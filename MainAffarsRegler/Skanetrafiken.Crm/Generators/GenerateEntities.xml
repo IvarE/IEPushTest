@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<filter>
+  <entities>
+    <entity>account</entity>
+    <entity>activityparty</entity>
+    <entity>asyncoperation</entity>
+    <entity>campaign</entity>
+    <entity>campaignitem</entity>
+    <entity>campaignresponse</entity>
+    <entity>customeraddress</entity>
+    <entity>contact</entity>
+    <entity>email</entity>
+    <entity>incident</entity>
+    <entity>lead</entity>
+    <entity>product</entity>
+    <entity>processstage</entity>
+    <entity>queue</entity>
+    <entity>queueitem</entity>
+    <entity>role</entity>
+    <entity>systemuser</entity>
+    <entity>systemuserroles</entity>
+    <entity>template</entity>
+    <entity>uom</entity>
+    <entity>uomschedule</entity>
+    <entity>usersettings</entity>
+    <entity>queue</entity>
+
+    <entity>campaignitem</entity>
+
+    <entity>cgi_categorydetail</entity>
+    <entity>cgi_creditorderrow</entity>
+    <entity>cgi_setting</entity>
+    <entity>cgi_travelcard</entity>
+    <entity>cgi_refund</entity>
+    <entity>cgi_reimbursementform</entity>
+    <entity>cgi_refundtype</entity>
+    <entity>cgi_refundaccount</entity>
+    <entity>cgi_refundresponsible</entity>
+
+    <entity>ed_biffintegrationerrorlog</entity>
+    <entity>ed_biffintegrationerrorlogrow</entity>
+    <entity>ed_companyrole</entity>
+    <entity>ed_deltabatcherrorlog</entity>
+    <entity>ed_deltabatcherrorlogrow</entity>
+    <entity>ed_deltabatchlog</entity>
+    <entity>ed_deltabatchqueue</entity>
+    <entity>ed_mergerecords</entity>
+    <entity>ed_notifymkl</entity>
+    <entity>ed_orderstatus</entity>
+    <entity>ed_skakort</entity>
+    <entity>ed_salesorder</entity>
+    <entity>ed_salesorderline</entity>
+    <entity>ed_salesorderlinetraveller</entity>
+    <entity>ed_senttextmessage</entity>
+    <entity>ed_textmessage</entity>
+    <entity>ed_textmessagetemplate</entity>
+    <entity>ed_valuecode</entity>
+    <entity>ed_valuecodetemplate</entity>
+    <entity>ed_valuecodeapproval</entity>
+    
+    <entity>ed_emailtemplateproxy</entity>
+    <entity>ed_returnmessagewebapi</entity>
+
+    <entity>edp_country</entity>
+    <entity>edp_sequence</entity>
+
+    <entity>st_singaporeticket</entity>
+
+  </entities>
+  <optionsets>
+    <optionset>account_accountcategorycode</optionset>
+    <optionset>asyncoperation_statuscode</optionset>
+    <optionset>campaign_statuscode</optionset>
+    <optionset>campaign_typecode</optionset>
+    <optionset>contact_statuscode</optionset>
+    <optionset>contact_accountrolecode</optionset>
+    <optionset>customeraddress_addresstypecode</optionset>
+    <optionset>email_statuscode</optionset>
+
+    <optionset>incident_casetypecode</optionset>
+    <optionset>incident_caseorigincode</optionset>
+    <optionset>incident_prioritycode</optionset>
+    <optionset>incident_incidentstagecode</optionset>
+
+    <optionset>lead_statuscode</optionset>
+    <optionset>lead_leadsourcecode</optionset>
+    <optionset>processstage_category</optionset>
+
+    <optionset>cgi_refund_statuscode</optionset>
+    <optionset>cgi_refund_ed_valuecodetype</optionset>
+    <optionset>cgi_refund_ed_refundingtype</optionset>
+    <optionset>cgi_travelcard_statuscode</optionset>
+    <optionset>cgi_travelcard_ed_blockedstatus</optionset>
+    <optionset>ed_creditsaferejectcodes</optionset>
+    <optionset>ed_informationsource</optionset>
+
+    <optionset>ed_account_ed_billingmethod</optionset>
+    <optionset>ed_account_ed_paymentmethod</optionset>
+    <optionset>ed_account_ed_typeofaccount</optionset>
+    <optionset>ed_campaign_ed_leadtopic</optionset>
+    <optionset>ed_companyrole_ed_role</optionset>
+    <optionset>ed_deltabatchqueue_ed_deltabatchoperation</optionset>
+    <optionset>ed_deltabatchqueue_statuscode</optionset>
+    <optionset>ed_notifymkl_ed_method</optionset>
+    <optionset>ed_notifymkl_ed_notificationtype</optionset>
+    <optionset>ed_notifymkl_statuscode</optionset>
+    <optionset>ed_salesorder_statuscode</optionset>
+    <optionset>ed_salesorderline_ed_ticketoffertype</optionset>
+    <optionset>ed_salesorderlinetraveller_ed_travellertype</optionset>
+    <optionset>ed_valuecode_ed_typeoption</optionset>
+    <optionset>ed_valuecodeapproval_ed_valuecodetype</optionset>
+    <optionset>ed_valuecodetemplate_ed_typeoption</optionset>
+    <optionset>ed_valuecodeapproval_statuscode</optionset>
+    <optionset>ed_valuecode_statuscode</optionset>
+    <optionset>ed_valuecodetype</optionset>
+    
+    <optionset>ed_refundingtype</optionset>
+    <optionset>ed_valuecodetypeglobal</optionset>
+    <optionset>ed_valuecodedeliverytypeglobal</optionset>
+    
+  </optionsets>
+</filter>

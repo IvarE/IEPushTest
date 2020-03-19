@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Coupon xmlns="http://v1_0.model.loopback.kuponginlosen.se">
+  <Issuer>KUPONGINLOSEN</Issuer>
+  <StoreId>12345</StoreId>
+  <CampaignNumber>52845</CampaignNumber>
+  <EanCode>9952845101002</EanCode>
+  <UniqueCode>000001132524</UniqueCode>
+  <RedeemedDT>2013-06-18T14:10:00.760+02:00</RedeemedDT>
+</Coupon>

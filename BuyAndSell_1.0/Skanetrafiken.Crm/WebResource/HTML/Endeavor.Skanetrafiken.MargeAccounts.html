@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Account Merger</title>
+	<style type="text/css">
+	h3 {
+	margin-top: 100px;
+	margin-bottom: auto;
+	margin-right: 150px;
+	margin-left: 150px;
+	text-align: center
+	}
+
+	#accountInput {
+		display: inline-block;
+	}
+
+	#inputForm {
+	text-align: center;
+	}
+
+	#statusText {
+	color: red;
+	}
+
+	#mergeBtn {
+	margin: 0px 0px 0px 20px;
+	}
+	</style>
+
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+
+    <script>
+        function mergeAccounts() {
+            var mergeButton = document.getElementById('mergeBtn');
+            var oldAccInput = document.getElementById('oldAccountInput');
+            var newAccInput = document.getElementById('newAccountInput');
+            if (!isInputEmpty(oldAccInput, newAccInput))
+                return;
+
+            
+			var data = {
+                "oldAccountNumber": oldAccInput.value.replace(/ /g, ''),
+                "newAccountNumber_KST": newAccInput.value.replace(/ /g, '')
+			};
+			
+            showHideElements(mergeButton, oldAccInput, newAccInput);
+
+            var organizationUrl = Xrm.Page.context.getClientUrl();
+            var req = new XMLHttpRequest();
+            req.open("POST", organizationUrl + "/api/data/v8.1/" + "ed_MergeAccountsPortalen", false);
+            req.setRequestHeader("Accept", "application/json");
+            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            req.setRequestHeader("OData-MaxVersion", "4.0");
+            req.setRequestHeader("OData-Version", "4.0");
+            req.onreadystatechange = function () {
+                if (this.readyState == 4) {
+                    req.onreadystatechange = null;
+                    if (this.status == 200 || this.status == 204) {
+                        var res = JSON.parse(this.response);
+                        var migrationStatusLabel = document.getElementById('statusText');
+                        if (res.MergeResponse == null || res.MergeResponse != "") {
+                            migrationStatusLabel.innerHTML = "Något fel inträffade. Vänligen kontakta administratör. \n\nFel: " + res.MergeResponse;
+                        } else {
+                            migrationStatusLabel.style.color = "green";
+                            migrationStatusLabel.innerHTML = "OK!";
+                        }
+                    } else {
+						var error = JSON.parse(this.response);
+						alert("Error in Action: "+error.message);
+                    }
+
+                    showHideElements(mergeButton, oldAccInput, newAccInput);
+                }
+            };
+            req.send(JSON.stringify(data));
+        }
+
+        function showHideElements(btn, oldAccInput, newAccInput) {
+            if (btn) {
+                if (btn.value == "Migrera")
+                    btn.value = "Bearbetar";
+                else btn.value = "Migrera";
+
+                btn.disabled = !btn.disabled;
+                oldAccInput.disabled = !oldAccInput.disabled;
+                newAccInput.disabled = !newAccInput.disabled;
+            }
+        }
+
+        function isInputEmpty(oldAccInput, newAccInput) {
+            if (!oldAccInput.value || !newAccInput.value) {
+                alert("Vänligen ange båda kontonummren.");
+                return false;
+            } return true;
+
+        }
+    </script>
+
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="text-center text-primary">V&auml;nligen ange konton som du vill sammanfoga.</h3>
+                <div id="inputForm">
+                    <div id="accountInput"><label for="oldAccountInput">Gammal konto</label> <input type="text" class="form-control" id="oldAccountInput" placeholder="Kundnummer" /></div>
+                    <span style="font-size: 100px; color: #9999">&rarr;</span> <span style="font-size: 100px; color: #9999">&larr;</span>
+                    <div id="accountInput"><label for="newAccountInput">Portal-konto </label> <input type="text" class="form-control" id="newAccountInput" placeholder="Kundnummer" /></div>
+                    <input id="mergeBtn" type="button" class="btn btn-primary" onclick="mergeAccounts()" value="Migrera" />
+                    <div><label>Migrering status:</label> <label id="statusText">V&auml;ntar p&aring; migrering</label></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
