@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.skanetrafiken.se/INTSTDK001GetDirectJourneysBetweenStops"
+	elementFormDefault="qualified">
+  <element name="GetDirectJourneysBetweenStops">
+    <complexType>
+      <sequence>
+        <element name="fromStopAreaGid" type="string" />
+        <element name="toStopAreaGid" type="string" />
+        <element name="forTimeWindowStartDateTime" type="dateTime" />
+        <element minOccurs="0" name="forTimeWindowDuration" nillable="true" type="string" />
+        <element minOccurs="0" name="withDepartureMaxCount" nillable="true" type="string" />
+        <element minOccurs="0" name="forLineGids" nillable="true" type="string" />
+        <element minOccurs="0" name="forProducts" nillable="true" type="string" />
+        <element minOccurs="0" name="purposeOfLineGroupingCode" nillable="true" type="string" />
+      </sequence>
+    </complexType>
+  </element>
+</schema>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="86856596-46a0-46a0-a5f4-b4dc7b9032d8" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://stip.skanetrafiken.se/INTSTDK008/SyncCustomerCards.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="BizTalkServiceInstance.wsdl" MetadataType="Wsdl" ID="7e19c3d8-356a-48e4-846f-038b337bb3f0" SourceId="1" SourceUrl="http://v-dkbiz.int.skanetrafiken.com/INTSTDK008/SyncCustomerCards.svc?wsdl" />
+    <MetadataFile FileName="SyncCustomerCards.disco" MetadataType="Disco" ID="65693bb9-eed5-42e9-a4d8-baa378bb4f33" SourceId="1" SourceUrl="http://v-dkbiz.int.skanetrafiken.com/INTSTDK008/SyncCustomerCards.svc?disco" />
+    <MetadataFile FileName="SyncCustomerCards.xsd" MetadataType="Schema" ID="7bcfe38e-6976-40a8-a69c-74b5abcbb926" SourceId="1" SourceUrl="http://v-dkbiz.int.skanetrafiken.com/INTSTDK008/SyncCustomerCards.svc?xsd=xsd3" />
+    <MetadataFile FileName="SyncCustomerCards1.xsd" MetadataType="Schema" ID="01432efd-4d3b-4196-a430-8a6756f86d63" SourceId="1" SourceUrl="http://v-dkbiz.int.skanetrafiken.com/INTSTDK008/SyncCustomerCards.svc?xsd=xsd2" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://BIFF.org/PeriodCost.xsd" id="PeriodCost" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:mstns="http://BIFF.org/PeriodCost.xsd" xmlns="http://BIFF.org/PeriodCost.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element msdata:IsDataSet="true" msdata:UseCurrentLocale="true" name="PeriodCost">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Cost">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" name="Currency">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="3"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element minOccurs="0" name="Cost" type="xs:decimal"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

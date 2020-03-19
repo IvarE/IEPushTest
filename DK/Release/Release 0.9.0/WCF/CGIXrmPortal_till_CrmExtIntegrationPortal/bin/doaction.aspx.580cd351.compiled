@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<preserve resultType="3" virtualPath="/CGIXrmPortal/CallGuide/DoAction.aspx" hash="fffffff52a665ce4" filehash="22838558488b13ff" flags="110000" assembly="App_Web_qrxjrg4f" type="ASP.callguide_doaction_aspx">
+    <filedeps>
+        <filedep name="/CGIXrmPortal/CallGuide/DoAction.aspx" />
+        <filedep name="/CGIXrmPortal/CallGuide/DoAction.aspx.cs" />
+    </filedeps>
+</preserve>

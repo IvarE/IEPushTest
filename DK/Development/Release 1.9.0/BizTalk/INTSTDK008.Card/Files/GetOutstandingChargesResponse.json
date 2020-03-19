@@ -1,0 +1,8 @@
+{
+    "Message": "NoCardFound on cardnumber 0000001",
+    "HasOutstandingCharge": false,
+    "HasExpiredCharge": false,
+    "Amount": 400,
+    "ErrorMessage": "ErrorMessage",
+    "StatusCode": 400
+}

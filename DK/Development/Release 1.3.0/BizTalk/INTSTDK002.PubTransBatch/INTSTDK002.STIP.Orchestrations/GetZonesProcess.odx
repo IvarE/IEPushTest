@@ -1,0 +1,703 @@
+﻿#if __DESIGNER_DATA
+#error Do not define __DESIGNER_DATA.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<om:MetaModel MajorVersion="1" MinorVersion="3" Core="2b131234-7959-458d-834f-2dc0769ce683" ScheduleModel="66366196-361d-448d-976f-cab5e87496d2" xmlns:om="http://schemas.microsoft.com/BizTalk/2003/DesignerData">
+    <om:Element Type="Module" OID="5f328fd5-5cd2-41b0-b663-5bfafa72dff1" LowerBound="1.1" HigherBound="175.1">
+        <om:Property Name="ReportToAnalyst" Value="True" />
+        <om:Property Name="Name" Value="INTSTDK002.STIP.Orchestrations" />
+        <om:Property Name="Signal" Value="False" />
+        <om:Element Type="ServiceDeclaration" OID="d24d599f-587e-4397-a43f-28565097a0bc" ParentLink="Module_ServiceDeclaration" LowerBound="32.1" HigherBound="174.1">
+            <om:Property Name="InitializedTransactionType" Value="False" />
+            <om:Property Name="IsInvokable" Value="False" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="GetZonesProcess" />
+            <om:Property Name="Signal" Value="False" />
+            <om:Element Type="VariableDeclaration" OID="d3c0db51-ee9c-449f-9569-8ed469c4f8c8" ParentLink="ServiceDeclaration_VariableDeclaration" LowerBound="50.1" HigherBound="51.1">
+                <om:Property Name="UseDefaultConstructor" Value="True" />
+                <om:Property Name="Type" Value="System.Xml.XmlDocument" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="xmlDoc" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="bf0bfc62-cbfa-4e66-a4f2-20ed32b5028f" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="43.1" HigherBound="44.1">
+                <om:Property Name="Type" Value="INTSTDK002.STIP.Orchestrations.Triggers.GetZones" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="Trigger" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="3ad5a1ff-7939-479b-8b24-047f2d05ce18" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="44.1" HigherBound="45.1">
+                <om:Property Name="Type" Value="INTSTDK002.PubTrans.Schemas.TopologyDataService.GetZonesResponse" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="GetZonesResponse" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="9ff6edd0-2fd8-498d-8bc3-038c80a6fe40" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="45.1" HigherBound="46.1">
+                <om:Property Name="Type" Value="INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetZonesProcess_EmptyTables" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SP_EmptyTables" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="3c770596-71a0-4eec-b19b-f1f4feedf7a3" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="46.1" HigherBound="47.1">
+                <om:Property Name="Type" Value="INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetZonesProcess_EmptyTablesResponse" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SP_EmptyTablesResponse" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="f4f2f5ee-4d92-4ced-90e2-53b8476ccfd0" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="47.1" HigherBound="48.1">
+                <om:Property Name="Type" Value="INTSTDK002.CRM.Schemas.CompositeOperation_GetContractorsWithOperatedLinesProcess.RequestResponse" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="CompositeOperationResponse" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="0c7b338e-3f4b-40df-ac2c-1637a8f3cc03" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="48.1" HigherBound="49.1">
+                <om:Property Name="Type" Value="BTS.soap_envelope_1__1.Fault" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SoapFault" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="678e0da7-2ba7-4fc1-9259-b01d162a78f2" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="49.1" HigherBound="50.1">
+                <om:Property Name="Type" Value="INTSTDK002.STIP.Orchestrations.FaultException" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SoapFaultMessage" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="ServiceBody" OID="2e5b992b-7da4-484b-85b3-686e71e9f58b" ParentLink="ServiceDeclaration_ServiceBody">
+                <om:Property Name="Signal" Value="False" />
+                <om:Element Type="Receive" OID="048268b6-1369-47da-b234-d616e5c0bccf" ParentLink="ServiceBody_Statement" LowerBound="53.1" HigherBound="56.1">
+                    <om:Property Name="Activate" Value="True" />
+                    <om:Property Name="PortName" Value="ReceiveGzTrigger" />
+                    <om:Property Name="MessageName" Value="Trigger" />
+                    <om:Property Name="OperationName" Value="RequestGzTrigger" />
+                    <om:Property Name="OperationMessageName" Value="Request" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Rcv_Trigger" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+                <om:Element Type="VariableAssignment" OID="61259e80-4893-4276-a0a6-89ad08be6da6" ParentLink="ServiceBody_Statement" LowerBound="56.1" HigherBound="58.1">
+                    <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetZones] Trigger GetZones received&quot;);" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Trace" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+                <om:Element Type="Scope" OID="3e30b96c-c663-42ba-89e5-854a2dd3da75" ParentLink="ServiceBody_Statement" LowerBound="58.1" HigherBound="172.1">
+                    <om:Property Name="InitializedTransactionType" Value="True" />
+                    <om:Property Name="IsSynchronized" Value="False" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Scope_RequestData" />
+                    <om:Property Name="Signal" Value="True" />
+                    <om:Element Type="Send" OID="08092e22-5da8-477d-97dd-f28e3dc1f130" ParentLink="ComplexStatement_Statement" LowerBound="63.1" HigherBound="65.1">
+                        <om:Property Name="PortName" Value="RequestGzData" />
+                        <om:Property Name="MessageName" Value="Trigger" />
+                        <om:Property Name="OperationName" Value="SendRequestGzData" />
+                        <om:Property Name="OperationMessageName" Value="Request" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="Snd_Trigger" />
+                        <om:Property Name="Signal" Value="True" />
+                    </om:Element>
+                    <om:Element Type="VariableAssignment" OID="479ceb2e-ea2c-4b01-8510-7029f57993bf" ParentLink="ComplexStatement_Statement" LowerBound="65.1" HigherBound="67.1">
+                        <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetZones] PubTrans requested data&quot;);" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="Trace" />
+                        <om:Property Name="Signal" Value="True" />
+                    </om:Element>
+                    <om:Element Type="Receive" OID="ea9ca1ce-0100-4122-8e7d-004d962f823a" ParentLink="ComplexStatement_Statement" LowerBound="67.1" HigherBound="69.1">
+                        <om:Property Name="Activate" Value="False" />
+                        <om:Property Name="PortName" Value="RequestGzData" />
+                        <om:Property Name="MessageName" Value="GetZonesResponse" />
+                        <om:Property Name="OperationName" Value="SendRequestGzData" />
+                        <om:Property Name="OperationMessageName" Value="Response" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="Rcv_GetZonesResponse" />
+                        <om:Property Name="Signal" Value="True" />
+                    </om:Element>
+                    <om:Element Type="VariableAssignment" OID="43142390-f22f-4c47-a786-87b00d25570b" ParentLink="ComplexStatement_Statement" LowerBound="69.1" HigherBound="71.1">
+                        <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetZones] PubTrans data response received&quot;);" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="Trace" />
+                        <om:Property Name="Signal" Value="False" />
+                    </om:Element>
+                    <om:Element Type="Scope" OID="b92777f0-bd6b-4cce-b8e2-fc6c3f913657" ParentLink="ComplexStatement_Statement" LowerBound="71.1" HigherBound="132.1">
+                        <om:Property Name="InitializedTransactionType" Value="True" />
+                        <om:Property Name="IsSynchronized" Value="False" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="Scope_EmptyTables" />
+                        <om:Property Name="Signal" Value="True" />
+                        <om:Element Type="Construct" OID="d708fe96-024d-48c7-ad3d-6fc4709bb8cc" ParentLink="ComplexStatement_Statement" LowerBound="76.1" HigherBound="83.1">
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Create_SP_EmptyTables" />
+                            <om:Property Name="Signal" Value="True" />
+                            <om:Element Type="MessageRef" OID="ac67bb89-54bd-45d8-ae15-6f203df20c78" ParentLink="Construct_MessageRef" LowerBound="77.39" HigherBound="77.53">
+                                <om:Property Name="Ref" Value="SP_EmptyTables" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Signal" Value="False" />
+                            </om:Element>
+                            <om:Element Type="MessageAssignment" OID="87844525-85a8-4c30-a2b7-e6ca8b19f3f4" ParentLink="ComplexStatement_Statement" LowerBound="79.1" HigherBound="82.1">
+                                <om:Property Name="Expression" Value="xmlDoc.LoadXml(&quot;&lt;ns0:SP_INTSTDK002_GetZonesProcess_EmptyTables xmlns:ns0=\&quot;http://schemas.microsoft.com/Sql/2008/05/Procedures/dbo\&quot; /&gt; &quot;);&#xD;&#xA;SP_EmptyTables = xmlDoc;" />
+                                <om:Property Name="ReportToAnalyst" Value="False" />
+                                <om:Property Name="Name" Value="Assign_SP_EmptyTables" />
+                                <om:Property Name="Signal" Value="False" />
+                            </om:Element>
+                        </om:Element>
+                        <om:Element Type="Send" OID="07afb3e2-55d5-4880-ac5b-d4587dd49d0f" ParentLink="ComplexStatement_Statement" LowerBound="83.1" HigherBound="85.1">
+                            <om:Property Name="PortName" Value="EmptyGzTables" />
+                            <om:Property Name="MessageName" Value="SP_EmptyTables" />
+                            <om:Property Name="OperationName" Value="SendEmptyGzTables" />
+                            <om:Property Name="OperationMessageName" Value="Request" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Snd_SP_EmptyTables" />
+                            <om:Property Name="Signal" Value="True" />
+                        </om:Element>
+                        <om:Element Type="VariableAssignment" OID="9634db72-cd28-4559-aad9-743544e8d0ce" ParentLink="ComplexStatement_Statement" LowerBound="85.1" HigherBound="87.1">
+                            <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetZones] CRM empty tables request&quot;);" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Trace" />
+                            <om:Property Name="Signal" Value="False" />
+                        </om:Element>
+                        <om:Element Type="Receive" OID="44ac4168-a77d-4723-b4d8-c91c396e99c1" ParentLink="ComplexStatement_Statement" LowerBound="87.1" HigherBound="89.1">
+                            <om:Property Name="Activate" Value="False" />
+                            <om:Property Name="PortName" Value="EmptyGzTables" />
+                            <om:Property Name="MessageName" Value="SP_EmptyTablesResponse" />
+                            <om:Property Name="OperationName" Value="SendEmptyGzTables" />
+                            <om:Property Name="OperationMessageName" Value="Response" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Rcv_SP_EmptyTablesResponse" />
+                            <om:Property Name="Signal" Value="True" />
+                        </om:Element>
+                        <om:Element Type="VariableAssignment" OID="4ef1ed66-87a8-415a-87be-522576df8828" ParentLink="ComplexStatement_Statement" LowerBound="89.1" HigherBound="91.1">
+                            <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetZones] CRM empty tables response&quot;);" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Trace" />
+                            <om:Property Name="Signal" Value="False" />
+                        </om:Element>
+                        <om:Element Type="Scope" OID="ed835d45-01a6-4a4f-913d-901147a27556" ParentLink="ComplexStatement_Statement" LowerBound="91.1" HigherBound="118.1">
+                            <om:Property Name="InitializedTransactionType" Value="True" />
+                            <om:Property Name="IsSynchronized" Value="False" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Scope_InsertData" />
+                            <om:Property Name="Signal" Value="True" />
+                            <om:Element Type="Send" OID="01fcb955-6da5-4821-b98c-b0ca376ef00e" ParentLink="ComplexStatement_Statement" LowerBound="96.1" HigherBound="98.1">
+                                <om:Property Name="PortName" Value="InsertGzData" />
+                                <om:Property Name="MessageName" Value="GetZonesResponse" />
+                                <om:Property Name="OperationName" Value="SendInsertGzData" />
+                                <om:Property Name="OperationMessageName" Value="Request" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="Snd_GetZonesResponse" />
+                                <om:Property Name="Signal" Value="True" />
+                            </om:Element>
+                            <om:Element Type="VariableAssignment" OID="1443a99a-6634-4432-b799-4efd88f479f3" ParentLink="ComplexStatement_Statement" LowerBound="98.1" HigherBound="100.1">
+                                <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetZones] CRM data sent&quot;);" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="Trace" />
+                                <om:Property Name="Signal" Value="True" />
+                            </om:Element>
+                            <om:Element Type="Receive" OID="f91b2c29-ccd3-47eb-a540-1449a524cab5" ParentLink="ComplexStatement_Statement" LowerBound="100.1" HigherBound="102.1">
+                                <om:Property Name="Activate" Value="False" />
+                                <om:Property Name="PortName" Value="InsertGzData" />
+                                <om:Property Name="MessageName" Value="CompositeOperationResponse" />
+                                <om:Property Name="OperationName" Value="SendInsertGzData" />
+                                <om:Property Name="OperationMessageName" Value="Response" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="Rcv_CompositeOperationResponse" />
+                                <om:Property Name="Signal" Value="True" />
+                            </om:Element>
+                            <om:Element Type="VariableAssignment" OID="eac14f87-ef35-4440-b500-acb8ed5da8d3" ParentLink="ComplexStatement_Statement" LowerBound="102.1" HigherBound="104.1">
+                                <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetZones] CRM data response received&quot;);" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="Trace" />
+                                <om:Property Name="Signal" Value="False" />
+                            </om:Element>
+                            <om:Element Type="Catch" OID="d53183b8-fa02-4070-8407-17565479eb12" ParentLink="Scope_Catch" LowerBound="107.1" HigherBound="116.1">
+                                <om:Property Name="ExceptionName" Value="ex" />
+                                <om:Property Name="ExceptionType" Value="System.Exception" />
+                                <om:Property Name="IsFaultMessage" Value="False" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="CatchException" />
+                                <om:Property Name="Signal" Value="True" />
+                                <om:Element Type="VariableAssignment" OID="8fd46f7e-6550-4157-9f13-eca8acf9afc1" ParentLink="Catch_Statement" LowerBound="110.1" HigherBound="113.1">
+                                    <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetZones] CRM PubTrans_Staging exception while inserting data: &quot; + ex.Message);&#xD;&#xA;System.Diagnostics.EventLog.WriteEntry(&quot;XLANG/s&quot;, &quot;[INTSTDK002.PubTransBatch.GetZones] CRM PubTrans_Staging exception while inserting data: &quot; + ex.Message, System.Diagnostics.EventLogEntryType.Error);" />
+                                    <om:Property Name="ReportToAnalyst" Value="True" />
+                                    <om:Property Name="Name" Value="TraceAndLog" />
+                                    <om:Property Name="Signal" Value="False" />
+                                </om:Element>
+                                <om:Element Type="Suspend" OID="3a51fa6a-a551-42c0-80c4-b0bc66837bed" ParentLink="Catch_Statement" LowerBound="113.1" HigherBound="115.1">
+                                    <om:Property Name="ErrorMessage" Value="&quot;[INTSTDK002.PubTransBatch.GetZones] CRM PubTrans_Staging exception while inserting data, restart integration; &quot; + ex.Message;" />
+                                    <om:Property Name="ReportToAnalyst" Value="True" />
+                                    <om:Property Name="Name" Value="Suspend" />
+                                    <om:Property Name="Signal" Value="True" />
+                                </om:Element>
+                            </om:Element>
+                        </om:Element>
+                        <om:Element Type="Catch" OID="e39cc842-10e4-4b84-9487-737e7d0cbd00" ParentLink="Scope_Catch" LowerBound="121.1" HigherBound="130.1">
+                            <om:Property Name="ExceptionName" Value="ex" />
+                            <om:Property Name="ExceptionType" Value="System.Exception" />
+                            <om:Property Name="IsFaultMessage" Value="False" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="CatchException" />
+                            <om:Property Name="Signal" Value="True" />
+                            <om:Element Type="VariableAssignment" OID="95bafbcb-3e8b-46b9-a5a2-c65159c9600e" ParentLink="Catch_Statement" LowerBound="124.1" HigherBound="127.1">
+                                <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetZones] CRM PubTrans_Staging exception while deleting table data: &quot; + ex.Message);&#xD;&#xA;System.Diagnostics.EventLog.WriteEntry(&quot;XLANG/s&quot;, &quot;[INTSTDK002.PubTransBatch.GetZones] CRM PubTrans_Staging exception while deleting table data: &quot; + ex.Message, System.Diagnostics.EventLogEntryType.Error);" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="TraceAndLog" />
+                                <om:Property Name="Signal" Value="False" />
+                            </om:Element>
+                            <om:Element Type="Suspend" OID="1ba33277-fcdb-4a48-a463-3fedbe2dd784" ParentLink="Catch_Statement" LowerBound="127.1" HigherBound="129.1">
+                                <om:Property Name="ErrorMessage" Value="&quot;[INTSTDK002.PubTransBatch.GetZones] CRM PubTrans_Staging exception while deleting table data, restart integration; &quot; + ex.Message;" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="Suspend" />
+                                <om:Property Name="Signal" Value="False" />
+                            </om:Element>
+                        </om:Element>
+                    </om:Element>
+                    <om:Element Type="Catch" OID="e5b2b6c6-2a39-4648-b36c-eab6b3d8b34c" ParentLink="Scope_Catch" LowerBound="135.1" HigherBound="152.1">
+                        <om:Property Name="ExceptionName" Value="sfex" />
+                        <om:Property Name="ExceptionType" Value="RequestGzData.SendRequestGzData.Fault" />
+                        <om:Property Name="IsFaultMessage" Value="False" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="CatchFaultException" />
+                        <om:Property Name="Signal" Value="True" />
+                        <om:Element Type="Construct" OID="13b18944-4246-45ef-8fc9-d57064ed69df" ParentLink="Catch_Statement" LowerBound="138.1" HigherBound="146.1">
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="X_SoapFault_To_SoapFaultMessage" />
+                            <om:Property Name="Signal" Value="True" />
+                            <om:Element Type="MessageAssignment" OID="d44c9f1e-bcd7-4690-83e7-1d3719d0b6ad" ParentLink="ComplexStatement_Statement" LowerBound="141.1" HigherBound="143.1">
+                                <om:Property Name="Expression" Value="SoapFault = sfex;" />
+                                <om:Property Name="ReportToAnalyst" Value="False" />
+                                <om:Property Name="Name" Value="AssignSoapFault" />
+                                <om:Property Name="Signal" Value="True" />
+                            </om:Element>
+                            <om:Element Type="Transform" OID="0e78a3dd-57ec-4b98-b06f-6c5eba9874a5" ParentLink="ComplexStatement_Statement" LowerBound="143.1" HigherBound="145.1">
+                                <om:Property Name="ClassName" Value="INTSTDK002.STIP.Orchestrations.X_SoapFault_To_SoapFaultMessage" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="X_SoapFault_To_SoapFaultMessage" />
+                                <om:Property Name="Signal" Value="True" />
+                                <om:Element Type="MessagePartRef" OID="6cb47aba-69f7-43b0-9797-d7162578d9e1" ParentLink="Transform_OutputMessagePartRef" LowerBound="144.40" HigherBound="144.56">
+                                    <om:Property Name="MessageRef" Value="SoapFaultMessage" />
+                                    <om:Property Name="ReportToAnalyst" Value="True" />
+                                    <om:Property Name="Name" Value="MessagePartReference_2" />
+                                    <om:Property Name="Signal" Value="False" />
+                                </om:Element>
+                                <om:Element Type="MessagePartRef" OID="e349f6db-bf78-479a-b090-c1ec5390450f" ParentLink="Transform_InputMessagePartRef" LowerBound="144.124" HigherBound="144.133">
+                                    <om:Property Name="MessageRef" Value="SoapFault" />
+                                    <om:Property Name="ReportToAnalyst" Value="True" />
+                                    <om:Property Name="Name" Value="MessagePartReference_1" />
+                                    <om:Property Name="Signal" Value="False" />
+                                </om:Element>
+                            </om:Element>
+                            <om:Element Type="MessageRef" OID="7a307ec6-fc72-40b3-9f2b-9b01d791850e" ParentLink="Construct_MessageRef" LowerBound="139.35" HigherBound="139.44">
+                                <om:Property Name="Ref" Value="SoapFault" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Signal" Value="False" />
+                            </om:Element>
+                            <om:Element Type="MessageRef" OID="4530cae6-1936-4c7f-baed-1505656d26ee" ParentLink="Construct_MessageRef" LowerBound="139.46" HigherBound="139.62">
+                                <om:Property Name="Ref" Value="SoapFaultMessage" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Signal" Value="False" />
+                            </om:Element>
+                        </om:Element>
+                        <om:Element Type="VariableAssignment" OID="4c792aac-9032-4600-a978-a0ffebedc9e4" ParentLink="Catch_Statement" LowerBound="146.1" HigherBound="149.1">
+                            <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetZones] PubTrans SOAP fault: &quot; + SoapFaultMessage.Message);&#xD;&#xA;System.Diagnostics.EventLog.WriteEntry(&quot;XLANG/s&quot;, &quot;[INTSTDK002.PubTransBatch.GetZones] PubTrans SOAP fault &quot; + SoapFaultMessage.Message, System.Diagnostics.EventLogEntryType.Error);" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="TraceAndLog" />
+                            <om:Property Name="Signal" Value="True" />
+                        </om:Element>
+                        <om:Element Type="Suspend" OID="3179d0f0-7503-473f-8300-ee2cea9cfe72" ParentLink="Catch_Statement" LowerBound="149.1" HigherBound="151.1">
+                            <om:Property Name="ErrorMessage" Value="&quot;[INTSTDK002.PubTransBatch.GetZones] PubTrans SOAP fault, restart integration; &quot; + SoapFaultMessage.Message;" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Suspend" />
+                            <om:Property Name="Signal" Value="True" />
+                        </om:Element>
+                    </om:Element>
+                    <om:Element Type="Catch" OID="3f8185ae-5c97-4ce5-8347-e4d58530e037" ParentLink="Scope_Catch" LowerBound="152.1" HigherBound="161.1">
+                        <om:Property Name="ExceptionName" Value="soapEx" />
+                        <om:Property Name="ExceptionType" Value="System.Web.Services.Protocols.SoapException" />
+                        <om:Property Name="IsFaultMessage" Value="False" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="CatchSoapException" />
+                        <om:Property Name="Signal" Value="True" />
+                        <om:Element Type="VariableAssignment" OID="b91909ad-e7e4-42df-9ad8-c889dbfd4816" ParentLink="Catch_Statement" LowerBound="155.1" HigherBound="158.1">
+                            <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetZones] PubTrans SOAP exception: &quot; + soapEx.Message);&#xD;&#xA;System.Diagnostics.EventLog.WriteEntry(&quot;XLANG/s&quot;, &quot;[INTSTDK002.PubTransBatch.GetZones] PubTrans SOAP exception: &quot; + soapEx.Message, System.Diagnostics.EventLogEntryType.Error);" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="TraceAndLog" />
+                            <om:Property Name="Signal" Value="True" />
+                        </om:Element>
+                        <om:Element Type="Suspend" OID="a9d9918d-a28c-4d81-a494-22c6cda8a3c7" ParentLink="Catch_Statement" LowerBound="158.1" HigherBound="160.1">
+                            <om:Property Name="ErrorMessage" Value="&quot;[INTSTDK002.PubTransBatch.GetZones] PubTrans SOAP exception, restart integration; &quot; + soapEx.Message;" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Suspend" />
+                            <om:Property Name="Signal" Value="False" />
+                        </om:Element>
+                    </om:Element>
+                    <om:Element Type="Catch" OID="96fee922-1124-4aea-a0f9-dcbfc2fa8158" ParentLink="Scope_Catch" LowerBound="161.1" HigherBound="170.1">
+                        <om:Property Name="ExceptionName" Value="ex" />
+                        <om:Property Name="ExceptionType" Value="System.Exception" />
+                        <om:Property Name="IsFaultMessage" Value="False" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="CatchException" />
+                        <om:Property Name="Signal" Value="True" />
+                        <om:Element Type="VariableAssignment" OID="605ccd8b-81f3-49f5-95ee-fd1c103ea37d" ParentLink="Catch_Statement" LowerBound="164.1" HigherBound="167.1">
+                            <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetZones] PubTrans exception: &quot; + ex.Message);&#xD;&#xA;System.Diagnostics.EventLog.WriteEntry(&quot;XLANG/s&quot;, &quot;[INTSTDK002.PubTransBatch.GetZones] PubTrans exception: &quot; + ex.Message, System.Diagnostics.EventLogEntryType.Error);" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="TraceAndLog" />
+                            <om:Property Name="Signal" Value="False" />
+                        </om:Element>
+                        <om:Element Type="Suspend" OID="3d29b5c6-5be4-430d-9bb6-dec3a3b11efb" ParentLink="Catch_Statement" LowerBound="167.1" HigherBound="169.1">
+                            <om:Property Name="ErrorMessage" Value="&quot;[INTSTDK002.PubTransBatch.GetZones] PubTrans exception, restart integration; &quot; + ex.Message;" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Suspend" />
+                            <om:Property Name="Signal" Value="True" />
+                        </om:Element>
+                    </om:Element>
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="99e48fd8-b3bc-43f7-ad1a-8aeda77ca1b4" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="35.1" HigherBound="37.1">
+                <om:Property Name="PortModifier" Value="Implements" />
+                <om:Property Name="Orientation" Value="Left" />
+                <om:Property Name="PortIndex" Value="8" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="INTSTDK002.STIP.Orchestrations.ReceiveGzTriggerType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="ReceiveGzTrigger" />
+                <om:Property Name="Signal" Value="False" />
+                <om:Element Type="LogicalBindingAttribute" OID="4b51c72f-7004-4b25-9b1d-12ddae1fb12a" ParentLink="PortDeclaration_CLRAttribute" LowerBound="35.1" HigherBound="36.1">
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="e771d944-cbc4-46ad-8ab5-43ec50d959b0" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="37.1" HigherBound="39.1">
+                <om:Property Name="PortModifier" Value="Uses" />
+                <om:Property Name="Orientation" Value="Right" />
+                <om:Property Name="PortIndex" Value="18" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="INTSTDK002.STIP.Orchestrations.RequestGzDataType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="RequestGzData" />
+                <om:Property Name="Signal" Value="False" />
+                <om:Element Type="LogicalBindingAttribute" OID="a34d6341-a61d-40b5-a4ff-13343b09fc50" ParentLink="PortDeclaration_CLRAttribute" LowerBound="37.1" HigherBound="38.1">
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="09ba5e67-21fb-4776-b8ce-fb27cbec1d3f" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="39.1" HigherBound="41.1">
+                <om:Property Name="PortModifier" Value="Uses" />
+                <om:Property Name="Orientation" Value="Right" />
+                <om:Property Name="PortIndex" Value="44" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="INTSTDK002.STIP.Orchestrations.EmptyGzTablesType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="EmptyGzTables" />
+                <om:Property Name="Signal" Value="False" />
+                <om:Element Type="LogicalBindingAttribute" OID="f9b63dee-54eb-49dc-8ab3-aaa12a726908" ParentLink="PortDeclaration_CLRAttribute" LowerBound="39.1" HigherBound="40.1">
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="b4d95fab-f70f-48d0-90f4-671359246151" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="41.1" HigherBound="43.1">
+                <om:Property Name="PortModifier" Value="Uses" />
+                <om:Property Name="Orientation" Value="Right" />
+                <om:Property Name="PortIndex" Value="83" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="INTSTDK002.STIP.Orchestrations.InsertGzDataType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="InsertGzData" />
+                <om:Property Name="Signal" Value="False" />
+                <om:Element Type="LogicalBindingAttribute" OID="16518f78-e6ec-414e-844f-e8a1cfd6678f" ParentLink="PortDeclaration_CLRAttribute" LowerBound="41.1" HigherBound="42.1">
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="PortType" OID="3a088248-4c86-470f-9ede-bb284f1b3f5c" ParentLink="Module_PortType" LowerBound="4.1" HigherBound="11.1">
+            <om:Property Name="Synchronous" Value="False" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="ReceiveGzTriggerType" />
+            <om:Property Name="Signal" Value="False" />
+            <om:Element Type="OperationDeclaration" OID="0aa9e4e2-2971-4e20-a843-ad13186b1bc4" ParentLink="PortType_OperationDeclaration" LowerBound="6.1" HigherBound="10.1">
+                <om:Property Name="OperationType" Value="OneWay" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="RequestGzTrigger" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="MessageRef" OID="339bb9fc-74de-4115-9220-5dd2cc6b6b85" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="8.13" HigherBound="8.30">
+                    <om:Property Name="Ref" Value="INTSTDK002.STIP.Orchestrations.Triggers.GetZones" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="PortType" OID="c09ca908-3683-4828-a05d-812f7a5c9d3d" ParentLink="Module_PortType" LowerBound="11.1" HigherBound="18.1">
+            <om:Property Name="Synchronous" Value="True" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="RequestGzDataType" />
+            <om:Property Name="Signal" Value="False" />
+            <om:Element Type="OperationDeclaration" OID="bf17c315-1cde-4e04-bc2b-abdf66694f6d" ParentLink="PortType_OperationDeclaration" LowerBound="13.1" HigherBound="17.1">
+                <om:Property Name="OperationType" Value="RequestResponse" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SendRequestGzData" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="MessageRef" OID="bfccf11c-bdb7-434d-9c64-d8a9f32ae205" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="15.13" HigherBound="15.30">
+                    <om:Property Name="Ref" Value="INTSTDK002.STIP.Orchestrations.Triggers.GetZones" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+                <om:Element Type="MessageRef" OID="2b6951ba-5bf8-4173-b093-8d6e5829357a" ParentLink="OperationDeclaration_FaultMessageRef" LowerBound="15.98" HigherBound="15.134">
+                    <om:Property Name="Ref" Value="BTS.soap_envelope_1__1.Fault" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Fault" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+                <om:Element Type="MessageRef" OID="3f4a9888-c337-4cf7-bcb8-7df319969bad" ParentLink="OperationDeclaration_ResponseMessageRef" LowerBound="15.32" HigherBound="15.96">
+                    <om:Property Name="Ref" Value="INTSTDK002.PubTrans.Schemas.TopologyDataService.GetZonesResponse" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Response" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="PortType" OID="756ef835-8d82-48c3-b8cc-f8914298831e" ParentLink="Module_PortType" LowerBound="18.1" HigherBound="25.1">
+            <om:Property Name="Synchronous" Value="True" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="EmptyGzTablesType" />
+            <om:Property Name="Signal" Value="False" />
+            <om:Element Type="OperationDeclaration" OID="3ce4883c-db7a-4522-805d-4c07f4364075" ParentLink="PortType_OperationDeclaration" LowerBound="20.1" HigherBound="24.1">
+                <om:Property Name="OperationType" Value="RequestResponse" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SendEmptyGzTables" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="MessageRef" OID="6d263dab-5c39-49d8-a867-888c8d888426" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="22.13" HigherBound="22.91">
+                    <om:Property Name="Ref" Value="INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetZonesProcess_EmptyTables" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+                <om:Element Type="MessageRef" OID="7b1c93cd-fe9a-45f7-9ab2-c19e69ff347f" ParentLink="OperationDeclaration_ResponseMessageRef" LowerBound="22.93" HigherBound="22.179">
+                    <om:Property Name="Ref" Value="INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetZonesProcess_EmptyTablesResponse" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Response" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="PortType" OID="40301175-c631-46e4-847a-2b3f2f16f88f" ParentLink="Module_PortType" LowerBound="25.1" HigherBound="32.1">
+            <om:Property Name="Synchronous" Value="True" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="InsertGzDataType" />
+            <om:Property Name="Signal" Value="False" />
+            <om:Element Type="OperationDeclaration" OID="0bfb890d-f08c-44f7-a152-4da166171ff7" ParentLink="PortType_OperationDeclaration" LowerBound="27.1" HigherBound="31.1">
+                <om:Property Name="OperationType" Value="RequestResponse" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SendInsertGzData" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="MessageRef" OID="f55b5280-8074-400d-855a-691a6132ce2e" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="29.13" HigherBound="29.77">
+                    <om:Property Name="Ref" Value="INTSTDK002.PubTrans.Schemas.TopologyDataService.GetZonesResponse" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+                <om:Element Type="MessageRef" OID="fb1d4b0f-2ca6-4836-b8b6-bedc957fe6dd" ParentLink="OperationDeclaration_ResponseMessageRef" LowerBound="29.79" HigherBound="29.175">
+                    <om:Property Name="Ref" Value="INTSTDK002.CRM.Schemas.CompositeOperation_GetContractorsWithOperatedLinesProcess.RequestResponse" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Response" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+    </om:Element>
+</om:MetaModel>
+#endif // __DESIGNER_DATA
+[Microsoft.XLANGs.BaseTypes.BPELExportable(false)]
+module INTSTDK002.STIP.Orchestrations
+{
+    internal porttype ReceiveGzTriggerType
+    {
+        oneway RequestGzTrigger
+        {
+            Triggers.GetZones
+        };
+    };
+    internal porttype RequestGzDataType
+    {
+        requestresponse SendRequestGzData
+        {
+            Triggers.GetZones, INTSTDK002.PubTrans.Schemas.TopologyDataService.GetZonesResponse, Fault = BTS.soap_envelope_1__1.Fault
+        };
+    };
+    internal porttype EmptyGzTablesType
+    {
+        requestresponse SendEmptyGzTables
+        {
+            INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetZonesProcess_EmptyTables, INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetZonesProcess_EmptyTablesResponse
+        };
+    };
+    internal porttype InsertGzDataType
+    {
+        requestresponse SendInsertGzData
+        {
+            INTSTDK002.PubTrans.Schemas.TopologyDataService.GetZonesResponse, INTSTDK002.CRM.Schemas.CompositeOperation_GetContractorsWithOperatedLinesProcess.RequestResponse
+        };
+    };
+    [Microsoft.XLANGs.BaseTypes.BPELExportable(false)]
+    internal service GetZonesProcess
+    {
+        [Microsoft.XLANGs.BaseTypes.LogicalBinding()]
+        port implements ReceiveGzTriggerType ReceiveGzTrigger;
+        [Microsoft.XLANGs.BaseTypes.LogicalBinding()]
+        port uses RequestGzDataType RequestGzData;
+        [Microsoft.XLANGs.BaseTypes.LogicalBinding()]
+        port uses EmptyGzTablesType EmptyGzTables;
+        [Microsoft.XLANGs.BaseTypes.LogicalBinding()]
+        port uses InsertGzDataType InsertGzData;
+        message Triggers.GetZones Trigger;
+        message INTSTDK002.PubTrans.Schemas.TopologyDataService.GetZonesResponse GetZonesResponse;
+        message INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetZonesProcess_EmptyTables SP_EmptyTables;
+        message INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetZonesProcess_EmptyTablesResponse SP_EmptyTablesResponse;
+        message INTSTDK002.CRM.Schemas.CompositeOperation_GetContractorsWithOperatedLinesProcess.RequestResponse CompositeOperationResponse;
+        message BTS.soap_envelope_1__1.Fault SoapFault;
+        message FaultException SoapFaultMessage;
+        System.Xml.XmlDocument xmlDoc;
+        body ()
+        {
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("048268b6-1369-47da-b234-d616e5c0bccf")]
+            activate receive (ReceiveGzTrigger.RequestGzTrigger, Trigger);
+            xmlDoc = new System.Xml.XmlDocument();
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("61259e80-4893-4276-a0a6-89ad08be6da6")]
+            System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetZones] Trigger GetZones received");
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("3e30b96c-c663-42ba-89e5-854a2dd3da75")]
+            scope
+            {
+                body
+                {
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("08092e22-5da8-477d-97dd-f28e3dc1f130")]
+                    send (RequestGzData.SendRequestGzData, Trigger);
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("479ceb2e-ea2c-4b01-8510-7029f57993bf")]
+                    System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetZones] PubTrans requested data");
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("ea9ca1ce-0100-4122-8e7d-004d962f823a")]
+                    receive (RequestGzData.SendRequestGzData, GetZonesResponse);
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("43142390-f22f-4c47-a786-87b00d25570b")]
+                    System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetZones] PubTrans data response received");
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("b92777f0-bd6b-4cce-b8e2-fc6c3f913657")]
+                    scope
+                    {
+                        body
+                        {
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("d708fe96-024d-48c7-ad3d-6fc4709bb8cc")]
+                            construct SP_EmptyTables
+                            {
+                                [Microsoft.XLANGs.BaseTypes.DesignerPosition("87844525-85a8-4c30-a2b7-e6ca8b19f3f4")]
+                                xmlDoc.LoadXml("<ns0:SP_INTSTDK002_GetZonesProcess_EmptyTables xmlns:ns0=\"http://schemas.microsoft.com/Sql/2008/05/Procedures/dbo\" /> ");
+                                SP_EmptyTables = xmlDoc;
+                            }
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("07afb3e2-55d5-4880-ac5b-d4587dd49d0f")]
+                            send (EmptyGzTables.SendEmptyGzTables, SP_EmptyTables);
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("9634db72-cd28-4559-aad9-743544e8d0ce")]
+                            System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetZones] CRM empty tables request");
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("44ac4168-a77d-4723-b4d8-c91c396e99c1")]
+                            receive (EmptyGzTables.SendEmptyGzTables, SP_EmptyTablesResponse);
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("4ef1ed66-87a8-415a-87be-522576df8828")]
+                            System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetZones] CRM empty tables response");
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("ed835d45-01a6-4a4f-913d-901147a27556")]
+                            scope
+                            {
+                                body
+                                {
+                                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("01fcb955-6da5-4821-b98c-b0ca376ef00e")]
+                                    send (InsertGzData.SendInsertGzData, GetZonesResponse);
+                                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("1443a99a-6634-4432-b799-4efd88f479f3")]
+                                    System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetZones] CRM data sent");
+                                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("f91b2c29-ccd3-47eb-a540-1449a524cab5")]
+                                    receive (InsertGzData.SendInsertGzData, CompositeOperationResponse);
+                                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("eac14f87-ef35-4440-b500-acb8ed5da8d3")]
+                                    System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetZones] CRM data response received");
+                                }
+                                exceptions
+                                {
+                                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("d53183b8-fa02-4070-8407-17565479eb12")]
+                                    catch (System.Exception ex)
+                                    {
+                                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("8fd46f7e-6550-4157-9f13-eca8acf9afc1")]
+                                        System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetZones] CRM PubTrans_Staging exception while inserting data: " + ex.Message);
+                                        System.Diagnostics.EventLog.WriteEntry("XLANG/s", "[INTSTDK002.PubTransBatch.GetZones] CRM PubTrans_Staging exception while inserting data: " + ex.Message, System.Diagnostics.EventLogEntryType.Error);
+                                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("3a51fa6a-a551-42c0-80c4-b0bc66837bed")]
+                                        suspend "[INTSTDK002.PubTransBatch.GetZones] CRM PubTrans_Staging exception while inserting data, restart integration; " + ex.Message;
+                                    }
+                                }
+                            }
+                        }
+                        exceptions
+                        {
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("e39cc842-10e4-4b84-9487-737e7d0cbd00")]
+                            catch (System.Exception ex)
+                            {
+                                [Microsoft.XLANGs.BaseTypes.DesignerPosition("95bafbcb-3e8b-46b9-a5a2-c65159c9600e")]
+                                System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetZones] CRM PubTrans_Staging exception while deleting table data: " + ex.Message);
+                                System.Diagnostics.EventLog.WriteEntry("XLANG/s", "[INTSTDK002.PubTransBatch.GetZones] CRM PubTrans_Staging exception while deleting table data: " + ex.Message, System.Diagnostics.EventLogEntryType.Error);
+                                [Microsoft.XLANGs.BaseTypes.DesignerPosition("1ba33277-fcdb-4a48-a463-3fedbe2dd784")]
+                                suspend "[INTSTDK002.PubTransBatch.GetZones] CRM PubTrans_Staging exception while deleting table data, restart integration; " + ex.Message;
+                            }
+                        }
+                    }
+                }
+                exceptions
+                {
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("e5b2b6c6-2a39-4648-b36c-eab6b3d8b34c")]
+                    catch (RequestGzData.SendRequestGzData.Fault sfex)
+                    {
+                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("13b18944-4246-45ef-8fc9-d57064ed69df")]
+                        construct SoapFault, SoapFaultMessage
+                        {
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("d44c9f1e-bcd7-4690-83e7-1d3719d0b6ad")]
+                            SoapFault = sfex;
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("0e78a3dd-57ec-4b98-b06f-6c5eba9874a5")]
+                            transform (SoapFaultMessage) = INTSTDK002.STIP.Orchestrations.X_SoapFault_To_SoapFaultMessage (SoapFault);
+                        }
+                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("4c792aac-9032-4600-a978-a0ffebedc9e4")]
+                        System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetZones] PubTrans SOAP fault: " + SoapFaultMessage.Message);
+                        System.Diagnostics.EventLog.WriteEntry("XLANG/s", "[INTSTDK002.PubTransBatch.GetZones] PubTrans SOAP fault " + SoapFaultMessage.Message, System.Diagnostics.EventLogEntryType.Error);
+                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("3179d0f0-7503-473f-8300-ee2cea9cfe72")]
+                        suspend "[INTSTDK002.PubTransBatch.GetZones] PubTrans SOAP fault, restart integration; " + SoapFaultMessage.Message;
+                    }
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("3f8185ae-5c97-4ce5-8347-e4d58530e037")]
+                    catch (System.Web.Services.Protocols.SoapException soapEx)
+                    {
+                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("b91909ad-e7e4-42df-9ad8-c889dbfd4816")]
+                        System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetZones] PubTrans SOAP exception: " + soapEx.Message);
+                        System.Diagnostics.EventLog.WriteEntry("XLANG/s", "[INTSTDK002.PubTransBatch.GetZones] PubTrans SOAP exception: " + soapEx.Message, System.Diagnostics.EventLogEntryType.Error);
+                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("a9d9918d-a28c-4d81-a494-22c6cda8a3c7")]
+                        suspend "[INTSTDK002.PubTransBatch.GetZones] PubTrans SOAP exception, restart integration; " + soapEx.Message;
+                    }
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("96fee922-1124-4aea-a0f9-dcbfc2fa8158")]
+                    catch (System.Exception ex)
+                    {
+                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("605ccd8b-81f3-49f5-95ee-fd1c103ea37d")]
+                        System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetZones] PubTrans exception: " + ex.Message);
+                        System.Diagnostics.EventLog.WriteEntry("XLANG/s", "[INTSTDK002.PubTransBatch.GetZones] PubTrans exception: " + ex.Message, System.Diagnostics.EventLogEntryType.Error);
+                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("3d29b5c6-5be4-430d-9bb6-dec3a3b11efb")]
+                        suspend "[INTSTDK002.PubTransBatch.GetZones] PubTrans exception, restart integration; " + ex.Message;
+                    }
+                }
+            }
+        }
+    }
+}
+

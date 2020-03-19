@@ -1,0 +1,27 @@
+﻿<ns0:GetDirectJourneysBetweenStopsResponse xmlns:ns0="http://INTSTDK001.CRM.Schemas.GetDirectJourneysBetweenStopsResponse.20140710">
+  <DirectJourneysBetweenStops>
+    <DatedVehicleJourneyId>1120501741524065</DatedVehicleJourneyId>
+    <ServiceJourneyGid>9015012080301101</ServiceJourneyGid>
+    <OperatingDayDate>2013-12-13T00:00:00+01:00</OperatingDayDate>
+    <ContractorGid>9013012002400000</ContractorGid>
+    <LineDesignation>803</LineDesignation>
+    <JourneyNumber>1101</JourneyNumber>
+    <DirectionOfLineDescription>Helsingör</DirectionOfLineDescription>
+    <PrimaryDestinationName>København H</PrimaryDestinationName>
+    <PrimaryDestinationShortName>9016</PrimaryDestinationShortName>
+    <DepartureId>1120000098584304</DepartureId>
+    <DepartureStopPointGid>9025012000705149</DepartureStopPointGid>
+    <DepartureType>2</DepartureType>
+    <DepartureSequenceNumber>7</DepartureSequenceNumber>
+    <PlannedDepartureDateTime>2013-12-13T18:33:00+01:00</PlannedDepartureDateTime>
+    <ArrivalId>1120000098584314</ArrivalId>
+    <ArrivalStopPointGid>9025012004500642</ArrivalStopPointGid>
+    <ArrivalType>2</ArrivalType>
+    <ArrivalSequenceNumber>17</ArrivalSequenceNumber>
+    <PlannedArrivalDateTime>2013-12-13T20:34:00+01:00</PlannedArrivalDateTime>
+    <ExpectedToBeMonitored>0</ExpectedToBeMonitored>
+    <TargetDepartureStopPointGid>9025012000705149</TargetDepartureStopPointGid>
+    <TargetDepartureDateTime>2013-12-13T18:33:00+01:00</TargetDepartureDateTime>
+    <ArrivalStopPointGid1>9025012004500642</ArrivalStopPointGid1>
+  </DirectJourneysBetweenStops>
+</ns0:GetDirectJourneysBetweenStopsResponse>

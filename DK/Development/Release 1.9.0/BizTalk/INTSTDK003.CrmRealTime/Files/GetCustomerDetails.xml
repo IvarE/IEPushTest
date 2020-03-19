@@ -1,0 +1,42 @@
+﻿<GetCustomerDetailsResponse xmlns="http://tempuri.org/">
+      <GetCustomerDetailsResult xmlns:a="http://schemas.datacontract.org/2004/07/CGIXrmEAIConnectorService" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+        <a:Message i:nil="true"/>
+        <a:Status>SUCCESS</a:Status>
+        <a:Customer>
+          <a:AccountFirstName i:nil="true"/>
+          <a:AccountId>eab5f76d-586e-e411-80d3-0050569010ad</a:AccountId>
+          <a:AccountLastName i:nil="true"/>
+          <a:AccountNumber>7757</a:AccountNumber>
+          <a:Addresses>
+            <a:Address>
+              <a:AddressId i:nil="true"/>
+              <a:AddressType>Invoice</a:AddressType>
+              <a:CareOff i:nil="true"/>
+              <a:City i:nil="true"/>
+              <a:CompanyName i:nil="true"/>
+              <a:ContactPerson i:nil="true"/>
+              <a:ContactPhoneNumber i:nil="true"/>
+              <a:Country i:nil="true"/>
+              <a:County i:nil="true"/>
+              <a:CustomerAddressId>00000000-0000-0000-0000-000000000000</a:CustomerAddressId>
+              <a:PostalCode i:nil="true"/>
+              <a:SMSNotificationNumber i:nil="true"/>
+              <a:Street i:nil="true"/>
+            </a:Address>
+          </a:Addresses>
+          <a:AllowAutoLoad>false</a:AllowAutoLoad>
+          <a:CompanyName i:nil="true"/>
+          <a:CustomerType>Private</a:CustomerType>
+          <a:Deleted>false</a:Deleted>
+          <a:Email>helloheyz@starrepublic.com</a:Email>
+          <a:InActive>false</a:InActive>
+          <a:MaxCardsAutoLoad>0</a:MaxCardsAutoLoad>
+          <a:MobilePhone i:nil="true"/>
+          <a:OrganizationCreditApproved>false</a:OrganizationCreditApproved>
+          <a:OrganizationNumber i:nil="true"/>
+          <a:OrganizationSubNumber i:nil="true"/>
+          <a:Phone>031 11 22 33</a:Phone>
+          <a:SocialSecurtiyNumber i:nil="true"/>
+        </a:Customer>
+      </GetCustomerDetailsResult>
+    </GetCustomerDetailsResponse>

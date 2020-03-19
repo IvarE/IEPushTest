@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Orders>
+  <Order>
+    <OrderNo>PO4000116</OrderNo>
+    <OrderTime>2015-02-09 12:15:45</OrderTime>
+    <ShippingAdress>
+      <Name>Marcus hoffman</Name>
+      <ContactPerson>Marcus Hoffmann</ContactPerson>
+      <CallPhone>0768-670204</CallPhone>
+      <EMail>marcus@starrepublic.com</EMail>
+      <Adress1>Ligustervägen 41</Adress1>
+      <Adress2/>
+      <PostalCode>43448</PostalCode>
+      <City>Kungsbacka</City>
+      <CountryCode>SE</CountryCode>
+    </ShippingAdress>
+    <ShippingAddress>
+      <Name>Star Republic Holding AB</Name>
+      <ContactPerson>Marcus hoffmann</ContactPerson>
+      <CellPhone>0768-670204</CellPhone>
+      <EMail />
+      <Address1>Otterhällegatan 1</Address1>
+      <Address2 />
+      <PostalCode>41118</PostalCode>
+      <City>GÖTEBORG</City>
+      <CountryCode>SE </CountryCode>
+    </ShippingAddress>
+    <Products>
+      <Product>
+        <Reference>Marcus Hoffmann</Reference>
+        <ProductCode>3161</ProductCode>
+        <Serial>3341373226</Serial>
+        <NameOnCard>d9c185e0-4420-47f9-900c-8a2bc10bdbb5</NameOnCard>
+      </Product>
+      <Product>
+        <Reference>Marcus Hoffmann</Reference>
+        <ProductCode>3161</ProductCode>
+        <Serial>3324946394</Serial>
+        <NameOnCard>8c69093a-19de-4828-8a7c-9fa37257ce25</NameOnCard>
+      </Product>
+    </Products>
+  </Order>
+</Orders>
+

@@ -1,0 +1,13 @@
+﻿   <GetCustomerIdForTravelCardResponse xmlns="http://tempuri.org/">
+         <GetCustomerIdForTravelCardResult xmlns:a="http://schemas.datacontract.org/2004/07/CGIXrmEAIConnectorService" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+            <a:Message i:nil="true"/>
+            <a:Status>SUCCESS</a:Status>
+            <a:Details>
+               <a:Detail>
+                  <a:CustomerId>00000000-0000-0000-0000-000000000000</a:CustomerId>
+                  <a:CustomerType>Private</a:CustomerType>
+                  <a:TravelCardNumber>223456787</a:TravelCardNumber>
+               </a:Detail>
+            </a:Details>
+         </GetCustomerIdForTravelCardResult>
+      </GetCustomerIdForTravelCardResponse>

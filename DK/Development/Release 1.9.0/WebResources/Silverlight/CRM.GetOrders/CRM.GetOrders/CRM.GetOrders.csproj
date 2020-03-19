@@ -1,0 +1,285 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1B06B3FB-AF55-4748-8E14-081B3885FF31}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CRM.GetOrders</RootNamespace>
+    <AssemblyName>CRM.GetOrders</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>true</SilverlightApplication>
+    <SupportedCultures>
+    </SupportedCultures>
+    <XapOutputs>true</XapOutputs>
+    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
+    <XapFilename>CRM.GetOrders.xap</XapFilename>
+    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
+    <SilverlightAppEntry>CRM.GetOrders.App</SilverlightAppEntry>
+    <TestPageFileName>CRM.GetOrdersTestPage.html</TestPageFileName>
+    <CreateTestPage>true</CreateTestPage>
+    <ValidateXaml>true</ValidateXaml>
+    <EnableOutOfBrowser>false</EnableOutOfBrowser>
+    <OutOfBrowserSettingsFile>Properties\OutOfBrowserSettings.xml</OutOfBrowserSettingsFile>
+    <UsePlatformExtensions>false</UsePlatformExtensions>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <LinkedServerProject>
+    </LinkedServerProject>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <!-- This property group is only here to support building this project using the 
+       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
+       to set the TargetFrameworkVersion to v3.5 -->
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Development|AnyCPU'">
+    <OutputPath>bin\Development\</OutputPath>
+    <NoConfig>true</NoConfig>
+    <NoStdLib>true</NoStdLib>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <OutputPath>bin\Test\</OutputPath>
+    <NoConfig>true</NoConfig>
+    <NoStdLib>true</NoStdLib>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Acceptance|AnyCPU'">
+    <OutputPath>bin\Acceptance\</OutputPath>
+    <NoConfig>true</NoConfig>
+    <NoStdLib>true</NoStdLib>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Production|AnyCPU'">
+    <OutputPath>bin\Production\</OutputPath>
+    <NoConfig>true</NoConfig>
+    <NoStdLib>true</NoStdLib>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CGI.CrmManager, Version=5.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Library\Logica\Silverlight\CrmManager\V 5.2.0\CGI.CrmManager.dll</HintPath>
+    </Reference>
+    <Reference Include="CGICRM2013Controls">
+      <HintPath>..\..\..\..\..\..\Library\Logica\Silverlight\CRM2013Controls\Version 0.0.5\CGICRM2013Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Logica.Xrm.Controls.DataGrid">
+      <HintPath>..\..\..\..\..\..\Library\Logica\Silverlight\Crm SilverlightUtilities\Ver 1.0.0.0\Logica.Xrm.Controls.DataGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Controls, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.Data, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.Data.Input, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.Navigation, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Toolkit, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\..\Library\Logica\Silverlight\Toolkit\Bin\System.Windows.Controls.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Toolkit.Internals, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\..\Library\Logica\Silverlight\Toolkit\Bin\System.Windows.Controls.Toolkit.Internals.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Data, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Windows.Browser" />
+    <Reference Include="System.Xml.Serialization, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\DataGridDoubleClickBehavior.cs" />
+    <Compile Include="Classes\DoubleClickDataGrid.cs" />
+    <Compile Include="Classes\MouseClickManager.cs" />
+    <Compile Include="Classes\NumericTextBox.cs" />
+    <Compile Include="Classes\OrderHeader_ViewObject.cs" />
+    <Compile Include="Classes\OrderRow_ViewObject.cs" />
+    <Compile Include="Classes\Payment_ViewObject.cs" />
+    <Compile Include="Classes\SavedOrderRow_ViewObject.cs" />
+    <Compile Include="Classes\sequrityroles.cs" />
+    <Compile Include="Classes\setting.cs" />
+    <Compile Include="Classes\ShippingAddress_ViewObject.cs" />
+    <Compile Include="Classes\Utilities.cs" />
+    <Compile Include="Classes\Language.cs" />
+    <Compile Include="Classes\CustomerOrder.cs" />
+    <Compile Include="Service References\GetOrdersServiceReference\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\MainPageViewModel.cs" />
+    <Compile Include="Views\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\OrderRowPage.xaml.cs">
+      <DependentUpon>OrderRowPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ShipmentAddressPage.xaml.cs">
+      <DependentUpon>ShipmentAddressPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrderRowPaymentPage.xaml.cs">
+      <DependentUpon>OrderRowPaymentPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OrderRowPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ShipmentAddressPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\OrderRowPaymentPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\GetOrdersServiceReference\CRM.GetOrders.GetOrdersServiceReference.GetCreditOrderResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GetOrdersServiceReference\CRM.GetOrders.GetOrdersServiceReference.GetOrderResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GetOrdersServiceReference\configuration91.svcinfo" />
+    <None Include="Service References\GetOrdersServiceReference\configuration.svcinfo" />
+    <None Include="Service References\GetOrdersServiceReference\CRM.GetOrders.GetOrdersServiceReference.SavedCreditOrderRowsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GetOrdersServiceReference\GetOrdersService1.wsdl" />
+    <None Include="Service References\GetOrdersServiceReference\GetOrdersService3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GetOrdersServiceReference\GetOrdersService4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GetOrdersServiceReference\GetOrdersService5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GetOrdersServiceReference\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Resource Include="Images\search_normal.png" />
+    <None Include="Service References\GetOrdersServiceReference\GetOrdersService1.disco" />
+    <Content Include="ServiceReferences.ClientConfig">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\AppManifest.xml" />
+    <Content Include="ServiceReferences.Debug.ClientConfig">
+      <DependentUpon>ServiceReferences.ClientConfig</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="ServiceReferences.Release.ClientConfig">
+      <DependentUpon>ServiceReferences.ClientConfig</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="ServiceReferences.Test.ClientConfig">
+      <DependentUpon>ServiceReferences.ClientConfig</DependentUpon>
+    </Content>
+    <Content Include="ServiceReferences.Development.ClientConfig">
+      <DependentUpon>ServiceReferences.ClientConfig</DependentUpon>
+    </Content>
+    <Content Include="ServiceReferences.Production.ClientConfig">
+      <DependentUpon>ServiceReferences.ClientConfig</DependentUpon>
+    </Content>
+    <Content Include="ServiceReferences.Acceptance.ClientConfig">
+      <DependentUpon>ServiceReferences.ClientConfig</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\buttonnormalgradient.png" />
+    <Resource Include="Images\buttonselectedgradient.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\gridcolumngradienthover_white.png" />
+    <Resource Include="Images\gridcolumngradient_white.png" />
+    <Resource Include="Images\gridcolumnverticalline_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\GetOrdersServiceReference\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  Other similar extension points exist, see Microsoft.Common.targets.   -->
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Web\Microsoft.Web.Publishing.Tasks.dll" />
+  <Target Name="AfterCompile" Condition="exists('ServiceReferences.$(Configuration).ClientConfig')">
+    <!-- Generate transformed ServiceReferences config in the intermediate directory -->
+    <TransformXml Source="ServiceReferences.ClientConfig" Destination="$(IntermediateOutputPath)$(TargetFileName).ClientConfig" Transform="ServiceReferences.$(Configuration).ClientConfig" />
+    <!-- Force build process to use the transformed configuration file from now on. -->
+    <ItemGroup>
+      <ServiceReferencesConfigWithTargetPath Remove="ServiceReferences.ClientConfig" />
+      <ServiceReferencesConfigWithTargetPath Include="$(IntermediateOutputPath)$(TargetFileName).ClientConfig">
+        <TargetPath>$(TargetFileName).ClientConfig</TargetPath>
+      </ServiceReferencesConfigWithTargetPath>
+    </ItemGroup>
+  </Target>
+</Project>

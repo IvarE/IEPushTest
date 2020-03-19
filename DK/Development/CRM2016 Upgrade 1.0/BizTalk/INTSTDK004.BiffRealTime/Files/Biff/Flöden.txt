@@ -1,0 +1,9 @@
+Jojokort status - GetCarDetails2 - Klar
+Spärra Jojokort BIFF - RequestCardBlock - Klar
+Status på laddning BIFF - GetAutoloadActivityReport - Klar
+Ladda Jojokort - RequestPurseDirectedAutload - Klar
+Begär periodprenumeration - RequestPeriodThresholdAutoload - pågår (OM och MG)
+HämtningOchBetalning - GetAutoloadThresholdActivities - Klar
+Spärra period - RequestProductBlock - Klar
+Avbeställa autoladda - RequestPeriodThresholdAutoload
+

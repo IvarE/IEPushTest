@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Body>
+    <ReportItems>
+      <Tablix Name="list1">
+        <TablixBody>
+          <TablixColumns>
+            <TablixColumn>
+              <Width>7.3125in</Width>
+            </TablixColumn>
+          </TablixColumns>
+          <TablixRows>
+            <TablixRow>
+              <Height>2.9375in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Rectangle Name="list1_Contents">
+                      <ReportItems>
+                        <Textbox Name="txtFilterSummary">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Filter Summary</Value>
+                                  <Style>
+                                    <FontFamily>tahoma</FontFamily>
+                                    <FontSize>12pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Top>0.1875in</Top>
+                          <Left>2.90625in</Left>
+                          <Height>0.25in</Height>
+                          <Width>1.34375in</Width>
+                          <Visibility>
+                            <Hidden>true</Hidden>
+                          </Visibility>
+                          <Style>
+                            <BackgroundColor>Orange</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <Textbox Name="txtFilterSummaryValue">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Parameters!CRM_FilterText.Value</Value>
+                                  <Style>
+                                    <FontFamily>tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Color>#313336</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Top>0.3125in</Top>
+                          <Height>0.25in</Height>
+                          <Width>1.8125in</Width>
+                          <ZIndex>1</ZIndex>
+                          <Visibility>
+                            <Hidden>true</Hidden>
+                            <ToggleItem>txtFilterSummary</ToggleItem>
+                          </Visibility>
+                          <Style>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <Subreport Name="subreport1">
+                          <ReportName>Account Overview Sub-Report</ReportName>
+                          <Parameters>
+                            <Parameter Name="CRM_CustomerID">
+                              <Value>=Fields!AccountID.Value</Value>
+                            </Parameter>
+                            <Parameter Name="CRM_URL">
+                              <Value>= Parameters!CRM_URL.Value</Value>
+                            </Parameter>
+                            <Parameter Name="CRM_FilterText">
+                              <Value>= Parameters!CRM_FilterText.Value</Value>
+                            </Parameter>
+                            <Parameter Name="CRM_IncludeSub">
+                              <Value>= Parameters!SubEntities.Value</Value>
+                            </Parameter>
+                            <Parameter Name="CRM_FullName">
+                              <Value>=Parameters!CRM_FullName.Value</Value>
+                            </Parameter>
+                            <Parameter Name="CRM_UserTimeZoneName">
+                              <Value>=Parameters!CRM_UserTimeZoneName.Value</Value>
+                            </Parameter>
+                          </Parameters>
+                          <KeepTogether>true</KeepTogether>
+                          <Left>0.02083in</Left>
+                          <Height>2.9375in</Height>
+                          <Width>7.29167in</Width>
+                          <ZIndex>2</ZIndex>
+                          <Style />
+                        </Subreport>
+                      </ReportItems>
+                      <KeepTogether>true</KeepTogether>
+                      <Style />
+                    </Rectangle>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+          </TablixRows>
+        </TablixBody>
+        <TablixColumnHierarchy>
+          <TablixMembers>
+            <TablixMember />
+          </TablixMembers>
+        </TablixColumnHierarchy>
+        <TablixRowHierarchy>
+          <TablixMembers>
+            <TablixMember>
+              <Group Name="list1_Details_Group">
+                <GroupExpressions>
+                  <GroupExpression>=Fields!AccountID.Value.ToString()</GroupExpression>
+                </GroupExpressions>
+                <PageBreak>
+                  <BreakLocation>Between</BreakLocation>
+                </PageBreak>
+              </Group>
+              <DataElementOutput>Output</DataElementOutput>
+              <KeepTogether>true</KeepTogether>
+            </TablixMember>
+          </TablixMembers>
+        </TablixRowHierarchy>
+        <DataSetName>dsAccountBase</DataSetName>
+        <PageBreak>
+          <BreakLocation>End</BreakLocation>
+        </PageBreak>
+        <Top>0.09375in</Top>
+        <Left>0.04167in</Left>
+        <Height>2.9375in</Height>
+        <Width>7.3125in</Width>
+        <Style />
+      </Tablix>
+    </ReportItems>
+    <Height>3.03125in</Height>
+    <Style />
+  </Body>
+  <Width>8.05in</Width>
+  <Page>
+    <PageFooter>
+      <Height>0.28125in</Height>
+      <PrintOnFirstPage>true</PrintOnFirstPage>
+      <PrintOnLastPage>true</PrintOnLastPage>
+      <ReportItems>
+        <Textbox Name="txtNotes">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Note: The maximum number of accounts in this report cannot exceed 10.</Value>
+                  <Style>
+                    <FontFamily>tahoma</FontFamily>
+                    <FontSize>8pt</FontSize>
+                    <Color>White</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <Left>0.1875in</Left>
+          <Height>0.1875in</Height>
+          <Width>7.28125in</Width>
+          <Visibility>
+            <Hidden>=IIF( Globals!PageNumber = 1, false,true)</Hidden>
+          </Visibility>
+          <DataElementOutput>NoOutput</DataElementOutput>
+          <Style>
+            <BackgroundColor>Black</BackgroundColor>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+      </ReportItems>
+      <Style />
+    </PageFooter>
+    <PageWidth>8.25in</PageWidth>
+    <InteractiveWidth>8.5in</InteractiveWidth>
+    <LeftMargin>0.1in</LeftMargin>
+    <RightMargin>0.1in</RightMargin>
+    <TopMargin>0.1in</TopMargin>
+    <BottomMargin>0.1in</BottomMargin>
+    <Style />
+  </Page>
+  <Author> MSFT</Author>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="CRM">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString>data source=localhost;initial catalog=Adventure_Works_Cycle_MSCRM</ConnectString>
+        <IntegratedSecurity>true</IntegratedSecurity>
+      </ConnectionProperties>
+      <rd:SecurityType>Integrated</rd:SecurityType>
+      <rd:DataSourceID>bd1301de-68ad-4451-8159-73edf1a55fea</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="UserInfo">
+      <Query>
+        <DataSourceName>CRM</DataSourceName>
+        <CommandText>select fullname from FilteredSystemUser where systemuserid = dbo.fn_FindUserGuid()</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="fullname">
+          <DataField>fullname</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="DSNumandCurrency">
+      <Query>
+        <DataSourceName>CRM</DataSourceName>
+        <CommandText>select * from dbo.fn_GetFormatStrings()</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="DateFormat">
+          <DataField>DateFormat</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TimeFormat">
+          <DataField>TimeFormat</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="NumberLanguageCode">
+          <DataField>NumberLanguageCode</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="NumberFormat_0_Precision">
+          <DataField>NumberFormat_0_Precision</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="NumberFormat_1_Precision">
+          <DataField>NumberFormat_1_Precision</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="NumberFormat_2_Precision">
+          <DataField>NumberFormat_2_Precision</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="NumberFormat_3_Precision">
+          <DataField>NumberFormat_3_Precision</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="NumberFormat_4_Precision">
+          <DataField>NumberFormat_4_Precision</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="NumberFormat_5_Precision">
+          <DataField>NumberFormat_5_Precision</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CurrencyFormat_0_Precision">
+          <DataField>CurrencyFormat_0_Precision</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CurrencyFormat_1_Precision">
+          <DataField>CurrencyFormat_1_Precision</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CurrencyFormat_2_Precision">
+          <DataField>CurrencyFormat_2_Precision</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CurrencyFormat_3_Precision">
+          <DataField>CurrencyFormat_3_Precision</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CurrencyFormat_4_Precision">
+          <DataField>CurrencyFormat_4_Precision</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CurrencyFormat_5_Precision">
+          <DataField>CurrencyFormat_5_Precision</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="dsAccountBase">
+      <Query>
+        <DataSourceName>CRM</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@CRM_FilteredAccount">
+            <Value>=Parameters!CRM_FilteredAccount.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>declare @sql as nVarchar(max)
+
+set @sql = '
+SELECT top 10 CAST(accountid as nvarchar(100)) as AccountID, 
+	name
+FROM (' + @CRM_FilteredAccount + ') as fa'
+
+exec(@sql)</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="AccountID">
+          <DataField>AccountID</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="name">
+          <DataField>name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="CRM_FilterText">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+        </Values>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>CRM_FilterText</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="CRM_FormatDate">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>DSNumandCurrency</DataSetName>
+          <ValueField>DateFormat</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>CRM_FormatDate</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="CRM_FormatTime">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>DSNumandCurrency</DataSetName>
+          <ValueField>TimeFormat</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>CRM_FormatTime</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="CRM_FullName">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>UserInfo</DataSetName>
+          <ValueField>fullname</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>CRM_FullName</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="CRM_URL">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+        </Values>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>CRM_URL</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="CRM_AccountID">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+        </Values>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>CRM_AccountID</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="CRM_FilteredAccount">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>select  [account0].*  from  FilteredAccount as "account0" join (select top 1 dbo.fn_BeginOfLastXDay(GetUTCDate(), 30) as modifiedon1,GetUTCDate() as modifiedon2 order by modifiedon1,modifiedon2) as modifiedondtc on 1=1  where  ( account0.modifiedonutc &gt;= modifiedondtc.modifiedon1 and account0.modifiedonutc &lt;= modifiedondtc.modifiedon2 )</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>CRM_FilteredAccount</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="SubEntities">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=False</Value>
+        </Values>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Sub-Accounts</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>True</Value>
+            <Label>Include</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>False</Value>
+            <Label>Exclude</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="CRM_NumberLanguageCode">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>DSNumandCurrency</DataSetName>
+          <ValueField>NumberLanguageCode</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>CRM_NumberLanguageCode</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="CRM_UserTimeZoneName">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>W. Europe Standard Time</Value>
+        </Values>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>CRM_UserTimeZoneName</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+  </ReportParameters>
+  <CustomProperties>
+    <CustomProperty>
+      <Name>Custom</Name>
+      <Value>&lt;MSCRM xmlns="mscrm"&gt;&amp;lt;ReportFilter&amp;gt;&amp;lt;ReportEntity paramname="CRM_FilteredAccount"&amp;gt;&amp;lt;fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false"&amp;gt;&amp;lt;entity name="account"&amp;gt;&amp;lt;all-attributes /&amp;gt;&amp;lt;filter type="and"&amp;gt;&amp;lt;condition attribute="modifiedon" operator="last-x-days" value="30" /&amp;gt;&amp;lt;/filter&amp;gt;&amp;lt;/entity&amp;gt;&amp;lt;/fetch&amp;gt;&amp;lt;/ReportEntity&amp;gt;&amp;lt;/ReportFilter&amp;gt;&lt;/MSCRM&gt;</Value>
+    </CustomProperty>
+  </CustomProperties>
+  <Language>=Parameters!CRM_NumberLanguageCode.Value</Language>
+  <CodeModules>
+    <CodeModule>Microsoft.Crm.Reporting.RdlHelper, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</CodeModule>
+  </CodeModules>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>175a60d8-7f95-49ba-b4f6-a498c1c36244</rd:ReportID>
+</Report>

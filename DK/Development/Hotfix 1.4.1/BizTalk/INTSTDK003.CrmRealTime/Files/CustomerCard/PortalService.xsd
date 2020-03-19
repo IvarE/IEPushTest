@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tempuri.org/">
+  <xs:import schemaLocation="PortalService_1.xsd" namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+  <xs:import schemaLocation="PortalService_1_2.xsd" namespace="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models"/>
+  <xs:import schemaLocation="PortalService_1_2_3.xsd" namespace="http://schemas.datacontract.org/2004/07/CGICRMPortalService"/>
+  <xs:element name="CheckCustomerExist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="customerEmail" nillable="true" type="xs:string"/>
+        <xs:element minOccurs="0" name="callerId" type="q1:guid" xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CheckCustomerExistResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="CheckCustomerExistResult" nillable="true" type="q2:CheckCustomerExistResponse" xmlns:q2="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CreateCustomer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="customer" nillable="true" type="q3:Customer" xmlns:q3="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models"/>
+        <xs:element minOccurs="0" name="callerId" type="q4:guid" xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CreateCustomerResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="CreateCustomerResult" nillable="true" type="q5:CreateCustomerResponse" xmlns:q5="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCustomer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="customerId" type="q6:guid" xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/"/>
+        <xs:element minOccurs="0" name="accountType" type="q7:AccountCategoryCode" xmlns:q7="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models"/>
+        <xs:element minOccurs="0" name="callerId" type="q8:guid" xmlns:q8="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCustomerResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetCustomerResult" nillable="true" type="q9:GetCustomerResponse" xmlns:q9="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateCustomer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="customerId" type="q10:guid" xmlns:q10="http://schemas.microsoft.com/2003/10/Serialization/"/>
+        <xs:element minOccurs="0" name="customer" nillable="true" type="q11:Customer" xmlns:q11="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models"/>
+        <xs:element minOccurs="0" name="callerId" type="q12:guid" xmlns:q12="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateCustomerResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="UpdateCustomerResult" nillable="true" type="q13:UpdateCustomerResponse" xmlns:q13="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RegisterTravelCard">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="travelCard" nillable="true" type="q14:TravelCard" xmlns:q14="http://schemas.datacontract.org/2004/07/CGICRMPortalService"/>
+        <xs:element minOccurs="0" name="callerId" type="q15:guid" xmlns:q15="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RegisterTravelCardResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RegisterTravelCardResult" nillable="true" type="q16:RegisterTravelCardResponse" xmlns:q16="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateTravelCard">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="travelCard" nillable="true" type="q17:TravelCard" xmlns:q17="http://schemas.datacontract.org/2004/07/CGICRMPortalService"/>
+        <xs:element minOccurs="0" name="callerId" type="q18:guid" xmlns:q18="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateTravelCardResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="UpdateTravelCardResult" nillable="true" type="q19:UpdateTravelCardResponse" xmlns:q19="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCardsForCustomer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="customerId" type="q20:guid" xmlns:q20="http://schemas.microsoft.com/2003/10/Serialization/"/>
+        <xs:element minOccurs="0" name="customerType" type="q21:AccountCategoryCode" xmlns:q21="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models"/>
+        <xs:element minOccurs="0" name="callerId" type="q22:guid" xmlns:q22="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCardsForCustomerResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetCardsForCustomerResult" nillable="true" type="q23:GetCardsForCustomerResponse" xmlns:q23="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UnregisterTravelCard">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="customerId" type="q24:guid" xmlns:q24="http://schemas.microsoft.com/2003/10/Serialization/"/>
+        <xs:element minOccurs="0" name="customerType" type="q25:AccountCategoryCode" xmlns:q25="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models"/>
+        <xs:element minOccurs="0" name="travelCardNumber" nillable="true" type="xs:string"/>
+        <xs:element minOccurs="0" name="callerId" type="q26:guid" xmlns:q26="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UnregisterTravelCardResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="UnregisterTravelCardResult" nillable="true" type="q27:UnRegisterTravelCardResponse" xmlns:q27="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

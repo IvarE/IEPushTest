@@ -1,0 +1,27 @@
+<?xml version="1.0" standalone="yes"?>
+<xs:schema targetNamespace="http://schemas.datacontract.org/2004/07/CGICRMPortalService" xmlns:mstns="http://schemas.xmlsoap.org/soap/envelope/" xmlns="http://schemas.datacontract.org/2004/07/CGICRMPortalService" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified" xmlns:app1="http://schemas.datacontract.org/2004/07/CGICRMPortalService" xmlns:app2="http://tempuri.org/">
+  <xs:import namespace="http://schemas.xmlsoap.org/soap/envelope/" schemaLocation="CardRequest.xsd" />
+  <xs:import namespace="http://tempuri.org/" schemaLocation="CardRequest_app2.xsd" />
+  <xs:element name="AccountId" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="AutoloadConnectionDate" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="AutoloadDisconnectionDate" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="AutoloadStatus" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="Blocked" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="CardCategory" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="CardName" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="CardNumber" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="CreditCardMask" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="Currency" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="CustomerType" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="FailedAttemptsToChargeMoney" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="LatestAutoloadAmount" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="LatestChargeDate" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="LatestFailedAttempt" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="PeriodCardTypeId" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="PeriodCardTypeTitle" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="PeriodValidFrom" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="PeriodValidTo" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="ValueCardTypeId" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="ValueCardTypeTitle" msdata:Prefix="cgic" type="xs:string" />
+  <xs:element name="VerifyId" msdata:Prefix="cgic" type="xs:string" />
+</xs:schema>

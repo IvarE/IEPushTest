@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Body>
+    <ReportItems>
+      <Tablix Name="Tablix2">
+        <TablixBody>
+          <TablixColumns>
+            <TablixColumn>
+              <Width>15.72917cm</Width>
+            </TablixColumn>
+          </TablixColumns>
+          <TablixRows>
+            <TablixRow>
+              <Height>0.6cm</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Subreport Name="DeletePrintRefundSub">
+                      <ReportName>DeletePrintRefundSub</ReportName>
+                      <Parameters>
+                        <Parameter Name="cgi_refundid">
+                          <Value>=Fields!cgi_refundid.Value</Value>
+                        </Parameter>
+                      </Parameters>
+                      <ZIndex>1</ZIndex>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                      </Style>
+                    </Subreport>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+          </TablixRows>
+        </TablixBody>
+        <TablixColumnHierarchy>
+          <TablixMembers>
+            <TablixMember />
+          </TablixMembers>
+        </TablixColumnHierarchy>
+        <TablixRowHierarchy>
+          <TablixMembers>
+            <TablixMember>
+              <Group Name="cgi_refundid">
+                <GroupExpressions>
+                  <GroupExpression>=Fields!cgi_refundid.Value</GroupExpression>
+                </GroupExpressions>
+              </Group>
+              <SortExpressions>
+                <SortExpression>
+                  <Value>=Fields!cgi_refundid.Value</Value>
+                </SortExpression>
+              </SortExpressions>
+            </TablixMember>
+          </TablixMembers>
+        </TablixRowHierarchy>
+        <DataSetName>DataSet1</DataSetName>
+        <Top>0.17639cm</Top>
+        <Left>0.42016cm</Left>
+        <Height>0.6cm</Height>
+        <Width>15.72917cm</Width>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Tablix>
+    </ReportItems>
+    <Height>0.34955in</Height>
+    <Style />
+  </Body>
+  <Width>6.5in</Width>
+  <Page>
+    <PageHeader>
+      <Height>1.23182cm</Height>
+      <PrintOnFirstPage>true</PrintOnFirstPage>
+      <PrintOnLastPage>true</PrintOnLastPage>
+      <ReportItems>
+        <Textbox Name="Textbox5">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>FÖLJANDE VÄRDEBEVIS KAN NU SKRIVAS UT IGEN:</Value>
+                  <Style>
+                    <FontSize>14pt</FontSize>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style />
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox5</rd:DefaultName>
+          <Left>0.42016cm</Left>
+          <Height>0.99688cm</Height>
+          <Width>15.72917cm</Width>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+      </ReportItems>
+      <Style>
+        <Border>
+          <Style>None</Style>
+        </Border>
+      </Style>
+    </PageHeader>
+    <PageHeight>29.7cm</PageHeight>
+    <PageWidth>21cm</PageWidth>
+    <LeftMargin>2cm</LeftMargin>
+    <RightMargin>2cm</RightMargin>
+    <TopMargin>2cm</TopMargin>
+    <BottomMargin>2cm</BottomMargin>
+    <ColumnSpacing>0.13cm</ColumnSpacing>
+    <Style />
+  </Page>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource1">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString>Data Source=.;Initial Catalog=Skanetrafiken_MSCRM</ConnectString>
+        <IntegratedSecurity>true</IntegratedSecurity>
+      </ConnectionProperties>
+      <rd:SecurityType>Integrated</rd:SecurityType>
+      <rd:DataSourceID>9f910bec-df26-426c-af07-f35e843c2b95</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="DataSet1">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@date_from">
+            <Value>=Parameters!date_from.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@date_tom">
+            <Value>=Parameters!date_tom.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT        Filteredcgi_refund.cgi_refundid
+FROM            Filteredcgi_refund INNER JOIN
+                         Filteredcgi_reimbursementform AS b ON Filteredcgi_refund.cgi_reimbursementformid = b.cgi_reimbursementformid
+WHERE        (b.cgi_print = '1') AND (Filteredcgi_refund.createdon &gt;= @date_from) AND (Filteredcgi_refund.createdon &lt;= @date_tom) AND (Filteredcgi_refund.cgi_refundid IN
+                             (SELECT DISTINCT refundid
+                               FROM            IntegrationDB.dbo.refund_printed))</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="cgi_refundid">
+          <DataField>cgi_refundid</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="date_from">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=Format(Now(), "yyyy-MM-dd")</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>date from</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="date_tom">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=Format(Now(), "yyyy-MM-dd")</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>date tom</Prompt>
+    </ReportParameter>
+  </ReportParameters>
+  <rd:ReportUnitType>Cm</rd:ReportUnitType>
+  <rd:ReportID>b75280d9-1cf9-47c8-bb93-c6d0dfaf4a06</rd:ReportID>
+</Report>

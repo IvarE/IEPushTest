@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{57B14E9A-025B-429B-8744-C06C3683C6C0}</ProjectGuid>
+    <ProjectTypeGuids>{EF7E3281-CD33-11D4-8326-00C04FA0CE8D};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>library</OutputType>
+    <GenericProcessing>true</GenericProcessing>
+    <RootNamespace>INTSTDK004.STIP.Schemas</RootNamespace>
+    <AssemblyName>INTSTDK004.STIP.Schemas</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <BpelCompliance>True</BpelCompliance>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>STDK.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="System.Configuration">
+      <Name>System.Configuration</Name>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.Pipeline">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.DefaultPipelines">
+      <Name>Microsoft.BizTalk.DefaultPipelines</Name>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.GlobalPropertySchemas">
+      <Name>Microsoft.BizTalk.GlobalPropertySchemas</Name>
+    </Reference>
+    <Reference Include="Microsoft.BizTalk.TestTools">
+      <Name>Microsoft.BizTalk.TestTools</Name>
+    </Reference>
+    <Reference Include="Microsoft.XLANGs.BaseTypes">
+      <Name>Microsoft.XLANGs.BaseTypes</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Schema Include="GetCardTransactions.xsd">
+      <TypeName>GetCardTransactions</TypeName>
+      <Namespace>INTSTDK004.STIP.Schemas</Namespace>
+      <SubType>Task</SubType>
+    </Schema>
+    <Schema Include="GetCardTransactionsResponse.xsd">
+      <TypeName>GetCardTransactionsResponseType</TypeName>
+      <Namespace>INTSTDK004.STIP.Schemas</Namespace>
+      <SubType>Task</SubType>
+    </Schema>
+    <Schema Include="CardTransactions.xsd">
+      <TypeName>CardTransactions</TypeName>
+      <Namespace>INTSTDK004.STIP.Schemas</Namespace>
+      <SubType>Task</SubType>
+    </Schema>
+    <Schema Include="RequestProductBlockResp.xsd">
+      <SubType>Task</SubType>
+      <TypeName>Copy_of_RequestProductBlock</TypeName>
+      <Namespace>INTSTDK004.STIP.Schemas</Namespace>
+    </Schema>
+    <None Include="STDK.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <Schema Include="CardDetails2.xsd">
+      <SubType>Task</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>CardDetails2.Designer.cs</LastGenOutput>
+      <TypeName>CardDetails2Type</TypeName>
+      <Namespace>INTSTDK004.STIP.Schemas</Namespace>
+    </Schema>
+    <Schema Include="GetAutoloadActivityReport.xsd">
+      <SubType>Task</SubType>
+      <TypeName>GetAutoloadActivityReportType</TypeName>
+      <Namespace>INTSTDK004.STIP.Schemas</Namespace>
+    </Schema>
+    <Schema Include="GetAutoloadActivityReportResponse.xsd">
+      <SubType>Designer</SubType>
+      <TypeName>GetAutoloadActivityReportResponseType</TypeName>
+      <Namespace>INTSTDK004.STIP.Schemas</Namespace>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GetAutoloadActivityReportResponse.Designer.cs</LastGenOutput>
+    </Schema>
+    <Schema Include="GetAutoloadThresholdActivities.xsd">
+      <SubType>Task</SubType>
+      <TypeName>GetAutoloadThresholdActivitiesType</TypeName>
+      <Namespace>INTSTDK004.STIP.Schemas</Namespace>
+    </Schema>
+    <Schema Include="GetAutoloadThresholdActivitiesResponse.xsd">
+      <SubType>Task</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GetAutoloadThresholdActivitiesResponse.Designer.cs</LastGenOutput>
+      <TypeName>GetAutoloadThresholdActivitiesResponseType</TypeName>
+      <Namespace>INTSTDK004.STIP.Schemas</Namespace>
+    </Schema>
+    <Schema Include="GetCardDetails2.xsd">
+      <SubType>Task</SubType>
+      <TypeName>GetCardDetails2Type</TypeName>
+      <Namespace>INTSTDK004.STIP.Schemas</Namespace>
+    </Schema>
+    <Schema Include="GetCardDetails2Response.xsd">
+      <SubType>Task</SubType>
+      <TypeName>GetCardDetails2ResponseType</TypeName>
+      <Namespace>INTSTDK004.STIP.Schemas</Namespace>
+    </Schema>
+    <Schema Include="RequestCardBlock.xsd">
+      <SubType>Task</SubType>
+      <TypeName>RequestCardBlockType</TypeName>
+      <Namespace>INTSTDK004.STIP.Schemas</Namespace>
+    </Schema>
+    <Schema Include="RequestPeriodThresholdAutoload.xsd">
+      <SubType>Task</SubType>
+      <TypeName>RequestPeriodThresholdAutoloadType</TypeName>
+      <Namespace>INTSTDK004.STIP.Schemas</Namespace>
+    </Schema>
+    <Schema Include="RequestProductBlock.xsd">
+      <SubType>Task</SubType>
+      <TypeName>RequestProductBlockType</TypeName>
+      <Namespace>INTSTDK004.STIP.Schemas</Namespace>
+    </Schema>
+    <Schema Include="RequestPurseDirectedAutolaod.xsd">
+      <SubType>Task</SubType>
+      <TypeName>RequestPurseDirectedAutolaodType</TypeName>
+      <Namespace>INTSTDK004.STIP.Schemas</Namespace>
+    </Schema>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\BizTalk\BizTalkC.targets" />
+</Project>

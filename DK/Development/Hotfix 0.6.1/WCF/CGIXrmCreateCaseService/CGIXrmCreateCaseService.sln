@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGIXrmCreateCaseService", "CGIXrmCreateCaseService\CGIXrmCreateCaseService.csproj", "{EA7594F8-3808-4A95-8B8A-920565BEB2E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRM2013.SkanetrafikenPlugins", "..\..\Plugins\CRM2013.SkanetrafikenPlugins\CRM2013.SkanetrafikenPlugins\CRM2013.SkanetrafikenPlugins.csproj", "{ADB01ABB-EDB7-4CEF-82A0-0A47CCD34F23}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://cgi-trafiken.visualstudio.com/defaultcollection
+		SccProjectUniqueName0 = CGIXrmCreateCaseService\\CGIXrmCreateCaseService.csproj
+		SccProjectName0 = CGIXrmCreateCaseService
+		SccAuxPath0 = https://cgi-trafiken.visualstudio.com/defaultcollection
+		SccLocalPath0 = CGIXrmCreateCaseService
+		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName1 = ..\\..\\Plugins\\CRM2013.SkanetrafikenPlugins\\CRM2013.SkanetrafikenPlugins\\CRM2013.SkanetrafikenPlugins.csproj
+		SccProjectName1 = ../../Plugins/CRM2013.SkanetrafikenPlugins/CRM2013.SkanetrafikenPlugins
+		SccAuxPath1 = https://cgi-trafiken.visualstudio.com/defaultcollection
+		SccLocalPath1 = ..\\..\\Plugins\\CRM2013.SkanetrafikenPlugins\\CRM2013.SkanetrafikenPlugins
+		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EA7594F8-3808-4A95-8B8A-920565BEB2E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA7594F8-3808-4A95-8B8A-920565BEB2E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA7594F8-3808-4A95-8B8A-920565BEB2E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA7594F8-3808-4A95-8B8A-920565BEB2E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADB01ABB-EDB7-4CEF-82A0-0A47CCD34F23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADB01ABB-EDB7-4CEF-82A0-0A47CCD34F23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADB01ABB-EDB7-4CEF-82A0-0A47CCD34F23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADB01ABB-EDB7-4CEF-82A0-0A47CCD34F23}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

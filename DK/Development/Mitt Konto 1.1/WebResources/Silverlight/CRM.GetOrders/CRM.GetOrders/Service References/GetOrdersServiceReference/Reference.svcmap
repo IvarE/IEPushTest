@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="097a56da-a2ae-408c-be3d-302d69c921d8" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>true</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.ObjectModel.ObservableCollection`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>false</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://v-dkcrm-utv:4500/CGIXrmGetOrdersService/GetOrdersService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="GetOrdersService3.xsd" MetadataType="Schema" ID="18dd90d8-f39e-45a4-a794-d9b12a52a4c8" SourceId="1" SourceUrl="http://v-dkcrm-utv:4500/CGIXrmGetOrdersService/GetOrdersService.svc?xsd=xsd2" />
+    <MetadataFile FileName="GetOrdersService4.xsd" MetadataType="Schema" ID="777629bd-d64e-474f-87d8-e3deaffe975e" SourceId="1" SourceUrl="http://v-dkcrm-utv:4500/CGIXrmGetOrdersService/GetOrdersService.svc?xsd=xsd0" />
+    <MetadataFile FileName="GetOrdersService5.xsd" MetadataType="Schema" ID="3fd69c96-f09e-4454-a771-4dd79359ff56" SourceId="1" SourceUrl="http://v-dkcrm-utv:4500/CGIXrmGetOrdersService/GetOrdersService.svc?xsd=xsd1" />
+    <MetadataFile FileName="GetOrdersService1.wsdl" MetadataType="Wsdl" ID="ed94677c-fc15-432c-b97d-e3e2620a074d" SourceId="1" SourceUrl="http://v-dkcrm-utv:4500/CGIXrmGetOrdersService/GetOrdersService.svc?wsdl" />
+    <MetadataFile FileName="GetOrdersService1.disco" MetadataType="Disco" ID="e5ab4f98-0a5f-42ce-83a1-b3e38e680513" SourceId="1" SourceUrl="http://v-dkcrm-utv:4500/CGIXrmGetOrdersService/GetOrdersService.svc?disco" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

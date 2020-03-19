@@ -1,0 +1,12 @@
+﻿
+Installerad på Frontend1, V-DK-CRM01-FE (Frontend) 10.16.229.121
+
+Körs med windows scheduler.
+
+OBS.
+Måste sättas upp med två olika konfigurationer. En för Chat och en för Facebook
+
+OBS2:
+- Skapa ODBC (32-bit systemDNS)
+	- Namn: TeliaCallGuide
+	- Server: db1.ccs.teliasonera.com

@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Body>
+    <ReportItems>
+      <Textbox Name="Textbox8">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Skånetrafiken</Value>
+                <Style>
+                  <FontSize>24pt</FontSize>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox8</rd:DefaultName>
+        <Height>0.42709in</Height>
+        <Width>2.42709in</Width>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox19">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>="Ärendenr: " + First(Fields!ticketnumber.Value, "DataSet2")</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox19</rd:DefaultName>
+        <Top>1.42558cm</Top>
+        <Height>0.6cm</Height>
+        <Width>7.42125cm</Width>
+        <ZIndex>1</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox20">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=Format(Now(), "yyyy-MM-dd")</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox20</rd:DefaultName>
+        <Top>1.42558cm</Top>
+        <Left>9.83933cm</Left>
+        <Height>0.6cm</Height>
+        <Width>4.24625cm</Width>
+        <ZIndex>2</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Name">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!Name.Value, "DataSet2")</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!PostAddress.Value, "DataSet2")</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!PostalCode.Value, "DataSet2") + "  " + First(Fields!PostCity.Value, "DataSet2")</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Name</rd:DefaultName>
+        <Top>1in</Top>
+        <Left>3.46528in</Left>
+        <Height>0.79167in</Height>
+        <Width>2.06944in</Width>
+        <ZIndex>3</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox16">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Ersättning för din resa</Value>
+                <Style>
+                  <FontSize>12pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Vi ber om ursäkt för de problem som uppstod vid din resa med oss </Value>
+                <Style />
+              </TextRun>
+              <TextRun>
+                <Value>=Format(First(Fields!cgi_actiondate.Value, "DataSet2"), "yyyy-MM-dd")</Value>
+                <Style>
+                  <Format>yyyy-MM-dd</Format>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>.</Value>
+                <Style>
+                  <Format>yyyy-MM-dd</Format>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style>
+                  <Format>d</Format>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Då förseningen på resan var 60 minuter eller mer ersätts du med 100 procent av resans pris, alltid minst 50 kronor, i form av ett värdebevis. Värdebeviset gäller i sex månader. Sista användningsdag framgår på värdebeviset. I Skåne kan du använda värdebeviset på något av våra kundcenter eller serviceombud.</Value>
+                <Style>
+                  <Format>d</Format>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style>
+                  <Format>d</Format>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Reser du med Jojokort inom Skåne? Kanske kan du använda dig av Resegaranti Online? Läs mer under 'Kundtjänst' på www.skanetrafiken.se</Value>
+                <Style>
+                  <Format>d</Format>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style>
+                  <Format>d</Format>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Med vänlig hälsning</Value>
+                <Style>
+                  <Format>d</Format>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style>
+                  <Format>d</Format>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!fullname.Value, "DataSet2")</Value>
+                <Style>
+                  <Format>d</Format>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!contactdetails.Value, "DataSet2")</Value>
+                <Style>
+                  <Format>d</Format>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox16</rd:DefaultName>
+        <Top>2.25in</Top>
+        <Left>0.6875in</Left>
+        <Height>2.77084in</Height>
+        <Width>5.125in</Width>
+        <ZIndex>4</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox2">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!ticketnumber.Value, "DataSet2")</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <Top>5.61458in</Top>
+        <Left>0.36979in</Left>
+        <Height>0.25in</Height>
+        <Width>1.89583in</Width>
+        <ZIndex>5</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox3">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=First(Fields!cgi_last_valid.Value, "DataSet2")</Value>
+                <Style>
+                  <Format>yyyy-MM-dd</Format>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Top>5.90625in</Top>
+        <Left>0.36979in</Left>
+        <Height>0.25in</Height>
+        <Width>1.89583in</Width>
+        <ZIndex>6</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox4">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>="***"+FormatNumber(Sum(Fields!cgi_amount.Value, "DataSet2"),0,false,false,false) + "SEK***"</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox4</rd:DefaultName>
+        <Top>6.45833in</Top>
+        <Left>3.91145in</Left>
+        <Height>0.25in</Height>
+        <Width>2.21875in</Width>
+        <ZIndex>7</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox5">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox5</rd:DefaultName>
+        <Top>5.33333in</Top>
+        <Left>0.36979in</Left>
+        <Height>0.25in</Height>
+        <Width>1.89583in</Width>
+        <ZIndex>8</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox27">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>="**" + First(Fields!cgi_name.Value, "DataSet2") + "**"</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox27</rd:DefaultName>
+        <Top>16.40417cm</Top>
+        <Left>0.93928cm</Left>
+        <Height>0.6cm</Height>
+        <Width>8.42667cm</Width>
+        <ZIndex>9</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+    </ReportItems>
+    <Height>6.97916in</Height>
+    <Style />
+  </Body>
+  <Width>6.1927in</Width>
+  <Page>
+    <PageHeight>29.7cm</PageHeight>
+    <PageWidth>21cm</PageWidth>
+    <LeftMargin>1cm</LeftMargin>
+    <RightMargin>1cm</RightMargin>
+    <TopMargin>1cm</TopMargin>
+    <BottomMargin>1cm</BottomMargin>
+    <ColumnSpacing>0.13cm</ColumnSpacing>
+    <Style />
+  </Page>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource1">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString>Data Source=CLCMSDB-SQL1;Initial Catalog=DKCRM_MSCRM</ConnectString>
+        <IntegratedSecurity>true</IntegratedSecurity>
+      </ConnectionProperties>
+      <rd:SecurityType>Integrated</rd:SecurityType>
+      <rd:DataSourceID>2d8980e9-4416-49aa-90d0-5022c4367ddd</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="DataSet1">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>declare @incidentid as varchar(max)
+
+--select @incidentid = incidentid
+--from FilteredIncident as CRMAF_Incident
+
+select @incidentid = '530DF020-CFB5-E411-80D6-005056903A38'
+
+SELECT a.cgi_refundid, b.cgi_reimbursementname
+FROM Filteredcgi_refund a
+inner join Filteredcgi_reimbursementform b
+	on a.cgi_reimbursementformid = b.cgi_reimbursementformid
+where a.cgi_caseid = @incidentid
+order by a.createdon DESC</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="cgi_refundid">
+          <DataField>cgi_refundid</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="cgi_reimbursementname">
+          <DataField>cgi_reimbursementname</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="DataSet2">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@RefundID">
+            <Value>=Parameters!RefundID.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>
+declare @incidentid as varchar(max)
+
+select @incidentid = a.cgi_caseid
+from Filteredcgi_refund a
+where a.cgi_refundid = @RefundID
+
+SELECT systemuserid, FilteredTeam.cgi_teamcontactdetails AS contactdetails INTO #test1 
+FROM FilteredTeamMembership
+INNER JOIN FilteredTeam ON FilteredTeamMembership.teamid = FilteredTeam.teamid
+
+SELECT ticketnumber, Filteredcgi_refund.cgi_last_valid, Filteredcgi_refund.cgi_amount, FilteredSystemUser.fullname, #test1.contactdetails, FilteredIncident.createdon, cgi_actiondate,
+Filteredcgi_amounttranslation.cgi_name,
+CASE 
+	WHEN FilteredIncident.cgi_contactid IS NOT NULL THEN FilteredContact.fullname 
+	WHEN FilteredIncident.cgi_accountid IS NOT NULL THEN FilteredAccount.name
+END AS Name,
+
+CASE
+	WHEN FilteredIncident.cgi_contactid IS NOT NULL THEN FilteredContact.address1_line1 
+	WHEN FilteredIncident.cgi_accountid IS NOT NULL THEN FilteredAccount.address1_line1
+END AS PostAddress,
+
+CASE
+	WHEN FilteredIncident.cgi_contactid IS NOT NULL THEN FilteredContact.address1_postalcode 
+	WHEN FilteredIncident.cgi_accountid IS NOT NULL THEN FilteredAccount.address1_postalcode
+END AS PostalCode,
+
+CASE
+	WHEN FilteredIncident.cgi_contactid IS NOT NULL THEN FilteredContact.address1_city 
+	WHEN FilteredIncident.cgi_accountid IS NOT NULL THEN FilteredAccount.address1_city
+END AS PostCity
+
+FROM FilteredIncident
+
+INNER JOIN Filteredcgi_refund ON Filteredcgi_refund.cgi_caseid = FilteredIncident.incidentid
+
+LEFT OUTER JOIN FilteredAccount ON FilteredIncident.accountid = FilteredAccount.accountid
+LEFT OUTER JOIN FilteredContact ON FilteredIncident.contactid = FilteredContact.contactid
+LEFT OUTER JOIN FilteredSystemUser ON FilteredIncident.ownerid = FilteredSystemUser.systemuserid
+LEFT OUTER JOIN #test1 ON FilteredIncident.ownerid = #test1.systemuserid
+LEFT OUTER JOIN Filteredcgi_amounttranslation ON Filteredcgi_refund.cgi_amount = Filteredcgi_amounttranslation.cgi_amount
+
+WHERE incidentid = @incidentid AND
+Filteredcgi_refund.cgi_refundid = @RefundID AND
+(FilteredIncident.cgi_accountid IS NOT NULL OR FilteredIncident.cgi_contactid IS NOT NULL)
+
+DROP TABLE #test1</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ticketnumber">
+          <DataField>ticketnumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="cgi_last_valid">
+          <DataField>cgi_last_valid</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="cgi_amount">
+          <DataField>cgi_amount</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="fullname">
+          <DataField>fullname</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="contactdetails">
+          <DataField>contactdetails</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="createdon">
+          <DataField>createdon</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="cgi_actiondate">
+          <DataField>cgi_actiondate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="cgi_name">
+          <DataField>cgi_name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PostAddress">
+          <DataField>PostAddress</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PostalCode">
+          <DataField>PostalCode</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PostCity">
+          <DataField>PostCity</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="RefundID">
+      <DataType>String</DataType>
+      <Prompt>Refund</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>DataSet1</DataSetName>
+          <ValueField>cgi_refundid</ValueField>
+          <LabelField>cgi_reimbursementname</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
+  </ReportParameters>
+  <rd:ReportUnitType>Cm</rd:ReportUnitType>
+  <rd:ReportID>9c381740-876d-4d29-bfb2-8d18c3e63a2d</rd:ReportID>
+</Report>

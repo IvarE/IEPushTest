@@ -1,0 +1,102 @@
+<?xml version="1.0" standalone="yes"?>
+<xs:schema targetNamespace="urn:schemas-microsoft-com:xml-diffgram-v1" xmlns:mstns="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/OrganisationalDataService" xmlns="urn:schemas-microsoft-com:xml-diffgram-v1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified" xmlns:app1="urn:schemas-microsoft-com:xml-diffgram-v1" xmlns:app2="urn:schemas-microsoft-com:xml-msdata">
+  <xs:import namespace="urn:schemas-microsoft-com:xml-msdata" schemaLocation="GetContractorsWithOperatedLinesResponse_app2.xsd" />
+  <xs:import namespace="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/OrganisationalDataService" schemaLocation="GetContractorsWithOperatedLinesResponse.xsd" />
+  <xs:attribute name="id" app2:Prefix="diffgr" type="xs:string" />
+  <xs:element name="diffgram" app2:Prefix="diffgr">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="GetContractorInfoMethod" form="unqualified">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="OrganisationalUnit" form="unqualified" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Id" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="0" />
+                    <xs:element name="Code" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="1" />
+                    <xs:element name="Name" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="2" />
+                    <xs:element name="MailAddressName" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="3" />
+                    <xs:element name="VisitingAddressName" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="4" />
+                    <xs:element name="Postcode" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="5" />
+                    <xs:element name="PostOfficeName" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="6" />
+                    <xs:element name="CountryName" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="7" />
+                    <xs:element name="PhoneNumber" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="8" />
+                    <xs:element name="ExistsFromDate" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="9" />
+                    <xs:element name="ExistsUptoDate" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="10" />
+                  </xs:sequence>
+                  <xs:attribute ref="app1:id" />
+                  <xs:attribute ref="app2:rowOrder" />
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="TransportAuthority" form="unqualified" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Id" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="0" />
+                    <xs:element name="Gid" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="1" />
+                    <xs:element name="IsOrganisationId" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="2" />
+                    <xs:element name="TimetableReleasedForPublicUseUptoDate" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="3" />
+                    <xs:element name="ExistsFromDate" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="4" />
+                  </xs:sequence>
+                  <xs:attribute ref="app1:id" />
+                  <xs:attribute ref="app2:rowOrder" />
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Contractor" form="unqualified" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Id" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="0" />
+                    <xs:element name="Gid" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="1" />
+                    <xs:element name="IsOrganisationId" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="2" />
+                    <xs:element name="IsPromotedByTransportAuthorityId" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="3" />
+                    <xs:element name="ExistsFromDate" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="4" />
+                    <xs:element name="ExistsUptoDate" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="5" />
+                  </xs:sequence>
+                  <xs:attribute ref="app1:id" />
+                  <xs:attribute ref="app2:rowOrder" />
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ServiceFunctionForOrganisationalUnit" form="unqualified" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Id" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="0" />
+                    <xs:element name="TypeOfServiceFunctionCode" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="1" />
+                    <xs:element name="TypeOfServiceFunctionName" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="2" />
+                    <xs:element name="IsUsedByOrganisationalUnitId" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="3" />
+                    <xs:element name="IsDelegatedByOrganisationalUnitId" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="4" />
+                    <xs:element name="IsDelegatedToOrganisationalUnitId" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="5" />
+                    <xs:element name="ExistsFromDate" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="6" />
+                    <xs:element name="ExistsUptoDate" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="7" />
+                  </xs:sequence>
+                  <xs:attribute ref="app1:id" />
+                  <xs:attribute ref="app2:rowOrder" />
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="OperatedLines" form="unqualified" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Id" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="0" />
+                    <xs:element name="Gid" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="1" />
+                    <xs:element name="Name" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="2" />
+                    <xs:element name="Number" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="3" />
+                    <xs:element name="Designation" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="4" />
+                    <xs:element name="DisplayOrder" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="5" />
+                    <xs:element name="LevelOfOperationCode" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="6" />
+                    <xs:element name="IsDefinedByTransportAuthorityId" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="7" />
+                    <xs:element name="IsOperatedByContractorId" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="8" />
+                    <xs:element name="IsControlledByOrganisationalUnitId" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="9" />
+                    <xs:element name="ExistsFromDate" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="10" />
+                    <xs:element name="ExistsUptoDate" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="11" />
+                    <xs:element name="ContractorOperatesLineFromDate" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="12" />
+                    <xs:element name="ContractorOperatesLineUptoDate" form="unqualified" type="xs:string" minOccurs="0" app2:Ordinal="13" />
+                  </xs:sequence>
+                  <xs:attribute ref="app1:id" />
+                  <xs:attribute ref="app2:rowOrder" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

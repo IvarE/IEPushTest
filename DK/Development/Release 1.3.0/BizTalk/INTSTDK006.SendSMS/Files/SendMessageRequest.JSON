@@ -1,0 +1,14 @@
+{
+  "Data": {
+    "Username": "My username",
+    "Password": "My password",
+    "SenderName": "My sender name",
+    "EmailSubject": "My email subject",
+    "EmailSenderAddress": "My email sender address",
+    "AppInbox": "App inbox",
+    "AppSederId": "App sender id",
+    "Message": "My message",
+    "Recipients": ["aStringValue"]
+  },
+  "AuthenticationToken": "ed90f066-43ab-40a2-bcc3-bfe7c912ef4a"
+}

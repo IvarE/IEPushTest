@@ -1,0 +1,503 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="CouponCreatorService" targetNamespace="http://service.web.couponcreator.kuponginlosen.se/" xmlns:ns1="http://cxf.apache.org/bindings/xformat" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://service.web.couponcreator.kuponginlosen.se/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://service.web.couponcreator.kuponginlosen.se/" xmlns:tns="http://service.web.couponcreator.kuponginlosen.se/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="createCouponForPrinting" type="tns:createCouponForPrinting" />
+      <xs:element name="createCouponForPrintingResponse" type="tns:createCouponForPrintingResponse" />
+      <xs:element name="createMobileCoupon" type="tns:createMobileCoupon" />
+      <xs:element name="createMobileCouponResponse" type="tns:createMobileCouponResponse" />
+      <xs:element name="createUniqueCoupon" type="tns:createUniqueCoupon" />
+      <xs:element name="createUniqueCouponBatch" type="tns:createUniqueCouponBatch" />
+      <xs:element name="createUniqueCouponBatchResponse" type="tns:createUniqueCouponBatchResponse" />
+      <xs:element name="createUniqueCouponResponse" type="tns:createUniqueCouponResponse" />
+      <xs:element name="createUniqueCouponWithEanCode" type="tns:createUniqueCouponWithEanCode" />
+      <xs:element name="createUniqueCouponWithEanCodeResponse" type="tns:createUniqueCouponWithEanCodeResponse" />
+      <xs:element name="getHeartbeat" type="tns:getHeartbeat" />
+      <xs:element name="getHeartbeatResponse" type="tns:getHeartbeatResponse" />
+      <xs:complexType name="createUniqueCouponBatch">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="campaignNumberBatchRequest" type="tns:campaignNumberBatchRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="campaignNumberBatchRequest">
+        <xs:complexContent>
+          <xs:extension base="tns:campaignNumberRequest">
+            <xs:sequence>
+              <xs:element name="quantity" type="xs:int" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="campaignNumberRequest">
+        <xs:complexContent>
+          <xs:extension base="tns:abstractRequest">
+            <xs:sequence>
+              <xs:element name="campaignNumber" type="xs:int" />
+              <xs:element name="amount" type="xs:decimal" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType abstract="true" name="abstractRequest">
+        <xs:sequence>
+          <xs:element name="validityInDays" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="createUniqueCouponBatchResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:batchResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="batchResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:abstractResponse">
+            <xs:sequence>
+              <xs:element minOccurs="0" name="fileName" type="xs:string" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType abstract="true" name="abstractResponse">
+        <xs:sequence>
+          <xs:element name="eanCode" type="xs:long" />
+          <xs:element minOccurs="0" name="lastRedemptionDate" type="xs:dateTime" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="createUniqueCoupon">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="campaignNumberRequest" type="tns:campaignNumberRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="createUniqueCouponResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:singleResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="singleResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:abstractResponse">
+            <xs:sequence>
+              <xs:element minOccurs="0" name="uniqueCode" type="xs:string" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="createMobileCoupon">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="campaignNumberRequest" type="tns:campaignNumberRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="createMobileCouponResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:singleResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="createCouponForPrinting">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="campaignNumberRequestWithAddress" type="tns:campaignNumberRequestWithAddress" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="campaignNumberRequestWithAddress">
+        <xs:complexContent>
+          <xs:extension base="tns:campaignNumberRequest">
+            <xs:sequence>
+              <xs:element name="firstName" type="xs:string" />
+              <xs:element name="familyName" type="xs:string" />
+              <xs:element name="socialSecurityNumber" type="xs:string" />
+              <xs:element name="street" type="xs:string" />
+              <xs:element name="streetNumber" type="xs:int" />
+              <xs:element minOccurs="0" name="coAddress" type="xs:string" />
+              <xs:element name="zipCode" type="xs:int" />
+              <xs:element name="city" type="xs:string" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="createCouponForPrintingResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:couponForPrintingResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="couponForPrintingResponse">
+        <xs:sequence>
+          <xs:element name="referenceNumber" type="xs:long" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getHeartbeat">
+        <xs:sequence />
+      </xs:complexType>
+      <xs:complexType name="getHeartbeatResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="createUniqueCouponWithEanCode">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="eanCodeRequest" type="tns:eanCodeRequest" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="eanCodeRequest">
+        <xs:complexContent>
+          <xs:extension base="tns:abstractRequest">
+            <xs:sequence>
+              <xs:element name="eanCode" type="xs:long" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="createUniqueCouponWithEanCodeResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:singleResponse" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="InvalidConfiguration" type="tns:InvalidConfiguration" />
+      <xs:complexType name="InvalidConfiguration">
+        <xs:sequence>
+          <xs:element name="errorCode" nillable="true" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="InternalError" type="tns:InternalError" />
+      <xs:complexType name="InternalError">
+        <xs:sequence>
+          <xs:element name="errorCode" nillable="true" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="InvalidAmount" type="tns:InvalidAmount" />
+      <xs:complexType name="InvalidAmount">
+        <xs:sequence>
+          <xs:element name="errorCode" nillable="true" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="InvalidCampaign" type="tns:InvalidCampaign" />
+      <xs:complexType name="InvalidCampaign">
+        <xs:sequence>
+          <xs:element name="errorCode" nillable="true" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="NoUniqueCodeCreated" type="tns:NoUniqueCodeCreated" />
+      <xs:complexType name="NoUniqueCodeCreated">
+        <xs:sequence>
+          <xs:element name="errorCode" nillable="true" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="InvalidField" type="tns:InvalidField" />
+      <xs:complexType name="InvalidField">
+        <xs:sequence>
+          <xs:element name="errorCode" nillable="true" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="InvalidEanCode" type="tns:InvalidEanCode" />
+      <xs:complexType name="InvalidEanCode">
+        <xs:sequence>
+          <xs:element name="errorCode" nillable="true" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="createMobileCouponResponse">
+    <wsdl:part element="tns:createMobileCouponResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createUniqueCouponBatch">
+    <wsdl:part element="tns:createUniqueCouponBatch" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getHeartbeat">
+    <wsdl:part element="tns:getHeartbeat" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createUniqueCouponResponse">
+    <wsdl:part element="tns:createUniqueCouponResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createCouponForPrintingResponse">
+    <wsdl:part element="tns:createCouponForPrintingResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="EanCodeException">
+    <wsdl:part element="tns:InvalidEanCode" name="EanCodeException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createMobileCoupon">
+    <wsdl:part element="tns:createMobileCoupon" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CampaignException">
+    <wsdl:part element="tns:InvalidCampaign" name="CampaignException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="AmountException">
+    <wsdl:part element="tns:InvalidAmount" name="AmountException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createUniqueCouponWithEanCode">
+    <wsdl:part element="tns:createUniqueCouponWithEanCode" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DatabaseException">
+    <wsdl:part element="tns:InternalError" name="DatabaseException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ConfigurationException">
+    <wsdl:part element="tns:InvalidConfiguration" name="ConfigurationException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createUniqueCoupon">
+    <wsdl:part element="tns:createUniqueCoupon" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="UniqueCodeException">
+    <wsdl:part element="tns:NoUniqueCodeCreated" name="UniqueCodeException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createUniqueCouponBatchResponse">
+    <wsdl:part element="tns:createUniqueCouponBatchResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getHeartbeatResponse">
+    <wsdl:part element="tns:getHeartbeatResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createCouponForPrinting">
+    <wsdl:part element="tns:createCouponForPrinting" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createUniqueCouponWithEanCodeResponse">
+    <wsdl:part element="tns:createUniqueCouponWithEanCodeResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="IncorrectValueException">
+    <wsdl:part element="tns:InvalidField" name="IncorrectValueException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="CouponCreatorService">
+    <wsdl:operation name="createUniqueCouponBatch">
+      <wsdl:input message="tns:createUniqueCouponBatch" name="createUniqueCouponBatch">
+      </wsdl:input>
+      <wsdl:output message="tns:createUniqueCouponBatchResponse" name="createUniqueCouponBatchResponse">
+      </wsdl:output>
+      <wsdl:fault message="tns:UniqueCodeException" name="UniqueCodeException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:CampaignException" name="CampaignException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:AmountException" name="AmountException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:ConfigurationException" name="ConfigurationException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:DatabaseException" name="DatabaseException">
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="createUniqueCoupon">
+      <wsdl:input message="tns:createUniqueCoupon" name="createUniqueCoupon">
+      </wsdl:input>
+      <wsdl:output message="tns:createUniqueCouponResponse" name="createUniqueCouponResponse">
+      </wsdl:output>
+      <wsdl:fault message="tns:UniqueCodeException" name="UniqueCodeException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:CampaignException" name="CampaignException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:AmountException" name="AmountException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:ConfigurationException" name="ConfigurationException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:DatabaseException" name="DatabaseException">
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="createMobileCoupon">
+      <wsdl:input message="tns:createMobileCoupon" name="createMobileCoupon">
+      </wsdl:input>
+      <wsdl:output message="tns:createMobileCouponResponse" name="createMobileCouponResponse">
+      </wsdl:output>
+      <wsdl:fault message="tns:UniqueCodeException" name="UniqueCodeException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:CampaignException" name="CampaignException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:AmountException" name="AmountException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:ConfigurationException" name="ConfigurationException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:DatabaseException" name="DatabaseException">
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="createCouponForPrinting">
+      <wsdl:input message="tns:createCouponForPrinting" name="createCouponForPrinting">
+      </wsdl:input>
+      <wsdl:output message="tns:createCouponForPrintingResponse" name="createCouponForPrintingResponse">
+      </wsdl:output>
+      <wsdl:fault message="tns:IncorrectValueException" name="IncorrectValueException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:CampaignException" name="CampaignException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:AmountException" name="AmountException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:ConfigurationException" name="ConfigurationException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:DatabaseException" name="DatabaseException">
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getHeartbeat">
+      <wsdl:input message="tns:getHeartbeat" name="getHeartbeat">
+      </wsdl:input>
+      <wsdl:output message="tns:getHeartbeatResponse" name="getHeartbeatResponse">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createUniqueCouponWithEanCode">
+      <wsdl:input message="tns:createUniqueCouponWithEanCode" name="createUniqueCouponWithEanCode">
+      </wsdl:input>
+      <wsdl:output message="tns:createUniqueCouponWithEanCodeResponse" name="createUniqueCouponWithEanCodeResponse">
+      </wsdl:output>
+      <wsdl:fault message="tns:EanCodeException" name="EanCodeException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:UniqueCodeException" name="UniqueCodeException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:CampaignException" name="CampaignException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:AmountException" name="AmountException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:ConfigurationException" name="ConfigurationException">
+      </wsdl:fault>
+      <wsdl:fault message="tns:DatabaseException" name="DatabaseException">
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CouponCreatorServiceSoapBinding" type="tns:CouponCreatorService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="createUniqueCouponBatch">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="createUniqueCouponBatch">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="createUniqueCouponBatchResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="UniqueCodeException">
+        <soap:fault name="UniqueCodeException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="CampaignException">
+        <soap:fault name="CampaignException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="AmountException">
+        <soap:fault name="AmountException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="ConfigurationException">
+        <soap:fault name="ConfigurationException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="DatabaseException">
+        <soap:fault name="DatabaseException" use="literal" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="createMobileCoupon">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="createMobileCoupon">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="createMobileCouponResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="UniqueCodeException">
+        <soap:fault name="UniqueCodeException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="CampaignException">
+        <soap:fault name="CampaignException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="AmountException">
+        <soap:fault name="AmountException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="ConfigurationException">
+        <soap:fault name="ConfigurationException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="DatabaseException">
+        <soap:fault name="DatabaseException" use="literal" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="createUniqueCoupon">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="createUniqueCoupon">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="createUniqueCouponResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="UniqueCodeException">
+        <soap:fault name="UniqueCodeException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="CampaignException">
+        <soap:fault name="CampaignException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="AmountException">
+        <soap:fault name="AmountException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="ConfigurationException">
+        <soap:fault name="ConfigurationException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="DatabaseException">
+        <soap:fault name="DatabaseException" use="literal" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="createCouponForPrinting">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="createCouponForPrinting">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="createCouponForPrintingResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="IncorrectValueException">
+        <soap:fault name="IncorrectValueException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="CampaignException">
+        <soap:fault name="CampaignException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="AmountException">
+        <soap:fault name="AmountException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="ConfigurationException">
+        <soap:fault name="ConfigurationException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="DatabaseException">
+        <soap:fault name="DatabaseException" use="literal" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getHeartbeat">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getHeartbeat">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getHeartbeatResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createUniqueCouponWithEanCode">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="createUniqueCouponWithEanCode">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="createUniqueCouponWithEanCodeResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="EanCodeException">
+        <soap:fault name="EanCodeException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="UniqueCodeException">
+        <soap:fault name="UniqueCodeException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="CampaignException">
+        <soap:fault name="CampaignException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="AmountException">
+        <soap:fault name="AmountException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="ConfigurationException">
+        <soap:fault name="ConfigurationException" use="literal" />
+      </wsdl:fault>
+      <wsdl:fault name="DatabaseException">
+        <soap:fault name="DatabaseException" use="literal" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CouponCreatorService">
+    <wsdl:port binding="tns:CouponCreatorServiceSoapBinding" name="CouponCreatorServicePort">
+      <soap:address location="https://octest.kassagirot.se/http/octest/couponcreator-web/services/CouponCreatorService" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

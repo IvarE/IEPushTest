@@ -1,0 +1,19 @@
+﻿<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+  <soap:Header>
+    <wsa:Action>http://cubic.com/RequestPeriodThresholdAutoloadResponse</wsa:Action>
+    <wsa:MessageID>urn:uuid:abc28788-256c-4139-aaef-38c3a722e680</wsa:MessageID>
+    <wsa:RelatesTo>urn:uuid:ee141993-6fb1-4d84-abed-59e5fb8a04bd</wsa:RelatesTo>
+    <wsa:To>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+    <wsse:Security>
+      <wsu:Timestamp wsu:Id="Timestamp-d0437c42-7efc-4e9a-bc10-50bacc26e085">
+        <wsu:Created>2014-09-18T11:03:59Z</wsu:Created>
+        <wsu:Expires>2014-09-18T11:08:59Z</wsu:Expires>
+      </wsu:Timestamp>
+    </wsse:Security>
+  </soap:Header>
+  <soap:Body>
+    <RequestPeriodThresholdAutoloadResponse xmlns="http://cubic.com">
+      <RequestPeriodThresholdAutoloadResult>1896643</RequestPeriodThresholdAutoloadResult>
+    </RequestPeriodThresholdAutoloadResponse>
+  </soap:Body>
+</soap:Envelope>

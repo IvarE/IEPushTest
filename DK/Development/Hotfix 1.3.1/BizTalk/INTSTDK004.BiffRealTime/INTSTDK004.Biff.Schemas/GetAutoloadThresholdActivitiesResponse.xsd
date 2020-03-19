@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="GetAutoloadThresholdActivitiesResponse" targetNamespace="http://cubic.com" xmlns:mstns="http://cubic.com" xmlns="http://cubic.com" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified" xmlns:app1="urn:schemas-microsoft-com:xml-diffgram-v1" xmlns:app2="http://tempuri.org/CardActivities.xsd" xmlns:app3="urn:schemas-microsoft-com:xml-msdata">
+  <xs:import namespace="http://tempuri.org/CardActivities.xsd" schemaLocation="GetAutoloadThresholdActivitiesResponse_app2.xsd" />
+  <xs:import namespace="urn:schemas-microsoft-com:xml-msdata" schemaLocation="GetAutoloadThresholdActivitiesResponse_app3.xsd" />
+  <xs:import namespace="urn:schemas-microsoft-com:xml-diffgram-v1" schemaLocation="GetAutoloadThresholdActivitiesResponse_app1.xsd" />
+  <xs:element name="GetAutoloadThresholdActivitiesResponse" app3:IsDataSet="true" app3:Locale="en-US">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="GetAutoloadThresholdActivitiesResult">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="app1:diffgram" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

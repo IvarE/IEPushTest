@@ -1,0 +1,39 @@
+<GetDataBySecureResponse xmlns="https://webservice.creditsafe.se/getdata/">
+
+  <GetDataBySecureResult>
+    <SearchNumber>5566849161</SearchNumber>
+    <TransactionId>5aef94ccb6074f86b32609c21170d261</TransactionId>
+    <Block_Name>NORDISK_F_BASIC</Block_Name>
+    <Parameters>
+      <diffgr:diffgram xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+       xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1">
+        <NewDataSet xmlns="">
+          <GETDATA_RESPONSE diffgr:id="GETDATA_RESPONSE1"
+          msdata:rowOrder="0" diffgr:hasChanges="inserted">
+            <ORGNR>5566849161</ORGNR>
+            <NAME>Star Republic Holding AB</NAME>
+            <COMPANY_TYPE>AB</COMPANY_TYPE>
+            <COMPANY_TYPE_TEXT>
+              Privat
+              aktiebolag
+            </COMPANY_TYPE_TEXT>
+            <COMPANY_LEGAL_CODE>49</COMPANY_LEGAL_CODE>
+            <OLD_NAME>Starta Eget Boxen 6186 AB</OLD_NAME>
+            <ADDRESS>Otterh&#195;&#164;llegatan 1</ADDRESS>
+            <ZIPCODE>41118</ZIPCODE>
+            <TOWN>G&#195;&#8211;TEBORG</TOWN>
+            <TELEPHONE>0768-670201</TELEPHONE>
+            <FAXNR />
+            <EMAIL_ADRESS />
+            <WWW_ADRESS />
+            <INCORPORATION_DATE>20050826</INCORPORATION_DATE>
+            <CFAR_NR>50823012</CFAR_NR>
+            <COMPANY_STATUS>Aktivt</COMPANY_STATUS>
+            <COMPANY_STATUS_DATE>20050826</COMPANY_STATUS_DATE>
+            <COMPANY_ACTIVE>Aktivt</COMPANY_ACTIVE>
+          </GETDATA_RESPONSE>
+        </NewDataSet>
+      </diffgr:diffgram>
+    </Parameters>
+  </GetDataBySecureResult>
+</GetDataBySecureResponse>
