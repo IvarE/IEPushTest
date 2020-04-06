@@ -1367,11 +1367,24 @@ namespace Skanetrafiken.Crm.Controllers
                     // **************************************************************************
 
                     // Get original contact
+
                     FilterExpression getContact = new FilterExpression(LogicalOperator.And);
-                    getContact.AddCondition(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, customer.Email);
-                    if (customer.Mobile != null && customer.Mobile != String.Empty)
+
+                    Guid guidOutput;
+                    if (customer.Guid != null && Guid.TryParse(customer.Guid, out guidOutput) == true)
                     {
-                        getContact.AddCondition(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, customer.Mobile);
+                        getContact.AddCondition(ContactEntity.Fields.Id, ConditionOperator.Equal, new Guid(customer.Guid));
+                        getContact.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active);
+                    }
+                    else
+                    {
+                        getContact = new FilterExpression(LogicalOperator.And);
+                        getContact.AddCondition(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, customer.Email);
+                        if (customer.Mobile != null && customer.Mobile != String.Empty)
+                        {
+                            getContact.AddCondition(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, customer.Mobile);
+                        }
+                        getContact.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active);
                     }
 
                     ContactEntity contact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, ContactEntity.ContactInfoBlock, getContact);
@@ -1410,20 +1423,11 @@ namespace Skanetrafiken.Crm.Controllers
                         throw;
                     }
 
-                    // TODO - Marcus, optimize update...
-
-                    ContactEntity contactToBeUpd = new ContactEntity();
-                    contactToBeUpd.Id = contact.Id;
-                    contactToBeUpd.ed_EmailToBeVerified = customer.NewEmail;
-                    contactToBeUpd.ed_LinkExpiryDate = DateTime.Now.AddHours(validityHours);
-                    contactToBeUpd.ed_LatestLinkGuid = Guid.NewGuid().ToString();
-                    contactToBeUpd.ed_InformationSource = Generated.ed_informationsource.BytEpost;
-
                     contact.ed_EmailToBeVerified = customer.NewEmail;
                     contact.ed_LinkExpiryDate = DateTime.Now.AddHours(validityHours);
                     contact.ed_LatestLinkGuid = Guid.NewGuid().ToString();
                     contact.ed_InformationSource = Generated.ed_informationsource.BytEpost;
-                    localContext.OrganizationService.Update(contactToBeUpd);
+                    localContext.OrganizationService.Update(contact);
 
                     SendEmailResponse resp = CrmPlusUtility.SendValidationEmail(localContext, threadId, contact);
 
