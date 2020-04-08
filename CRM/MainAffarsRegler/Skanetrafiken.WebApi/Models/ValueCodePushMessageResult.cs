@@ -94,6 +94,8 @@ namespace Skanetrafiken.Crm.Models
         public long? eanCode { get; set; } //EanCode
         public int? couponId { get; set; } //Skip
 
+        public string ticketId { get; set; }
+
         protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         internal void UpdateValueCodeInCRM(int threadId)
@@ -111,6 +113,14 @@ namespace Skanetrafiken.Crm.Models
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
+
+                    List<string> attributeLst = new List<string>();
+                    attributeLst.Add(FeatureTogglingEntity.Fields.ed_RemoveControlForTypeOfValueCodeEnabled);
+                    attributeLst.Add(FeatureTogglingEntity.Fields.ed_PaybackVoucherEnabled);
+
+                    FeatureTogglingEntity featureToggling = FeatureTogglingEntity.GetFeatureToggling(localContext, attributeLst);
+                    
+
                     QueryExpression query = new QueryExpression()
                     {
                         EntityName = ValueCodeEntity.EntityLogicalName,
@@ -119,125 +129,279 @@ namespace Skanetrafiken.Crm.Models
                         {
                             Conditions =
                             {
-                                new ConditionExpression(ValueCodeEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.ed_ValueCodeState.Active),
+                                //new ConditionExpression(ValueCodeEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.ed_ValueCodeState.Active),
                                 new ConditionExpression(ValueCodeEntity.Fields.ed_CodeId, ConditionOperator.Equal, this.voucherCode)
                             }
                         }
                     };
+
+                    if (featureToggling.ed_PaybackVoucherEnabled != true)
+                    {
+                        ConditionExpression conditionState = new ConditionExpression(ValueCodeEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.ed_ValueCodeState.Active);
+                        query.Criteria.AddCondition(conditionState);
+                    }
                     
                     ValueCodeEntity valueCode = XrmRetrieveHelper.RetrieveFirst<ValueCodeEntity>(localContext, query);
                     DateTime? redeemed = this.disabled;
 
-                    if (valueCode == null)
+                    //Devop Task 745 - Round decimals
+                    if (this.amount > 0)
                     {
-                        _log.Debug($"Could not find value code '{voucherCode}'");
+                        var roundedValue = (decimal)Math.Round(this.amount, 0, MidpointRounding.AwayFromZero);
+                        _log.Debug($"Th={threadId} Rounding value '{this.amount}' to {roundedValue}");
+                        this.amount = roundedValue;
+                    }
 
-                        _log.Debug($"Creating a new value code. Should be type 5.");
+                    
 
-                        ValueCodeEntity newValueCode = new ValueCodeEntity()
+
+                    if (featureToggling.ed_RemoveControlForTypeOfValueCodeEnabled == true)
+                    {
+                        if (valueCode == null)
                         {
-                            ed_Amount = new Money(amount),
-                            ed_CreatedTimestamp = created,
-                            ed_LastRedemptionDate = validToDate,
-                            ed_CodeId = voucherCode,
-                            ed_Ean = eanCode?.ToString(),
-                            ed_OriginalAmount = 1000
-                        };
+                            #region No Value Code was found (create a new one)
 
-                        switch (voucherType)
-                        {
-                            case (int)Generated.ed_valuecodetypeglobal.Ersattningsarende:
-                                newValueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.Ersattningsarende;
-                                break;
-                            case (int)Generated.ed_valuecodetypeglobal.Forlustgaranti:
-                                newValueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.Forlustgaranti;
-                                break;
-                            case (int)Generated.ed_valuecodetypeglobal.Forseningsersattning:
-                                newValueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.Forseningsersattning;
-                                break;
-                            case (int)Generated.ed_valuecodetypeglobal.InlostReskassa:
-                                newValueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.InlostReskassa;
-                                break;
-                            default:
-                                newValueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.Presentkort; //Type 5
-                                break;
-                        }
-
-                        newValueCode.Id = XrmHelper.Create(localContext, newValueCode);
-                        newValueCode.ed_name = newValueCode.Id.ToString();
-                        XrmHelper.Update(localContext, newValueCode);
-
-                        //_log.Debug($"Creating value code type 5 (Presentkort) with values:");
-                        //_log.Debug($"{ValueCodeEntity.Fields.Id}: '{newValueCode.Id}', " +
-                        //    $"{ValueCodeEntity.Fields.ed_Amount}: '{newValueCode.ed_Amount}', " +
-                        //    $"{ValueCodeEntity.Fields.ed_CreatedTimestamp}: '{newValueCode.ed_CreatedTimestamp ?? DateTime.MinValue}', " +
-                        //    $"{ValueCodeEntity.Fields.ed_LastRedemptionDate}: '{newValueCode.ed_LastRedemptionDate ?? DateTime.MinValue}', " +
-                        //    $"{ValueCodeEntity.Fields.ed_CodeId}: '{newValueCode.ed_CodeId}', " +
-                        //    $"{ValueCodeEntity.Fields.ed_Ean}: '{newValueCode.ed_Ean}', " +
-                        //    $"{ValueCodeEntity.Fields.ed_OriginalAmount}: '{newValueCode.ed_OriginalAmount ?? -1}'");
-
-                        if (this.amount <= 0)
-                        {
-                            newValueCode.ed_RedemptionDate = redeemed;
-                            UpdateValueCodeRecordAndDeactivate(localContext, newValueCode);
-                        }
-                        else
-                        {
-                            XrmHelper.Update(localContext.OrganizationService, newValueCode);
-                            _log.Debug($"Updating value code value.");
-                            _log.Debug($"New value - Amount: '{newValueCode?.ed_Amount.Value}'");
-                        }
+                            _log.Debug($"Could not find value code '{voucherCode}'");
+                            _log.Debug($"Creating a new value code. Should be type 5.");
                             
-                    }
-                    // Presentkort
-                    else if ((int)valueCode.ed_ValueCodeTypeGlobal.Value == 2)
-                    {
-                        if(this.amount <= 0)
-                        {
-                            valueCode.ed_Amount = new Money(this.amount);
-                            valueCode.ed_RedemptionDate = redeemed;
-
-                            UpdateValueCodeRecordAndDeactivate(localContext, valueCode);
-
-                            _log.Debug($"Updating value code status.");
-                            SetStateRequest req = new SetStateRequest()
+                            ValueCodeEntity newValueCode = new ValueCodeEntity()
                             {
-                                EntityMoniker = valueCode.ToEntityReference(),
-                                State = new OptionSetValue((int)Generated.ed_ValueCodeState.Inactive),
-                                Status = new OptionSetValue((int)ValueCodeEntity.Status.Inlost)
+                                ed_Amount = new Money(amount),
+                                ed_CreatedTimestamp = created,
+                                ed_LastRedemptionDate = validToDate,
+                                ed_CodeId = voucherCode,
+                                ed_Ean = eanCode?.ToString(),
+                                ed_OriginalAmount = 1000
                             };
-                            SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
 
-                            // TODO : Marcus Generate
-                            //_log.Debug($"New status - State: '{Generated.ed_ValueCodeState.Inactive}', Status: '{Generated.ed_valuecodes.Inlost}'");
+                            switch (this.voucherType)
+                            {
+                                case (int)Generated.ed_valuecodetypeglobal.Ersattningsarende:
+                                    newValueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.Ersattningsarende;
+                                    break;
+                                case (int)Generated.ed_valuecodetypeglobal.Forlustgaranti:
+                                    newValueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.Forlustgaranti;
+                                    break;
+                                case (int)Generated.ed_valuecodetypeglobal.Forseningsersattning:
+                                    newValueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.Forseningsersattning;
+                                    break;
+                                case (int)Generated.ed_valuecodetypeglobal.InlostReskassa:
+                                    newValueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.InlostReskassa;
+                                    break;
+                                default:
+                                    newValueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.Presentkort;
+                                    break;
+                            }
+                            
+                            newValueCode.Id = XrmHelper.Create(localContext, newValueCode);
+                            newValueCode.ed_name = newValueCode.Id.ToString();
+                            XrmHelper.Update(localContext, newValueCode);
+
+                            if (this.amount <= 0)
+                            {
+                                newValueCode.ed_RedemptionDate = redeemed;
+                                UpdateValueCodeRecordAndDeactivate(localContext, newValueCode);
+                            }
+                            else
+                            {
+                                XrmHelper.Update(localContext.OrganizationService, newValueCode);
+                                _log.Debug($"Th={threadId} Updating value code value.");
+                                _log.Debug($"Th={threadId} New value - Amount: '{newValueCode?.ed_Amount.Value}'");
+
+                                // 2020-03-03 - Marcus Stenswed
+                                // Update status of value code to be "Skickad"
+                                SetStateRequest req = new SetStateRequest()
+                                {
+                                    EntityMoniker = newValueCode.ToEntityReference(),
+                                    State = new OptionSetValue((int)Generated.ed_ValueCodeState.Active),
+                                    Status = new OptionSetValue((int)ValueCodeEntity.Status.Skickad)
+                                };
+                                SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
+                            }
+
+                            valueCode = newValueCode;
+
+                            #endregion
                         }
                         else
                         {
-                            valueCode.ed_Amount = new Money(this.amount);
+                            #region Value Code was found in SeKund (update existing one)
+                            
+                            if (this.amount <= 0)
+                            {
+                                var updateValueCode = new ValueCodeEntity()
+                                {
+                                    Id = valueCode.Id,
+                                    ed_Amount = new Money(this.amount),
+                                    ed_RedemptionDate = redeemed
+                                };
+                                
+                                UpdateValueCodeRecordAndDeactivate(localContext, updateValueCode);
+                            }
+                            else
+                            {
+                                if (valueCode.statecode == Generated.ed_ValueCodeState.Inactive &&
+                                    featureToggling.ed_PaybackVoucherEnabled == true &&
+                                    this.amount > 0)
+                                {
+                                    // Voucher Code has been redeemed and needs to be reactivated with a higher amount
+                                    SetStateRequest req = new SetStateRequest()
+                                    {
+                                        EntityMoniker = valueCode.ToEntityReference(),
+                                        State = new OptionSetValue((int)Generated.ed_ValueCodeState.Active),
+                                        Status = new OptionSetValue((int)ValueCodeEntity.Status.Skickad)
+                                    };
+                                    SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
 
-                            XrmHelper.Update(localContext.OrganizationService, valueCode);
-                            _log.Debug($"Updating value code value.");
-                            _log.Debug($"New value - Amount: '{valueCode?.ed_Amount.Value}'");
+                                    var updateValueCode = new ValueCodeEntity()
+                                    {
+                                        Id = valueCode.Id,
+                                        ed_Amount = new Money(this.amount),
+                                    };
 
+                                    XrmHelper.Update(localContext.OrganizationService, updateValueCode);
+                                    _log.Debug($"Th={threadId} New value (after activate - Amount: '{valueCode?.ed_Amount.Value}'");
+                                }
+                                else
+                                {
+                                    var updateValueCode = new ValueCodeEntity()
+                                    {
+                                        Id = valueCode.Id,
+                                        ed_Amount = new Money(this.amount),
+                                    };
+
+                                    XrmHelper.Update(localContext.OrganizationService, updateValueCode);
+                                    _log.Debug($"Th={threadId} Updating value code value.");
+                                    _log.Debug($"Th={threadId} New value - Amount: '{valueCode?.ed_Amount.Value}'");
+                                }
+                            }
+
+                            #endregion
                         }
+
+                        #region Create Value Code Transaction row
+
+                        CreateValueCodeTransaction(threadId, localContext, valueCode);
+
+                        #endregion
                     }
-                    // Övriga
-                    else if ((int)valueCode.ed_ValueCodeTypeGlobal.Value != 2)
+                    else
                     {
-                        if (this.amount > 0 
-                            && (int)valueCode.ed_ValueCodeTypeGlobal.Value != 1
-                            && (int)valueCode.ed_ValueCodeTypeGlobal.Value != 3
-                            && (int)valueCode.ed_ValueCodeTypeGlobal.Value != 4)
+                        if (valueCode == null)
                         {
-                            valueCode.ed_Amount = new Money(this.amount);
-                            XrmHelper.Update(localContext, valueCode);
+                            _log.Debug($"Could not find value code '{voucherCode}'");
+
+                            _log.Debug($"Creating a new value code. Should be type 5.");
+
+                            ValueCodeEntity newValueCode = new ValueCodeEntity()
+                            {
+                                ed_Amount = new Money(amount),
+                                ed_CreatedTimestamp = created,
+                                ed_LastRedemptionDate = validToDate,
+                                ed_CodeId = voucherCode,
+                                ed_Ean = eanCode?.ToString(),
+                                ed_OriginalAmount = 1000
+                            };
+
+                            switch (voucherType)
+                            {
+                                case (int)Generated.ed_valuecodetypeglobal.Ersattningsarende:
+                                    newValueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.Ersattningsarende;
+                                    break;
+                                case (int)Generated.ed_valuecodetypeglobal.Forlustgaranti:
+                                    newValueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.Forlustgaranti;
+                                    break;
+                                case (int)Generated.ed_valuecodetypeglobal.Forseningsersattning:
+                                    newValueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.Forseningsersattning;
+                                    break;
+                                case (int)Generated.ed_valuecodetypeglobal.InlostReskassa:
+                                    newValueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.InlostReskassa;
+                                    break;
+                                default:
+                                    newValueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.Presentkort; //Type 5
+                                    break;
+                            }
+
+                            newValueCode.Id = XrmHelper.Create(localContext, newValueCode);
+                            newValueCode.ed_name = newValueCode.Id.ToString();
+                            XrmHelper.Update(localContext, newValueCode);
+
+                            //_log.Debug($"Creating value code type 5 (Presentkort) with values:");
+                            //_log.Debug($"{ValueCodeEntity.Fields.Id}: '{newValueCode.Id}', " +
+                            //    $"{ValueCodeEntity.Fields.ed_Amount}: '{newValueCode.ed_Amount}', " +
+                            //    $"{ValueCodeEntity.Fields.ed_CreatedTimestamp}: '{newValueCode.ed_CreatedTimestamp ?? DateTime.MinValue}', " +
+                            //    $"{ValueCodeEntity.Fields.ed_LastRedemptionDate}: '{newValueCode.ed_LastRedemptionDate ?? DateTime.MinValue}', " +
+                            //    $"{ValueCodeEntity.Fields.ed_CodeId}: '{newValueCode.ed_CodeId}', " +
+                            //    $"{ValueCodeEntity.Fields.ed_Ean}: '{newValueCode.ed_Ean}', " +
+                            //    $"{ValueCodeEntity.Fields.ed_OriginalAmount}: '{newValueCode.ed_OriginalAmount ?? -1}'");
+                            
+                            if (this.amount <= 0)
+                            {
+                                newValueCode.ed_RedemptionDate = redeemed;
+                                UpdateValueCodeRecordAndDeactivate(localContext, newValueCode);
+                            }
+                            else
+                            {
+                                XrmHelper.Update(localContext.OrganizationService, newValueCode);
+                                _log.Debug($"Updating value code value.");
+                                _log.Debug($"New value - Amount: '{newValueCode?.ed_Amount.Value}'");
+                            }
+
                         }
-                        else
+                        // Presentkort
+                        else if ((int)valueCode.ed_ValueCodeTypeGlobal.Value == 2)
                         {
-                            valueCode.ed_Amount = new Money(0);
-                            valueCode.ed_RedemptionDate = redeemed;
-                            UpdateValueCodeRecordAndDeactivate(localContext, valueCode);
+                            if (this.amount <= 0)
+                            {
+                                valueCode.ed_Amount = new Money(this.amount);
+                                valueCode.ed_RedemptionDate = redeemed;
+
+                                UpdateValueCodeRecordAndDeactivate(localContext, valueCode);
+
+                                _log.Debug($"Updating value code status.");
+                                SetStateRequest req = new SetStateRequest()
+                                {
+                                    EntityMoniker = valueCode.ToEntityReference(),
+                                    State = new OptionSetValue((int)Generated.ed_ValueCodeState.Inactive),
+                                    Status = new OptionSetValue((int)ValueCodeEntity.Status.Inlost)
+                                };
+                                SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
+
+                                // TODO : Marcus Generate
+                                //_log.Debug($"New status - State: '{Generated.ed_ValueCodeState.Inactive}', Status: '{Generated.ed_valuecodes.Inlost}'");
+                            }
+                            else
+                            {
+                                valueCode.ed_Amount = new Money(this.amount);
+
+                                XrmHelper.Update(localContext.OrganizationService, valueCode);
+                                _log.Debug($"Updating value code value.");
+                                _log.Debug($"New value - Amount: '{valueCode?.ed_Amount.Value}'");
+
+                            }
                         }
+                        // Övriga
+                        else if ((int)valueCode.ed_ValueCodeTypeGlobal.Value != 2)
+                        {
+                            if (this.amount > 0
+                                && (int)valueCode.ed_ValueCodeTypeGlobal.Value != 1
+                                && (int)valueCode.ed_ValueCodeTypeGlobal.Value != 3
+                                && (int)valueCode.ed_ValueCodeTypeGlobal.Value != 4)
+                            {
+                                valueCode.ed_Amount = new Money(this.amount);
+                                XrmHelper.Update(localContext, valueCode);
+                            }
+                            else
+                            {
+                                valueCode.ed_Amount = new Money(0);
+                                valueCode.ed_RedemptionDate = redeemed;
+                                UpdateValueCodeRecordAndDeactivate(localContext, valueCode);
+                            }
+
+                            
+                        }
+
+                        CreateValueCodeTransaction(threadId, localContext, valueCode);
                     }
 
                     _log.Debug($"Exiting UpdateValueCodeInCRM.");
@@ -251,6 +415,45 @@ namespace Skanetrafiken.Crm.Models
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="threadId"></param>
+        /// <param name="localContext"></param>
+        /// <param name="valueCode"></param>
+        private ValueCodeTransactionEntity CreateValueCodeTransaction(int threadId, Plugin.LocalPluginContext localContext, ValueCodeEntity valueCode)
+        {
+            _log.Debug($"Th={threadId} ---> Entering {nameof(CreateValueCodeTransaction)}");
+
+            if (valueCode == null)
+                throw new NullReferenceException($"Argument '{nameof(valueCode)}' is empty.");
+
+            ValueCodeTransactionEntity valueCodeTransaction = null;
+
+            try
+            {
+                valueCodeTransaction = new ValueCodeTransactionEntity()
+                {
+                    ed_name = $"{DateTime.UtcNow.AddHours(1)} - {this.voucherCode}",
+                    ed_Balance = this.amount,
+                    ed_PreviousBalance = valueCode.ed_Amount.Value,
+                    ed_Redeemed = this.amount <= 0 ? true : false,
+                    ed_TransactionDate = DateTime.UtcNow.AddHours(1),
+                    ed_ValueCode = valueCode.ToEntityReference(),
+                    ed_TicketId = !String.IsNullOrEmpty(this.ticketId) ? this.ticketId : ""
+                };
+
+                valueCodeTransaction.Id = XrmHelper.Create(localContext, valueCodeTransaction);
+
+                _log.Debug($"Th={threadId} <--- Exiting {nameof(CreateValueCodeTransaction)}");
+                return valueCodeTransaction;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

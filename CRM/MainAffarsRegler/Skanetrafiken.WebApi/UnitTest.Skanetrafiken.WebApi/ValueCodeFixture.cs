@@ -280,6 +280,7 @@ namespace Endeavor.Crm.UnitTest
         //        Assert.Less((DateTime.Parse(dateString).ToUniversalTime() - valueCode.ed_RedemptionDate.Value.ToUniversalTime()).Seconds, 1);
         //    }
         //}
+        
 
         [Test, Category("Debug")]
         public void GetValueCodesFromContact()
@@ -442,6 +443,78 @@ namespace Endeavor.Crm.UnitTest
         }
 
         #endregion
+
+        [Test, Category("Regression")]
+        public void EventExistingValueCode()
+        {
+            try
+            {
+                // Connect to the Organization service. 
+                // The using statement assures that the service proxy will be properly disposed.
+                using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+                {
+                    // This statement is required to enable early-bound type support.
+                    _serviceProxy.EnableProxyTypes();
+
+                    Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
+
+                    string url = $"{WebApiTestHelper.WebApiRootEndpoint}ValueCode";
+                    var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+                    WebApiTestHelper.CreateTokenForTest(localContext, httpWebRequest);
+                    httpWebRequest.ContentType = "application/json";
+                    httpWebRequest.Method = "POST";
+
+                    string jsonEvent = "{  amount = 2547.35, created = '2019-12-18 07:25:28', tag = '', validFromDate = '2019-12-18 07:25:28' validToDate = '2021-12-18 07:25:28', voucherCode = '307001090083', voucherId = 'c966e822-2cd3-4b8f-bbb0-99fea2cd3e92', voucherType = 6 }";
+
+                    jsonEvent = "{ "
+                     + "   'amount': 2547.35,"
+                     + "   'created': '2019-12-18 07:25:28',"
+                     + "   'tag': '',"
+                     + "   'validFromDate': '2019-12-18 07:25:28',"
+                     + "   'validToDate': '2021-12-18 07:25:28',"
+                     + "   'voucherCode': '307001090083',"
+                     + "   'voucherId': 'c966e822-2cd3-4b8f-bbb0-99fea2cd3e92',"
+                     + "   'voucherType': 6"
+                     + "}";
+
+                    ValueCodeEvent valueCodeEvent = new ValueCodeEvent();
+                                    
+
+                    //Amount: '2547,35', Created: 2019 - 12 - 18 07:25:28, Tag: , ValidFromDate: 2019 - 12 - 18 07:25:28, ValidToDate: 2021 - 12 - 18 07:25:28, VoucherCode: 307001090083, 
+                    //VoucherId: c966e822 - 2cd3 - 4b8f - bbb0 - 99fea2cd3e92, VoucherType: 2, RemainingAmount: , Disabled: , EanCode: , CouponId:
+                    
+                    //Send request
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    {
+                        var InputJSON = WebApiTestHelper.GenericSerializer(jsonEvent);
+                        streamWriter.Write(InputJSON);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+                    
+                    //Get response
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        //Read response
+                        var response = streamReader.ReadToEnd();
+                        localContext.TracingService.Trace("Done, returned httpCode: {0} Content: {1}", httpResponse.StatusCode, response);
+
+                        Assert.AreEqual(HttpStatusCode.OK, httpResponse.StatusCode);
+
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                var resp = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
+                throw new Exception(resp, ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"*Error: {ex.Message}", ex);
+            }
+        }
 
         [Test]
         public void CreateValueCode_AboveMaxAmount()

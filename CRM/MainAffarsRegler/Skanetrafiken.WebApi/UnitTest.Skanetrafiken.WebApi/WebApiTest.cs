@@ -5056,6 +5056,243 @@ namespace Endeavor.Crm.UnitTest
             }
         }
 
+        public string GetSKAKortJsonString(Guid? contactGuid, bool withoutCardNumber, bool withoutCardName, bool withoutContactId, out string cardNumberOut, out string cardNameOut)
+        {
+            string json = "{ ";
+
+            string cardNumber = "";
+            string cardName = "";
+            string contactId = "";
+
+            #region Random Card Number
+            if (withoutCardNumber != true)
+            {
+                Random rnd = new Random();
+                int randomCardNumber = rnd.Next(100000, 999999);
+                cardNumber = randomCardNumber.ToString();
+                json += "'cardNumber': '" + cardNumber + "', ";
+
+                cardNumberOut = cardNumber;
+            }
+            else
+            {
+                cardNumberOut = "";
+            }
+            #endregion
+
+            #region Card Name
+            if (withoutCardName != true)
+            {
+                cardName = "Skånetrafikenskortet_" + DateTime.Now + "_" + DateTime.Now.Hour + " " + DateTime.Now.Minute;
+                json += "'cardName': '" + cardNumber + "', ";
+
+                cardNameOut = cardName;
+            }
+            else
+            {
+                cardNameOut = "";
+            }
+            #endregion
+
+            #region Contact
+            if (withoutContactId != true)
+            {
+                contactId = contactGuid.ToString();
+                json += "'contactId': '" + contactId + "' ";
+            }
+            #endregion
+
+            //json = "{ 'cardNumber': '" + cardNumber + "', 'cardName': '" + cardName + "', 'contactId': '" + contactId + "' }";
+
+            return json;
+        }
+
+        [Test, Category("Debug")]
+        public void FullFlowSKAkort()
+        {
+            // Connect to the Organization service. 
+            // The using statement assures that the service proxy will be properly disposed.
+            using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+            {
+                // This statement is required to enable early-bound type support.
+                _serviceProxy.EnableProxyTypes();
+
+                Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
+
+                System.Diagnostics.Stopwatch _totalTimer = new System.Diagnostics.Stopwatch();
+                System.Diagnostics.Stopwatch _partTimer = new System.Diagnostics.Stopwatch();
+                _totalTimer.Restart();
+                _partTimer.Restart();
+
+
+                QueryExpression contactQuery = new QueryExpression()
+                {
+                    EntityName = ContactEntity.EntityLogicalName,
+                    ColumnSet = new ColumnSet(false),
+                    Criteria =
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active)
+                        }
+                    }
+                };
+
+                ContactEntity contact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, contactQuery);
+
+                string cardNumber = "";
+                string cardName = "";
+                string skaKortJsonMessage = GetSKAKortJsonString(contact.Id, false, false, false, out cardNumber, out cardName);
+                
+                // 2020-04-07 Register Skå Card against Contact
+                #region Register SKÅ Card
+                {
+                    var httpWebRequest = (HttpWebRequest)WebRequest.Create($"{WebApiTestHelper.WebApiRootEndpoint}SkaKort");
+                    WebApiTestHelper.CreateTokenForTest(localContext, httpWebRequest);
+                    httpWebRequest.ContentType = "application/json";
+                    httpWebRequest.Method = "POST";
+
+
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    {
+                        string InputJSON = WebApiTestHelper.GenericSerializer(skaKortJsonMessage);
+
+                        streamWriter.Write(InputJSON);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        // Result is 
+                        var result = streamReader.ReadToEnd();
+                        localContext.TracingService.Trace("SkaKort POST results={0}", result);
+                    }
+
+                    QueryExpression skaKortQuery = new QueryExpression()
+                    {
+                        EntityName = SkaKortEntity.EntityLogicalName,
+                        ColumnSet = new ColumnSet(true),
+                        Criteria =
+                        {
+                            Conditions =
+                            {
+                                new ConditionExpression(SkaKortEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.ed_SKAkortState.Active),
+                                new ConditionExpression(SkaKortEntity.Fields.ed_CardNumber, ConditionOperator.Equal, cardNumber),
+                                new ConditionExpression(SkaKortEntity.Fields.ed_Contact, ConditionOperator.Equal, contact.Id)
+                            }
+                        }
+                    };
+
+                    SkaKortEntity skaKort = XrmRetrieveHelper.RetrieveFirst<SkaKortEntity>(localContext, skaKortQuery);
+
+                    if(skaKort == null)
+                    {
+                        throw new Exception("SKA kort should have been created. Found no card...");
+                    }
+                }
+                #endregion
+
+                // 2020-04-07 Unregister Skå Card against Contact
+                #region "Unregister" SKÅ Card
+                {
+                    var httpWebRequest = (HttpWebRequest)WebRequest.Create($"{WebApiTestHelper.WebApiRootEndpoint}SkaKort");
+                    WebApiTestHelper.CreateTokenForTest(localContext, httpWebRequest);
+                    httpWebRequest.ContentType = "application/json";
+                    httpWebRequest.Method = "PUT";
+                    
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    {
+                        string InputJSON = WebApiTestHelper.GenericSerializer(skaKortJsonMessage);
+
+                        streamWriter.Write(InputJSON);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        // Result is 
+                        var result = streamReader.ReadToEnd();
+                        localContext.TracingService.Trace("SkaKort PUT results={0}", result);
+                    }
+
+                    QueryExpression skaKortQuery = new QueryExpression()
+                    {
+                        EntityName = SkaKortEntity.EntityLogicalName,
+                        ColumnSet = new ColumnSet(true),
+                        Criteria =
+                        {
+                            Conditions =
+                            {
+                                new ConditionExpression(SkaKortEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.ed_SKAkortState.Active),
+                                new ConditionExpression(SkaKortEntity.Fields.ed_CardNumber, ConditionOperator.Equal, cardNumber)
+                            }
+                        }
+                    };
+
+                    SkaKortEntity skaKort = XrmRetrieveHelper.RetrieveFirst<SkaKortEntity>(localContext, skaKortQuery);
+
+                    if (skaKort == null || skaKort.ed_Contact != null)
+                    {
+                        throw new Exception("Found no SKA kort or Contact still exists on card..");
+                    }
+                }
+                #endregion
+
+                // 2020-04-07 Unregister Skå Card against Contact
+                #region Delete SKÅ Card
+                {
+                    var httpWebRequest = (HttpWebRequest)WebRequest.Create($"{WebApiTestHelper.WebApiRootEndpoint}SkaKort");
+                    WebApiTestHelper.CreateTokenForTest(localContext, httpWebRequest);
+                    httpWebRequest.ContentType = "application/json";
+                    httpWebRequest.Method = "DELETE";
+
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    {
+                        string InputJSON = WebApiTestHelper.GenericSerializer(skaKortJsonMessage);
+
+                        streamWriter.Write(InputJSON);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        // Result is 
+                        var result = streamReader.ReadToEnd();
+                        localContext.TracingService.Trace("SkaKort DELETE results={0}", result);
+                    }
+
+                    QueryExpression skaKortQuery = new QueryExpression()
+                    {
+                        EntityName = SkaKortEntity.EntityLogicalName,
+                        ColumnSet = new ColumnSet(true),
+                        Criteria =
+                        {
+                            Conditions =
+                            {
+                                new ConditionExpression(SkaKortEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.ed_SKAkortState.Inactive),
+                                new ConditionExpression(SkaKortEntity.Fields.ed_CardNumber, ConditionOperator.Equal, cardNumber)
+                            }
+                        }
+                    };
+
+                    SkaKortEntity skaKort = XrmRetrieveHelper.RetrieveFirst<SkaKortEntity>(localContext, skaKortQuery);
+
+                    if (skaKort == null)
+                    {
+                        throw new Exception("Found no inactive SKA kort..");
+                    }
+                }
+                #endregion
+                
+            }
+        }
+
 
         [Test]
         public void ValidateEmailAddressWithStrangeCharacters()

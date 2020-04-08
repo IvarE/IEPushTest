@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ns0:Filter xmlns:ns0="http://crm.endeavor.se/Filter.xsd" languageCode="1053">
+  <ns0:TargetFile>Test.js</ns0:TargetFile>
+  <ns0:EntityOptionSets>
+    <ns0:EntityOptionSet entity="account" attribute="accountcategorycode" />
+  </ns0:EntityOptionSets>
+  <ns0:GlobalOptionSets>
+    <ns0:GlobalOptionSet name="processstage_category"/>
+  </ns0:GlobalOptionSets>
+</ns0:Filter>

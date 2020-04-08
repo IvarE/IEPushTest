@@ -137,6 +137,7 @@
     <Compile Include="Entities\CampaignResponseEntity.cs" />
     <Compile Include="Entities\CreditOrderRowEntity.cs" />
     <Compile Include="Entities\EmailTemplateProxyEntity.cs" />
+    <Compile Include="Entities\FeatureTogglingEntity.cs" />
     <Compile Include="Entities\OrderStatusEntity.cs" />
     <Compile Include="Entities\RefundAccountEntity.cs" />
     <Compile Include="Entities\RefundEntity.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Entities\ValueCodeApprovalEntity.cs" />
     <Compile Include="Entities\ValueCodeEntity.cs" />
     <Compile Include="Entities\ValueCodeTemplateEntity.cs" />
+    <Compile Include="Entities\ValueCodeTransactionEntity.cs" />
     <Compile Include="EntityExtensionMethods.cs" />
     <Compile Include="Identity.cs" />
     <Compile Include="ColumnBlockSchemas\NotificationInfoBlock.cs">
