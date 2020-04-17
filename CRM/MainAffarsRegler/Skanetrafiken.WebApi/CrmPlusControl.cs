@@ -4168,6 +4168,395 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
+        internal static HttpResponseMessage RegisterBuyAndSendSkaKortPost(int threadId, SkaKortInfo skaKortInfo)
+        {
+            try
+            {
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+                // Cast the proxy client to the IOrganizationService interface.
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                {
+                    Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    //TODO: Create Validate Register skaKortInfo method -> Create skaKortUtility. Might not need to validate ContactId / PortalId
+                    StatusBlock validateStatus = SkaKortUtility.ValidateSkaKortInfo(localContext, skaKortInfo, true);
+                    if (!validateStatus.TransactionOk)
+                    {
+                        _log.Error($"SkaKort-POST. Validation failed.");
+                        HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        rm.Content = new StringContent(validateStatus.ErrorMessage);
+                        return rm;
+                    }
+
+                    //Get Contact
+                    FilterExpression contactFilter = new FilterExpression(LogicalOperator.And);
+                    contactFilter.AddCondition(ContactEntity.Fields.Id.ToLower(), ConditionOperator.Equal, skaKortInfo.ContactId.ToLower());
+                    ContactEntity contact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, new ColumnSet(false), contactFilter);
+
+                    if (contact != null)
+                    {
+                        //TODO: Validate if SkaKort already exists
+                        FilterExpression skaKortFilter = new FilterExpression(LogicalOperator.And);
+                        skaKortFilter.AddCondition(SkaKortEntity.Fields.ed_CardNumber, ConditionOperator.Equal, skaKortInfo.CardNumber);
+                        List<SkaKortEntity> skakort = XrmRetrieveHelper.RetrieveMultiple<SkaKortEntity>(localContext, new ColumnSet(false), skaKortFilter).ToList();
+
+                        if (skakort != null && skakort.Count > 0) //Vi ska inte hitta någon Resekort med Contact
+                        {
+                            if (skakort[0].ed_Account != null || skakort[0].ed_Contact != null)
+                            {
+                                _log.Error($"SkaKort-POST. SkaKort found with existing Account/Contact. CardNumber: {skaKortInfo.CardNumber}.");
+                                HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                error.Content = new StringContent($"SkaKort with CardNumber {skaKortInfo.CardNumber} already exists with Account/Contact.");
+                                return error;
+                            }
+                            else
+                            {
+                                _log.Debug($"Updating SkaKort with CardNumber {skaKortInfo.CardNumber} and CardName {skaKortInfo.CardName}.");
+
+                                //TODO: Update SkaKort
+                                SkaKortEntity updateSkaKort = new SkaKortEntity();
+                                updateSkaKort.Id = skakort[0].Id;
+                                updateSkaKort.ed_name = skaKortInfo.CardName;
+                                updateSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
+                                updateSkaKort.ed_Contact = contact.ToEntityReference();
+
+                                if (skaKortInfo.InformationSource == 1)
+                                {
+                                    updateSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
+                                }
+                                else if (skaKortInfo.InformationSource == 2)
+                                {
+                                    updateSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
+                                }
+
+                                XrmHelper.Update(localContext, updateSkaKort);
+
+                                _log.Debug($"SkaKort updated. SkaKortId: {skakort[0].Id}.");
+
+                                HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                                resp.Content = new StringContent("SkaKort updated.");
+                                return resp;
+                            }
+                        }
+                        else //Create new
+                        {
+                            _log.Debug($"Creating new SkaKort with CardNumber {skaKortInfo.CardNumber} and CardName {skaKortInfo.CardName}.");
+
+                            //TODO: Create SkaKort
+                            SkaKortEntity newSkaKort = new SkaKortEntity();
+                            newSkaKort.ed_name = skaKortInfo.CardName;
+                            newSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
+                            newSkaKort.ed_Contact = contact.ToEntityReference();
+
+                            if (skaKortInfo.InformationSource == 1)
+                            {
+                                newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
+                            }
+                            else if (skaKortInfo.InformationSource == 2)
+                            {
+                                newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
+                            }
+                            
+                            newSkaKort.Id = XrmHelper.Create(localContext, newSkaKort);
+
+                            _log.Debug($"New SkaKort created. SkaKortId: {newSkaKort.Id}.");
+
+                            HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                            resp.Content = new StringContent("SkaKort created.");
+                            return resp;
+                        }
+                    }
+                    else
+                    {
+                        _log.Error($"SkaKort-POST. No Account found with passed AccountNumber {skaKortInfo.PortalId}.");
+                        HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        error.Content = new StringContent($"Account with AccountNumber {skaKortInfo.PortalId} does not exist.");
+                        return error;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
+            }
+        }
+
+        internal static HttpResponseMessage RegisterCompanySkaKortPost(int threadId, SkaKortInfo skaKortInfo)
+        {
+            try
+            {
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+                // Cast the proxy client to the IOrganizationService interface.
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                {
+                    Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    //TODO: Create Validate Register skaKortInfo method -> Create skaKortUtility. Might not need to validate ContactId / PortalId
+                    StatusBlock validateStatus = SkaKortUtility.ValidateSkaKortInfo(localContext, skaKortInfo, true);
+                    if (!validateStatus.TransactionOk)
+                    {
+                        _log.Error($"SkaKort-POST. Validation failed.");
+                        HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        rm.Content = new StringContent(validateStatus.ErrorMessage);
+                        return rm;
+                    }
+
+                    //Get Account
+                    FilterExpression accountFilter = new FilterExpression(LogicalOperator.And);
+                    accountFilter.AddCondition(AccountEntity.Fields.AccountNumber, ConditionOperator.Equal, skaKortInfo.PortalId);
+                    AccountEntity account = XrmRetrieveHelper.RetrieveFirst<AccountEntity>(localContext, new ColumnSet(false), accountFilter);
+
+                    if (account != null)
+                    {
+                        //TODO: Validate if SkaKort already exists
+                        FilterExpression skaKortFilter = new FilterExpression(LogicalOperator.And);
+                        skaKortFilter.AddCondition(SkaKortEntity.Fields.ed_CardNumber, ConditionOperator.Equal, skaKortInfo.CardNumber);
+
+                        List<SkaKortEntity> skakort = XrmRetrieveHelper.RetrieveMultiple<SkaKortEntity>(localContext, new ColumnSet(SkaKortEntity.Fields.Id, SkaKortEntity.Fields.ed_Contact, SkaKortEntity.Fields.ed_Account), skaKortFilter).ToList();
+
+                        if (skakort != null && skakort.Count > 0) //Vi ska inte hitta fler än 1 (update)
+                        {
+                            if (skakort[0].ed_Account != null || skakort[0].ed_Contact != null)
+                            {
+                                _log.Error($"SkaKort-POST. SkaKort found with existing Account/Contact. CardNumber: {skaKortInfo.CardNumber}.");
+                                HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                error.Content = new StringContent($"SkaKort with CardNumber {skaKortInfo.CardNumber} already exists with Account/Contact.");
+                                return error;
+                            }
+                            else
+                            {
+                                _log.Debug($"Updating SkaKort with CardNumber {skaKortInfo.CardNumber} and CardName {skaKortInfo.CardName}.");
+
+                                //TODO: Update SkaKort
+                                SkaKortEntity updateSkaKort = new SkaKortEntity();
+                                updateSkaKort.Id = skakort[0].Id;
+                                updateSkaKort.ed_name = skaKortInfo.CardName;
+                                updateSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
+                                updateSkaKort.ed_Account = account.ToEntityReference();
+
+                                if (skaKortInfo.InformationSource == 1)
+                                {
+                                    updateSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
+                                }
+                                else if (skaKortInfo.InformationSource == 2)
+                                {
+                                    updateSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
+                                }
+
+                                XrmHelper.Update(localContext, updateSkaKort);
+
+                                _log.Debug($"SkaKort updated. SkaKortId: {skakort[0].Id}.");
+
+                                HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                                resp.Content = new StringContent("SkaKort updated.");
+                                return resp;
+                            }
+                        }
+                        else
+                        {
+                            _log.Debug($"Creating new SkaKort with CardNumber {skaKortInfo.CardNumber} and CardName {skaKortInfo.CardName}.");
+
+                            //TODO: Create SkaKort
+                            SkaKortEntity newSkaKort = new SkaKortEntity();
+                            newSkaKort.ed_name = skaKortInfo.CardName;
+                            newSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
+                            newSkaKort.ed_Account = account.ToEntityReference();
+
+                            if (skaKortInfo.InformationSource == 1)
+                            {
+                                newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
+                            }
+                            else if (skaKortInfo.InformationSource == 2)
+                            {
+                                newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
+                            }
+
+                            newSkaKort.Id = XrmHelper.Create(localContext, newSkaKort);
+
+                            _log.Debug($"New SkaKort created. SkaKortId: {newSkaKort.Id}.");
+
+                            HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                            resp.Content = new StringContent("SkaKort created.");
+                            return resp;
+                        }
+                        
+                    }
+                    else
+                    {
+                        _log.Error($"SkaKort-POST. No Account found with passed AccountNumber {skaKortInfo.PortalId}.");
+                        HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        error.Content = new StringContent($"Account with AccountNumber {skaKortInfo.PortalId} does not exist.");
+                        return error;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
+            }
+        }
+
+        internal static HttpResponseMessage RemoveSkaKortContactOrAccountPut(int threadId, SkaKortInfo skaKortInfo)
+        {
+            try
+            {
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+                // Cast the proxy client to the IOrganizationService interface.
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                {
+                    Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    //TODO: Create Validate Register skaKortInfo method -> Create skaKortUtility. Might not need to validate ContactId / PortalId
+                    StatusBlock validateStatus = SkaKortUtility.ValidateSkaKortInfo(localContext, skaKortInfo, false);
+                    if (!validateStatus.TransactionOk)
+                    {
+                        _log.Error($"SkaKort-POST. Validation failed.");
+                        HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        rm.Content = new StringContent(validateStatus.ErrorMessage);
+                        return rm;
+                    }
+
+                    //TODO: Get relevant SkaKort
+                    SkaKortEntity skakort = null;
+                    FilterExpression skaKortFilter = new FilterExpression(LogicalOperator.And);
+                    skaKortFilter.AddCondition(SkaKortEntity.Fields.ed_CardNumber, ConditionOperator.Equal, skaKortInfo.CardNumber);
+                    skakort = XrmRetrieveHelper.RetrieveFirst<SkaKortEntity>(localContext, new ColumnSet(SkaKortEntity.Fields.Id, SkaKortEntity.Fields.statuscode, SkaKortEntity.Fields.statecode), skaKortFilter);
+
+                    if (skakort == null)
+                    {
+                        _log.Error($"SkaKort-PUT. SkaKort with CardNumber {skaKortInfo.CardNumber} was not found.");
+                        HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        error.Content = new StringContent($"SkaKort with CardNumber {skaKortInfo.CardNumber} does not exist.");
+                        return error;
+                    }
+                    else
+                    {
+                        if (skakort.statecode != Generated.ed_SKAkortState.Inactive)
+                        {
+                            SkaKortEntity updateSkakort = new SkaKortEntity();
+                            updateSkakort.Id = skakort.Id;
+                            updateSkakort.statecode = Generated.ed_SKAkortState.Inactive;
+
+                            XrmHelper.Update(localContext, updateSkakort);
+
+                            _log.Debug($"SkaKort updated. SkaKortId: {skakort.Id}.");
+
+                            HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                            resp.Content = new StringContent("SkaKort updated.");
+                            return resp;
+                        }
+                        else
+                        {
+                            _log.Error($"SkaKort-PUT. SkaKort with CardNumber {skaKortInfo.CardNumber} has already been removed.");
+                            HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                            error.Content = new StringContent($"SkaKort with CardNumber {skaKortInfo.CardNumber} has already been removed.");
+                            return error;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
+            }
+        }
+
+        internal static HttpResponseMessage SkaKortDelete(int threadId, SkaKortInfo skaKortInfo)
+        {
+            try
+            {
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+                // Cast the proxy client to the IOrganizationService interface.
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                {
+                    Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    //TODO: Create Validate Register skaKortInfo method -> Create skaKortUtility. Might not need to validate ContactId / PortalId
+                    StatusBlock validateStatus = SkaKortUtility.ValidateSkaKortInfo(localContext, skaKortInfo, false);
+                    if (!validateStatus.TransactionOk)
+                    {
+                        HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        rm.Content = new StringContent(validateStatus.ErrorMessage);
+                        return rm;
+                    }
+
+                    //TODO: Get relevant SkaKort
+                    SkaKortEntity skakort = null;
+                    FilterExpression skaKortFilter = new FilterExpression(LogicalOperator.And);
+                    skaKortFilter.AddCondition(SkaKortEntity.Fields.ed_CardNumber, ConditionOperator.Equal, skaKortInfo.CardNumber);
+                    skakort = XrmRetrieveHelper.RetrieveFirst<SkaKortEntity>(localContext, new ColumnSet(SkaKortEntity.Fields.Id, SkaKortEntity.Fields.ed_CardNumber, SkaKortEntity.Fields.statecode, SkaKortEntity.Fields.statuscode), skaKortFilter);
+
+                    if (skakort == null)
+                    {
+                        _log.Error($"SkaKort-DELETE. SkaKort with CardNumber {skaKortInfo.CardNumber} was not found.");
+                        HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        error.Content = new StringContent($"SkaKort with CardNumber {skaKortInfo.CardNumber} does not exist.");
+                        return error;
+                    }
+
+                    SkaKortEntity updateSkakort = new SkaKortEntity();
+                    updateSkakort.Id = skakort.Id;
+                    updateSkakort.statecode = Generated.ed_SKAkortState.Inactive; //Add account among columns
+
+                    XrmHelper.Update(localContext, updateSkakort);
+
+                    _log.Debug($"SkaKort revoked. SkaKortId: {skakort.Id}.");
+
+                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                    resp.Content = new StringContent("SkaKort revoked.");
+                    return resp;
+                }
+
+                //HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                //resp.Content = new StringContent(SerializeNoNull(skaKortInfo));
+                //return resp;
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
+            }
+        }
+
         //Use this method to return the Guid for the Euro currency
         public static String RetrieveSEKCurrencyId(IOrganizationService service)
         {

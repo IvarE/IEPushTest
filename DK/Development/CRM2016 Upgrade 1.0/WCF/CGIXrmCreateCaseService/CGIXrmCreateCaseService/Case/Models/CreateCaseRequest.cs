@@ -49,6 +49,9 @@ namespace CGIXrmCreateCaseService
         public string City { get; set; }
 
         [DataMember]
+        public string DriverId { get; set; }
+
+        [DataMember]
         public string Train { get; set; }
 
         [DataMember]

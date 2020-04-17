@@ -327,10 +327,12 @@
     <Compile Include="..\Skanetrafiken.Crm\XrmRetrieveHelper.cs">
       <Link>XrmRetrieveHelper.cs</Link>
     </Compile>
+    <Compile Include="SkaKortUtility.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="ConnectionCacheManager.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
+    <Compile Include="Controllers\SkaKortController.cs" />
     <Compile Include="Controllers\TravelCardController.cs" />
     <Compile Include="Controllers\ValueCodeController.cs" />
     <Compile Include="Controllers\PingConnectionController.cs" />
@@ -350,6 +352,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Help.cs" />
+    <Compile Include="Models\SkaKortInfo.cs" />
     <Compile Include="Models\BlockTravelCardReasonCode.cs" />
     <Compile Include="Models\CardDetails.cs" />
     <Compile Include="Models\AccountInfo.cs" />
