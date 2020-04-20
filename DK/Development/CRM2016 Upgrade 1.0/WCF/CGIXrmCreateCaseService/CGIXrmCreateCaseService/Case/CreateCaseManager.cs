@@ -1707,6 +1707,11 @@ namespace CGIXrmCreateCaseService.Case
                 incident.Attributes.Add("cgi_unregisterdtravelcard", request.CardNumber);
             }
 
+            if(!string.IsNullOrEmpty(request.SKACardNumber))
+            {
+                incident.Attributes.Add("ed_UnregisterdSKACard", request.SKACardNumber);
+            }
+
             if (!string.IsNullOrEmpty(request.WayOfTravel))
             {
                 incident.Attributes.Add("cgi_way_of_transport", request.WayOfTravel);
