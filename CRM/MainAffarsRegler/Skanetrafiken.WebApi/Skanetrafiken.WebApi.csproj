@@ -204,6 +204,9 @@
     <Compile Include="..\Skanetrafiken.Crm\Entities\EmailTemplateProxyEntity.cs">
       <Link>Entities\EmailTemplateProxyEntity.cs</Link>
     </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\FeatureTogglingEntity.cs">
+      <Link>Entities\FeatureTogglingEntity.cs</Link>
+    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\IncidentEntity.cs">
       <Link>Entities\IncidentEntity.cs</Link>
     </Compile>
@@ -296,6 +299,9 @@
     </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\ValueCodeTemplateEntity.cs">
       <Link>Entities\ValueCodeTemplateEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ValueCodeTransactionEntity.cs">
+      <Link>Entities\ValueCodeTransactionEntity.cs</Link>
     </Compile>
     <Compile Include="..\Skanetrafiken.Crm\GeneratedEntities.cs">
       <Link>GeneratedEntities.cs</Link>

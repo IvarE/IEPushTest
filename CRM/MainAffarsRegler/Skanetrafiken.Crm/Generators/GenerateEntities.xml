@@ -44,6 +44,7 @@
     <entity>ed_deltabatcherrorlogrow</entity>
     <entity>ed_deltabatchlog</entity>
     <entity>ed_deltabatchqueue</entity>
+    <entity>ed_featuretoggling</entity>
     <entity>ed_mergerecords</entity>
     <entity>ed_notifymkl</entity>
     <entity>ed_orderstatus</entity>
@@ -57,6 +58,7 @@
     <entity>ed_valuecode</entity>
     <entity>ed_valuecodetemplate</entity>
     <entity>ed_valuecodeapproval</entity>
+    <entity>ed_valuecodetransaction</entity>
     
     <entity>ed_emailtemplateproxy</entity>
     <entity>ed_returnmessagewebapi</entity>

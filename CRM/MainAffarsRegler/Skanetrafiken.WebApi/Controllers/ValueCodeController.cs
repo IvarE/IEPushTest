@@ -131,7 +131,7 @@ namespace Skanetrafiken.Crm.Controllers
                 ConnectionCacheManager.ReleaseConnection(threadId);
             }
         }
-
+        
 
         /// <summary>
         /// Used for receiving messages including value code information from a Push-queue (IronMQ).

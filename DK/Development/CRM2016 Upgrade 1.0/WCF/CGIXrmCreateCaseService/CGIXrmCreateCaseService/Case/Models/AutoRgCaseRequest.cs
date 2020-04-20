@@ -35,6 +35,9 @@ namespace CGIXrmCreateCaseService.Case.Models
         public string CardNumber { get; set; } // saved as case travelcardnumber
 
         [DataMember]
+        public string SKACardNumber { get; set; } // saved as case SKA Card number
+
+        [DataMember]
         public string WayOfTravel { get; set; }//saved as case Incident way of transport
 
         [DataMember]
@@ -98,7 +101,7 @@ namespace CGIXrmCreateCaseService.Case.Models
 
         [DataMember]
         public string TicketNumber2 { get; set; }
-
+        
         [DataMember]
         public string MileageFrom { get; set; }
 

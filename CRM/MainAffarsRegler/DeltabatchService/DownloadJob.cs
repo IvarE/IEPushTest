@@ -592,6 +592,14 @@ namespace Endeavor.Crm.DeltabatchService
             }
             #endregion
             #region PostalCode
+            // 2018-11-22 - Marcus Stenswed
+            // If Postal Code is missing, set value 00000
+            if (String.IsNullOrEmpty(postalCode) && !String.IsNullOrEmpty(existingContact.Address1_PostalCode) && existingContact.Address1_PostalCode != "00000")
+            {
+                updateContact.Address1_PostalCode = "00000";
+                update = true;
+            }
+            else if (String.IsNullOrEmpty(postalCode) && String.IsNullOrEmpty(existingContact.Address1_PostalCode))
             {
                 updateContact.Address1_PostalCode = "00000";
                 update = true;
