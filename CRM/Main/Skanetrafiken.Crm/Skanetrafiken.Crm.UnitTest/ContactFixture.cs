@@ -632,7 +632,7 @@ namespace Endeavor.Crm.UnitTest
                 System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
 
-                bool checkSingleCompanyRole = true;
+                bool checkSingleCompanyRole = false;
 
                 List<CompanyRoleEntity> allCompanyRoles = new List<CompanyRoleEntity>();
 

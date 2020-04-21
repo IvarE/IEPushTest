@@ -44,6 +44,9 @@ namespace CGIXrmCreateCaseService.Case.Models
         public string Line { get; set; }//saved as case line
 
         [DataMember]
+        public string DriverId { get; set; }//New Field
+
+        [DataMember]
         public string FirstName { get; set; }//used to create a private customer if no customer is found by customerid or email.
 
         [DataMember]

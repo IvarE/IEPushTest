@@ -1590,6 +1590,12 @@ namespace CGIXrmCreateCaseService.Case
                 descriptionText += $"{Environment.NewLine}Stad: {request.City}";
             }
 
+            if (!string.IsNullOrEmpty(request.DriverId))
+            {
+                _incidentEntity.Attributes.Add("ed_driverid", request.DriverId);
+                descriptionText += $"{Environment.NewLine}Förar Id: {request.DriverId}";
+            }
+
             if (!string.IsNullOrEmpty(request.EmailAddress))
                 _incidentEntity.Attributes.Add("cgi_emailaddress", request.EmailAddress);
 
@@ -1720,6 +1726,11 @@ namespace CGIXrmCreateCaseService.Case
             if (!string.IsNullOrEmpty(request.Line))
             {
                 incident.Attributes.Add("cgi_line", request.Line);
+            }
+
+            if (!string.IsNullOrEmpty(request.DriverId))
+            {
+                incident.Attributes.Add("ed_driverid", request.DriverId);
             }
 
             if (!string.IsNullOrEmpty(request.EmailAddress))

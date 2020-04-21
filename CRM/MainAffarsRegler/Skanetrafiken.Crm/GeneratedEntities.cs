@@ -43284,6 +43284,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Unique identifier for Account associated with SKÅ kort.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_account")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_Account
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_account");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_account", value);
+			}
+		}
+		
+		/// <summary>
 		/// 
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_account")]
