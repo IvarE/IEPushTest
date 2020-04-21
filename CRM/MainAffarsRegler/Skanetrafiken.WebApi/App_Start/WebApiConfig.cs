@@ -140,7 +140,7 @@ namespace Skanetrafiken.Crm
 
             config.Routes.MapHttpRoute(
                 name: "Puts",
-                routeTemplate: "api/{controller}/{id}",
+                routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new
                 {
                 },
@@ -149,6 +149,8 @@ namespace Skanetrafiken.Crm
                     httpMethod = new HttpMethodConstraint(HttpMethod.Put)
                 }
                 );
+
+            
 
             //config.Routes.MapHttpRoute(
             //    name: "Gets and Puts",
@@ -159,6 +161,34 @@ namespace Skanetrafiken.Crm
             //    constraints: new
             //    {
             //        httpMethod = new HttpMethodConstraint(HttpMethod.Get, HttpMethod.Put)
+            //    }
+            //    );
+
+            //config.Routes.MapHttpRoute(
+            //    name: "Revoke",
+            //    routeTemplate: "api/{controller}/Revoke",
+            //    defaults: new
+            //    {
+            //        action = "Revoke"
+            //    },
+
+            //    constraints: new
+            //    {
+            //        httpMethod = new HttpMethodConstraint(HttpMethod.Put)
+            //    }
+            //    );
+
+            //config.Routes.MapHttpRoute(
+            //    name: "Disconnect",
+            //    routeTemplate: "api/{controller}/Disconnect",
+            //    defaults: new
+            //    {
+            //        action = "Disconnect"
+            //    },
+
+            //    constraints: new
+            //    {
+            //        httpMethod = new HttpMethodConstraint(HttpMethod.Put)
             //    }
             //    );
 

@@ -89,7 +89,7 @@ namespace Skanetrafiken.Crm.Controllers
 
         //Remove Contact/Account (Update) SkaKort
         [HttpPut]
-        public HttpResponseMessage Put([FromBody] SkaKortInfo skaKortInfo)
+        public HttpResponseMessage Revoke([FromUri] string id, [FromBody] SkaKortInfo skaKortInfo)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
             _log.DebugFormat($"Th={threadId} - Put called with Payload:\n {CrmPlusControl.SerializeNoNull(skaKortInfo)}");
@@ -124,10 +124,10 @@ namespace Skanetrafiken.Crm.Controllers
 
         //Revoke (Delete) SkaKort
         [HttpPut]
-        public HttpResponseMessage Delete([FromBody] SkaKortInfo skaKortInfo)
+        public HttpResponseMessage Disconnect([FromUri] string id, [FromBody] SkaKortInfo skaKortInfo)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.DebugFormat($"Th={threadId} - Delete called with Payload:\n {CrmPlusControl.SerializeNoNull(skaKortInfo)}");
+            _log.DebugFormat($"Th={threadId} - Disconnect called with Payload:\n {CrmPlusControl.SerializeNoNull(skaKortInfo)}");
 
             if (skaKortInfo == null)
             {
@@ -140,7 +140,7 @@ namespace Skanetrafiken.Crm.Controllers
             try
             {
 
-                HttpResponseMessage rm = CrmPlusControl.SkaKortDelete(threadId, skaKortInfo);
+                HttpResponseMessage rm = CrmPlusControl.SkaKortDisconnect(threadId, skaKortInfo);
 
                 _log.DebugFormat($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 return rm;

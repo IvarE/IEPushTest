@@ -385,7 +385,7 @@ namespace Skanetrafiken.Crm.Controllers
         /// <param name="threadId"></param>
         /// <param name="salesOrderInfo"></param>
         /// <returns></returns>
-        internal static HttpResponseMessage KopOchSkickaSalesOrderPost(int threadId, SalesOrderInfo salesOrderInfo)
+        internal static HttpResponseMessage KopOchSkickaSalesOrderPost(int threadId, SalesOrderInfo salesOrderInfo, bool isFTG)
         {
             CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
             _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
@@ -402,31 +402,64 @@ namespace Skanetrafiken.Crm.Controllers
                 _log.Debug($"Entered KopOchSkickaSalesOrderPost.");
 
                 _log.Debug($"Entering ValidateKopOchSkickaSalesOrderInfo.");
-                var response = ValidateKopOchSkickaSalesOrderInfo(localContext, salesOrderInfo);
+                var response = ValidateKopOchSkickaSalesOrderInfo(localContext, salesOrderInfo, isFTG);
                 _log.Debug($"Exited ValidateKopOchSkickaSalesOrderInfo.");
 
                 if (!HttpStatusCode.OK.Equals(response.StatusCode))
                     return response;
 
-                salesOrderInfo.Customer = new CustomerInfo() { Guid = salesOrderInfo.ContactGuid };
+                ContactEntity contact = null;
+                AccountEntity account = null;
+                SalesOrderEntity newSalesOrder = null;
 
-                if (salesOrderInfo.Customer.Source == 0)
-                    salesOrderInfo.Customer.Source = salesOrderInfo.InformationSource;
-
-                var contact = ContactEntity.GetContactById(localContext, new ColumnSet(ContactEntity.Fields.StateCode), Guid.Parse(salesOrderInfo.Customer.Guid));
-                if (contact == null || contact.StateCode == Generated.ContactState.Inactive)
+                #region Handle Account / Contact Flow
+                if (isFTG == false)
                 {
-                    var contactresp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    contactresp.Content = new StringContent(SerializeNoNull($"Contact '{salesOrderInfo.Customer.Guid}' is either inactive or does not exist in CRM."));
-                    return contactresp;
+                    contact = ContactEntity.GetContactById(localContext, new ColumnSet(ContactEntity.Fields.StateCode), Guid.Parse(salesOrderInfo.Customer.Guid));
+
+                    salesOrderInfo.Customer = new CustomerInfo() { Guid = salesOrderInfo.ContactGuid };
+
+                    if (salesOrderInfo.Customer.Source == 0)
+                        salesOrderInfo.Customer.Source = salesOrderInfo.InformationSource;
+
+                    //var contact = ContactEntity.GetContactById(localContext, new ColumnSet(ContactEntity.Fields.StateCode), Guid.Parse(salesOrderInfo.Customer.Guid));
+                    if ((contact == null || contact.StateCode == Generated.ContactState.Inactive))
+                    {
+                        var contactresp = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        contactresp.Content = new StringContent(SerializeNoNull($"Contact '{salesOrderInfo.Customer.Guid}' is either inactive or does not exist in CRM."));
+                        return contactresp;
+                    }
+
+                    #region Create SalesOrder from SalesOrderInfo
+                    //var newSalesOrder = SalesOrderInfo.GetSalesOrderEntityFromKopAndSkicka(localContext, salesOrderInfo, false);
+                    newSalesOrder = SalesOrderInfo.GetSalesOrderEntityFromKopAndSkicka(localContext, salesOrderInfo, false);
+                    newSalesOrder.ed_ContactId = contact.ToEntityReference(); //check if FTG
+
+                    newSalesOrder.Id = XrmHelper.Create(localContext, newSalesOrder);
+                    #endregion
+                }
+                else
+                {
+                    account = AccountEntity.GetAccountByPortalId(localContext, new ColumnSet(AccountEntity.Fields.StateCode), salesOrderInfo.PortalId);
+                    
+                    if ((account == null || account.StateCode == Generated.AccountState.Inactive))
+                    {
+                        var accountresp = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        accountresp.Content = new StringContent(SerializeNoNull($"Account with PortalId '{salesOrderInfo.PortalId}' is either inactive or does not exist in CRM."));
+                        return accountresp;
+                    }
+
+                    #region Create SalesOrder from SalesOrderInfo
+                    //var newSalesOrder = SalesOrderInfo.GetSalesOrderEntityFromKopAndSkicka(localContext, salesOrderInfo, true);
+                    newSalesOrder = SalesOrderInfo.GetSalesOrderEntityFromKopAndSkicka(localContext, salesOrderInfo, true);
+                    newSalesOrder.ed_AccountId = account.ToEntityReference(); //check if FTG
+
+                    newSalesOrder.Id = XrmHelper.Create(localContext, newSalesOrder);
+                    #endregion
                 }
 
-                #region Create SalesOrder from SalesOrderInfo
-                var newSalesOrder = SalesOrderInfo.GetSalesOrderEntityFromKopAndSkicka(localContext, salesOrderInfo, false);
-                newSalesOrder.ed_ContactId = contact.ToEntityReference();
-
-                newSalesOrder.Id = XrmHelper.Create(localContext, newSalesOrder);
                 #endregion
+
 
                 if (salesOrderInfo.SalesOrderLines != null)
                 {
@@ -460,13 +493,29 @@ namespace Skanetrafiken.Crm.Controllers
                             if (skaKortEnt == null) //Do not create a new SkaKort if one already exists.
                             {
                                 localContext.TracingService.Trace($"Could not find a SkaKort with card number '{salesOrderLineInfo.CardNumber}'");
-                                var skaKort = new SkaKortEntity()
+                                //var skaKort = new SkaKortEntity()
+                                //{
+                                //    ed_CardNumber = salesOrderLineInfo.CardNumber,
+                                //    ed_InformationSource = Generated.ed_informationsource.KopOchSkicka,
+                                //    ed_Contact = contact.ToEntityReference(),
+                                //    ed_name = salesOrderLineInfo.CardNumber
+                                //};
+
+                                SkaKortEntity skaKort = new SkaKortEntity();
+                                skaKort.ed_CardNumber = salesOrderLineInfo.CardNumber;
+                                skaKort.ed_name = salesOrderLineInfo.CardNumber;
+                                if (isFTG == false)
                                 {
-                                    ed_CardNumber = salesOrderLineInfo.CardNumber,
-                                    ed_InformationSource = Generated.ed_informationsource.KopOchSkicka,
-                                    ed_Contact = contact.ToEntityReference(),
-                                    ed_name = salesOrderLineInfo.CardNumber
-                                };
+                                    skaKort.ed_InformationSource = Generated.ed_informationsource.KopOchSkicka;
+                                    skaKort.ed_Contact = contact.ToEntityReference();
+                                }
+                                else
+                                {
+                                    skaKort.ed_InformationSource = Generated.ed_informationsource.KopOchSkickaFTG;
+                                    skaKort.ed_Account = account.ToEntityReference();
+                                }
+                                
+
                                 localContext.TracingService.Trace($"Creating a new SkaKort.");
                                 skaKort.Trace(localContext.TracingService);
                                 skaKort.Id = XrmHelper.Create(localContext, skaKort);
@@ -489,7 +538,8 @@ namespace Skanetrafiken.Crm.Controllers
                                 salesOrderLineInfo,
                                 newSalesOrder.ToEntityReference(),
                                 orderStatus.ToEntityReference(),
-                                null
+                                null,
+                                ""
                             );
 
                             newSalesOrderLine.Id = XrmHelper.Create(localContext, newSalesOrderLine);
@@ -503,7 +553,8 @@ namespace Skanetrafiken.Crm.Controllers
                                     salesOrderLineInfo,
                                     newSalesOrder.ToEntityReference(),
                                     orderStatus.ToEntityReference(),
-                                    skaKortEnt.ToEntityReference()
+                                    skaKortEnt.ToEntityReference(),
+                                    skaKortEnt.ed_CardNumber
                                 );
 
                             newSalesOrderLine.Id = XrmHelper.Create(localContext, newSalesOrderLine);
@@ -521,7 +572,7 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
-        internal static HttpResponseMessage KopOchSkickaSalesOrderPut(int threadId, SalesOrderInfo salesOrderInfo)
+        internal static HttpResponseMessage KopOchSkickaSalesOrderPut(int threadId, SalesOrderInfo salesOrderInfo, bool isFTG)
         {
             CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
             _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
@@ -536,37 +587,61 @@ namespace Skanetrafiken.Crm.Controllers
 
                 _log.Debug($"Entering KopOchSkickaSalesOrderPost.");
 
-                HttpResponseMessage response = ValidateKopOchSkickaSalesOrderInfo(localContext, salesOrderInfo);
+                HttpResponseMessage response = ValidateKopOchSkickaSalesOrderInfo(localContext, salesOrderInfo, isFTG); //Will we always have portalID?
                 if (!HttpStatusCode.OK.Equals(response.StatusCode))
                     return response;
 
                 //Since no Customer is sent into this model, we'll create a new one with contactid from call.
-                salesOrderInfo.Customer = new CustomerInfo() { Guid = salesOrderInfo.ContactGuid };
+                //salesOrderInfo.Customer = new CustomerInfo() { Guid = salesOrderInfo.ContactGuid };
 
 
-                QueryExpression query = new QueryExpression()
+                //QueryExpression query = new QueryExpression()
+                //{
+                //    EntityName = SalesOrderEntity.EntityLogicalName,
+                //    ColumnSet = new ColumnSet(SalesOrderEntity.Fields.ed_OrderNo),
+                //    Criteria =
+                //    {
+                //        Conditions =
+                //        {
+                //            new ConditionExpression(SalesOrderEntity.Fields.ed_OrderNo, ConditionOperator.Equal, salesOrderInfo.OrderNo),
+                //            new ConditionExpression(SalesOrderEntity.Fields.ed_informationsource, ConditionOperator.Equal, (int)Generated.ed_informationsource.KopOchSkicka)
+                //        }
+                //    }
+                //};
+
+                FilterExpression salesOrderFilter = new FilterExpression();
+                salesOrderFilter.AddCondition(SalesOrderEntity.Fields.ed_OrderNo, ConditionOperator.Equal, salesOrderInfo.OrderNo);
+
+                if (isFTG == false)
                 {
-                    EntityName = SalesOrderEntity.EntityLogicalName,
-                    ColumnSet = new ColumnSet(SalesOrderEntity.Fields.ed_OrderNo),
-                    Criteria =
-                    {
-                        Conditions =
-                        {
-                            new ConditionExpression(SalesOrderEntity.Fields.ed_OrderNo, ConditionOperator.Equal, salesOrderInfo.OrderNo),
-                            new ConditionExpression(SalesOrderEntity.Fields.ed_informationsource, ConditionOperator.Equal, (int)Generated.ed_informationsource.KopOchSkicka)
-                        }
-                    }
-                };
+                    //Since no Customer is sent into this model, we'll create a new one with contactid from call.
+                    salesOrderInfo.Customer = new CustomerInfo() { Guid = salesOrderInfo.ContactGuid };
+                    salesOrderFilter.AddCondition(SalesOrderEntity.Fields.ed_informationsource, ConditionOperator.Equal, (int)Generated.ed_informationsource.KopOchSkicka);
+                }
+                else
+                {
+                    salesOrderFilter.AddCondition(SalesOrderEntity.Fields.ed_informationsource, ConditionOperator.Equal, (int)Generated.ed_informationsource.KopOchSkickaFTG);
+                }
 
                 //Fetch SalesOrder
                 _log.Debug($"Fetching SalesOrderEntity '{salesOrderInfo.OrderNo}'");
-                SalesOrderEntity salesOrderObj = XrmRetrieveHelper.RetrieveFirst<SalesOrderEntity>(localContext, query);
+                //SalesOrderEntity salesOrderObj = XrmRetrieveHelper.RetrieveFirst<SalesOrderEntity>(localContext, query);
+                SalesOrderEntity salesOrderObj = XrmRetrieveHelper.RetrieveFirst<SalesOrderEntity>(localContext, new ColumnSet(SalesOrderEntity.Fields.ed_OrderNo), salesOrderFilter);
 
                 if (salesOrderObj != null)
                 {
                     _log.Debug($"Found SalesOrderEntity. Getting attributes from SalesOrderInfo.");
 
-                    SalesOrderEntity salesOrder = SalesOrderInfo.GetSalesOrderEntityFromKopAndSkicka(localContext, salesOrderInfo, true);
+                    //SalesOrderEntity salesOrder = SalesOrderInfo.GetSalesOrderEntityFromKopAndSkicka(localContext, salesOrderInfo, true);
+                    SalesOrderEntity salesOrder = null;
+                    if (isFTG == false)
+                    {
+                        salesOrder = SalesOrderInfo.GetSalesOrderEntityFromKopAndSkicka(localContext, salesOrderInfo, false);
+                    }
+                    else
+                    {
+                        salesOrder = SalesOrderInfo.GetSalesOrderEntityFromKopAndSkicka(localContext, salesOrderInfo, true);
+                    }
 
                     salesOrder.Id = salesOrderObj.Id;
                     XrmHelper.Update(localContext, salesOrder);
@@ -611,13 +686,28 @@ namespace Skanetrafiken.Crm.Controllers
                                 {
                                     _log.Debug($"SKÅ Kort not found. Create new.");
 
-                                    skaKort = new SkaKortEntity()
+                                    //skaKort = new SkaKortEntity()
+                                    //{
+                                    //    ed_CardNumber = salesOrderLineFromPUT.CardNumber,
+                                    //    ed_InformationSource = Generated.ed_informationsource.KopOchSkicka,
+                                    //    ed_Contact = salesOrder.ed_ContactId,
+                                    //    ed_name = salesOrderLineFromPUT.CardNumber
+                                    //};
+
+                                    skaKort = new SkaKortEntity();
+                                    skaKort.ed_CardNumber = salesOrderLineFromPUT.CardNumber;
+                                    skaKort.ed_name = salesOrderLineFromPUT.CardNumber;
+
+                                    if (isFTG == false)
                                     {
-                                        ed_CardNumber = salesOrderLineFromPUT.CardNumber,
-                                        ed_InformationSource = Generated.ed_informationsource.KopOchSkicka,
-                                        ed_Contact = salesOrder.ed_ContactId,
-                                        ed_name = salesOrderLineFromPUT.CardNumber
-                                    };
+                                        skaKort.ed_InformationSource = Generated.ed_informationsource.KopOchSkicka;
+                                        skaKort.ed_Contact = salesOrder.ed_ContactId;
+                                    }
+                                    else
+                                    {
+                                        skaKort.ed_InformationSource = Generated.ed_informationsource.KopOchSkickaFTG;
+                                        skaKort.ed_Account = salesOrder.ed_AccountId;
+                                    }
 
                                     _log.Debug($"Creating new SKÅ Kort.");
 
@@ -631,7 +721,7 @@ namespace Skanetrafiken.Crm.Controllers
                                 }
 
                                 SalesOrderLineEntity updatedSalesOrderLine = SalesOrderLineInfo.GetSalesOrderLineEntityFromKopOchSkicka(localContext, salesOrderLineFromPUT,
-                                    salesOrder.ToEntityReference(), orderStatus.ToEntityReference(), skaKort.ToEntityReference());
+                                    salesOrder.ToEntityReference(), orderStatus.ToEntityReference(), skaKort.ToEntityReference(), salesOrderLineFromPUT.CardNumber);
 
 
 
@@ -817,7 +907,7 @@ namespace Skanetrafiken.Crm.Controllers
             return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
-        private static HttpResponseMessage ValidateKopOchSkickaSalesOrderInfo(Plugin.LocalPluginContext localContext, SalesOrderInfo salesOrderInfo)
+        private static HttpResponseMessage ValidateKopOchSkickaSalesOrderInfo(Plugin.LocalPluginContext localContext, SalesOrderInfo salesOrderInfo, bool isFTG)
         {
             _log.Debug($"Entering ValidateKopOchSkickaSalesOrderInfo.");
             HttpResponseMessage respMess;
@@ -828,9 +918,17 @@ namespace Skanetrafiken.Crm.Controllers
                 respMess.Content = new StringContent(Resources.IncomingDataCannotBeNull);
                 return respMess;
             }
-            if (string.IsNullOrWhiteSpace(salesOrderInfo.ContactGuid))
+            if (isFTG == false && string.IsNullOrWhiteSpace(salesOrderInfo.ContactGuid))
             {
                 _log.Debug($"{nameof(salesOrderInfo.Customer)} is empty.");
+                respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                respMess.Content = new StringContent(Resources.NoContactGuidOnSalesOrderInfo);
+                return respMess;
+            }
+
+            if (isFTG == true && string.IsNullOrWhiteSpace(salesOrderInfo.PortalId))
+            {
+                _log.Debug($"{nameof(salesOrderInfo.PortalId)} is empty.");
                 respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 respMess.Content = new StringContent(Resources.NoContactGuidOnSalesOrderInfo);
                 return respMess;
@@ -4198,7 +4296,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                     //Get Contact
                     FilterExpression contactFilter = new FilterExpression(LogicalOperator.And);
-                    contactFilter.AddCondition(ContactEntity.Fields.Id.ToLower(), ConditionOperator.Equal, skaKortInfo.ContactId.ToLower());
+                    contactFilter.AddCondition(ContactEntity.Fields.Id, ConditionOperator.Equal, skaKortInfo.ContactId);
                     ContactEntity contact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, new ColumnSet(false), contactFilter);
 
                     if (contact != null)
@@ -4206,7 +4304,12 @@ namespace Skanetrafiken.Crm.Controllers
                         //TODO: Validate if SkaKort already exists
                         FilterExpression skaKortFilter = new FilterExpression(LogicalOperator.And);
                         skaKortFilter.AddCondition(SkaKortEntity.Fields.ed_CardNumber, ConditionOperator.Equal, skaKortInfo.CardNumber);
-                        List<SkaKortEntity> skakort = XrmRetrieveHelper.RetrieveMultiple<SkaKortEntity>(localContext, new ColumnSet(false), skaKortFilter).ToList();
+                        List<SkaKortEntity> skakort = XrmRetrieveHelper.RetrieveMultiple<SkaKortEntity>(localContext, new ColumnSet(
+                            SkaKortEntity.Fields.Id, 
+                            SkaKortEntity.Fields.ed_Contact, 
+                            SkaKortEntity.Fields.ed_Account,
+                            SkaKortEntity.Fields.ed_CardNumber,
+                            SkaKortEntity.Fields.ed_name), skaKortFilter).ToList();
 
                         if (skakort != null && skakort.Count > 0) //Vi ska inte hitta någon Resekort med Contact
                         {
@@ -4224,17 +4327,21 @@ namespace Skanetrafiken.Crm.Controllers
                                 //TODO: Update SkaKort
                                 SkaKortEntity updateSkaKort = new SkaKortEntity();
                                 updateSkaKort.Id = skakort[0].Id;
-                                updateSkaKort.ed_name = skaKortInfo.CardName;
-                                updateSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
                                 updateSkaKort.ed_Contact = contact.ToEntityReference();
 
-                                if (skaKortInfo.InformationSource == 1)
+                                if (skakort[0].ed_name != skaKortInfo.CardName)
+                                {
+                                    updateSkaKort.ed_name = skaKortInfo.CardName;
+                                }
+
+                                if (skakort[0].ed_CardNumber != skaKortInfo.CardNumber)
+                                {
+                                    updateSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
+                                }
+
+                                if (skakort[0].ed_InformationSource != Crm.Schema.Generated.ed_informationsource.KopOchSkicka)
                                 {
                                     updateSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
-                                }
-                                else if (skaKortInfo.InformationSource == 2)
-                                {
-                                    updateSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
                                 }
 
                                 XrmHelper.Update(localContext, updateSkaKort);
@@ -4255,15 +4362,7 @@ namespace Skanetrafiken.Crm.Controllers
                             newSkaKort.ed_name = skaKortInfo.CardName;
                             newSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
                             newSkaKort.ed_Contact = contact.ToEntityReference();
-
-                            if (skaKortInfo.InformationSource == 1)
-                            {
-                                newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
-                            }
-                            else if (skaKortInfo.InformationSource == 2)
-                            {
-                                newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
-                            }
+                            newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
                             
                             newSkaKort.Id = XrmHelper.Create(localContext, newSkaKort);
 
@@ -4330,9 +4429,14 @@ namespace Skanetrafiken.Crm.Controllers
                         FilterExpression skaKortFilter = new FilterExpression(LogicalOperator.And);
                         skaKortFilter.AddCondition(SkaKortEntity.Fields.ed_CardNumber, ConditionOperator.Equal, skaKortInfo.CardNumber);
 
-                        List<SkaKortEntity> skakort = XrmRetrieveHelper.RetrieveMultiple<SkaKortEntity>(localContext, new ColumnSet(SkaKortEntity.Fields.Id, SkaKortEntity.Fields.ed_Contact, SkaKortEntity.Fields.ed_Account), skaKortFilter).ToList();
+                        List<SkaKortEntity> skakort = XrmRetrieveHelper.RetrieveMultiple<SkaKortEntity>(localContext, new ColumnSet(
+                            SkaKortEntity.Fields.Id, 
+                            SkaKortEntity.Fields.ed_Contact, 
+                            SkaKortEntity.Fields.ed_Account,
+                            SkaKortEntity.Fields.ed_name,
+                            SkaKortEntity.Fields.ed_CardNumber), skaKortFilter).ToList();
 
-                        if (skakort != null && skakort.Count > 0) //Vi ska inte hitta fler än 1 (update)
+                        if (skakort != null && skakort.Count > 0)
                         {
                             if (skakort[0].ed_Account != null || skakort[0].ed_Contact != null)
                             {
@@ -4345,21 +4449,25 @@ namespace Skanetrafiken.Crm.Controllers
                             {
                                 _log.Debug($"Updating SkaKort with CardNumber {skaKortInfo.CardNumber} and CardName {skaKortInfo.CardName}.");
 
-                                //TODO: Update SkaKort
+                                //TODO: Update SkaKort (Vad gör vi om kortet är inaktiv?)
                                 SkaKortEntity updateSkaKort = new SkaKortEntity();
                                 updateSkaKort.Id = skakort[0].Id;
-                                updateSkaKort.ed_name = skaKortInfo.CardName;
-                                updateSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
                                 updateSkaKort.ed_Account = account.ToEntityReference();
 
-                                if (skaKortInfo.InformationSource == 1)
+                                if (skakort[0].ed_name != skaKortInfo.CardName)
                                 {
-                                    updateSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
+                                    updateSkaKort.ed_name = skaKortInfo.CardName;
                                 }
-                                else if (skaKortInfo.InformationSource == 2)
+
+                                if (skakort[0].ed_CardNumber != skaKortInfo.CardNumber)
+                                {
+                                    updateSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
+                                }
+
+                                if (skakort[0].ed_InformationSource != Crm.Schema.Generated.ed_informationsource.ForetagsPortal)
                                 {
                                     updateSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
-                                }
+                                }                                
 
                                 XrmHelper.Update(localContext, updateSkaKort);
 
@@ -4379,15 +4487,7 @@ namespace Skanetrafiken.Crm.Controllers
                             newSkaKort.ed_name = skaKortInfo.CardName;
                             newSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
                             newSkaKort.ed_Account = account.ToEntityReference();
-
-                            if (skaKortInfo.InformationSource == 1)
-                            {
-                                newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
-                            }
-                            else if (skaKortInfo.InformationSource == 2)
-                            {
-                                newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
-                            }
+                            newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
 
                             newSkaKort.Id = XrmHelper.Create(localContext, newSkaKort);
 
@@ -4448,13 +4548,18 @@ namespace Skanetrafiken.Crm.Controllers
                     SkaKortEntity skakort = null;
                     FilterExpression skaKortFilter = new FilterExpression(LogicalOperator.And);
                     skaKortFilter.AddCondition(SkaKortEntity.Fields.ed_CardNumber, ConditionOperator.Equal, skaKortInfo.CardNumber);
-                    skakort = XrmRetrieveHelper.RetrieveFirst<SkaKortEntity>(localContext, new ColumnSet(SkaKortEntity.Fields.Id, SkaKortEntity.Fields.statuscode, SkaKortEntity.Fields.statecode), skaKortFilter);
+                    skakort = XrmRetrieveHelper.RetrieveFirst<SkaKortEntity>(localContext, new ColumnSet(
+                        SkaKortEntity.Fields.Id, 
+                        SkaKortEntity.Fields.statuscode, 
+                        SkaKortEntity.Fields.statecode,
+                        SkaKortEntity.Fields.ed_Contact,
+                        SkaKortEntity.Fields.ed_Account), skaKortFilter);
 
                     if (skakort == null)
                     {
-                        _log.Error($"SkaKort-PUT. SkaKort with CardNumber {skaKortInfo.CardNumber} was not found.");
+                        _log.Error($"SkaKort-PUT. Active SkaKort with CardNumber {skaKortInfo.CardNumber} was not found.");
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        error.Content = new StringContent($"SkaKort with CardNumber {skaKortInfo.CardNumber} does not exist.");
+                        error.Content = new StringContent($"Active SkaKort with CardNumber {skaKortInfo.CardNumber} does not exist.");
                         return error;
                     }
                     else
@@ -4463,7 +4568,16 @@ namespace Skanetrafiken.Crm.Controllers
                         {
                             SkaKortEntity updateSkakort = new SkaKortEntity();
                             updateSkakort.Id = skakort.Id;
-                            updateSkakort.statecode = Generated.ed_SKAkortState.Inactive;
+
+                            if (skakort.ed_Contact != null)
+                            {
+                                updateSkakort.ed_Contact = null;
+                            }
+
+                            if (skakort.ed_Account != null)
+                            {
+                                updateSkakort.ed_Account = null;
+                            }
 
                             XrmHelper.Update(localContext, updateSkakort);
 
@@ -4475,9 +4589,9 @@ namespace Skanetrafiken.Crm.Controllers
                         }
                         else
                         {
-                            _log.Error($"SkaKort-PUT. SkaKort with CardNumber {skaKortInfo.CardNumber} has already been removed.");
+                            _log.Error($"SkaKort-PUT. SkaKort with CardNumber {skaKortInfo.CardNumber} is not an active SkaKort.");
                             HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                            error.Content = new StringContent($"SkaKort with CardNumber {skaKortInfo.CardNumber} has already been removed.");
+                            error.Content = new StringContent($"SkaKort with CardNumber {skaKortInfo.CardNumber} is not an active SkaKort.");
                             return error;
                         }
                     }
@@ -4495,7 +4609,7 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
-        internal static HttpResponseMessage SkaKortDelete(int threadId, SkaKortInfo skaKortInfo)
+        internal static HttpResponseMessage SkaKortDisconnect(int threadId, SkaKortInfo skaKortInfo)
         {
             try
             {
@@ -4526,28 +4640,34 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (skakort == null)
                     {
-                        _log.Error($"SkaKort-DELETE. SkaKort with CardNumber {skaKortInfo.CardNumber} was not found.");
+                        _log.Error($"SkaKort-Disconnect. SkaKort with CardNumber {skaKortInfo.CardNumber} was not found.");
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
                         error.Content = new StringContent($"SkaKort with CardNumber {skaKortInfo.CardNumber} does not exist.");
                         return error;
                     }
 
-                    SkaKortEntity updateSkakort = new SkaKortEntity();
-                    updateSkakort.Id = skakort.Id;
-                    updateSkakort.statecode = Generated.ed_SKAkortState.Inactive; //Add account among columns
+                    if (skakort.statecode != Generated.ed_SKAkortState.Inactive)
+                    {
+                        SkaKortEntity updateSkakort = new SkaKortEntity();
+                        updateSkakort.Id = skakort.Id;
+                        updateSkakort.statecode = Generated.ed_SKAkortState.Inactive;
 
-                    XrmHelper.Update(localContext, updateSkakort);
+                        XrmHelper.Update(localContext, updateSkakort);
 
-                    _log.Debug($"SkaKort revoked. SkaKortId: {skakort.Id}.");
+                        _log.Debug($"SkaKort Disconnected. SkaKortId: {skakort.Id}.");
 
-                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                    resp.Content = new StringContent("SkaKort revoked.");
-                    return resp;
+                        HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                        resp.Content = new StringContent("SkaKort Disconnected.");
+                        return resp;
+                    }
+                    else
+                    {
+                        _log.Error($"SkaKort-Disconnect. SkaKort with CardNumber {skaKortInfo.CardNumber} is already disconnected.");
+                        HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        error.Content = new StringContent($"SkaKort with CardNumber {skaKortInfo.CardNumber} is already disconnected.");
+                        return error;
+                    }
                 }
-
-                //HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                //resp.Content = new StringContent(SerializeNoNull(skaKortInfo));
-                //return resp;
             }
             catch (Exception ex)
             {

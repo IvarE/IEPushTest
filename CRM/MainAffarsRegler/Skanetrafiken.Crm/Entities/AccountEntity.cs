@@ -375,6 +375,36 @@ namespace Skanetrafiken.Crm.Entities
 
         #region Helpers
 
+        public static AccountEntity GetAccountByPortalId(Plugin.LocalPluginContext localContext, ColumnSet columnSet, string portalId)
+        {
+            AccountEntity account = null;
+
+            if (!String.IsNullOrWhiteSpace(portalId))
+            {
+                //Check if account exists in CRM.
+                var accountQuery = new QueryExpression()
+                {
+                    EntityName = AccountEntity.EntityLogicalName,
+                    ColumnSet = columnSet,
+                    Criteria =
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(AccountEntity.Fields.AccountNumber, ConditionOperator.Equal, portalId)
+                        }
+                    }
+                };
+
+                account = XrmRetrieveHelper.RetrieveFirst<AccountEntity>(localContext, accountQuery);
+
+                // Make sure Account is active
+                if (account.StateCode != Generated.AccountState.Active)
+                    return null;
+            }
+
+            return account;
+        }
+
         /// <summary>
         /// Checkes whether given account has an active travel card (non hotlisted in BIFF)
         /// </summary>

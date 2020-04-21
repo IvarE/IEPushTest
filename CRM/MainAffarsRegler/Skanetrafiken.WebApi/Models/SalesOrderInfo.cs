@@ -206,13 +206,22 @@ namespace Skanetrafiken.Crm
             return soe;
         }
 
-        internal static SalesOrderEntity GetSalesOrderEntityFromKopAndSkicka(Plugin.LocalPluginContext localContext, SalesOrderInfo salesOrderInfo, bool isPut)
+        internal static SalesOrderEntity GetSalesOrderEntityFromKopAndSkicka(Plugin.LocalPluginContext localContext, SalesOrderInfo salesOrderInfo, bool isPut, bool? isFTG = null)
         {
 
             SalesOrderEntity soe = new SalesOrderEntity();
             soe.ed_Name = $"{salesOrderInfo.OrderNo}"; 
             soe.ed_OrderPlacedOn = salesOrderInfo.OrderTime;
-            soe.ed_informationsource = Generated.ed_informationsource.KopOchSkicka;
+            //soe.ed_informationsource = Generated.ed_informationsource.KopOchSkicka;
+
+            if (isFTG == null || isFTG == false)
+            {
+                soe.ed_informationsource = Generated.ed_informationsource.KopOchSkicka;
+            }
+            else if (isFTG == true)
+            {
+                soe.ed_informationsource = Generated.ed_informationsource.KopOchSkickaFTG;
+            }
 
             if(!isPut)
                 soe.ed_OrderNo = salesOrderInfo.OrderNo;
@@ -562,7 +571,7 @@ namespace Skanetrafiken.Crm
         }
 
         internal static SalesOrderLineEntity GetSalesOrderLineEntityFromKopOchSkicka(Plugin.LocalPluginContext localContext, SalesOrderLineInfo salesOrderLineInfo, 
-            EntityReference salesOrderId, EntityReference orderStatus, EntityReference skaKort)
+            EntityReference salesOrderId, EntityReference orderStatus, EntityReference skaKort, string skaCardNumber)
         {
             SalesOrderLineEntity salesOrderLine = new SalesOrderLineEntity()
             {
@@ -572,6 +581,11 @@ namespace Skanetrafiken.Crm
                 ed_OrderStatus = orderStatus,
                 ed_SKAkort = skaKort
             };
+
+            if (!String.IsNullOrWhiteSpace(skaCardNumber))
+            {
+                salesOrderLine.ed_SkaCardNumber = skaCardNumber;
+            }
 
             return salesOrderLine;
         }

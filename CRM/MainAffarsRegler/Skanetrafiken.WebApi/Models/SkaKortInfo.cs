@@ -16,9 +16,9 @@ namespace Skanetrafiken.Crm
         //Kortnamn
         private string cardName;
         //Kontakt Id
-        private string contactId;
+        private Guid ContactGuid;
         //AccountNumber
-        private string accountnumber;
+        private string portalId;
 
         /// <summary>
         /// TODO
@@ -68,15 +68,15 @@ namespace Skanetrafiken.Crm
         /// <summary>
         /// TODO
         /// </summary>
-        public string ContactId
+        public Guid ContactId
         {
             get
             {
-                return this.contactId;
+                return this.ContactGuid;
             }
             set
             {
-                this.contactId = value;
+                this.ContactGuid = value;
             }
         }
 
@@ -87,11 +87,11 @@ namespace Skanetrafiken.Crm
         {
             get
             {
-                return this.accountnumber;
+                return this.portalId;
             }
             set
             {
-                this.accountnumber = value;
+                this.portalId = value;
             }
         }
     }

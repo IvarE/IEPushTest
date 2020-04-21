@@ -3840,18 +3840,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Version number of the account.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
-		public System.Nullable<long> VersionNumber
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
-			}
-		}
-		
-		/// <summary>
 		/// Type the account's website URL to get quick details about the company profile.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("websiteurl")]
@@ -3864,6 +3852,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("websiteurl", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the account.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
 			}
 		}
 		
@@ -4995,9 +4995,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
 			
-			public const string VersionNumber = "versionnumber";
-			
 			public const string WebSiteURL = "websiteurl";
+			
+			public const string VersionNumber = "versionnumber";
 			
 			public const string YomiName = "yominame";
 		}
@@ -26811,18 +26811,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Version number of the contact.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
-		public System.Nullable<long> VersionNumber
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
-			}
-		}
-		
-		/// <summary>
 		/// Type the contact's professional or personal website or blog URL.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("websiteurl")]
@@ -26835,6 +26823,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("websiteurl", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the contact.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
 			}
 		}
 		
@@ -28377,9 +28377,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
 			
-			public const string VersionNumber = "versionnumber";
-			
 			public const string WebSiteUrl = "websiteurl";
+			
+			public const string VersionNumber = "versionnumber";
 			
 			public const string YomiFirstName = "yomifirstname";
 			
@@ -35289,6 +35289,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Yes = Used for new business rules when creating Company-/Private Customer to keep them seperated in all flows.
+		///No = Used with old business rules
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_splittcompany")]
+		public System.Nullable<bool> ed_SplittCompany
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_splittcompany");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_splittcompany", value);
+			}
+		}
+		
+		/// <summary>
 		/// Sequence number of the import that created this record.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
@@ -35593,6 +35610,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_PaybackVoucherEnabled = "ed_paybackvoucherenabled";
 			
 			public const string ed_RemoveControlForTypeOfValueCodeEnabled = "ed_removecontrolfortypeofvaluecodeenabled";
+			
+			public const string ed_SplittCompany = "ed_splittcompany";
 			
 			public const string ImportSequenceNumber = "importsequencenumber";
 			
@@ -41160,6 +41179,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_skacardnumber")]
+		public string ed_SkaCardNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_skacardnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_skacardnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_skakort")]
 		public Microsoft.Xrm.Sdk.EntityReference ed_SKAkort
 		{
@@ -41815,6 +41850,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_SalesOrderLinePortalId = "ed_salesorderlineportalid";
 			
+			public const string ed_SkaCardNumber = "ed_skacardnumber";
+			
 			public const string ed_SKAkort = "ed_skakort";
 			
 			public const string ed_TicketId = "ed_ticketid";
@@ -41880,6 +41917,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_Recipient = 15;
 			
 			public const int ed_SalesOrderLinePortalId = 20;
+			
+			public const int ed_SkaCardNumber = 100;
 			
 			public const int ed_TicketId = 15;
 			
@@ -43265,7 +43304,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Unique identifier for Account associated with SKÅ kort.
+		/// 
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_account")]
 		public Microsoft.Xrm.Sdk.EntityReference ed_Account
@@ -57278,6 +57317,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_unregisterdskacard")]
+		public string ed_UnregisterdSKACard
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_unregisterdskacard");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_unregisterdskacard", value);
+			}
+		}
+		
+		/// <summary>
 		/// Unique identifier for Email Recipient associated with Case.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("edp_emailrecipientid")]
@@ -59537,6 +59592,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_TimeToMeetingStart = "ed_timetomeetingstart";
 			
+			public const string ed_UnregisterdSKACard = "ed_unregisterdskacard";
+			
 			public const string edp_EmailRecipientId = "edp_emailrecipientid";
 			
 			public const string edp_RemittanceDate = "edp_remittancedate";
@@ -59901,6 +59958,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const int ed_DriverId = 100;
 			
+			public const int ed_UnregisterdSKACard = 100;
+			
 			public const int EntityImage_URL = 200;
 			
 			public const int ProductSerialNumber = 100;
@@ -59917,6 +59976,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 	{
 		
 		KopOchSkicka = 17,
+		
+		KopOchSkickaFTG = 18,
 		
 		B2BManuell = 16,
 		
@@ -63000,18 +63061,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Version number of the lead.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
-		public System.Nullable<long> VersionNumber
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
-			}
-		}
-		
-		/// <summary>
 		/// Type the website URL for the company associated with this lead.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("websiteurl")]
@@ -63024,6 +63073,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("websiteurl", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the lead.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
 			}
 		}
 		
@@ -63988,9 +64049,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
 			
-			public const string VersionNumber = "versionnumber";
-			
 			public const string WebSiteUrl = "websiteurl";
+			
+			public const string VersionNumber = "versionnumber";
 			
 			public const string YomiCompanyName = "yomicompanyname";
 			
@@ -65234,22 +65295,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Stock volume of the product.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stockvolume")]
-		public System.Nullable<decimal> StockVolume
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<decimal>>("stockvolume");
-			}
-			set
-			{
-				this.SetAttributeValue("stockvolume", value);
-			}
-		}
-		
-		/// <summary>
 		/// Stock weight of the product.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stockweight")]
@@ -65262,6 +65307,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("stockweight", value);
+			}
+		}
+		
+		/// <summary>
+		/// Stock volume of the product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stockvolume")]
+		public System.Nullable<decimal> StockVolume
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("stockvolume");
+			}
+			set
+			{
+				this.SetAttributeValue("stockvolume", value);
 			}
 		}
 		
@@ -65746,9 +65807,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string StatusCode = "statuscode";
 			
-			public const string StockVolume = "stockvolume";
-			
 			public const string StockWeight = "stockweight";
+			
+			public const string StockVolume = "stockvolume";
 			
 			public const string SubjectId = "subjectid";
 			

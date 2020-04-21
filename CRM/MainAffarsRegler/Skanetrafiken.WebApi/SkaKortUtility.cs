@@ -66,7 +66,7 @@ namespace Skanetrafiken.Crm
                         }
                         break;
                     case (int)Schema.Generated.ed_informationsource.KopOchSkicka:
-                        if (string.IsNullOrWhiteSpace(skaKortInfo.ContactId) ||
+                        if (skaKortInfo.ContactId == null ||
                             string.IsNullOrWhiteSpace(skaKortInfo.CardNumber) ||
                             string.IsNullOrWhiteSpace(skaKortInfo.CardName)
                             )
@@ -129,7 +129,7 @@ namespace Skanetrafiken.Crm
                         missingFields.Add("CardName");
                     break;
                 case (int)Crm.Schema.Generated.ed_informationsource.KopOchSkicka:
-                    if (string.IsNullOrWhiteSpace(skaKortInfo.ContactId))
+                    if (skaKortInfo.ContactId == null)
                         missingFields.Add("ContactId");
                     if (string.IsNullOrWhiteSpace(skaKortInfo.CardNumber))
                         missingFields.Add("CardNumber");
