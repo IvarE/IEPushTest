@@ -2476,8 +2476,14 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
-        //public static HttpResponseMessage Create
-        public static HttpResponseMessage CreateForetagsKund(int threadId, CustomerInfo customerInfo)
+        /// <summary>
+        /// Method for creating a customer (Konto) connected to an Account.
+        /// Creating a Company, School or Senior typ of customer (Konto).
+        /// </summary>
+        /// <param name="threadId"></param>
+        /// <param name="customerInfo"></param>
+        /// <returns></returns>
+        public static HttpResponseMessage CreatePortalCustomer(int threadId, CustomerInfo customerInfo)
         {
             try
             {
@@ -2491,51 +2497,53 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    // Validera inkommande information (validateCustomerInfo)
-                    if (customerInfo.Source == (int)Generated.ed_informationsource.ForetagsPortal)
-                    {
-                        customerInfo.Source = (int)Generated.ed_informationsource.ForetagsPortal;
-                    }
-                    else if (customerInfo.Source == (int)Generated.ed_informationsource.SkolPortal)
-                    {
-                        customerInfo.Source = (int)Generated.ed_informationsource.SkolPortal;
-                    }
-                    else if (customerInfo.Source == (int)Generated.ed_informationsource.SeniorPortal)
-                    {
-                        customerInfo.Source = (int)Generated.ed_informationsource.SeniorPortal;
-                    }
+                    #region Validations
+
+                    // Validates Email (from Company Role) and Social Security Number
+                    StatusBlock validateEmailAndSocialSecurityNumberStatus = CustomerUtility.ValidateCustomerInfo(localContext, customerInfo);
                     
-                    StatusBlock validateStatus = CustomerUtility.ValidateCustomerInfo(localContext, customerInfo); //CHECK
-                    
-                    if (!validateStatus.TransactionOk)
+                    // Return 400 Bad Request if not validated
+                    if (!validateEmailAndSocialSecurityNumberStatus.TransactionOk)
                     {
+                        _log.Debug("Returning Bad Request. Email or SocialSecurityNumber was not valid.");
+
                         HttpResponseMessage responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        responseMessage.Content = new StringContent(validateStatus.ErrorMessage);
+                        responseMessage.Content = new StringContent(validateEmailAndSocialSecurityNumberStatus.ErrorMessage);
                         return responseMessage;
                     }
 
 
-                    StatusBlock validateFirstLastNameStatus = CustomerUtility.ValidateCustomerFirstLastNameInfo(localContext, customerInfo); //CHECK
+                    // Validate First- and Lastname
+                    StatusBlock validateFirstLastNameStatus = CustomerUtility.ValidateCustomerFirstLastNameInfo(localContext, customerInfo);
 
+                    // Return 400 Bad Request if not validated
                     if (!validateFirstLastNameStatus.TransactionOk)
                     {
+                        _log.Debug("Returning Bad Request. First- or Lastname was not valid.");
+
                         HttpResponseMessage responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
                         responseMessage.Content = new StringContent(validateFirstLastNameStatus.ErrorMessage);
                         return responseMessage;
                     }
 
 
-                    StatusBlock validateRoleStatus = CustomerUtility.ValidateRoleInfo(localContext, customerInfo); //CHECK
+                    // Validate Company Role object of CustomerInfo
+                    StatusBlock validateRoleStatus = CustomerUtility.ValidateRoleInfo(localContext, customerInfo);
 
+                    // Return 400 Bad Request if not validated
                     if (!validateRoleStatus.TransactionOk)
                     {
+                        _log.Debug("Returning Bad Request. Company Role object was not valid.");
+
                         HttpResponseMessage responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
                         responseMessage.Content = new StringContent(validateRoleStatus.ErrorMessage);
                         return responseMessage;
                     }
+                    #endregion
+
 
                     HttpResponseMessage resp = new HttpResponseMessage();
-
+                    
                     Guid? contactId = CompanyRoleEntity.CreateNewCompanyRole(localContext, customerInfo, ref resp); // CHECK ?? This is where the Match happens
 
                     if (resp.StatusCode != HttpStatusCode.OK)
@@ -3576,7 +3584,7 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
-        internal static HttpResponseMessage UpdateForetagsKund(int threadId, CustomerInfo customerInfo)
+        internal static HttpResponseMessage UpdatePortalCustomer(int threadId, CustomerInfo customerInfo)
         {
             try
             {
@@ -3590,21 +3598,8 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    // Validera inkommande information (validateCustomerInfo)
-                    if (customerInfo.Source == (int)Generated.ed_informationsource.ForetagsPortal)
-                    {
-                        customerInfo.Source = (int)Generated.ed_informationsource.ForetagsPortal;
-                    }
-                    if (customerInfo.Source == (int)Generated.ed_informationsource.SkolPortal)
-                    {
-                        customerInfo.Source = (int)Generated.ed_informationsource.SkolPortal;
-                    }
-                    if (customerInfo.Source == (int)Generated.ed_informationsource.SeniorPortal)
-                    {
-                        customerInfo.Source = (int)Generated.ed_informationsource.SeniorPortal;
-                    }
 
-                    StatusBlock validateCustomerStatus = CustomerUtility.ValidateCustomerInfo(localContext, customerInfo); //CHECK
+                    StatusBlock validateCustomerStatus = CustomerUtility.ValidateCustomerInfo(localContext, customerInfo);
                     if (!validateCustomerStatus.TransactionOk)
                     {
                         HttpResponseMessage responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
@@ -3638,7 +3633,7 @@ namespace Skanetrafiken.Crm.Controllers
                     // MS: If company portal only updates flag to block Contact. Do not validate CompanyRole
                     if (customerInfo.CompanyRole == null)
                     {
-                        //Update has changes since we are not working with regular mail and telefone
+                        // Update has changes since we are not working with regular mail and telefone
                         StatusBlock validateBlockContactInfo = CustomerUtility.ValidateBlockContactInfo(localContext, customerInfo);
                         if (!validateBlockContactInfo.TransactionOk)
                         {
@@ -3646,9 +3641,10 @@ namespace Skanetrafiken.Crm.Controllers
                             responseMessage.Content = new StringContent(validateBlockContactInfo.ErrorMessage);
                             return responseMessage;
                         }
-
-                        //THis method has changed and needs sompany role to work
-                        ContactEntity contact = ContactEntity.FindActiveContact(localContext, customerInfo);
+                        
+                        ContactEntity contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, 
+                            new Guid(customerInfo.Guid), 
+                            new ColumnSet(ContactEntity.Fields.ed_isLockedPortal));
 
                         if (contact.ed_isLockedPortal != null)
                         {

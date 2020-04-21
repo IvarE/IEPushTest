@@ -204,10 +204,10 @@ namespace Skanetrafiken.Crm
 
             return string.Format("test{0}@test.test", testInstanceName);
         }
-
-        //ValidateCustomerFirstLastNameInfo
+        
+        
         /// <summary>
-        /// 
+        /// Validate Customers First-/Lastname
         /// </summary>
         /// <param name="localContext"></param>
         /// <param name="customerInfo"></param>
@@ -223,346 +223,16 @@ namespace Skanetrafiken.Crm
                     ErrorMessage = Properties.Resources.IncomingDataCannotBeNull
                 };
             }
-            EntityReference countryRef = null;
-            if (customerInfo.AddressBlock != null && customerInfo.AddressBlock.CountryISO != null)
-            {
-                countryRef = CountryEntity.GetEntityRefForCountryCode(localContext, customerInfo.AddressBlock.CountryISO);
-            }
+
             List<string> messages = new List<string>();
             bool error = false;
-            switch (customerInfo.Source)
-            {
-                #region SkapaMittKonto
-                case (int)Schema.Generated.ed_informationsource.SkapaMittKonto:
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName) ||
-                        customerInfo.AddressBlock == null ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.Line1) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.PostalCode) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.City) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.CountryISO) ||
-                        string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) ||
-                        string.IsNullOrWhiteSpace(customerInfo.Email))
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
-                    break;
-                #endregion
-                #region BytEpost
-                case (int)Schema.Generated.ed_informationsource.BytEpost:
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName) ||
-                        customerInfo.AddressBlock == null ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.Line1) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.PostalCode) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.City) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.CountryISO) ||
-                        string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) ||
-                        string.IsNullOrWhiteSpace(customerInfo.Email) ||
-                        string.IsNullOrWhiteSpace(customerInfo.NewEmail))
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
-                    break;
-                #endregion
-                #region OinloggatKop
-                case (int)Schema.Generated.ed_informationsource.OinloggatKop:
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock?.Line1) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock?.PostalCode) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock?.City) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock?.CountryISO) ||
-                        string.IsNullOrWhiteSpace(customerInfo.Email))
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
-                    break;
-                #endregion
-                #region OinloggatKundÄrende
-                case (int)Schema.Generated.ed_informationsource.OinloggatKundArende:
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.Email))
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
-                    break;
-                #endregion
-                #region RGOL
-                case (int)Schema.Generated.ed_informationsource.RGOL:
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName) ||
-                        customerInfo.AddressBlock == null ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.Line1) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.PostalCode) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.City) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.CountryISO))
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
-                    if (string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) &&
-                        string.IsNullOrWhiteSpace(customerInfo.Email))
-                    {
-                        error = true;
-                        messages.Add(Resources.RGOLNeedsEmailOrSocSecNr);
-                    }
-                    break;
-                #endregion
-                #region PASS
-                case (int)Schema.Generated.ed_informationsource.PASS:
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName)/* ||
-                        customerInfo.AddressBlock == null ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.Line1) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.PostalCode) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.City) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.CountryISO) ||
-                        string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber)*/)
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
-                    break;
-                #endregion
-                #region Kampanj
-                case (int)Schema.Generated.ed_informationsource.Kampanj:
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.Email))
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
-                    break;
-                #endregion
-                #region AdmSkapaKund
-                case (int)Schema.Generated.ed_informationsource.AdmSkapaKund:
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName))
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
-                    break;
-                #endregion
-                #region OinloggatLaddaKort
-                case (int)Schema.Generated.ed_informationsource.OinloggatLaddaKort:
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.Email))
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
-                    break;
-                #endregion
-                #region UppdateraMittKonto
-                case (int)Schema.Generated.ed_informationsource.UppdateraMittKonto:
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName) ||
-                        customerInfo.AddressBlock == null ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.Line1) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.PostalCode) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.City) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.CountryISO) ||
-                        string.IsNullOrWhiteSpace(customerInfo.Mobile) ||
-                        string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) ||
-                        string.IsNullOrWhiteSpace(customerInfo.Email))
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
-                    break;
-                #endregion
-                #region Folkbokföring
-                case (int)Schema.Generated.ed_informationsource.Folkbokforing:
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) ||
 
-                        (
-                        ((!customerInfo.UtvandradSpecified || !customerInfo.Utvandrad) &&
-                        customerInfo.AddressBlock == null ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.Line1) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.PostalCode) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.City) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.CountryISO))
-                        //&&
-                        //((customerInfo.UtvandradSpecified && customerInfo.Utvandrad) &&
-                        //customerInfo.SpecAddressBlock == null ||
-                        //string.IsNullOrWhiteSpace(customerInfo.SpecAddressBlock.Line1) ||
-                        //string.IsNullOrWhiteSpace(customerInfo.SpecAddressBlock.CountryName))
-                        )
-                        )
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
-                    break;
-                #endregion
-                #region AdmÄndraKund
-                case (int)Schema.Generated.ed_informationsource.AdmAndraKund:
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
+            if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
                         string.IsNullOrWhiteSpace(customerInfo.LastName))
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
-                    break;
-                #endregion
-                #region ForetagsPortal
-                case (int)Schema.Generated.ed_informationsource.ForetagsPortal:
-                    // MS: Företagssidan skickar inte med för-/efternamn vid Contact-PUT
-                    // Separat kontroll på detta vid Contact-POST
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName))
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
-                    if (customerInfo.CompanyRole != null)
-                    {
-                        if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Telephone)*/)
-                        {
-                            error = true;
-                            messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                        }
-                    }
-                    else
-                    {
-                        if (string.IsNullOrWhiteSpace(customerInfo.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.Mobile)*/)
-                        {
-                            error = true;
-                            messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                        }
-                    }
-                    break;
-                #endregion
-                #region SkolPortal
-                case (int)Schema.Generated.ed_informationsource.SkolPortal:
-                    // MS: Företagssidan skickar inte med för-/efternamn vid Contact-PUT
-                    // Separat kontroll på detta vid Contact-POST
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName))
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
-                    if (customerInfo.CompanyRole != null)
-                    {
-                        if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Telephone)*/)
-                        {
-                            error = true;
-                            messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                        }
-                    }
-                    else
-                    {
-                        if (string.IsNullOrWhiteSpace(customerInfo.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.Mobile)*/)
-                        {
-                            error = true;
-                            messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                        }
-                    }
-                    break;
-                #endregion
-                #region SeniorPortal
-                case (int)Schema.Generated.ed_informationsource.SeniorPortal:
-                    // MS: Företagssidan skickar inte med för-/efternamn vid Contact-PUT
-                    // Separat kontroll på detta vid Contact-POST
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName))
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
-                    if (customerInfo.CompanyRole != null)
-                    {
-                        if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Telephone)*/)
-                        {
-                            error = true;
-                            messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                        }
-                    }
-                    else
-                    {
-                        if (string.IsNullOrWhiteSpace(customerInfo.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.Mobile)*/)
-                        {
-                            error = true;
-                            messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                        }
-                    }
-                    break;
-                #endregion
-                #region B2B
-                case (int)Generated.ed_informationsource.B2BManuell:
-
-                    break;
-                #endregion
-                default:
-                    return new StatusBlock()
-                    {
-                        TransactionOk = false,
-                        StatusBlockCode = (int)StatusBlockCode.InvalidInput,
-                        ErrorMessage = string.Format(Resources.InvalidSource, customerInfo.Source)
-                    };
-            }
-            #region Format Checks
-            if ("SE".Equals(customerInfo.AddressBlock?.CountryISO?.ToUpper()) && !string.IsNullOrWhiteSpace(customerInfo.AddressBlock?.PostalCode) && !CheckPostalCodeFormat(customerInfo.AddressBlock.PostalCode))
             {
                 error = true;
-                messages.Add(string.Format(Resources.InvalidFormatForPostalCode, customerInfo.AddressBlock.PostalCode));
+                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
             }
-            if (!string.IsNullOrWhiteSpace(customerInfo.Telephone) && !CheckPhoneNumberFormat(customerInfo.Telephone))
-            {
-                error = true;
-                messages.Add(string.Format(Resources.InvalidFormatForTelephone, customerInfo.Telephone));
-            }
-            if (!string.IsNullOrWhiteSpace(customerInfo.Mobile) && !CheckMobilePhoneFormat(customerInfo.Mobile))
-            {
-                error = true;
-                messages.Add(string.Format(Resources.InvalidFormatForMobile, customerInfo.Mobile));
-            }
-            //string errorMessage;
-            if (!string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) && customerInfo.SwedishSocialSecurityNumber && !CheckPersonnummerFormat(customerInfo.SocialSecurityNumber/*, out errorMessage*/))
-            {
-                error = true;
-                //messages.Add(string.Format(Resources.InvalidFormatForSocialSecurityNumber, $"{customerInfo.SocialSecurityNumber} mess: {errorMessage}"));
-                messages.Add(string.Format(Resources.InvalidFormatForSocialSecurityNumber, customerInfo.SocialSecurityNumber));
-            }
-            if (!string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) && !customerInfo.SwedishSocialSecurityNumber && !CheckDateFormat(customerInfo.SocialSecurityNumber))
-            {
-                error = true;
-                messages.Add(string.Format(Resources.InvalidFormatForIntenationalSocialSecurityNumber, customerInfo.SocialSecurityNumber));
-            }
-            if (!string.IsNullOrWhiteSpace(customerInfo.Email) && !CheckEmailFormat(customerInfo.Email))
-            {
-                error = true;
-                messages.Add(string.Format(Resources.InvalidFormatForEmail, customerInfo.Email));
-            }
-            if (!string.IsNullOrWhiteSpace(customerInfo.NewEmail) && !CheckEmailFormat(customerInfo.NewEmail))
-            {
-                error = true;
-                messages.Add(string.Format(Resources.InvalidNewEmail, customerInfo.NewEmail));
-            }
-            if (customerInfo.AddressBlock != null && !string.IsNullOrWhiteSpace(customerInfo.AddressBlock.CountryISO) && countryRef == null)
-            {
-                error = true;
-                messages.Add(string.Format(Resources.CouldNotFindAValidCountryForISOCode, customerInfo.AddressBlock.CountryISO));
-            }
-            #endregion
 
             if (error)
             {
@@ -768,66 +438,120 @@ namespace Skanetrafiken.Crm
                 #endregion
                 #region ForetagsPortal
                 case (int)Schema.Generated.ed_informationsource.ForetagsPortal:
-                    if (customerInfo.CompanyRole != null)
+
+                    FeatureTogglingEntity featureCompany = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_SplittCompany);
+
+                    if (featureCompany.ed_SplittCompany == true)
                     {
-                        if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Telephone)*/)
+                        if (customerInfo.CompanyRole != null)
                         {
-                            error = true;
-                            messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                            if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) ||
+                                string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber))
+                            {
+                                error = true;
+                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                            }
                         }
                     }
-                    else
+                    else if (featureCompany.ed_SplittCompany == false)
                     {
-                        if (string.IsNullOrWhiteSpace(customerInfo.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.Mobile)*/)
+                        if (customerInfo.CompanyRole != null)
                         {
-                            error = true;
-                            messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                            if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) /*||
+                        string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Telephone)*/)
+                            {
+                                error = true;
+                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                            }
+                        }
+                        else
+                        {
+                            if (string.IsNullOrWhiteSpace(customerInfo.Email) /*||
+                        string.IsNullOrWhiteSpace(customerInfo.Mobile)*/)
+                            {
+                                error = true;
+                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                            }
                         }
                     }
                     break;
                 #endregion
                 #region SkolPortal
                 case (int)Schema.Generated.ed_informationsource.SkolPortal:
-                    if (customerInfo.CompanyRole != null)
+
+                    FeatureTogglingEntity featureSchool = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_SplittCompany);
+
+                    if (featureSchool.ed_SplittCompany == true)
                     {
-                        if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Telephone)*/)
+                        if (customerInfo.CompanyRole != null)
                         {
-                            error = true;
-                            messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                            if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) ||
+                                string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber))
+                            {
+                                error = true;
+                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                            }
                         }
                     }
-                    else
+                    else if (featureSchool.ed_SplittCompany == false)
                     {
-                        if (string.IsNullOrWhiteSpace(customerInfo.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.Mobile)*/)
+                        if (customerInfo.CompanyRole != null)
                         {
-                            error = true;
-                            messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                            if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) /*||
+                        string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Telephone)*/)
+                            {
+                                error = true;
+                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                            }
+                        }
+                        else
+                        {
+                            if (string.IsNullOrWhiteSpace(customerInfo.Email) /*||
+                        string.IsNullOrWhiteSpace(customerInfo.Mobile)*/)
+                            {
+                                error = true;
+                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                            }
                         }
                     }
                     break;
                 #endregion
                 #region SeniorPortal
                 case (int)Schema.Generated.ed_informationsource.SeniorPortal:
-                    if (customerInfo.CompanyRole != null)
+
+                    FeatureTogglingEntity featureSenior = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_SplittCompany);
+
+                    if (featureSenior.ed_SplittCompany == true)
                     {
-                        if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Telephone)*/)
+                        if (customerInfo.CompanyRole != null)
                         {
-                            error = true;
-                            messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                            if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) ||
+                                string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber))
+                            {
+                                error = true;
+                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                            }
                         }
                     }
-                    else
+                    else if (featureSenior.ed_SplittCompany == false)
                     {
-                        if (string.IsNullOrWhiteSpace(customerInfo.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.Mobile)*/)
+                        if (customerInfo.CompanyRole != null)
                         {
-                            error = true;
-                            messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                            if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) /*||
+                        string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Telephone)*/)
+                            {
+                                error = true;
+                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                            }
+                        }
+                        else
+                        {
+                            if (string.IsNullOrWhiteSpace(customerInfo.Email) /*||
+                        string.IsNullOrWhiteSpace(customerInfo.Mobile)*/)
+                            {
+                                error = true;
+                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                            }
                         }
                     }
                     break;
@@ -966,6 +690,12 @@ namespace Skanetrafiken.Crm
             };
         }
 
+        /// <summary>
+        /// Validate that CustomerInfo contains a valid Company Role object
+        /// </summary>
+        /// <param name="localContext"></param>
+        /// <param name="customerInfo"></param>
+        /// <returns></returns>
         internal static StatusBlock ValidateRoleInfo(Plugin.LocalPluginContext localContext, CustomerInfo customerInfo)
         {
             if (customerInfo == null)

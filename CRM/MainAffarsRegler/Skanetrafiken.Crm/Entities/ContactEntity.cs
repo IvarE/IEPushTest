@@ -1559,7 +1559,7 @@ namespace Skanetrafiken.Crm.Entities
                 });
             return userInRole != null;
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -1571,7 +1571,6 @@ namespace Skanetrafiken.Crm.Entities
             if (customerInfo == null)
                 return null;
 
-            //CHECK ?? This is where we match to find a contact (FTG/Skola: Email, Mobil, OptionSet if found to indicate correct informationsource - Privatperson: PersNr, Optionset (privatperson))
             ContactEntity contact = FindActiveContact(localContext, customerInfo);
 
             //PRIVATKUND
@@ -1617,52 +1616,35 @@ namespace Skanetrafiken.Crm.Entities
             {
                 //4. Kontrollera ifall cotact har en "Role" värde, om inte - uppdatera till antingen admin.FTG/admin.SKOL/Admin.Senior
 
-                if (contact == null) //Lägg till företagskoll
+                // "contact" is null means no existing matching Contact was found
+                if (contact == null)
                 {
                     contact = new ContactEntity(localContext, customerInfo);
-                    //contact.ed_VerifiedSSN = true; //Detta gäller inte för FTG/SKOLA
 
                     //Lägg till Contact.AccountRoleCode på contacten för ftg (administratör-ftg)/ SKOL värde 9 (portaladministrator-skol) / seniorvärde 10 (portaladministrator-senior)
-                    if (contact.ed_SeniorContact != true && customerInfo.Source == (int)Generated.ed_informationsource.SeniorPortal) // ??
+                    if (customerInfo.Source == (int)Generated.ed_informationsource.SeniorPortal)
                     {
                         contact.ed_SeniorContact = true;
                         contact.AccountRoleCode = Generated.contact_accountrolecode.PortalAdministratorSenior;
                     }
-                    else if (contact.ed_SchoolContact != true && customerInfo.Source == (int)Generated.ed_informationsource.SkolPortal)
+                    else if (customerInfo.Source == (int)Generated.ed_informationsource.SkolPortal)
                     {
                         contact.ed_SchoolContact = true;
                         contact.AccountRoleCode = Generated.contact_accountrolecode.PortalAdministratorSchool;
                     }
-                    else if (contact.ed_BusinessContact != true && customerInfo.Source == (int)Generated.ed_informationsource.ForetagsPortal)
+                    else if (customerInfo.Source == (int)Generated.ed_informationsource.ForetagsPortal)
                     {
                         contact.ed_BusinessContact = true;
                         contact.AccountRoleCode = Generated.contact_accountrolecode.PortalAdministratorFTG;
                     }
-
-                    if (string.IsNullOrWhiteSpace(contact.ed_SocialSecurityNumberBlock) && !string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber))
-                    {
-                        contact.ed_SocialSecurityNumberBlock = customerInfo.SocialSecurityNumber;
-                        //contact.cgi_socialsecuritynumber = string.Empty; //ska vi tömma SSN?
-                    }
-                    else if (string.IsNullOrWhiteSpace(contact.ed_SocialSecurityNumberBlock))
-                    {
-                        contact.ed_SocialSecurityNumberBlock = customerInfo.SocialSecurityNumber;
-                    }
-
-                    //if (contact.cgi_DebtCollection != true || contact.cgi_DebtCollection == false)
-                    //{
-                    //    contact.cgi_DebtCollection = true;
-                    //}
-
-
-                    //add final else if for portal
+                    
+                    // Create new Portal Customer
                     contact.Id = XrmHelper.Create(localContext.OrganizationService, contact);
-                    //localContext.OrganizationService.Create(contact);
-                    //contact.Id = localContext.OrganizationService.Create(contact);
                 }
+                // "contact" is not null means existing matching Contact was found
                 else
                 {
-                    // update with all data in customerInfo
+                    // Update existing Contact with information from CustomerInfo
                     ContactEntity updateContact = contact.UpdateWithWeakCustomerInfo(localContext, customerInfo);
                     if (updateContact != null)
                         localContext.OrganizationService.Update(updateContact);
@@ -1810,46 +1792,26 @@ namespace Skanetrafiken.Crm.Entities
                     updated = true;
                 }
             }
-            else //Kolla vad för sorts FTG/SKOL
+            else if (customerInfo.Source == (int)Generated.ed_informationsource.ForetagsPortal ||
+                customerInfo.Source == (int)Generated.ed_informationsource.SkolPortal ||
+                customerInfo.Source == (int)Generated.ed_informationsource.SeniorPortal)
             {
-                //Telefon
-                //Flyttats upp då detta inte bara gäller privatpersoner
-                if (string.IsNullOrWhiteSpace(this.Telephone2) && !string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Telephone))
+                // Has Telephone changed?
+                if (!string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Telephone) && this.Telephone2 != customerInfo.CompanyRole[0].Telephone)
                 {
                     this.Telephone2 = customerInfo.CompanyRole[0].Telephone;
                     updateContact.Telephone2 = customerInfo.CompanyRole[0].Telephone;
                     updated = true;
                 }
 
-                //Email (emailaddress1)
-                // Handle e-mail
-                if (string.IsNullOrWhiteSpace(this.EMailAddress1))
+                // Has Email changed?
+                if(!string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Email) && this.EMailAddress1 != customerInfo.CompanyRole[0].Email)
                 {
-                    // Assign e-mail2 if email is supplied.
-                    if (!string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Email) && !customerInfo.CompanyRole[0].Email.Equals(this.EMailAddress2))
-                    {
-                        this.EMailAddress2 = customerInfo.CompanyRole[0].Email;
-                        updateContact.EMailAddress2 = customerInfo.CompanyRole[0].Email;
-                        updated = true;
-                    }
-                    if (!string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Email) && !customerInfo.CompanyRole[0].Email.Equals(this.EMailAddress1))
-                    {
-                        this.EMailAddress1 = customerInfo.CompanyRole[0].Email;
-                        updateContact.EMailAddress1 = customerInfo.CompanyRole[0].Email;
-                        updated = true;
-                    }
-
+                    this.EMailAddress1 = customerInfo.CompanyRole[0].Email;
+                    updateContact.EMailAddress1 = customerInfo.CompanyRole[0].Email;
+                    updated = true;
                 }
-                else if (!string.IsNullOrWhiteSpace(this.EMailAddress1))
-                {
-                    if (!string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Email) && !customerInfo.CompanyRole[0].Email.Equals(this.EMailAddress1))
-                    {
-                        this.EMailAddress1 = customerInfo.CompanyRole[0].Email;
-                        updateContact.EMailAddress1 = customerInfo.CompanyRole[0].Email;
-                        updated = true;
-                    }
-                }
-
+                
                 if (customerInfo.isLockedPortalSpecified && this.ed_isLockedPortal != customerInfo.isLockedPortal)
                 {
                     this.ed_isLockedPortal = customerInfo.isLockedPortal;
@@ -1893,14 +1855,6 @@ namespace Skanetrafiken.Crm.Entities
                     updateContact.ed_SocialSecurityNumberBlock = customerInfo.SocialSecurityNumber;
                     updated = true;
                 }
-                //lägg till portalcustomer
-                //Detta används inte längre
-                //if (this.ed_VerifiedSSN != true)
-                //{
-                //    this.ed_VerifiedSSN = true;
-                //    updateContact.ed_VerifiedSSN = true;
-                //    updated = true;
-                //}
             }
 
             if (this.ed_InformationSource == null && customerInfo.Source > -1 && customerInfo.Source < Enum.GetValues(typeof(Generated.ed_informationsource)).Length)
@@ -1955,6 +1909,8 @@ namespace Skanetrafiken.Crm.Entities
 
         /// <summary>
         /// Finds contact in CRM based on Social security number (primary key) and fallback on FirstName + LastName + Email (secondary key as specified by Håkan Tingström (Skånetrafiken)).
+        /// Company/School/Senior matching criteria:
+        /// Exact match on Social Security Number (ed_SocialSecurityNumberBlock) and Email (EMailAddress1). Also check for each flag (Business-, School- or Senior Contact)
         /// </summary>
         /// <param name="localContext"></param>
         /// <param name="customerInfo"></param>
@@ -2219,135 +2175,199 @@ namespace Skanetrafiken.Crm.Entities
                 customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.SkolPortal ||
                 customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.SeniorPortal)
             {
+                
+                FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_SplittCompany);
 
-                string email = string.Empty;
-                if (customerInfo.CompanyRole != null && customerInfo.CompanyRole[0] != null && !string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Email))
+                if (feature.ed_SplittCompany == false)
                 {
-                    email = customerInfo.CompanyRole[0].Email;
-                }
-                else if (customerInfo.Email != null)
-                {
-                    email = customerInfo.Email;
-                }
-
-                if (contact == null && !string.IsNullOrWhiteSpace(email) /*&& !string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Telephone)*/) //gå efter company role
-                {
-                    // ONLY CHECK FOR VALIDATED EMAILS (emailaddress1)
-                    FilterExpression emailFilterNew = new FilterExpression(LogicalOperator.And)
+                    string email = string.Empty;
+                    if (customerInfo.CompanyRole != null && customerInfo.CompanyRole[0] != null && !string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Email))
                     {
-                        Conditions =
+                        email = customerInfo.CompanyRole[0].Email;
+                    }
+                    else if (customerInfo.Email != null)
+                    {
+                        email = customerInfo.Email;
+                    }
+
+                    if (contact == null && !string.IsNullOrWhiteSpace(email) /*&& !string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Telephone)*/) //gå efter company role
+                    {
+                        // ONLY CHECK FOR VALIDATED EMAILS (emailaddress1)
+                        FilterExpression emailFilterNew = new FilterExpression(LogicalOperator.And)
+                        {
+                            Conditions =
                         {
                             new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, email)
                             //new ConditionExpression(ContactEntity.Fields.EMailAddress2, ConditionOperator.Equal, email)
                         }
-                    };
-                    
-                    //Begins with 0046(13)/+46(12)/(10)7....
-                    //string compareNumber = string.Empty;
-                    //if (!string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Telephone))
-                    //{
-                    //    compareNumber = customerInfo.CompanyRole[0].Telephone.Substring(customerInfo.CompanyRole[0].Telephone.Length - 9, 9);
-                    //}
-                    ////FilterExpression (begins with x3 (or)- ends with 9 siffror(and)) else on nr är mindre än 10 - matcha direkt (9 eller mindre)
-                    //FilterExpression phoneNrBeginFilter = new FilterExpression(LogicalOperator.Or);
-                    //FilterExpression phoneNrFilter = new FilterExpression(LogicalOperator.And);
+                        };
 
-                    List<ContactEntity> emMoContacts = new List<ContactEntity>();
+                        //Begins with 0046(13)/+46(12)/(10)7....
+                        //string compareNumber = string.Empty;
+                        //if (!string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Telephone))
+                        //{
+                        //    compareNumber = customerInfo.CompanyRole[0].Telephone.Substring(customerInfo.CompanyRole[0].Telephone.Length - 9, 9);
+                        //}
+                        ////FilterExpression (begins with x3 (or)- ends with 9 siffror(and)) else on nr är mindre än 10 - matcha direkt (9 eller mindre)
+                        //FilterExpression phoneNrBeginFilter = new FilterExpression(LogicalOperator.Or);
+                        //FilterExpression phoneNrFilter = new FilterExpression(LogicalOperator.And);
 
-                    //if (compareNumber != string.Empty && !string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Telephone))
-                    //{
-                    //    phoneNrBeginFilter.AddCondition(ContactEntity.Fields.Telephone2, ConditionOperator.BeginsWith, "0046");
-                    //    phoneNrBeginFilter.AddCondition(ContactEntity.Fields.Telephone2, ConditionOperator.BeginsWith, "+46");
-                    //    phoneNrBeginFilter.AddCondition(ContactEntity.Fields.Telephone2, ConditionOperator.BeginsWith, "0");
+                        List<ContactEntity> emMoContacts = new List<ContactEntity>();
 
-                    //    phoneNrFilter.AddCondition(ContactEntity.Fields.Telephone2, ConditionOperator.EndsWith, compareNumber);
-                    //    phoneNrFilter.AddFilter(phoneNrBeginFilter);
+                        //if (compareNumber != string.Empty && !string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Telephone))
+                        //{
+                        //    phoneNrBeginFilter.AddCondition(ContactEntity.Fields.Telephone2, ConditionOperator.BeginsWith, "0046");
+                        //    phoneNrBeginFilter.AddCondition(ContactEntity.Fields.Telephone2, ConditionOperator.BeginsWith, "+46");
+                        //    phoneNrBeginFilter.AddCondition(ContactEntity.Fields.Telephone2, ConditionOperator.BeginsWith, "0");
 
-                    //    emMoContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, ContactEntity.ContactInfoBlock,
-                    //    new FilterExpression(LogicalOperator.And)
-                    //    {
-                    //        Conditions =
-                    //        {
-                    //            //new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, customerInfo.Mobile),
-                    //            new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
-                    //        },
-                    //        Filters = //NEW
-                    //        {
-                    //            emailFilterNew,
-                    //            //phoneNrFilter //Ska bara matcha mot E-Post
-                    //        }
+                        //    phoneNrFilter.AddCondition(ContactEntity.Fields.Telephone2, ConditionOperator.EndsWith, compareNumber);
+                        //    phoneNrFilter.AddFilter(phoneNrBeginFilter);
 
-                    //    }).ToList();
+                        //    emMoContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, ContactEntity.ContactInfoBlock,
+                        //    new FilterExpression(LogicalOperator.And)
+                        //    {
+                        //        Conditions =
+                        //        {
+                        //            //new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, customerInfo.Mobile),
+                        //            new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
+                        //        },
+                        //        Filters = //NEW
+                        //        {
+                        //            emailFilterNew,
+                        //            //phoneNrFilter //Ska bara matcha mot E-Post
+                        //        }
 
-                    //    if (emMoContacts.Count == 1)
-                    //    {
-                    //        contact = emMoContacts[0];
-                    //    }
-                    //    else if (emMoContacts.Count > 1)
-                    //    {
-                    //        throw new Exception(string.Format("Multiple Contacts found with the same Email: {0}, and Mobile Number: {1}", customerInfo.Email, customerInfo.Mobile)); //revise
-                    //    }
-                    //}
+                        //    }).ToList();
 
-                    emMoContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, ContactEntity.ContactInfoBlock,
-                        new FilterExpression(LogicalOperator.And)
-                        {
-                            Conditions =
+                        //    if (emMoContacts.Count == 1)
+                        //    {
+                        //        contact = emMoContacts[0];
+                        //    }
+                        //    else if (emMoContacts.Count > 1)
+                        //    {
+                        //        throw new Exception(string.Format("Multiple Contacts found with the same Email: {0}, and Mobile Number: {1}", customerInfo.Email, customerInfo.Mobile)); //revise
+                        //    }
+                        //}
+
+                        emMoContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, ContactEntity.ContactInfoBlock,
+                            new FilterExpression(LogicalOperator.And)
                             {
+                                Conditions =
+                                {
                                 //new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, customerInfo.Mobile),
                                 new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
-                            },
-                            Filters = //NEW
+                                },
+                                Filters = //NEW
                             {
                                 emailFilterNew,
                                 //phoneNrFilter //Ska bara matcha mot E-Post
                             }
 
-                        }).ToList();
+                            }).ToList();
 
 
-                    // TODO - 2020-01-31 Marcus Stenswed
-                    // How should we handle if there are more hits than one?
-                    if (emMoContacts.Count == 1)
-                    {
-                        contact = emMoContacts[0];
+                        // TODO - 2020-01-31 Marcus Stenswed
+                        // How should we handle if there are more hits than one?
+                        if (emMoContacts.Count == 1)
+                        {
+                            contact = emMoContacts[0];
+                        }
+                        else if (emMoContacts.Count > 1)
+                        {
+                            // 2020-01-31 - Marcus Stenswed
+                            // For now we're picking the first one
+                            contact = emMoContacts[0];
+
+                            //throw new Exception(string.Format("Multiple Contacts found with the same Email: {0}, and Mobile Number: {1}", email, customerInfo.CompanyRole[0]?.Telephone)); //revise
+                        }
+
+                        //IList<ContactEntity> emMoContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, ContactEntity.ContactInfoBlock,
+                        //    new FilterExpression(LogicalOperator.And)
+                        //    {
+                        //        Conditions =
+                        //        {
+                        //            new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, customerInfo.Mobile),
+                        //            new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
+                        //        },
+                        //        Filters = //NEW
+                        //        {
+                        //            emailFilterNew
+                        //        }
+
+                        //    });
+
+                        //if (emMoContacts.Count == 1)
+                        //{
+                        //    contact = emMoContacts[0];
+                        //}
+                        //else if (emMoContacts.Count > 1)
+                        //{
+                        //    throw new Exception(string.Format("Multiple Contacts found with the same Email: {0}, and Mobile Number: {1}", customerInfo.Email, customerInfo.Mobile)); //revise
+                        //}
                     }
-                    else if (emMoContacts.Count > 1)
-                    {
-                        // 2020-01-31 - Marcus Stenswed
-                        // For now we're picking the first one
-                        contact = emMoContacts[0];
-
-                        //throw new Exception(string.Format("Multiple Contacts found with the same Email: {0}, and Mobile Number: {1}", email, customerInfo.CompanyRole[0]?.Telephone)); //revise
-                    }
-
-                    //IList<ContactEntity> emMoContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, ContactEntity.ContactInfoBlock,
-                    //    new FilterExpression(LogicalOperator.And)
-                    //    {
-                    //        Conditions =
-                    //        {
-                    //            new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, customerInfo.Mobile),
-                    //            new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
-                    //        },
-                    //        Filters = //NEW
-                    //        {
-                    //            emailFilterNew
-                    //        }
-
-                    //    });
-
-                    //if (emMoContacts.Count == 1)
-                    //{
-                    //    contact = emMoContacts[0];
-                    //}
-                    //else if (emMoContacts.Count > 1)
-                    //{
-                    //    throw new Exception(string.Format("Multiple Contacts found with the same Email: {0}, and Mobile Number: {1}", customerInfo.Email, customerInfo.Mobile)); //revise
-                    //}
                 }
 
-            }
+                if (feature.ed_SplittCompany == true)
+                {
+                    string email = customerInfo.CompanyRole[0].Email;
+                    string socialSecurityNumber = customerInfo.SocialSecurityNumber;
 
+                    /* 
+                     Check for matching Contacts (Company, School or Senior marked)
+                     Based on Email and Social Security Number (both must match)
+                     */
+
+                    QueryExpression portalCustomerFilter = new QueryExpression()
+                    {
+                        EntityName = ContactEntity.EntityLogicalName,
+                        ColumnSet = ContactEntity.ContactInfoBlock,
+                        Criteria = new FilterExpression(LogicalOperator.And)
+                        {
+                            Conditions =
+                            {
+                                new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, email),
+                                new ConditionExpression(ContactEntity.Fields.ed_SocialSecurityNumberBlock, ConditionOperator.Equal, socialSecurityNumber),
+                                new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active)
+                            }
+                        }
+                    };
+
+                    if (customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal)
+                    {
+                        ConditionExpression companyCustomerExpression = new ConditionExpression(ContactEntity.Fields.ed_BusinessContact, ConditionOperator.Equal, true);
+                        portalCustomerFilter.Criteria.AddCondition(companyCustomerExpression);
+                    }
+                    else if (customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.SkolPortal)
+                    {
+                        ConditionExpression schoolCustomerExpression = new ConditionExpression(ContactEntity.Fields.ed_SchoolContact, ConditionOperator.Equal, true);
+                        portalCustomerFilter.Criteria.AddCondition(schoolCustomerExpression);
+                    }
+                    else if (customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.SeniorPortal)
+                    {
+                        ConditionExpression seniorCustomerExpression = new ConditionExpression(ContactEntity.Fields.ed_SeniorContact, ConditionOperator.Equal, true);
+                        portalCustomerFilter.Criteria.AddCondition(seniorCustomerExpression);
+                    }
+
+                    List<ContactEntity> matchingContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, portalCustomerFilter);
+
+                    // TODO - 2020-04-08 (Marcus Stenswed)
+                    // How should we handle if there are more hits than one?
+                    // Return first match (temporary)
+                    if (matchingContacts != null && matchingContacts.Count() > 0)
+                    {
+                        if (matchingContacts.Count == 1)
+                        {
+                            contact = matchingContacts[0];
+                        }
+                        else if (matchingContacts.Count > 1)
+                        {
+                            contact = matchingContacts[0];
+                        }
+                    }
+                }
+
+                
+            }
             #endregion
 
             return contact;

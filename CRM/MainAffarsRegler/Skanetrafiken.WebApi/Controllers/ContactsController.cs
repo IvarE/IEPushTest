@@ -106,7 +106,7 @@ namespace Skanetrafiken.Crm.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Controller used for create customers of different types
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
@@ -159,13 +159,14 @@ namespace Skanetrafiken.Crm.Controllers
             else if (info.ServiceType == 2)
                 info.Source = (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
             
+            // Format Customer info
             FormatCustomerInfo(ref info);
+            
 
-            //TODO: 1. Handle Matching for portalcustomers
             HttpResponseMessage rm = null;
             switch (info.Source)
             {
-                case (int)Crm.Schema.Generated.ed_informationsource.OinloggatKundArende: //---
+                case (int)Crm.Schema.Generated.ed_informationsource.OinloggatKundArende:
                     rm = CrmPlusControl.NonLoginCustomerIncident(threadId, info);
                     break;
                 case (int)Crm.Schema.Generated.ed_informationsource.RGOL:
@@ -175,16 +176,16 @@ namespace Skanetrafiken.Crm.Controllers
                     rm = CrmPlusControl.PASS(threadId, info);
                     break;
                 case (int)Crm.Schema.Generated.ed_informationsource.OinloggatKop:
-                    rm = CrmPlusControl.NonLoginPurchase(threadId, info); // --- PrivatKund (OptionSet)
+                    rm = CrmPlusControl.NonLoginPurchase(threadId, info); // --- Private Contact
                     break;
-                case (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal: // BusinessContact (Manuel), SkolContact, SeniorCuontact - Ska vi skapa flera av dessa?
-                    rm = CrmPlusControl.CreateForetagsKund(threadId, info);
+                case (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal: // Business Contact 
+                    rm = CrmPlusControl.CreatePortalCustomer(threadId, info);
                     break;
-                case (int)Crm.Schema.Generated.ed_informationsource.SkolPortal: // BusinessContact (Manuel), SkolContact, SeniorCuontact - Ska vi skapa flera av dessa?
-                    rm = CrmPlusControl.CreateForetagsKund(threadId, info);
+                case (int)Crm.Schema.Generated.ed_informationsource.SkolPortal: // School Contact
+                    rm = CrmPlusControl.CreatePortalCustomer(threadId, info);
                     break;
-                case (int)Crm.Schema.Generated.ed_informationsource.SeniorPortal: // BusinessContact (Manuel), SkolContact, SeniorCuontact - Ska vi skapa flera av dessa?
-                    rm = CrmPlusControl.CreateForetagsKund(threadId, info);
+                case (int)Crm.Schema.Generated.ed_informationsource.SeniorPortal: // Senior Contact
+                    rm = CrmPlusControl.CreatePortalCustomer(threadId, info);
                     break;
                 case (int)Schema.Generated.ed_informationsource.KopOchSkicka:
                     rm = CrmPlusControl.KopOchSkickaKund(threadId, info);
@@ -284,13 +285,13 @@ namespace Skanetrafiken.Crm.Controllers
                     rm = CrmPlusControl.ValidateEmail(threadId, guid, ContactEntity.EntityTypeCode, id, info.MklId);
                     break;
                 case (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal:
-                    rm = CrmPlusControl.UpdateForetagsKund(threadId, info);
+                    rm = CrmPlusControl.UpdatePortalCustomer(threadId, info);
                     break;
                 case (int)Crm.Schema.Generated.ed_informationsource.SkolPortal:
-                    rm = CrmPlusControl.UpdateForetagsKund(threadId, info);
+                    rm = CrmPlusControl.UpdatePortalCustomer(threadId, info);
                     break;
                 case (int)Crm.Schema.Generated.ed_informationsource.SeniorPortal:
-                    rm = CrmPlusControl.UpdateForetagsKund(threadId, info);
+                    rm = CrmPlusControl.UpdatePortalCustomer(threadId, info);
                     break;
                 default:
                     rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
