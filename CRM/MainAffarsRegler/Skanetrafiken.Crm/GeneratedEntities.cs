@@ -4204,6 +4204,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_account_ed_skakort_Account
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_account_ed_skakort_Account")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_SKAkort> ed_account_ed_skakort_Account
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_SKAkort>("ed_account_ed_skakort_Account", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_SKAkort>("ed_account_ed_skakort_Account", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N incident_customer_accounts
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("incident_customer_accounts")]
@@ -24233,6 +24249,34 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_contactinformation")]
+		public string ed_contactinformation
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_contactinformation");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_contacttypeinfo")]
+		public string ed_contacttypeinfo
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_contacttypeinfo");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_contacttypeinfo", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_creditsaferejectioncode")]
 		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.ed_creditsaferejectcodes> ed_CreditsafeRejectionCode
 		{
@@ -27995,6 +28039,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_ConflictConnectionGuid = "ed_conflictconnectionguid";
 			
+			public const string ed_contactinformation = "ed_contactinformation";
+			
+			public const string ed_contacttypeinfo = "ed_contacttypeinfo";
+			
 			public const string ed_CreditsafeRejectionCode = "ed_creditsaferejectioncode";
 			
 			public const string ed_CreditsafeRejectionComment = "ed_creditsaferejectioncomment";
@@ -28504,6 +28552,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_Address1_Community = 100;
 			
 			public const int ed_ConflictConnectionGuid = 100;
+			
+			public const int ed_contactinformation = 4000;
+			
+			public const int ed_contacttypeinfo = 100;
 			
 			public const int ed_CreditsafeRejectionComment = 100;
 			
@@ -35237,6 +35289,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Yes = Used for new business rules when creating Company-/Private Customer to keep them seperated in all flows.
+		///No = Used with old business rules
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_splittcompany")]
+		public System.Nullable<bool> ed_SplittCompany
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_splittcompany");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_splittcompany", value);
+			}
+		}
+		
+		/// <summary>
 		/// Sequence number of the import that created this record.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
@@ -35541,6 +35610,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_PaybackVoucherEnabled = "ed_paybackvoucherenabled";
 			
 			public const string ed_RemoveControlForTypeOfValueCodeEnabled = "ed_removecontrolfortypeofvaluecodeenabled";
+			
+			public const string ed_SplittCompany = "ed_splittcompany";
 			
 			public const string ImportSequenceNumber = "importsequencenumber";
 			
@@ -43215,6 +43286,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_account")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_Account
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_account");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_account", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_cardnumber")]
 		public string ed_CardNumber
 		{
@@ -43596,6 +43683,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 ed_account_ed_skakort_Account
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_account")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_account_ed_skakort_Account")]
+		public Skanetrafiken.Crm.Schema.Generated.Account ed_account_ed_skakort_Account
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("ed_account_ed_skakort_Account", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("ed_account_ed_skakort_Account", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 ed_contact_ed_skakort_Contact
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_contact")]
@@ -43672,6 +43776,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string CreatedOn = "createdon";
 			
 			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string ed_Account = "ed_account";
 			
 			public const string ed_CardNumber = "ed_cardnumber";
 			

@@ -36,7 +36,8 @@ namespace Skanetrafiken.Crm.Entities
 
         internal static CompanyRoleEntity GetUpdateCompanyRole(Plugin.LocalPluginContext localContext, CustomerInfo customerInfo)
         {
-            bool updated = false;
+            bool roleUpdated = false;
+            bool contactUpdated = false;
             if (customerInfo == null)
                 return null;
 
@@ -54,7 +55,13 @@ namespace Skanetrafiken.Crm.Entities
             // 2020-01-31 - Marcus Stenswed - We have a guid to the existing Contact, use that instead of matching on email. It's coming from PUT Contact
             //ContactEntity contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo); //Check - Match
 
-            ContactEntity contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, new Guid(customerInfo.Guid), new ColumnSet(false));
+            ContactEntity contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, 
+                new Guid(customerInfo.Guid), 
+                new ColumnSet(ContactEntity.Fields.cgi_socialsecuritynumber,
+                    ContactEntity.Fields.FirstName,
+                    ContactEntity.Fields.LastName,
+                    ContactEntity.Fields.Telephone2,
+                    ContactEntity.Fields.EMailAddress1));
 
 
             AccountEntity account = AccountEntity.FindAccount(localContext, companyRole.PortalId, AccountEntity.AccountInfoBlock);
@@ -90,64 +97,84 @@ namespace Skanetrafiken.Crm.Entities
             };
 
             string roleName = GetCompanyRoleName(account, contact, customerInfo);
+
+            // Role Name
             if (!string.IsNullOrWhiteSpace(roleName) && !roleName.Equals(oldRole.ed_name))
             {
                 localContext.TracingService.Trace("Updating Role Name");
                 updateRole.ed_name = roleName;
-                updated = true;
+                roleUpdated = true;
             }
-            if (!string.IsNullOrWhiteSpace(companyRole.PortalId) && !companyRole.PortalId.Equals(account.AccountNumber))
+            
+            // Update Contact First Name
+            if(!string.IsNullOrEmpty(customerInfo.FirstName) && contact.FirstName != customerInfo.FirstName)
             {
-                localContext.TracingService.Trace("Updating Account");
-                updateRole.ed_Account = account.ToEntityReference();
-                updated = true;
+                contact.FirstName = customerInfo.FirstName;
+                contactUpdated = true;
             }
-            if (!string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) && !customerInfo.SocialSecurityNumber.Equals(contact.cgi_socialsecuritynumber))
+
+            // Update Role First Name
+            if (!string.IsNullOrWhiteSpace(customerInfo.FirstName) && !customerInfo.FirstName.Equals(oldRole.ed_FirstName))
             {
-                localContext.TracingService.Trace("Updating Contact");
-                updateRole.ed_Contact = contact.ToEntityReference();
-                updated = true;
+                updateRole.ed_FirstName = customerInfo.FirstName;
+                roleUpdated = true;
             }
-            //if (!string.IsNullOrWhiteSpace(contact.FirstName) && !contact.FirstName.Equals(oldRole.ed_FirstName))
-            //{
-            //    updateRole.ed_FirstName = customerInfo.FirstName;
-            //    updated = true;
-            //}
-            //if (!string.IsNullOrWhiteSpace(contact.LastName) && !contact.LastName.Equals(oldRole.ed_LastName))
-            //{
-            //    updateRole.ed_LastName = customerInfo.LastName;
-            //    updated = true;
-            //}
+
+            // Update Contact Last Name
+            if (!string.IsNullOrEmpty(customerInfo.LastName) && contact.LastName != customerInfo.LastName)
+            {
+                contact.LastName = customerInfo.LastName;
+                contactUpdated = true;
+            }
+
+            // Update Role Last Name
+            if (!string.IsNullOrWhiteSpace(customerInfo.LastName) && !customerInfo.LastName.Equals(oldRole.ed_LastName))
+            {
+                updateRole.ed_LastName = customerInfo.LastName;
+                roleUpdated = true;
+            }
+
+            // Update Role Email
             if (!string.IsNullOrWhiteSpace(companyRole.Email) && !companyRole.Email.Equals(oldRole.ed_EmailAddress))
             {
                 localContext.TracingService.Trace("Updating Email");
                 updateRole.ed_EmailAddress = companyRole.Email;
-                updated = true;
+                roleUpdated = true;
             }
+
+            // Update Contact Email
+            if(!string.IsNullOrEmpty(companyRole.Email) && contact.EMailAddress1 != companyRole.Email)
+            {
+                contact.EMailAddress1 = companyRole.Email;
+                contactUpdated = true;
+            }
+
+            // Update Role Telephone
             if (!string.IsNullOrWhiteSpace(companyRole.Telephone) && !companyRole.Telephone.Equals(oldRole.ed_Telephone))
             {
                 localContext.TracingService.Trace("Updating Telephone");
                 updateRole.ed_Telephone = companyRole.Telephone;
-                updated = true;
+                roleUpdated = true;
             }
-            if (!string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) && !customerInfo.SocialSecurityNumber.Equals(oldRole.ed_SocialSecurityNumber))
+
+            // Update Contact Telephone
+            if (!string.IsNullOrEmpty(companyRole.Telephone) && contact.Telephone2 != companyRole.Telephone)
             {
-                localContext.TracingService.Trace("Updating Social Security Number");
-                updateRole.ed_SocialSecurityNumber = customerInfo.SocialSecurityNumber;
-                updated = true;
+                contact.Telephone2 = companyRole.Telephone;
+                contactUpdated = true;
             }
 
             if (companyRole.isLockedPortalSpecified && !companyRole.isLockedPortal.Equals(oldRole.ed_isLockedPortal))
             {
                 localContext.TracingService.Trace("Updating IsLockedPortal");
                 updateRole.ed_isLockedPortal = companyRole.isLockedPortal;
-                updated = true;
+                roleUpdated = true;
             }
 
             if (oldRole.ed_Role == null && companyRole.CompanyRole > -1 && companyRole.CompanyRole < Enum.GetValues(typeof(Generated.ed_companyrole_ed_role)).Length)
             {
                 updateRole.ed_Role = (Generated.ed_companyrole_ed_role)companyRole.CompanyRole;
-                updated = true;
+                roleUpdated = true;
             }
 
             if (companyRole.deleteCompanyRole == true)
@@ -161,7 +188,8 @@ namespace Skanetrafiken.Crm.Entities
                 try
                 {
                     SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
-                    updated = false;
+                    roleUpdated = false;
+                    contactUpdated = false;
                 }
                 catch (Exception e)
                 {
@@ -170,29 +198,35 @@ namespace Skanetrafiken.Crm.Entities
                 }
             }
 
-            if (updated)
+            if(contactUpdated)
+                XrmHelper.Update(localContext, contact);
+
+            if (roleUpdated)
                 return updateRole;
             else
                 return null;
         }
 
         /// <summary>
-        /// Creates contact if SSN is not found. Gets existing account or returns an error if account does not exist.
+        /// Create a new Company customer (Konto) connected to an Account.
+        /// Matching existing Company customers on Email and Social Security Number
         /// </summary>
         /// <param name="localContext"></param>
         /// <param name="customerInfo"></param>
+        /// <param name="resp"></param>
         /// <returns></returns>
         internal static Guid? CreateNewCompanyRole(Plugin.LocalPluginContext localContext, CustomerInfo customerInfo, ref HttpResponseMessage resp)
         {
             CustomerInfoCompanyRole role = customerInfo.CompanyRole[0];
+            
+            // Tries to find existing Contact, otherwise creates a new Contact
+            ContactEntity contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo);
 
-            ContactEntity contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo); //Matchning sker här!!
+            // Finds existing Account
             AccountEntity account = AccountEntity.FindAccount(localContext, role.PortalId, new ColumnSet(AccountEntity.Fields.Name, AccountEntity.Fields.ParentAccountId));
-
-            IList<CompanyRoleEntity> roles;
-
-
-            roles = XrmRetrieveHelper.RetrieveMultiple<CompanyRoleEntity>(localContext, new ColumnSet(false),
+            
+            // Check if Contact already has roles
+            IList<CompanyRoleEntity> roles = XrmRetrieveHelper.RetrieveMultiple<CompanyRoleEntity>(localContext, new ColumnSet(false),
                         new FilterExpression()
                         {
                             Conditions =
@@ -209,16 +243,13 @@ namespace Skanetrafiken.Crm.Entities
                 resp = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 resp.Content = new StringContent($"Contact already have the role: {role.CompanyRole} on Account with Id: {role.PortalId}");
                 return null;
-
-                // 2020-01-31 - TODO Marcus Stenswed
-                // This throw exception returns a 500 error, maybe return a 400 BadRequest instead?
-                //throw new Exception($"Role {Generated.ed_companyrole_ed_role.Administrator.ToString()} on {account.Name} already exists.");
             }
             else
             {
                 resp.StatusCode = HttpStatusCode.OK;
             }
 
+            // If no existing Company Role was created then create a new Company Role.
             CompanyRoleEntity newRole = new CompanyRoleEntity()
             {
                 ed_name = GetCompanyRoleName(account, contact, customerInfo),
@@ -273,8 +304,6 @@ namespace Skanetrafiken.Crm.Entities
                 // Execute the request.
                 localContext.OrganizationService.Execute(requestOrgRel);
             }
-            //// Execute the request.
-            //localContext.OrganizationService.Execute(requestOrgRel);
 
             return contact.Id;
         }

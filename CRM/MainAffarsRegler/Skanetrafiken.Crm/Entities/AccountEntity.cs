@@ -35,13 +35,14 @@ namespace Skanetrafiken.Crm.Entities
         internal static AccountEntity FindAccount(Plugin.LocalPluginContext localContext, string accountNumber, ColumnSet columns)
         {
             IList<AccountEntity> accounts = XrmRetrieveHelper.RetrieveMultiple<AccountEntity>(localContext, columns,
-                                new FilterExpression()
-                                {
-                                    Conditions =
-                                    {
-                                        new ConditionExpression(AccountEntity.Fields.AccountNumber, ConditionOperator.Equal, accountNumber)
-                                    }
-                                });
+                new FilterExpression()
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression(AccountEntity.Fields.AccountNumber, ConditionOperator.Equal, accountNumber),
+                        new ConditionExpression(AccountEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.AccountState.Active)
+                    }
+                });
 
             if (accounts != null && accounts.Count > 1)
             {
