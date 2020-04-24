@@ -571,7 +571,7 @@ namespace Skanetrafiken.Crm
         }
 
         internal static SalesOrderLineEntity GetSalesOrderLineEntityFromKopOchSkicka(Plugin.LocalPluginContext localContext, SalesOrderLineInfo salesOrderLineInfo, 
-            EntityReference salesOrderId, EntityReference orderStatus, EntityReference skaKort, string skaCardNumber)
+            EntityReference salesOrderId, EntityReference orderStatus, EntityReference skaKort)
         {
             SalesOrderLineEntity salesOrderLine = new SalesOrderLineEntity()
             {
@@ -581,12 +581,7 @@ namespace Skanetrafiken.Crm
                 ed_OrderStatus = orderStatus,
                 ed_SKAkort = skaKort
             };
-
-            if (!String.IsNullOrWhiteSpace(skaCardNumber))
-            {
-                salesOrderLine.ed_SkaCardNumber = skaCardNumber;
-            }
-
+            
             return salesOrderLine;
         }
     }

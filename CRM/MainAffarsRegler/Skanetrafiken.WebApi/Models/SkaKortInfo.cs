@@ -8,21 +8,41 @@ namespace Skanetrafiken.Crm
 {
     public class SkaKortInfo
     {
-
-        //Kortnummer
+        /// <summary>
+        /// Specifies what the call is related to. 1 = KopOchSkicka | 2 = ForetagsPortal.
+        /// </summary>
         private int informationSourceField;
-        //Kortnummer
-        private string cardNumber;
-        //Kortnamn
-        private string cardName;
-        //Kontakt Id
-        private Guid ContactGuid;
-        //AccountNumber
-        private string portalId;
+        
+        /// <summary>
+        /// Number of Reskort
+        /// </summary>
+        private string cardNumberField;
+        
+        /// <summary>
+        /// Name of Reskort
+        /// </summary>
+        private string cardNameField;
+        
+        /// <summary>
+        /// Record Id of Contact
+        /// </summary>
+        private Guid ContactGuidField;
+        
+        /// <summary>
+        /// Account Number of Account
+        /// </summary>
+        private string portalIdField;
 
         /// <summary>
-        /// TODO
+        /// Type of operation
         /// </summary>
+        /// <example>0 = Register | 1 = Delete | 2 = Revoke</example>
+        private Operation operationField;
+
+        /// <summary>
+        /// Specifies what the call is related to. 1 = KopOchSkicka | 2 = ForetagsPortal.
+        /// </summary>
+        /// <example>1 = KopOchSkicka | 2 = ForetagsPortal</example>
         public int InformationSource
         {
             get
@@ -36,63 +56,91 @@ namespace Skanetrafiken.Crm
         }
 
         /// <summary>
-        /// TODO
+        /// Number of Reskort
         /// </summary>
+        /// <example>5927183216</example>
         public string CardNumber
         {
             get
             {
-                return this.cardNumber;
+                return this.cardNumberField;
             }
             set
             {
-                this.cardNumber = value;
+                this.cardNumberField = value;
             }
         }
 
         /// <summary>
-        /// TODO
+        /// Name of Reskort
         /// </summary>
+        /// <example>Marks Reskort</example>
         public string CardName
         {
             get
             {
-                return this.cardName;
+                return this.cardNameField;
             }
             set
             {
-                this.cardName = value;
+                this.cardNameField = value;
             }
         }
 
         /// <summary>
-        /// TODO
+        /// Record Id of Contact
         /// </summary>
+        /// <example>63dd0fac-35eb-4c66-b39f-42ff05ff3723</example>
         public Guid ContactId
         {
             get
             {
-                return this.ContactGuid;
+                return this.ContactGuidField;
             }
             set
             {
-                this.ContactGuid = value;
+                this.ContactGuidField = value;
             }
         }
 
         /// <summary>
-        /// TODO
+        /// Account Number of Account
         /// </summary>
+        /// <example>12345</example>
         public string PortalId
         {
             get
             {
-                return this.portalId;
+                return this.portalIdField;
             }
             set
             {
-                this.portalId = value;
+                this.portalIdField = value;
             }
         }
+
+        /// <summary>
+        /// Type of operation. 0 = Register | 1 = Delete | 2 = Revoke.
+        /// </summary>
+        /// <example>0 = Register | 1 = Delete | 2 = Revoke</example>
+        public Operation Operation
+        {
+            get
+            {
+                return this.operationField;
+            }
+            set
+            {
+                this.operationField = value;
+            }
+        }
+
+    }
+    
+    public enum Operation : ushort
+    {
+        Register = 0,
+        Delete = 1,
+        Revoke = 2
     }
 }

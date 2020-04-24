@@ -23,14 +23,23 @@ namespace Skanetrafiken.Crm.Controllers
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
             _log.Debug($"Th={threadId} - Unsupported generic GET called.");
-            
+
             HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.BadRequest);
             resp.Content = new StringContent(Resources.GenericGetNotSupported);
             _log.DebugFormat($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}");
             return resp;
         }
 
-        //Register (Create) SkaKort
+        /// <summary>
+        /// Registers a Reskort connected to a Contact or Company
+        /// </summary>
+        /// <remarks>
+        /// 2020-04-22
+        /// </remarks>
+        /// <param name="skaKortInfo">Contains information of Reskort</param>
+        /// <response code="200">Reskort was registered correctly</response>
+        /// <response code="400">Bad information was received</response>
+        /// <response code="500">Something unexpected happened</response>
         [HttpPost]
         public HttpResponseMessage Post([FromBody] SkaKortInfo skaKortInfo)
         {
@@ -45,15 +54,21 @@ namespace Skanetrafiken.Crm.Controllers
                 return nrm;
             }
 
+            if (skaKortInfo.Operation != Operation.Register)
+            {
+                HttpResponseMessage nrm = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                nrm.Content = new StringContent("Incorrect Operation for this endpoint");
+                _log.DebugFormat($"Th={threadId} - Returning statuscode = {nrm.StatusCode}, Content = {nrm.Content.ReadAsStringAsync().Result}\n");
+                return nrm;
+            }
+
             try
             {
                 if (skaKortInfo.InformationSource == 1)
                     skaKortInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.KopOchSkicka; //ändra till skakort hantering (ResKortPrivat - ReskortFöretag) - Då måste det finnas en contactid
                 else if (skaKortInfo.InformationSource == 2)
                     skaKortInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal; // skickar de med en 2a så måste det finnas en accountID
-                else if (skaKortInfo.InformationSource == null)
-                    skaKortInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal; //Bad request if no information source was sent
-
+                
 
                 HttpResponseMessage rm = null;
                 switch (skaKortInfo.InformationSource)
@@ -75,7 +90,7 @@ namespace Skanetrafiken.Crm.Controllers
                 //else _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}");
                 return rm;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
@@ -87,9 +102,19 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
-        //Remove Contact/Account (Update) SkaKort
+        /// <summary>
+        /// Update Reskort (Delete/Revoke)
+        /// </summary>
+        /// <remarks>
+        /// 2020-04-22
+        /// </remarks>
+        /// <param name="id">Card Number</param>
+        /// <param name="skaKortInfo">Contains information of Reskort</param>
+        /// <response code="200">Reskort was registered correctly</response>
+        /// <response code="400">Bad information was received</response>
+        /// <response code="500">Something unexpected happened</response>
         [HttpPut]
-        public HttpResponseMessage Revoke([FromUri] string id, [FromBody] SkaKortInfo skaKortInfo)
+        public HttpResponseMessage Put([FromUri] string id, [FromBody] SkaKortInfo skaKortInfo)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
             _log.DebugFormat($"Th={threadId} - Put called with Payload:\n {CrmPlusControl.SerializeNoNull(skaKortInfo)}");
@@ -102,45 +127,31 @@ namespace Skanetrafiken.Crm.Controllers
                 return nrm;
             }
 
-            try
-            {
-
-                HttpResponseMessage rm = CrmPlusControl.RemoveSkaKortContactOrAccountPut(threadId, skaKortInfo);
-                
-                _log.DebugFormat($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-                return rm;
-            }
-            catch (Exception ex)
-            {
-                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                return rm;
-            }
-            finally
-            {
-                ConnectionCacheManager.ReleaseConnection(threadId);
-            }
-        }
-
-        //Revoke (Delete) SkaKort
-        [HttpPut]
-        public HttpResponseMessage Disconnect([FromUri] string id, [FromBody] SkaKortInfo skaKortInfo)
-        {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.DebugFormat($"Th={threadId} - Disconnect called with Payload:\n {CrmPlusControl.SerializeNoNull(skaKortInfo)}");
-
-            if (skaKortInfo == null)
+            if (skaKortInfo.Operation != Operation.Delete && skaKortInfo.Operation != Operation.Revoke)
             {
                 HttpResponseMessage nrm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                nrm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
+                nrm.Content = new StringContent("Incorrect Operation for this endpoint");
                 _log.DebugFormat($"Th={threadId} - Returning statuscode = {nrm.StatusCode}, Content = {nrm.Content.ReadAsStringAsync().Result}\n");
                 return nrm;
             }
 
             try
             {
-
-                HttpResponseMessage rm = CrmPlusControl.SkaKortDisconnect(threadId, skaKortInfo);
+                if (skaKortInfo.InformationSource == 1)
+                    skaKortInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.KopOchSkicka; //ändra till skakort hantering (ResKortPrivat - ReskortFöretag) - Då måste det finnas en contactid
+                else if (skaKortInfo.InformationSource == 2)
+                    skaKortInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal; // skickar de med en 2a så måste det finnas en accountID
+                
+                HttpResponseMessage rm = new HttpResponseMessage();
+                
+                if (skaKortInfo.Operation == Operation.Revoke)
+                {
+                    rm = CrmPlusControl.SkaKortInactivate(threadId, skaKortInfo);
+                }
+                else if (skaKortInfo.Operation == Operation.Delete)
+                {
+                    rm = CrmPlusControl.RemoveSkaKortContactOrAccount(threadId, skaKortInfo);
+                }
 
                 _log.DebugFormat($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 return rm;
@@ -156,6 +167,41 @@ namespace Skanetrafiken.Crm.Controllers
                 ConnectionCacheManager.ReleaseConnection(threadId);
             }
         }
+
+        ////Revoke (Delete) SkaKort
+        //[HttpPut]
+        //public HttpResponseMessage Disconnect([FromUri] string id, [FromBody] SkaKortInfo skaKortInfo)
+        //{
+        //    int threadId = Thread.CurrentThread.ManagedThreadId;
+        //    _log.DebugFormat($"Th={threadId} - Disconnect called with Payload:\n {CrmPlusControl.SerializeNoNull(skaKortInfo)}");
+
+        //    if (skaKortInfo == null)
+        //    {
+        //        HttpResponseMessage nrm = new HttpResponseMessage(HttpStatusCode.BadRequest);
+        //        nrm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
+        //        _log.DebugFormat($"Th={threadId} - Returning statuscode = {nrm.StatusCode}, Content = {nrm.Content.ReadAsStringAsync().Result}\n");
+        //        return nrm;
+        //    }
+
+        //    try
+        //    {
+
+        //        HttpResponseMessage rm = CrmPlusControl.SkaKortDisconnect(threadId, skaKortInfo);
+
+        //        _log.DebugFormat($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+        //        return rm;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+        //        rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+        //        return rm;
+        //    }
+        //    finally
+        //    {
+        //        ConnectionCacheManager.ReleaseConnection(threadId);
+        //    }
+        //}
 
     }
 }

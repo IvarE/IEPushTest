@@ -140,7 +140,7 @@ namespace Skanetrafiken.Crm
 
             config.Routes.MapHttpRoute(
                 name: "Puts",
-                routeTemplate: "api/{controller}/{action}/{id}",
+                routeTemplate: "api/{controller}/{id}",
                 defaults: new
                 {
                 },

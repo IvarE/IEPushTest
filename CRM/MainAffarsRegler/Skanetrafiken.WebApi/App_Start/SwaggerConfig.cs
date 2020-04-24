@@ -34,6 +34,8 @@ namespace Skanetrafiken.Crm
                         //
                         c.SingleApiVersion("v1", "Skanetrafiken.Crm");
 
+                        c.IncludeXmlComments(string.Format(@"{0}\bin\Skanetrafiken.WebApi.XML", System.AppDomain.CurrentDomain.BaseDirectory));
+                        
                         // If your API has multiple versions, use "MultipleApiVersions" instead of "SingleApiVersion".
                         // In this case, you must provide a lambda that tells Swashbuckle which actions should be
                         // included in the docs for a given API version. Like "SingleApiVersion", each call to "Version"
@@ -57,7 +59,7 @@ namespace Skanetrafiken.Crm
                         //c.BasicAuth("basic")
                         //    .Description("Basic HTTP Authentication");
                         //
-						// NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
+                        // NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
                         //c.ApiKey("apiKey")
                         //    .Description("API Key Authentication")
                         //    .Name("apiKey")
