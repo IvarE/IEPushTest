@@ -4304,15 +4304,15 @@ namespace Skanetrafiken.Crm.Controllers
                             }
                             else
                             {
-                                _log.Debug($"Updating SkaKort with CardNumber {skaKortInfo.CardNumber} and CardName {skaKortInfo.CardName}.");
+                                _log.Debug($"Updating SkaKort with CardNumber {skaKortInfo.CardNumber}.");
                                 
                                 SkaKortEntity updateSkaKort = new SkaKortEntity();
                                 updateSkaKort.Id = skakort.Id;
                                 updateSkaKort.ed_Contact = contact.ToEntityReference();
 
-                                if (skakort.ed_name != skaKortInfo.CardName)
+                                if (skakort.ed_name != skaKortInfo.CardNumber)
                                 {
-                                    updateSkaKort.ed_name = skaKortInfo.CardName;
+                                    updateSkaKort.ed_name = skaKortInfo.CardNumber;
                                 }
 
                                 if (skakort.ed_CardNumber != skaKortInfo.CardNumber)
@@ -4336,10 +4336,10 @@ namespace Skanetrafiken.Crm.Controllers
                         }
                         else //Create new
                         {
-                            _log.Debug($"Creating new SkaKort with CardNumber {skaKortInfo.CardNumber} and CardName {skaKortInfo.CardName}.");
+                            _log.Debug($"Creating new SkaKort with CardNumber {skaKortInfo.CardNumber}.");
                             
                             SkaKortEntity newSkaKort = new SkaKortEntity();
-                            newSkaKort.ed_name = skaKortInfo.CardName;
+                            newSkaKort.ed_name = skaKortInfo.CardNumber;
                             newSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
                             newSkaKort.ed_Contact = contact.ToEntityReference();
                             newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
@@ -4428,16 +4428,16 @@ namespace Skanetrafiken.Crm.Controllers
                             }
                             else
                             {
-                                _log.Debug($"Updating SkaKort with CardNumber {skaKortInfo.CardNumber} and CardName {skaKortInfo.CardName}.");
+                                _log.Debug($"Updating SkaKort with CardNumber {skaKortInfo.CardNumber}.");
 
                                 //TODO: Update SkaKort (Vad gör vi om kortet är inaktiv?)
                                 SkaKortEntity updateSkaKort = new SkaKortEntity();
                                 updateSkaKort.Id = skakort.Id;
                                 updateSkaKort.ed_Account = account.ToEntityReference();
 
-                                if (skakort.ed_name != skaKortInfo.CardName)
+                                if (skakort.ed_name != skaKortInfo.CardNumber)
                                 {
-                                    updateSkaKort.ed_name = skaKortInfo.CardName;
+                                    updateSkaKort.ed_name = skaKortInfo.CardNumber;
                                 }
 
                                 if (skakort.ed_CardNumber != skaKortInfo.CardNumber)
@@ -4461,11 +4461,11 @@ namespace Skanetrafiken.Crm.Controllers
                         }
                         else
                         {
-                            _log.Debug($"Creating new SkaKort with CardNumber {skaKortInfo.CardNumber} and CardName {skaKortInfo.CardName}.");
+                            _log.Debug($"Creating new SkaKort with CardNumber {skaKortInfo.CardNumber}.");
 
                             //TODO: Create SkaKort
                             SkaKortEntity newSkaKort = new SkaKortEntity();
-                            newSkaKort.ed_name = skaKortInfo.CardName;
+                            newSkaKort.ed_name = skaKortInfo.CardNumber;
                             newSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
                             newSkaKort.ed_Account = account.ToEntityReference();
                             newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
