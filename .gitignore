@@ -9,3 +9,5 @@ bin
 *.user
 /CRM/MainAffarsRegler/Skanetrafiken.Crm/packages
 /CRM/Main/Skanetrafiken.Crm/packages
+/CRM/Main/Skanetrafiken.UECCIntegration/Endeavor.BiffIntegration.log_20200506.log
+/CRM/Main/Skanetrafiken.UECCIntegration/Endeavor.UECCIntegration.log_20200506.log
