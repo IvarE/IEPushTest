@@ -62,18 +62,36 @@ namespace Skanetrafiken.UECCIntegration.Logic
         {
             List<Guid> lGContacts = new List<Guid>();
 
+            //Private Customer is false or null - TODO TESTS
+
             string fetch = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' aggregate='true' no-lock='true' >
                               <entity name='ed_companyrole' >
                                 <attribute name='ed_companyroleid' alias='companyrole_count' aggregate='countcolumn' />
                                 <link-entity name='contact' from='contactid' to='ed_contact' alias='ab' >
-                                  <attribute name='contactid' alias='contactid' groupby='true' />
-                                  <filter type='and' >
-                                    <condition attribute='ed_privatecustomercontact' operator='eq' value='{0}' />
-                                    <condition attribute='statecode' operator='eq' value='{1}' />
-                                  </filter>
-                                </link-entity>
-                              </entity>
-                            </fetch>";
+                                  <attribute name='contactid' alias='contactid' groupby='true' />";
+
+            if(privateCustomer == 0) //Is Criteria 1
+            {
+                fetch += @"<filter type='and'>
+                              <filter type='or'>
+                                <condition attribute='ed_privatecustomercontact' operator='eq' value='{0}' />
+                                <condition attribute='ed_privatecustomercontact' operator='null' />
+                              </filter>
+                              <condition attribute='statecode' operator='eq' value='{1}' />
+                            </filter>";
+            }
+            else
+            {
+                fetch += @"<filter type='and'>
+                                <condition attribute='ed_privatecustomercontact' operator='eq' value='{0}' />
+                                <condition attribute='statecode' operator='eq' value='{1}' />
+                            </filter>";
+                                
+            }
+
+            fetch += @"</link-entity>
+                        </entity>
+                        </fetch>";
 
             string getCompanyRoles = string.Format(fetch, privateCustomer, active);
             List<Entity> lContacts = organizationService.RetrieveMultiple(new FetchExpression(getCompanyRoles)).Entities.ToList();
@@ -213,20 +231,21 @@ namespace Skanetrafiken.UECCIntegration.Logic
 
                 foreach (ed_CompanyRole companyRole in lCompanyRoles)
                 {
-                    //Contact nContact = new Contact();
-                    //nContact.FirstName = contact.FirstName;
-                    //nContact.LastName = contact.LastName;
-                    //nContact.EMailAddress1 = companyRole.ed_EmailAddress;
-                    //nContact.Telephone2 = companyRole.ed_Telephone;
-                    //nContact.ed_SocialSecurityNumberBlock = companyRole.ed_SocialSecurityNumber;
+                    Contact nContact = new Contact();
+                    nContact.FirstName = contact.FirstName;
+                    nContact.LastName = contact.LastName;
+                    nContact.EMailAddress1 = companyRole.ed_EmailAddress;
+                    nContact.Telephone2 = companyRole.ed_Telephone;
+                    nContact.ed_SocialSecurityNumberBlock = companyRole.ed_SocialSecurityNumber;
+                    nContact.ed_InformationSource = ed_informationsource.ForetagsPortal;
 
-                    //Guid gNewContact = XrmHelper.Create(localContext, nContact);
+                    Guid gNewContact = XrmHelper.Create(localContext, nContact);
 
-                    //ed_CompanyRole uCompanyRole = new ed_CompanyRole();
-                    //uCompanyRole.Id = (Guid)companyRole.ed_CompanyRoleId;
-                    //uCompanyRole.ed_Contact = new EntityReference(Contact.EntityLogicalName, gNewContact);
+                    ed_CompanyRole uCompanyRole = new ed_CompanyRole();
+                    uCompanyRole.Id = (Guid)companyRole.ed_CompanyRoleId;
+                    uCompanyRole.ed_Contact = new EntityReference(Contact.EntityLogicalName, gNewContact);
 
-                    //XrmHelper.Update(localContext, uCompanyRole);
+                    XrmHelper.Update(localContext, uCompanyRole);
                 }
             }
         }
