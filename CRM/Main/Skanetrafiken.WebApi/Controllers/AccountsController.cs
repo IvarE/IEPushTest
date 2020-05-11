@@ -124,6 +124,7 @@ namespace Skanetrafiken.Crm.Controllers
                 _log.DebugFormat($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
                 return erm;
             }
+
             Guid guid = Guid.Empty;
             if (info.Guid == null || !Guid.TryParse(info.Guid, out guid))
             {
@@ -179,7 +180,6 @@ namespace Skanetrafiken.Crm.Controllers
             }
             _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
             return rm;
-
         }
         
         [NonAction]

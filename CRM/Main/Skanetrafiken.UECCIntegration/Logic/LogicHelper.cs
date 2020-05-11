@@ -62,8 +62,6 @@ namespace Skanetrafiken.UECCIntegration.Logic
         {
             List<Guid> lGContacts = new List<Guid>();
 
-            //Private Customer is false or null - TODO TESTS
-
             string fetch = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' aggregate='true' no-lock='true' >
                               <entity name='ed_companyrole' >
                                 <attribute name='ed_companyroleid' alias='companyrole_count' aggregate='countcolumn' />

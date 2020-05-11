@@ -437,6 +437,7 @@ namespace Skanetrafiken.Crm
         private string PostalCodeField;
         private string CityField;
         private string CountryISOField;
+        private string COField;
         
         /// <summary>
         /// TODO
@@ -450,6 +451,21 @@ namespace Skanetrafiken.Crm
             set
             {
                 this.AddressTypeCodeField = value;
+            }
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        public string CO
+        {
+            get
+            {
+                return this.COField;
+            }
+            set
+            {
+                this.COField = value;
             }
         }
 
@@ -585,6 +601,12 @@ namespace Skanetrafiken.Crm
             if (oldAddress.Country != addressInfo.CountryISO)
             {
                 newAddress.Country = addressInfo.CountryISO;
+                isChanged = true;
+            }
+
+            if(oldAddress.ed_CoAddress != addressInfo.CO)
+            {
+                newAddress.ed_CoAddress = addressInfo.CO;
                 isChanged = true;
             }
 

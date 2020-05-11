@@ -2206,6 +2206,7 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
                 _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -2242,7 +2243,7 @@ namespace Skanetrafiken.Crm.Controllers
                     if (existingAccount.StateCode != Generated.AccountState.Active)
                     {
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.Forbidden);
-                        error.Content = new StringContent($"The requsted Account must be active.");
+                        error.Content = new StringContent($"The requested Account must be active.");
                         return error;
                     }
 
