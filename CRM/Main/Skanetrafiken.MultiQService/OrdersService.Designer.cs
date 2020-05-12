@@ -1,4 +1,4 @@
-﻿namespace Skanetrafiken.OrdersService
+﻿namespace Skanetrafiken.MultiQService
 {
     partial class OrdersService
     {

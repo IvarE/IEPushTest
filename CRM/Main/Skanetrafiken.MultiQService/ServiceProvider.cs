@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xrm.Sdk;
 
-namespace Skanetrafiken.OrdersService
+namespace Skanetrafiken.MultiQService
 {
     class ServiceProvider : IServiceProvider
     {

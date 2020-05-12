@@ -2,11 +2,11 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Skanetrafiken.OrdersService.UnitTest")]
+[assembly: AssemblyTitle("Skanetrafiken.MultiQService.UnitTest")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Endeavor")]
-[assembly: AssemblyProduct("Skanetrafiken.OrdersService.UnitTest")]
+[assembly: AssemblyProduct("Skanetrafiken.MultiQService.UnitTest")]
 [assembly: AssemblyCopyright("Copyright © 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

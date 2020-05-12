@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Skanetrafiken.OrdersService.Properties {
+namespace Skanetrafiken.MultiQService.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -25,7 +25,7 @@ namespace Skanetrafiken.OrdersService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\Endeavor\\OrdersService.Credential.xml")]
+        [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\Endeavor\\MultiQService.Credential.xml")]
         public string CredentialsFilePath {
             get {
                 return ((string)(this["CredentialsFilePath"]));

@@ -35,9 +35,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BIFFIntegration.UnitTest", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.UECCIntegration", "..\Skanetrafiken.UECCIntegration\Skanetrafiken.UECCIntegration.csproj", "{E6795991-10A3-42CF-8483-7DE3D1A89E6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.OrdersService.UnitTest", "..\Skanetrafiken.OrdersService.UnitTest\Skanetrafiken.OrdersService.UnitTest.csproj", "{0BD3A1EC-2734-47EB-89A5-151AB7D27C8E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.MultiQService.UnitTest", "..\Skanetrafiken.MultiQService.UnitTest\Skanetrafiken.MultiQService.UnitTest.csproj", "{0BD3A1EC-2734-47EB-89A5-151AB7D27C8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.OrdersService", "..\Skanetrafiken.OrdersService\Skanetrafiken.OrdersService.csproj", "{29EFD712-FEE7-4752-BF9B-C1BCA876DF0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.MultiQService", "..\Skanetrafiken.MultiQService\Skanetrafiken.MultiQService.csproj", "{29EFD712-FEE7-4752-BF9B-C1BCA876DF0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

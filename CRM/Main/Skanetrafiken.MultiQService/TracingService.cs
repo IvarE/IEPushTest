@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xrm.Sdk;
 using Common.Logging;
 
-namespace Skanetrafiken.OrdersService
+namespace Skanetrafiken.MultiQService
 {
     internal class TracingService : ITracingService
     {

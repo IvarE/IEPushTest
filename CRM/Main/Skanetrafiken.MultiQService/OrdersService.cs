@@ -17,7 +17,7 @@ using System.Globalization;
 using Skanetrafiken.Crm.Entities;
 using Quartz.Impl;
 
-namespace Skanetrafiken.OrdersService
+namespace Skanetrafiken.MultiQService
 {
     public partial class OrdersService : ServiceBase
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Skanetrafiken.OrdersService.UnitTest
+namespace Skanetrafiken.MultiQService.UnitTest
 {
     [TestClass]
     public class UnitTest1

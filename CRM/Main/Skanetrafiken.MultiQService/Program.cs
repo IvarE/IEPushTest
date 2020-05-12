@@ -8,7 +8,7 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Skanetrafiken.OrdersService
+namespace Skanetrafiken.MultiQService
 {
     static class Program
     {
