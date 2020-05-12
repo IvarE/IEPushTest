@@ -23,6 +23,7 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.IO;
+using System.IdentityModel;
 
 namespace Skanetrafiken.Crm.Controllers
 {
@@ -2529,8 +2530,9 @@ namespace Skanetrafiken.Crm.Controllers
 
 
                     HttpResponseMessage resp = new HttpResponseMessage();
-                    
-                    Guid? contactId = CompanyRoleEntity.CreateNewCompanyRole(localContext, customerInfo, ref resp); // CHECK ?? This is where the Match happens
+                    resp.StatusCode = HttpStatusCode.OK;
+
+                    Guid? contactId = CompanyRoleEntity.CreateNewCompanyRole(localContext, customerInfo, ref resp); //This is where the Match happens
 
                     if (resp.StatusCode != HttpStatusCode.OK)
                     {
@@ -2545,6 +2547,12 @@ namespace Skanetrafiken.Crm.Controllers
 
                 }
 
+            }
+            catch (BadRequestException ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                rm.Content = new StringContent(ex.Message);
+                return rm;
             }
             catch (Exception ex)
             {
