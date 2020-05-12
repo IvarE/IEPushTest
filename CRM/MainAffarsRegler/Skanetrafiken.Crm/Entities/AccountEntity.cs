@@ -8,9 +8,12 @@ using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Crm.Sdk;
 using Microsoft.Crm.Sdk.Messages;
+using System.Net;
+using System.Net.Http;
 using Generated = Skanetrafiken.Crm.Schema.Generated;
 using Endeavor.Crm;
 using System.Globalization;
+using System.IdentityModel;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -46,12 +49,14 @@ namespace Skanetrafiken.Crm.Entities
 
             if (accounts != null && accounts.Count > 1)
             {
-                throw new Exception($"Multiple accounts with AccountNumber {accountNumber}");
+                throw new BadRequestException($"Multiple accounts with AccountNumber {accountNumber}.");
+                //throw new Exception($"Multiple accounts with AccountNumber {accountNumber}.");
             }
 
             if (accounts != null && accounts.Count == 0)
             {
-                throw new Exception($"Found no accounts with AccountNumber {accountNumber}.");
+                throw new BadRequestException($"Found no accounts with AccountNumber {accountNumber}.");
+                //throw new Exception($"Found no accounts with AccountNumber {accountNumber}.");
             }
 
             return accounts[0];

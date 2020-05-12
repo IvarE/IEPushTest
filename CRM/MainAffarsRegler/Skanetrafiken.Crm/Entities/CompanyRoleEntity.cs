@@ -187,7 +187,7 @@ namespace Skanetrafiken.Crm.Entities
                 };
                 try
                 {
-                    SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
+                    SetStateResponse respState = (SetStateResponse)localContext.OrganizationService.Execute(req);
                     roleUpdated = false;
                     contactUpdated = false;
                 }
@@ -217,14 +217,30 @@ namespace Skanetrafiken.Crm.Entities
         /// <returns></returns>
         internal static Guid? CreateNewCompanyRole(Plugin.LocalPluginContext localContext, CustomerInfo customerInfo, ref HttpResponseMessage resp)
         {
-            CustomerInfoCompanyRole role = customerInfo.CompanyRole[0];
-            
-            // Tries to find existing Contact, otherwise creates a new Contact
-            ContactEntity contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo);
+            //FeatureToggling
+            FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_SplittCompany);
 
-            // Finds existing Account
+            CustomerInfoCompanyRole role = customerInfo.CompanyRole[0];
+
+            // Finds existing Account - Add Bad Request to function?
             AccountEntity account = AccountEntity.FindAccount(localContext, role.PortalId, new ColumnSet(AccountEntity.Fields.Name, AccountEntity.Fields.ParentAccountId));
+
+            // Tries to find existing Contact, otherwise creates a new Contact
+            //ContactEntity contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo);
+
+            ContactEntity contact = null;
+            if (feature.ed_SplittCompany == false) //Old Logic
+            {
+                // Tries to find existing Contact, otherwise creates a new Contact
+                contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo, null, feature); //Changed (06/05-20)
+            }
+            else if (feature.ed_SplittCompany == true) //New Logic
+            {
+                // Tries to find existing Contact, otherwise creates a new Contact
+                contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo, account, feature); //Changed (06/05-20)
+            }
             
+
             // Check if Contact already has roles
             IList<CompanyRoleEntity> roles = XrmRetrieveHelper.RetrieveMultiple<CompanyRoleEntity>(localContext, new ColumnSet(false),
                         new FilterExpression()
@@ -287,22 +303,25 @@ namespace Skanetrafiken.Crm.Entities
                 localContext.OrganizationService.Execute(requestCostSiteRel);
             }
 
-            if (!DoesRelationshipExist(localContext, "cgi_account_contact", AccountEntity.EntityLogicalName, account.ParentAccountId.Id, ContactEntity.EntityLogicalName, contact.ContactId.Value))
+            if (account.ParentAccountId != null)
             {
-                //Namespace is Microsoft.Crm.Sdk.Messages
-                AssociateEntitiesRequest requestOrgRel = new AssociateEntitiesRequest();
+                if (!DoesRelationshipExist(localContext, "cgi_account_contact", AccountEntity.EntityLogicalName, account.ParentAccountId.Id, ContactEntity.EntityLogicalName, contact.ContactId.Value))
+                {
+                    //Namespace is Microsoft.Crm.Sdk.Messages
+                    AssociateEntitiesRequest requestOrgRel = new AssociateEntitiesRequest();
 
-                // Set the ID of Moniker1 to the ID of the lead.
-                requestOrgRel.Moniker1 = new EntityReference { Id = account.ParentAccountId.Id, LogicalName = AccountEntity.EntityLogicalName };
+                    // Set the ID of Moniker1 to the ID of the lead.
+                    requestOrgRel.Moniker1 = new EntityReference { Id = account.ParentAccountId.Id, LogicalName = AccountEntity.EntityLogicalName };
 
-                // Set the ID of Moniker2 to the ID of the contact.
-                requestOrgRel.Moniker2 = new EntityReference { Id = contact.ContactId.Value, LogicalName = ContactEntity.EntityLogicalName };
+                    // Set the ID of Moniker2 to the ID of the contact.
+                    requestOrgRel.Moniker2 = new EntityReference { Id = contact.ContactId.Value, LogicalName = ContactEntity.EntityLogicalName };
 
-                // Set the relationship name to associate on.
-                requestOrgRel.RelationshipName = "cgi_account_contact";
+                    // Set the relationship name to associate on.
+                    requestOrgRel.RelationshipName = "cgi_account_contact";
 
-                // Execute the request.
-                localContext.OrganizationService.Execute(requestOrgRel);
+                    // Execute the request.
+                    localContext.OrganizationService.Execute(requestOrgRel);
+                }
             }
 
             return contact.Id;
