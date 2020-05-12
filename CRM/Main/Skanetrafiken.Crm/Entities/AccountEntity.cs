@@ -27,7 +27,8 @@ namespace Skanetrafiken.Crm.Entities
             AccountEntity.Fields.ed_BillingEmailAddress,
             AccountEntity.Fields.ed_BillingMethod,
             AccountEntity.Fields.StateCode,
-            AccountEntity.Fields.ed_AllowCreate
+            AccountEntity.Fields.ed_AllowCreate,
+            AccountEntity.Fields.ed_SubOrgNamn
             );
         
         internal static AccountEntity FindAccount(Plugin.LocalPluginContext localContext, string accountNumber, ColumnSet columns)

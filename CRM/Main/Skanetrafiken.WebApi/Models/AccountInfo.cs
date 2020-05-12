@@ -299,7 +299,7 @@ namespace Skanetrafiken.Crm
             //ae.Name = $"Kostnadsställe - {ai.OrganizationName}"; //Gamla
             ae.Name = $"{ai.OrganizationName} - KST"; //ändra namn
 
-            ae.ed_SubOrgNamn = ai.Suborgname; //Inget skickas från fasaden ännu
+            ae.ed_SubOrgNamn = ai.Suborgname;
 
             if (ai.InformationSource == (int)Schema.Generated.ed_informationsource.ForetagsPortal)
             {
@@ -328,6 +328,8 @@ namespace Skanetrafiken.Crm
             ae.ed_BillingEmailAddress = ai.BillingEmailAddress;
             ae.ed_BillingMethod = (Crm.Schema.Generated.ed_account_ed_billingmethod?)ai.BillingMethod;
             ae.ed_ReferencePortal = ai.ReferencePortal;
+            ae.cgi_organizational_number = ai.OrganizationNumber;
+            ae.ed_AllowCreate = ai.AllowCreate;
             
             return ae;
         }
@@ -393,13 +395,19 @@ namespace Skanetrafiken.Crm
 
             if (accountInfo.BillingMethod.HasValue && (int?)oldAccount.ed_BillingMethod != accountInfo.BillingMethod)
             {
-                newAccount.ed_BillingMethod= (Crm.Schema.Generated.ed_account_ed_billingmethod?)accountInfo.BillingMethod;
+                newAccount.ed_BillingMethod = (Crm.Schema.Generated.ed_account_ed_billingmethod?)accountInfo.BillingMethod;
                 isChanged = true;
             }
 
             if (!string.IsNullOrEmpty(accountInfo.ReferencePortal) && oldAccount.ed_ReferencePortal != accountInfo.ReferencePortal)
             {
                 newAccount.ed_ReferencePortal = accountInfo.ReferencePortal;
+                isChanged = true;
+            }
+
+            if(!string.IsNullOrEmpty(accountInfo.Suborgname) && oldAccount.ed_SubOrgNamn != accountInfo.Suborgname)
+            {
+                newAccount.ed_SubOrgNamn = accountInfo.Suborgname;
                 isChanged = true;
             }
 
@@ -423,6 +431,7 @@ namespace Skanetrafiken.Crm
             accountInfo.ed_BillingEmailAddress = ae.ed_BillingEmailAddress;
             accountInfo.ed_BillingMethod = (int?)ae.ed_BillingMethod;
             accountInfo.ed_AllowCreate = ae.ed_AllowCreate;
+            accountInfo.Suborgname = ae.ed_SubOrgNamn;
 
             return accountInfo;
         }
