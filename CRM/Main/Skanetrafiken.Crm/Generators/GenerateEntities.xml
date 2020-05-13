@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <filter>
   <entities>
+    <entity>annotation</entity>
     <entity>account</entity>
     <entity>activityparty</entity>
     <entity>asyncoperation</entity>

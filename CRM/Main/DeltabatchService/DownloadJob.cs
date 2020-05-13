@@ -160,44 +160,90 @@ namespace Endeavor.Crm.DeltabatchService
                                         _errors.Add(new Tuple<string[], Exception>(lineParams, new Exception($"Incomplete responseRow: {outputLine}, expected number of parameters: {_fieldNames.Length}")));
                                         continue;
                                     }
-                                    //add params to log entity
-                                    DeltabatchLogEntity credLog = new DeltabatchLogEntity
+
+                                    string socSec = lineParams[Array.IndexOf(_fieldNames, _socSecFieldKeyword)];
+
+                                    if (socSec == null || string.IsNullOrEmpty(socSec))
                                     {
-                                        ed_CreditsafeParameters = outputLine
-                                    };
-
-                                    bool update = false, rejected = false;
-                                    //if (numberOfOperations % 5000 < 3)
-                                    //{
-                                    //    _log.Info($"Iteration {numberOfOperations}, starting to parse to updateContact");
-                                    //}
-                                    ContactEntity updateEntity = ParseChangedFieldsToAlteredContactEntity(localContext, lineParams, ref credLog, ref update, ref rejected);
-
-                                    //if (numberOfOperations % 5000 < 3)
-                                    //{
-                                    //    _log.Info($"Creating credLog");
-                                    //}
-
-                                    // 2018-11-22 - Marcus Stenswed
-                                    // Row added to make sure only Contacts with MKL Id are updated and not sent again to CreditSafe
-                                    if (!String.IsNullOrEmpty(updateEntity.ed_MklId))
-                                        XrmHelper.Create(localContext, credLog);
-
-                                    if (updateEntity == null)
+                                        _errors.Add(new Tuple<string[], Exception>(lineParams, new Exception($"Socialsecuritynumber is null or empty. Please handle manually.")));
                                         continue;
+                                    }
 
-                                    // 2018-11-22 - Marcus Stenswed
-                                    // Row added to make sure only Contacts with MKL Id are updated and not sent again to CreditSafe
-                                    if ((rejected || update) && !String.IsNullOrEmpty(updateEntity.ed_MklId))
+                                    if (numberOfOperations % 5000 < 3)
                                     {
-                                        updateEntity.ed_InformationSource = Generated.ed_informationsource.Folkbokforing;
+                                        _log.Info($"Retrieving Current information");
+                                    }
+
+                                    ColumnSet contactColumnsWithAddress2 = ContactEntity.ContactInfoBlock;
+                                    contactColumnsWithAddress2.AddColumns(
+                                        ContactEntity.Fields.Address2_Line1,
+                                        ContactEntity.Fields.Address2_Line2,
+                                        ContactEntity.Fields.Address2_PostalCode,
+                                        ContactEntity.Fields.Address2_City,
+                                        ContactEntity.Fields.Address2_Country);
+
+                                    FilterExpression filterContacts = new FilterExpression
+                                                        {
+                                                            Conditions =
+                                                            {
+                                                                new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, socSec)
+
+                                                                //// 2018-11-22 - Marcus Stenswed
+                                                                //// Row added to make sure only Contacts with MKL Id are updated and not sent again to CreditSafe
+                                                                //new ConditionExpression(ContactEntity.Fields.ed_MklId, ConditionOperator.NotNull)
+                                                            }
+                                                        };
+
+                                    List<ContactEntity> lExistingContact = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, ContactEntity.EntityLogicalName, contactColumnsWithAddress2, filterContacts).ToList();
+
+                                    if (numberOfOperations % 5000 < 3)
+                                    {
+                                        _log.Info($"Retrieve Done");
+                                    }
+
+                                    foreach (ContactEntity contact in lExistingContact)
+                                    {
+                                        //add params to log entity
+                                        DeltabatchLogEntity credLog = new DeltabatchLogEntity
+                                        {
+                                            ed_CreditsafeParameters = outputLine
+                                        };
+
+                                        bool update = false, rejected = false;
+                                        //if (numberOfOperations % 5000 < 3)
+                                        //{
+                                        //    _log.Info($"Iteration {numberOfOperations}, starting to parse to updateContact");
+                                        //}
+                                        //Cannot pass ref value from foreach
+                                        ContactEntity existingContact = contact;
+                                        ContactEntity updateEntity = ParseChangedFieldsToAlteredContactEntity(localContext, lineParams, ref credLog, ref update, ref rejected, ref existingContact, socSec);
 
                                         //if (numberOfOperations % 5000 < 3)
                                         //{
-                                        //    _log.Info($"Updating Contact");
+                                        //    _log.Info($"Creating credLog");
                                         //}
-                                        //_log.Debug($"Updating Contact.");
-                                        XrmHelper.Update(localContext, updateEntity);
+
+                                        // 2018-11-22 - Marcus Stenswed
+                                        // Row added to make sure only Contacts with MKL Id are updated and not sent again to CreditSafe
+                                        if (!String.IsNullOrEmpty(updateEntity.ed_MklId))
+                                            XrmHelper.Create(localContext, credLog);
+
+                                        if (updateEntity == null)
+                                            continue;
+
+                                        // 2018-11-22 - Marcus Stenswed
+                                        // Row added to make sure only Contacts with MKL Id are updated and not sent again to CreditSafe
+                                        if ((rejected || update) && !String.IsNullOrEmpty(updateEntity.ed_MklId))
+                                        {
+                                            updateEntity.ed_InformationSource = Generated.ed_informationsource.Folkbokforing;
+
+                                            //if (numberOfOperations % 5000 < 3)
+                                            //{
+                                            //    _log.Info($"Updating Contact");
+                                            //}
+                                            //_log.Debug($"Updating Contact.");
+                                            XrmHelper.Update(localContext, updateEntity);
+                                        }
                                     }
                                 }
                             }
@@ -371,7 +417,7 @@ namespace Endeavor.Crm.DeltabatchService
         /// <param name="update"></param>
         /// <param name="rejected"></param>
         /// <returns></returns>
-        private ContactEntity ParseChangedFieldsToAlteredContactEntity(Plugin.LocalPluginContext localContext, string[] lineParams, ref DeltabatchLogEntity deltaLog, ref bool update, ref bool rejected)
+        private ContactEntity ParseChangedFieldsToAlteredContactEntity(Plugin.LocalPluginContext localContext, string[] lineParams, ref DeltabatchLogEntity deltaLog, ref bool update, ref bool rejected, ref ContactEntity existingContact, string socSec)
         {
             _log.Debug("Entered ParseChangedFieldsToAlteredContactEntity()");
             if (numberOfOperations % 5000 < 3)
@@ -394,7 +440,6 @@ namespace Endeavor.Crm.DeltabatchService
             deltaLog.ed_RejectText = rejectText;
             deltaLog.ed_RejectComment = rejectComment;
 
-            string socSec = lineParams[Array.IndexOf(_fieldNames, _socSecFieldKeyword)];
             deltaLog.ed_SocialSecurityNumber = socSec;
             string givenName = lineParams[Array.IndexOf(_fieldNames, _givenNameFieldKeyword)];
             deltaLog.ed_GivenName = givenName;
@@ -451,34 +496,7 @@ namespace Endeavor.Crm.DeltabatchService
             //    return null;
             //}
 
-            if (numberOfOperations % 5000 < 3)
-            {
-                _log.Info($"Retrieving Current information");
-            }
-            ColumnSet contactColumnsWithAddress2 = ContactEntity.ContactInfoBlock;
-            contactColumnsWithAddress2.AddColumns(
-                ContactEntity.Fields.Address2_Line1,
-                ContactEntity.Fields.Address2_Line2,
-                ContactEntity.Fields.Address2_PostalCode,
-                ContactEntity.Fields.Address2_City,
-                ContactEntity.Fields.Address2_Country);
-            //ContactEntity existingContact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, guid, contactColumnsWithAddress2);
-            ContactEntity existingContact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, ContactEntity.EntityLogicalName, contactColumnsWithAddress2,
-                new FilterExpression
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, socSec)
 
-                        //// 2018-11-22 - Marcus Stenswed
-                        //// Row added to make sure only Contacts with MKL Id are updated and not sent again to CreditSafe
-                        //new ConditionExpression(ContactEntity.Fields.ed_MklId, ConditionOperator.NotNull)
-                    }
-                });
-            if (numberOfOperations % 5000 < 3)
-            {
-                _log.Info($"Retrieve Done");
-            }
 
             if (existingContact == null)
             {
