@@ -330,6 +330,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="ConnectionCacheManager.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
+    <Compile Include="Controllers\MultiQController.cs" />
     <Compile Include="Controllers\TravelCardController.cs" />
     <Compile Include="Controllers\ValueCodeController.cs" />
     <Compile Include="Controllers\PingConnectionController.cs" />

@@ -8,6 +8,7 @@ using Skanetrafiken.Crm.Schema.Generated;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,22 @@ namespace Skanetrafiken.UpSalesMigration
 {
     class Program
     {
+        public class ImportExcelInfo 
+        {
+            public int? rowCount { get; set; }
+            public int? colCount { get; set; }
+            public ExcelApp.Range excelRange { get; set; }
+            public List<ExcelColumn> lColumns { get; set; }
+
+            public ImportExcelInfo(int? r, int? c, ExcelApp.Range range, List<ExcelColumn> lC)
+            {
+                rowCount = r;
+                colCount = c;
+                excelRange = range;
+                lColumns = lC;
+            }
+        }
+
         public class ExcelColumn
         {
             public int index { get; set; }
@@ -27,18 +44,6 @@ namespace Skanetrafiken.UpSalesMigration
             {
                 index = i;
                 name = n;
-            }
-        }
-
-        public class FilesInfo
-        {
-            public string fileName { get; set; }
-            public string entityName { get; set; }
-
-            public FilesInfo(string fName, string eName)
-            {
-                fileName = fName;
-                entityName = eName;
             }
         }
 
@@ -68,11 +73,64 @@ namespace Skanetrafiken.UpSalesMigration
             return lColumns;
         }
 
-        public static void ImportAccountRecords(Plugin.LocalPluginContext localContext, ExcelApp.Range excelRange, List<ExcelColumn> lColumns, string entityName, int rowCount, int colCount)
+        public static ExcelColumn GetSelectedExcelColumn(List<ExcelColumn> lColumns, int j)
         {
+            List<ExcelColumn> lSelectedColumns = lColumns.Where(x => x.index == j).ToList();
+
+            if (lSelectedColumns.Count == 0)
+            {
+                _log.Info("No Columns found with Index: " + j);
+                return null;
+            }
+            else if (lSelectedColumns.Count > 1)
+            {
+                _log.Info("One Or More Columns found with Index: " + j);
+                return null;
+            }
+
+            return lSelectedColumns.FirstOrDefault();
+        }
+
+        public static ImportExcelInfo HandleExcelInformation(string relativeExcelPath, string fileName)
+        {
+            try
+            {
+                ExcelApp.Application excelApp = new ExcelApp.Application();
+                ExcelApp.Workbook excelBook = excelApp.Workbooks.Open(relativeExcelPath + "\\" + fileName);
+
+                int numberOfSheets = excelBook.Worksheets.Count;
+
+                if (numberOfSheets > 1)
+                    _log.InfoFormat(CultureInfo.InvariantCulture, $"There is more than one WorkSheet in this file, by default it will check the first WorkSheet.");
+
+                ExcelApp._Worksheet excelSheet = excelBook.Sheets[1];
+                ExcelApp.Range excelRange = excelSheet.UsedRange;
+
+                int rowCount = excelRange.Rows.Count;
+                int colCount = excelRange.Columns.Count;
+
+                List<ExcelColumn> lColumns = GetListExcelColumns(excelRange, colCount);
+
+                return new ImportExcelInfo(rowCount, colCount, excelRange, lColumns);
+            }
+            catch (Exception e)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Details: " + e.Message);
+                return null;
+            }
+        }
+
+        public static void ImportAccountRecords(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo, string entityName)
+        {
+            if(importExcelInfo == null || importExcelInfo.excelRange == null || importExcelInfo.lColumns == null || importExcelInfo.rowCount == null || importExcelInfo.colCount == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
+            }
+
+            ExcelApp.Range excelRange = importExcelInfo.excelRange;
             List<Account> lAccounts = new List<Account>();
 
-            for (int i = 2; i <= rowCount; i++)
+            for (int i = 2; i <= importExcelInfo.rowCount; i++)
             {
                 Account nAccount = new Account();
 
@@ -82,29 +140,23 @@ namespace Skanetrafiken.UpSalesMigration
                 string country = string.Empty;
                 string postalCode = string.Empty;
 
-                for (int j = 1; j <= colCount; j++)
+                for (int j = 1; j <= importExcelInfo.colCount; j++)
                 {
-                    List<ExcelColumn> lSelectedColumns = lColumns.Where(x => x.index == j).ToList();
-
-                    if (lSelectedColumns.Count == 0)
-                    {
-                        _log.Info("No Columns found with Index: " + j);
-                        continue;
-                    }
-                    else if (lSelectedColumns.Count > 1)
-                    {
-                        _log.Info("One Or More Columns found with Index: " + j);
-                        continue;
-                    }
-
-                    ExcelColumn selectedColumn = lSelectedColumns.FirstOrDefault();
-                    string name = selectedColumn.name;
-
                     if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null)
                     {
                         _log.Info("The value inside the Cell is null.");
                         continue;
                     }
+
+                    ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
+
+                    if(selectedColumn == null)
+                    {
+                        _log.Info("The Selected Column is null.");
+                        continue;
+                    }
+
+                    string name = selectedColumn.name;
 
                     switch (name)
                     {
@@ -238,6 +290,9 @@ namespace Skanetrafiken.UpSalesMigration
                         case "Företag: Kundresa":
                             break;
                         default:
+
+                            _log.Info("The Column " + name + " is not on the mappings initially set.");
+
                             break;
                     }
                 }
@@ -272,65 +327,170 @@ namespace Skanetrafiken.UpSalesMigration
             }
         }
 
+        public static void ImportContactsRecords(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo, string entityName)
+        {
+
+        }
+
+        public static void ImportActivitiesRecords(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo, string entityName)
+        {
+
+        }
+
+        public static void ImportLeadsRecords(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo, string entityName)
+        {
+
+        }
+
+        public static void ImportOpportunitiesRecords(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo, string entityName)
+        {
+
+        }
+
+        public static void ImportWonOpportunitiesRecords(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo, string entityName)
+        {
+
+        }
+
+        public static void ImportHistoricalDataRecords(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo, string entityName)
+        {
+
+        }
+
+        static ExcelApp.Application excelApp = new ExcelApp.Application();
         private static ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         static void Main(string[] args)
         {
+            //Test Connection
             Plugin.LocalPluginContext localContext = GetCrmConnection();
 
             string relativeExcelPath = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.ExcelRelativePath);
+            string fileName = "Upsales företag 2020-04-30.xlsx";
 
-            List<FilesInfo> lFileInfo = new List<FilesInfo>();
-            lFileInfo.Add(new FilesInfo("Upsales företag 2020-04-30.xlsx", "account"));
+            #region Import Accounts
 
-            foreach (FilesInfo fileInfo in lFileInfo)
+            try
             {
-                ExcelApp.Application excelApp = new ExcelApp.Application();
-                ExcelApp.Workbook excelBook = excelApp.Workbooks.Open(relativeExcelPath + "\\" + fileInfo.fileName);
-
-                int numberOfSheets = excelBook.Worksheets.Count;
-
-                if (numberOfSheets > 1)
-                {
-                    _log.Info("There is more than one WorkSheet in this file, by default it will check the first WorkSheet.");
-                }
-
-                ExcelApp._Worksheet excelSheet = excelBook.Sheets[1];
-                ExcelApp.Range excelRange = excelSheet.UsedRange;
-
-                int rowCount = excelRange.Rows.Count;
-                int colCount = excelRange.Columns.Count;
-
-                string entityName = fileInfo.entityName;
-                List<ExcelColumn> lColumns = GetListExcelColumns(excelRange, colCount);
-
-                switch (entityName)
-                {
-                    case "account":
-
-                        try
-                        {
-                            ImportAccountRecords(localContext, excelRange, lColumns, entityName, rowCount, colCount);
-                        }
-                        catch (Exception e)
-                        {
-                            _log.Error("Error Importing Account Records. Details: " + e.Message);
-                            throw;
-                        }
-
-                        break;
-                    case "contact":
-                        break;
-                    default:
-                        break;
-                }
-
-                //after reading, relaase the excel project
-                excelApp.Quit();
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
-                Console.ReadLine();
-
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
+                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
+                ImportAccountRecords(localContext, importExcelInfo, "account");
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
             }
+            catch (Exception e)
+            {
+                _log.Error("Error Importing Account Records. Details: " + e.Message);
+                throw;
+            }
+
+            #endregion
+            #region Import Contacts
+
+            try
+            {
+                fileName = "Contacts företag 2020-04-30.xlsx";
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Contact Entity--------------");
+                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
+                ImportContactsRecords(localContext, importExcelInfo, "contact");
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Contact Entity--------------");
+            }
+            catch (Exception e)
+            {
+                _log.Error("Error Importing Contact Records. Details: " + e.Message);
+                throw;
+            }
+
+            #endregion
+            #region Import Activities
+
+            try
+            {
+                fileName = "Activities företag 2020-04-30.xlsx";
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Activities Entity--------------");
+                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
+                ImportActivitiesRecords(localContext, importExcelInfo, "activity");
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Activities Entity--------------");
+            }
+            catch (Exception e)
+            {
+                _log.Error("Error Importing Activities Records. Details: " + e.Message);
+                throw;
+            }
+
+            #endregion
+            #region Import Leads
+
+            try
+            {
+                fileName = "Leads företag 2020-04-30.xlsx";
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Leads Entity--------------");
+                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
+                ImportLeadsRecords(localContext, importExcelInfo, "lead");
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Leads Entity--------------");
+            }
+            catch (Exception e)
+            {
+                _log.Error("Error Importing Leads Records. Details: " + e.Message);
+                throw;
+            }
+
+            #endregion
+            #region Import Opportunities
+
+            try
+            {
+                fileName = "Opportunities företag 2020-04-30.xlsx";
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Opportunities Entity--------------");
+                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
+                ImportOpportunitiesRecords(localContext, importExcelInfo, "opportunity");
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Opportunities Entity--------------");
+            }
+            catch (Exception e)
+            {
+                _log.Error("Error Importing Opportunities Records. Details: " + e.Message);
+                throw;
+            }
+
+            #endregion
+            #region Import Won Opportunities
+
+            try
+            {
+                fileName = "Won Opportunities företag 2020-04-30.xlsx";
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Won Opportunities Entity--------------");
+                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
+                ImportWonOpportunitiesRecords(localContext, importExcelInfo, "opportunity");
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Won Opportunities Entity--------------");
+            }
+            catch (Exception e)
+            {
+                _log.Error("Error Importing Won Opportunities Records. Details: " + e.Message);
+                throw;
+            }
+
+            #endregion
+            #region Import Historical Data
+
+            try
+            {
+                fileName = "Historical Data företag 2020-04-30.xlsx";
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Historical Data Entity--------------");
+                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
+                ImportHistoricalDataRecords(localContext, importExcelInfo, "historicaldata");
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Historical Data Entity--------------");
+            }
+            catch (Exception e)
+            {
+                _log.Error("Error Importing Historical Data Records. Details: " + e.Message);
+                throw;
+            }
+
+            #endregion
+
+            //after reading, relaase the excel project
+            excelApp.Quit();
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
+            Console.ReadLine();
         }
     }
 }
