@@ -2,6 +2,7 @@ using Endeavor.Crm;
 using Endeavor.Crm.UpSalesMigration;
 using log4net;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using Skanetrafiken.Crm.Schema.Generated;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
+using System.ServiceModel.Description;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -44,6 +46,25 @@ namespace Skanetrafiken.UpSalesMigration
             {
                 index = i;
                 name = n;
+            }
+        }
+
+        public static void ConnectToMSCRM(string UserName, string Password, string SoapOrgServiceUri)
+        {
+            try
+            {
+                ClientCredentials credentials = new ClientCredentials();
+                credentials.UserName.UserName = UserName;
+                credentials.UserName.Password = Password;
+                Uri serviceUri = new Uri(SoapOrgServiceUri);
+                OrganizationServiceProxy proxy = new OrganizationServiceProxy(serviceUri, null, credentials, null);
+                proxy.EnableProxyTypes();
+                _service = (IOrganizationService)proxy;
+            }
+            catch (Exception ex)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, "Error while connecting to CRM " + ex.Message);
+                Console.WriteLine("Error while connecting to CRM " + ex.Message);
             }
         }
 
@@ -120,15 +141,65 @@ namespace Skanetrafiken.UpSalesMigration
             }
         }
 
-        public static void ImportAccountRecords(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo, string entityName)
+        public static EntityReference GetCrmUserOrTeamByName(Plugin.LocalPluginContext localContext, string name)
+        {
+            FilterExpression filterUsers = new FilterExpression();
+            filterUsers.Conditions.Add(new ConditionExpression(SystemUser.Fields.FullName, ConditionOperator.Equal, name));
+
+            List<SystemUser> lUsers = XrmRetrieveHelper.RetrieveMultiple<SystemUser>(localContext, new ColumnSet(SystemUser.Fields.SystemUserId), filterUsers).ToList();
+
+            if(lUsers.Count == 1)
+                return lUsers.FirstOrDefault().ToEntityReference();
+
+            FilterExpression filterTeams = new FilterExpression();
+            filterTeams.Conditions.Add(new ConditionExpression(Team.Fields.Name, ConditionOperator.Equal, name));
+
+            List<Team> lTeams = XrmRetrieveHelper.RetrieveMultiple<Team>(localContext, new ColumnSet(), filterTeams).ToList();
+
+            if(lTeams.Count == 1)
+                return lTeams.FirstOrDefault().ToEntityReference();
+
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Users/Teams or More than One found with Name: " + name + ".");
+            return null;
+        }
+
+        public static EntityReference GetCrmAccountByName(Plugin.LocalPluginContext localContext, string name)
+        {
+            FilterExpression filterAccounts = new FilterExpression();
+            filterAccounts.Conditions.Add(new ConditionExpression(Account.Fields.Name, ConditionOperator.Equal, name));
+
+            List<Account> lAccounts = XrmRetrieveHelper.RetrieveMultiple<Account>(localContext, new ColumnSet(Account.Fields.AccountId), filterAccounts).ToList();
+
+            if (lAccounts.Count == 1)
+                return lAccounts.FirstOrDefault().ToEntityReference();
+
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Accounts or More than One found with Name: " + name + ".");
+            return null;
+        }
+
+        public static EntityReference GetCrmContactByFullName(Plugin.LocalPluginContext localContext, string name)
+        {
+            FilterExpression filterContacts = new FilterExpression();
+            filterContacts.Conditions.Add(new ConditionExpression(Contact.Fields.FullName, ConditionOperator.Equal, name));
+
+            List<Contact> lContacts = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, new ColumnSet(Contact.Fields.ContactId), filterContacts).ToList();
+
+            if (lContacts.Count == 1)
+                return lContacts.FirstOrDefault().ToEntityReference();
+
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Contacts or More than One found with Name: " + name + ".");
+            return null;
+        }
+
+        public static void ImportAccountRecords(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo)
         {
             if(importExcelInfo == null || importExcelInfo.excelRange == null || importExcelInfo.lColumns == null || importExcelInfo.rowCount == null || importExcelInfo.colCount == null)
             {
                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
+                return;
             }
 
             ExcelApp.Range excelRange = importExcelInfo.excelRange;
-            List<Account> lAccounts = new List<Account>();
 
             for (int i = 2; i <= importExcelInfo.rowCount; i++)
             {
@@ -142,9 +213,9 @@ namespace Skanetrafiken.UpSalesMigration
 
                 for (int j = 1; j <= importExcelInfo.colCount; j++)
                 {
-                    if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null)
+                    if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
                     {
-                        _log.Info("The value inside the Cell is null.");
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The cell in position (" + i + "," + j + ") is null or empty.");
                         continue;
                     }
 
@@ -152,147 +223,90 @@ namespace Skanetrafiken.UpSalesMigration
 
                     if(selectedColumn == null)
                     {
-                        _log.Info("The Selected Column is null.");
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null.");
                         continue;
                     }
 
                     string name = selectedColumn.name;
+                    string value = excelRange.Cells[i, j].Value2.ToString();
 
                     switch (name)
                     {
-                        case "Företag: Namn":
-                            nAccount.Name = excelRange.Cells[i, j].Value2.ToString();
+                        case "Företag: Namn": nAccount.Name = value;
                             break;
-                        case "Företag: Telefon":
-                            nAccount.Telephone2 = excelRange.Cells[i, j].Value2.ToString();
+                        case "Företag: Telefon": nAccount.Telephone2 = value;
+                            break;
+                        case "Företag: Hemsida": nAccount.WebSiteURL = value;
                             break;
                         case "Företag: Kontoansvarig":
 
-                            //TODO Default User
+                            EntityReference erOwner = GetCrmUserOrTeamByName(localContext, value);
 
-                            string ownerName = excelRange.Cells[i, j].Value2.ToString();
-                            FilterExpression filterUsers = new FilterExpression();
-                            filterUsers.Conditions.Add(new ConditionExpression(SystemUser.Fields.FullName, ConditionOperator.Equal, ownerName));
-
-                            List<SystemUser> lUsers = XrmRetrieveHelper.RetrieveMultiple<SystemUser>(localContext, new ColumnSet(SystemUser.Fields.SystemUserId), filterUsers).ToList();
-
-                            if (lUsers.Count == 0)
+                            if(erOwner == null)
                             {
-                                _log.Info("No Users Found with Name: " + ownerName + ".");
-                                break;
-                            }
-                            else if (lUsers.Count > 1)
-                            {
-                                _log.Info("More than one Users Found with Name: " + ownerName + ".");
-                                break;
+                                string defaultUserName = "Admin"; //TODO Put on App Config
+                                erOwner = GetCrmUserOrTeamByName(localContext, defaultUserName);
                             }
 
-                            SystemUser user = lUsers.FirstOrDefault();
-                            EntityReference erOwner = user.ToEntityReference();
-
-                            nAccount.OwnerId = erOwner;
-
-                            break;
-                        case "Företag: Kampanjer":
-                            //Not in the mappings
-                            break;
-                        case "Företag: Anteckningar":
-
-                            noteText = excelRange.Cells[i, j].Value2.ToString();
+                            if (erOwner != null)
+                                nAccount.OwnerId = erOwner;
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Owner of the Account was not found.");
 
                             break;
-                        case "Företag: Postadress: Fullständig adress":
+                        case "Företag: Moderbolag":
 
-                            street2 = excelRange.Cells[i, j].Value2.ToString();
+                            EntityReference erParentAccount = GetCrmAccountByName(localContext, value);
 
-                            break;
-                        case "Företag: Postadress: Stad":
-
-                            city = excelRange.Cells[i, j].Value2.ToString();
-
-                            break;
-                        case "Företag: Postadress: Land":
-
-                            country = excelRange.Cells[i, j].Value2.ToString();
+                            if (erParentAccount != null)
+                                nAccount.ParentAccountId = erParentAccount;
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Parent Account of the Account was not found or it was already null.");
 
                             break;
-                        case "Företag: Postadress: Postnummer":
-
-                            postalCode = excelRange.Cells[i, j].Value2.ToString();
-
+                        case "Företag: Anteckningar": noteText = value;
                             break;
-                        case "Företag: Besöksadress: Fullständig adress":
-
-                            nAccount.Address1_Line1 = excelRange.Cells[i, j].Value2.ToString();
-
+                        case "Företag: Postadress: Fullständig adress": street2 = value;
                             break;
-                        case "Företag: Besöksadress: Stad":
-
-                            nAccount.Address1_City = excelRange.Cells[i, j].Value2.ToString();
-
+                        case "Företag: Postadress: Stad": city = value;
                             break;
-                        case "Företag: Besöksadress: Land":
-
-                            nAccount.Address1_Country = excelRange.Cells[i, j].Value2.ToString();
-
+                        case "Företag: Postadress: Land": country = value;
                             break;
-                        case "Företag: Besöksadress: Län":
-
-                            nAccount.Address1_County = excelRange.Cells[i, j].Value2.ToString();
-
+                        case "Företag: Postadress: Postnummer": postalCode = value;
                             break;
-                        case "Företag: Besöksadress: Postnummer":
-
-                            nAccount.Address1_PostalCode = excelRange.Cells[i, j].Value2.ToString();
-
+                        case "Företag: Besöksadress: Fullständig adress": nAccount.Address1_Line1 = value;
                             break;
-                        case "Företag: Faktureringsadress: Fullständig adress":
-
-                            nAccount.Address2_Line1 = excelRange.Cells[i, j].Value2.ToString();
-
+                        case "Företag: Besöksadress: Stad": nAccount.Address1_City = value;
                             break;
-                        case "Företag: Faktureringsadress: Stad":
-
-                            nAccount.Address2_City = excelRange.Cells[i, j].Value2.ToString();
-
+                        case "Företag: Besöksadress: Land": nAccount.Address1_Country = value;
                             break;
-                        case "Företag: Faktureringsadress: Postnummer":
-
-                            nAccount.Address2_PostalCode = excelRange.Cells[i, j].Value2.ToString();
-
+                        case "Företag: Besöksadress: Län": nAccount.Address1_County = value;
                             break;
-                        case "Företag: duns":
-                            //ignore field
+                        case "Företag: Besöksadress: Postnummer": nAccount.Address1_PostalCode = value;
                             break;
-                        case "Företag: Organisationsnummer":
-
-                            nAccount.cgi_organizational_number = excelRange.Cells[i, j].Value2.ToString();
-
+                        case "Företag: Faktureringsadress: Fullständig adress": nAccount.Address2_Line1 = value;
                             break;
-                        case "Företag: Bransch (SNI)":
-
+                        case "Företag: Faktureringsadress: Stad": nAccount.Address2_City = value;
                             break;
-                        case "Företag: Bolagsform":
+                        case "Företag: Faktureringsadress: Land": nAccount.Address2_Country = value;
                             break;
-                        case "Företag: Kreditvärdighet (Bisnode)":
+                        case "Företag: Faktureringsadress: Län": nAccount.Address2_County = value;
                             break;
-                        case "Företag: Omsättning":
+                        case "Företag: Faktureringsadress: Postnummer": nAccount.Address2_PostalCode = value;
                             break;
-                        case "Företag: Vinst":
-                            break;
-                        case "Företag: Status":
+                        case "Företag: Organisationsnummer": nAccount.cgi_organizational_number = value;
                             break;
                         case "Företag: Antal anställda":
 
-                            nAccount.NumberOfEmployees = excelRange.Cells[i, j].Value2.ToString();
+                            int iValue;
+
+                            if(int.TryParse(value, out iValue))
+                                nAccount.NumberOfEmployees = iValue;
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"It was not possible to convert " + value + " to an integer.");
 
                             break;
-                        case "Företag: Kundresa":
-                            break;
-                        default:
-
-                            _log.Info("The Column " + name + " is not on the mappings initially set.");
-
+                        default: _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
                             break;
                     }
                 }
@@ -305,8 +319,8 @@ namespace Skanetrafiken.UpSalesMigration
                 {
                     Annotation note = new Annotation();
 
-                    note.ObjectId = new EntityReference(entityName, gAccount);
-                    note.ObjectTypeCode = entityName;
+                    note.ObjectId = new EntityReference(Account.EntityLogicalName, gAccount);
+                    note.ObjectTypeCode = Account.EntityLogicalName;
                     note.Subject = "Note from UpSales Integration";
                     note.NoteText = noteText;
 
@@ -327,14 +341,106 @@ namespace Skanetrafiken.UpSalesMigration
             }
         }
 
-        public static void ImportContactsRecords(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo, string entityName)
+        public static void ImportContactsRecords(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo)
         {
+            if (importExcelInfo == null || importExcelInfo.excelRange == null || importExcelInfo.lColumns == null || importExcelInfo.rowCount == null || importExcelInfo.colCount == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
+                return;
+            }
 
+            ExcelApp.Range excelRange = importExcelInfo.excelRange;
+
+            for (int i = 2; i <= importExcelInfo.rowCount; i++)
+            {
+                Contact nContact = new Contact();
+
+                string noteText = string.Empty;
+
+                for (int j = 1; j <= importExcelInfo.colCount; j++)
+                {
+                    if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The cell in position (" + i + "," + j + ") is null or empty.");
+                        continue;
+                    }
+
+                    ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
+
+                    if (selectedColumn == null)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null.");
+                        continue;
+                    }
+
+                    string name = selectedColumn.name;
+                    string value = excelRange.Cells[i, j].Value2.ToString();
+
+                    switch (name)
+                    {
+                        case "Företag":
+
+                            EntityReference erParent = GetCrmAccountByName(localContext, value);
+
+                            if (erParent == null)
+                                erParent = GetCrmContactByFullName(localContext, value);
+
+                            if (erParent != null)
+                                nContact.ParentCustomerId = erParent;
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Parent Customer of the Contact was not found or it was already null.");
+
+                            break;
+                        case "Förnamn": nContact.FirstName = value;
+                            break;
+                        case "Efternamn": nContact.LastName = value;
+                            break;
+                        case "Anteckningar": noteText = value;
+                            break;
+                        case "Titel": //nContact.AccountRoleCode = TODO ask about the Option Set Values mappings
+                            break;
+                        case "Telefon": nContact.Telephone1 = value;
+                            break;
+                        case "Mobiltelefon": nContact.Telephone2 = value; //Asigned from the Web API mapping file?
+                            break;
+                        case "Email": nContact.EMailAddress1 = value;
+                            break;
+                        default:
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
+                            break;
+                    }
+                }
+
+                nContact.StateCode = ContactState.Active;
+
+                Guid gContact = XrmHelper.Create(localContext, nContact);
+
+                if (noteText != string.Empty && gContact != null)
+                {
+                    Annotation note = new Annotation();
+
+                    note.ObjectId = new EntityReference(Contact.EntityLogicalName, gContact);
+                    note.ObjectTypeCode = Contact.EntityLogicalName;
+                    note.Subject = "Note from UpSales Integration";
+                    note.NoteText = noteText;
+
+                    XrmHelper.Create(localContext, note);
+                }
+            }
         }
 
-        public static void ImportActivitiesRecords(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo, string entityName)
+        public static void ImportActivitiesRecords(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo)
         {
+            if (importExcelInfo == null || importExcelInfo.excelRange == null || importExcelInfo.lColumns == null || importExcelInfo.rowCount == null || importExcelInfo.colCount == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
+                return;
+            }
 
+            ExcelApp.Range excelRange = importExcelInfo.excelRange;
+
+            //Check Excel File First
+            //Will we have a file with all activities or 3 files with email, appointments and phonecall
         }
 
         public static void ImportLeadsRecords(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo, string entityName)
@@ -357,13 +463,19 @@ namespace Skanetrafiken.UpSalesMigration
 
         }
 
+        public static IOrganizationService _service = null;
         static ExcelApp.Application excelApp = new ExcelApp.Application();
         private static ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         static void Main(string[] args)
         {
             //Test Connection
-            Plugin.LocalPluginContext localContext = GetCrmConnection();
+            ConnectToMSCRM("D1\\CRMAdmin", "uSEme2!nstal1", "https://sekundtst.skanetrafiken.se/DKCRM/XRMServices/2011/Organization.svc");
+
+            if (_service == null)
+                _log.ErrorFormat(CultureInfo.InvariantCulture, "The CRM Service is null.");
+
+            Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _service, null, new TracingService());
 
             string relativeExcelPath = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.ExcelRelativePath);
             string fileName = "Upsales företag 2020-04-30.xlsx";
@@ -374,7 +486,7 @@ namespace Skanetrafiken.UpSalesMigration
             {
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
                 ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
-                ImportAccountRecords(localContext, importExcelInfo, "account");
+                ImportAccountRecords(localContext, importExcelInfo);
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
             }
             catch (Exception e)
@@ -384,14 +496,16 @@ namespace Skanetrafiken.UpSalesMigration
             }
 
             #endregion
+
+            fileName = "Contacts företag 2020-04-30.xlsx";
+
             #region Import Contacts
 
             try
             {
-                fileName = "Contacts företag 2020-04-30.xlsx";
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Contact Entity--------------");
                 ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
-                ImportContactsRecords(localContext, importExcelInfo, "contact");
+                ImportContactsRecords(localContext, importExcelInfo);
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Contact Entity--------------");
             }
             catch (Exception e)
@@ -401,14 +515,16 @@ namespace Skanetrafiken.UpSalesMigration
             }
 
             #endregion
+
+            fileName = "Activities företag 2020-04-30.xlsx";
+
             #region Import Activities
 
             try
             {
-                fileName = "Activities företag 2020-04-30.xlsx";
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Activities Entity--------------");
                 ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
-                ImportActivitiesRecords(localContext, importExcelInfo, "activity");
+                ImportActivitiesRecords(localContext, importExcelInfo);
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Activities Entity--------------");
             }
             catch (Exception e)
@@ -418,11 +534,13 @@ namespace Skanetrafiken.UpSalesMigration
             }
 
             #endregion
+
+            fileName = "Leads företag 2020-04-30.xlsx";
+
             #region Import Leads
 
             try
             {
-                fileName = "Leads företag 2020-04-30.xlsx";
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Leads Entity--------------");
                 ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
                 ImportLeadsRecords(localContext, importExcelInfo, "lead");
@@ -435,11 +553,13 @@ namespace Skanetrafiken.UpSalesMigration
             }
 
             #endregion
+
+            fileName = "Opportunities företag 2020-04-30.xlsx";
+
             #region Import Opportunities
 
             try
             {
-                fileName = "Opportunities företag 2020-04-30.xlsx";
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Opportunities Entity--------------");
                 ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
                 ImportOpportunitiesRecords(localContext, importExcelInfo, "opportunity");
@@ -452,11 +572,13 @@ namespace Skanetrafiken.UpSalesMigration
             }
 
             #endregion
+
+            fileName = "Won Opportunities företag 2020-04-30.xlsx";
+
             #region Import Won Opportunities
 
             try
             {
-                fileName = "Won Opportunities företag 2020-04-30.xlsx";
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Won Opportunities Entity--------------");
                 ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
                 ImportWonOpportunitiesRecords(localContext, importExcelInfo, "opportunity");
@@ -469,11 +591,13 @@ namespace Skanetrafiken.UpSalesMigration
             }
 
             #endregion
+
+            fileName = "Historical Data företag 2020-04-30.xlsx";
+
             #region Import Historical Data
 
             try
             {
-                fileName = "Historical Data företag 2020-04-30.xlsx";
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Historical Data Entity--------------");
                 ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
                 ImportHistoricalDataRecords(localContext, importExcelInfo, "historicaldata");

@@ -24,6 +24,7 @@
     <entity>uomschedule</entity>
     <entity>usersettings</entity>
     <entity>queue</entity>
+    <!--<entity>team</entity>-->
 
     <entity>campaignitem</entity>
 

@@ -21,7 +21,7 @@ namespace Skanetrafiken.UECCIntegration
 {
     class Program
     {
-        public static IOrganizationService _service;
+        public static IOrganizationService _service = null;
 
         private static ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -49,8 +49,8 @@ namespace Skanetrafiken.UECCIntegration
             }
             catch (Exception ex)
             {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, "Error while connecting to CRM " + ex.Message);
                 Console.WriteLine("Error while connecting to CRM " + ex.Message);
-                Console.ReadKey();
             }
         }
 

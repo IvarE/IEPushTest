@@ -23,6 +23,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml.XPath;
+using Skanetrafiken.Crm.Models;
 
 namespace Skanetrafiken.Crm.Controllers
 {
@@ -2004,7 +2005,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                     //TODO LOGIC
 
-                    List<string> lOrdersInfo = new List<string>();
+                    List<OrderMQInfo> lOrdersInfo = new List<OrderMQInfo>();
 
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                     resp.Content = new StringContent(SerializeNoNull(lOrdersInfo));
