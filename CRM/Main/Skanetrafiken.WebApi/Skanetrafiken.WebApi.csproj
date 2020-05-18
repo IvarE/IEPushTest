@@ -353,6 +353,7 @@
     <Compile Include="Models\BlockTravelCardReasonCode.cs" />
     <Compile Include="Models\CardDetails.cs" />
     <Compile Include="Models\AccountInfo.cs" />
+    <Compile Include="Models\OrderMQInfo.cs" />
     <Compile Include="Models\SalesOrderInfo.cs" />
     <Compile Include="Models\ValueCodeCreation.cs" />
     <Compile Include="Models\ValueCodePushMessageResult.cs" />
