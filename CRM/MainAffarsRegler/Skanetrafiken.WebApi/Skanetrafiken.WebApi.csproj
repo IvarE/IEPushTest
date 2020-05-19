@@ -333,6 +333,8 @@
     <Compile Include="..\Skanetrafiken.Crm\XrmRetrieveHelper.cs">
       <Link>XrmRetrieveHelper.cs</Link>
     </Compile>
+    <Compile Include="Controllers\MultiQController.cs" />
+    <Compile Include="Models\OrderMQInfo.cs" />
     <Compile Include="SkaKortUtility.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
