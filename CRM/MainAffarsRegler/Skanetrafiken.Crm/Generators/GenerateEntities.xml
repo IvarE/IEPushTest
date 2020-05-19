@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <filter>
   <entities>
+    <entity>annotation</entity>
     <entity>account</entity>
     <entity>activityparty</entity>
     <entity>asyncoperation</entity>
@@ -24,8 +25,10 @@
     <entity>uomschedule</entity>
     <entity>usersettings</entity>
     <entity>queue</entity>
-
+    <entity>team</entity>
     <entity>campaignitem</entity>
+
+
 
     <entity>cgi_categorydetail</entity>
     <entity>cgi_creditorderrow</entity>
@@ -36,6 +39,8 @@
     <entity>cgi_refundtype</entity>
     <entity>cgi_refundaccount</entity>
     <entity>cgi_refundresponsible</entity>
+
+
 
     <entity>ed_biffintegrationerrorlog</entity>
     <entity>ed_biffintegrationerrorlogrow</entity>
@@ -59,19 +64,28 @@
     <entity>ed_valuecodetemplate</entity>
     <entity>ed_valuecodeapproval</entity>
     <entity>ed_valuecodetransaction</entity>
-    
+
     <entity>ed_emailtemplateproxy</entity>
     <entity>ed_returnmessagewebapi</entity>
+
+
 
     <entity>edp_country</entity>
     <entity>edp_sequence</entity>
 
+
+
     <entity>st_singaporeticket</entity>
+
+
 
   </entities>
   <optionsets>
     <optionset>account_accountcategorycode</optionset>
     <optionset>asyncoperation_statuscode</optionset>
+
+
+
     <optionset>campaign_statuscode</optionset>
     <optionset>campaign_typecode</optionset>
     <optionset>contact_statuscode</optionset>
@@ -79,14 +93,22 @@
     <optionset>customeraddress_addresstypecode</optionset>
     <optionset>email_statuscode</optionset>
 
+
+
     <optionset>incident_casetypecode</optionset>
     <optionset>incident_caseorigincode</optionset>
     <optionset>incident_prioritycode</optionset>
     <optionset>incident_incidentstagecode</optionset>
 
+    <optionset>contact_statuscode</optionset>
+    <optionset>contact_accountrolecode</optionset>
+    <optionset>customeraddress_addresstypecode</optionset>
+    <optionset>email_statuscode</optionset>
     <optionset>lead_statuscode</optionset>
     <optionset>lead_leadsourcecode</optionset>
     <optionset>processstage_category</optionset>
+
+
 
     <optionset>cgi_refund_statuscode</optionset>
     <optionset>cgi_refund_ed_valuecodetype</optionset>
@@ -95,6 +117,8 @@
     <optionset>cgi_travelcard_ed_blockedstatus</optionset>
     <optionset>ed_creditsaferejectcodes</optionset>
     <optionset>ed_informationsource</optionset>
+
+
 
     <optionset>ed_account_ed_billingmethod</optionset>
     <optionset>ed_account_ed_paymentmethod</optionset>
@@ -115,10 +139,10 @@
     <optionset>ed_valuecodeapproval_statuscode</optionset>
     <optionset>ed_valuecode_statuscode</optionset>
     <optionset>ed_valuecodetype</optionset>
-    
+
     <optionset>ed_refundingtype</optionset>
     <optionset>ed_valuecodetypeglobal</optionset>
     <optionset>ed_valuecodedeliverytypeglobal</optionset>
-    
+
   </optionsets>
 </filter>

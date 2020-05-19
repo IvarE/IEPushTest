@@ -3900,6 +3900,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N Account_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Account_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> Account_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Account_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Account_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N Account_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Account_AsyncOperations")]
@@ -4496,6 +4512,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("system_user_accounts", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_accounts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_accounts")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_accounts
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_accounts", null);
 			}
 		}
 		
@@ -5721,6 +5750,1149 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 	}
 	
+	/// <summary>
+	/// Note that is attached to one or more objects, including other notes.
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("annotation")]
+	public partial class Annotation : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public Annotation() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "annotation";
+		
+		public const int EntityTypeCode = 5;
+		
+		/// <summary>
+		/// Unique identifier of the note.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("annotationid")]
+		public System.Nullable<System.Guid> AnnotationId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("annotationid");
+			}
+			set
+			{
+				this.SetAttributeValue("annotationid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("annotationid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.AnnotationId = value;
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who created the note.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the note was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who created the annotation.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Contents of the note's attachment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("documentbody")]
+		public string DocumentBody
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("documentbody");
+			}
+			set
+			{
+				this.SetAttributeValue("documentbody", value);
+			}
+		}
+		
+		/// <summary>
+		/// File name of the note.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("filename")]
+		public string FileName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("filename");
+			}
+			set
+			{
+				this.SetAttributeValue("filename", value);
+			}
+		}
+		
+		/// <summary>
+		/// File size of the note.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("filesize")]
+		public System.Nullable<int> FileSize
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("filesize");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data import or data migration that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Specifies whether the note is an attachment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isdocument")]
+		public System.Nullable<bool> IsDocument
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isdocument");
+			}
+			set
+			{
+				this.SetAttributeValue("isdocument", value);
+			}
+		}
+		
+		/// <summary>
+		/// Language identifier for the note.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("langid")]
+		public string LangId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("langid");
+			}
+			set
+			{
+				this.SetAttributeValue("langid", value);
+			}
+		}
+		
+		/// <summary>
+		/// MIME type of the note's attachment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("mimetype")]
+		public string MimeType
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("mimetype");
+			}
+			set
+			{
+				this.SetAttributeValue("mimetype", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who last modified the note.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the note was last modified.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who last modified the annotation.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Text of the note.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("notetext")]
+		public string NoteText
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("notetext");
+			}
+			set
+			{
+				this.SetAttributeValue("notetext", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the object with which the note is associated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		public Microsoft.Xrm.Sdk.EntityReference ObjectId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("objectid");
+			}
+			set
+			{
+				this.SetAttributeValue("objectid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type of entity with which the note is associated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objecttypecode")]
+		public string ObjectTypeCode
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("objecttypecode");
+			}
+			set
+			{
+				this.SetAttributeValue("objecttypecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user or team who owns the note.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ownerid")]
+		public Microsoft.Xrm.Sdk.EntityReference OwnerId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ownerid");
+			}
+			set
+			{
+				this.SetAttributeValue("ownerid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the business unit that owns the note.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningbusinessunit")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningBusinessUnit
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningbusinessunit");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the team who owns the note.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningTeam
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningteam");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who owns the note.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningUser
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owninguser");
+			}
+		}
+		
+		/// <summary>
+		/// workflow step id associated with the note.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stepid")]
+		public string StepId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("stepid");
+			}
+			set
+			{
+				this.SetAttributeValue("stepid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Subject associated with the note.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("subject")]
+		public string Subject
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("subject");
+			}
+			set
+			{
+				this.SetAttributeValue("subject", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the note.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Annotation_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Annotation_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> Annotation_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("Annotation_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("Annotation_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Account_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Account_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.Account Account_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("Account_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("Account_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 annotation_owning_user
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("annotation_owning_user")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser annotation_owning_user
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("annotation_owning_user", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Campaign_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Campaign_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.Campaign Campaign_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Campaign>("Campaign_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Campaign>("Campaign_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 CampaignResponse_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("CampaignResponse_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.CampaignResponse CampaignResponse_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.CampaignResponse>("CampaignResponse_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.CampaignResponse>("CampaignResponse_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 cgi_refund_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cgi_refund_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.cgi_refund cgi_refund_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.cgi_refund>("cgi_refund_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.cgi_refund>("cgi_refund_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 cgi_travelcard_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cgi_travelcard_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.cgi_travelcard cgi_travelcard_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.cgi_travelcard>("cgi_travelcard_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.cgi_travelcard>("cgi_travelcard_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Contact_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Contact_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact Contact_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("Contact_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("Contact_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_biffintegrationerrorlog_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlog_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_biffintegrationerrorlog ed_biffintegrationerrorlog_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_biffintegrationerrorlog>("ed_biffintegrationerrorlog_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_biffintegrationerrorlog>("ed_biffintegrationerrorlog_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_biffintegrationerrorlogrow_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlogrow_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_BiffIntegrationErrorLogRow ed_biffintegrationerrorlogrow_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_BiffIntegrationErrorLogRow>("ed_biffintegrationerrorlogrow_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_BiffIntegrationErrorLogRow>("ed_biffintegrationerrorlogrow_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_companyrole_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_companyrole_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_CompanyRole ed_companyrole_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_CompanyRole>("ed_companyrole_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_CompanyRole>("ed_companyrole_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_deltabatcherrorlog_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlog_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLog ed_deltabatcherrorlog_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLog>("ed_deltabatcherrorlog_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLog>("ed_deltabatcherrorlog_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_deltabatcherrorlogrow_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlogrow_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLogRow ed_deltabatcherrorlogrow_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLogRow>("ed_deltabatcherrorlogrow_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLogRow>("ed_deltabatcherrorlogrow_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_deltabatchlog_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchlog_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchLog ed_deltabatchlog_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchLog>("ed_deltabatchlog_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchLog>("ed_deltabatchlog_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_deltabatchqueue_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchqueue_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue ed_deltabatchqueue_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue>("ed_deltabatchqueue_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue>("ed_deltabatchqueue_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_emailtemplateproxy_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_emailtemplateproxy_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_emailtemplateproxy ed_emailtemplateproxy_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_emailtemplateproxy>("ed_emailtemplateproxy_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_emailtemplateproxy>("ed_emailtemplateproxy_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_featuretoggling_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_featuretoggling_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_FeatureToggling ed_featuretoggling_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_FeatureToggling>("ed_featuretoggling_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_FeatureToggling>("ed_featuretoggling_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_notifymkl_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_notifymkl_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_notifymkl ed_notifymkl_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl>("ed_notifymkl_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl>("ed_notifymkl_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_orderstatus_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_orderstatus_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_OrderStatus ed_orderstatus_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_OrderStatus>("ed_orderstatus_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_OrderStatus>("ed_orderstatus_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_returnmessagewebapi_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_returnmessagewebapi_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_ReturnMessageWebAPI ed_returnmessagewebapi_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ReturnMessageWebAPI>("ed_returnmessagewebapi_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ReturnMessageWebAPI>("ed_returnmessagewebapi_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_salesorderline_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderline_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_salesorderline ed_salesorderline_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("ed_salesorderline_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("ed_salesorderline_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_salesorderlinetraveller_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderlinetraveller_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_salesorderlinetraveller ed_salesorderlinetraveller_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_salesorderlinetraveller>("ed_salesorderlinetraveller_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_salesorderlinetraveller>("ed_salesorderlinetraveller_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_senttextmessage_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_senttextmessage_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_senttextmessage ed_senttextmessage_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_senttextmessage>("ed_senttextmessage_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_senttextmessage>("ed_senttextmessage_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_skakort_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_skakort_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_SKAkort ed_skakort_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_SKAkort>("ed_skakort_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_SKAkort>("ed_skakort_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_textmessage_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_textmessage_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_TextMessage ed_textmessage_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage>("ed_textmessage_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage>("ed_textmessage_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_textmessagetemplate_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_textmessagetemplate_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_TextMessageTemplate ed_textmessagetemplate_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_TextMessageTemplate>("ed_textmessagetemplate_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_TextMessageTemplate>("ed_textmessagetemplate_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_valuecode_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecode_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_ValueCode ed_valuecode_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ValueCode>("ed_valuecode_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ValueCode>("ed_valuecode_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_valuecodeapproval_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodeapproval_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_ValueCodeApproval ed_valuecodeapproval_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ValueCodeApproval>("ed_valuecodeapproval_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ValueCodeApproval>("ed_valuecodeapproval_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_valuecodetemplate_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetemplate_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_valuecodetemplate ed_valuecodetemplate_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_valuecodetemplate>("ed_valuecodetemplate_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_valuecodetemplate>("ed_valuecodetemplate_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_valuecodetransaction_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetransaction_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_valuecodetransaction ed_valuecodetransaction_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_valuecodetransaction>("ed_valuecodetransaction_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_valuecodetransaction>("ed_valuecodetransaction_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 edp_sequence_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("edp_sequence_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.edp_Sequence edp_sequence_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.edp_Sequence>("edp_sequence_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.edp_Sequence>("edp_sequence_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Email_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Email_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.Email Email_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Email>("Email_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Email>("Email_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Incident_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Incident_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.Incident Incident_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("Incident_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("Incident_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Lead_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Lead_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.Lead Lead_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Lead>("Lead_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Lead>("Lead_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_annotationbase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_annotationbase_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_annotationbase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_annotationbase_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_annotationbase_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_annotationbase_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_annotationbase_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_annotationbase_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_annotationbase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_annotationbase_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_annotationbase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_annotationbase_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_annotationbase_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_annotationbase_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_annotationbase_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_annotationbase_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Product_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Product_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.Product Product_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Product>("Product_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Product>("Product_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 st_singaporeticket_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("st_singaporeticket_Annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.st_singaporeticket st_singaporeticket_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket>("st_singaporeticket_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket>("st_singaporeticket_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_annotations")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_annotations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_annotations", null);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string AnnotationId = "annotationid";
+			
+			public const string Id = "annotationid";
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string DocumentBody = "documentbody";
+			
+			public const string FileName = "filename";
+			
+			public const string FileSize = "filesize";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string IsDocument = "isdocument";
+			
+			public const string LangId = "langid";
+			
+			public const string MimeType = "mimetype";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string NoteText = "notetext";
+			
+			public const string ObjectId = "objectid";
+			
+			public const string ObjectTypeCode = "objecttypecode";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string OwnerId = "ownerid";
+			
+			public const string OwningBusinessUnit = "owningbusinessunit";
+			
+			public const string OwningTeam = "owningteam";
+			
+			public const string OwningUser = "owninguser";
+			
+			public const string StepId = "stepid";
+			
+			public const string Subject = "subject";
+			
+			public const string VersionNumber = "versionnumber";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int DocumentBody = 1073741823;
+			
+			public const int FileName = 255;
+			
+			public const int LangId = 2;
+			
+			public const int MimeType = 256;
+			
+			public const int NoteText = 100000;
+			
+			public const int StepId = 32;
+			
+			public const int Subject = 500;
+		}
+	}
+	
 	public enum AsyncOperationState
 	{
 		
@@ -6481,6 +7653,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("Account_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Annotation_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Annotation_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.Annotation Annotation_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Annotation>("Annotation_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Annotation>("Annotation_AsyncOperations", null, value);
 			}
 		}
 		
@@ -7366,6 +8555,36 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 team_asyncoperation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_asyncoperation")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_asyncoperation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_asyncoperation", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Team_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Team_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.Team Team_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("Team_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("Team_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 Template_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -7550,8 +8769,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 	public enum campaign_statuscode
 	{
 		
-		Suspended = 5,
-		
 		Proposed = 0,
 		
 		ReadyToLaunch = 1,
@@ -7561,6 +8778,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		Completed = 3,
 		
 		Canceled = 4,
+		
+		Suspended = 5,
 		
 		Inactive = 6,
 	}
@@ -7633,7 +8852,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Type the amount budgeted for the campaign to define a limit for how much you can spend. Kampanjbudget
+		/// Type the amount budgeted for the campaign to define a limit for how much you can spend.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("budgetedcost")]
 		public Microsoft.Xrm.Sdk.Money BudgetedCost
@@ -9306,6 +10525,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N Campaign_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Campaign_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> Campaign_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Campaign_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Campaign_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N Campaign_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Campaign_AsyncOperations")]
@@ -9577,6 +10812,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("SystemUser_Campaigns", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_Campaigns
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_Campaigns")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_Campaigns
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_Campaigns", null);
 			}
 		}
 		
@@ -11108,6 +12356,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N CampaignResponse_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("CampaignResponse_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> CampaignResponse_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("CampaignResponse_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("CampaignResponse_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N CampaignResponse_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("CampaignResponse_AsyncOperations")]
@@ -11356,6 +12620,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.cgi_travelcard>("st_cgi_travelcard_campaignresponse_TravelCard_Campaign", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_campaignresponse
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_campaignresponse")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_campaignresponse
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_campaignresponse", null);
 			}
 		}
 		
@@ -12365,6 +13642,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 team_cgi_categorydetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_categorydetail")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_cgi_categorydetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_cgi_categorydetail", null);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 user_cgi_categorydetail
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
@@ -13064,6 +14354,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_cgi_creditorderrow_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_cgi_creditorderrow
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_creditorderrow")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_cgi_creditorderrow
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_cgi_creditorderrow", null);
 			}
 		}
 		
@@ -14546,6 +15849,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N cgi_refund_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cgi_refund_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> cgi_refund_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("cgi_refund_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("cgi_refund_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N cgi_refund_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cgi_refund_AsyncOperations")]
@@ -14745,6 +16064,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_cgi_refund_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_cgi_refund
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_refund")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_cgi_refund
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_cgi_refund", null);
 			}
 		}
 		
@@ -15438,6 +16770,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 team_cgi_refundaccount
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_refundaccount")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_cgi_refundaccount
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_cgi_refundaccount", null);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 user_cgi_refundaccount
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
@@ -15961,6 +17306,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_cgi_refundresponsible_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_cgi_refundresponsible
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_refundresponsible")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_cgi_refundresponsible
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_cgi_refundresponsible", null);
 			}
 		}
 		
@@ -16634,6 +17992,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_cgi_refundtype_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_cgi_refundtype
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_refundtype")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_cgi_refundtype
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_cgi_refundtype", null);
 			}
 		}
 		
@@ -17429,6 +18800,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_cgi_reimbursementform_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_cgi_reimbursementform
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_reimbursementform")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_cgi_reimbursementform
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_cgi_reimbursementform", null);
 			}
 		}
 		
@@ -19471,6 +20855,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 cgi_team_cgi_setting_DefaultTeamonPASSCase
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cgi_defaultteamonpasscase")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cgi_team_cgi_setting_DefaultTeamonPASSCase")]
+		public Skanetrafiken.Crm.Schema.Generated.Team cgi_team_cgi_setting_DefaultTeamonPASSCase
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("cgi_team_cgi_setting_DefaultTeamonPASSCase", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("cgi_team_cgi_setting_DefaultTeamonPASSCase", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 ed_queue_cgi_setting_DefaultQueueValueCodes
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_defaultqueuevaluecodes")]
@@ -21197,6 +22598,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N cgi_travelcard_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cgi_travelcard_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> cgi_travelcard_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("cgi_travelcard_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("cgi_travelcard_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N cgi_travelcard_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cgi_travelcard_AsyncOperations")]
@@ -21458,6 +22875,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("st_contact_cgi_travelcard_CampaignResponder", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_cgi_travelcard
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_travelcard")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_cgi_travelcard
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_cgi_travelcard", null);
 			}
 		}
 		
@@ -27011,6 +28441,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N Contact_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Contact_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> Contact_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Contact_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Contact_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N contact_as_primary_contact
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("contact_as_primary_contact")]
@@ -27719,6 +29165,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("system_user_contacts", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_contacts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_contacts")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_contacts
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_contacts", null);
 			}
 		}
 		
@@ -28897,6 +30356,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Care-Of address
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_coaddress")]
+		public string ed_CoAddress
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_coaddress");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_coaddress", value);
+			}
+		}
+		
+		/// <summary>
 		/// Shows the conversion rate of the record's currency. The exchange rate is used to convert all money fields in the record from the local currency to the system's default currency.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
@@ -29523,6 +30998,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string Id = "customeraddressid";
 			
+			public const string ed_CoAddress = "ed_coaddress";
+			
 			public const string ExchangeRate = "exchangerate";
 			
 			public const string Fax = "fax";
@@ -29604,6 +31081,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int Country = 80;
 			
 			public const int County = 50;
+			
+			public const int ed_CoAddress = 100;
 			
 			public const int Fax = 50;
 			
@@ -29977,6 +31456,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_biffintegrationerrorlog_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlog_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_biffintegrationerrorlog_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_biffintegrationerrorlog_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_biffintegrationerrorlog_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_biffintegrationerrorlog_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlog_AsyncOperations")]
@@ -30108,6 +31603,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_biffintegrationerrorlog_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_ed_biffintegrationerrorlog
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_biffintegrationerrorlog")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_biffintegrationerrorlog
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_biffintegrationerrorlog", null);
 			}
 		}
 		
@@ -30715,6 +32223,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_biffintegrationerrorlogrow_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlogrow_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_biffintegrationerrorlogrow_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_biffintegrationerrorlogrow_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_biffintegrationerrorlogrow_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_biffintegrationerrorlogrow_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlogrow_AsyncOperations")]
@@ -30847,6 +32371,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_biffintegrationerrorlogrow_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_ed_biffintegrationerrorlogrow
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_biffintegrationerrorlogrow")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_biffintegrationerrorlogrow
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_biffintegrationerrorlogrow", null);
 			}
 		}
 		
@@ -31459,6 +32996,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_companyrole_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_companyrole_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_companyrole_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_companyrole_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_companyrole_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_companyrole_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_companyrole_AsyncOperations")]
@@ -31654,6 +33207,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_companyrole_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_ed_companyrole
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_companyrole")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_companyrole
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_companyrole", null);
 			}
 		}
 		
@@ -32079,6 +33645,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_deltabatcherrorlog_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlog_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_deltabatcherrorlog_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_deltabatcherrorlog_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_deltabatcherrorlog_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_deltabatcherrorlog_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlog_AsyncOperations")]
@@ -32207,6 +33789,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_deltabatcherrorlog_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_ed_deltabatcherrorlog
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_deltabatcherrorlog")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_deltabatcherrorlog
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_deltabatcherrorlog", null);
 			}
 		}
 		
@@ -32650,6 +34245,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_deltabatcherrorlogrow_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlogrow_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_deltabatcherrorlogrow_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_deltabatcherrorlogrow_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_deltabatcherrorlogrow_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_deltabatcherrorlogrow_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlogrow_AsyncOperations")]
@@ -32779,6 +34390,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_deltabatcherrorlogrow_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_ed_deltabatcherrorlogrow
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_deltabatcherrorlogrow")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_deltabatcherrorlogrow
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_deltabatcherrorlogrow", null);
 			}
 		}
 		
@@ -33600,6 +35224,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_deltabatchlog_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchlog_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_deltabatchlog_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_deltabatchlog_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_deltabatchlog_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_deltabatchlog_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchlog_AsyncOperations")]
@@ -33729,6 +35369,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_deltabatchlog_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_ed_deltabatchlog
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_deltabatchlog")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_deltabatchlog
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_deltabatchlog", null);
 			}
 		}
 		
@@ -34352,6 +36005,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_deltabatchqueue_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchqueue_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_deltabatchqueue_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_deltabatchqueue_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_deltabatchqueue_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_deltabatchqueue_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchqueue_AsyncOperations")]
@@ -34514,6 +36183,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("st_account_ed_deltabatchqueue_ContactLookup", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_ed_deltabatchqueue
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_deltabatchqueue")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_deltabatchqueue
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_deltabatchqueue", null);
 			}
 		}
 		
@@ -34955,6 +36637,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_emailtemplateproxy_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_emailtemplateproxy_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_emailtemplateproxy_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_emailtemplateproxy_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_emailtemplateproxy_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_emailtemplateproxy_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_emailtemplateproxy_AsyncOperations")]
@@ -35067,6 +36765,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_emailtemplateproxy_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_ed_emailtemplateproxy
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_emailtemplateproxy")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_emailtemplateproxy
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_emailtemplateproxy", null);
 			}
 		}
 		
@@ -35473,6 +37184,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_featuretoggling_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_featuretoggling_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_featuretoggling_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_featuretoggling_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_featuretoggling_Annotations", null, value);
 			}
 		}
 		
@@ -36133,6 +37860,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_mergerecords_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_ed_mergerecords
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_mergerecords")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_mergerecords
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_mergerecords", null);
 			}
 		}
 		
@@ -37589,6 +39329,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_notifymkl_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_notifymkl_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_notifymkl_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_notifymkl_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_notifymkl_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_notifymkl_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_notifymkl_AsyncOperations")]
@@ -37903,6 +39659,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("ed_notifymkl_systemuser_owninguser", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_notifymkl_team_owningteam
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_notifymkl_team_owningteam")]
+		public Skanetrafiken.Crm.Schema.Generated.Team ed_notifymkl_team_owningteam
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("ed_notifymkl_team_owningteam", null);
 			}
 		}
 		
@@ -38608,6 +40377,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("ed_ed_orderstatus_ed_salesorderline_OrderStatus", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_orderstatus_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_orderstatus_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_orderstatus_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_orderstatus_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_orderstatus_Annotations", null, value);
 			}
 		}
 		
@@ -39800,6 +41585,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_returnmessagewebapi_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_returnmessagewebapi_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_returnmessagewebapi_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_returnmessagewebapi_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_returnmessagewebapi_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_returnmessagewebapi_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_returnmessagewebapi_AsyncOperations")]
@@ -40847,6 +42648,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 team_ed_salesorder
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_salesorder")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_salesorder
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_salesorder", null);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 user_ed_salesorder
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
@@ -41608,6 +43422,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_salesorderline_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderline_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_salesorderline_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_salesorderline_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_salesorderline_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_salesorderline_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderline_AsyncOperations")]
@@ -41805,6 +43635,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("st_contact_ed_salesorderline_contact", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_ed_salesorderline
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_salesorderline")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_salesorderline
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_salesorderline", null);
 			}
 		}
 		
@@ -42338,6 +44181,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_salesorderlinetraveller_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderlinetraveller_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_salesorderlinetraveller_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_salesorderlinetraveller_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_salesorderlinetraveller_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_salesorderlinetraveller_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderlinetraveller_AsyncOperations")]
@@ -42467,6 +44326,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_salesorderlinetraveller_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_ed_salesorderlinetraveller
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_salesorderlinetraveller")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_salesorderlinetraveller
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_salesorderlinetraveller", null);
 			}
 		}
 		
@@ -42988,6 +44860,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_senttextmessage_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_senttextmessage_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_senttextmessage_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_senttextmessage_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_senttextmessage_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_senttextmessage_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_senttextmessage_AsyncOperations")]
@@ -43151,6 +45039,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_senttextmessage_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_ed_senttextmessage
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_senttextmessage")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_senttextmessage
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_senttextmessage", null);
 			}
 		}
 		
@@ -43516,7 +45417,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Status of the SKÅ kort
+		/// Status för Reskort
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
 		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.ed_SKAkortState> statecode
@@ -43547,7 +45448,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Reason for the status of the SKÅ kort
+		/// Orsak till status för Reskort
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
 		public Microsoft.Xrm.Sdk.OptionSetValue statuscode
@@ -43635,6 +45536,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket>("ed_ed_skakort_st_singaporeticket_SKAkort", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_skakort_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_skakort_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_skakort_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_skakort_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_skakort_Annotations", null, value);
 			}
 		}
 		
@@ -45107,6 +47024,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_textmessage_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_textmessage_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_textmessage_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_textmessage_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_textmessage_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_textmessage_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_textmessage_AsyncOperations")]
@@ -45523,6 +47456,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("ed_textmessage_systemuser_owninguser", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_textmessage_team_owningteam
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_textmessage_team_owningteam")]
+		public Skanetrafiken.Crm.Schema.Generated.Team ed_textmessage_team_owningteam
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("ed_textmessage_team_owningteam", null);
 			}
 		}
 		
@@ -46181,6 +48127,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_textmessagetemplate_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_textmessagetemplate_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_textmessagetemplate_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_textmessagetemplate_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_textmessagetemplate_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_textmessagetemplate_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_textmessagetemplate_AsyncOperations")]
@@ -46293,6 +48255,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_textmessagetemplate_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_ed_textmessagetemplate
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_textmessagetemplate")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_textmessagetemplate
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_textmessagetemplate", null);
 			}
 		}
 		
@@ -47676,6 +49651,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_valuecode_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecode_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_valuecode_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_valuecode_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_valuecode_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_valuecode_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecode_AsyncOperations")]
@@ -48835,6 +50826,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_valuecodeapproval_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodeapproval_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_valuecodeapproval_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_valuecodeapproval_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_valuecodeapproval_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_valuecodeapproval_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodeapproval_AsyncOperations")]
@@ -49692,6 +51699,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_valuecodetemplate_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetemplate_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_valuecodetemplate_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_valuecodetemplate_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_valuecodetemplate_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_valuecodetemplate_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetemplate_AsyncOperations")]
@@ -50349,6 +52372,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_valuecodetransaction_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetransaction_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> ed_valuecodetransaction_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_valuecodetransaction_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("ed_valuecodetransaction_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_valuecodetransaction_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetransaction_AsyncOperations")]
@@ -50478,6 +52517,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_valuecodetransaction_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_ed_valuecodetransaction
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_valuecodetransaction")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_valuecodetransaction
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_valuecodetransaction", null);
 			}
 		}
 		
@@ -51099,6 +53151,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 team_edp_country
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_edp_country")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_edp_country
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_edp_country", null);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 user_edp_country
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
@@ -51638,6 +53703,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N edp_sequence_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("edp_sequence_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> edp_sequence_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("edp_sequence_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("edp_sequence_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N edp_sequence_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("edp_sequence_AsyncOperations")]
@@ -51702,6 +53783,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_edp_sequence_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_edp_sequence
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_edp_sequence")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_edp_sequence
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_edp_sequence", null);
 			}
 		}
 		
@@ -53217,6 +55311,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N Email_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Email_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> Email_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Email_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Email_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N Email_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Email_AsyncOperations")]
@@ -53900,6 +56010,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("SystemUser_Email_EmailSender", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_email
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_email")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_email
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_email", null);
 			}
 		}
 		
@@ -58468,6 +60591,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N Incident_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Incident_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> Incident_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Incident_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Incident_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N Incident_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Incident_AsyncOperations")]
@@ -59200,6 +61339,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("system_user_incidents", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_incidents
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_incidents")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_incidents
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_incidents", null);
 			}
 		}
 		
@@ -63245,6 +65397,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N Lead_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Lead_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> Lead_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Lead_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Lead_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N Lead_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Lead_AsyncOperations")]
@@ -63353,6 +65521,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Account>("accountleads_association", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:N cdi_lead_product
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cdi_lead_product")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Product> cdi_lead_product
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Product>("cdi_lead_product", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Product>("cdi_lead_product", null, value);
 			}
 		}
 		
@@ -63534,6 +65718,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Lead>("lead_master_lead", Microsoft.Xrm.Sdk.EntityRole.Referencing);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lead_owning_team
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lead_owning_team")]
+		public Skanetrafiken.Crm.Schema.Generated.Team lead_owning_team
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("lead_owning_team", null);
 			}
 		}
 		
@@ -64562,6 +66759,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			}
 		}
 		
+		/// <summary>
+		/// 1:N processstage_teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_teams")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> processstage_teams
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("processstage_teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("processstage_teams", null, value);
+			}
+		}
+		
 		public struct Fields
 		{
 			
@@ -65515,6 +67728,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N Product_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Product_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> Product_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Product_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Product_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N Product_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Product_AsyncOperations")]
@@ -65575,6 +67804,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Campaign>("campaignproduct_association", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:N cdi_lead_product
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cdi_lead_product")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Lead> cdi_lead_product
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("cdi_lead_product", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("cdi_lead_product", null, value);
 			}
 		}
 		
@@ -66683,6 +68928,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SystemUser>("queue_system_user", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N queue_team
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("queue_team")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> queue_team
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("queue_team", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("queue_team", null, value);
 			}
 		}
 		
@@ -67951,6 +70212,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			}
 		}
 		
+		/// <summary>
+		/// N:1 team_queueitembase_workerid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("workerid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_queueitembase_workerid")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_queueitembase_workerid
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_queueitembase_workerid", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_queueitembase_workerid", null, value);
+			}
+		}
+		
 		public struct Fields
 		{
 			
@@ -68527,6 +70805,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SystemUser>("systemuserroles_association", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:N teamroles_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("teamroles_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> teamroles_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("teamroles_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("teamroles_association", null, value);
 			}
 		}
 		
@@ -69269,6 +71563,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N st_singaporeticket_Annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("st_singaporeticket_Annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> st_singaporeticket_Annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("st_singaporeticket_Annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("st_singaporeticket_Annotations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N st_singaporeticket_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("st_singaporeticket_AsyncOperations")]
@@ -69432,6 +71742,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("st_contact_st_singaporeticket_ContactID", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_st_singaporeticket
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_st_singaporeticket")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_st_singaporeticket
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_st_singaporeticket", null);
 			}
 		}
 		
@@ -71183,6 +73506,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ptm_peruserlicensingdocumentscorepack")]
+		public System.Nullable<bool> ptm_peruserlicensingdocumentscorepack
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ptm_peruserlicensingdocumentscorepack");
+			}
+			set
+			{
+				this.SetAttributeValue("ptm_peruserlicensingdocumentscorepack", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ptm_peruserlicensingdocumentscorepackserver")]
+		public System.Nullable<bool> ptm_peruserlicensingdocumentscorepackserver
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ptm_peruserlicensingdocumentscorepackserver");
+			}
+			set
+			{
+				this.SetAttributeValue("ptm_peruserlicensingdocumentscorepackserver", value);
+			}
+		}
+		
+		/// <summary>
 		/// Unique identifier of the default queue for the user.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("queueid")]
@@ -71564,6 +73919,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N annotation_owning_user
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("annotation_owning_user")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> annotation_owning_user
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("annotation_owning_user", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("annotation_owning_user", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N cgi_systemuser_cgi_setting_case_rgol_defaultowner
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cgi_systemuser_cgi_setting_case_rgol_defaultowner")]
@@ -71880,6 +74251,70 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Account>("lk_accountbase_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_annotationbase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_annotationbase_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> lk_annotationbase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("lk_annotationbase_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("lk_annotationbase_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_annotationbase_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_annotationbase_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> lk_annotationbase_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("lk_annotationbase_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("lk_annotationbase_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_annotationbase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_annotationbase_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> lk_annotationbase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("lk_annotationbase_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("lk_annotationbase_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_annotationbase_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_annotationbase_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> lk_annotationbase_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("lk_annotationbase_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("lk_annotationbase_modifiedonbehalfby", null, value);
 			}
 		}
 		
@@ -74908,6 +77343,86 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N lk_team_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_team_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> lk_team_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("lk_team_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("lk_team_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_team_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_team_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> lk_team_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("lk_team_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("lk_team_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_teambase_administratorid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_teambase_administratorid")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> lk_teambase_administratorid
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("lk_teambase_administratorid", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("lk_teambase_administratorid", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_teambase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_teambase_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> lk_teambase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("lk_teambase_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("lk_teambase_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_teambase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_teambase_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> lk_teambase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("lk_teambase_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("lk_teambase_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N lk_templatebase_createdby
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_templatebase_createdby")]
@@ -75852,6 +78367,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:N teammembership_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("teammembership_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> teammembership_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("teammembership_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("teammembership_association", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 lk_systemuser_createdonbehalfby
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
@@ -76169,6 +78700,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ProcessId = "processid";
 			
+			public const string ptm_peruserlicensingdocumentscorepack = "ptm_peruserlicensingdocumentscorepack";
+			
+			public const string ptm_peruserlicensingdocumentscorepackserver = "ptm_peruserlicensingdocumentscorepackserver";
+			
 			public const string QueueId = "queueid";
 			
 			public const string Salutation = "salutation";
@@ -76479,6 +79014,1358 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string Id = "systemuserroleid";
 			
 			public const string VersionNumber = "versionnumber";
+		}
+	}
+	
+	/// <summary>
+	/// Collection of system users that routinely collaborate. Teams can be used to simplify record sharing and provide team members with common access to organization data when team members belong to different Business Units.
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("team")]
+	public partial class Team : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public Team() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "team";
+		
+		public const int EntityTypeCode = 9;
+		
+		/// <summary>
+		/// Unique identifier of the user primary responsible for the team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("administratorid")]
+		public Microsoft.Xrm.Sdk.EntityReference AdministratorId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("administratorid");
+			}
+			set
+			{
+				this.SetAttributeValue("administratorid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the business unit with which the team is associated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("businessunitid")]
+		public Microsoft.Xrm.Sdk.EntityReference BusinessUnitId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("businessunitid");
+			}
+			set
+			{
+				this.SetAttributeValue("businessunitid", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cgi_printdetails")]
+		public string cgi_PrintDetails
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("cgi_printdetails");
+			}
+			set
+			{
+				this.SetAttributeValue("cgi_printdetails", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cgi_teamcontactdetails")]
+		public string cgi_TeamContactDetails
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("cgi_teamcontactdetails");
+			}
+			set
+			{
+				this.SetAttributeValue("cgi_teamcontactdetails", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who created the team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the team was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who created the team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Description of the team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("description")]
+		public string Description
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("description");
+			}
+			set
+			{
+				this.SetAttributeValue("description", value);
+			}
+		}
+		
+		/// <summary>
+		/// Email address for the team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("emailaddress")]
+		public string EMailAddress
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("emailaddress");
+			}
+			set
+			{
+				this.SetAttributeValue("emailaddress", value);
+			}
+		}
+		
+		/// <summary>
+		/// Exchange rate for the currency associated with the team with respect to the base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data import or data migration that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Information about whether the team is a default business unit team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isdefault")]
+		public System.Nullable<bool> IsDefault
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isdefault");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who last modified the team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the team was last modified.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who last modified the team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Name of the team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("name")]
+		public string Name
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("name");
+			}
+			set
+			{
+				this.SetAttributeValue("name", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the organization associated with the team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("organizationid")]
+		public System.Nullable<System.Guid> OrganizationId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("organizationid");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the process.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("processid")]
+		public System.Nullable<System.Guid> ProcessId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("processid");
+			}
+			set
+			{
+				this.SetAttributeValue("processid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the default queue for the team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("queueid")]
+		public Microsoft.Xrm.Sdk.EntityReference QueueId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("queueid");
+			}
+			set
+			{
+				this.SetAttributeValue("queueid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the record that the team relates to.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		public Microsoft.Xrm.Sdk.EntityReference RegardingObjectId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("regardingobjectid");
+			}
+			set
+			{
+				this.SetAttributeValue("regardingobjectid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the stage.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		public System.Nullable<System.Guid> StageId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("stageid");
+			}
+			set
+			{
+				this.SetAttributeValue("stageid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the team will be managed by the system.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("systemmanaged")]
+		public System.Nullable<bool> SystemManaged
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("systemmanaged");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for the team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("teamid")]
+		public System.Nullable<System.Guid> TeamId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("teamid");
+			}
+			set
+			{
+				this.SetAttributeValue("teamid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("teamid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.TeamId = value;
+			}
+		}
+		
+		/// <summary>
+		/// Shows the team template that is associated with the team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("teamtemplateid")]
+		public Microsoft.Xrm.Sdk.EntityReference TeamTemplateId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("teamtemplateid");
+			}
+			set
+			{
+				this.SetAttributeValue("teamtemplateid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select the team type.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("teamtype")]
+		public Microsoft.Xrm.Sdk.OptionSetValue TeamType
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("teamtype");
+			}
+			set
+			{
+				this.SetAttributeValue("teamtype", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the currency associated with the team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public Microsoft.Xrm.Sdk.EntityReference TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("traversedpath")]
+		public string TraversedPath
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("traversedpath");
+			}
+			set
+			{
+				this.SetAttributeValue("traversedpath", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// Pronunciation of the full name of the team, written in phonetic hiragana or katakana characters.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("yominame")]
+		public string YomiName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("yominame");
+			}
+			set
+			{
+				this.SetAttributeValue("yominame", value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N cgi_team_cgi_setting_DefaultTeamonPASSCase
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cgi_team_cgi_setting_DefaultTeamonPASSCase")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.cgi_setting> cgi_team_cgi_setting_DefaultTeamonPASSCase
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_setting>("cgi_team_cgi_setting_DefaultTeamonPASSCase", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_setting>("cgi_team_cgi_setting_DefaultTeamonPASSCase", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_notifymkl_team_owningteam
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_notifymkl_team_owningteam")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl> ed_notifymkl_team_owningteam
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl>("ed_notifymkl_team_owningteam", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl>("ed_notifymkl_team_owningteam", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_textmessage_team_owningteam
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_textmessage_team_owningteam")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage> ed_textmessage_team_owningteam
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage>("ed_textmessage_team_owningteam", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage>("ed_textmessage_team_owningteam", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lead_owning_team
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lead_owning_team")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Lead> lead_owning_team
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("lead_owning_team", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("lead_owning_team", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_accounts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_accounts")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Account> team_accounts
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Account>("team_accounts", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Account>("team_accounts", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_annotations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_annotations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> team_annotations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("team_annotations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("team_annotations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_asyncoperation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_asyncoperation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> team_asyncoperation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("team_asyncoperation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("team_asyncoperation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Team_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Team_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> Team_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("Team_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("Team_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_campaignresponse
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_campaignresponse")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.CampaignResponse> team_campaignresponse
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.CampaignResponse>("team_campaignresponse", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.CampaignResponse>("team_campaignresponse", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_Campaigns
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_Campaigns")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Campaign> team_Campaigns
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Campaign>("team_Campaigns", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Campaign>("team_Campaigns", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_cgi_categorydetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_categorydetail")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.cgi_categorydetail> team_cgi_categorydetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_categorydetail>("team_cgi_categorydetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_categorydetail>("team_cgi_categorydetail", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_cgi_creditorderrow
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_creditorderrow")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.cgi_creditorderrow> team_cgi_creditorderrow
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_creditorderrow>("team_cgi_creditorderrow", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_creditorderrow>("team_cgi_creditorderrow", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_cgi_refund
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_refund")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.cgi_refund> team_cgi_refund
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_refund>("team_cgi_refund", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_refund>("team_cgi_refund", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_cgi_refundaccount
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_refundaccount")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.cgi_refundaccount> team_cgi_refundaccount
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_refundaccount>("team_cgi_refundaccount", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_refundaccount>("team_cgi_refundaccount", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_cgi_refundresponsible
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_refundresponsible")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.cgi_refundresponsible> team_cgi_refundresponsible
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_refundresponsible>("team_cgi_refundresponsible", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_refundresponsible>("team_cgi_refundresponsible", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_cgi_refundtype
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_refundtype")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.cgi_refundtype> team_cgi_refundtype
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_refundtype>("team_cgi_refundtype", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_refundtype>("team_cgi_refundtype", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_cgi_reimbursementform
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_reimbursementform")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.cgi_reimbursementform> team_cgi_reimbursementform
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_reimbursementform>("team_cgi_reimbursementform", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_reimbursementform>("team_cgi_reimbursementform", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_cgi_travelcard
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_cgi_travelcard")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.cgi_travelcard> team_cgi_travelcard
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_travelcard>("team_cgi_travelcard", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_travelcard>("team_cgi_travelcard", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_contacts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_contacts")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Contact> team_contacts
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Contact>("team_contacts", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Contact>("team_contacts", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_biffintegrationerrorlog
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_biffintegrationerrorlog")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_biffintegrationerrorlog> team_ed_biffintegrationerrorlog
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_biffintegrationerrorlog>("team_ed_biffintegrationerrorlog", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_biffintegrationerrorlog>("team_ed_biffintegrationerrorlog", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_biffintegrationerrorlogrow
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_biffintegrationerrorlogrow")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_BiffIntegrationErrorLogRow> team_ed_biffintegrationerrorlogrow
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_BiffIntegrationErrorLogRow>("team_ed_biffintegrationerrorlogrow", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_BiffIntegrationErrorLogRow>("team_ed_biffintegrationerrorlogrow", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_companyrole
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_companyrole")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_CompanyRole> team_ed_companyrole
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_CompanyRole>("team_ed_companyrole", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_CompanyRole>("team_ed_companyrole", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_deltabatcherrorlog
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_deltabatcherrorlog")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLog> team_ed_deltabatcherrorlog
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLog>("team_ed_deltabatcherrorlog", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLog>("team_ed_deltabatcherrorlog", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_deltabatcherrorlogrow
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_deltabatcherrorlogrow")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLogRow> team_ed_deltabatcherrorlogrow
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLogRow>("team_ed_deltabatcherrorlogrow", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLogRow>("team_ed_deltabatcherrorlogrow", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_deltabatchlog
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_deltabatchlog")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchLog> team_ed_deltabatchlog
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchLog>("team_ed_deltabatchlog", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchLog>("team_ed_deltabatchlog", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_deltabatchqueue
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_deltabatchqueue")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue> team_ed_deltabatchqueue
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue>("team_ed_deltabatchqueue", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue>("team_ed_deltabatchqueue", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_emailtemplateproxy
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_emailtemplateproxy")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_emailtemplateproxy> team_ed_emailtemplateproxy
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_emailtemplateproxy>("team_ed_emailtemplateproxy", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_emailtemplateproxy>("team_ed_emailtemplateproxy", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_mergerecords
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_mergerecords")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_MergeRecords> team_ed_mergerecords
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_MergeRecords>("team_ed_mergerecords", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_MergeRecords>("team_ed_mergerecords", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_salesorder
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_salesorder")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_SalesOrder> team_ed_salesorder
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_SalesOrder>("team_ed_salesorder", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_SalesOrder>("team_ed_salesorder", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_salesorderline
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_salesorderline")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline> team_ed_salesorderline
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("team_ed_salesorderline", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("team_ed_salesorderline", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_salesorderlinetraveller
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_salesorderlinetraveller")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_salesorderlinetraveller> team_ed_salesorderlinetraveller
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_salesorderlinetraveller>("team_ed_salesorderlinetraveller", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_salesorderlinetraveller>("team_ed_salesorderlinetraveller", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_senttextmessage
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_senttextmessage")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_senttextmessage> team_ed_senttextmessage
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_senttextmessage>("team_ed_senttextmessage", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_senttextmessage>("team_ed_senttextmessage", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_textmessagetemplate
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_textmessagetemplate")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_TextMessageTemplate> team_ed_textmessagetemplate
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_TextMessageTemplate>("team_ed_textmessagetemplate", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_TextMessageTemplate>("team_ed_textmessagetemplate", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_valuecodetransaction
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_valuecodetransaction")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_valuecodetransaction> team_ed_valuecodetransaction
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_valuecodetransaction>("team_ed_valuecodetransaction", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_valuecodetransaction>("team_ed_valuecodetransaction", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_edp_country
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_edp_country")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.edp_Country> team_edp_country
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.edp_Country>("team_edp_country", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.edp_Country>("team_edp_country", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_edp_sequence
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_edp_sequence")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.edp_Sequence> team_edp_sequence
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.edp_Sequence>("team_edp_sequence", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.edp_Sequence>("team_edp_sequence", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_email
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_email")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Email> team_email
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("team_email", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("team_email", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_email_templates
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_email_templates")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Template> team_email_templates
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Template>("team_email_templates", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Template>("team_email_templates", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_incidents
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_incidents")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Incident> team_incidents
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Incident>("team_incidents", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Incident>("team_incidents", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_queueitembase_workerid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_queueitembase_workerid")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QueueItem> team_queueitembase_workerid
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QueueItem>("team_queueitembase_workerid", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QueueItem>("team_queueitembase_workerid", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_st_singaporeticket
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_st_singaporeticket")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket> team_st_singaporeticket
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket>("team_st_singaporeticket", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket>("team_st_singaporeticket", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:N teammembership_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("teammembership_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.SystemUser> teammembership_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SystemUser>("teammembership_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SystemUser>("teammembership_association", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:N teamroles_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("teamroles_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Role> teamroles_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Role>("teamroles_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Role>("teamroles_association", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_team_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_team_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_team_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_team_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_team_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_team_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_team_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_team_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_teambase_administratorid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("administratorid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_teambase_administratorid")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_teambase_administratorid
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_teambase_administratorid", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_teambase_administratorid", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_teambase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_teambase_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_teambase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_teambase_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_teambase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_teambase_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_teambase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_teambase_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 processstage_teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_teams")]
+		public Skanetrafiken.Crm.Schema.Generated.ProcessStage processstage_teams
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 queue_team
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("queueid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("queue_team")]
+		public Skanetrafiken.Crm.Schema.Generated.Queue queue_team
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Queue>("queue_team", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Queue>("queue_team", null, value);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string AdministratorId = "administratorid";
+			
+			public const string BusinessUnitId = "businessunitid";
+			
+			public const string cgi_PrintDetails = "cgi_printdetails";
+			
+			public const string cgi_TeamContactDetails = "cgi_teamcontactdetails";
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string Description = "description";
+			
+			public const string EMailAddress = "emailaddress";
+			
+			public const string ExchangeRate = "exchangerate";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string IsDefault = "isdefault";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string Name = "name";
+			
+			public const string OrganizationId = "organizationid";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string ProcessId = "processid";
+			
+			public const string QueueId = "queueid";
+			
+			public const string RegardingObjectId = "regardingobjectid";
+			
+			public const string StageId = "stageid";
+			
+			public const string SystemManaged = "systemmanaged";
+			
+			public const string TeamId = "teamid";
+			
+			public const string Id = "teamid";
+			
+			public const string TeamTemplateId = "teamtemplateid";
+			
+			public const string TeamType = "teamtype";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
+			
+			public const string TraversedPath = "traversedpath";
+			
+			public const string VersionNumber = "versionnumber";
+			
+			public const string YomiName = "yominame";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int cgi_PrintDetails = 2000;
+			
+			public const int cgi_TeamContactDetails = 2000;
+			
+			public const int Description = 2000;
+			
+			public const int EMailAddress = 100;
+			
+			public const int Name = 160;
+			
+			public const int TraversedPath = 1250;
+			
+			public const int YomiName = 160;
 		}
 	}
 	
@@ -77036,6 +80923,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("system_user_email_templates", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_email_templates
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_email_templates")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_email_templates
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_email_templates", null);
 			}
 		}
 		
