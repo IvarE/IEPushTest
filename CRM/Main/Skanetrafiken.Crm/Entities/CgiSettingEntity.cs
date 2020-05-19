@@ -16,7 +16,7 @@ namespace Skanetrafiken.Crm.Entities
 {
     public class CgiSettingEntity : Generated.cgi_setting
     {
-        
+
         public static int GetSettingInt(Plugin.LocalPluginContext localContext, string settingName)
         {
             // Set time valid from CgiSettings
@@ -75,17 +75,27 @@ namespace Skanetrafiken.Crm.Entities
         /// <param name="localContext"></param>
         /// <param name="settingName"></param>
         /// <returns></returns>
-        public static object GetSetting(Plugin.LocalPluginContext localContext, string settingName)
+        public static object GetSetting(Plugin.LocalPluginContext localContext, string settingName, bool allowNullValue = false)
         {
             var settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(settingName), CurrentTimeFilter());
-            if(settings == null)
+            if (settings == null && !allowNullValue)
                 throw new MissingFieldException(Resources.ValidSettingsEntityMissing);
 
             var setting = settings.GetAttributeValue<object>(settingName); //This will fetch correct datatype that matches the settingName.
-            if(setting == null)
+            if (setting == null)
             {
                 throw new MissingFieldException(string.Format(Resources.SettingsValueMissing, settingName));
             }
+            return setting;
+        }
+
+        public static DateTime GetSettingDate(Plugin.LocalPluginContext localContext, string settingName, bool allowNullValue = false)
+        {
+            var settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(settingName), CurrentTimeFilter());
+            if (settings == null && !allowNullValue)
+                throw new MissingFieldException(Resources.ValidSettingsEntityMissing);
+
+            var setting = settings.GetAttributeValue<DateTime>(settingName); //This will fetch correct datatype that matches the settingName.
             return setting;
         }
 

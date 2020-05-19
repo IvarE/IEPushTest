@@ -132,7 +132,7 @@ namespace Skanetrafiken.Crm.Entities
                 incident.cgi_Contactid = contact.ToEntityReference();
                 incident.CustomerId = contact.ToEntityReference();
             }
-
+                
 
             incident.cgi_customer_email = emailaddress;
             incident.cgi_customer_telephonenumber = mobile;

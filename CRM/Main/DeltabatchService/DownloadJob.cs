@@ -73,7 +73,7 @@ namespace Endeavor.Crm.DeltabatchService
             DateTime modifiedAfter = dataMap.GetDateTime(DataMapModifiedAfter);
 
             _log.Debug(string.Format(Properties.Resources.ScheduleJobExecuting, context.JobDetail.Description ?? context.JobDetail.Key.Name ?? "NULL", modifiedAfter.ToString() ?? "NULL"));
-            
+
             ExecuteJob();
 
             _log.Debug(string.Format(Properties.Resources.ScheduleJobExecuted, context.JobDetail.Description ?? context.JobDetail.Key.Name, modifiedAfter.ToString()));
@@ -85,7 +85,7 @@ namespace Endeavor.Crm.DeltabatchService
             try
             {
                 localContext = DeltabatchJobHelper.GenerateLocalContext();
-                
+
                 RetrieveFile();
 
                 UpdateContactsWithNewInfo(localContext);
@@ -115,7 +115,7 @@ namespace Endeavor.Crm.DeltabatchService
             FileInfo[] retrievedFilesInfo = retrievedFileLocation.GetFiles();
             if (retrievedFilesInfo.Length < 1)
                 return;
-            for (int i=0; i < retrievedFilesInfo.Length; i++)
+            for (int i = 0; i < retrievedFilesInfo.Length; i++)
             {
                 File.Move($"{retrievedFileLocation.FullName}\\{retrievedFilesInfo[i]}", $"{retrievedFileHistoryLocation.FullName}\\{retrievedFilesInfo[i]}");
             }
@@ -131,7 +131,6 @@ namespace Endeavor.Crm.DeltabatchService
             try
             {
                 string outputFilePath = $"{Properties.Settings.Default.DeltabatchRetrievedFileLocation}/{_currentOutputFileName}";
-                //string outputFilePath = $"{Properties.Settings.Default.DeltabatchRetrievedFileLocation}/out_Skane_Consumer_PersonFilter_GD_20181202_230138_26041.txt";
 
 
                 if (!File.Exists(outputFilePath))
@@ -183,8 +182,8 @@ namespace Endeavor.Crm.DeltabatchService
                                         ContactEntity.Fields.Address2_Country);
 
                                     FilterExpression filterContacts = new FilterExpression
-                                                        {
-                                                            Conditions =
+                                    {
+                                        Conditions =
                                                             {
                                                                 new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, socSec)
 
@@ -192,7 +191,7 @@ namespace Endeavor.Crm.DeltabatchService
                                                                 //// Row added to make sure only Contacts with MKL Id are updated and not sent again to CreditSafe
                                                                 //new ConditionExpression(ContactEntity.Fields.ed_MklId, ConditionOperator.NotNull)
                                                             }
-                                                        };
+                                    };
 
                                     List<ContactEntity> lExistingContact = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, ContactEntity.EntityLogicalName, contactColumnsWithAddress2, filterContacts).ToList();
 
@@ -255,7 +254,7 @@ namespace Endeavor.Crm.DeltabatchService
                             {
                                 _log.Info($"Iterated {numberOfOperations} updates, regenerating context");
                                 //localContext = DeltabatchJobHelper.GenerateLocalContext();
-                            }                            
+                            }
                         }
                     }
                     else
@@ -407,7 +406,7 @@ namespace Endeavor.Crm.DeltabatchService
                 return false;
             return true;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -466,7 +465,7 @@ namespace Endeavor.Crm.DeltabatchService
             string specialCity = lineParams[Array.IndexOf(_fieldNames, _specCityFieldKeyword)];
             deltaLog.ed_SpecialCity = specialCity;
             string specialRegAddr = lineParams[Array.IndexOf(_fieldNames, _specRegisteredAddressFieldKeyword)];
-            deltaLog.ed_SpecialRegisteredAddress = specialRegAddr.Length < 100 ? specialRegAddr : specialRegAddr.Substring(0,99); // field is limited to 100 characters
+            deltaLog.ed_SpecialRegisteredAddress = specialRegAddr.Length < 100 ? specialRegAddr : specialRegAddr.Substring(0, 99); // field is limited to 100 characters
             string dateString = lineParams[Array.IndexOf(_fieldNames, _searchDateFieldKeyword)];
             deltaLog.ed_SearchDate = dateString;
             string county = lineParams[Array.IndexOf(_fieldNames, _countyFieldKeyword)];
@@ -509,8 +508,6 @@ namespace Endeavor.Crm.DeltabatchService
             {
                 ContactId = existingContact.ContactId,
                 Id = existingContact.Id,
-                ed_UpdatedFBDate = DateTime.Now,
-                ed_MklId = existingContact.ed_MklId
             };
 
             if (!string.IsNullOrWhiteSpace(rejectCode))
@@ -627,12 +624,12 @@ namespace Endeavor.Crm.DeltabatchService
             #region PostalCode
             // 2018-11-22 - Marcus Stenswed
             // If Postal Code is missing, set value 00000
-            if (String.IsNullOrEmpty(postalCode) && !String.IsNullOrEmpty(existingContact.Address1_PostalCode) && existingContact.Address1_PostalCode != "00000") 
+            if (String.IsNullOrEmpty(postalCode) && !String.IsNullOrEmpty(existingContact.Address1_PostalCode) && existingContact.Address1_PostalCode != "00000")
             {
                 updateContact.Address1_PostalCode = "00000";
                 update = true;
             }
-            else if(String.IsNullOrEmpty(postalCode) && String.IsNullOrEmpty(existingContact.Address1_PostalCode))
+            else if (String.IsNullOrEmpty(postalCode) && String.IsNullOrEmpty(existingContact.Address1_PostalCode))
             {
                 updateContact.Address1_PostalCode = "00000";
                 update = true;
@@ -822,7 +819,7 @@ namespace Endeavor.Crm.DeltabatchService
             int rejectOptionSetCode;
             if (!int.TryParse(rejectCode, out rejectOptionSetCode))
             {
-                rejectErrorMess= $"Could not parse {rejectCode} to integer.";
+                rejectErrorMess = $"Could not parse {rejectCode} to integer.";
                 return null;
             }
             IEnumerable<Generated.ed_creditsaferejectcodes> values = Enum.GetValues(typeof(Generated.ed_creditsaferejectcodes)).Cast<Generated.ed_creditsaferejectcodes>();

@@ -322,7 +322,8 @@ namespace Skanetrafiken.Crm.Entities
                 Criteria =
                 {
                     Conditions = {
-                        new ConditionExpression(TravelCardEntity.Fields.cgi_travelcardnumber, ConditionOperator.Equal, travelCardNumber)
+                        new ConditionExpression(TravelCardEntity.Fields.cgi_travelcardnumber, ConditionOperator.Equal, travelCardNumber),
+                        new ConditionExpression(TravelCardEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.cgi_travelcardState.Active)
                     }
                 },
 

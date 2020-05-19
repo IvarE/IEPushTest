@@ -281,7 +281,7 @@
     <value>Administratör får inte skapa en validerad Kund</value>
   </data>
   <data name="CouldNotCreateCustomerEmail" xml:space="preserve">
-    <value># Kunde inte skapa Kund. En kund med samma e-postadress existerar redan.</value>
+    <value># Kunde inte skapa Kund. En kund med samma e-postadress och mobilnummer existerar redan.</value>
   </data>
   <data name="CouldNotUpdateContactSocialSecurityConflict" xml:space="preserve">
     <value># Kunde inte uppdatera Kund. En kund med samma personnummer existerar redan.</value>

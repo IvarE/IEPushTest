@@ -23,6 +23,7 @@ namespace Skanetrafiken.Crm
         private bool? ed_AllowCreate;
         private string ed_ReferencePortal;
         private string ed_Suborgname;
+        private string ed_AccountDescription;
 
         private List<AddressInfo> addresses;
 
@@ -37,7 +38,7 @@ namespace Skanetrafiken.Crm
             }
             set
             {
-                this.informationSourceField= value;
+                this.informationSourceField = value;
             }
         }
 
@@ -299,27 +300,27 @@ namespace Skanetrafiken.Crm
             //ae.Name = $"Kostnadsställe - {ai.OrganizationName}"; //Gamla
             ae.Name = $"{ai.OrganizationName} - KST"; //ändra namn
 
-            ae.ed_SubOrgNamn = ai.Suborgname;
+            ae.ed_SubOrgNamn = ai.Suborgname; //Inget skickas från fasaden ännu
 
             if (ai.InformationSource == (int)Schema.Generated.ed_informationsource.ForetagsPortal)
             {
                 ae.ed_PortalCustomer = true;
                 ae.cgi_DebtCollection = true;
-                //ae.AccountCategoryCode = Schema.Generated.account_accountcategorycode.Business;//optionset
+                ae.AccountCategoryCode = Schema.Generated.account_accountcategorycode.Business;//optionset
             }
             else if (ai.InformationSource == (int)Schema.Generated.ed_informationsource.SeniorPortal)
             {
                 ae.ed_SeniorCustomer = true;
                 ae.cgi_DebtCollection = true;
-                //ae.AccountCategoryCode = Schema.Generated.account_accountcategorycode.Senior;
+                ae.AccountCategoryCode = Schema.Generated.account_accountcategorycode.Senior;
             }
             else if (ai.InformationSource == (int)Schema.Generated.ed_informationsource.SkolPortal)
             {
                 ae.ed_SchoolCustomer = true;
                 ae.cgi_DebtCollection = true;
-                //ae.AccountCategoryCode = Schema.Generated.account_accountcategorycode.School;
+                ae.AccountCategoryCode = Schema.Generated.account_accountcategorycode.School;
             }
-            
+
             //ae.cgi_organizational_number = ai.OrganizationNumber; //verifiera skapandet via portal
             ae.ed_PaymentMethod = (Crm.Schema.Generated.ed_account_ed_paymentmethod?)ai.PaymentMethod;
             ae.ed_IsLockedPortal = ai.IsLockedPortal;
@@ -330,7 +331,10 @@ namespace Skanetrafiken.Crm
             ae.ed_ReferencePortal = ai.ReferencePortal;
             ae.cgi_organizational_number = ai.OrganizationNumber;
             ae.ed_AllowCreate = ai.AllowCreate;
-            
+
+            //Account Description
+            ae.ed_AccountDescription = ai.ed_AccountDescription;
+
             return ae;
         }
 
@@ -405,9 +409,15 @@ namespace Skanetrafiken.Crm
                 isChanged = true;
             }
 
-            if(!string.IsNullOrEmpty(accountInfo.Suborgname) && oldAccount.ed_SubOrgNamn != accountInfo.Suborgname)
+            if (!string.IsNullOrEmpty(accountInfo.Suborgname) && oldAccount.ed_SubOrgNamn != accountInfo.Suborgname)
             {
                 newAccount.ed_SubOrgNamn = accountInfo.Suborgname;
+                isChanged = true;
+            }
+
+            if (!string.IsNullOrEmpty(accountInfo.ed_AccountDescription) && oldAccount.ed_AccountDescription != accountInfo.ed_AccountDescription)
+            {
+                newAccount.ed_AccountDescription = accountInfo.ed_AccountDescription;
                 isChanged = true;
             }
 
@@ -418,7 +428,7 @@ namespace Skanetrafiken.Crm
         {
             AccountInfo accountInfo = new AccountInfo();
 
-            if(ae.Id != null)
+            if (ae.Id != null)
             {
                 accountInfo.guidField = ae.Id.ToString();
             }
@@ -432,6 +442,7 @@ namespace Skanetrafiken.Crm
             accountInfo.ed_BillingMethod = (int?)ae.ed_BillingMethod;
             accountInfo.ed_AllowCreate = ae.ed_AllowCreate;
             accountInfo.Suborgname = ae.ed_SubOrgNamn;
+            accountInfo.ed_AccountDescription = ae.ed_AccountDescription;
 
             return accountInfo;
         }
@@ -447,7 +458,7 @@ namespace Skanetrafiken.Crm
         private string CityField;
         private string CountryISOField;
         private string COField;
-        
+
         /// <summary>
         /// TODO
         /// </summary>
@@ -613,7 +624,7 @@ namespace Skanetrafiken.Crm
                 isChanged = true;
             }
 
-            if(oldAddress.ed_CoAddress != addressInfo.CO)
+            if (oldAddress.ed_CoAddress != addressInfo.CO)
             {
                 newAddress.ed_CoAddress = addressInfo.CO;
                 isChanged = true;

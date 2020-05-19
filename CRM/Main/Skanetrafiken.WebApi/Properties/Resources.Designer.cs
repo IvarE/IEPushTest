@@ -232,7 +232,7 @@ namespace Skanetrafiken.Crm.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to # Kunde inte skapa Kund. En kund med samma e-postadress existerar redan..
+        ///   Looks up a localized string similar to # Kunde inte skapa Kund. En kund med samma e-postadress och mobilnummer existerar redan..
         /// </summary>
         internal static string CouldNotCreateCustomerEmail {
             get {

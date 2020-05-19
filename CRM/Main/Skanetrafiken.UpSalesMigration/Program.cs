@@ -136,13 +136,13 @@ namespace Skanetrafiken.UpSalesMigration
             if(lUsers.Count == 1)
                 return lUsers.FirstOrDefault().ToEntityReference();
 
-            FilterExpression filterTeams = new FilterExpression();
-            filterTeams.Conditions.Add(new ConditionExpression(Team.Fields.Name, ConditionOperator.Equal, name));
+            //FilterExpression filterTeams = new FilterExpression();
+            //filterTeams.Conditions.Add(new ConditionExpression(Team.Fields.Name, ConditionOperator.Equal, name));
 
-            List<Team> lTeams = XrmRetrieveHelper.RetrieveMultiple<Team>(localContext, new ColumnSet(), filterTeams).ToList();
+            //List<Team> lTeams = XrmRetrieveHelper.RetrieveMultiple<Team>(localContext, new ColumnSet(), filterTeams).ToList();
 
-            if(lTeams.Count == 1)
-                return lTeams.FirstOrDefault().ToEntityReference();
+            //if(lTeams.Count == 1)
+            //    return lTeams.FirstOrDefault().ToEntityReference();
 
             _log.InfoFormat(CultureInfo.InvariantCulture, $"No Users/Teams or More than One found with Name: " + name + ".");
             return null;
