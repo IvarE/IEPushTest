@@ -24,6 +24,7 @@ using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.IO;
 using System.IdentityModel;
+using Skanetrafiken.Crm.Models;
 
 namespace Skanetrafiken.Crm.Controllers
 {
@@ -2125,6 +2126,78 @@ namespace Skanetrafiken.Crm.Controllers
                 ConnectionCacheManager.ReleaseConnection(threadId);
             }
         }
+
+        public static HttpResponseMessage GetOrders(int threadId)
+        {
+            try
+            {
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+                // Cast the proxy client to the IOrganizationService interface.
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                {
+                    Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    //TODO LOGIC
+
+                    List<OrderMQInfo> lOrdersInfo = new List<OrderMQInfo>();
+
+                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                    resp.Content = new StringContent(SerializeNoNull(lOrdersInfo));
+                    return resp;
+                }
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
+            }
+        }
+
+        public static HttpResponseMessage PostDeliveryReport(int threadId, string base64)
+        {
+            try
+            {
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+                // Cast the proxy client to the IOrganizationService interface.
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                {
+                    Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    //TODO LOGIC
+
+
+                    _log.Debug("Delivery Report successfully created and associated to Order! ");
+                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                    resp.Content = new StringContent("Delivery Report created and associated.");
+                    return resp;
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Unexpected error from PostDeliveryReport-POST");
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
+            }
+        }
+
 
         internal static HttpResponseMessage AccountPost(int threadId, AccountInfo accountInfo)
         {
