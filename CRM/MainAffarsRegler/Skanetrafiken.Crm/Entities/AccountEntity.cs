@@ -32,9 +32,10 @@ namespace Skanetrafiken.Crm.Entities
             AccountEntity.Fields.ed_BillingMethod,
             AccountEntity.Fields.StateCode,
             AccountEntity.Fields.ed_AllowCreate,
-            AccountEntity.Fields.ed_AccountDescription
+            AccountEntity.Fields.ed_AccountDescription,
+            AccountEntity.Fields.ed_SubOrgNamn
             );
-        
+
         internal static AccountEntity FindAccount(Plugin.LocalPluginContext localContext, string accountNumber, ColumnSet columns)
         {
             IList<AccountEntity> accounts = XrmRetrieveHelper.RetrieveMultiple<AccountEntity>(localContext, columns,
@@ -222,7 +223,7 @@ namespace Skanetrafiken.Crm.Entities
             {
                 foreach (var old_addr in oldAcc_address)
                 {
-                   
+
                     if (string.IsNullOrWhiteSpace(old_addr.Name) &&
                         string.IsNullOrWhiteSpace(old_addr.PostalCode) &&
                         string.IsNullOrWhiteSpace(old_addr.City) &&

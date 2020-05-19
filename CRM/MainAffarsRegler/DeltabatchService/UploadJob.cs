@@ -128,7 +128,14 @@ namespace Endeavor.Crm.DeltabatchService
                     list.Add(dbq);
                 }
 
-                List<DeltabatchQueueEntity> sortedList = list.OrderByDescending(dbq => dbq.CreatedOn).ToList<DeltabatchQueueEntity>();
+                if (list.Count == 0)
+                {
+                    _log.Error($"No DeltabatchQueue Records were found.");
+                    return;
+                }
+
+                List<DeltabatchQueueEntity> distinctList = list.GroupBy(x => x.ed_ContactNumber).Select(f => f.First()).ToList();
+                List<DeltabatchQueueEntity> sortedList = distinctList.OrderByDescending(dbq => dbq.CreatedOn).ToList<DeltabatchQueueEntity>();
                 List<string> processedSocSecNumbers = new List<string>();
                 
                 foreach (DeltabatchQueueEntity q in sortedList)
