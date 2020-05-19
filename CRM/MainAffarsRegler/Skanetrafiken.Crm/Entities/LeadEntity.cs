@@ -75,13 +75,15 @@ namespace Skanetrafiken.Crm.Entities
                     StatusBlockCode = (int)CustomerUtility.StatusBlockCode.InvalidInput
                 };
             }
-            
+
+            // Check for conflicting Contact
             FilterExpression emailMobileFilter = new FilterExpression(LogicalOperator.And);
             emailMobileFilter.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active);
             emailMobileFilter.AddCondition(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, customerInfo.Email);
             emailMobileFilter.AddCondition(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, customerInfo.Mobile);
-            
-            IList<ContactEntity> existingConflictingContacts = existingConflictingContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, 
+            emailMobileFilter.AddCondition(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true);
+
+            IList<ContactEntity> existingConflictingContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, 
                 new ColumnSet(
                     ContactEntity.Fields.Id,
                     ContactEntity.Fields.EMailAddress1
