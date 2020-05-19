@@ -68,21 +68,6 @@ namespace Skanetrafiken.UpSalesMigration
             }
         }
 
-        private static Plugin.LocalPluginContext GetCrmConnection()
-        {
-            CrmServiceClient conn = new CrmServiceClient(ConfigurationManager.ConnectionStrings["CrmConnection"].ConnectionString);
-
-            if (conn.IsReady == false)
-                throw new Exception("Failed to connect to Microsoft CRM. IsReady = false");
-
-            // Cast the proxy client to the IOrganizationService interface.
-            IOrganizationService serviceProxy = (IOrganizationService)conn.OrganizationWebProxyClient != null ? (IOrganizationService)conn.OrganizationWebProxyClient : (IOrganizationService)conn.OrganizationServiceProxy;
-
-            Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
-
-            return localContext;
-        }
-
         public static List<ExcelColumn> GetListExcelColumns(ExcelApp.Range excelRange, int colCount)
         {
             List<ExcelColumn> lColumns = new List<ExcelColumn>();

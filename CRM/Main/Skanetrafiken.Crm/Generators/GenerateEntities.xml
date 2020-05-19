@@ -23,9 +23,7 @@
     <entity>uom</entity>
     <entity>uomschedule</entity>
     <entity>usersettings</entity>
-    <entity>queue</entity>
-    <!--<entity>team</entity>-->
-
+    <entity>team</entity>
     <entity>campaignitem</entity>
 
     <entity>cgi_categorydetail</entity>
