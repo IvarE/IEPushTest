@@ -1614,8 +1614,8 @@ namespace Skanetrafiken.Crm.Entities
                     contact.EMailAddress2 = contact.EMailAddress1;
                     contact.EMailAddress1 = null;
 
-                    //Lägg till att det är en privatperson
-                    if (contact.ed_PrivateCustomerContact == null || contact.ed_PrivateCustomerContact != true) // ??
+                    //Mark Contact as PrivateCustomer
+                    if (contact.ed_PrivateCustomerContact == null || contact.ed_PrivateCustomerContact != true)
                     {
                         contact.ed_PrivateCustomerContact = true;
                     }
@@ -1641,7 +1641,7 @@ namespace Skanetrafiken.Crm.Entities
                     }
                 }
             }
-            //FÖRETAGSKUND FTG/SKOLA, lägg till else if?
+            //FÖRETAGSKUND FTG/SKOLA
             else if (customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal || 
                 customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.SkolPortal || 
                 customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.SeniorPortal)
@@ -2031,9 +2031,7 @@ namespace Skanetrafiken.Crm.Entities
                     {
                         Conditions =
                             {
-                                // Null == true, fallback if no data
                                 new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true),
-                                new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Null),
                             }
                     };
 
@@ -2042,20 +2040,19 @@ namespace Skanetrafiken.Crm.Entities
                         EntityName = ContactEntity.EntityLogicalName,
                         ColumnSet = ContactEntity.ContactInfoBlock,
                         Criteria =
-                        {
-                            FilterOperator = LogicalOperator.And,
-                            Conditions =
                             {
-                                new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active)
-                                //new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true)
-                            },
-                            Filters =
-                            {
-                                mobileFilter,
-                                emailFilterNew,
-                                privateCustomerFilter
+                                FilterOperator = LogicalOperator.And,
+                                Conditions =
+                                {
+                                    new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active)
+                                },
+                                Filters =
+                                {
+                                    mobileFilter,
+                                    emailFilterNew,
+                                    privateCustomerFilter
+                                }
                             }
-                        }
                     };
 
                     contact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, queryEmailAndMobile);
@@ -2092,9 +2089,7 @@ namespace Skanetrafiken.Crm.Entities
                     {
                         Conditions =
                             {
-                                // Null == true, fallback if no data
                                 new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true),
-                                new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Null),
                             }
                     };
                     IList<ContactEntity> socseccontacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, ContactEntity.ContactInfoBlock,
@@ -2104,8 +2099,7 @@ namespace Skanetrafiken.Crm.Entities
                             {
                             new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, customerInfo.SocialSecurityNumber),
                             new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active)
-                            //new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true) //?
-                            },
+                        },
                             Filters =
                             {
                                 privateCustomerFilter
@@ -2132,32 +2126,32 @@ namespace Skanetrafiken.Crm.Entities
                     FilterExpression nameFilter = new FilterExpression(LogicalOperator.Or)
                     {
                         Filters =
-                        {
-                            new FilterExpression(LogicalOperator.And)
                             {
-                                Conditions =
+                                new FilterExpression(LogicalOperator.And)
                                 {
-                                    new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, customerInfo.FirstName),
-                                    new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, customerInfo.LastName)
-                                }
-                            },
-                            new FilterExpression(LogicalOperator.And)
-                            {
-                                Conditions =
+                                    Conditions =
+                                    {
+                                        new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, customerInfo.FirstName),
+                                        new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, customerInfo.LastName)
+                                    }
+                                },
+                                new FilterExpression(LogicalOperator.And)
                                 {
-                                    new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, "Ange"),
-                                    new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, "Namn")
+                                    Conditions =
+                                    {
+                                        new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, "Ange"),
+                                        new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, "Namn")
+                                    }
                                 }
                             }
-                        }
                     };
                     FilterExpression emailFilterNew = new FilterExpression(LogicalOperator.Or)
                     {
                         Conditions =
-                        {
-                            new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, customerInfo.Email),
-                            new ConditionExpression(ContactEntity.Fields.EMailAddress2, ConditionOperator.Equal, customerInfo.Email)
-                        }
+                            {
+                                new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, customerInfo.Email),
+                                new ConditionExpression(ContactEntity.Fields.EMailAddress2, ConditionOperator.Equal, customerInfo.Email)
+                            }
                     };
 
                     //FilterExpression privateCustomerFilter = new FilterExpression(LogicalOperator.Or)

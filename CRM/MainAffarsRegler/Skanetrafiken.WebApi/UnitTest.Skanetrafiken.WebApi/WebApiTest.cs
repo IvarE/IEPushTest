@@ -7130,9 +7130,9 @@ namespace Endeavor.Crm.UnitTest
                             City = "UpdatedCity",
                             CountryISO = customer.AddressBlock.CountryISO
                         },
-                        SocialSecurityNumber = customer.SocialSecurityNumber,
-                        SwedishSocialSecurityNumber = customer.SwedishSocialSecurityNumber,
-                        SwedishSocialSecurityNumberSpecified = customer.SwedishSocialSecurityNumberSpecified,
+                        //SocialSecurityNumber = customer.SocialSecurityNumber,
+                        //SwedishSocialSecurityNumber = customer.SwedishSocialSecurityNumber,
+                        //SwedishSocialSecurityNumberSpecified = customer.SwedishSocialSecurityNumberSpecified,
                         Email = customer.Email,
                         Mobile = customer.Mobile,
                         Telephone = customer.Telephone,
@@ -9542,10 +9542,10 @@ namespace Endeavor.Crm.UnitTest
         /// <returns></returns>
         public static CustomerInfo ValidCustomerInfo_FullTest(string testInstanceName, string personnummer = null)
         {
-            if (personnummer == null)
-                // Build a random, valid, unique personnummer
-                personnummer = CustomerUtility.GenerateValidSocialSecurityNumber(DateTime.Now);
-
+            //if (personnummer == null)
+            //    // Build a random, valid, unique personnummer
+            //    personnummer = CustomerUtility.GenerateValidSocialSecurityNumber(DateTime.Now);
+            personnummer = "";
             return new CustomerInfo()
             {
                 Source = (int)Skanetrafiken.Crm.Schema.Generated.ed_informationsource.SkapaMittKonto,
@@ -9563,8 +9563,8 @@ namespace Endeavor.Crm.UnitTest
                 Mobile = "0735" + testInstanceName.Replace(".", ""),
                 SocialSecurityNumber = personnummer,
                 Email = string.Format("test{0}@test.test", testInstanceName),
-                SwedishSocialSecurityNumber = true,
-                SwedishSocialSecurityNumberSpecified = true
+                //SwedishSocialSecurityNumber = true,
+                //SwedishSocialSecurityNumberSpecified = true
             };
 
         }

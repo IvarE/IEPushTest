@@ -3728,6 +3728,8 @@ namespace Skanetrafiken.Crm.Controllers
                         return rm;
                     }
 
+                    FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_SplittCompany);
+
                     switch (entityTypeCode)
                     {
                         #region case Contact
@@ -3798,25 +3800,31 @@ namespace Skanetrafiken.Crm.Controllers
                                     (contact.MobilePhone != null) ? new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, contact.MobilePhone) : new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Null),
                                     //new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, contact.FirstName),
                                     //new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, contact.LastName),
-                                    new ConditionExpression(ContactEntity.Fields.Id, ConditionOperator.NotEqual, contact.Id)
+                                    new ConditionExpression(ContactEntity.Fields.Id, ConditionOperator.NotEqual, contact.Id),
+                                    new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.NotEqual, true)
                                 }
                             };
                             conflictFilter.AddFilter(mailFilter);
-                            if (contact.ed_HasSwedishSocialSecurityNumber.HasValue && contact.ed_HasSwedishSocialSecurityNumber.Value)
-                            {
-                                FilterExpression socsecFilter = new FilterExpression(LogicalOperator.And)
-                                {
-                                    Conditions =
-                                {
-                                    new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
-                                    new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.NotNull),
-                                    new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, contact.cgi_socialsecuritynumber), //Change personal number
-                                    new ConditionExpression(ContactEntity.Fields.Id, ConditionOperator.NotEqual, contact.Id)
 
+                            if (feature != null && feature.ed_SplittCompany == false)
+                            {
+                                if (contact.ed_HasSwedishSocialSecurityNumber.HasValue && contact.ed_HasSwedishSocialSecurityNumber.Value)
+                                {
+                                    FilterExpression socsecFilter = new FilterExpression(LogicalOperator.And)
+                                    {
+                                        Conditions =
+                                        {
+                                            new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
+                                            new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.NotNull),
+                                            new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, contact.cgi_socialsecuritynumber), //Change personal number
+                                            new ConditionExpression(ContactEntity.Fields.Id, ConditionOperator.NotEqual, contact.Id)
+
+                                        }
+                                    };
+                                    conflictFilter.AddFilter(socsecFilter);
                                 }
-                                };
-                                conflictFilter.AddFilter(socsecFilter);
                             }
+                            
                             QueryExpression conflictContactQuery = new QueryExpression()
                             {
                                 EntityName = ContactEntity.EntityLogicalName,
@@ -3827,19 +3835,32 @@ namespace Skanetrafiken.Crm.Controllers
                             IList<ContactEntity> contactConflicts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, conflictContactQuery);
                             if (contactConflicts.Count > 0)
                             {
-                                if (contact.ed_EmailToBeVerified.Equals(contactConflicts[0].EMailAddress1))
+                                if (feature != null && feature.ed_SplittCompany == true)
                                 {
-                                    _log.DebugFormat($"Th={threadId} - Found existing, validated contact with conflicting email {contact.ed_EmailToBeVerified}. Cannot validate this contact.");
-                                    HttpResponseMessage rm3 = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                    rm3.Content = new StringContent(Resources.CouldNotVerifyCustomerEmail);
-                                    return rm3;
+                                    if (contact.ed_EmailToBeVerified.Equals(contactConflicts[0].EMailAddress1))
+                                    {
+                                        _log.DebugFormat($"Th={threadId} - Found existing, validated contact with conflicting email {contact.ed_EmailToBeVerified}. Cannot validate this contact.");
+                                        HttpResponseMessage rm3 = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                        rm3.Content = new StringContent(Resources.CouldNotVerifyCustomerEmail);
+                                        return rm3;
+                                    }
                                 }
-                                else
+                                else if (feature == null || (feature != null && feature.ed_SplittCompany == false))
                                 {
-                                    _log.DebugFormat($"Th={threadId} - Found existing, validated contact with Social Security Number {contactConflicts[0].cgi_socialsecuritynumber}. Cannot validate this contact.");
-                                    HttpResponseMessage rm3 = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                    rm3.Content = new StringContent(Resources.CouldNotVerifyCustomerSocSec);
-                                    return rm3;
+                                    if (contact.ed_EmailToBeVerified.Equals(contactConflicts[0].EMailAddress1))
+                                    {
+                                        _log.DebugFormat($"Th={threadId} - Found existing, validated contact with conflicting email {contact.ed_EmailToBeVerified}. Cannot validate this contact.");
+                                        HttpResponseMessage rm3 = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                        rm3.Content = new StringContent(Resources.CouldNotVerifyCustomerEmail);
+                                        return rm3;
+                                    }
+                                    else
+                                    {
+                                        _log.DebugFormat($"Th={threadId} - Found existing, validated contact with Social Security Number {contactConflicts[0].cgi_socialsecuritynumber}. Cannot validate this contact.");
+                                        HttpResponseMessage rm3 = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                        rm3.Content = new StringContent(Resources.CouldNotVerifyCustomerSocSec);
+                                        return rm3;
+                                    }
                                 }
                             }
 
@@ -3848,46 +3869,50 @@ namespace Skanetrafiken.Crm.Controllers
                             FilterExpression nameFilter = new FilterExpression(LogicalOperator.Or)
                             {
                                 Filters =
-                            {
-                                new FilterExpression
                                 {
-                                    Conditions =
+                                    new FilterExpression
                                     {
-                                        //new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, contact.FirstName),
-                                        (contact.FirstName != null) ? new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, contact.FirstName) : new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Null),
-                                        //new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, contact.LastName),
-                                        (contact.LastName != null) ? new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, contact.LastName) : new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Null),
-                                    }
-                                },
-                                new FilterExpression
-                                {
-                                    Conditions =
+                                        Conditions =
+                                        {
+                                            //new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, contact.FirstName),
+                                            (contact.FirstName != null) ? new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, contact.FirstName) : new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Null),
+                                            //new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, contact.LastName),
+                                            (contact.LastName != null) ? new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, contact.LastName) : new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Null),
+                                        }
+                                    },
+                                    new FilterExpression
                                     {
-                                        new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, "Ange"),
-                                        new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, "Namn")
+                                        Conditions =
+                                        {
+                                            new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, "Ange"),
+                                            new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, "Namn")
+                                        }
                                     }
                                 }
-                            }
                             };
 
                             // If there is a socialSecuriityNumber, add condition
-                            if (contact.ed_HasSwedishSocialSecurityNumber.HasValue && contact.ed_HasSwedishSocialSecurityNumber.Value)
+                            if (feature != null && feature.ed_SplittCompany == false)
                             {
-                                FilterExpression persNrFilter = new FilterExpression(LogicalOperator.And)
+                                if (contact.ed_HasSwedishSocialSecurityNumber.HasValue && contact.ed_HasSwedishSocialSecurityNumber.Value)
                                 {
-                                    Conditions =
+                                    FilterExpression persNrFilter = new FilterExpression(LogicalOperator.And)
                                     {
-                                        new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
-                                        new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, contact.cgi_socialsecuritynumber),
-                                        new ConditionExpression(ContactEntity.Fields.Id, ConditionOperator.NotEqual, contact.Id)
-                                    },
-                                    Filters =
-                                    {
-                                        nameFilter
-                                    }
-                                };
-                                mergeContactFilter.AddFilter(persNrFilter);
+                                        Conditions =
+                                        {
+                                            new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
+                                            new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, contact.cgi_socialsecuritynumber),
+                                            new ConditionExpression(ContactEntity.Fields.Id, ConditionOperator.NotEqual, contact.Id)
+                                        },
+                                        Filters =
+                                        {
+                                            nameFilter
+                                        }
+                                    };
+                                    mergeContactFilter.AddFilter(persNrFilter);
+                                }
                             }
+                            
                             FilterExpression epostFilter = new FilterExpression(LogicalOperator.And)
                             {
                                 Conditions =
@@ -3896,7 +3921,8 @@ namespace Skanetrafiken.Crm.Controllers
                                     new ConditionExpression(ContactEntity.Fields.EMailAddress2, ConditionOperator.Equal, contact.ed_EmailToBeVerified),
                                     //new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, contact.MobilePhone),
                                     (contact.MobilePhone != null) ? new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, contact.MobilePhone) : new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Null),
-                                    new ConditionExpression(ContactEntity.Fields.Id, ConditionOperator.NotEqual, contact.Id)
+                                    new ConditionExpression(ContactEntity.Fields.Id, ConditionOperator.NotEqual, contact.Id),
+                                    new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.NotEqual, true)
                                 },
                                 Filters =
                                 {
@@ -3919,19 +3945,19 @@ namespace Skanetrafiken.Crm.Controllers
                                 EntityName = LeadEntity.EntityLogicalName,
                                 ColumnSet = LeadEntity.LeadInfoBlock,
                                 Criteria =
-                            {
-                                Conditions =
                                 {
-                                    new ConditionExpression(LeadEntity.Fields.EMailAddress1, ConditionOperator.Equal, contact.ed_EmailToBeVerified),
-                                    //new ConditionExpression(LeadEntity.Fields.EMailAddress1, ConditionOperator.Equal, contact.EMailAddress1),
-                                    //new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, contact.FirstName),
-                                    (contact.FirstName != null) ? new ConditionExpression(LeadEntity.Fields.FirstName, ConditionOperator.Equal, contact.FirstName) : new ConditionExpression(LeadEntity.Fields.FirstName, ConditionOperator.Null),
-                                    //new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, contact.LastName),
-                                    (contact.LastName != null) ? new ConditionExpression(LeadEntity.Fields.LastName, ConditionOperator.Equal, contact.LastName) : new ConditionExpression(LeadEntity.Fields.LastName, ConditionOperator.Null),
-                                    new ConditionExpression(LeadEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.LeadState.Open),
-                                    new ConditionExpression(LeadEntity.Fields.CampaignId, ConditionOperator.Null)
+                                    Conditions =
+                                    {
+                                        new ConditionExpression(LeadEntity.Fields.EMailAddress1, ConditionOperator.Equal, contact.ed_EmailToBeVerified),
+                                        //new ConditionExpression(LeadEntity.Fields.EMailAddress1, ConditionOperator.Equal, contact.EMailAddress1),
+                                        //new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, contact.FirstName),
+                                        (contact.FirstName != null) ? new ConditionExpression(LeadEntity.Fields.FirstName, ConditionOperator.Equal, contact.FirstName) : new ConditionExpression(LeadEntity.Fields.FirstName, ConditionOperator.Null),
+                                        //new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, contact.LastName),
+                                        (contact.LastName != null) ? new ConditionExpression(LeadEntity.Fields.LastName, ConditionOperator.Equal, contact.LastName) : new ConditionExpression(LeadEntity.Fields.LastName, ConditionOperator.Null),
+                                        new ConditionExpression(LeadEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.LeadState.Open),
+                                        new ConditionExpression(LeadEntity.Fields.CampaignId, ConditionOperator.Null)
+                                    }
                                 }
-                            }
                             };
                             #endregion
                             IList<LeadEntity> leadConflicts = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, conflictLeadQuery);
@@ -3957,6 +3983,7 @@ namespace Skanetrafiken.Crm.Controllers
                                     ContactEntity.UpdateContactWithLead(ref contact, ref updContact, leadConflict);
                             }
 
+                            //contact.ed_PrivateCustomerContact = true; //?
                             contact.EMailAddress1 = contact.ed_EmailToBeVerified;
                             contact.ed_EmailToBeVerified = ContactEntity._NEWEMAILDONE;
                             contact.EMailAddress2 = null;
@@ -4051,14 +4078,16 @@ namespace Skanetrafiken.Crm.Controllers
                             }
                             #endregion
 
-                            
-                            // 2020-02-04 - Checking Social Security Number OR (EMailAddress2 & First-/LastName) 
+
+                            // 2020-02-04 - Checking Social Security Number OR (EMailAddress2 & First-/LastName) (OLD)
+                            // 2020-05-14 - Checking EMailAddress2 & Telephone2 & ed_PrivateCustomerContact
                             QueryExpression contactConflictQuery = CreateContactConflictQuery(lead);
                             IList<ContactEntity> conflictContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactConflictQuery);
                             _log.DebugFormat($"Th={threadId} - Found {conflictContacts.Count} conflicting Contacts");
 
-                            // 2020-02-04 - If no matches found, validate against EMailAddress1 & First-/LastName
-                            if(conflictContacts == null || conflictContacts.Count() < 1)
+                            // 2020-02-04 - If no matches found, validate against EMailAddress1 & First-/LastName (OLD)
+                            // 2020-05-14 - If no matches found, validate against EMailAddress1 & Telephone2 & ed_PrivateCustomerContact
+                            if (conflictContacts == null || conflictContacts.Count() < 1)
                             {
                                 contactConflictQuery = CreateContactEMailAddress1ConflictQuery(lead);
                                 conflictContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactConflictQuery);
@@ -4089,102 +4118,109 @@ namespace Skanetrafiken.Crm.Controllers
                             #region if Contact conflicts are found
                             if (conflictContacts.Count > 0)
                             {
-                                ContactEntity socialSecurityConflict = null;
-                                ContactEntity emailAddress1Conflict = null;
 
-                                foreach (ContactEntity c in conflictContacts)
-                                {
-                                    // 2020-02-19 - Marcus Stenswed
-                                    // Remove conflicting SSN (New Business Rules)
-                                    /*if (lead.ed_Personnummer != null && lead.ed_Personnummer.Equals(c.cgi_socialsecuritynumber))
-                                    {
-                                        if (socialSecurityConflict == null)
-                                        {
-                                            _log.DebugFormat($"Th={threadId} - Found Contact matching on social security number.");
-                                            socialSecurityConflict = c;
-                                        }
-                                        else
-                                        {
-                                            _log.DebugFormat($"Th={threadId} - Multiple conflicting Contacts with the same socialSecurityNumber were found.");
-                                            HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                            respMess.Content = new StringContent(Resources.MultipleSocSecConflictsFound);
-                                            return respMess;
-                                        }
-                                    }
-                                    else */
-                                    if (lead.EMailAddress1 != null && lead.EMailAddress1.Equals(c.EMailAddress1))
-                                    {
-                                        if(emailAddress1Conflict == null)
-                                        {
-                                            _log.DebugFormat($"Th={threadId} - Found Contact matching on emailaddress1.");
-                                            emailAddress1Conflict = c;
-                                        }
-                                        else
-                                        {
-                                            _log.DebugFormat($"Th={threadId} - Multiple conflicting Contacts with the same EMailAddress1 were found.");
-                                            HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                            respMess.Content = new StringContent("Found multiple Contacts with the same first-/lastname and email");
-                                            return respMess;
-                                        }
-                                    }
-                                }
-                                if (socialSecurityConflict != null)
-                                {
-                                    conflictContacts.Remove(socialSecurityConflict);
-                                    newContact = socialSecurityConflict;
-                                    UpdateContactWithAuthorityLead(ref newContact, lead);
+                                _log.DebugFormat($"Th={threadId} - Found one or more conflicting Contacts with the same EMailAddress / Telephone.");
+                                HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                respMess.Content = new StringContent("Found one or more conflicting Contacts with the same EMailAddress / Telephone.");
+                                return respMess;
 
-                                    SetStateRequest req = new SetStateRequest()
-                                    {
-                                        EntityMoniker = lead.ToEntityReference(),
-                                        State = new OptionSetValue((int)Generated.LeadState.Disqualified),
-                                        Status = new OptionSetValue((int)Generated.lead_statuscode.Canceled)
-                                    };
-                                    SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
+                                //ContactEntity socialSecurityConflict = null;
+                                //ContactEntity emailAddress1Conflict = null;
 
-                                    newContact.EMailAddress1 = lead.EMailAddress1;
-                                    newContact.EMailAddress2 = null;
-                                }
-                                // If there's a match on existing Business Contact (not Private Customer) based on EMailAddress1
-                                else if (socialSecurityConflict == null && emailAddress1Conflict != null && conflictContacts.First().ed_PrivateCustomerContact == false)
-                                {
-                                    conflictContacts.Remove(emailAddress1Conflict);
-                                    newContact = emailAddress1Conflict;
-                                    UpdateContactWithAuthorityLead(ref newContact, lead);
-
-                                    SetStateRequest req = new SetStateRequest()
-                                    {
-                                        EntityMoniker = lead.ToEntityReference(),
-                                        State = new OptionSetValue((int)Generated.LeadState.Disqualified),
-                                        Status = new OptionSetValue((int)Generated.lead_statuscode.Canceled)
-                                    };
-                                    SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
-                                }
-                                else
-                                {
-                                    //newContact = new ContactEntity(lead.ToCustomerInfo());
-                                    //newContact.Id = localContext.OrganizationService.Create(newContact);
-                                    _log.DebugFormat($"Th={threadId} - No SocialSecurity conflict was found. Qualifying Lead.");
-                                    newContact = QualifyLeadToContact(localContext, lead);
-                                }
-                                _log.DebugFormat($"Th={threadId} - Combining {conflictContacts.Count} conflicting contacts.");
-                                newContact.CombineContacts(localContext, conflictContacts);
-
-                                ////inactivate other customers
                                 //foreach (ContactEntity c in conflictContacts)
                                 //{
+                                //    // 2020-02-19 - Marcus Stenswed
+                                //    // Remove conflicting SSN (New Business Rules)
+                                //    /*if (lead.ed_Personnummer != null && lead.ed_Personnummer.Equals(c.cgi_socialsecuritynumber))
+                                //    {
+                                //        if (socialSecurityConflict == null)
+                                //        {
+                                //            _log.DebugFormat($"Th={threadId} - Found Contact matching on social security number.");
+                                //            socialSecurityConflict = c;
+                                //        }
+                                //        else
+                                //        {
+                                //            _log.DebugFormat($"Th={threadId} - Multiple conflicting Contacts with the same socialSecurityNumber were found.");
+                                //            HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                //            respMess.Content = new StringContent(Resources.MultipleSocSecConflictsFound);
+                                //            return respMess;
+                                //        }
+                                //    }
+                                //    else */
+                                //    if (lead.EMailAddress1 != null && lead.EMailAddress1.Equals(c.EMailAddress1))
+                                //    {
+                                //        if (emailAddress1Conflict == null)
+                                //        {
+                                //            _log.DebugFormat($"Th={threadId} - Found Contact matching on emailaddress1.");
+                                //            emailAddress1Conflict = c;
+                                //        }
+                                //        else
+                                //        {
+                                //            _log.DebugFormat($"Th={threadId} - Multiple conflicting Contacts with the same EMailAddress1 were found.");
+                                //            HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                //            respMess.Content = new StringContent("Found multiple Contacts with the same first-/lastname and email");
+                                //            return respMess;
+                                //        }
+                                //    }
+                                //}
+                                //if (socialSecurityConflict != null)
+                                //{
+                                //    conflictContacts.Remove(socialSecurityConflict);
+                                //    newContact = socialSecurityConflict;
+                                //    UpdateContactWithAuthorityLead(ref newContact, lead);
+
                                 //    SetStateRequest req = new SetStateRequest()
                                 //    {
-                                //        EntityMoniker = c.ToEntityReference(),
-                                //        State = new OptionSetValue((int)Generated.ContactState.Inactive),
-                                //        Status = new OptionSetValue((int)Generated.contact_statuscode.Inactive)
+                                //        EntityMoniker = lead.ToEntityReference(),
+                                //        State = new OptionSetValue((int)Generated.LeadState.Disqualified),
+                                //        Status = new OptionSetValue((int)Generated.lead_statuscode.Canceled)
                                 //    };
-                                //    localContext.OrganizationService.Execute(req);
+                                //    SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
+
+                                //    newContact.EMailAddress1 = lead.EMailAddress1;
+                                //    newContact.EMailAddress2 = null;
                                 //}
+                                //// If there's a match on existing Business Contact (not Private Customer) based on EMailAddress1
+                                //else if (socialSecurityConflict == null && emailAddress1Conflict != null && conflictContacts.First().ed_PrivateCustomerContact == false)
+                                //{
+                                //    conflictContacts.Remove(emailAddress1Conflict);
+                                //    newContact = emailAddress1Conflict;
+                                //    UpdateContactWithAuthorityLead(ref newContact, lead);
+
+                                //    SetStateRequest req = new SetStateRequest()
+                                //    {
+                                //        EntityMoniker = lead.ToEntityReference(),
+                                //        State = new OptionSetValue((int)Generated.LeadState.Disqualified),
+                                //        Status = new OptionSetValue((int)Generated.lead_statuscode.Canceled)
+                                //    };
+                                //    SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
+                                //}
+                                //else
+                                //{
+                                //    //newContact = new ContactEntity(lead.ToCustomerInfo());
+                                //    //newContact.Id = localContext.OrganizationService.Create(newContact);
+                                //    _log.DebugFormat($"Th={threadId} - No SocialSecurity conflict was found. Qualifying Lead.");
+                                //    newContact = QualifyLeadToContact(localContext, lead);
+                                //}
+                                //_log.DebugFormat($"Th={threadId} - Combining {conflictContacts.Count} conflicting contacts.");
+                                //newContact.CombineContacts(localContext, conflictContacts);
+
+                                //////inactivate other customers
+                                ////foreach (ContactEntity c in conflictContacts)
+                                ////{
+                                ////    SetStateRequest req = new SetStateRequest()
+                                ////    {
+                                ////        EntityMoniker = c.ToEntityReference(),
+                                ////        State = new OptionSetValue((int)Generated.ContactState.Inactive),
+                                ////        Status = new OptionSetValue((int)Generated.contact_statuscode.Inactive)
+                                ////    };
+                                ////    localContext.OrganizationService.Execute(req);
+                                ////}
                             }
                             #endregion
                             else
                             {
+                                //Creating New Contact
                                 _log.DebugFormat($"Th={threadId} - No valid existing contact found, creating new from the Lead.");
                                 newContact = QualifyLeadToContact(localContext, lead);
                             }
@@ -4716,11 +4752,12 @@ namespace Skanetrafiken.Crm.Controllers
             FilterExpression phoneEmailFilter = new FilterExpression(LogicalOperator.And)
             {
                 Conditions =
-                            {
-                                new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
-                                new ConditionExpression(ContactEntity.Fields.EMailAddress2, ConditionOperator.Equal, lead.EMailAddress1),
-                                new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, lead.MobilePhone),
-                            },
+                {
+                    new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
+                    new ConditionExpression(ContactEntity.Fields.EMailAddress2, ConditionOperator.Equal, lead.EMailAddress1),
+                    new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, lead.MobilePhone),
+                    new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true),
+                },
                 //Filters =
                 //            {
                 //                new FilterExpression(LogicalOperator.Or)
@@ -4770,55 +4807,57 @@ namespace Skanetrafiken.Crm.Controllers
 
             FilterExpression filterWithName = new FilterExpression();
 
-            if (!String.IsNullOrEmpty(lead.FirstName) && !String.IsNullOrEmpty(lead.LastName))
-            {
-                filterWithName = new FilterExpression(LogicalOperator.And)
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, lead.FirstName),
-                        new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, lead.LastName)
-                    }
-                };
-            }
+            //if (!String.IsNullOrEmpty(lead.FirstName) && !String.IsNullOrEmpty(lead.LastName))
+            //{
+            //    filterWithName = new FilterExpression(LogicalOperator.And)
+            //    {
+            //        Conditions =
+            //        {
+            //            new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, lead.FirstName),
+            //            new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, lead.LastName)
+            //        }
+            //    };
+            //}
             
             FilterExpression nameMailFilter = new FilterExpression(LogicalOperator.And)
             {
                 Conditions =
                 {
                     new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
-                    new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, lead.EMailAddress1)
+                    new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, lead.EMailAddress1),
+                    new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, lead.MobilePhone),
+                    new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true)
                 },
-                Filters =
-                {
-                    new FilterExpression(LogicalOperator.Or)
-                    {
-                        Filters =
-                        {
-                            // TODO - Marcus Stenswed
-                            // Does it work setting new FilterExpression??
-                            (filterWithName.Conditions != null && filterWithName.Conditions.Count > 0) ? filterWithName : new FilterExpression(),
+                //Filters =
+                //{
+                //    new FilterExpression(LogicalOperator.Or)
+                //    {
+                //        Filters =
+                //        {
+                //            // TODO - Marcus Stenswed
+                //            // Does it work setting new FilterExpression??
+                //            //(filterWithName.Conditions != null && filterWithName.Conditions.Count > 0) ? filterWithName : new FilterExpression(),
 
-                            //new FilterExpression(LogicalOperator.And)
-                            //{
-                            //    Conditions =
-                            //    {
-                            //        new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, lead.FirstName),
-                            //        new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, lead.LastName)
-                            //    }
-                            //},
+                //            //new FilterExpression(LogicalOperator.And)
+                //            //{
+                //            //    Conditions =
+                //            //    {
+                //            //        new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, lead.FirstName),
+                //            //        new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, lead.LastName)
+                //            //    }
+                //            //},
 
-                            new FilterExpression(LogicalOperator.And)
-                            {
-                                Conditions =
-                                {
-                                    new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, "Ange"),
-                                    new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, "Namn")
-                                }
-                            }
-                        }
-                    }
-                }
+                //            new FilterExpression(LogicalOperator.And)
+                //            {
+                //                Conditions =
+                //                {
+                //                    new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, "Ange"),
+                //                    new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, "Namn")
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
             };
             contactConflictFilter.AddFilter(nameMailFilter);
 
