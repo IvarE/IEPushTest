@@ -409,6 +409,12 @@ namespace Skanetrafiken.Crm
                 isChanged = true;
             }
 
+            if (!string.IsNullOrEmpty(accountInfo.Suborgname) && oldAccount.ed_SubOrgNamn != accountInfo.Suborgname)
+            {
+                newAccount.ed_SubOrgNamn = accountInfo.Suborgname;
+                isChanged = true;
+            }
+
             if (!string.IsNullOrEmpty(accountInfo.ed_AccountDescription) && oldAccount.ed_AccountDescription != accountInfo.ed_AccountDescription)
             {
                 newAccount.ed_AccountDescription = accountInfo.ed_AccountDescription;
@@ -573,6 +579,7 @@ namespace Skanetrafiken.Crm
             cae.PostalCode = ai.PostalCode;
             cae.City = ai.City;
             cae.Country = ai.CountryISO;
+            cae.ed_CoAddress = ai.CO;
 
             return cae;
         }
@@ -637,6 +644,7 @@ namespace Skanetrafiken.Crm
             addressInfo.PostalCode = cae.PostalCode;
             addressInfo.City = cae.City;
             addressInfo.CountryISO = cae.Country;
+            addressInfo.CO = cae.ed_CoAddress;
 
             return addressInfo;
         }

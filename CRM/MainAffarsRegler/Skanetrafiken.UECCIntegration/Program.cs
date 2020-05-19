@@ -25,16 +25,6 @@ namespace Skanetrafiken.UECCIntegration
 
         private static ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        internal static byte[] Entropy = System.Text.Encoding.Unicode.GetBytes("BiffigasteIntegrationen");
-
-        internal static string CredentialFilePath
-        {
-            get
-            {
-                return Environment.ExpandEnvironmentVariables(Properties.Settings.Default.CredentialsFilePath);
-            }
-        }
-
         public static void ConnectToMSCRM(string UserName, string Password, string SoapOrgServiceUri)
         {
             try
@@ -52,51 +42,6 @@ namespace Skanetrafiken.UECCIntegration
                 _log.ErrorFormat(CultureInfo.InvariantCulture, "Error while connecting to CRM " + ex.Message);
                 Console.WriteLine("Error while connecting to CRM " + ex.Message);
             }
-        }
-
-        private static Plugin.LocalPluginContext GetCrmConnection()
-        {
-            _log.InfoFormat(CultureInfo.InvariantCulture, "Building CRM connection string");
-            //_log.InfoFormat(CultureInfo.InvariantCulture, $"Found connectionstring {CrmConnection.GetCrmConnectionString(CredentialFilePath, Entropy)}");
-
-            // Connect to the CRM web service using a connection string.
-            //CrmServiceClient conn = new CrmServiceClient(CrmConnection.GetCrmConnectionString(CredentialFilePath, Entropy));
-
-            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-            CrmServiceClient conn = new CrmServiceClient(ConfigurationManager.ConnectionStrings["CrmConnection"].ConnectionString);
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"Service client created, Ready:{conn.IsReady}");
-
-            if (conn.IsReady == false)
-                throw new Exception("Failed to connect to Microsoft CRM. IsReady = false");
-
-            // Cast the proxy client to the IOrganizationService interface.
-            IOrganizationService serviceProxy = (IOrganizationService)conn.OrganizationWebProxyClient != null ? (IOrganizationService)conn.OrganizationWebProxyClient : (IOrganizationService)conn.OrganizationServiceProxy;
-
-            Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
-
-            // Obtain information about the logged on user from the web service.
-            {
-                Guid userId = ((WhoAmIResponse)serviceProxy.Execute(new WhoAmIRequest())).UserId;
-
-                SystemUserEntity systemUser = XrmRetrieveHelper.Retrieve<SystemUserEntity>(
-                    localContext,
-                    userId,
-                    new ColumnSet(
-                        SystemUserEntity.Fields.FullName));
-
-                _log.InfoFormat(CultureInfo.InvariantCulture, "The logged on user is \"{0}\" with id \"{1}\".", systemUser.FullName, userId.ToString());
-            }
-
-            // Retrieve the version of Microsoft Dynamics CRM.
-            {
-                RetrieveVersionRequest versionRequest = new RetrieveVersionRequest();
-                RetrieveVersionResponse versionResponse = (RetrieveVersionResponse)serviceProxy.Execute(versionRequest);
-
-                _log.InfoFormat(CultureInfo.InvariantCulture, "Microsoft Dynamics CRM version \"{0}\".", versionResponse.Version);
-            }
-
-            return localContext;
         }
 
         static void Main(string[] args)
