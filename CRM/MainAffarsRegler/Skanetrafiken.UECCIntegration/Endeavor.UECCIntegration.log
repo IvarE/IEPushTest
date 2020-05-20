@@ -1,0 +1,24 @@
+2020-05-20 18:09:12,622 ERROR FileAppenderLog - Failed Response: Microsoft.Xrm.Sdk.Messages.UpdateRequest : Response Exception details: 
+ErrorCode: 0x80060890
+Message: The specified key attributes are not a defined key for the contact entity
+TimeStamp: 2020-05-20T17:09:10.9967871Z
+--
+
+2020-05-20 18:17:51,498 ERROR FileAppenderLog - Failed Response: Microsoft.Xrm.Sdk.Messages.UpdateRequest : Response Exception details: 
+ErrorCode: 0x80060890
+Message: The specified key attributes are not a defined key for the contact entity
+TimeStamp: 2020-05-20T17:16:43.7978071Z
+--
+
+2020-05-20 18:21:31,365 ERROR FileAppenderLog - Failed Response: Microsoft.Xrm.Sdk.Messages.UpdateRequest : Response Exception details: 
+ErrorCode: 0x80060890
+Message: The specified key attributes are not a defined key for the contact entity
+TimeStamp: 2020-05-20T17:20:02.6299046Z
+--
+
+2020-05-20 18:33:05,989 ERROR FileAppenderLog - Failed Response: Microsoft.Xrm.Sdk.Messages.UpdateRequest : Response Exception details: 
+ErrorCode: 0x80060890
+Message: The specified key attributes are not a defined key for the contact entity
+TimeStamp: 2020-05-20T17:32:46.4887034Z
+--
+
