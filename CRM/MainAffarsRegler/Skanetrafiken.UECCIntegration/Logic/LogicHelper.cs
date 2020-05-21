@@ -1,6 +1,7 @@
 ﻿using Endeavor.Crm;
 using log4net;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Skanetrafiken.Crm.Entities;
@@ -21,6 +22,8 @@ namespace Skanetrafiken.UECCIntegration.Logic
         //private static ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static ILog _log = LogManager.GetLogger("FileAppenderLog");
         private static ILog _logC3 = LogManager.GetLogger("Criteria3Contacts");
+
+        public static string rel_contact_companyRole = "ed_contact_ed_companyrole_Contact";
 
         public static bool CheckInterceptions(List<Guid> lGContactsC1, List<Guid> lGContactsC2, List<Guid> lGContactsC3)
         {
@@ -216,10 +219,8 @@ namespace Skanetrafiken.UECCIntegration.Logic
             return lFinalContacts;
         }
 
-        public static SkaneRequests HandleContactsC1C2(Plugin.LocalPluginContext localContext, List<Guid> lGContacts, bool isC1)
+        public static void HandleContactsC1C2(Plugin.LocalPluginContext localContext, CrmContext crmContext, List<Guid> lGContacts, bool isC1)
         {
-            SkaneRequests finalRequests = new SkaneRequests();
-
             List<Contact> lFinalContacts = GetContactsFromListGuids(localContext, lGContacts);
 
             foreach (Contact contact in lFinalContacts)
@@ -245,10 +246,12 @@ namespace Skanetrafiken.UECCIntegration.Logic
                         uContact.Id = (Guid)contact.ContactId;
                         uContact.EMailAddress1 = companyRoleEmailAddress;
 
-                        UpdateRequest updateRequest = new UpdateRequest { Target = uContact };
-                        finalRequests.lUpdateRequests.Add(updateRequest);
+                        crmContext.Attach(uContact);
+                        crmContext.UpdateObject(uContact);
                         _log.InfoFormat("Update Request Added for Contact: " + (Guid)contact.ContactId);
 
+                        //UpdateRequest updateRequest = new UpdateRequest { Target = uContact };
+                        //finalRequests.lUpdateRequests.Add(updateRequest);
                         //XrmHelper.Update(localContext, uContact);
                         //_log.InfoFormat(CultureInfo.InvariantCulture, "The Contact " + (Guid)contact.ContactId + " of Criteria 1 was updated with email address: " + companyRoleEmailAddress + ".");
                     }
@@ -269,37 +272,29 @@ namespace Skanetrafiken.UECCIntegration.Logic
                     nContact.ed_InformationSource = ed_informationsource.ForetagsPortal;
                     nContact.Description = contact.ContactId.ToString();
 
-                    CreateRequest createRequest = new CreateRequest { Target = nContact };
-                    finalRequests.lCreateRequests.Add(createRequest);
+                    crmContext.AddObject(nContact);
                     _log.InfoFormat("Create Request Added for Contact: " + contact.FirstName + ", " + contact.LastName);
 
+                    //CreateRequest createRequest = new CreateRequest { Target = nContact };
+                    //finalRequests.lCreateRequests.Add(createRequest);
                     //gNewContact = XrmHelper.Create(localContext, nContact);
                     //_log.InfoFormat(CultureInfo.InvariantCulture, "New Contact created");
 
-                    if(companyRole.ed_EmailAddress != null)
-                    {
-                        ed_CompanyRole uCompanyRole = new ed_CompanyRole();
-                        uCompanyRole.Id = (Guid)companyRole.ed_CompanyRoleId;
-                        uCompanyRole.ed_Contact = new EntityReference(Contact.EntityLogicalName)
-                        {
-                            KeyAttributes = new KeyAttributeCollection
-                            {
-                                {Contact.Fields.EMailAddress1, companyRole.ed_EmailAddress}
-                            }
-                        };
-                        //uCompanyRole.ed_Contact = new EntityReference(Contact.EntityLogicalName, gNewContact);
+                    //ed_CompanyRole uCompanyRole = new ed_CompanyRole();
+                    //uCompanyRole.Id = (Guid)companyRole.ed_CompanyRoleId;
+                    //uCompanyRole.ed_Contact = new EntityReference(Contact.EntityLogicalName, gNewContact);
 
-                        UpdateRequest updateRequest = new UpdateRequest { Target = uCompanyRole };
-                        finalRequests.lUpdateRequests.Add(updateRequest);
-                        _log.InfoFormat("Update Request Added for Company Role: " + (Guid)companyRole.ed_CompanyRoleId);
+                    crmContext.Attach(companyRole);
+                    crmContext.AddLink(nContact, new Relationship(rel_contact_companyRole), companyRole);
+                    //PERGUNTAR AO RAFA //TESTAR ISTO
+                    _log.InfoFormat("Update Request Added for Company Role: " + (Guid)companyRole.ed_CompanyRoleId);
 
-                        //XrmHelper.Update(localContext, uCompanyRole);
-                        //_log.InfoFormat(CultureInfo.InvariantCulture, "The Company Role " + (Guid)companyRole.ed_CompanyRoleId + " was updated with contact: " + gNewContact + ".");
-                    }
+                    //UpdateRequest updateRequest = new UpdateRequest { Target = uCompanyRole };
+                    //finalRequests.lUpdateRequests.Add(updateRequest);
+                    //XrmHelper.Update(localContext, uCompanyRole);
+                    //_log.InfoFormat(CultureInfo.InvariantCulture, "The Company Role " + (Guid)companyRole.ed_CompanyRoleId + " was updated with contact: " + gNewContact + ".");
                 }
             }
-
-            return finalRequests;
         }
 
         public static void HandleContactsC3(Plugin.LocalPluginContext localContext, List<Guid> lGContacts)
@@ -505,8 +500,10 @@ namespace Skanetrafiken.UECCIntegration.Logic
             return null;
         }
 
-        public static void RunLogic(Plugin.LocalPluginContext localContext)
+        public static void RunLogic(Plugin.LocalPluginContext localContext, CrmContext crmContext)
         {
+            SaveChangesOptions optionsChanges = SaveChangesOptions.ContinueOnError;
+
             int active = 0;
             int privateCustomerC1 = 0;
             int numberOfCompanyRolesC1 = int.Parse(ConfigurationManager.AppSettings["numberOfCompanyRolesC1"]);
@@ -535,23 +532,28 @@ namespace Skanetrafiken.UECCIntegration.Logic
             _log.InfoFormat(CultureInfo.InvariantCulture, "There is no Interceptions between the two lists.");
 
             _log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 1 Requests.");
-            SkaneRequests requestsC1 = HandleContactsC1C2(localContext, lGContactsC1, true);
-            _log.InfoFormat(CultureInfo.InvariantCulture, "Found " + requestsC1.lCreateRequests.Count + " Create Requests and " + requestsC1.lUpdateRequests.Count + " Update Requests");
+            HandleContactsC1C2(localContext, crmContext,  lGContactsC1, true);
+
+            SaveChangesResultCollection responsesC1 = crmContext.SaveChanges(optionsChanges); //TODO RESPONSES
+            crmContext.ClearChanges();
 
             _log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 2 Logic.");
-            SkaneRequests requestsC2 = HandleContactsC1C2(localContext, lGContactsC2, false);
-            _log.InfoFormat(CultureInfo.InvariantCulture, "Found " + requestsC2.lCreateRequests.Count + " Create Requests and " + requestsC2.lUpdateRequests.Count + " Update Requests");
+            HandleContactsC1C2(localContext, crmContext, lGContactsC2, false);
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, "Starting to Send Requests to CRM.");
-            HandleMultipleRequests(localContext, requestsC1, requestsC2);
-            _log.InfoFormat(CultureInfo.InvariantCulture, "Finished sending Requests to CRM.");
+            SaveChangesResultCollection responsesC2 = crmContext.SaveChanges(optionsChanges); //TODO RESPONSES
+            crmContext.ClearChanges();
+            
+            //_log.InfoFormat(CultureInfo.InvariantCulture, "Starting to Send Requests to CRM.");
+            //HandleMultipleRequests(localContext, requestsC1, requestsC2);
+            //_log.InfoFormat(CultureInfo.InvariantCulture, "Finished sending Requests to CRM.");
 
             _logC3.InfoFormat(CultureInfo.InvariantCulture, "Logging Criteria 3 Contacts.");
             HandleContactsC3(localContext, lGContactsC3);
         }
 
-        public static void RunErrorContacts(Plugin.LocalPluginContext localContext)
+        public static void RunErrorContacts(Plugin.LocalPluginContext localContext, CrmContext crmContext)
         {
+            SaveChangesOptions optionsChanges = SaveChangesOptions.ContinueOnError;
             List<Guid> errorContacts = ReadLogFileForErrorContacts();
 
             if(errorContacts == null || errorContacts.Count == 0)
@@ -581,16 +583,20 @@ namespace Skanetrafiken.UECCIntegration.Logic
             }
 
             _log.InfoFormat(CultureInfo.InvariantCulture, $"Getting Criteria 1 Requests.");
-            SkaneRequests requestsC1 = HandleContactsC1C2(localContext, lGContactsC1, true);
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"Found " + requestsC1.lCreateRequests.Count + " Create Requests and " + requestsC1.lUpdateRequests.Count + " Update Requests");
+            HandleContactsC1C2(localContext, crmContext, lGContactsC1, true);
+
+            SaveChangesResultCollection responsesC1 = crmContext.SaveChanges(optionsChanges); //TODO RESPONSES
+            crmContext.ClearChanges();
 
             _log.InfoFormat(CultureInfo.InvariantCulture, $"Getting Criteria 2 Logic.");
-            SkaneRequests requestsC2 = HandleContactsC1C2(localContext, lGContactsC2, false);
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"Found " + requestsC2.lCreateRequests.Count + " Create Requests and " + requestsC2.lUpdateRequests.Count + " Update Requests");
+             HandleContactsC1C2(localContext, crmContext, lGContactsC2, false);
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"RunErrorContacts--------------------Starting to Send Requests to CRM.");
-            HandleMultipleRequests(localContext, requestsC1, requestsC2);
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"RunErrorContacts--------------------Finished sending Requests to CRM.");
+            SaveChangesResultCollection responsesC2 = crmContext.SaveChanges(optionsChanges); //TODO RESPONSES
+            crmContext.ClearChanges();
+
+            //_log.InfoFormat(CultureInfo.InvariantCulture, $"RunErrorContacts--------------------Starting to Send Requests to CRM.");
+            //HandleMultipleRequests(localContext, requestsC1, requestsC2);
+            //_log.InfoFormat(CultureInfo.InvariantCulture, $"RunErrorContacts--------------------Finished sending Requests to CRM.");
         }
     }
 }

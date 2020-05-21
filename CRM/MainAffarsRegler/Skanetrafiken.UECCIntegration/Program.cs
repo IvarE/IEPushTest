@@ -57,40 +57,14 @@ namespace Skanetrafiken.UECCIntegration
                     _log.ErrorFormat(CultureInfo.InvariantCulture, "The CRM Service is null.");
 
                 Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _service, null, new TracingService());
+                CrmContext crmContext = new CrmContext(_service);
 
-                ExecuteMultipleRequest requestWithResults = new ExecuteMultipleRequest()
-                {
-                    Settings = new ExecuteMultipleSettings()
-                    {
-                        ContinueOnError = true,
-                        ReturnResponses = true
-                    },
-                    Requests = new OrganizationRequestCollection()
-                };
+                bool firstRun = true; //Change this flag to run for the remaining Contacts that throw errors
 
-                ed_CompanyRole uCompanyRole = new ed_CompanyRole();
-                uCompanyRole.Id = new Guid("1038d3bb-bb9a-ea11-80f8-005056b61fff");
-                uCompanyRole.ed_Contact = new EntityReference(Contact.EntityLogicalName)
-                {
-                    KeyAttributes = new KeyAttributeCollection
-                    {
-                        {Contact.Fields.EMailAddress1, "vahidaz2@msn.com"}
-                    }
-                };
-
-                UpdateRequest updateRequest = new UpdateRequest { Target = uCompanyRole };
-                requestWithResults.Requests.Add(updateRequest);
-
-                ExecuteMultipleResponse responseWithResults =
-                    (ExecuteMultipleResponse)localContext.OrganizationService.Execute(requestWithResults);
-
-                LogicHelper.LogExecuteMultipleResponses(requestWithResults, responseWithResults); //TODO TESTAR ISTO - PERGUNTAR SE POSSO CRIAR UMA KEY NA ENTIDADE CONTACT
-                //bool firstRun = true; //Change this flag to run for the remaining Contacts that throw errors
-
-                //if(firstRun)
-                //    LogicHelper.RunLogic(localContext);
-                //else
-                //    LogicHelper.RunErrorContacts(localContext);
+                if (firstRun)
+                    LogicHelper.RunLogic(localContext, crmContext);
+                else
+                    LogicHelper.RunErrorContacts(localContext, crmContext);
             }
             catch (Exception e)
             {
