@@ -356,40 +356,47 @@ namespace Skanetrafiken.UECCIntegration.Logic
                 // An error has occurred.
                 else if (responseItem.Fault != null)
                 {
-                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed Response: " + requestWithResults.Requests[responseItem.RequestIndex] + " : Response: " + responseItem.Fault);
-
-                    if (requestWithResults.Requests[responseItem.RequestIndex].RequestName == "Create")
+                    try
                     {
-                        Contact createContact = (Contact)requestWithResults.Requests[responseItem.RequestIndex].Parameters.Values.FirstOrDefault();
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed Response: " + requestWithResults.Requests[responseItem.RequestIndex] + " : Response: " + responseItem.Fault);
 
-                        if(createContact != null && createContact.Description != null)
-                            lStringFile.Add(createContact.Description);
+                        if (requestWithResults.Requests[responseItem.RequestIndex].RequestName == "Create")
+                        {
+                            Contact createContact = (Contact)requestWithResults.Requests[responseItem.RequestIndex].Parameters.Values.FirstOrDefault();
+
+                            if (createContact != null && createContact.Description != null)
+                                lStringFile.Add(createContact.Description);
+                        }
+                        else if (requestWithResults.Requests[responseItem.RequestIndex].RequestName == "Update")
+                        {
+                            Entity target = (Entity)requestWithResults.Requests[responseItem.RequestIndex].Parameters.Values.FirstOrDefault();
+
+                            if (target == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Target Value from Responses is null. Contact your administrator.");
+                                continue;
+                            }
+
+                            if (target.LogicalName == ed_CompanyRole.EntityLogicalName)
+                            {
+                                KeyAttributeCollection keyAttribute = target.GetAttributeValue<EntityReference>("ed_contact")?.KeyAttributes;
+                                string keyContactEmail = (string)keyAttribute.Values.FirstOrDefault();
+                                Guid keyCompanyRoleId = target.GetAttributeValue<Guid>("ed_companyroleid");
+
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to Update Company Role: " + keyContactEmail + " with Contact: " + keyContactEmail + ". Response: " + responseItem.Fault);
+                            }
+                            else if (target.LogicalName == Contact.EntityLogicalName)
+                            {
+                                string emailAddress = target.GetAttributeValue<string>("emailaddress1");
+                                Guid contactId = target.GetAttributeValue<Guid>("contactid");
+
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to Update Contact: " + contactId + " with Email Address: " + emailAddress);
+                            }
+                        }
                     }
-                    else if(requestWithResults.Requests[responseItem.RequestIndex].RequestName == "Update")
+                    catch (Exception e)
                     {
-                        Entity target = (Entity)requestWithResults.Requests[responseItem.RequestIndex].Parameters.Values.FirstOrDefault();
-
-                        if(target == null)
-                        {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Target Value from Responses is null. Contact your administrator.");
-                            continue;
-                        }
-
-                        if(target.LogicalName == ed_CompanyRole.EntityLogicalName)
-                        {
-                            KeyAttributeCollection keyAttribute = target.GetAttributeValue<EntityReference>("ed_contact")?.KeyAttributes;
-                            string keyContactEmail = (string)keyAttribute.Values.FirstOrDefault();
-                            Guid keyCompanyRoleId = target.GetAttributeValue<Guid>("ed_companyroleid");
-
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to Update Company Role: " + keyContactEmail + " with Contact: " + keyContactEmail + ". Response: " + responseItem.Fault);
-                        }
-                        else if(target.LogicalName == Contact.EntityLogicalName)
-                        {
-                            string emailAddress = target.GetAttributeValue<string>("emailaddress1");
-                            Guid contactId = target.GetAttributeValue<Guid>("contactid");
-
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to Update Contact: " + contactId + " with Email Address: " + emailAddress);
-                        }
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Error logging error message: Details " + e.Message);
                     }
                 }
             }
@@ -404,7 +411,7 @@ namespace Skanetrafiken.UECCIntegration.Logic
 
         public static void HandleMultipleRequests(Plugin.LocalPluginContext localContext, SkaneRequests requestsC1, SkaneRequests requestsC2)
         {
-            int maxLimitCalls = int.Parse(ConfigurationManager.AppSettings["maxLimitCalls"]); ;
+            int maxLimitCalls = int.Parse(ConfigurationManager.AppSettings["maxLimitCalls"]);
 
             SkaneRequests finalRequest = new SkaneRequests();
             finalRequest.lCreateRequests.AddRange(requestsC1.lCreateRequests);

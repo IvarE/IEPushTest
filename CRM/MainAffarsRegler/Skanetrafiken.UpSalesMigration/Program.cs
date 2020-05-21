@@ -3,6 +3,7 @@ using Endeavor.Crm.UpSalesMigration;
 using log4net;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
+using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using Skanetrafiken.Crm.Schema.Generated;
@@ -176,6 +177,77 @@ namespace Skanetrafiken.UpSalesMigration
             return null;
         }
 
+        public static void LogExecuteMultipleResponses(ExecuteMultipleRequest requestWithResults, ExecuteMultipleResponse responseWithResults)
+        {
+            foreach (ExecuteMultipleResponseItem responseItem in responseWithResults.Responses)
+            {
+                // A valid response.
+                if (responseItem.Response != null)
+                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Success Response: " + requestWithResults.Requests[responseItem.RequestIndex] + " : Response: " + responseItem.Response);
+
+                // An error has occurred.
+                else if (responseItem.Fault != null)
+                {
+                    string errorMessage = $"Failed Response: " + requestWithResults.Requests[responseItem.RequestIndex] + " : Response: " + responseItem.Fault;
+
+                    if (requestWithResults.Requests[responseItem.RequestIndex].RequestName == "Create")
+                    {
+                        Entity entity = (Entity)requestWithResults.Requests[responseItem.RequestIndex].Parameters.Values.FirstOrDefault();
+
+                        errorMessage += " - Details: "; //TODO SWITCH FOR EACH ENTITY
+
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, errorMessage);
+                    }
+                }
+            }
+        }
+
+        public static void HandleMultipleRequests(Plugin.LocalPluginContext localContext, List<CreateRequest> lCreateRequests)
+        {
+            int maxLimitCalls = int.Parse(ConfigurationManager.AppSettings["maxLimitCalls"]);
+
+            ExecuteMultipleRequest requestWithResults = new ExecuteMultipleRequest()
+            {
+                Settings = new ExecuteMultipleSettings()
+                {
+                    ContinueOnError = true,
+                    ReturnResponses = true
+                },
+                Requests = new OrganizationRequestCollection()
+            };
+
+            if (lCreateRequests.Count > maxLimitCalls)
+            {
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"The total Requests is greater than the max allowed.");
+
+                List<List<CreateRequest>> lAuxCreate = lCreateRequests.Select((x, i) => new { Index = i, Value = x }).GroupBy(x => x.Index / maxLimitCalls)
+                                                .Select(x => x.Select(v => v.Value).ToList()).ToList();
+
+                foreach (List<CreateRequest> listCreate in lAuxCreate)
+                {
+                    requestWithResults.Requests = new OrganizationRequestCollection();
+                    requestWithResults.Requests.AddRange(listCreate);
+
+                    ExecuteMultipleResponse responseWithResults =
+                    (ExecuteMultipleResponse)localContext.OrganizationService.Execute(requestWithResults);
+
+                    LogExecuteMultipleResponses(requestWithResults, responseWithResults);
+                }
+            }
+            else
+            {
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"The total Requests is less than the max allowed.");
+
+                requestWithResults.Requests = new OrganizationRequestCollection();
+                requestWithResults.Requests.AddRange(lCreateRequests);
+
+                ExecuteMultipleResponse responseWithResults =
+                    (ExecuteMultipleResponse)localContext.OrganizationService.Execute(requestWithResults);
+
+                LogExecuteMultipleResponses(requestWithResults, responseWithResults);
+            }
+        }
+
         public static void ImportAccountRecords(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo)
         {
             if(importExcelInfo == null || importExcelInfo.excelRange == null || importExcelInfo.lColumns == null || importExcelInfo.rowCount == null || importExcelInfo.colCount == null)
@@ -217,6 +289,17 @@ namespace Skanetrafiken.UpSalesMigration
 
                     switch (name)
                     {
+                        case "CreateOn":
+
+                            DateTime dateTime = DateTime.MinValue;
+
+                            if(DateTime.TryParse(value, out dateTime))
+                            {
+                                if(dateTime != DateTime.MinValue)
+                                    nAccount.OverriddenCreatedOn = dateTime;
+                            }
+
+                            break;
                         case "Företag: Namn": nAccount.Name = value;
                             break;
                         case "Företag: Telefon": nAccount.Telephone2 = value;
@@ -298,6 +381,10 @@ namespace Skanetrafiken.UpSalesMigration
 
                 nAccount.StateCode = AccountState.Active;
 
+                //TODO field line of text, random string characters use that as a unique field to map the records, also on UECCIntegration - dont do
+
+                //crm.AddObject
+                //crm.AddRelatedObject
                 Guid gAccount = XrmHelper.Create(localContext, nAccount);
 
                 if (noteText != string.Empty && gAccount != null)
@@ -312,7 +399,7 @@ namespace Skanetrafiken.UpSalesMigration
                     XrmHelper.Create(localContext, note);
                 }
 
-                if (street2 != string.Empty || city != string.Empty || country != string.Empty || postalCode != string.Empty)
+                if ((street2 != string.Empty || city != string.Empty || country != string.Empty || postalCode != string.Empty) && gAccount != null)
                 {
                     CustomerAddress nCustomerAddress = new CustomerAddress();
                     nCustomerAddress.AddressTypeCode = customeraddress_addresstypecode.ShipTo;
@@ -320,6 +407,7 @@ namespace Skanetrafiken.UpSalesMigration
                     nCustomerAddress.City = city;
                     nCustomerAddress.Country = country;
                     nCustomerAddress.PostalCode = postalCode;
+                    nCustomerAddress.ParentId = new EntityReference(Account.EntityLogicalName, gAccount);
 
                     XrmHelper.Create(localContext, nCustomerAddress);
                 }
@@ -363,6 +451,17 @@ namespace Skanetrafiken.UpSalesMigration
 
                     switch (name)
                     {
+                        case "CreateOn":
+
+                            DateTime dateTime = DateTime.MinValue;
+
+                            if (DateTime.TryParse(value, out dateTime))
+                            {
+                                if (dateTime != DateTime.MinValue)
+                                    nContact.OverriddenCreatedOn = dateTime;
+                            }
+
+                            break;
                         case "Företag":
 
                             EntityReference erParent = GetCrmAccountByName(localContext, value);
@@ -382,7 +481,7 @@ namespace Skanetrafiken.UpSalesMigration
                             break;
                         case "Anteckningar": noteText = value;
                             break;
-                        case "Titel": //nContact.AccountRoleCode = TODO ask about the Option Set Values mappings
+                        case "Titel": //nContact.ed_.AccountRoleCode = TODO ask about the Option Set Values mappings
                             break;
                         case "Telefon": nContact.Telephone1 = value;
                             break;
@@ -397,6 +496,7 @@ namespace Skanetrafiken.UpSalesMigration
                 }
 
                 nContact.StateCode = ContactState.Active;
+                //nContact.AccountRoleCode = contact_accountrolecode.AnsvarigforInfotainment;
 
                 Guid gContact = XrmHelper.Create(localContext, nContact);
 
@@ -458,9 +558,24 @@ namespace Skanetrafiken.UpSalesMigration
             ConnectToMSCRM("D1\\CRMAdmin", "uSEme2!nstal1", "https://sekundtst.skanetrafiken.se/DKCRM/XRMServices/2011/Organization.svc");
 
             if (_service == null)
-                _log.ErrorFormat(CultureInfo.InvariantCulture, "The CRM Service is null.");
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The CRM Service is null.");
+                Console.WriteLine("The CRM Service is null.");
+                Console.ReadLine();
+                return;
+            }
 
             Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _service, null, new TracingService());
+            //CrmContext crmContext = new CrmContext(_service);
+
+            //crmContext.AddObject(account);
+            //crmContext.AddRelatedObject(relatedAccount, new Relationship("gpe_account_gpe_morada_conta"), address);
+
+            //https://docs.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/org-service/create-early-bound-entity-classes-code-generation-tool 
+
+            //TODO ADD CRM CONTEXT TO THE HOLE PROGRAM AND RETURN LIST OF CREATEREQUESTS
+
+
 
             string relativeExcelPath = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.ExcelRelativePath);
             string fileName = "Upsales företag 2020-04-30.xlsx";
