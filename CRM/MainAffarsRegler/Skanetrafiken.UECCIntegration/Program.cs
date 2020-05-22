@@ -59,12 +59,16 @@ namespace Skanetrafiken.UECCIntegration
                 Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _service, null, new TracingService());
                 CrmContext crmContext = new CrmContext(_service);
 
-                bool firstRun = true; //Change this flag to run for the remaining Contacts that throw errors
+                //At the end of each run, save the errorContacts and successContacts on another folder and delete the files. 
+                //For next batch of records
+                bool firstRun = false; //Change this flag to run for the remaining Contacts that throw errors
 
                 if (firstRun)
                     LogicHelper.RunLogic(localContext, crmContext);
                 else
                     LogicHelper.RunErrorContacts(localContext, crmContext);
+
+                //LogicHelper.RunSuccessContacts(localContext);
             }
             catch (Exception e)
             {

@@ -249,11 +249,6 @@ namespace Skanetrafiken.UECCIntegration.Logic
                         crmContext.Attach(uContact);
                         crmContext.UpdateObject(uContact);
                         _log.InfoFormat("Update Request Added for Contact: " + (Guid)contact.ContactId);
-
-                        //UpdateRequest updateRequest = new UpdateRequest { Target = uContact };
-                        //finalRequests.lUpdateRequests.Add(updateRequest);
-                        //XrmHelper.Update(localContext, uContact);
-                        //_log.InfoFormat(CultureInfo.InvariantCulture, "The Contact " + (Guid)contact.ContactId + " of Criteria 1 was updated with email address: " + companyRoleEmailAddress + ".");
                     }
 
                     lCompanyRoles.Remove(firstCompanyRole);
@@ -275,24 +270,9 @@ namespace Skanetrafiken.UECCIntegration.Logic
                     crmContext.AddObject(nContact);
                     _log.InfoFormat("Create Request Added for Contact: " + contact.FirstName + ", " + contact.LastName);
 
-                    //CreateRequest createRequest = new CreateRequest { Target = nContact };
-                    //finalRequests.lCreateRequests.Add(createRequest);
-                    //gNewContact = XrmHelper.Create(localContext, nContact);
-                    //_log.InfoFormat(CultureInfo.InvariantCulture, "New Contact created");
-
-                    //ed_CompanyRole uCompanyRole = new ed_CompanyRole();
-                    //uCompanyRole.Id = (Guid)companyRole.ed_CompanyRoleId;
-                    //uCompanyRole.ed_Contact = new EntityReference(Contact.EntityLogicalName, gNewContact);
-
                     crmContext.Attach(companyRole);
                     crmContext.AddLink(nContact, new Relationship(rel_contact_companyRole), companyRole);
-                    //PERGUNTAR AO RAFA //TESTAR ISTO
                     _log.InfoFormat("Update Request Added for Company Role: " + (Guid)companyRole.ed_CompanyRoleId);
-
-                    //UpdateRequest updateRequest = new UpdateRequest { Target = uCompanyRole };
-                    //finalRequests.lUpdateRequests.Add(updateRequest);
-                    //XrmHelper.Update(localContext, uCompanyRole);
-                    //_log.InfoFormat(CultureInfo.InvariantCulture, "The Company Role " + (Guid)companyRole.ed_CompanyRoleId + " was updated with contact: " + gNewContact + ".");
                 }
             }
         }
@@ -320,11 +300,11 @@ namespace Skanetrafiken.UECCIntegration.Logic
             }
         }
 
-        public static List<Guid> ReadLogFileForErrorContacts()
+        public static List<Guid> ReadLogFileContacts(string path)
         {
             List<Guid> lContacts = new List<Guid>();
 
-            string[] lines = System.IO.File.ReadAllLines(@"C:\S\CRM\MainAffarsRegler\Skanetrafiken.UECCIntegration\Endeavor.ErrorContacts.log");
+            string[] lines = System.IO.File.ReadAllLines(path);
 
             foreach (string line in lines)
             {
@@ -338,137 +318,63 @@ namespace Skanetrafiken.UECCIntegration.Logic
             return lContacts;
         }
 
-        public static void LogExecuteMultipleResponses(ExecuteMultipleRequest requestWithResults, ExecuteMultipleResponse responseWithResults)
+        public static void LogCrmContextMultipleResponses(SaveChangesResultCollection lResponses)
         {
-            List<string> lStringFile = new List<string>();
+            List<string> lErrorContactsFile = new List<string>();
+            List<string> lSuccessContactsFile = new List<string>();
 
-            foreach (ExecuteMultipleResponseItem responseItem in responseWithResults.Responses)
+            try
             {
-                // A valid response.
-                if (responseItem.Response != null)
-                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Success Response: " + requestWithResults.Requests[responseItem.RequestIndex] + " : Response: " + responseItem.Response);
-
-                // An error has occurred.
-                else if (responseItem.Fault != null)
+                foreach (SaveChangesResult response in lResponses)
                 {
-                    try
+                    // A valid response.
+                    if (response.Error == null)
                     {
-                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed Response: " + requestWithResults.Requests[responseItem.RequestIndex] + " : Response: " + responseItem.Fault);
+                        string message = response.Request.RequestName;
+                        Contact contact = (Contact)response.Request["Target"];
 
-                        if (requestWithResults.Requests[responseItem.RequestIndex].RequestName == "Create")
+                        if (contact != null && contact.Description != null)
+                            lSuccessContactsFile.Add(contact.Description);
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"The Contact entity with email: " + contact.EMailAddress1 + " was " + message + "ed sucessfully.");
+                    }
+                    //An error has occurred.
+                    else
+                    {
+                        Contact contact = (Contact)response.Request["Target"];
+                        string message = response.Request.RequestName;
+
+                        if(message == "Create")
                         {
-                            Contact createContact = (Contact)requestWithResults.Requests[responseItem.RequestIndex].Parameters.Values.FirstOrDefault();
+                            if (contact != null && contact.Description != null)
+                                lErrorContactsFile.Add(contact.Description);
 
-                            if (createContact != null && createContact.Description != null)
-                                lStringFile.Add(createContact.Description);
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Contact entity with email: " + contact.EMailAddress1 + " was not created. Details: " + response.Error.Message);
                         }
-                        else if (requestWithResults.Requests[responseItem.RequestIndex].RequestName == "Update")
+                        else if(message == "Update")
                         {
-                            Entity target = (Entity)requestWithResults.Requests[responseItem.RequestIndex].Parameters.Values.FirstOrDefault();
-
-                            if (target == null)
-                            {
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Target Value from Responses is null. Contact your administrator.");
-                                continue;
-                            }
-
-                            if (target.LogicalName == ed_CompanyRole.EntityLogicalName)
-                            {
-                                KeyAttributeCollection keyAttribute = target.GetAttributeValue<EntityReference>("ed_contact")?.KeyAttributes;
-                                string keyContactEmail = (string)keyAttribute.Values.FirstOrDefault();
-                                Guid keyCompanyRoleId = target.GetAttributeValue<Guid>("ed_companyroleid");
-
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to Update Company Role: " + keyContactEmail + " with Contact: " + keyContactEmail + ". Response: " + responseItem.Fault);
-                            }
-                            else if (target.LogicalName == Contact.EntityLogicalName)
-                            {
-                                string emailAddress = target.GetAttributeValue<string>("emailaddress1");
-                                Guid contactId = target.GetAttributeValue<Guid>("contactid");
-
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to Update Contact: " + contactId + " with Email Address: " + emailAddress);
-                            }
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Contact entity with Id: " + contact.ContactId.ToString() + " was not updated with email: " + contact.EMailAddress1 + ". Details: " + response.Error.Message);
                         }
                     }
-                    catch (Exception e)
-                    {
-                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Error logging error message: Details " + e.Message);
-                    }
                 }
             }
-
-            if(lStringFile.Count == 0)
+            catch (Exception e)
             {
-                List<string> lFinalString = lStringFile.Distinct().ToList();
-                if(lFinalString.Count != 0)
-                    System.IO.File.WriteAllLines(@"C:\S\CRM\MainAffarsRegler\Skanetrafiken.UECCIntegration\Endeavor.ErrorContacts.log", lFinalString);
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error logging results. Details: " + e.Message);
             }
-        }
 
-        public static void HandleMultipleRequests(Plugin.LocalPluginContext localContext, SkaneRequests requestsC1, SkaneRequests requestsC2)
-        {
-            int maxLimitCalls = int.Parse(ConfigurationManager.AppSettings["maxLimitCalls"]);
-
-            SkaneRequests finalRequest = new SkaneRequests();
-            finalRequest.lCreateRequests.AddRange(requestsC1.lCreateRequests);
-            finalRequest.lCreateRequests.AddRange(requestsC2.lCreateRequests);
-            finalRequest.lUpdateRequests.AddRange(requestsC1.lUpdateRequests);
-            finalRequest.lUpdateRequests.AddRange(requestsC2.lUpdateRequests);
-
-            ExecuteMultipleRequest requestWithResults = new ExecuteMultipleRequest()
+            if (lErrorContactsFile.Count > 0)
             {
-                Settings = new ExecuteMultipleSettings()
-                {
-                    ContinueOnError = true,
-                    ReturnResponses = true
-                },
-                Requests = new OrganizationRequestCollection()
-            };
-
-            if (finalRequest.lUpdateRequests.Count + finalRequest.lCreateRequests.Count > maxLimitCalls)
-            {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"The total Requests is greater than the max allowed.");
-
-                List<List<CreateRequest>> lAuxCreate = finalRequest.lCreateRequests.Select((x, i) => new { Index = i, Value = x }).GroupBy(x => x.Index / maxLimitCalls)
-                                                .Select(x => x.Select(v => v.Value).ToList()).ToList();
-
-                foreach (List<CreateRequest> listCreate in lAuxCreate)
-                {
-                    requestWithResults.Requests = new OrganizationRequestCollection();
-                    requestWithResults.Requests.AddRange(listCreate);
-
-                    ExecuteMultipleResponse responseWithResults =
-                    (ExecuteMultipleResponse)localContext.OrganizationService.Execute(requestWithResults);
-
-                    LogExecuteMultipleResponses(requestWithResults, responseWithResults);
-                }
-
-                List<List<UpdateRequest>> lAuxUpdate = finalRequest.lUpdateRequests.Select((x, i) => new { Index = i, Value = x }).GroupBy(x => x.Index / maxLimitCalls)
-                                                .Select(x => x.Select(v => v.Value).ToList()).ToList();
-
-                foreach (List<UpdateRequest> listUpdate in lAuxUpdate)
-                {
-                    requestWithResults.Requests = new OrganizationRequestCollection();
-                    requestWithResults.Requests.AddRange(listUpdate);
-
-                    ExecuteMultipleResponse responseWithResults =
-                    (ExecuteMultipleResponse)localContext.OrganizationService.Execute(requestWithResults);
-
-                    LogExecuteMultipleResponses(requestWithResults, responseWithResults);
-                }
-
+                List<string> lFinalString = lErrorContactsFile.Distinct().ToList();
+                if (lFinalString.Count > 0)
+                    System.IO.File.AppendAllLines(@"C:\S\CRM\MainAffarsRegler\Skanetrafiken.UECCIntegration\Endeavor.ErrorContacts.log", lFinalString);
             }
-            else
+
+            if (lSuccessContactsFile.Count > 0)
             {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"The total Requests is less than the max allowed.");
-
-                requestWithResults.Requests = new OrganizationRequestCollection();
-                requestWithResults.Requests.AddRange(finalRequest.lCreateRequests);
-                requestWithResults.Requests.AddRange(finalRequest.lUpdateRequests);
-
-                ExecuteMultipleResponse responseWithResults =
-                    (ExecuteMultipleResponse)localContext.OrganizationService.Execute(requestWithResults);
-
-                LogExecuteMultipleResponses(requestWithResults, responseWithResults);
+                List<string> lFinalString = lSuccessContactsFile.Distinct().ToList();
+                if (lFinalString.Count > 0)
+                    System.IO.File.AppendAllLines(@"C:\S\CRM\MainAffarsRegler\Skanetrafiken.UECCIntegration\Endeavor.SuccessContacts.log", lFinalString);
             }
         }
 
@@ -532,20 +438,18 @@ namespace Skanetrafiken.UECCIntegration.Logic
             _log.InfoFormat(CultureInfo.InvariantCulture, "There is no Interceptions between the two lists.");
 
             _log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 1 Requests.");
-            HandleContactsC1C2(localContext, crmContext,  lGContactsC1, true);
+            HandleContactsC1C2(localContext, crmContext, lGContactsC1, true);
 
-            SaveChangesResultCollection responsesC1 = crmContext.SaveChanges(optionsChanges); //TODO RESPONSES
+            SaveChangesResultCollection responsesC1 = crmContext.SaveChanges(optionsChanges);
+            LogCrmContextMultipleResponses(responsesC1);
             crmContext.ClearChanges();
 
             _log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 2 Logic.");
             HandleContactsC1C2(localContext, crmContext, lGContactsC2, false);
 
-            SaveChangesResultCollection responsesC2 = crmContext.SaveChanges(optionsChanges); //TODO RESPONSES
+            SaveChangesResultCollection responsesC2 = crmContext.SaveChanges(optionsChanges);
+            LogCrmContextMultipleResponses(responsesC2);
             crmContext.ClearChanges();
-            
-            //_log.InfoFormat(CultureInfo.InvariantCulture, "Starting to Send Requests to CRM.");
-            //HandleMultipleRequests(localContext, requestsC1, requestsC2);
-            //_log.InfoFormat(CultureInfo.InvariantCulture, "Finished sending Requests to CRM.");
 
             _logC3.InfoFormat(CultureInfo.InvariantCulture, "Logging Criteria 3 Contacts.");
             HandleContactsC3(localContext, lGContactsC3);
@@ -554,7 +458,8 @@ namespace Skanetrafiken.UECCIntegration.Logic
         public static void RunErrorContacts(Plugin.LocalPluginContext localContext, CrmContext crmContext)
         {
             SaveChangesOptions optionsChanges = SaveChangesOptions.ContinueOnError;
-            List<Guid> errorContacts = ReadLogFileForErrorContacts();
+            string filePath = @"C:\S\CRM\MainAffarsRegler\Skanetrafiken.UECCIntegration\Endeavor.ErrorContacts.log"; //set to new location for the second run
+            List<Guid> errorContacts = ReadLogFileContacts(filePath);
 
             if(errorContacts == null || errorContacts.Count == 0)
             {
@@ -582,21 +487,51 @@ namespace Skanetrafiken.UECCIntegration.Logic
                     lGContactsC2.Add(gContact);
             }
 
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"Running Error Contacts.");
             _log.InfoFormat(CultureInfo.InvariantCulture, $"Getting Criteria 1 Requests.");
             HandleContactsC1C2(localContext, crmContext, lGContactsC1, true);
 
-            SaveChangesResultCollection responsesC1 = crmContext.SaveChanges(optionsChanges); //TODO RESPONSES
+            SaveChangesResultCollection responsesC1 = crmContext.SaveChanges(optionsChanges);
+            LogCrmContextMultipleResponses(responsesC1);
             crmContext.ClearChanges();
 
             _log.InfoFormat(CultureInfo.InvariantCulture, $"Getting Criteria 2 Logic.");
              HandleContactsC1C2(localContext, crmContext, lGContactsC2, false);
 
-            SaveChangesResultCollection responsesC2 = crmContext.SaveChanges(optionsChanges); //TODO RESPONSES
+            SaveChangesResultCollection responsesC2 = crmContext.SaveChanges(optionsChanges);
+            LogCrmContextMultipleResponses(responsesC2);
             crmContext.ClearChanges();
+        }
 
-            //_log.InfoFormat(CultureInfo.InvariantCulture, $"RunErrorContacts--------------------Starting to Send Requests to CRM.");
-            //HandleMultipleRequests(localContext, requestsC1, requestsC2);
-            //_log.InfoFormat(CultureInfo.InvariantCulture, $"RunErrorContacts--------------------Finished sending Requests to CRM.");
+        public static void RunSuccessContacts(Plugin.LocalPluginContext localContext)
+        {
+            string filePath = @"C:\S\CRM\MainAffarsRegler\Skanetrafiken.UECCIntegration\Endeavor.SuccessContacts.log"; //set to new location for the second run
+            List<Guid> successContacts = ReadLogFileContacts(filePath);
+
+            if (successContacts == null || successContacts.Count == 0)
+            {
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"No more Contacts to handle.");
+                Console.ReadLine();
+                return;
+            }
+
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"Running Success Contacts.");
+
+            foreach (Guid gContact in successContacts)
+            {
+                try
+                {
+                    Contact nContact = new Contact();
+                    nContact.Id = gContact;
+                    nContact.Description = string.Empty;
+
+                    XrmHelper.Update(localContext, nContact);
+                }
+                catch (Exception)
+                {
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Not possible to update the Contact: " + gContact + " with Description Empty.");
+                }
+            }
         }
     }
 }

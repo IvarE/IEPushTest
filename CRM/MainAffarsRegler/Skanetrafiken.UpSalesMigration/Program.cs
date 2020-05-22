@@ -17,15 +17,6 @@ using System.ServiceModel.Description;
 
 using ExcelApp = Microsoft.Office.Interop.Excel;
 
-using Team = Skanetrafiken.Crm.Schema.Generated.Team;
-using Account = Skanetrafiken.Crm.Schema.Generated.Account;
-using Contact = Skanetrafiken.Crm.Schema.Generated.Contact;
-using SystemUser = Skanetrafiken.Crm.Schema.Generated.SystemUser;
-using Annotation = Skanetrafiken.Crm.Schema.Generated.Annotation;
-using CustomerAddress = Skanetrafiken.Crm.Schema.Generated.CustomerAddress;
-using AccountState = Skanetrafiken.Crm.Schema.Generated.AccountState;
-using ContactState = Skanetrafiken.Crm.Schema.Generated.ContactState;
-
 namespace Skanetrafiken.UpSalesMigration
 {
     class Program
@@ -74,12 +65,12 @@ namespace Skanetrafiken.UpSalesMigration
 
             if (lSelectedColumns.Count == 0)
             {
-                _log.Info("No Columns found with Index: " + j);
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"No Columns found with Index: " + j);
                 return null;
             }
             else if (lSelectedColumns.Count > 1)
             {
-                _log.Info("One Or More Columns found with Index: " + j);
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"One Or More Columns found with Index: " + j);
                 return null;
             }
 
@@ -165,6 +156,7 @@ namespace Skanetrafiken.UpSalesMigration
             return null;
         }
 
+        ///////------------------------------------------------------OLD CODE----------------------------------------------------------------------------
         public static void LogExecuteMultipleResponses(ExecuteMultipleRequest requestWithResults, ExecuteMultipleResponse responseWithResults)
         {
             foreach (ExecuteMultipleResponseItem responseItem in responseWithResults.Responses)
@@ -233,6 +225,88 @@ namespace Skanetrafiken.UpSalesMigration
                     (ExecuteMultipleResponse)localContext.OrganizationService.Execute(requestWithResults);
 
                 LogExecuteMultipleResponses(requestWithResults, responseWithResults);
+            }
+        }
+
+        ///////-------------------------------------------------------OLD CODE---------------------------------------------------------------------------
+
+        public static void LogCrmContextMultipleResponses(SaveChangesResultCollection lResponses)
+        {
+            //TODO
+            try
+            {
+                foreach (SaveChangesResult response in lResponses)
+                {
+                    // A valid response.
+                    if (response.Error == null)
+                    {
+                        string id = (string)response.Response["id"];
+                        Entity entity = (Entity)response.Request["Target"];
+
+                        if(id == null || entity == null)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"A record has been created, but no id or Request was retrieved.");
+                            continue;
+                        }
+
+                        switch (entity.LogicalName)
+                        {
+                            case Account.EntityLogicalName:
+
+                                Account account = (Account)entity;
+                                _log.InfoFormat(CultureInfo.InvariantCulture, $"Account with Name: " + account.Name + " was created with id: " + id + ".");
+
+                                break;
+                            case Contact.EntityLogicalName:
+                                break;
+                            case "activity":
+                                break;
+                            case Lead.EntityLogicalName:
+                                break;
+                            case "opportunity":
+                                break;
+                            default:
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"No logs implemented for " + entity.LogicalName + ". Please contact you administrator.");
+                                break;
+                        }
+                    }
+                    //An error has occurred.
+                    else
+                    {
+                        Entity entity = (Entity)response.Request["Target"];
+
+                        if(entity == null)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"A record has failed to be created, but no Request was retrieved.");
+                            continue;
+                        }
+
+                        switch (entity.LogicalName)
+                        {
+                            case Account.EntityLogicalName:
+
+                                Account account = (Account)entity;
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Account with Name: " + account.Name + " was not created.");
+
+                                break;
+                            case Contact.EntityLogicalName:
+                                break;
+                            case "activity":
+                                break;
+                            case Lead.EntityLogicalName:
+                                break;
+                            case "opportunity":
+                                break;
+                            default:
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"No logs implemented for " + entity.LogicalName + ". Please contact you administrator.");
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error logging results. Details: " + e.Message);
             }
         }
 
@@ -559,7 +633,7 @@ namespace Skanetrafiken.UpSalesMigration
                 ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
                 ImportAccountRecords(localContext, crmContext, importExcelInfo);
                 SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                //TODO LOG RESPONSES
+                LogCrmContextMultipleResponses(responses);
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
             }
             catch (Exception e)
