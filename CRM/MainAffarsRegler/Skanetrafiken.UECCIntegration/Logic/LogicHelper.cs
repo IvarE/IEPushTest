@@ -253,6 +253,16 @@ namespace Skanetrafiken.UECCIntegration.Logic
 
                     lCompanyRoles.Remove(firstCompanyRole);
                 }
+                else
+                {
+                    Contact uContactC2 = new Contact();
+                    uContactC2.Id = (Guid)contact.ContactId;
+                    uContactC2.ed_BusinessContact = false;
+
+                    crmContext.Attach(uContactC2);
+                    crmContext.UpdateObject(uContactC2);
+                    _log.InfoFormat("Update Request Added for Contact: " + (Guid)contact.ContactId);
+                }
 
                 foreach (ed_CompanyRole companyRole in lCompanyRoles)
                 {
@@ -353,7 +363,7 @@ namespace Skanetrafiken.UECCIntegration.Logic
                         }
                         else if(message == "Update")
                         {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Contact entity with Id: " + contact.ContactId.ToString() + " was not updated with email: " + contact.EMailAddress1 + ". Details: " + response.Error.Message);
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Contact entity with Id: " + contact.ContactId + " was not updated with email: " + contact.EMailAddress1 + ". Details: " + response.Error.Message);
                         }
                     }
                 }

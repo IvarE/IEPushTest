@@ -4,6 +4,7 @@ using log4net;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Messages;
+using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using Skanetrafiken.Crm.Schema.Generated;
@@ -156,6 +157,31 @@ namespace Skanetrafiken.UpSalesMigration
             return null;
         }
 
+        public static OptionMetadataCollection GetOptionSetMetadata(Plugin.LocalPluginContext localContext, string entityName, string attributeName)
+        {
+            RetrieveAttributeRequest attributeRequest = new RetrieveAttributeRequest
+            {
+                EntityLogicalName = entityName,
+                LogicalName = attributeName,
+                RetrieveAsIfPublished = true
+            };
+
+            RetrieveAttributeResponse attributeResponse = (RetrieveAttributeResponse)localContext.OrganizationService.Execute(attributeRequest);
+            PicklistAttributeMetadata attributeMetadata = (PicklistAttributeMetadata)attributeResponse.AttributeMetadata;
+
+            return attributeMetadata?.OptionSet?.Options;
+        }
+
+        public static int? GetOptionSetValueByName(OptionMetadataCollection colOptions, string name)
+        {
+            OptionMetadata option = colOptions.FirstOrDefault(x => x.Label.UserLocalizedLabel.Label == name);
+
+            if (option == null)
+                return null;
+
+            return option.Value;
+        }
+
         ///////------------------------------------------------------OLD CODE----------------------------------------------------------------------------
         public static void LogExecuteMultipleResponses(ExecuteMultipleRequest requestWithResults, ExecuteMultipleResponse responseWithResults)
         {
@@ -240,7 +266,7 @@ namespace Skanetrafiken.UpSalesMigration
                     // A valid response.
                     if (response.Error == null)
                     {
-                        string id = (string)response.Response["id"];
+                        Guid id = (Guid)response.Response["id"];
                         Entity entity = (Entity)response.Request["Target"];
 
                         if(id == null || entity == null)
@@ -319,6 +345,8 @@ namespace Skanetrafiken.UpSalesMigration
             }
 
             ExcelApp.Range excelRange = importExcelInfo.excelRange;
+            OptionMetadataCollection colOpCompanyTrade = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_companytrade);
+            OptionMetadataCollection colOpBusinessType = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_BusinessType);
 
             for (int i = 2; i <= importExcelInfo.rowCount; i++)
             {
@@ -334,7 +362,7 @@ namespace Skanetrafiken.UpSalesMigration
                 {
                     if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
                     {
-                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The cell in position (" + i + "," + j + ") is null or empty.");
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"The cell in position (" + i + "," + j + ") is null or empty.");
                         continue;
                     }
 
@@ -351,24 +379,128 @@ namespace Skanetrafiken.UpSalesMigration
 
                     switch (name)
                     {
-                        case "CreateOn":
+                        case "Företagsnamn":
+                            nAccount.Name = value;
+                            break;
+                        case "Organisationsnummer":
+                            nAccount.edp_OrgNo = value;
+                            break;
+                        case "Besöksadress - Gatuadress":
+                            nAccount.Address1_Line2 = value;
+                            break;
+                        case "Besöksadress - Postnummer":
+                            nAccount.Address1_PostalCode = value;
+                            break;
+                        case "Besöksadress - Ort":
+                            nAccount.Address1_City = value;
+                            break;
+                        case "Besöksadress - Land":
+                            nAccount.Address1_Country = value;
+                            break;
+                        //case "Besöksadress - Land":
+                        //    nAccount.edp_address1_countryid = value;
+                        //    break;
+                        case "CS datum för senast adressändring":
+                            nAccount.ed_CSDateforlastaddressChange = value;
+                            break;
+                        case "E-post":
+                            nAccount.EMailAddress1 = value;
+                            break;
+                        case "Mobil":
+                            nAccount.Telephone1 = value;
+                            break;
+                        case "Webbplats":
+                            nAccount.WebSiteURL = value;
+                            break;
+                        case "Branchid":
+                            nAccount.ed_IndustryCodeId = value;
+                            break;
+                        case "Branch ":
+
+                            int? optionSetCT = GetOptionSetValueByName(colOpCompanyTrade, value);
+
+                            if (optionSetCT == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM.");
+                            }
+                            else
+                                nAccount.ed_companytrade = new OptionSetValue((int)optionSetCT);
+
+                            break;
+                        case "Bolagsformid":
+                            nAccount.ed_BusinessTypeId = value;
+                            break;
+                        case "Bolagsform":
+
+                            int? optionSetBT = GetOptionSetValueByName(colOpBusinessType, value);
+
+                            if (optionSetBT == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM.");
+                            }
+                            else
+                                nAccount.ed_BusinessType = new OptionSetValue((int)optionSetBT);
+
+                            break;
+                        case "Net Margin":
+                            nAccount.edp_NetMargin = value;
+                            break;
+                        case "Nettoresultat":
+
+                            decimal dNetProfit = decimal.MinValue;
+
+                            if (decimal.TryParse(value, out dNetProfit))
+                            {
+                                if (dNetProfit != decimal.MinValue)
+                                    nAccount.edp_NetProfit = new Money(dNetProfit);
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a decimal value.");
+
+                            break;
+                        case "Nettoomsättning":
+
+                            decimal dRevenue = decimal.MinValue;
+
+                            if (decimal.TryParse(value, out dRevenue))
+                            {
+                                if (dRevenue != decimal.MinValue)
+                                    nAccount.Revenue = new Money(dRevenue);
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a decimal value.");
+
+                            break;
+                        case "Totalt antal anställda 1":
+
+                            int iNEmployees = int.MinValue;
+
+                            if (int.TryParse(value, out iNEmployees))
+                            {
+                                if (iNEmployees != decimal.MinValue)
+                                    nAccount.NumberOfEmployees = iNEmployees;
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to an integer value.");
+
+                            break;
+
+
+                        //-----------------------------------------------------OLD MAPPINGS---------------------------------------------------------
+                        case "CreateOn - test":
 
                             DateTime dateTime = DateTime.MinValue;
 
-                            if(DateTime.TryParse(value, out dateTime))
+                            if (DateTime.TryParse(value, out dateTime))
                             {
-                                if(dateTime != DateTime.MinValue)
+                                if (dateTime != DateTime.MinValue)
                                     nAccount.OverriddenCreatedOn = dateTime;
                             }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
 
                             break;
-                        case "Företagsnamn": nAccount.Name = value;
-                            break;
-                        case "Telefon": nAccount.Telephone2 = value;
-                            break;
-                        case "Webbplats": nAccount.WebSiteURL = value;
-                            break;
-                        case "Företag: Kontoansvarig":
+                        case "Owner - ToBeDefined - test":
 
                             EntityReference erOwner = GetCrmUserOrTeamByName(localContext, value);
 
@@ -384,7 +516,7 @@ namespace Skanetrafiken.UpSalesMigration
                                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Owner of the Account was not found.");
 
                             break;
-                        case "Företag: Moderbolag":
+                        case "Företag: Moderbolag - test":
 
                             EntityReference erParentAccount = GetCrmAccountByName(localContext, value);
 
@@ -394,53 +526,34 @@ namespace Skanetrafiken.UpSalesMigration
                                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Parent Account of the Account was not found or it was already null.");
 
                             break;
-                        case "Företag: Anteckningar": noteText = value;
+                        case "Företag: Anteckningar - test": noteText = value;
                             break;
-                        case "Företag: Postadress: Fullständig adress": street2 = value;
+                        case "Företag: Postadress: Fullständig adress - test": street2 = value;
                             break;
-                        case "Företag: Postadress: Stad": city = value;
+                        case "Företag: Postadress: Stad - test": city = value;
                             break;
-                        case "Företag: Postadress: Land": country = value;
+                        case "Företag: Postadress: Land - test": country = value;
                             break;
-                        case "Företag: Postadress: Postnummer": postalCode = value;
+                        case "Företag: Postadress: Postnummer - test": postalCode = value;
                             break;
-                        case "Besöksadress (gata)": nAccount.Address1_Line1 = value;
+                        case "Företag: Besöksadress: Län - test": nAccount.Address1_County = value;
                             break;
-                        case "Besöksadress (ort)": nAccount.Address1_City = value;
+                        case "Företag: Faktureringsadress: Fullständig adress - test": nAccount.Address2_Line1 = value;
                             break;
-                        case "Land": nAccount.Address1_Country = value;
+                        case "Företag: Faktureringsadress: Stad - test": nAccount.Address2_City = value;
                             break;
-                        case "Företag: Besöksadress: Län": nAccount.Address1_County = value;
+                        case "Företag: Faktureringsadress: Land - test": nAccount.Address2_Country = value;
                             break;
-                        case "Besöksadress (postnummer)": nAccount.Address1_PostalCode = value;
+                        case "Företag: Faktureringsadress: Län - test": nAccount.Address2_County = value;
                             break;
-                        case "Företag: Faktureringsadress: Fullständig adress": nAccount.Address2_Line1 = value;
-                            break;
-                        case "Företag: Faktureringsadress: Stad": nAccount.Address2_City = value;
-                            break;
-                        case "Företag: Faktureringsadress: Land": nAccount.Address2_Country = value;
-                            break;
-                        case "Företag: Faktureringsadress: Län": nAccount.Address2_County = value;
-                            break;
-                        case "Företag: Faktureringsadress: Postnummer": nAccount.Address2_PostalCode = value;
-                            break;
-                        case "Org.nr/VATnr": nAccount.cgi_organizational_number = value;
-                            break;
-                        case "Företag: Antal anställda":
-
-                            int iValue;
-
-                            if(int.TryParse(value, out iValue))
-                                nAccount.NumberOfEmployees = iValue;
-                            else
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"It was not possible to convert " + value + " to an integer.");
-
+                        case "Företag: Faktureringsadress: Postnummer - test": nAccount.Address2_PostalCode = value;
                             break;
                         default: _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
                             break;
                     }
                 }
 
+                nAccount.ed_InfotainmentCustomer = true;
                 nAccount.StateCode = AccountState.Active;
 
                 crmContext.AddObject(nAccount);
@@ -623,7 +736,7 @@ namespace Skanetrafiken.UpSalesMigration
             SaveChangesOptions optionsChanges = SaveChangesOptions.ContinueOnError;
 
             string relativeExcelPath = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.ExcelRelativePath);
-            string fileName = "Skånetrafiken företag 2020-05-18 (version 1).xlsx";
+            string fileName = "Spann 5 - nya datakällor 2020-05-25.xlsx";
 
             #region Import Accounts
 
