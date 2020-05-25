@@ -579,7 +579,8 @@ namespace Skanetrafiken.Crm
                 ed_SalesOrderId = salesOrderId,
                 st_SalesOrderLineID = salesOrderLineInfo.OrderLineNo,
                 ed_OrderStatus = orderStatus,
-                ed_SKAkort = skaKort
+                ed_SKAkort = skaKort,
+                ed_Amount = salesOrderLineInfo.Amount
             };
             
             return salesOrderLine;
