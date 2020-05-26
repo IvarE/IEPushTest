@@ -2144,6 +2144,8 @@ namespace Skanetrafiken.Crm.Controllers
                     //TODO LOGIC
 
                     List<OrderMQInfo> lOrdersInfo = new List<OrderMQInfo>();
+                    //Probabiliy = 100
+                    //StatusCode = Complete/100001
 
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                     resp.Content = new StringContent(SerializeNoNull(lOrdersInfo));

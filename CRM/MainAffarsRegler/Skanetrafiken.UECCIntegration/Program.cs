@@ -51,7 +51,7 @@ namespace Skanetrafiken.UECCIntegration
         {
             try
             {
-                ConnectToMSCRM("D1\\CRMAdmin", "uSEme2!nstal1", "https://sekundtst.skanetrafiken.se/DKCRM/XRMServices/2011/Organization.svc");
+                ConnectToMSCRM("D1\\CRMAdmin", "uSEme2!nstal1", "https://sekunduat.skanetrafiken.se/DKCRM/XRMServices/2011/Organization.svc");
 
                 if (_service == null)
                     _log.ErrorFormat(CultureInfo.InvariantCulture, "The CRM Service is null.");
@@ -61,7 +61,7 @@ namespace Skanetrafiken.UECCIntegration
 
                 //At the end of each run, save the errorContacts and successContacts on another folder and delete the files. 
                 //For next batch of records
-                bool firstRun = false; //Change this flag to run for the remaining Contacts that throw errors
+                bool firstRun = true; //Change this flag to run for the remaining Contacts that throw errors
 
                 if (firstRun)
                     LogicHelper.RunLogic(localContext, crmContext);

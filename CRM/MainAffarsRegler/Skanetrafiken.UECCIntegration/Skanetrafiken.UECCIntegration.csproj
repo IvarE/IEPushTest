@@ -89,6 +89,9 @@
     <Compile Include="..\Skanetrafiken.Crm\EntityExtensionMethods.cs">
       <Link>CrmHelper\EntityExtensionMethods.cs</Link>
     </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\GeneratedEntities.cs">
+      <Link>GeneratedEntities.cs</Link>
+    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Plugin.cs">
       <Link>CrmHelper\Plugin.cs</Link>
     </Compile>
@@ -98,7 +101,6 @@
     <Compile Include="..\Skanetrafiken.Crm\XrmRetrieveHelper.cs">
       <Link>CrmHelper\XrmRetrieveHelper.cs</Link>
     </Compile>
-    <Compile Include="AUXGeneratedEntities.cs" />
     <Compile Include="CrmHelper\CrmConnection.cs" />
     <Compile Include="CrmHelper\ServiceProvider.cs" />
     <Compile Include="CrmHelper\TracingService.cs" />

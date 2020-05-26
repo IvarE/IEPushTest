@@ -102,6 +102,7 @@
 
     <optionset>contact_statuscode</optionset>
     <optionset>contact_accountrolecode</optionset>
+    <optionset>contact_ed_functioncontext</optionset>
     <optionset>customeraddress_addresstypecode</optionset>
     <optionset>email_statuscode</optionset>
     <optionset>lead_statuscode</optionset>
