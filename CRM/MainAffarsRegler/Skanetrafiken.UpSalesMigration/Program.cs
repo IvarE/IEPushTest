@@ -719,6 +719,7 @@ namespace Skanetrafiken.UpSalesMigration
                     }
 
                     nContact.StateCode = ContactState.Active;
+                    nContact.ed_InformationSource = ed_informationsource.AdmAndraKund;
                     nContact.ed_InfotainmentContact = true;
 
                     //Not possible to generate contact_ed_functioncontext 899310000 - Ansvarig för Infotainment
