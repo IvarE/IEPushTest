@@ -2437,6 +2437,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_upsalesid")]
+		public string ed_UpsalesId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_upsalesid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_upsalesid", value);
+			}
+		}
+		
+		/// <summary>
 		/// Unique identifier for Country associated with Account.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("edp_address1_countryid")]
@@ -4838,6 +4854,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_TypeOfAccount = "ed_typeofaccount";
 			
+			public const string ed_UpsalesId = "ed_upsalesid";
+			
 			public const string edp_Address1_CountryId = "edp_address1_countryid";
 			
 			public const string edp_Address2_CountryId = "edp_address2_countryid";
@@ -5155,6 +5173,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_ReferencePortal = 100;
 			
 			public const int ed_SubOrgNamn = 100;
+			
+			public const int ed_UpsalesId = 100;
 			
 			public const int edp_CreditSafeId = 100;
 			
@@ -20233,6 +20253,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_jojocarddetailsapi")]
+		public string ed_JojoCardDetailsAPI
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_jojocarddetailsapi");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_jojocarddetailsapi", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_leadvalidityhours")]
 		public System.Nullable<int> ed_LeadValidityHours
 		{
@@ -21141,6 +21177,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_EmailValidationSite = "ed_emailvalidationsite";
 			
+			public const string ed_JojoCardDetailsAPI = "ed_jojocarddetailsapi";
+			
 			public const string ed_LeadValidityHours = "ed_leadvalidityhours";
 			
 			public const string ed_MaxAmountForCompensationLoss = "ed_maxamountforcompensationloss";
@@ -21310,6 +21348,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_CRMPlusService = 255;
 			
 			public const int ed_EmailValidationSite = 400;
+			
+			public const int ed_JojoCardDetailsAPI = 100;
 			
 			public const int ed_MklEndpoint = 100;
 			
@@ -23104,13 +23144,27 @@ namespace Skanetrafiken.Crm.Schema.Generated
 	public enum contact_accountrolecode
 	{
 		
-		DecisionMaker = 1,
+		VD = 899310000,
 		
-		MarketingResponible = 2,
+		MarknadForsaljningsansvarig = 899310001,
 		
-		Influencer = 3,
+		Annanroll = 899310003,
+		
+		ITansvarig = 899310008,
+		
+		ForvaltningAvdelningschef = 899310009,
+		
+		Ekonomiansvarig = 899310010,
 		
 		InvoiceResponsible = 4,
+		
+		HRPersonalansvarig = 899310004,
+		
+		ServiceSupportansvarig = 899310005,
+		
+		Produktionsansvarig = 899310006,
+		
+		HallbarhetMiljoansvarig = 899310007,
 		
 		PurchasingManager = 5,
 		
@@ -23118,19 +23172,13 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		Stakeholder = 7,
 		
-		HeadofInformation = 17,
-		
-		CommunicationsOfficer = 11,
-		
 		SustainabilityManager = 12,
 		
 		Other = 13,
 		
-		HeadofDepartment = 15,
-		
-		HeadofCommunications = 16,
-		
 		PortalAdministrator = 6,
+		
+		InformationKommunikationsansvarig = 899310002,
 		
 		PortalAdministratorSenior = 10,
 		
@@ -25832,6 +25880,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Kontaktens ansvar i förhållande till Skånetrafiken
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_functioncontext")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ed_functioncontext
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("ed_functioncontext");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_functioncontext", value);
+			}
+		}
+		
+		/// <summary>
 		/// Används för t.ex formatkontroll av personnummer
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_hasswedishsocialsecuritynumber")]
@@ -26087,6 +26151,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Det som finns på visitkortet. Ansvaret som beskrivs utifrån kundens perspektiv och kontaktens eget uttalade ansvar i verksamheten.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_title")]
+		public string ed_title
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_title");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_title", value);
+			}
+		}
+		
+		/// <summary>
 		/// 
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_updatedfb")]
@@ -26115,6 +26195,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_updatedfbdate", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_upsalesid")]
+		public string ed_UpsalesId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_upsalesid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_upsalesid", value);
 			}
 		}
 		
@@ -29516,6 +29612,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_EmailToBeVerified = "ed_emailtobeverified";
 			
+			public const string ed_functioncontext = "ed_functioncontext";
+			
 			public const string ed_HasSwedishSocialSecurityNumber = "ed_hasswedishsocialsecuritynumber";
 			
 			public const string ed_InformationSource = "ed_informationsource";
@@ -29546,9 +29644,13 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_SourceCampaignId = "ed_sourcecampaignid";
 			
+			public const string ed_title = "ed_title";
+			
 			public const string ed_UpdatedFB = "ed_updatedfb";
 			
 			public const string ed_UpdatedFBDate = "ed_updatedfbdate";
+			
+			public const string ed_UpsalesId = "ed_upsalesid";
 			
 			public const string ed_VerifiedSSN = "ed_verifiedssn";
 			
@@ -30029,6 +30131,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_SocialSecurityNumber2 = 100;
 			
 			public const int ed_SocialSecurityNumberBlock = 100;
+			
+			public const int ed_title = 200;
+			
+			public const int ed_UpsalesId = 100;
 			
 			public const int EMailAddress1 = 100;
 			
@@ -62168,6 +62274,12 @@ namespace Skanetrafiken.Crm.Schema.Generated
 	
 	public enum lead_leadsourcecode
 	{
+		
+		Mediabyra = 899310008,
+		
+		Bokningsfirma = 899310009,
+		
+		Motesbokning = 899310010,
 		
 		Foretagslead = 899310003,
 		
