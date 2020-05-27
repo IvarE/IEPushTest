@@ -3932,6 +3932,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N Account_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Account_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> Account_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Account_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Account_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N Account_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Account_AsyncOperations")]
@@ -4072,6 +4088,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Account>("account_parent_account", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Account_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Account_Phonecalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> Account_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Account_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Account_Phonecalls", null, value);
 			}
 		}
 		
@@ -5548,6 +5580,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 appointment_activity_parties
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activityid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("appointment_activity_parties")]
+		public Skanetrafiken.Crm.Schema.Generated.Appointment appointment_activity_parties
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Appointment>("appointment_activity_parties", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Appointment>("appointment_activity_parties", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 campaign_activity_parties
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("partyid")]
@@ -5680,6 +5729,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Lead>("lead_activity_parties", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 phonecall_activity_parties
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activityid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("phonecall_activity_parties")]
+		public Skanetrafiken.Crm.Schema.Generated.PhoneCall phonecall_activity_parties
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("phonecall_activity_parties", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("phonecall_activity_parties", null, value);
 			}
 		}
 		
@@ -6209,6 +6275,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("annotation_owning_user", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Appointment_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Appointment_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.Appointment Appointment_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Appointment>("Appointment_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Appointment>("Appointment_Annotation", null, value);
 			}
 		}
 		
@@ -6792,6 +6875,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 PhoneCall_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("PhoneCall_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.PhoneCall PhoneCall_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("PhoneCall_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("PhoneCall_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 Product_Annotation
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
@@ -6910,6 +7010,1767 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int StepId = 32;
 			
 			public const int Subject = 500;
+		}
+	}
+	
+	public enum AppointmentState
+	{
+		
+		Open = 0,
+		
+		Completed = 1,
+		
+		Canceled = 2,
+		
+		Scheduled = 3,
+	}
+	
+	/// <summary>
+	/// Commitment representing a time interval with start/end times and duration.
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("appointment")]
+	public partial class Appointment : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public Appointment() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "appointment";
+		
+		public const int EntityTypeCode = 4201;
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activityadditionalparams")]
+		public string ActivityAdditionalParams
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("activityadditionalparams");
+			}
+			set
+			{
+				this.SetAttributeValue("activityadditionalparams", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the appointment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activityid")]
+		public System.Nullable<System.Guid> ActivityId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("activityid");
+			}
+			set
+			{
+				this.SetAttributeValue("activityid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activityid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.ActivityId = value;
+			}
+		}
+		
+		/// <summary>
+		/// Type of activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activitytypecode")]
+		public string ActivityTypeCode
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("activitytypecode");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the value selected in the Duration field on the appointment at the time that the appointment is closed as completed. The duration is used to report the time spent on the activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("actualdurationminutes")]
+		public System.Nullable<int> ActualDurationMinutes
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("actualdurationminutes");
+			}
+			set
+			{
+				this.SetAttributeValue("actualdurationminutes", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the actual end date and time of the appointment. By default, it displays the date and time when the activity was completed or canceled, but can be edited to capture the actual duration of the appointment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("actualend")]
+		public System.Nullable<System.DateTime> ActualEnd
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("actualend");
+			}
+			set
+			{
+				this.SetAttributeValue("actualend", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the actual start date and time for the appointment. By default, it displays the date and time when the activity was created, but can be edited to capture the actual duration of the appointment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("actualstart")]
+		public System.Nullable<System.DateTime> ActualStart
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("actualstart");
+			}
+			set
+			{
+				this.SetAttributeValue("actualstart", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the number of attachments on the appointment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("attachmentcount")]
+		public System.Nullable<int> AttachmentCount
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("attachmentcount");
+			}
+		}
+		
+		/// <summary>
+		/// Select the error code to identify issues with the outlook item recipients or attachments, such as blocked attachments.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("attachmenterrors")]
+		public Microsoft.Xrm.Sdk.OptionSetValue AttachmentErrors
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("attachmenterrors");
+			}
+			set
+			{
+				this.SetAttributeValue("attachmenterrors", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a category to identify the appointment type, such as sales demo, prospect call, or service call, to tie the appointment to a business group or function.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("category")]
+		public string Category
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("category");
+			}
+			set
+			{
+				this.SetAttributeValue("category", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows who created the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was created. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who created the record on behalf of another user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Type additional information to describe the purpose of the appointment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("description")]
+		public string Description
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("description");
+			}
+			set
+			{
+				this.SetAttributeValue("description", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the conversion rate of the record's currency. The exchange rate is used to convert all money fields in the record from the local currency to the system's default currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the appointment in Microsoft Office Outlook. The ID is used to synchronize the appointment between Microsoft Dynamics CRM and the correct Exchange account.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("globalobjectid")]
+		public string GlobalObjectId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("globalobjectid");
+			}
+			set
+			{
+				this.SetAttributeValue("globalobjectid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data import or data migration that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type of instance of a recurring series.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("instancetypecode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue InstanceTypeCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("instancetypecode");
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the appointment is an all-day event to make sure that the required resources are scheduled for the full day.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isalldayevent")]
+		public System.Nullable<bool> IsAllDayEvent
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isalldayevent");
+			}
+			set
+			{
+				this.SetAttributeValue("isalldayevent", value);
+			}
+		}
+		
+		/// <summary>
+		/// Information regarding whether the appointment was billed as part of resolving a case.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isbilled")]
+		public System.Nullable<bool> IsBilled
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isbilled");
+			}
+			set
+			{
+				this.SetAttributeValue("isbilled", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ismapiprivate")]
+		public System.Nullable<bool> IsMapiPrivate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ismapiprivate");
+			}
+			set
+			{
+				this.SetAttributeValue("ismapiprivate", value);
+			}
+		}
+		
+		/// <summary>
+		/// Information regarding whether the activity is a regular activity type or event type.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isregularactivity")]
+		public System.Nullable<bool> IsRegularActivity
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isregularactivity");
+			}
+		}
+		
+		/// <summary>
+		/// Information regarding whether the appointment was created from a workflow rule.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isworkflowcreated")]
+		public System.Nullable<bool> IsWorkflowCreated
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isworkflowcreated");
+			}
+			set
+			{
+				this.SetAttributeValue("isworkflowcreated", value);
+			}
+		}
+		
+		/// <summary>
+		/// Contains the date and time stamp of the last on hold time.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("lastonholdtime")]
+		public System.Nullable<System.DateTime> LastOnHoldTime
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("lastonholdtime");
+			}
+			set
+			{
+				this.SetAttributeValue("lastonholdtime", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the location where the appointment will take place, such as a conference room or customer office.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("location")]
+		public string Location
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("location");
+			}
+			set
+			{
+				this.SetAttributeValue("location", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows who last updated the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only. 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedfieldsmask")]
+		public string ModifiedFieldsMask
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("modifiedfieldsmask");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was last updated. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who created the record on behalf of another user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows how long, in minutes, that the record was on hold.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("onholdtime")]
+		public System.Nullable<int> OnHoldTime
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("onholdtime");
+			}
+		}
+		
+		/// <summary>
+		/// Enter the account, contact, lead, user, or other equipment resources that are not needed at the appointment, but can optionally attend.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("optionalattendees")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> OptionalAttendees
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.EntityCollection collection = this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityCollection>("optionalattendees");
+				if (((collection != null) 
+							&& (collection.Entities != null)))
+				{
+					return System.Linq.Enumerable.Cast<Skanetrafiken.Crm.Schema.Generated.ActivityParty>(collection.Entities);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("optionalattendees", value);
+				}
+				else
+				{
+					this.SetAttributeValue("optionalattendees", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Enter the user who is in charge of coordinating or leading the appointment to make sure the appointment is displayed in the user's My Activities view.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("organizer")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> Organizer
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.EntityCollection collection = this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityCollection>("organizer");
+				if (((collection != null) 
+							&& (collection.Entities != null)))
+				{
+					return System.Linq.Enumerable.Cast<Skanetrafiken.Crm.Schema.Generated.ActivityParty>(collection.Entities);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("organizer", value);
+				}
+				else
+				{
+					this.SetAttributeValue("organizer", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// The original start date of the appointment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("originalstartdate")]
+		public System.Nullable<System.DateTime> OriginalStartDate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("originalstartdate");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the Microsoft Office Outlook appointment owner that correlates to the PR_OWNER_APPT_ID MAPI property.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("outlookownerapptid")]
+		public System.Nullable<int> OutlookOwnerApptId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("outlookownerapptid");
+			}
+			set
+			{
+				this.SetAttributeValue("outlookownerapptid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the user or team who is assigned to manage the record. This field is updated every time the record is assigned to a different user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ownerid")]
+		public Microsoft.Xrm.Sdk.EntityReference OwnerId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ownerid");
+			}
+			set
+			{
+				this.SetAttributeValue("ownerid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the business unit that the record owner belongs to.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningbusinessunit")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningBusinessUnit
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningbusinessunit");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the team that owns the appointment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningTeam
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningteam");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user that owns the appointment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningUser
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owninguser");
+			}
+		}
+		
+		/// <summary>
+		/// Select the priority so that preferred customers or critical issues are handled quickly.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("prioritycode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PriorityCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("prioritycode");
+			}
+			set
+			{
+				this.SetAttributeValue("prioritycode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the process.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("processid")]
+		public System.Nullable<System.Guid> ProcessId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("processid");
+			}
+			set
+			{
+				this.SetAttributeValue("processid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the object with which the appointment is associated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		public Microsoft.Xrm.Sdk.EntityReference RegardingObjectId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("regardingobjectid");
+			}
+			set
+			{
+				this.SetAttributeValue("regardingobjectid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the account, contact, lead, user, or other equipment resources that are required to attend the appointment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("requiredattendees")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> RequiredAttendees
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.EntityCollection collection = this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityCollection>("requiredattendees");
+				if (((collection != null) 
+							&& (collection.Entities != null)))
+				{
+					return System.Linq.Enumerable.Cast<Skanetrafiken.Crm.Schema.Generated.ActivityParty>(collection.Entities);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("requiredattendees", value);
+				}
+				else
+				{
+					this.SetAttributeValue("requiredattendees", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Shows the expected duration of the appointment, in minutes.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("scheduleddurationminutes")]
+		public System.Nullable<int> ScheduledDurationMinutes
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("scheduleddurationminutes");
+			}
+			set
+			{
+				this.SetAttributeValue("scheduleddurationminutes", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the expected due date and time for the activity to be completed to provide details about the timing of the appointment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("scheduledend")]
+		public System.Nullable<System.DateTime> ScheduledEnd
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("scheduledend");
+			}
+			set
+			{
+				this.SetAttributeValue("scheduledend", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the expected start date and time for the activity to provide details about the timing of the appointment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("scheduledstart")]
+		public System.Nullable<System.DateTime> ScheduledStart
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("scheduledstart");
+			}
+			set
+			{
+				this.SetAttributeValue("scheduledstart", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the recurring series of an instance.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("seriesid")]
+		public System.Nullable<System.Guid> SeriesId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("seriesid");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for an associated service.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("serviceid")]
+		public Microsoft.Xrm.Sdk.EntityReference ServiceId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("serviceid");
+			}
+			set
+			{
+				this.SetAttributeValue("serviceid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the service level agreement (SLA) that you want to apply to the appointment record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("slaid")]
+		public Microsoft.Xrm.Sdk.EntityReference SLAId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("slaid");
+			}
+			set
+			{
+				this.SetAttributeValue("slaid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Last SLA that was applied to this appointment. This field is for internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("slainvokedid")]
+		public Microsoft.Xrm.Sdk.EntityReference SLAInvokedId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("slainvokedid");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the stage.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		public System.Nullable<System.Guid> StageId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("stageid");
+			}
+			set
+			{
+				this.SetAttributeValue("stageid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows whether the appointment is open, completed, or canceled. Completed and canceled appointments are read-only and can't be edited.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.AppointmentState> StateCode
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.AppointmentState)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.AppointmentState), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("statecode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statecode", new Microsoft.Xrm.Sdk.OptionSetValue(((int)(value))));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Select the appointment's status.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue StatusCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+			}
+			set
+			{
+				this.SetAttributeValue("statuscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a subcategory to identify the appointment type and relate the activity to a specific product, sales region, business group, or other function.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("subcategory")]
+		public string Subcategory
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("subcategory");
+			}
+			set
+			{
+				this.SetAttributeValue("subcategory", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a short description about the objective or primary topic of the appointment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("subject")]
+		public string Subject
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("subject");
+			}
+			set
+			{
+				this.SetAttributeValue("subject", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("subscriptionid")]
+		public System.Nullable<System.Guid> SubscriptionId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("subscriptionid");
+			}
+			set
+			{
+				this.SetAttributeValue("subscriptionid", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timezoneruleversionnumber")]
+		public System.Nullable<int> TimeZoneRuleVersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("timezoneruleversionnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the local currency for the record to make sure budgets are reported in the correct currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public Microsoft.Xrm.Sdk.EntityReference TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("traversedpath")]
+		public string TraversedPath
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("traversedpath");
+			}
+			set
+			{
+				this.SetAttributeValue("traversedpath", value);
+			}
+		}
+		
+		/// <summary>
+		/// Time zone code that was in use when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("utcconversiontimezonecode")]
+		public System.Nullable<int> UTCConversionTimeZoneCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("utcconversiontimezonecode");
+			}
+			set
+			{
+				this.SetAttributeValue("utcconversiontimezonecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the appointment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N appointment_activity_parties
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("appointment_activity_parties")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> appointment_activity_parties
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ActivityParty>("appointment_activity_parties", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ActivityParty>("appointment_activity_parties", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Appointment_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Appointment_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> Appointment_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Appointment_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Appointment_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Appointment_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Appointment_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> Appointment_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("Appointment_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("Appointment_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N appointment_campaignresponse
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("appointment_campaignresponse")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.CampaignResponse> appointment_campaignresponse
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.CampaignResponse>("appointment_campaignresponse", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.CampaignResponse>("appointment_campaignresponse", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Appointment_QueueItem
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Appointment_QueueItem")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QueueItem> Appointment_QueueItem
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QueueItem>("Appointment_QueueItem", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QueueItem>("Appointment_QueueItem", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Account_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Account_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.Account Account_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("Account_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("Account_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Campaign_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Campaign_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.Campaign Campaign_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Campaign>("Campaign_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Campaign>("Campaign_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 cgi_travelcard_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cgi_travelcard_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.cgi_travelcard cgi_travelcard_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.cgi_travelcard>("cgi_travelcard_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.cgi_travelcard>("cgi_travelcard_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Contact_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Contact_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact Contact_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("Contact_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("Contact_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_biffintegrationerrorlog_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlog_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_biffintegrationerrorlog ed_biffintegrationerrorlog_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_biffintegrationerrorlog>("ed_biffintegrationerrorlog_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_biffintegrationerrorlog>("ed_biffintegrationerrorlog_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_biffintegrationerrorlogrow_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlogrow_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_BiffIntegrationErrorLogRow ed_biffintegrationerrorlogrow_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_BiffIntegrationErrorLogRow>("ed_biffintegrationerrorlogrow_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_BiffIntegrationErrorLogRow>("ed_biffintegrationerrorlogrow_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_companyrole_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_companyrole_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_CompanyRole ed_companyrole_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_CompanyRole>("ed_companyrole_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_CompanyRole>("ed_companyrole_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_deltabatcherrorlog_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlog_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLog ed_deltabatcherrorlog_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLog>("ed_deltabatcherrorlog_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLog>("ed_deltabatcherrorlog_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_deltabatcherrorlogrow_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlogrow_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLogRow ed_deltabatcherrorlogrow_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLogRow>("ed_deltabatcherrorlogrow_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLogRow>("ed_deltabatcherrorlogrow_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_deltabatchlog_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchlog_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchLog ed_deltabatchlog_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchLog>("ed_deltabatchlog_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchLog>("ed_deltabatchlog_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_deltabatchqueue_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchqueue_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue ed_deltabatchqueue_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue>("ed_deltabatchqueue_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue>("ed_deltabatchqueue_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_emailtemplateproxy_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_emailtemplateproxy_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_emailtemplateproxy ed_emailtemplateproxy_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_emailtemplateproxy>("ed_emailtemplateproxy_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_emailtemplateproxy>("ed_emailtemplateproxy_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_featuretoggling_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_featuretoggling_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_FeatureToggling ed_featuretoggling_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_FeatureToggling>("ed_featuretoggling_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_FeatureToggling>("ed_featuretoggling_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_orderstatus_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_orderstatus_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_OrderStatus ed_orderstatus_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_OrderStatus>("ed_orderstatus_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_OrderStatus>("ed_orderstatus_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_salesorderline_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderline_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_salesorderline ed_salesorderline_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("ed_salesorderline_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("ed_salesorderline_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_salesorderlinetraveller_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderlinetraveller_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_salesorderlinetraveller ed_salesorderlinetraveller_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_salesorderlinetraveller>("ed_salesorderlinetraveller_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_salesorderlinetraveller>("ed_salesorderlinetraveller_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_senttextmessage_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_senttextmessage_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_senttextmessage ed_senttextmessage_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_senttextmessage>("ed_senttextmessage_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_senttextmessage>("ed_senttextmessage_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_skakort_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_skakort_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_SKAkort ed_skakort_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_SKAkort>("ed_skakort_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_SKAkort>("ed_skakort_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_textmessagetemplate_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_textmessagetemplate_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_TextMessageTemplate ed_textmessagetemplate_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_TextMessageTemplate>("ed_textmessagetemplate_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_TextMessageTemplate>("ed_textmessagetemplate_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_valuecode_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecode_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_ValueCode ed_valuecode_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ValueCode>("ed_valuecode_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ValueCode>("ed_valuecode_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_valuecodeapproval_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodeapproval_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_ValueCodeApproval ed_valuecodeapproval_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ValueCodeApproval>("ed_valuecodeapproval_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ValueCodeApproval>("ed_valuecodeapproval_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_valuecodetemplate_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetemplate_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_valuecodetemplate ed_valuecodetemplate_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_valuecodetemplate>("ed_valuecodetemplate_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_valuecodetemplate>("ed_valuecodetemplate_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_valuecodetransaction_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetransaction_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_valuecodetransaction ed_valuecodetransaction_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_valuecodetransaction>("ed_valuecodetransaction_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_valuecodetransaction>("ed_valuecodetransaction_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Incident_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Incident_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.Incident Incident_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("Incident_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("Incident_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Lead_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Lead_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.Lead Lead_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Lead>("Lead_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Lead>("Lead_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_appointment_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_appointment_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_appointment_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_appointment_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_appointment_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_appointment_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_appointment_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_appointment_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_appointment_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_appointment_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_appointment_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_appointment_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_appointment_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_appointment_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_appointment_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_appointment_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 processstage_appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.ProcessStage processstage_appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 st_singaporeticket_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("st_singaporeticket_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.st_singaporeticket st_singaporeticket_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket>("st_singaporeticket_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket>("st_singaporeticket_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_appointment
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_appointment")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_appointment
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_appointment", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 user_appointment
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_appointment")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser user_appointment
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("user_appointment", null);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string ActivityAdditionalParams = "activityadditionalparams";
+			
+			public const string ActivityId = "activityid";
+			
+			public const string Id = "activityid";
+			
+			public const string ActivityTypeCode = "activitytypecode";
+			
+			public const string ActualDurationMinutes = "actualdurationminutes";
+			
+			public const string ActualEnd = "actualend";
+			
+			public const string ActualStart = "actualstart";
+			
+			public const string AttachmentCount = "attachmentcount";
+			
+			public const string AttachmentErrors = "attachmenterrors";
+			
+			public const string Category = "category";
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string Description = "description";
+			
+			public const string ExchangeRate = "exchangerate";
+			
+			public const string GlobalObjectId = "globalobjectid";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string InstanceTypeCode = "instancetypecode";
+			
+			public const string IsAllDayEvent = "isalldayevent";
+			
+			public const string IsBilled = "isbilled";
+			
+			public const string IsMapiPrivate = "ismapiprivate";
+			
+			public const string IsRegularActivity = "isregularactivity";
+			
+			public const string IsWorkflowCreated = "isworkflowcreated";
+			
+			public const string LastOnHoldTime = "lastonholdtime";
+			
+			public const string Location = "location";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedFieldsMask = "modifiedfieldsmask";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string OnHoldTime = "onholdtime";
+			
+			public const string OptionalAttendees = "optionalattendees";
+			
+			public const string Organizer = "organizer";
+			
+			public const string OriginalStartDate = "originalstartdate";
+			
+			public const string OutlookOwnerApptId = "outlookownerapptid";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string OwnerId = "ownerid";
+			
+			public const string OwningBusinessUnit = "owningbusinessunit";
+			
+			public const string OwningTeam = "owningteam";
+			
+			public const string OwningUser = "owninguser";
+			
+			public const string PriorityCode = "prioritycode";
+			
+			public const string ProcessId = "processid";
+			
+			public const string RegardingObjectId = "regardingobjectid";
+			
+			public const string RequiredAttendees = "requiredattendees";
+			
+			public const string ScheduledDurationMinutes = "scheduleddurationminutes";
+			
+			public const string ScheduledEnd = "scheduledend";
+			
+			public const string ScheduledStart = "scheduledstart";
+			
+			public const string SeriesId = "seriesid";
+			
+			public const string ServiceId = "serviceid";
+			
+			public const string SLAId = "slaid";
+			
+			public const string SLAInvokedId = "slainvokedid";
+			
+			public const string StageId = "stageid";
+			
+			public const string StateCode = "statecode";
+			
+			public const string StatusCode = "statuscode";
+			
+			public const string Subcategory = "subcategory";
+			
+			public const string Subject = "subject";
+			
+			public const string SubscriptionId = "subscriptionid";
+			
+			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
+			
+			public const string TraversedPath = "traversedpath";
+			
+			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
+			
+			public const string VersionNumber = "versionnumber";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int ActivityAdditionalParams = 8192;
+			
+			public const int Category = 250;
+			
+			public const int Description = 2000;
+			
+			public const int GlobalObjectId = 300;
+			
+			public const int Location = 200;
+			
+			public const int ModifiedFieldsMask = 1073741823;
+			
+			public const int Subcategory = 250;
+			
+			public const int Subject = 200;
+			
+			public const int TraversedPath = 1250;
 		}
 	}
 	
@@ -7694,6 +9555,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 Appointment_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Appointment_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.Appointment Appointment_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Appointment>("Appointment_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Appointment>("Appointment_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 Campaign_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -8456,6 +10334,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_asyncoperation_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 PhoneCall_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("PhoneCall_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.PhoneCall PhoneCall_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("PhoneCall_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("PhoneCall_AsyncOperations", null, value);
 			}
 		}
 		
@@ -10561,6 +12456,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N Campaign_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Campaign_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> Campaign_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Campaign_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Campaign_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N Campaign_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Campaign_AsyncOperations")]
@@ -10653,6 +12564,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("campaign_leads", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Campaign_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Campaign_Phonecalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> Campaign_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Campaign_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Campaign_Phonecalls", null, value);
 			}
 		}
 		
@@ -12456,6 +14383,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 appointment_campaignresponse
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("originatingactivityid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("appointment_campaignresponse")]
+		public Skanetrafiken.Crm.Schema.Generated.Appointment appointment_campaignresponse
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Appointment>("appointment_campaignresponse", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Appointment>("appointment_campaignresponse", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 Campaign_CampaignResponses
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -12606,6 +14550,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_campaignresponse_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 phonecall_campaignresponse
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("originatingactivityid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("phonecall_campaignresponse")]
+		public Skanetrafiken.Crm.Schema.Generated.PhoneCall phonecall_campaignresponse
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("phonecall_campaignresponse", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("phonecall_campaignresponse", null, value);
 			}
 		}
 		
@@ -22654,6 +24615,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N cgi_travelcard_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cgi_travelcard_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> cgi_travelcard_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("cgi_travelcard_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("cgi_travelcard_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N cgi_travelcard_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cgi_travelcard_AsyncOperations")]
@@ -22714,6 +24691,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("cgi_travelcard_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N cgi_travelcard_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cgi_travelcard_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> cgi_travelcard_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("cgi_travelcard_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("cgi_travelcard_PhoneCalls", null, value);
 			}
 		}
 		
@@ -23144,45 +25137,15 @@ namespace Skanetrafiken.Crm.Schema.Generated
 	public enum contact_accountrolecode
 	{
 		
-		VD = 899310000,
+		Ansvarigforinfotainment = 899310011,
 		
-		MarknadForsaljningsansvarig = 899310001,
+		Ansvarigforinkopavbiljetter = 899310012,
 		
-		Annanroll = 899310003,
+		Ansvarigforsamarbete = 899310013,
 		
-		ITansvarig = 899310008,
-		
-		ForvaltningAvdelningschef = 899310009,
-		
-		Ekonomiansvarig = 899310010,
-		
-		InvoiceResponsible = 4,
-		
-		HRPersonalansvarig = 899310004,
-		
-		ServiceSupportansvarig = 899310005,
-		
-		Produktionsansvarig = 899310006,
-		
-		HallbarhetMiljoansvarig = 899310007,
-		
-		PurchasingManager = 5,
-		
-		SalesManager = 14,
-		
-		Stakeholder = 7,
-		
-		SustainabilityManager = 12,
-		
-		Other = 13,
-		
-		HeadofDepartment = 15,
-		
-		HeadofCommunications = 16,
+		Ingetansvar = 899310014,
 		
 		PortalAdministrator = 6,
-		
-		InformationKommunikationsansvarig = 899310002,
 		
 		PortalAdministratorSenior = 10,
 		
@@ -28557,6 +30520,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N Contact_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Contact_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> Contact_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Contact_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Contact_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N contact_as_primary_contact
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("contact_as_primary_contact")]
@@ -28713,6 +30692,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Contact>("contact_master_contact", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Contact_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Contact_Phonecalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> Contact_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Contact_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Contact_Phonecalls", null, value);
 			}
 		}
 		
@@ -31582,6 +33577,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_biffintegrationerrorlog_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlog_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_biffintegrationerrorlog_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_biffintegrationerrorlog_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_biffintegrationerrorlog_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_biffintegrationerrorlog_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlog_AsyncOperations")]
@@ -31642,6 +33653,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_biffintegrationerrorlog_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_biffintegrationerrorlog_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlog_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_biffintegrationerrorlog_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_biffintegrationerrorlog_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_biffintegrationerrorlog_PhoneCalls", null, value);
 			}
 		}
 		
@@ -32349,6 +34376,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_biffintegrationerrorlogrow_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlogrow_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_biffintegrationerrorlogrow_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_biffintegrationerrorlogrow_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_biffintegrationerrorlogrow_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_biffintegrationerrorlogrow_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlogrow_AsyncOperations")]
@@ -32409,6 +34452,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_biffintegrationerrorlogrow_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_biffintegrationerrorlogrow_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlogrow_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_biffintegrationerrorlogrow_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_biffintegrationerrorlogrow_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_biffintegrationerrorlogrow_PhoneCalls", null, value);
 			}
 		}
 		
@@ -33122,6 +35181,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_companyrole_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_companyrole_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_companyrole_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_companyrole_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_companyrole_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_companyrole_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_companyrole_AsyncOperations")]
@@ -33182,6 +35257,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_companyrole_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_companyrole_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_companyrole_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_companyrole_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_companyrole_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_companyrole_PhoneCalls", null, value);
 			}
 		}
 		
@@ -33771,6 +35862,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_deltabatcherrorlog_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlog_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_deltabatcherrorlog_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_deltabatcherrorlog_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_deltabatcherrorlog_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_deltabatcherrorlog_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlog_AsyncOperations")]
@@ -33831,6 +35938,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_deltabatcherrorlog_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_deltabatcherrorlog_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlog_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_deltabatcherrorlog_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_deltabatcherrorlog_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_deltabatcherrorlog_PhoneCalls", null, value);
 			}
 		}
 		
@@ -34371,6 +36494,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_deltabatcherrorlogrow_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlogrow_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_deltabatcherrorlogrow_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_deltabatcherrorlogrow_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_deltabatcherrorlogrow_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_deltabatcherrorlogrow_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlogrow_AsyncOperations")]
@@ -34431,6 +36570,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_deltabatcherrorlogrow_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_deltabatcherrorlogrow_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlogrow_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_deltabatcherrorlogrow_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_deltabatcherrorlogrow_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_deltabatcherrorlogrow_PhoneCalls", null, value);
 			}
 		}
 		
@@ -35350,6 +37505,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_deltabatchlog_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchlog_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_deltabatchlog_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_deltabatchlog_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_deltabatchlog_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_deltabatchlog_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchlog_AsyncOperations")]
@@ -35410,6 +37581,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_deltabatchlog_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_deltabatchlog_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchlog_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_deltabatchlog_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_deltabatchlog_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_deltabatchlog_PhoneCalls", null, value);
 			}
 		}
 		
@@ -36131,6 +38318,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_deltabatchqueue_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchqueue_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_deltabatchqueue_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_deltabatchqueue_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_deltabatchqueue_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_deltabatchqueue_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchqueue_AsyncOperations")]
@@ -36191,6 +38394,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_deltabatchqueue_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_deltabatchqueue_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchqueue_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_deltabatchqueue_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_deltabatchqueue_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_deltabatchqueue_PhoneCalls", null, value);
 			}
 		}
 		
@@ -36763,6 +38982,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_emailtemplateproxy_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_emailtemplateproxy_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_emailtemplateproxy_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_emailtemplateproxy_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_emailtemplateproxy_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_emailtemplateproxy_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_emailtemplateproxy_AsyncOperations")]
@@ -36823,6 +39058,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_emailtemplateproxy_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_emailtemplateproxy_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_emailtemplateproxy_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_emailtemplateproxy_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_emailtemplateproxy_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_emailtemplateproxy_PhoneCalls", null, value);
 			}
 		}
 		
@@ -37314,6 +39565,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_featuretoggling_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_featuretoggling_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_featuretoggling_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_featuretoggling_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_featuretoggling_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_featuretoggling_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_featuretoggling_AsyncOperations")]
@@ -37374,6 +39641,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_featuretoggling_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_featuretoggling_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_featuretoggling_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_featuretoggling_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_featuretoggling_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_featuretoggling_PhoneCalls", null, value);
 			}
 		}
 		
@@ -40507,6 +42790,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_orderstatus_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_orderstatus_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_orderstatus_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_orderstatus_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_orderstatus_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_orderstatus_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_orderstatus_AsyncOperations")]
@@ -40567,6 +42866,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_orderstatus_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_orderstatus_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_orderstatus_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_orderstatus_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_orderstatus_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_orderstatus_PhoneCalls", null, value);
 			}
 		}
 		
@@ -43548,6 +45863,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_salesorderline_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderline_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_salesorderline_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_salesorderline_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_salesorderline_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_salesorderline_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderline_AsyncOperations")]
@@ -43608,6 +45939,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_salesorderline_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_salesorderline_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderline_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_salesorderline_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_salesorderline_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_salesorderline_PhoneCalls", null, value);
 			}
 		}
 		
@@ -44307,6 +46654,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_salesorderlinetraveller_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderlinetraveller_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_salesorderlinetraveller_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_salesorderlinetraveller_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_salesorderlinetraveller_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_salesorderlinetraveller_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderlinetraveller_AsyncOperations")]
@@ -44367,6 +46730,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_salesorderlinetraveller_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_salesorderlinetraveller_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderlinetraveller_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_salesorderlinetraveller_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_salesorderlinetraveller_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_salesorderlinetraveller_PhoneCalls", null, value);
 			}
 		}
 		
@@ -44986,6 +47365,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_senttextmessage_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_senttextmessage_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_senttextmessage_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_senttextmessage_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_senttextmessage_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_senttextmessage_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_senttextmessage_AsyncOperations")]
@@ -45046,6 +47441,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_senttextmessage_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_senttextmessage_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_senttextmessage_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_senttextmessage_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_senttextmessage_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_senttextmessage_PhoneCalls", null, value);
 			}
 		}
 		
@@ -45666,6 +48077,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_skakort_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_skakort_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_skakort_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_skakort_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_skakort_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_skakort_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_skakort_AsyncOperations")]
@@ -45726,6 +48153,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_skakort_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_skakort_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_skakort_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_skakort_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_skakort_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_skakort_PhoneCalls", null, value);
 			}
 		}
 		
@@ -48253,6 +50696,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_textmessagetemplate_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_textmessagetemplate_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_textmessagetemplate_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_textmessagetemplate_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_textmessagetemplate_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_textmessagetemplate_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_textmessagetemplate_AsyncOperations")]
@@ -48313,6 +50772,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_textmessagetemplate_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_textmessagetemplate_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_textmessagetemplate_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_textmessagetemplate_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_textmessagetemplate_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_textmessagetemplate_PhoneCalls", null, value);
 			}
 		}
 		
@@ -49777,6 +52252,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_valuecode_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecode_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_valuecode_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_valuecode_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_valuecode_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_valuecode_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecode_AsyncOperations")]
@@ -49837,6 +52328,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_valuecode_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_valuecode_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecode_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_valuecode_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_valuecode_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_valuecode_PhoneCalls", null, value);
 			}
 		}
 		
@@ -50952,6 +53459,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_valuecodeapproval_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodeapproval_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_valuecodeapproval_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_valuecodeapproval_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_valuecodeapproval_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_valuecodeapproval_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodeapproval_AsyncOperations")]
@@ -51012,6 +53535,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_valuecodeapproval_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_valuecodeapproval_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodeapproval_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_valuecodeapproval_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_valuecodeapproval_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_valuecodeapproval_PhoneCalls", null, value);
 			}
 		}
 		
@@ -51825,6 +54364,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_valuecodetemplate_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetemplate_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_valuecodetemplate_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_valuecodetemplate_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_valuecodetemplate_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_valuecodetemplate_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetemplate_AsyncOperations")]
@@ -51885,6 +54440,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_valuecodetemplate_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_valuecodetemplate_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetemplate_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_valuecodetemplate_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_valuecodetemplate_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_valuecodetemplate_PhoneCalls", null, value);
 			}
 		}
 		
@@ -52498,6 +55069,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_valuecodetransaction_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetransaction_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> ed_valuecodetransaction_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_valuecodetransaction_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("ed_valuecodetransaction_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_valuecodetransaction_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetransaction_AsyncOperations")]
@@ -52558,6 +55145,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("ed_valuecodetransaction_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_valuecodetransaction_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetransaction_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> ed_valuecodetransaction_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_valuecodetransaction_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("ed_valuecodetransaction_PhoneCalls", null, value);
 			}
 		}
 		
@@ -60717,6 +63320,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N Incident_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Incident_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> Incident_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Incident_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Incident_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N Incident_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Incident_AsyncOperations")]
@@ -60825,6 +63444,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Incident>("incident_parent_incident", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Incident_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Incident_Phonecalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> Incident_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Incident_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Incident_Phonecalls", null, value);
 			}
 		}
 		
@@ -65329,6 +67964,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Version number of the lead.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
 		/// Type the website URL for the company associated with this lead.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("websiteurl")]
@@ -65517,6 +68164,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N Lead_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Lead_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> Lead_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Lead_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Lead_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N Lead_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Lead_AsyncOperations")]
@@ -65609,6 +68272,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("lead_master_lead", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Lead_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Lead_Phonecalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> Lead_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Lead_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Lead_Phonecalls", null, value);
 			}
 		}
 		
@@ -66530,6 +69209,1635 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 	}
 	
+	public enum PhoneCallState
+	{
+		
+		Open = 0,
+		
+		Completed = 1,
+		
+		Canceled = 2,
+	}
+	
+	/// <summary>
+	/// Activity to track a telephone call from Callguide.
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("phonecall")]
+	public partial class PhoneCall : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public PhoneCall() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "phonecall";
+		
+		public const int EntityTypeCode = 4210;
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activityadditionalparams")]
+		public string ActivityAdditionalParams
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("activityadditionalparams");
+			}
+			set
+			{
+				this.SetAttributeValue("activityadditionalparams", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the phone call activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activityid")]
+		public System.Nullable<System.Guid> ActivityId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("activityid");
+			}
+			set
+			{
+				this.SetAttributeValue("activityid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activityid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.ActivityId = value;
+			}
+		}
+		
+		/// <summary>
+		/// Shows the type of activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activitytypecode")]
+		public string ActivityTypeCode
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("activitytypecode");
+			}
+		}
+		
+		/// <summary>
+		/// Type the number of minutes spent on the phone call. The duration is used in reporting.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("actualdurationminutes")]
+		public System.Nullable<int> ActualDurationMinutes
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("actualdurationminutes");
+			}
+			set
+			{
+				this.SetAttributeValue("actualdurationminutes", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the actual end date and time of the phone call. By default, it displays the date and time when the activity was completed or canceled, but can be edited to capture the actual duration of the phone call.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("actualend")]
+		public System.Nullable<System.DateTime> ActualEnd
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("actualend");
+			}
+			set
+			{
+				this.SetAttributeValue("actualend", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the actual start date and time for the phone call. By default, it displays the date and time when the activity was created, but can be edited to capture the actual duration of the phone call.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("actualstart")]
+		public System.Nullable<System.DateTime> ActualStart
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("actualstart");
+			}
+			set
+			{
+				this.SetAttributeValue("actualstart", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a category to identify the phone call type, such as lead gathering or customer follow-up, to tie the phone call to a business group or function.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("category")]
+		public string Category
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("category");
+			}
+			set
+			{
+				this.SetAttributeValue("category", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cgi_callguideinfoid")]
+		public Microsoft.Xrm.Sdk.EntityReference cgi_CallguideInfoid
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("cgi_callguideinfoid");
+			}
+			set
+			{
+				this.SetAttributeValue("cgi_callguideinfoid", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cgi_createcase")]
+		public System.Nullable<bool> cgi_CreateCase
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("cgi_createcase");
+			}
+			set
+			{
+				this.SetAttributeValue("cgi_createcase", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows who created the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was created. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who created the record on behalf of another user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Type additional information to describe the phone call, such as the primary message or the products and services discussed.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("description")]
+		public string Description
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("description");
+			}
+			set
+			{
+				this.SetAttributeValue("description", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select the direction of the phone call as incoming or outbound.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("directioncode")]
+		public System.Nullable<bool> DirectionCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("directioncode");
+			}
+			set
+			{
+				this.SetAttributeValue("directioncode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the conversion rate of the record's currency. The exchange rate is used to convert all money fields in the record from the local currency to the system's default currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+		}
+		
+		/// <summary>
+		/// Enter the account, contact, lead, or user who made the phone call.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("from")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> From
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.EntityCollection collection = this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityCollection>("from");
+				if (((collection != null) 
+							&& (collection.Entities != null)))
+				{
+					return System.Linq.Enumerable.Cast<Skanetrafiken.Crm.Schema.Generated.ActivityParty>(collection.Entities);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("from", value);
+				}
+				else
+				{
+					this.SetAttributeValue("from", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data import or data migration that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Information which specifies whether the phone call activity was billed as part of resolving a case.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isbilled")]
+		public System.Nullable<bool> IsBilled
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isbilled");
+			}
+			set
+			{
+				this.SetAttributeValue("isbilled", value);
+			}
+		}
+		
+		/// <summary>
+		/// Information regarding whether the activity is a regular activity type or event type.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isregularactivity")]
+		public System.Nullable<bool> IsRegularActivity
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isregularactivity");
+			}
+		}
+		
+		/// <summary>
+		/// Indication which specifies if the phone call activity was created by a workflow rule.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isworkflowcreated")]
+		public System.Nullable<bool> IsWorkflowCreated
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isworkflowcreated");
+			}
+			set
+			{
+				this.SetAttributeValue("isworkflowcreated", value);
+			}
+		}
+		
+		/// <summary>
+		/// Contains the date and time stamp of the last on hold time.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("lastonholdtime")]
+		public System.Nullable<System.DateTime> LastOnHoldTime
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("lastonholdtime");
+			}
+			set
+			{
+				this.SetAttributeValue("lastonholdtime", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether a voice mail was left for the person.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("leftvoicemail")]
+		public System.Nullable<bool> LeftVoiceMail
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("leftvoicemail");
+			}
+			set
+			{
+				this.SetAttributeValue("leftvoicemail", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows who last updated the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was last updated. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who last updated the record on behalf of another user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows how long, in minutes, that the record was on hold.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("onholdtime")]
+		public System.Nullable<int> OnHoldTime
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("onholdtime");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the user or team who is assigned to manage the record. This field is updated every time the record is assigned to a different user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ownerid")]
+		public Microsoft.Xrm.Sdk.EntityReference OwnerId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ownerid");
+			}
+			set
+			{
+				this.SetAttributeValue("ownerid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the business unit that owns the phone call activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningbusinessunit")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningBusinessUnit
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningbusinessunit");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the team that owns the phone call activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningTeam
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningteam");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user that owns the phone call activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningUser
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owninguser");
+			}
+		}
+		
+		/// <summary>
+		/// Type the phone number.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("phonenumber")]
+		public string PhoneNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("phonenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("phonenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select the priority so that preferred customers or critical issues are handled quickly.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("prioritycode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PriorityCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("prioritycode");
+			}
+			set
+			{
+				this.SetAttributeValue("prioritycode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the process.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("processid")]
+		public System.Nullable<System.Guid> ProcessId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("processid");
+			}
+			set
+			{
+				this.SetAttributeValue("processid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the object with which the phone call activity is associated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		public Microsoft.Xrm.Sdk.EntityReference RegardingObjectId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("regardingobjectid");
+			}
+			set
+			{
+				this.SetAttributeValue("regardingobjectid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Scheduled duration of the phone call activity, specified in minutes.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("scheduleddurationminutes")]
+		public System.Nullable<int> ScheduledDurationMinutes
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("scheduleddurationminutes");
+			}
+		}
+		
+		/// <summary>
+		/// Enter the expected due date and time.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("scheduledend")]
+		public System.Nullable<System.DateTime> ScheduledEnd
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("scheduledend");
+			}
+			set
+			{
+				this.SetAttributeValue("scheduledend", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the expected due date and time.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("scheduledstart")]
+		public System.Nullable<System.DateTime> ScheduledStart
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("scheduledstart");
+			}
+			set
+			{
+				this.SetAttributeValue("scheduledstart", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for an associated service.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("serviceid")]
+		public Microsoft.Xrm.Sdk.EntityReference ServiceId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("serviceid");
+			}
+			set
+			{
+				this.SetAttributeValue("serviceid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the service level agreement (SLA) that you want to apply to the Phone Call record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("slaid")]
+		public Microsoft.Xrm.Sdk.EntityReference SLAId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("slaid");
+			}
+			set
+			{
+				this.SetAttributeValue("slaid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Last SLA that was applied to this Phone Call. This field is for internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("slainvokedid")]
+		public Microsoft.Xrm.Sdk.EntityReference SLAInvokedId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("slainvokedid");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the stage.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		public System.Nullable<System.Guid> StageId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("stageid");
+			}
+			set
+			{
+				this.SetAttributeValue("stageid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows whether the phone call is open, completed, or canceled. Completed and canceled phone calls are read-only and can't be edited.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.PhoneCallState> StateCode
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.PhoneCallState)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.PhoneCallState), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("statecode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statecode", new Microsoft.Xrm.Sdk.OptionSetValue(((int)(value))));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Select the phone call's status.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue StatusCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+			}
+			set
+			{
+				this.SetAttributeValue("statuscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a subcategory to identify the phone call type and relate the activity to a specific product, sales region, business group, or other function.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("subcategory")]
+		public string Subcategory
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("subcategory");
+			}
+			set
+			{
+				this.SetAttributeValue("subcategory", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a short description about the objective or primary topic of the phone call.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("subject")]
+		public string Subject
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("subject");
+			}
+			set
+			{
+				this.SetAttributeValue("subject", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("subscriptionid")]
+		public System.Nullable<System.Guid> SubscriptionId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("subscriptionid");
+			}
+			set
+			{
+				this.SetAttributeValue("subscriptionid", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timezoneruleversionnumber")]
+		public System.Nullable<int> TimeZoneRuleVersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("timezoneruleversionnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the account, contact, lead, or user recipients of the phone call.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("to")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> To
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.EntityCollection collection = this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityCollection>("to");
+				if (((collection != null) 
+							&& (collection.Entities != null)))
+				{
+					return System.Linq.Enumerable.Cast<Skanetrafiken.Crm.Schema.Generated.ActivityParty>(collection.Entities);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("to", value);
+				}
+				else
+				{
+					this.SetAttributeValue("to", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Choose the local currency for the record to make sure budgets are reported in the correct currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public Microsoft.Xrm.Sdk.EntityReference TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("traversedpath")]
+		public string TraversedPath
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("traversedpath");
+			}
+			set
+			{
+				this.SetAttributeValue("traversedpath", value);
+			}
+		}
+		
+		/// <summary>
+		/// Time zone code that was in use when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("utcconversiontimezonecode")]
+		public System.Nullable<int> UTCConversionTimeZoneCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("utcconversiontimezonecode");
+			}
+			set
+			{
+				this.SetAttributeValue("utcconversiontimezonecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the phone call activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N phonecall_activity_parties
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("phonecall_activity_parties")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> phonecall_activity_parties
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ActivityParty>("phonecall_activity_parties", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ActivityParty>("phonecall_activity_parties", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N PhoneCall_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("PhoneCall_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> PhoneCall_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("PhoneCall_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("PhoneCall_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N PhoneCall_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("PhoneCall_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> PhoneCall_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("PhoneCall_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("PhoneCall_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N phonecall_campaignresponse
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("phonecall_campaignresponse")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.CampaignResponse> phonecall_campaignresponse
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.CampaignResponse>("phonecall_campaignresponse", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.CampaignResponse>("phonecall_campaignresponse", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N PhoneCall_QueueItem
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("PhoneCall_QueueItem")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QueueItem> PhoneCall_QueueItem
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QueueItem>("PhoneCall_QueueItem", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QueueItem>("PhoneCall_QueueItem", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Account_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Account_Phonecalls")]
+		public Skanetrafiken.Crm.Schema.Generated.Account Account_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("Account_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("Account_Phonecalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Campaign_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Campaign_Phonecalls")]
+		public Skanetrafiken.Crm.Schema.Generated.Campaign Campaign_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Campaign>("Campaign_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Campaign>("Campaign_Phonecalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 cgi_travelcard_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("cgi_travelcard_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.cgi_travelcard cgi_travelcard_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.cgi_travelcard>("cgi_travelcard_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.cgi_travelcard>("cgi_travelcard_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Contact_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Contact_Phonecalls")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact Contact_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("Contact_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("Contact_Phonecalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_biffintegrationerrorlog_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlog_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_biffintegrationerrorlog ed_biffintegrationerrorlog_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_biffintegrationerrorlog>("ed_biffintegrationerrorlog_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_biffintegrationerrorlog>("ed_biffintegrationerrorlog_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_biffintegrationerrorlogrow_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_biffintegrationerrorlogrow_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_BiffIntegrationErrorLogRow ed_biffintegrationerrorlogrow_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_BiffIntegrationErrorLogRow>("ed_biffintegrationerrorlogrow_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_BiffIntegrationErrorLogRow>("ed_biffintegrationerrorlogrow_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_companyrole_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_companyrole_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_CompanyRole ed_companyrole_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_CompanyRole>("ed_companyrole_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_CompanyRole>("ed_companyrole_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_deltabatcherrorlog_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlog_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLog ed_deltabatcherrorlog_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLog>("ed_deltabatcherrorlog_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLog>("ed_deltabatcherrorlog_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_deltabatcherrorlogrow_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatcherrorlogrow_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLogRow ed_deltabatcherrorlogrow_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLogRow>("ed_deltabatcherrorlogrow_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchErrorLogRow>("ed_deltabatcherrorlogrow_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_deltabatchlog_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchlog_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchLog ed_deltabatchlog_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchLog>("ed_deltabatchlog_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchLog>("ed_deltabatchlog_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_deltabatchqueue_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_deltabatchqueue_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue ed_deltabatchqueue_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue>("ed_deltabatchqueue_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue>("ed_deltabatchqueue_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_emailtemplateproxy_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_emailtemplateproxy_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_emailtemplateproxy ed_emailtemplateproxy_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_emailtemplateproxy>("ed_emailtemplateproxy_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_emailtemplateproxy>("ed_emailtemplateproxy_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_featuretoggling_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_featuretoggling_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_FeatureToggling ed_featuretoggling_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_FeatureToggling>("ed_featuretoggling_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_FeatureToggling>("ed_featuretoggling_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_orderstatus_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_orderstatus_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_OrderStatus ed_orderstatus_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_OrderStatus>("ed_orderstatus_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_OrderStatus>("ed_orderstatus_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_salesorderline_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderline_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_salesorderline ed_salesorderline_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("ed_salesorderline_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("ed_salesorderline_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_salesorderlinetraveller_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderlinetraveller_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_salesorderlinetraveller ed_salesorderlinetraveller_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_salesorderlinetraveller>("ed_salesorderlinetraveller_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_salesorderlinetraveller>("ed_salesorderlinetraveller_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_senttextmessage_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_senttextmessage_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_senttextmessage ed_senttextmessage_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_senttextmessage>("ed_senttextmessage_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_senttextmessage>("ed_senttextmessage_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_skakort_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_skakort_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_SKAkort ed_skakort_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_SKAkort>("ed_skakort_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_SKAkort>("ed_skakort_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_textmessagetemplate_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_textmessagetemplate_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_TextMessageTemplate ed_textmessagetemplate_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_TextMessageTemplate>("ed_textmessagetemplate_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_TextMessageTemplate>("ed_textmessagetemplate_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_valuecode_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecode_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_ValueCode ed_valuecode_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ValueCode>("ed_valuecode_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ValueCode>("ed_valuecode_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_valuecodeapproval_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodeapproval_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_ValueCodeApproval ed_valuecodeapproval_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ValueCodeApproval>("ed_valuecodeapproval_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ValueCodeApproval>("ed_valuecodeapproval_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_valuecodetemplate_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetemplate_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_valuecodetemplate ed_valuecodetemplate_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_valuecodetemplate>("ed_valuecodetemplate_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_valuecodetemplate>("ed_valuecodetemplate_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_valuecodetransaction_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_valuecodetransaction_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_valuecodetransaction ed_valuecodetransaction_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_valuecodetransaction>("ed_valuecodetransaction_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_valuecodetransaction>("ed_valuecodetransaction_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Incident_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Incident_Phonecalls")]
+		public Skanetrafiken.Crm.Schema.Generated.Incident Incident_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("Incident_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("Incident_Phonecalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Lead_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Lead_Phonecalls")]
+		public Skanetrafiken.Crm.Schema.Generated.Lead Lead_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Lead>("Lead_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Lead>("Lead_Phonecalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_phonecall_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_phonecall_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_phonecall_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_phonecall_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_phonecall_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_phonecall_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_phonecall_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_phonecall_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_phonecall_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_phonecall_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_phonecall_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_phonecall_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_phonecall_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_phonecall_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_phonecall_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_phonecall_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 processstage_phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_phonecalls")]
+		public Skanetrafiken.Crm.Schema.Generated.ProcessStage processstage_phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_phonecalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 st_singaporeticket_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("st_singaporeticket_PhoneCalls")]
+		public Skanetrafiken.Crm.Schema.Generated.st_singaporeticket st_singaporeticket_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket>("st_singaporeticket_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket>("st_singaporeticket_PhoneCalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_phonecall
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_phonecall")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_phonecall
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_phonecall", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 user_phonecall
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_phonecall")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser user_phonecall
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("user_phonecall", null);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string ActivityAdditionalParams = "activityadditionalparams";
+			
+			public const string ActivityId = "activityid";
+			
+			public const string Id = "activityid";
+			
+			public const string ActivityTypeCode = "activitytypecode";
+			
+			public const string ActualDurationMinutes = "actualdurationminutes";
+			
+			public const string ActualEnd = "actualend";
+			
+			public const string ActualStart = "actualstart";
+			
+			public const string Category = "category";
+			
+			public const string cgi_CallguideInfoid = "cgi_callguideinfoid";
+			
+			public const string cgi_CreateCase = "cgi_createcase";
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string Description = "description";
+			
+			public const string DirectionCode = "directioncode";
+			
+			public const string ExchangeRate = "exchangerate";
+			
+			public const string From = "from";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string IsBilled = "isbilled";
+			
+			public const string IsRegularActivity = "isregularactivity";
+			
+			public const string IsWorkflowCreated = "isworkflowcreated";
+			
+			public const string LastOnHoldTime = "lastonholdtime";
+			
+			public const string LeftVoiceMail = "leftvoicemail";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string OnHoldTime = "onholdtime";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string OwnerId = "ownerid";
+			
+			public const string OwningBusinessUnit = "owningbusinessunit";
+			
+			public const string OwningTeam = "owningteam";
+			
+			public const string OwningUser = "owninguser";
+			
+			public const string PhoneNumber = "phonenumber";
+			
+			public const string PriorityCode = "prioritycode";
+			
+			public const string ProcessId = "processid";
+			
+			public const string RegardingObjectId = "regardingobjectid";
+			
+			public const string ScheduledDurationMinutes = "scheduleddurationminutes";
+			
+			public const string ScheduledEnd = "scheduledend";
+			
+			public const string ScheduledStart = "scheduledstart";
+			
+			public const string ServiceId = "serviceid";
+			
+			public const string SLAId = "slaid";
+			
+			public const string SLAInvokedId = "slainvokedid";
+			
+			public const string StageId = "stageid";
+			
+			public const string StateCode = "statecode";
+			
+			public const string StatusCode = "statuscode";
+			
+			public const string Subcategory = "subcategory";
+			
+			public const string Subject = "subject";
+			
+			public const string SubscriptionId = "subscriptionid";
+			
+			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
+			
+			public const string To = "to";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
+			
+			public const string TraversedPath = "traversedpath";
+			
+			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
+			
+			public const string VersionNumber = "versionnumber";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int ActivityAdditionalParams = 8192;
+			
+			public const int Category = 250;
+			
+			public const int Description = 2000;
+			
+			public const int PhoneNumber = 200;
+			
+			public const int Subcategory = 250;
+			
+			public const int Subject = 200;
+			
+			public const int TraversedPath = 1250;
+		}
+	}
+	
 	public enum processstage_category
 	{
 		
@@ -66736,6 +71044,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N processstage_appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> processstage_appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("processstage_appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("processstage_appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N processstage_campaignresponses
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_campaignresponses")]
@@ -66828,6 +71152,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("processstage_lead", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N processstage_phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_phonecalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> processstage_phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("processstage_phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("processstage_phonecalls", null, value);
 			}
 		}
 		
@@ -70146,6 +74486,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 Appointment_QueueItem
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Appointment_QueueItem")]
+		public Skanetrafiken.Crm.Schema.Generated.Appointment Appointment_QueueItem
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Appointment>("Appointment_QueueItem", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Appointment>("Appointment_QueueItem", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 CampaignResponse_QueueItem
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
@@ -70296,6 +74653,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_queueitembase_workerid", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 PhoneCall_QueueItem
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("PhoneCall_QueueItem")]
+		public Skanetrafiken.Crm.Schema.Generated.PhoneCall PhoneCall_QueueItem
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("PhoneCall_QueueItem", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("PhoneCall_QueueItem", null, value);
 			}
 		}
 		
@@ -71683,6 +76057,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N st_singaporeticket_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("st_singaporeticket_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> st_singaporeticket_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("st_singaporeticket_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("st_singaporeticket_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N st_singaporeticket_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("st_singaporeticket_AsyncOperations")]
@@ -71743,6 +76133,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("st_singaporeticket_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N st_singaporeticket_PhoneCalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("st_singaporeticket_PhoneCalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> st_singaporeticket_PhoneCalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("st_singaporeticket_PhoneCalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("st_singaporeticket_PhoneCalls", null, value);
 			}
 		}
 		
@@ -74423,6 +78829,70 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N lk_appointment_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_appointment_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> lk_appointment_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("lk_appointment_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("lk_appointment_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_appointment_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_appointment_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> lk_appointment_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("lk_appointment_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("lk_appointment_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_appointment_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_appointment_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> lk_appointment_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("lk_appointment_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("lk_appointment_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_appointment_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_appointment_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> lk_appointment_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("lk_appointment_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("lk_appointment_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N lk_asyncoperation_createdby
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_asyncoperation_createdby")]
@@ -77047,6 +81517,70 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N lk_phonecall_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_phonecall_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> lk_phonecall_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("lk_phonecall_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("lk_phonecall_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_phonecall_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_phonecall_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> lk_phonecall_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("lk_phonecall_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("lk_phonecall_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_phonecall_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_phonecall_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> lk_phonecall_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("lk_phonecall_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("lk_phonecall_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_phonecall_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_phonecall_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> lk_phonecall_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("lk_phonecall_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("lk_phonecall_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N lk_product_createdonbehalfby
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_product_createdonbehalfby")]
@@ -77959,6 +82493,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N user_appointment
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_appointment")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> user_appointment
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("user_appointment", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("user_appointment", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N user_campaignresponse
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_campaignresponse")]
@@ -78403,6 +82953,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SystemUser>("user_parent_user", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N user_phonecall
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_phonecall")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> user_phonecall
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("user_phonecall", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("user_phonecall", null, value);
 			}
 		}
 		
@@ -79694,6 +84260,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N team_appointment
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_appointment")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> team_appointment
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("team_appointment", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("team_appointment", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N team_asyncoperation
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_asyncoperation")]
@@ -80218,6 +84800,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Incident>("team_incidents", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_phonecall
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_phonecall")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> team_phonecall
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("team_phonecall", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("team_phonecall", null, value);
 			}
 		}
 		
@@ -83910,6 +88508,17 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.Appointment"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.Appointment> AppointmentSet
+		{
+			get
+			{
+				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.Appointment>();
+			}
+		}
+		
+		/// <summary>
 		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.AsyncOperation"/> entities.
 		/// </summary>
 		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> AsyncOperationSet
@@ -84390,6 +88999,17 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.Lead>();
+			}
+		}
+		
+		/// <summary>
+		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.PhoneCall"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> PhoneCallSet
+		{
+			get
+			{
+				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.PhoneCall>();
 			}
 		}
 		

@@ -1,6 +1,7 @@
 using Endeavor.Crm;
 using Endeavor.Crm.UpSalesMigration;
 using log4net;
+using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Messages;
@@ -25,10 +26,12 @@ namespace Skanetrafiken.UpSalesMigration
         public static string rel_account_note = "Account_Annotation";
         public static string rel_account_address = "Account_CustomerAddress";
         public static string rel_contact_note = "Contact_Annotation";
+        public static string rel_contact_account = "account_primary_contact";
 
         public static IOrganizationService _service = null;
         static ExcelApp.Application excelApp = new ExcelApp.Application();
         private static ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        public static List<Account> lAccountsUpdate = new List<Account>();
 
         public static void ConnectToMSCRM(string UserName, string Password, string SoapOrgServiceUri)
         {
@@ -47,6 +50,11 @@ namespace Skanetrafiken.UpSalesMigration
                 _log.ErrorFormat(CultureInfo.InvariantCulture, "Error while connecting to CRM " + ex.Message);
                 Console.WriteLine("Error while connecting to CRM " + ex.Message);
             }
+        }
+
+        public static string cleanMobileTelefon(string value)
+        {
+            return value.Replace("+", "").Replace("(", "").Replace(")", "").Replace("-", "").Replace("'", "").Replace(" ", "");
         }
 
         public static List<ExcelColumn> GetListExcelColumns(ExcelApp.Range excelRange, int colCount)
@@ -72,6 +80,24 @@ namespace Skanetrafiken.UpSalesMigration
             else if (lSelectedColumns.Count > 1)
             {
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"One Or More Columns found with Index: " + j);
+                return null;
+            }
+
+            return lSelectedColumns.FirstOrDefault();
+        }
+
+        public static ExcelColumn GetSelectedExcelColumnByName(List<ExcelColumn> lColumns, string name)
+        {
+            List<ExcelColumn> lSelectedColumns = lColumns.Where(x => x.name == name).ToList();
+
+            if (lSelectedColumns.Count == 0)
+            {
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"No Columns found with Name: " + name);
+                return null;
+            }
+            else if (lSelectedColumns.Count > 1)
+            {
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"One Or More Columns found with Name: " + name);
                 return null;
             }
 
@@ -182,7 +208,43 @@ namespace Skanetrafiken.UpSalesMigration
             return option.Value;
         }
 
-        public static int? InsertOptionSetOption(Plugin.LocalPluginContext localContext, string entityName, string optionSetName, string label, int languageCode)
+        public static void PublishGlobalOptionSet(Plugin.LocalPluginContext localContext, string optionSetName)
+        {
+            try
+            {
+                //Publish the OptionSet
+                PublishXmlRequest pxReq2 = new PublishXmlRequest { ParameterXml = String.Format("<importexportxml><optionsets><optionset>{0}</optionset></optionsets></importexportxml>", optionSetName) };
+                localContext.OrganizationService.Execute(pxReq2);
+            }
+            catch (Exception e)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error publishing Global OptionSet " + optionSetName + ". Details: " + e.Message);
+            }
+        }
+
+        public static int? InsertGlobalOptionSetOption(Plugin.LocalPluginContext localContext, string optionSetName, string label, int languageCode)
+        {
+            try
+            {
+                InsertOptionValueRequest insertOptionValueRequest =
+                new InsertOptionValueRequest
+                {
+                    OptionSetName = optionSetName,
+                    Label = new Label(label, languageCode)
+                };
+
+                InsertOptionValueResponse insertedOption = ((InsertOptionValueResponse)localContext.OrganizationService.Execute(insertOptionValueRequest));
+
+                return insertedOption.NewOptionValue;
+            }
+            catch (Exception e)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error getting Global OptionSet " + optionSetName + ". Details: " + e.Message);
+                return null;
+            }
+        }
+
+        public static int? InsertLocalOptionSetOption(Plugin.LocalPluginContext localContext, string entityName, string optionSetName, string label, int languageCode)
         {
             // Create a request.
             InsertOptionValueRequest insertOptionValueRequest =
@@ -203,79 +265,51 @@ namespace Skanetrafiken.UpSalesMigration
                 return null;
         }
 
-        ///////------------------------------------------------------OLD CODE----------------------------------------------------------------------------
-        public static void LogExecuteMultipleResponses(ExecuteMultipleRequest requestWithResults, ExecuteMultipleResponse responseWithResults)
+        public static void UpdateAccountsWithPrimaryContactId(Plugin.LocalPluginContext localContext, CrmContext crmContext)
         {
-            foreach (ExecuteMultipleResponseItem responseItem in responseWithResults.Responses)
+            if (lAccountsUpdate.Count == 0)
+                return;
+
+            List<Account> lFinalList = lAccountsUpdate.GroupBy(elem => elem.AccountId).Select(group => group.First()).ToList();
+
+            foreach (Account account in lFinalList)
             {
-                // A valid response.
-                if (responseItem.Response != null)
-                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Success Response: " + requestWithResults.Requests[responseItem.RequestIndex] + " : Response: " + responseItem.Response);
+                string upsalesId = account.Description;
 
-                // An error has occurred.
-                else if (responseItem.Fault != null)
+                if (upsalesId == null)
                 {
-                    string errorMessage = $"Failed Response: " + requestWithResults.Requests[responseItem.RequestIndex] + " : Response: " + responseItem.Fault;
-
-                    if (requestWithResults.Requests[responseItem.RequestIndex].RequestName == "Create")
-                    {
-                        Entity entity = (Entity)requestWithResults.Requests[responseItem.RequestIndex].Parameters.Values.FirstOrDefault();
-
-                        errorMessage += " - Details: "; //TODO SWITCH FOR EACH ENTITY
-
-                        _log.ErrorFormat(CultureInfo.InvariantCulture, errorMessage);
-                    }
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Account object does not have Contact Upsales Id.");
+                    continue;
                 }
+
+                QueryExpression queryContacts = new QueryExpression(Contact.EntityLogicalName);
+                queryContacts.NoLock = true;
+                queryContacts.ColumnSet.AddColumns(Contact.Fields.ContactId, Contact.Fields.FirstName, Contact.Fields.LastName);
+                queryContacts.Criteria.AddCondition(Contact.Fields.ed_UpsalesId, ConditionOperator.Equal, upsalesId);
+
+                List<Contact> lContact = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts).ToList();
+
+                if (lContact.Count == 1)
+                {
+                    Guid contactId = (Guid)lContact.FirstOrDefault().ContactId;
+                    string firstName = lContact.FirstOrDefault().FirstName;
+                    string lastName = lContact.FirstOrDefault().LastName;
+
+                    Account uAccount = new Account();
+                    uAccount.Id = account.Id;
+                    uAccount.PrimaryContactId = new EntityReference(Contact.EntityLogicalName, contactId);
+
+                    if (!crmContext.IsAttached(uAccount))
+                        crmContext.Attach(uAccount);
+
+                    crmContext.UpdateObject(uAccount);
+
+                    _log.InfoFormat(CultureInfo.InvariantCulture, $"A Request has been created for the Account " + account.Id + " to be updated with Contact " + firstName + " " + lastName + " as it's Primary Contact.");
+                }
+                else
+                    _log.InfoFormat(CultureInfo.InvariantCulture, $"There were found zero or more than one Contacts with Upsales Id: " + upsalesId);
             }
         }
-
-        public static void HandleMultipleRequests(Plugin.LocalPluginContext localContext, List<CreateRequest> lCreateRequests)
-        {
-            int maxLimitCalls = int.Parse(ConfigurationManager.AppSettings["maxLimitCalls"]);
-
-            ExecuteMultipleRequest requestWithResults = new ExecuteMultipleRequest()
-            {
-                Settings = new ExecuteMultipleSettings()
-                {
-                    ContinueOnError = true,
-                    ReturnResponses = true
-                },
-                Requests = new OrganizationRequestCollection()
-            };
-
-            if (lCreateRequests.Count > maxLimitCalls)
-            {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"The total Requests is greater than the max allowed.");
-
-                List<List<CreateRequest>> lAuxCreate = lCreateRequests.Select((x, i) => new { Index = i, Value = x }).GroupBy(x => x.Index / maxLimitCalls)
-                                                .Select(x => x.Select(v => v.Value).ToList()).ToList();
-
-                foreach (List<CreateRequest> listCreate in lAuxCreate)
-                {
-                    requestWithResults.Requests = new OrganizationRequestCollection();
-                    requestWithResults.Requests.AddRange(listCreate);
-
-                    ExecuteMultipleResponse responseWithResults =
-                    (ExecuteMultipleResponse)localContext.OrganizationService.Execute(requestWithResults);
-
-                    LogExecuteMultipleResponses(requestWithResults, responseWithResults);
-                }
-            }
-            else
-            {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"The total Requests is less than the max allowed.");
-
-                requestWithResults.Requests = new OrganizationRequestCollection();
-                requestWithResults.Requests.AddRange(lCreateRequests);
-
-                ExecuteMultipleResponse responseWithResults =
-                    (ExecuteMultipleResponse)localContext.OrganizationService.Execute(requestWithResults);
-
-                LogExecuteMultipleResponses(requestWithResults, responseWithResults);
-            }
-        }
-
-        ///////-------------------------------------------------------OLD CODE---------------------------------------------------------------------------
 
         public static void LogCrmContextMultipleResponses(SaveChangesResultCollection lResponses)
         {
@@ -287,34 +321,75 @@ namespace Skanetrafiken.UpSalesMigration
                     // A valid response.
                     if (response.Error == null)
                     {
-                        Guid id = (Guid)response.Response["id"];
                         Entity entity = (Entity)response.Request["Target"];
 
-                        if(id == null || entity == null)
+                        if (response.Response.ResponseName == "Update")
                         {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"A record has been created, but no id or Request was retrieved.");
-                            continue;
+                            if (entity == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"A record has been updated, but no Request was retrieved.");
+                                continue;
+                            }
+
+                            switch (entity.LogicalName)
+                            {
+                                case Account.EntityLogicalName:
+
+                                    Account account = (Account)entity;
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Account with Id: " + account.Id + " was updated.");
+
+                                    break;
+                                case Contact.EntityLogicalName:
+
+                                    Contact contact = (Contact)entity;
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Contact with Id: " + contact.Id + " was updated.");
+
+                                    break;
+                                case "activity":
+                                    break;
+                                case Lead.EntityLogicalName:
+                                    break;
+                                case "opportunity":
+                                    break;
+                                default:
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"No logs implemented for " + entity.LogicalName + ". Please contact you administrator.");
+                                    break;
+                            }
                         }
-
-                        switch (entity.LogicalName)
+                        else if(response.Response.ResponseName == "Create")
                         {
-                            case Account.EntityLogicalName:
+                            Guid id = (Guid)response.Response["id"];
 
-                                Account account = (Account)entity;
-                                _log.InfoFormat(CultureInfo.InvariantCulture, $"Account with Name: " + account.Name + " was created with id: " + id + ".");
+                            if (id == null || entity == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"A record has been created, but no id or Request was retrieved.");
+                                continue;
+                            }
 
-                                break;
-                            case Contact.EntityLogicalName:
-                                break;
-                            case "activity":
-                                break;
-                            case Lead.EntityLogicalName:
-                                break;
-                            case "opportunity":
-                                break;
-                            default:
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"No logs implemented for " + entity.LogicalName + ". Please contact you administrator.");
-                                break;
+                            switch (entity.LogicalName)
+                            {
+                                case Account.EntityLogicalName:
+
+                                    Account account = (Account)entity;
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Account with Name: " + account.Name + " was created with id: " + id + ".");
+
+                                    break;
+                                case Contact.EntityLogicalName:
+
+                                    Contact contact = (Contact)entity;
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Contact with Name: " + contact.FirstName + " " + contact.LastName + " was created with id: " + id + ".");
+
+                                    break;
+                                case "activity":
+                                    break;
+                                case Lead.EntityLogicalName:
+                                    break;
+                                case "opportunity":
+                                    break;
+                                default:
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"No logs implemented for " + entity.LogicalName + ". Please contact you administrator.");
+                                    break;
+                            }
                         }
                     }
                     //An error has occurred.
@@ -333,10 +408,14 @@ namespace Skanetrafiken.UpSalesMigration
                             case Account.EntityLogicalName:
 
                                 Account account = (Account)entity;
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Account with Name: " + account.Name + " was not created.");
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Account with Name: " + account.Name + " was not created. Details: " + response.Error.Message);
 
                                 break;
                             case Contact.EntityLogicalName:
+
+                                Contact contact = (Contact)entity;
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Contact with Name: " + contact.FirstName + " " + contact.LastName + " was not created. Details: " + response.Error.Message);
+
                                 break;
                             case "activity":
                                 break;
@@ -355,6 +434,405 @@ namespace Skanetrafiken.UpSalesMigration
             {
                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error logging results. Details: " + e.Message);
             }
+        }
+
+        public static PhoneCall GetPhoneCall(Plugin.LocalPluginContext localContext, ExcelApp.Range excelRange, ImportExcelInfo importExcelInfo, int i)
+        {
+            PhoneCall nPhoneCall = new PhoneCall();
+
+            for (int j = 1; j <= importExcelInfo.colCount; j++)
+            {
+                if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
+                    continue;
+
+                ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
+
+                if (selectedColumn == null)
+                {
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null.");
+                    continue;
+                }
+
+                string name = selectedColumn.name;
+                string value = excelRange.Cells[i, j].Value2.ToString();
+
+                switch (name)
+                {
+                    case "Företag":
+
+                        EntityReference erAccount = GetCrmAccountByName(localContext, value);
+
+                        if (erAccount == null)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Regarding Object of the PhoneCall was not found. There is not Account with Name: " + value);
+                            break;
+                        }
+
+                        nPhoneCall.RegardingObjectId = erAccount;
+
+                        break;
+                    case "Kontaktperson":
+
+                        EntityReference erContact = GetCrmContactByFullName(localContext, value);
+
+                        if (erContact == null)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The To of the PhoneCall was not found. There is not Contact with FullName: " + value);
+                            break;
+                        }
+
+                        ActivityParty toParty = new ActivityParty();
+                        toParty.PartyId = erContact;
+
+                        List<ActivityParty> phoneCallTo = new List<ActivityParty>();
+                        phoneCallTo.Add(toParty);
+
+                        nPhoneCall.To = phoneCallTo;
+
+                        break;
+                    case "Beskrivning":
+                        nPhoneCall.Subject = value;
+                        break;
+                    case "Datum":
+                        //No Information
+                        break;
+                    case "Faktiskt avslutsdatum":
+
+                        DateTime scheduleEnd = DateTime.MinValue;
+
+                        if (DateTime.TryParse(value, out scheduleEnd))
+                        {
+                            if (scheduleEnd != DateTime.MinValue)
+                                nPhoneCall.ScheduledEnd = scheduleEnd;
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+
+                        break;
+                    case "Modifierad":
+
+                        //Not Possible Unsuported
+                        //DateTime dateTime = DateTime.MinValue;
+
+                        //if (DateTime.TryParse(value, out dateTime))
+                        //{
+                        //    if (dateTime != DateTime.MinValue)
+                        //        nPhoneCall.ModifiedOn = dateTime;
+                        //}
+                        //else
+                        //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+
+                        break;
+
+                    case "Skapad":
+
+                        DateTime createdOn = DateTime.MinValue;
+
+                        if (DateTime.TryParse(value, out createdOn))
+                        {
+                            if (createdOn != DateTime.MinValue)
+                                nPhoneCall.OverriddenCreatedOn = createdOn;
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+
+                        break;
+                    case "Användare":
+
+                        EntityReference erOwner = GetCrmUserOrTeamByName(localContext, value);
+
+                        if (erOwner == null)
+                        {
+                            string defaultUserName = "Admin"; //TODO Put on App Config
+                            erOwner = GetCrmUserOrTeamByName(localContext, defaultUserName);
+                        }
+
+                        if (erOwner != null)
+                            nPhoneCall.OwnerId = erOwner;
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Owner of the PhoneCall was not found.");
+
+                        break;
+                    case "Aktivitetstyp":
+                        //Already Handleded
+                        break;
+                    case "Anteckningar":
+                        nPhoneCall.Description = value;
+                        break;
+
+                    default:
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
+                        break;
+                }
+            }
+
+            return nPhoneCall;
+        }
+
+        public static Email GetEmail(Plugin.LocalPluginContext localContext, ExcelApp.Range excelRange, ImportExcelInfo importExcelInfo, int i)
+        {
+            Email nEmail = new Email();
+
+            for (int j = 1; j <= importExcelInfo.colCount; j++)
+            {
+                if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
+                    continue;
+
+                ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
+
+                if (selectedColumn == null)
+                {
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null.");
+                    continue;
+                }
+
+                string name = selectedColumn.name;
+                string value = excelRange.Cells[i, j].Value2.ToString();
+
+                switch (name)
+                {
+                    case "Företag":
+
+                        EntityReference erAccount = GetCrmAccountByName(localContext, value);
+
+                        if (erAccount == null)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Regarding Object of the Email was not found. There is not Account with Name: " + value);
+                            break;
+                        }
+
+                        nEmail.RegardingObjectId = erAccount;
+
+                        break;
+                    case "Kontaktperson":
+
+                        EntityReference erContact = GetCrmContactByFullName(localContext, value);
+
+                        if (erContact == null)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The To of the PhoneCall was not found. There is not Contact with FullName: " + value);
+                            break;
+                        }
+
+                        ActivityParty toParty = new ActivityParty();
+                        toParty.PartyId = erContact;
+
+                        List<ActivityParty> phoneCallTo = new List<ActivityParty>();
+                        phoneCallTo.Add(toParty);
+
+                        nEmail.To = phoneCallTo;
+
+                        break;
+                    case "Beskrivning":
+                        nEmail.Subject = value;
+                        break;
+                    case "Datum":
+                        //No Information
+                        break;
+                    case "Faktiskt avslutsdatum":
+
+                        DateTime scheduleEnd = DateTime.MinValue;
+
+                        if (DateTime.TryParse(value, out scheduleEnd))
+                        {
+                            if (scheduleEnd != DateTime.MinValue)
+                                nEmail.ScheduledEnd = scheduleEnd;
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+
+                        break;
+                    case "Modifierad":
+
+                        //Not Possible Unsuported
+                        //DateTime dateTime = DateTime.MinValue;
+
+                        //if (DateTime.TryParse(value, out dateTime))
+                        //{
+                        //    if (dateTime != DateTime.MinValue)
+                        //        nEmail.ModifiedOn = dateTime;
+                        //}
+                        //else
+                        //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+
+                        break;
+
+                    case "Skapad":
+
+                        DateTime createdOn = DateTime.MinValue;
+
+                        if (DateTime.TryParse(value, out createdOn))
+                        {
+                            if (createdOn != DateTime.MinValue)
+                                nEmail.OverriddenCreatedOn = createdOn;
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+
+                        break;
+                    case "Användare":
+
+                        EntityReference erOwner = GetCrmUserOrTeamByName(localContext, value);
+
+                        if (erOwner == null)
+                        {
+                            string defaultUserName = "Admin"; //TODO Put on App Config
+                            erOwner = GetCrmUserOrTeamByName(localContext, defaultUserName);
+                        }
+
+                        if (erOwner != null)
+                            nEmail.OwnerId = erOwner;
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Owner of the Email was not found.");
+
+                        break;
+                    case "Aktivitetstyp":
+                        //Already Handleded
+                        break;
+                    case "Anteckningar":
+                        nEmail.Description = value;
+                        break;
+
+                    default:
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
+                        break;
+                }
+            }
+
+            return nEmail;
+        }
+
+        public static Appointment GetAppointment(Plugin.LocalPluginContext localContext, ExcelApp.Range excelRange, ImportExcelInfo importExcelInfo, int i)
+        {
+            Appointment nAppointment = new Appointment();
+
+            for (int j = 1; j <= importExcelInfo.colCount; j++)
+            {
+                if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
+                    continue;
+
+                ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
+
+                if (selectedColumn == null)
+                {
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null.");
+                    continue;
+                }
+
+                string name = selectedColumn.name;
+                string value = excelRange.Cells[i, j].Value2.ToString();
+
+                switch (name)
+                {
+                    case "Företag":
+
+                        EntityReference erAccount = GetCrmAccountByName(localContext, value);
+
+                        if (erAccount == null)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Regarding Object of the Appointment was not found. There is not Account with Name: " + value);
+                            break;
+                        }
+
+                        nAppointment.RegardingObjectId = erAccount;
+
+                        break;
+                    case "Kontaktperson":
+
+                        EntityReference erContact = GetCrmContactByFullName(localContext, value);
+
+                        if (erContact == null)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The To of the Appointment was not found. There is not Contact with FullName: " + value);
+                            break;
+                        }
+
+                        ActivityParty toParty = new ActivityParty();
+                        toParty.PartyId = erContact;
+
+                        List<ActivityParty> phoneCallTo = new List<ActivityParty>();
+                        phoneCallTo.Add(toParty);
+
+                        nAppointment.RequiredAttendees = phoneCallTo;
+
+                        break;
+                    case "Beskrivning":
+                        nAppointment.Subject = value;
+                        break;
+                    case "Datum":
+                        //No Information
+                        break;
+                    case "Faktiskt avslutsdatum":
+
+                        DateTime scheduleEnd = DateTime.MinValue;
+
+                        if (DateTime.TryParse(value, out scheduleEnd))
+                        {
+                            if (scheduleEnd != DateTime.MinValue)
+                                nAppointment.ScheduledEnd = scheduleEnd;
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+
+                        break;
+                    case "Modifierad":
+
+                        //Not Possible Unsuported
+                        //DateTime dateTime = DateTime.MinValue;
+
+                        //if (DateTime.TryParse(value, out dateTime))
+                        //{
+                        //    if (dateTime != DateTime.MinValue)
+                        //        nAppointment.ModifiedOn = dateTime;
+                        //}
+                        //else
+                        //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+
+                        break;
+
+                    case "Skapad":
+
+                        DateTime createdOn = DateTime.MinValue;
+
+                        if (DateTime.TryParse(value, out createdOn))
+                        {
+                            if (createdOn != DateTime.MinValue)
+                                nAppointment.OverriddenCreatedOn = createdOn;
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+
+                        break;
+                    case "Användare":
+
+                        EntityReference erOwner = GetCrmUserOrTeamByName(localContext, value);
+
+                        if (erOwner == null)
+                        {
+                            string defaultUserName = "Admin"; //TODO Put on App Config
+                            erOwner = GetCrmUserOrTeamByName(localContext, defaultUserName);
+                        }
+
+                        if (erOwner != null)
+                            nAppointment.OwnerId = erOwner;
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Owner of the Appointment was not found.");
+
+                        break;
+                    case "Aktivitetstyp":
+                        //Already Handleded
+                        break;
+                    case "Anteckningar":
+                        nAppointment.Description = value;
+                        break;
+
+                    default:
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
+                        break;
+                }
+            }
+
+            return nAppointment;
         }
 
         public static void ImportAccountRecords(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
@@ -384,10 +862,7 @@ namespace Skanetrafiken.UpSalesMigration
                     for (int j = 1; j <= importExcelInfo.colCount; j++)
                     {
                         if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
-                        {
-                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The cell in position (" + i + "," + j + ") is null or empty.");
                             continue;
-                        }
 
                         ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
 
@@ -428,10 +903,12 @@ namespace Skanetrafiken.UpSalesMigration
                                 nAccount.ed_CSDateforlastaddressChange = value;
                                 break;
                             case "E-post":
+                            case "epost":
                                 nAccount.EMailAddress1 = value;
                                 break;
                             case "Mobil":
-                                nAccount.Telephone1 = value;
+                            case "Telefon":
+                                nAccount.Telephone1 = cleanMobileTelefon(value);
                                 break;
                             case "Webbplats":
                                 nAccount.WebSiteURL = value;
@@ -445,9 +922,11 @@ namespace Skanetrafiken.UpSalesMigration
 
                                 if (optionSetCT == null)
                                 {
-                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM.");
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM. By default it will be created into Skund.");
+                                    optionSetCT = InsertGlobalOptionSetOption(localContext, "ed_companytrade", value, 1053);
                                 }
-                                else
+
+                                if(optionSetCT != null)
                                     nAccount.ed_companytrade = new OptionSetValue((int)optionSetCT);
 
                                 break;
@@ -460,9 +939,11 @@ namespace Skanetrafiken.UpSalesMigration
 
                                 if (optionSetBT == null)
                                 {
-                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM.");
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM. By default it will be created into Skund.");
+                                    optionSetBT = InsertGlobalOptionSetOption(localContext, "ed_businesstype", value, 1053);
                                 }
-                                else
+
+                                if(optionSetBT != null)
                                     nAccount.ed_BusinessType = new OptionSetValue((int)optionSetBT);
 
                                 break;
@@ -511,6 +992,8 @@ namespace Skanetrafiken.UpSalesMigration
 
 
                             //-----------------------------------------------------OLD MAPPINGS---------------------------------------------------------
+
+                            #region OldMappings
                             case "CreateOn - test":
 
                                 DateTime dateTime = DateTime.MinValue;
@@ -583,6 +1066,8 @@ namespace Skanetrafiken.UpSalesMigration
                             case "Företag: Faktureringsadress: Postnummer - test":
                                 nAccount.Address2_PostalCode = value;
                                 break;
+                            #endregion
+
                             default:
                                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
                                 break;
@@ -644,10 +1129,7 @@ namespace Skanetrafiken.UpSalesMigration
                     for (int j = 1; j <= importExcelInfo.colCount; j++)
                     {
                         if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
-                        {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The cell in position (" + i + "," + j + ") is null or empty.");
                             continue;
-                        }
 
                         ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
 
@@ -669,11 +1151,11 @@ namespace Skanetrafiken.UpSalesMigration
 
                                 EntityReference erParent = GetCrmAccountByName(localContext, value);
 
-                                if (erParent == null)
-                                    erParent = GetCrmContactByFullName(localContext, value);
-
                                 if (erParent != null)
+                                {
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"The Parent Customer " + value + " of the Contact was updated.");
                                     nContact.ParentCustomerId = erParent;
+                                }
                                 else
                                     _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Parent Customer " + value + " of the Contact was not found.");
 
@@ -688,16 +1170,18 @@ namespace Skanetrafiken.UpSalesMigration
                                 nContact.ed_title = value;
                                 break;
                             case "Telefon":
-                                nContact.Telephone1 = value;
+                                nContact.Telephone1 = cleanMobileTelefon(value);
                                 break;
                             case "Mobiltelefon":
-                                nContact.Telephone2 = value;
+                                nContact.Telephone2 = cleanMobileTelefon(value);
                                 break;
                             case "Email":
                                 nContact.EMailAddress1 = value;
                                 break;
 
+                            //-----------------------------------------------------OLD MAPPINGS---------------------------------------------------------
 
+                            #region OldMappings
                             case "CreateOn - test":
 
                                 DateTime dateTime = DateTime.MinValue;
@@ -712,21 +1196,48 @@ namespace Skanetrafiken.UpSalesMigration
                             case "Anteckningar - test":
                                 noteText = value;
                                 break;
+
+                            #endregion
+
                             default:
                                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
                                 break;
                         }
                     }
 
+                    nContact.ed_InfotainmentContact = true;
                     nContact.StateCode = ContactState.Active;
                     nContact.ed_InformationSource = ed_informationsource.AdmAndraKund;
-                    nContact.ed_InfotainmentContact = true;
+                    nContact.AccountRoleCode = contact_accountrolecode.Ansvarigforinfotainment;
 
-                    //Not possible to generate contact_ed_functioncontext 899310000 - Ansvarig för Infotainment
-                    nContact.ed_functioncontext = new OptionSetValue(899310000);
+                    //Prevent Plugin Errors
+                    if (nContact.FirstName == null)
+                        nContact.FirstName = " ";
+
+                    if (nContact.LastName == null)
+                        nContact.LastName = " ";
 
                     crmContext.AddObject(nContact);
 
+                    if(nContact.ParentCustomerId != null && nContact.ParentCustomerId.LogicalName == Account.EntityLogicalName)
+                    {
+                        EntityReference erAccount = new EntityReference(Account.EntityLogicalName, nContact.ParentCustomerId.Id);
+                        Account account = XrmRetrieveHelper.Retrieve<Account>(localContext, erAccount, new ColumnSet(Account.Fields.PrimaryContactId));
+
+                        if (account != null && account.PrimaryContactId == null)
+                        {
+                            Account uAccount = new Account();
+                            uAccount.Id = account.Id;
+                            uAccount.Description = nContact.ed_UpsalesId;
+
+                            lAccountsUpdate.Add(uAccount);
+
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Account Object Added to the List.");
+                        }
+                        else
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The Account " + nContact.ParentCustomerId.Id + " already has a Primary Contact.");
+                    }
+                    
                     if (noteText != string.Empty)
                     {
                         Annotation note = new Annotation();
@@ -741,8 +1252,6 @@ namespace Skanetrafiken.UpSalesMigration
                 {
                     _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to import row " + i + ". Details: " + e.Message);
                 }
-
-                return;
             }
         }
 
@@ -754,10 +1263,58 @@ namespace Skanetrafiken.UpSalesMigration
                 return;
             }
 
+            string activityTypeNameColumn = "Aktivitetstyp";
             ExcelApp.Range excelRange = importExcelInfo.excelRange;
 
-            //Check Excel File First
-            //Will we have a file with all activities or 3 files with email, appointments and phonecall
+            for (int i = 2; i < importExcelInfo.rowCount; i++)
+            {
+                try
+                {
+                    ExcelColumn activityTypeColumn = GetSelectedExcelColumnByName(importExcelInfo.lColumns, activityTypeNameColumn);
+
+                    if(activityTypeColumn == null)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null.");
+                        continue;
+                    }
+
+                    int j = activityTypeColumn.index;
+
+                    if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
+                        continue;
+
+                    string activityType = excelRange.Cells[i, j].Value2.ToString();
+
+                    switch (activityType)
+                    {
+                        case "Telefonsamtal":
+
+                            PhoneCall nPhoneCall = GetPhoneCall(localContext, excelRange, importExcelInfo, i);
+                            crmContext.AddObject(nPhoneCall);
+
+                            break;
+                        case "E-post":
+
+                            Email nEmail = GetEmail(localContext, excelRange, importExcelInfo, i);
+                            crmContext.AddObject(nEmail);
+
+                            break;
+                        case "Övrigt":
+
+                            Appointment nAppointment = GetAppointment(localContext, excelRange, importExcelInfo, i);
+                            crmContext.AddObject(nAppointment);
+
+                            break;
+                        default:
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Activity Type " + activityType + " is not implemented yet.");
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to import row " + i + ". Details: " + e.Message);
+                }
+            }
         }
 
         public static void ImportLeadsRecords(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
@@ -798,26 +1355,35 @@ namespace Skanetrafiken.UpSalesMigration
             SaveChangesOptions optionsChanges = SaveChangesOptions.ContinueOnError;
 
             string relativeExcelPath = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.ExcelRelativePath);
-            string fileName = "Spann 5 - nya datakällor 2020-05-25.xlsx";
+            string fileName = "Spann 1 - unika 2020-05-27.xlsx";
 
-            //#region Import Accounts
+            #region Import Accounts
 
-            //try
-            //{
-            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
-            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
-            //    ImportAccountRecords(localContext, crmContext, importExcelInfo);
-            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-            //    LogCrmContextMultipleResponses(responses);
-            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
-            //}
-            //catch (Exception e)
-            //{
-            //    _log.Error("Error Importing Account Records. Details: " + e.Message);
-            //    throw;
-            //}
+            try
+            {
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
 
-            //#endregion
+                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
+                ImportAccountRecords(localContext, crmContext, importExcelInfo);
+                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                LogCrmContextMultipleResponses(responses);
+
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
+
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Publishing Accounts OptionSets--------------");
+
+                PublishGlobalOptionSet(localContext, "ed_companytrade");
+                PublishGlobalOptionSet(localContext, "ed_businesstype");
+
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished Publishing Accounts OptionSets--------------");
+            }
+            catch (Exception e)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
+                throw;
+            }
+
+            #endregion
 
             fileName = "Upsales data clean 2020-05-25_kontakter.xlsx";
 
@@ -827,29 +1393,44 @@ namespace Skanetrafiken.UpSalesMigration
             {
                 crmContext.ClearChanges();
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Contact Entity--------------");
-                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
+
+                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Contacts", fileName);
                 ImportContactsRecords(localContext, crmContext, importExcelInfo);
                 SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
                 LogCrmContextMultipleResponses(responses);
+
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Contact Entity--------------");
+
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Update Accounts Primary Contact--------------------");
+
+                crmContext.ClearChanges();
+                UpdateAccountsWithPrimaryContactId(localContext, crmContext);
+                SaveChangesResultCollection responsesAccounts = crmContext.SaveChanges(optionsChanges);
+                LogCrmContextMultipleResponses(responsesAccounts);
+
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished Updating Accounts Primary Contact--------------------");
             }
             catch (Exception e)
             {
-                _log.Error("Error Importing Contact Records. Details: " + e.Message);
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Contact Records. Details: " + e.Message);
                 throw;
             }
 
             #endregion
 
-            //fileName = "Activities företag 2020-04-30.xlsx";
+            fileName = "Activities företag 2020-04-30.xlsx";
 
             //#region Import Activities
 
             //try
             //{
             //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Activities Entity--------------");
-            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath, fileName);
+
+            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Activities", fileName);
             //    ImportActivitiesRecords(localContext, crmContext, importExcelInfo);
+            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(responses);
+
             //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Activities Entity--------------");
             //}
             //catch (Exception e)
@@ -936,10 +1517,8 @@ namespace Skanetrafiken.UpSalesMigration
 
             //#endregion
 
-            //after reading, relaase the excel project
             excelApp.Quit();
             System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
-            Console.ReadLine();
         }
     }
 }

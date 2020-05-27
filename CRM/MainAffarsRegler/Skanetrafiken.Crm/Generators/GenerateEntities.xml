@@ -2,6 +2,7 @@
 <filter>
   <entities>
     <entity>annotation</entity>
+    <entity>appointment</entity>
     <entity>account</entity>
     <entity>activityparty</entity>
     <entity>asyncoperation</entity>
@@ -15,6 +16,7 @@
     <entity>lead</entity>
     <entity>product</entity>
     <entity>processstage</entity>
+    <entity>phonecall</entity>
     <entity>queue</entity>
     <entity>queueitem</entity>
     <entity>role</entity>

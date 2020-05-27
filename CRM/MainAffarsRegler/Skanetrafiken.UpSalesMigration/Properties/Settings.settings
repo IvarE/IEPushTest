@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="ExcelRelativePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Users\Pedro\OneDrive\Ambiente de Trabalho</Value>
+      <Value Profile="(Default)">C:\Users\Pedro\OneDrive\Ambiente de Trabalho\Skanetrafiken\Upsales Migration</Value>
     </Setting>
   </Settings>
 </SettingsFile>
