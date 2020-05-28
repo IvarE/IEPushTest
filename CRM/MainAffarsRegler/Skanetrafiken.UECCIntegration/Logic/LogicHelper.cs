@@ -275,6 +275,8 @@ namespace Skanetrafiken.UECCIntegration.Logic
                     nContact.Telephone2 = companyRole.ed_Telephone;
                     nContact.ed_SocialSecurityNumberBlock = companyRole.ed_SocialSecurityNumber;
                     nContact.ed_InformationSource = ed_informationsource.ForetagsPortal;
+                    nContact.ed_PrivateCustomerContact = false;
+                    nContact.ed_BusinessContact = true;
                     nContact.Description = contact.ContactId.ToString();
 
                     crmContext.AddObject(nContact);
@@ -447,12 +449,12 @@ namespace Skanetrafiken.UECCIntegration.Logic
 
             _log.InfoFormat(CultureInfo.InvariantCulture, "There is no Interceptions between the two lists.");
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 1 Requests.");
-            HandleContactsC1C2(localContext, crmContext, lGContactsC1, true);
+            //_log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 1 Requests.");
+            //HandleContactsC1C2(localContext, crmContext, lGContactsC1, true);
 
-            SaveChangesResultCollection responsesC1 = crmContext.SaveChanges(optionsChanges);
-            LogCrmContextMultipleResponses(responsesC1);
-            crmContext.ClearChanges();
+            //SaveChangesResultCollection responsesC1 = crmContext.SaveChanges(optionsChanges);
+            //LogCrmContextMultipleResponses(responsesC1);
+            //crmContext.ClearChanges();
 
             _log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 2 Logic.");
             HandleContactsC1C2(localContext, crmContext, lGContactsC2, false);

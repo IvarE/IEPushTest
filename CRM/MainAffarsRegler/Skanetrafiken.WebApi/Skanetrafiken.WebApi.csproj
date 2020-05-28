@@ -216,6 +216,12 @@
     <Compile Include="..\Skanetrafiken.Crm\Entities\NotifyMKLEntity.cs">
       <Link>Entities\NotifyMKLEntity.cs</Link>
     </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\OrderEntity.cs">
+      <Link>Entities\OrderEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\OrderProductEntity.cs">
+      <Link>Entities\OrderProductEntity.cs</Link>
+    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\OrderStatusEntity.cs">
       <Link>Entities\OrderStatusEntity.cs</Link>
     </Compile>
@@ -334,6 +340,7 @@
       <Link>XrmRetrieveHelper.cs</Link>
     </Compile>
     <Compile Include="Controllers\MultiQController.cs" />
+    <Compile Include="Models\FileInfoMQ.cs" />
     <Compile Include="Models\OrderMQInfo.cs" />
     <Compile Include="SkaKortUtility.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />

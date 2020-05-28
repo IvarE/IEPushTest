@@ -57,6 +57,11 @@ namespace Skanetrafiken.UpSalesMigration
             return value.Replace("+", "").Replace("(", "").Replace(")", "").Replace("-", "").Replace("'", "").Replace(" ", "");
         }
 
+        public static string getSubString(string value, int max)
+        {
+            return value.Length > max ? value.Substring(0, max - 1) : value;
+        }
+
         public static List<ExcelColumn> GetListExcelColumns(ExcelApp.Range excelRange, int colCount)
         {
             List<ExcelColumn> lColumns = new List<ExcelColumn>();
@@ -345,7 +350,23 @@ namespace Skanetrafiken.UpSalesMigration
                                     _log.InfoFormat(CultureInfo.InvariantCulture, $"Contact with Id: " + contact.Id + " was updated.");
 
                                     break;
-                                case "activity":
+                                case PhoneCall.EntityLogicalName:
+
+                                    PhoneCall phoneCall = (PhoneCall)entity;
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"PhoneCall with Id: " + phoneCall.Id + " was updated.");
+
+                                    break;
+                                case Email.EntityLogicalName:
+
+                                    Email email = (Email)entity;
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Email with Id: " + email.Id + " was updated.");
+
+                                    break;
+                                case Appointment.EntityLogicalName:
+
+                                    Appointment appointment = (Appointment)entity;
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Appointment with Id: " + appointment.Id + " was updated.");
+
                                     break;
                                 case Lead.EntityLogicalName:
                                     break;
@@ -380,7 +401,23 @@ namespace Skanetrafiken.UpSalesMigration
                                     _log.InfoFormat(CultureInfo.InvariantCulture, $"Contact with Name: " + contact.FirstName + " " + contact.LastName + " was created with id: " + id + ".");
 
                                     break;
-                                case "activity":
+                                case PhoneCall.EntityLogicalName:
+
+                                    PhoneCall phoneCall = (PhoneCall)entity;
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"PhoneCall with Subject: " + phoneCall.Subject + " was created with id: " + id + ".");
+
+                                    break;
+                                case Email.EntityLogicalName:
+
+                                    Email email = (Email)entity;
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Email with Subject: " + email.Subject + " was created with id: " + id + ".");
+
+                                    break;
+                                case Appointment.EntityLogicalName:
+
+                                    Appointment appointment = (Appointment)entity;
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Appointment with Subject: " + appointment.Subject + " was created with id: " + id + ".");
+
                                     break;
                                 case Lead.EntityLogicalName:
                                     break;
@@ -417,7 +454,23 @@ namespace Skanetrafiken.UpSalesMigration
                                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Contact with Name: " + contact.FirstName + " " + contact.LastName + " was not created. Details: " + response.Error.Message);
 
                                 break;
-                            case "activity":
+                            case PhoneCall.EntityLogicalName:
+
+                                PhoneCall phoneCall = (PhoneCall)entity;
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - PhoneCall with Subject: " + phoneCall.Subject + " was not created. Details: " + response.Error.Message);
+
+                                break;
+                            case Email.EntityLogicalName:
+
+                                Email email = (Email)entity;
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Email with Subject: " + email.Subject + " was not created. Details: " + response.Error.Message);
+
+                                break;
+                            case Appointment.EntityLogicalName:
+
+                                Appointment appointment = (Appointment)entity;
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Appointment with Subject: " + appointment.Subject + " was not created. Details: " + response.Error.Message);
+
                                 break;
                             case Lead.EntityLogicalName:
                                 break;
@@ -1268,6 +1321,9 @@ namespace Skanetrafiken.UpSalesMigration
 
             for (int i = 2; i < importExcelInfo.rowCount; i++)
             {
+                if (i == 160)
+                    return;
+
                 try
                 {
                     ExcelColumn activityTypeColumn = GetSelectedExcelColumnByName(importExcelInfo.lColumns, activityTypeNameColumn);
@@ -1346,7 +1402,6 @@ namespace Skanetrafiken.UpSalesMigration
             {
                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"The CRM Service is null.");
                 Console.WriteLine("The CRM Service is null.");
-                Console.ReadLine();
                 return;
             }
 
@@ -1418,28 +1473,28 @@ namespace Skanetrafiken.UpSalesMigration
 
             #endregion
 
-            fileName = "Activities företag 2020-04-30.xlsx";
+            fileName = "Upsales data clean 2020-05-26_aktiviteter.xlsx";
 
-            //#region Import Activities
+            #region Import Activities
 
-            //try
-            //{
-            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Activities Entity--------------");
+            try
+            {
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Activities Entity--------------");
 
-            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Activities", fileName);
-            //    ImportActivitiesRecords(localContext, crmContext, importExcelInfo);
-            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-            //    LogCrmContextMultipleResponses(responses);
+                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Activities", fileName);
+                ImportActivitiesRecords(localContext, crmContext, importExcelInfo);
+                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                LogCrmContextMultipleResponses(responses);
 
-            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Activities Entity--------------");
-            //}
-            //catch (Exception e)
-            //{
-            //    _log.Error("Error Importing Activities Records. Details: " + e.Message);
-            //    throw;
-            //}
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Activities Entity--------------");
+            }
+            catch (Exception e)
+            {
+                _log.Error("Error Importing Activities Records. Details: " + e.Message);
+                throw;
+            }
 
-            //#endregion
+            #endregion
 
             //fileName = "Leads företag 2020-04-30.xlsx";
 

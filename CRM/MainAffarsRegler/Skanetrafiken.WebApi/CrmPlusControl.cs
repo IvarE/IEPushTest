@@ -25,6 +25,7 @@ using System.Xml.XPath;
 using System.IO;
 using System.IdentityModel;
 using Skanetrafiken.Crm.Models;
+using Skanetrafiken.Crm.Schema.Generated;
 
 namespace Skanetrafiken.Crm.Controllers
 {
@@ -2127,12 +2128,13 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
-        public static HttpResponseMessage GetOrders(int threadId)
+        public static HttpResponseMessage GetOrders(int threadId, int probability)
         {
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
                 _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -2141,14 +2143,46 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    //TODO LOGIC
+                    ColumnSet columnsOrder = new ColumnSet(OrderEntity.Fields.OrderNumber, OrderEntity.Fields.Name, OrderEntity.Fields.ed_DeliveryReportStatus,
+                                                OrderEntity.Fields.OwnerId, OrderEntity.Fields.CustomerId, OrderEntity.Fields.ed_Probability, OrderEntity.Fields.ed_campaigndatestart,
+                                                OrderEntity.Fields.ed_campaigndateend);
 
-                    List<OrderMQInfo> lOrdersInfo = new List<OrderMQInfo>();
-                    //Probabiliy = 100
-                    //StatusCode = Complete/100001
+                    QueryExpression queryOrders = new QueryExpression(OrderEntity.EntityLogicalName);
+                    queryOrders.NoLock = true;
+                    queryOrders.ColumnSet = columnsOrder;
+                    queryOrders.Criteria.AddCondition(OrderEntity.Fields.ed_Probability, ConditionOperator.GreaterEqual, probability);
+                    queryOrders.Criteria.AddCondition(OrderEntity.Fields.StatusCode, ConditionOperator.Equal, (int)salesorder_statuscode.Complete);
+
+                    List<OrderEntity> lOrders = XrmRetrieveHelper.RetrieveMultiple<OrderEntity>(localContext, queryOrders);
+
+                    if(lOrders.Count == 0)
+                    {
+                        HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.NoContent);
+                        rm.Content = new StringContent(string.Format(Resources.NoSalesOrderFoundWithInfo, ""));
+                        return rm;
+                    }
+
+                    OrderMQInfo orderMQInfo = new OrderMQInfo();
+
+                    orderMQInfo.error = null;
+
+                    foreach (OrderEntity order in lOrders)
+                    {
+                        try
+                        {
+                            OrderMQ orderMQ = OrderMQ.GetOrderMQInfoFromOrderEntity(localContext, order);
+
+                            if (orderMQ != null)
+                                orderMQInfo.data.Add(orderMQ);
+                        }
+                        catch (Exception e)
+                        {
+                            _log.DebugFormat($"Th={threadId} - Error converting Order Info:\n " + e.Message);
+                        }
+                    }
 
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                    resp.Content = new StringContent(SerializeNoNull(lOrdersInfo));
+                    resp.Content = new StringContent(SerializeNoNull(orderMQInfo));
                     return resp;
                 }
             }
@@ -2164,12 +2198,13 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
-        public static HttpResponseMessage PostDeliveryReport(int threadId, string base64)
+        public static HttpResponseMessage PostDeliveryReport(int threadId, FileInfoMQ fileInfo)
         {
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
                 _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -2178,13 +2213,43 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    //TODO LOGIC
+                    QueryExpression queryOrder = new QueryExpression(OrderEntity.EntityLogicalName);
+                    queryOrder.NoLock = true;
+                    queryOrder.ColumnSet.AddColumn(OrderEntity.Fields.SalesOrderId);
+                    queryOrder.Criteria.AddCondition(OrderEntity.Fields.OrderNumber, ConditionOperator.Equal, fileInfo.OrderId);
 
+                    List<OrderEntity> lOrders = XrmRetrieveHelper.RetrieveMultiple<OrderEntity>(localContext, queryOrder);
 
-                    _log.Debug("Delivery Report successfully created and associated to Order! ");
-                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                    resp.Content = new StringContent("Delivery Report created and associated.");
-                    return resp;
+                    if(lOrders.Count == 0)
+                    {
+                        _log.Debug(string.Format(Resources.NoSalesOrderFoundWithInfo, fileInfo.OrderId));
+                        HttpResponseMessage respNoOrders = new HttpResponseMessage(HttpStatusCode.NotFound);
+                        respNoOrders.Content = new StringContent(string.Format(Resources.NoSalesOrderFoundWithInfo, fileInfo.OrderId));
+                        return respNoOrders;
+                    }
+                    else if(lOrders.Count > 1)
+                    {
+                        _log.Debug(string.Format(Resources.MultipleOrdersFound, fileInfo.OrderId));
+                        HttpResponseMessage respNoOrders = new HttpResponseMessage(HttpStatusCode.NotFound);
+                        respNoOrders.Content = new StringContent(string.Format(Resources.MultipleOrdersFound, fileInfo.OrderId));
+                        return respNoOrders;
+                    }
+                    else
+                    {
+                        OrderEntity order = lOrders.FirstOrDefault();
+
+                        OrderEntity uOrder = new OrderEntity();
+                        uOrder.Id = (Guid)order.SalesOrderId;
+                        uOrder.ed_DeliveryReportName = fileInfo.FileName;
+                        uOrder.ed_DeliveryReportStatus = ed_deliveryreportstatus.Creatednotuploaded;
+
+                        XrmHelper.Update(localContext, uOrder);
+
+                        _log.Debug("Delivery Report Information successfully updated on Sekund.");
+                        HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                        resp.Content = new StringContent("Delivery Report Information successfully updated on Sekund.");
+                        return resp;
+                    }
                 }
             }
             catch (Exception ex)
@@ -2199,7 +2264,6 @@ namespace Skanetrafiken.Crm.Controllers
                 ConnectionCacheManager.ReleaseConnection(threadId);
             }
         }
-
 
         internal static HttpResponseMessage AccountPost(int threadId, AccountInfo accountInfo)
         {

@@ -737,6 +737,15 @@ namespace Skanetrafiken.Crm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to # Hittade flera orders med ordernummer {0}..
+        /// </summary>
+        internal static string MultipleOrdersFound {
+            get {
+                return ResourceManager.GetString("MultipleOrdersFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to # Multipla Kunder med samma personnummer funna, vänligen kontakta administratör.
         /// </summary>
         internal static string MultipleSocSecConflictsFound {
