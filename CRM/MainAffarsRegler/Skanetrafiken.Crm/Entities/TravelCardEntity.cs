@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using static Skanetrafiken.Crm.ValueCodes.ValueCodeHandler;
 using System.Net.Http;
 using Microsoft.Xrm.Sdk;
+using Skanetrafiken.Crm.ValueCodes;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -25,6 +26,36 @@ namespace Skanetrafiken.Crm.Entities
             Misuse = 3,
             HandlingError = 4,
             Other = 5
+        }
+
+        public static ValueCodeHandler.GetCardProperties HandlePlaceOrder(Plugin.LocalPluginContext localContext, string cardNumber)
+        {
+            localContext.TracingService.Trace($"Running HandlePlaceOrder.");
+            //TODO: Parse information from API to a GetCardProperties Object
+            ValueCodeHandler.GetCardProperties gerCardProperties = null;
+
+            localContext.TracingService.Trace($"Successfully exiting HandlePlaceOrder.");
+            return gerCardProperties;
+        }
+
+        public static string HandleCaptureOrder(Plugin.LocalPluginContext localContext, string cardNumber)
+        {
+            localContext.TracingService.Trace($"Running HandleCaptureOrder.");
+            //TODO: Parse information from API to a Status String (200 - Success / 400 - Bad Request, error message)
+
+            localContext.TracingService.Trace($"Successfully exiting HandleCaptureOrder.");
+            string apiStatusResponse = "";
+            return apiStatusResponse;
+        }
+
+        public static ValueCodeHandler.GetCardProperties HandleGetCard(Plugin.LocalPluginContext localContext, string cardNumber)
+        {
+            localContext.TracingService.Trace($"Running HandleGetCard.");
+            //TODO: Parse information from API to a GetCardProperties Object
+            ValueCodeHandler.GetCardProperties gerCardProperties = null;
+
+            localContext.TracingService.Trace($"Successfully exiting HandleGetCard.");
+            return gerCardProperties;
         }
 
         public static string BlockCardBiztalk(Plugin.LocalPluginContext localContext, string travelCardNumber, int reasonCode)

@@ -777,6 +777,45 @@ namespace Skanetrafiken.Crm.ValueCodes
             return parsedCardBlockResponse;
         }
 
+        //Change response to be an object
+        public static string CallCaptureOrderAction(Plugin.LocalPluginContext localContext, string cardNumber)
+        {
+            OrganizationRequest request = new OrganizationRequest("ed_CaptureOrder");
+            request["CardNumber"] = cardNumber;
+
+            OrganizationResponse response = (OrganizationResponse)localContext.OrganizationService.Execute(request);
+
+            return (string)response["CaptureOrderResponse"];
+        }
+
+        public static string CallPlaceOrderAction(Plugin.LocalPluginContext localContext, string cardNumber)
+        {
+            OrganizationRequest request = new OrganizationRequest("ed_PlaceOrder");
+            request["CardNumber"] = cardNumber;
+
+            OrganizationResponse response = (OrganizationResponse)localContext.OrganizationService.Execute(request);
+
+            return (string)response["PlaceOrderResponse"];
+        }
+
+        public static GetCardProperties CallGetCardAction(Plugin.LocalPluginContext localContext, string cardNumber)
+        {
+            OrganizationRequest request = new OrganizationRequest("ed_GetCard");
+            request["CardNumber"] = cardNumber;
+
+            //Handle Response Model
+            OrganizationResponse response = (OrganizationResponse)localContext.OrganizationService.Execute(request);
+
+            GetCardProperties getCardProperties = new GetCardProperties();
+            getCardProperties.CardNumber = (string)response["CardNumberResp"];
+            getCardProperties.IsClosed = (bool)response["IsClosed"];
+            getCardProperties.Amount = (decimal)response["Amount"];
+            getCardProperties.ClosedReason = (string)response["ClosedReason"];
+            getCardProperties.IsReserved = (bool)response["IsReserved"];
+
+            return getCardProperties;
+        }
+
         public static EntityReference CallCreateValueCodeAction(Plugin.LocalPluginContext localContext, int voucherType, decimal amount, decimal periodPrice, string mobile, string email, 
             EntityReference refundId, EntityReference leadId, EntityReference contactId, EntityReference valueCodeApprovalId, int deliveryMethod, EntityReference travelCard)
         {
@@ -1541,7 +1580,18 @@ namespace Skanetrafiken.Crm.ValueCodes
 
         }
 
-
+        public class GetCardProperties
+        {
+            public string CardNumber { get; set; }
+            
+            public bool IsClosed { get; set; }
+            
+            public decimal Amount { get; set; }
+            
+            public string ClosedReason { get; set; }
+            
+            public bool IsReserved { get; set; }
+        }
 
         /// <summary>
         /// Model for PurseDetails from Biztalk

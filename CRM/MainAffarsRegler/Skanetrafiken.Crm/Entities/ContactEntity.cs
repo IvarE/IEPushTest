@@ -2008,16 +2008,16 @@ namespace Skanetrafiken.Crm.Entities
             {
                 // Find by social security number first. (NOTE: we are not using social security number for FTG/SCHOOL)
                 //Privat
-                if (contact == null && !string.IsNullOrWhiteSpace(customerInfo.Mobile) && !string.IsNullOrWhiteSpace(customerInfo.Email))
+                if (contact == null /* && !string.IsNullOrWhiteSpace(customerInfo.Mobile) */ && !string.IsNullOrWhiteSpace(customerInfo.Email))
                 {
 
-                    FilterExpression mobileFilter = new FilterExpression(LogicalOperator.And)
-                    {
-                        Conditions =
-                        {
-                            new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, customerInfo.Mobile)
-                        }
-                    };
+                    //FilterExpression mobileFilter = new FilterExpression(LogicalOperator.And)
+                    //{
+                    //    Conditions =
+                    //    {
+                    //        new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, customerInfo.Mobile)
+                    //    }
+                    //};
                     FilterExpression emailFilterNew = new FilterExpression(LogicalOperator.Or)
                     {
                         Conditions =
@@ -2048,7 +2048,7 @@ namespace Skanetrafiken.Crm.Entities
                                 },
                                 Filters =
                                 {
-                                    mobileFilter,
+                                    //mobileFilter,
                                     emailFilterNew,
                                     privateCustomerFilter
                                 }

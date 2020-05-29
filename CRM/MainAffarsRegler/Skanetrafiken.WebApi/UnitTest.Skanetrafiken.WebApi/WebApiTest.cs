@@ -8613,6 +8613,113 @@ namespace Endeavor.Crm.UnitTest
             }
         }
 
+        [Test, Category("Regression"), Category("Pure WebApi")]
+        public void JojoAPITest()
+        {
+            // Connect to the Organization service. 
+            // The using statement assures that the service proxy will be properly disposed.
+            using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+            {
+                // This statement is required to enable early-bound type support.
+                _serviceProxy.EnableProxyTypes();
+
+                Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
+
+                System.Diagnostics.Stopwatch _totalTimer = new System.Diagnostics.Stopwatch();
+                System.Diagnostics.Stopwatch _partTimer = new System.Diagnostics.Stopwatch();
+                _totalTimer.Restart();
+                _partTimer.Restart();
+
+                try
+                {
+                    string result = string.Empty;
+
+                    //Get API Endpoint from Setting Entity
+                    FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+
+                    CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
+
+                    localContext.TracingService.Trace("TotalTime elapsed: {0}. Since last reset: {1}", _totalTimer.ElapsedMilliseconds, _partTimer.ElapsedMilliseconds);
+                    _partTimer.Restart();
+
+                    localContext.TracingService.Trace("\nJojoAPITest - Capture Order:");
+
+                    var httpWebRequestCaptureOrder = (HttpWebRequest)WebRequest.Create(string.Format("{0}captureOrder/", settingEntity.ed_JojoCardDetailsAPI));
+
+                    //WebApiTestHelper.CreateTokenForTest(localContext, httpWebRequest); //Dont think i need a token
+
+                    httpWebRequestCaptureOrder.ContentType = "application/json";
+                    httpWebRequestCaptureOrder.Method = "POST";
+
+                    using (var streamWriter = new StreamWriter(httpWebRequestCaptureOrder.GetRequestStream()))
+                    {
+
+                        string InputJSON = "Card-Number: 12312313";
+
+                        streamWriter.Write(InputJSON);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+
+                    var httpResponseCaptureOrder = (HttpWebResponse)httpWebRequestCaptureOrder.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponseCaptureOrder.GetResponseStream()))
+                    {
+                        //WrapperController.FormatCustomerInfo(ref customer); //Might come in handy
+
+                        // Result is 
+                        result = streamReader.ReadToEnd();
+                        localContext.TracingService.Trace("Jojo API results={0}", result);
+
+                        
+                    }
+
+                    // Validate / Use result
+                    if (!String.IsNullOrWhiteSpace(result))
+                    {
+                        localContext.TracingService.Trace("\nJojoAPITest - Place Order:");
+
+                        var httpWebRequestPlaceOrder = (HttpWebRequest)WebRequest.Create(string.Format("{0}placeOrder/", settingEntity.ed_JojoCardDetailsAPI));
+
+                        //WebApiTestHelper.CreateTokenForTest(localContext, httpWebRequest); //Dont think i need a token
+
+                        httpWebRequestPlaceOrder.ContentType = "application/json";
+                        httpWebRequestPlaceOrder.Method = "POST";
+
+                        using (var streamWriter = new StreamWriter(httpWebRequestPlaceOrder.GetRequestStream()))
+                        {
+
+                            string InputJSON = "Card-Number: 12312313";
+
+                            streamWriter.Write(InputJSON);
+                            streamWriter.Flush();
+                            streamWriter.Close();
+                        }
+
+                        var httpResponsePlaceOrder = (HttpWebResponse)httpWebRequestPlaceOrder.GetResponse();
+                        using (var streamReader = new StreamReader(httpResponsePlaceOrder.GetResponseStream()))
+                        {
+                            //WrapperController.FormatCustomerInfo(ref customer); //Might come in handy
+
+                            // Result is 
+                            result = streamReader.ReadToEnd();
+                            localContext.TracingService.Trace("Jojo API results={0}", result);
+
+                            // Validate / Use result
+                            if (!String.IsNullOrWhiteSpace(result))
+                            {
+                                //Handle Value Code
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.Message);
+                }
+            }
+        }
+        
         //[Test, Explicit]
         //public void WebApiFlow_3_UpdateContactTest()
         //{
