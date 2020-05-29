@@ -2178,8 +2178,16 @@ namespace Skanetrafiken.Crm.Controllers
                         catch (Exception e)
                         {
                             _log.DebugFormat($"Th={threadId} - Error converting Order Info:\n " + e.Message);
+                            orderMQInfo.error = e.Message;
                         }
                     }
+
+                    Metadata metadataMQ = new Metadata();
+                    metadataMQ.limit = null; //TODO CODE LIMIT?
+                    metadataMQ.total = orderMQInfo.data.Count;
+                    metadataMQ.offset = 0;
+
+                    orderMQInfo.metadata = metadataMQ;
 
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                     resp.Content = new StringContent(SerializeNoNull(orderMQInfo));

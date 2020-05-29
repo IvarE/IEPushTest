@@ -1,0 +1,402 @@
+2020-05-29 15:35:36,767 INFO  Skanetrafiken.UpSalesMigration.Program - --------------Starting to Upload the Account Entity--------------
+2020-05-29 15:35:41,164 INFO  Skanetrafiken.UpSalesMigration.Program - There is more than one WorkSheet in this file, by default it will check the first WorkSheet.
+2020-05-29 15:36:34,237 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:40:46,352 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:40:46,390 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 2. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,401 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 3. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,412 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 4. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,420 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 5. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,432 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 6. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,442 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 7. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,454 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 8. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,465 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 9. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,476 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 10. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,493 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 11. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,501 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 12. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,513 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 13. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,523 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 14. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,531 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 15. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,543 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 16. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,557 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 17. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,577 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 18. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,590 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 19. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,603 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 20. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,618 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 21. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,631 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 22. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,642 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 23. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,651 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 24. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,662 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 25. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,670 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 26. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,679 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 27. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,688 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 28. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,696 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 29. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,706 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 30. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,714 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 31. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,724 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 32. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,732 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 33. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,743 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 34. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,754 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 35. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,763 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 36. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,771 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 37. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,791 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 38. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,805 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 39. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,813 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 40. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,823 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 41. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,832 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 42. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,841 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 43. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,850 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 44. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,858 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 45. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,867 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 46. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,876 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 47. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,883 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 48. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,891 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 49. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,899 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 50. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,909 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 51. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,917 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 52. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,926 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 53. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,933 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 54. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,943 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 55. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,951 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 56. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,960 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 57. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,969 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 58. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,978 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 59. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,987 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 60. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:46,999 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 61. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,010 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 62. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,019 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 63. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,028 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 64. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,037 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 65. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,051 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 66. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,065 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 67. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,077 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 68. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,086 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 69. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,096 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 70. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,104 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 71. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,112 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 72. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,119 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 73. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,127 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 74. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,134 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 75. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,143 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 76. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,151 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 77. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,162 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 78. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,171 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 79. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,179 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 80. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,187 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 81. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,197 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 82. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,206 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 83. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,219 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 84. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,228 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 85. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,236 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 86. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,249 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 87. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,259 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 88. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,267 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 89. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,275 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 90. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,283 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 91. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,291 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 92. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,301 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 93. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,310 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 94. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,317 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 95. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,325 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 96. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,349 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 97. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,366 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 98. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,387 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 99. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,424 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 100. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,440 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 101. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,454 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 102. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,476 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 103. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,487 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 104. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,497 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 105. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,510 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 106. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,521 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 107. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,531 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 108. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,539 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 109. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,547 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 110. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,555 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 111. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,564 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 112. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:40:47,571 ERROR Skanetrafiken.UpSalesMigration.Program - Failed to import row 113. Details: O filtro de mensagens indicou que a aplicação está ocupada. (Excepção de HRESULT: 0x8001010A (RPC_E_SERVERCALL_RETRYLATER))
+2020-05-29 15:41:09,205 INFO  Skanetrafiken.UpSalesMigration.Program - --------------Finished to Upload the Account Entity--------------
+2020-05-29 15:42:03,351 INFO  Skanetrafiken.UpSalesMigration.Program - --------------Starting to Upload the Account Entity--------------
+2020-05-29 15:42:06,344 INFO  Skanetrafiken.UpSalesMigration.Program - There is more than one WorkSheet in this file, by default it will check the first WorkSheet.
+2020-05-29 15:42:18,476 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:42:18,476 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:42:20,942 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:42:20,942 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:42:58,358 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001041.
+2020-05-29 15:42:58,358 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001041 was not found.
+2020-05-29 15:43:55,163 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001025.
+2020-05-29 15:43:55,163 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001025 was not found.
+2020-05-29 15:43:55,607 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120000944.
+2020-05-29 15:43:55,607 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120000944 was not found.
+2020-05-29 15:43:55,983 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120000944.
+2020-05-29 15:43:55,983 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120000944 was not found.
+2020-05-29 15:43:56,365 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021003211.
+2020-05-29 15:43:56,365 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021003211 was not found.
+2020-05-29 15:43:56,695 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001173.
+2020-05-29 15:43:56,695 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001173 was not found.
+2020-05-29 15:43:57,025 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001173.
+2020-05-29 15:43:57,025 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001173 was not found.
+2020-05-29 15:43:57,378 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:43:57,378 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:01,364 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021003195.
+2020-05-29 15:44:01,364 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021003195 was not found.
+2020-05-29 15:44:01,742 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001108.
+2020-05-29 15:44:01,742 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001108 was not found.
+2020-05-29 15:44:02,210 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001108.
+2020-05-29 15:44:02,210 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001108 was not found.
+2020-05-29 15:44:02,644 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021003195.
+2020-05-29 15:44:02,644 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021003195 was not found.
+2020-05-29 15:44:02,991 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001058.
+2020-05-29 15:44:02,991 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001058 was not found.
+2020-05-29 15:44:03,342 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001140.
+2020-05-29 15:44:03,342 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001140 was not found.
+2020-05-29 15:44:08,272 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021003211.
+2020-05-29 15:44:08,272 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021003211 was not found.
+2020-05-29 15:44:08,603 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021003211.
+2020-05-29 15:44:08,603 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021003211 was not found.
+2020-05-29 15:44:08,943 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021003211.
+2020-05-29 15:44:08,943 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021003211 was not found.
+2020-05-29 15:44:09,290 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021003211.
+2020-05-29 15:44:09,290 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021003211 was not found.
+2020-05-29 15:44:09,643 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021003211.
+2020-05-29 15:44:09,643 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021003211 was not found.
+2020-05-29 15:44:09,981 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021003211.
+2020-05-29 15:44:09,981 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021003211 was not found.
+2020-05-29 15:44:10,332 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021003211.
+2020-05-29 15:44:10,332 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021003211 was not found.
+2020-05-29 15:44:10,687 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021003211.
+2020-05-29 15:44:10,687 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021003211 was not found.
+2020-05-29 15:44:11,023 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021003211.
+2020-05-29 15:44:11,023 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021003211 was not found.
+2020-05-29 15:44:11,344 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:11,344 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:11,705 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:11,705 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:12,054 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:12,054 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:12,377 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:12,377 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:12,729 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:12,729 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:13,065 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 5562562065.
+2020-05-29 15:44:13,066 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 5562562065 was not found.
+2020-05-29 15:44:13,415 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:13,415 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:13,763 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:13,764 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:14,123 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:14,123 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:14,465 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:14,465 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:14,803 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:14,803 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:15,164 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:15,164 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:15,532 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:15,532 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:16,083 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:16,083 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:16,909 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:16,909 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:17,527 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:17,527 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:18,148 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:18,148 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:18,521 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:18,521 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:18,899 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:18,899 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:19,285 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:19,285 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:19,681 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:19,681 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:20,043 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:20,043 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:20,536 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:20,536 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:20,947 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:20,947 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:21,308 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:21,308 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:21,695 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:21,695 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:22,043 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:22,043 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:22,385 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:22,385 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:22,771 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:22,772 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:23,131 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001124.
+2020-05-29 15:44:23,131 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001124 was not found.
+2020-05-29 15:44:23,462 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021004920.
+2020-05-29 15:44:23,462 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021004920 was not found.
+2020-05-29 15:44:23,811 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021004920.
+2020-05-29 15:44:23,812 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021004920 was not found.
+2020-05-29 15:44:24,162 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 5561203679.
+2020-05-29 15:44:24,162 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 5561203679 was not found.
+2020-05-29 15:44:24,500 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 5562375161.
+2020-05-29 15:44:24,501 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 5562375161 was not found.
+2020-05-29 15:44:24,844 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021000076.
+2020-05-29 15:44:24,845 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021000076 was not found.
+2020-05-29 15:44:25,192 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021000076.
+2020-05-29 15:44:25,192 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021000076 was not found.
+2020-05-29 15:44:25,542 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2021000076.
+2020-05-29 15:44:25,542 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2021000076 was not found.
+2020-05-29 15:44:25,887 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2321000255.
+2020-05-29 15:44:25,887 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2321000255 was not found.
+2020-05-29 15:44:26,307 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2321000255.
+2020-05-29 15:44:26,307 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2321000255 was not found.
+2020-05-29 15:44:26,644 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2321000255.
+2020-05-29 15:44:26,644 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2321000255 was not found.
+2020-05-29 15:44:27,011 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2321000255.
+2020-05-29 15:44:27,011 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2321000255 was not found.
+2020-05-29 15:44:27,363 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2321000255.
+2020-05-29 15:44:27,363 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2321000255 was not found.
+2020-05-29 15:44:27,705 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2321000255.
+2020-05-29 15:44:27,705 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2321000255 was not found.
+2020-05-29 15:44:28,065 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2321000255.
+2020-05-29 15:44:28,065 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2321000255 was not found.
+2020-05-29 15:44:28,431 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2321000255.
+2020-05-29 15:44:28,431 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2321000255 was not found.
+2020-05-29 15:44:28,770 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2321000255.
+2020-05-29 15:44:28,771 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2321000255 was not found.
+2020-05-29 15:44:29,123 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2321000255.
+2020-05-29 15:44:29,123 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2321000255 was not found.
+2020-05-29 15:44:29,462 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001082.
+2020-05-29 15:44:29,462 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001082 was not found.
+2020-05-29 15:44:29,813 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001082.
+2020-05-29 15:44:29,813 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001082 was not found.
+2020-05-29 15:44:30,154 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001082.
+2020-05-29 15:44:30,154 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001082 was not found.
+2020-05-29 15:44:30,542 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001082.
+2020-05-29 15:44:30,542 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001082 was not found.
+2020-05-29 15:44:30,905 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2321000255.
+2020-05-29 15:44:30,905 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2321000255 was not found.
+2020-05-29 15:44:31,254 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2321000255.
+2020-05-29 15:44:31,254 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2321000255 was not found.
+2020-05-29 15:44:31,644 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2321000255.
+2020-05-29 15:44:31,644 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2321000255 was not found.
+2020-05-29 15:44:32,152 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120000993.
+2020-05-29 15:44:32,152 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120000993 was not found.
+2020-05-29 15:44:32,533 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001074.
+2020-05-29 15:44:32,533 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001074 was not found.
+2020-05-29 15:44:34,103 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001181.
+2020-05-29 15:44:34,103 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001181 was not found.
+2020-05-29 15:44:34,625 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001181.
+2020-05-29 15:44:34,625 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001181 was not found.
+2020-05-29 15:44:35,082 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120001181.
+2020-05-29 15:44:35,082 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120001181 was not found.
+2020-05-29 15:44:35,487 INFO  Skanetrafiken.UpSalesMigration.Program - No Accounts or More than One found with field 'cgi_organizational_number' = 2120000878.
+2020-05-29 15:44:35,487 ERROR Skanetrafiken.UpSalesMigration.Program - The Parent Account with Organization Number: 2120000878 was not found.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: 005 Valnämnden, 6541 Förtidsröstning was created with id: d7af9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: 176 Arbetsmarknads- och socialförvaltningen was created with id: d8af9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Arbetsförmedlingen | Kommunikationsavdelningen (Malmö) was created with id: d9af9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Bjuvs kommun - Rörlig Personal was created with id: daaf9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Burlövs kommun - Rörlig Personal was created with id: dbaf9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Båstad kommun - Arbetscentrum was created with id: dcaf9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Båstads kommun - Rörlig Personal was created with id: ddaf9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Clinical Research Centre, Lunds Universitet was created with id: deaf9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Eslövs kommun - Hemtjänsten was created with id: dfaf9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Familjehem Eslövs kommun was created with id: e0af9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Familjehem Malmö stad was created with id: e1af9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Helsingborgs kommun - Arbetsmarknadsfv was created with id: e2af9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Helsingborgs kommun - Filbornaskolan, Vhtstöd och John Blu was created with id: e3af9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Helsingborgs kommun - Förvaltningskontor Vård och Omsorg was created with id: e4af9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Helsingborgs kommun - Kompetentscenter Norrehed was created with id: e5af9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Helsingborgs kommun - Rönnowska Skolan was created with id: e6af9def-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Helsingborgs kommun - Sff Förvaltningskontor was created with id: aba7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Helsingborgs kommun - Socialförvaltningskontor was created with id: aca7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Helsingborgs kommun - Stadsbyggnförv Mex was created with id: ada7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Helsingborgs kommun - Kulturförvaltningen Fredriksdal was created with id: aea7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Helsingborgs stad - Arbetsmarknadsförvaltningen was created with id: afa7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,416 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Högskolan i Kristianstad was created with id: b0a7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Hörby kommun - Fackliga Organisationer Expeditioner was created with id: b1a7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Hörby Kommun - Strategi och Utveckling was created with id: b2a7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Kristianstad Högskola was created with id: b3a7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Kävlinge kommun - Rörlig Personal was created with id: b4a7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Landskrona kommun - Kompetensforum was created with id: b5a7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Kommun - Barn & Skolförvaltningen was created with id: b6a7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Kommun - Kommunkontoret miljöstrategiska enheten was created with id: b7a7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Kommun - Miljöförvaltningen was created with id: b8a7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds kommun - Modersmålsverksamhet Lunds Skolor was created with id: b9a7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds kommun - Polhemskolan was created with id: baa7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Kommun - Socialförvaltningen was created with id: bba7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Kommun - Tekniska Förvaltningen was created with id: bca7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Kommun - Utbildningsförvaltningen was created with id: bda7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Kommun - Valnämnden was created with id: bea7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds kommun - Visit Lund was created with id: bfa7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds kommun kommunkontoret- brunnshögsprojektet was created with id: c0a7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Kommun Kultur - och fritidsförvaltningen was created with id: c1a7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds kommun- Vård och omsorgsförvaltningen was created with id: c2a7e6f5-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Universitet - Biomedicinskt Center was created with id: f7a4fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Universitet - Hcec Ekonomihögskolan was created with id: f8a4fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Universitet - Kemicentrum was created with id: f9a4fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Universitet - M Huset was created with id: faa4fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Universitet - Max IV Laboratory was created with id: fba4fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Universitet - Medicinska Fakulteten was created with id: fca4fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Universitet - Skissernas Museum was created with id: fda4fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds Universitet - Språk och Litteraturcentrum was created with id: fea4fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Lunds universitet sektionen kommunikation was created with id: ffa4fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö kommun - Fastighets- och Gatukontoret was created with id: 00a5fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö kommun - Hemtjänst was created with id: 01a5fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö kommun - Serviceavdelning was created with id: 02a5fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö kommun - Stadområdesförvaltning Innerstaden was created with id: 03a5fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö kommun - Stadsområdesförvaltning Söder was created with id: 04a5fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Opera & Musikteater AB was created with id: 05a5fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Bildningsenheten was created with id: 06a5fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Fastighets- och gatukontoret was created with id: 07a5fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Fastighetskontoret was created with id: 08a5fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Fritidsförvaltningen was created with id: 09a5fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö stad - Funktionsstödsförvaltningen was created with id: 0aa5fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Förskoleförvaltningen was created with id: 0ba5fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Gatukontoret was created with id: 0ca5fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Grundskoleförvaltningen was created with id: 0da5fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - HR was created with id: 0ea5fcfb-baa1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Hälsa, Vård och Omsorgförvaltningen was created with id: 74e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Katrinetorp was created with id: 75e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Kommunikationsenheten was created with id: 76e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Kulturförvaltningen was created with id: 77e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Malmö Lärlingcenter was created with id: 78e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Miljöförvaltningen was created with id: 79e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Näringslivskontoret was created with id: 7ae0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Sociala Resursförvaltningen was created with id: 7be0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Stadsbyggnadskontoret was created with id: 7ce0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Stadskontoret was created with id: 7de0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Öster was created with id: 7ee0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - 170 Gymnasie och vuxenutbildningsförvaltningen was created with id: 7fe0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - Kommunstyrelsen was created with id: 80e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö stad - 037 Fastighets- och gatukontoret was created with id: 81e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Stad - 040 Fritidsförvaltningen was created with id: 82e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Universitet - Fakulteten F Lärande och Samhälle, B was created with id: 83e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Malmö Universitet - Odontologiska Fakulteten Tandvårdshö was created with id: 84e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,417 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Nordens Teknikerinstitut AB (Nti) - Nti-Gymnasium was created with id: 85e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Peab Bostad AB was created with id: 86e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Polismyndigheten - Kristianstad was created with id: 87e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Polismyndigheten - Polismyndigheten - Lund was created with id: 88e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Polismyndigheten - Polismyndigheten - Malmö was created with id: 89e0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Region Skåne - Blodcentralen was created with id: 8ae0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Region Skåne - Patientnämnden was created with id: 8be0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Region Skåne - Skåne Innovation Week was created with id: 8ce0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Region Skåne - Skånes Universitetssjukhus was created with id: 8de0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Region Skåne - Skånevård Sund was created with id: 8ee0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Region Skåne - Ungdomsmottagningen was created with id: 8fe0f601-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Region Skåne Medicinsk Service was created with id: 62c51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Region Skåne, Enheten för samhällsanalys, Avdelningen för regional utveckling was created with id: 63c51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Region Skåne, Regional utveckling, Miljö was created with id: 64c51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Region Skåne, Regionstyrelsen was created with id: 65c51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Skurups kommun - Arbetsmarknads Enh, Bemanningsenh, F was created with id: 66c51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Skurups kommun - Nils Holgersson Gymnasiet, Gymnasies was created with id: 67c51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Skurups kommun - Rörlig Personal was created with id: 68c51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Skurups Kommun - socialförvaltningen was created with id: 69c51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Skåne Läns Landsting - Kamber Malmö was created with id: 6ac51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Skåne Läns Landsting - Labmedicin Malmö was created with id: 6bc51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Skåne Läns Landsting - Medicon Village was created with id: 6cc51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Svalövs kommun - Svalöfs Gymnasium was created with id: 6dc51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Svedala kommun - Rörlig Personal was created with id: 6ec51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Trelleborgs Kommun - Bildningsenheten was created with id: 6fc51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Trelleborgs Kommun - Fritidsförvaltningen was created with id: 70c51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Trelleborgs Kommun - Turistbyrån / Utvecklingsbolaget was created with id: 71c51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Ystad Kommun - Bästa Biennalen was created with id: 72c51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Ystad Kommun - Vård och Omsorg was created with id: 73c51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Ystads Kommun - Refnr 10113901 was created with id: 74c51c08-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - Account with Name: Örkelljunga kommun - Rörlig Personal was created with id: d280420e-bba1-ea11-8196-040e3c516ba1.
+2020-05-29 15:46:11,418 INFO  Skanetrafiken.UpSalesMigration.Program - --------------Finished to Upload the Account Entity--------------

@@ -13,7 +13,7 @@ namespace Skanetrafiken.Crm.Models
     public class Metadata
     {
         public int total { get; set; }
-        public int limit { get; set; }
+        public int? limit { get; set; }
         public int offset { get; set; }
     }
 
@@ -51,6 +51,8 @@ namespace Skanetrafiken.Crm.Models
         public string name { get; set; }
         public int id { get; set; }
         public object category { get; set; }
+        public string startDate { get; set; }
+        public string endDate { get; set; }
     }
 
     public class OrderRow
@@ -96,21 +98,43 @@ namespace Skanetrafiken.Crm.Models
         public bool userRemovable { get; set; }
         public bool userEditable { get; set; }
 
-        internal static List<OrderRow> GetOrderProductsFromOrder(Plugin.LocalPluginContext localContext, Guid orderId)
+        internal static List<OrderRow> GetOrderProductsFromOrder(Plugin.LocalPluginContext localContext, Guid orderId, string pattern)
         {
             if (orderId == null)
                 return new List<OrderRow>();
 
             QueryExpression queryOrderProducts = new QueryExpression(OrderProductEntity.EntityLogicalName);
             queryOrderProducts.NoLock = true;
-            queryOrderProducts.ColumnSet.AddColumns(OrderProductEntity.Fields.SalesOrderDetailId);
+            queryOrderProducts.ColumnSet.AddColumns(OrderProductEntity.Fields.SalesOrderDetailId, OrderProductEntity.Fields.ProductId);
             queryOrderProducts.Criteria.AddCondition(OrderProductEntity.Fields.SalesOrderId, ConditionOperator.Equal, orderId);
 
+            List<OrderRow> lOrderRows = new List<OrderRow>();
             List<OrderProductEntity> lOrderProducts = XrmRetrieveHelper.RetrieveMultiple<OrderProductEntity>(localContext, queryOrderProducts);
 
-            //TODO CREATE NEW LIST OF ORDER ROWS
+            foreach (OrderProductEntity orderProduct in lOrderProducts)
+            {
+                OrderRow orderRow = new OrderRow();
 
-            return new List<OrderRow>();
+                orderRow.id = 1;
+                orderRow.quantity = 1;
+                orderRow.discount = 0;
+                orderRow.custom = new List<object>();
+                orderRow.productId = 1;
+                orderRow.sortId = 1;
+                orderRow.listPrice = 10000;
+
+                Product productObject = new Product();
+                productObject.name = orderProduct.ProductId?.Name;
+                productObject.id = 1;
+                productObject.category = null;
+                productObject.startDate = orderProduct.ed_FromDate?.ToString(pattern);
+                productObject.endDate = orderProduct.ed_ToDate?.ToString(pattern);
+
+                orderRow.product = productObject;
+                lOrderRows.Add(orderRow);
+            }
+
+            return lOrderRows;
         }
 
         internal static OrderMQ GetOrderMQInfoFromOrderEntity(Plugin.LocalPluginContext localContext, OrderEntity orderCRM)
@@ -196,8 +220,7 @@ namespace Skanetrafiken.Crm.Models
             orderMQ.userRemovable = true;
             orderMQ.userEditable = true;
 
-            //The Products are missing TODO
-            List<OrderRow> lOrderProducts = GetOrderProductsFromOrder(localContext, orderCRM.Id);
+            List<OrderRow> lOrderProducts = GetOrderProductsFromOrder(localContext, orderCRM.Id, pattern);
             orderMQ.orderRow = lOrderProducts;
 
             return orderMQ;
