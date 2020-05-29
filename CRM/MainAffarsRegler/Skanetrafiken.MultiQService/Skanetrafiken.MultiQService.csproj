@@ -98,12 +98,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Skanetrafiken.Crm\Entities\SystemUserEntity.cs">
-      <Link>Entities\SystemUserEntity.cs</Link>
-    </Compile>
-    <Compile Include="..\Skanetrafiken.Crm\GeneratedEntities.cs">
-      <Link>GeneratedEntities.cs</Link>
-    </Compile>
     <Compile Include="CrmConnection.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="OrdersService.cs">
@@ -124,6 +118,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="ReportUploader.cs" />
     <Compile Include="ServiceProvider.cs" />
     <Compile Include="TracingService.cs" />
   </ItemGroup>

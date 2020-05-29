@@ -31,5 +31,14 @@ namespace Skanetrafiken.MultiQService.Properties {
                 return ((string)(this["CredentialsFilePath"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0 23 1/1 * ? *")]
+        public string FileUploadScheduleCronExpression {
+            get {
+                return ((string)(this["FileUploadScheduleCronExpression"]));
+            }
+        }
     }
 }

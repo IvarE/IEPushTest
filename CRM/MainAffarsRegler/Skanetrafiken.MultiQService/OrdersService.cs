@@ -36,42 +36,25 @@ namespace Skanetrafiken.MultiQService
 
         public static void InitializeScheduler(IScheduler scheduler)
         {
-            //JobDataMap jobDataMap = new JobDataMap();
-            //jobDataMap[UploadJob.DataMapModifiedAfter] = DateTime.Now;
+            JobDataMap jobDataMap = new JobDataMap();
+            jobDataMap[ReportUploader.DataMapModifiedAfter] = DateTime.Now;
 
-            //_log.Info($"Scheduling UploadJob");
+            _log.Info($"Scheduling UploadJob");
 
-            //IJobDetail scheduleUploadJob = JobBuilder.Create<UploadJob>()
-            //.WithIdentity(UploadJob.JobName, UploadJob.GroupName)
-            //.UsingJobData(jobDataMap)
-            //.WithDescription(UploadJob.JobDescription)
-            //.Build();
+            IJobDetail scheduleUploadJob = JobBuilder.Create<ReportUploader>()
+            .WithIdentity(ReportUploader.JobName, ReportUploader.GroupName)
+            .UsingJobData(jobDataMap)
+            .WithDescription(ReportUploader.JobDescription)
+            .Build();
 
-            //ITrigger scheduleUploadTrigger = TriggerBuilder.Create()
-            //      .WithIdentity(UploadJob.TriggerName, UploadJob.GroupName)
-            //      .WithCronSchedule(Properties.Settings.Default.FileUploadScheduleCronExpression)
-            //      .WithDescription(UploadJob.TriggerDescription)
-            //      .ForJob(scheduleUploadJob)
-            //      .Build();
+            ITrigger scheduleUploadTrigger = TriggerBuilder.Create()
+                  .WithIdentity(ReportUploader.TriggerName, ReportUploader.GroupName)
+                  .WithCronSchedule(Properties.Settings.Default.FileUploadScheduleCronExpression)
+                  .WithDescription(ReportUploader.TriggerDescription)
+                  .ForJob(scheduleUploadJob)
+                  .Build();
 
-            //scheduler.ScheduleJob(scheduleUploadJob, scheduleUploadTrigger);
-
-            //_log.Info($"Scheduling DownloadJob");
-
-            //IJobDetail scheduleDownloadJob = JobBuilder.Create<DownloadJob>()
-            //.WithIdentity(DownloadJob.JobName, DownloadJob.GroupName)
-            //.UsingJobData(jobDataMap)
-            //.WithDescription(DownloadJob.JobDescription)
-            //.Build();
-
-            //ITrigger scheduleDownloadTrigger = TriggerBuilder.Create()
-            //      .WithIdentity(DownloadJob.TriggerName, DownloadJob.GroupName)
-            //      .WithCronSchedule(Properties.Settings.Default.FileDownloadScheduleCronExpression)
-            //      .WithDescription(DownloadJob.TriggerDescription)
-            //      .ForJob(scheduleDownloadJob)
-            //      .Build();
-
-            //scheduler.ScheduleJob(scheduleDownloadJob, scheduleDownloadTrigger);
+            scheduler.ScheduleJob(scheduleUploadJob, scheduleUploadTrigger);
 
         }
 

@@ -132,4 +132,13 @@
   <data name="QuartzShuttingDownCompleted" xml:space="preserve">
     <value>Shut down of Quartz completed.</value>
   </data>
+  <data name="ScheduleJobExecuted" xml:space="preserve">
+    <value>Schedule Job "{0}" executed, Modified After {1}.</value>
+  </data>
+  <data name="ScheduleJobExecuting" xml:space="preserve">
+    <value>Schedule Job "{0}" executing, Modified After {1}.</value>
+  </data>
+  <data name="TriggerExecuting" xml:space="preserve">
+    <value>Trigger "{0}" executing.</value>
+  </data>
 </root>

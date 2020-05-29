@@ -104,5 +104,32 @@ namespace Skanetrafiken.MultiQService.Properties {
                 return ResourceManager.GetString("QuartzShuttingDownCompleted", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schedule Job &quot;{0}&quot; executed, Modified After {1}..
+        /// </summary>
+        internal static string ScheduleJobExecuted {
+            get {
+                return ResourceManager.GetString("ScheduleJobExecuted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schedule Job &quot;{0}&quot; executing, Modified After {1}..
+        /// </summary>
+        internal static string ScheduleJobExecuting {
+            get {
+                return ResourceManager.GetString("ScheduleJobExecuting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trigger &quot;{0}&quot; executing..
+        /// </summary>
+        internal static string TriggerExecuting {
+            get {
+                return ResourceManager.GetString("TriggerExecuting", resourceCulture);
+            }
+        }
     }
 }
