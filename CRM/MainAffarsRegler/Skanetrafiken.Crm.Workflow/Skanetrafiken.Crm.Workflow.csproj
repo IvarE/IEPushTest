@@ -299,6 +299,9 @@
     <Compile Include="ApproveValueCodeApproval.cs" />
     <Compile Include="BigInteger.cs" />
     <Compile Include="BlockAccountPortal.cs" />
+    <Compile Include="GetCard.cs" />
+    <Compile Include="PlaceOrder.cs" />
+    <Compile Include="CaptureOrder.cs" />
     <Compile Include="BlockCardBiztalk.cs" />
     <Compile Include="BlockCompanyRolePortal.cs" />
     <Compile Include="BlockCustomerPortal.cs" />

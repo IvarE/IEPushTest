@@ -266,6 +266,7 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage HandleCreateValueCode(Plugin.LocalPluginContext localContext, ValueCodeCreationGiftCard valueCode, int threadId)
         {
             _log.Debug($"--------------Running CreateValueCode--------------");
+            FeatureTogglingEntity feature = XrmRetrieveHelper.RetrieveFirst<FeatureTogglingEntity>(localContext, new ColumnSet(FeatureTogglingEntity.Fields.ed_BlockTravelCardAPI));
 
             #region Argument validation
             if (valueCode == null)
@@ -519,358 +520,561 @@ namespace Skanetrafiken.Crm.Controllers
                 _log.Debug($"No contact has been assigned.");
             }
 
-            #region Validate travel card in BIFF
-            //Check if travel card exists in BIFF
-            //Check if travel card is already invalidated (From BIFF) 
-            //Check if there's any value in travel card (if no then send error)
-            //Check if there's an active period on the travel card (if yes then send error, cannot invalidate card)
-
-            //Only block card if not one of these cards. This is used for mocking.
-            if ((valueCode.TravelCard.TravelCardNumber == "123456" && valueCode.TravelCard.CVC == "123") ||
-                (valueCode.TravelCard.TravelCardNumber == "654321" && valueCode.TravelCard.CVC == "321") ||
-                (valueCode.TravelCard.TravelCardNumber == "45678" && valueCode.TravelCard.CVC == "456") ||
-                (valueCode.TravelCard.TravelCardNumber == "123456" && valueCode.TravelCard.CVC == "123") ||
-                (valueCode.TravelCard.TravelCardNumber == "987654" && valueCode.TravelCard.CVC == "987"))
+            if (feature == null || (feature != null && feature.ed_BlockTravelCardAPI != true))
             {
-                _log.Debug($"Called mocked travel cards.");
-                return new HttpResponseMessage(HttpStatusCode.OK);
-            }
+                #region Validate travel card in BIFF (Changed API to not go from Biff anymore)
+                //Check if travel card exists in BIFF
+                //Check if travel card is already invalidated (From BIFF) 
+                //Check if there's any value in travel card (if no then send error)
+                //Check if there's an active period on the travel card (if yes then send error, cannot invalidate card)
 
-            decimal outstandingChargesWaiting = 0;
-
-
-            // Get Outstanding Charges
-            #region GetOutstandingCharges
-            _log.Debug($"Trying to retrieve OutstandingCharges.");
-            try
-            {
-                string outstandingChargesResponse =
-                ValueCodeHandler.CallGetOutstandingChargesFromBiztalkAction(localContext, valueCode.TravelCard.TravelCardNumber);
-
-                _log.Debug($"OutstandingCharges retrieve completed. {outstandingChargesResponse}");
-
-                TravelCardEntity.OutstandingChargesEnvelope outstandingCharges = null;
-
-
-                if (!string.IsNullOrEmpty(outstandingChargesResponse))
+                //Only block card if not one of these cards. This is used for mocking.
+                if ((valueCode.TravelCard.TravelCardNumber == "123456" && valueCode.TravelCard.CVC == "123") ||
+                    (valueCode.TravelCard.TravelCardNumber == "654321" && valueCode.TravelCard.CVC == "321") ||
+                    (valueCode.TravelCard.TravelCardNumber == "45678" && valueCode.TravelCard.CVC == "456") ||
+                    (valueCode.TravelCard.TravelCardNumber == "123456" && valueCode.TravelCard.CVC == "123") ||
+                    (valueCode.TravelCard.TravelCardNumber == "987654" && valueCode.TravelCard.CVC == "987"))
                 {
-                    try
+                    _log.Debug($"Called mocked travel cards.");
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }
+
+                decimal outstandingChargesWaiting = 0;
+
+
+                // Get Outstanding Charges
+                #region GetOutstandingCharges
+                _log.Debug($"Trying to retrieve OutstandingCharges.");
+                try
+                {
+                    string outstandingChargesResponse =
+                    ValueCodeHandler.CallGetOutstandingChargesFromBiztalkAction(localContext, valueCode.TravelCard.TravelCardNumber);
+
+                    _log.Debug($"OutstandingCharges retrieve completed. {outstandingChargesResponse}");
+
+                    TravelCardEntity.OutstandingChargesEnvelope outstandingCharges = null;
+
+
+                    if (!string.IsNullOrEmpty(outstandingChargesResponse))
                     {
-                        _log.Debug("Starting to serialize outstanding charges");
-
-                        XmlSerializer serializer = new XmlSerializer(typeof(TravelCardEntity.OutstandingChargesEnvelope));
-
-                        _log.Debug("serializer step 1");
-
-                        if (serializer == null)
+                        try
                         {
-                            _log.Debug("serializer step 2");
-                            throw new Exception("ParseCardDetails: XmlSerializer is null.");
-                        }
+                            _log.Debug("Starting to serialize outstanding charges");
 
-                        if (string.IsNullOrWhiteSpace(outstandingChargesResponse))
-                        {
-                            _log.Debug("serializer step 3");
-                            throw new Exception("ParseCardDetails: soapResponse is null.");
-                        }
+                            XmlSerializer serializer = new XmlSerializer(typeof(TravelCardEntity.OutstandingChargesEnvelope));
 
-                        _log.Debug("serializer step 4");
+                            _log.Debug("serializer step 1");
 
-                        StringReader strReader = new StringReader(outstandingChargesResponse);
-
-                        _log.Debug("serializer step 5");
-
-                        if (strReader == null)
-                        {
-                            _log.Debug("serializer step 6");
-                            throw new Exception("ParseCardDetails: StringReader is null.");
-                        }
-
-                        _log.Debug("serializer step 7");
-                        outstandingCharges = (TravelCardEntity.OutstandingChargesEnvelope)serializer.Deserialize(strReader);
-
-                    }
-                    catch (Exception ex)
-                    {
-                        localContext.TracingService.Trace("Error from ParseCardDetails. Ex: " + ex.Message);
-                        //throw new Exception($"(ParseCardDetails) error: {ex}");
-                        _log.Debug($"InnerError while fetching Outstanding Charges...");
-                        //throw new Exception("Någont oväntat fel skedde när vi försökte hämta outhämtade laddningar (ENDAST TILLFÄLLIGT MEDDELANDE)");
-                    }
-
-                    if (outstandingCharges != null && outstandingCharges.Body != null &&
-                        outstandingCharges.Body.OutstandingChargesResponse != null)
-                    {
-                        if (outstandingCharges.Body.OutstandingChargesResponse.HasOutstandingCharge == true)
-                        {
-
-                            _log.Debug($"Outstanding Charges = {outstandingCharges.Body.OutstandingChargesResponse.Amount} for TravelCard: {valueCode.TravelCard.TravelCardNumber}");
-
-                            decimal amountOutstandingCharges = outstandingCharges.Body.OutstandingChargesResponse.Amount;
-
-                            if (amountOutstandingCharges > 0)
+                            if (serializer == null)
                             {
-                                _log.Debug($"There are outstanding charges.");
-
-                                outstandingChargesWaiting = amountOutstandingCharges;
-
-
-                                //_log.Debug($"Returning BadRequest for TravelCard {valueCode.TravelCard.TravelCardNumber} having Outstanding Charges.");
-
-                                //return ReturnApiMessage(threadId,
-                                //    ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_PendingCharge),
-                                //    HttpStatusCode.BadRequest);
+                                _log.Debug("serializer step 2");
+                                throw new Exception("ParseCardDetails: XmlSerializer is null.");
                             }
-                            else
+
+                            if (string.IsNullOrWhiteSpace(outstandingChargesResponse))
                             {
-                                _log.Debug("Outstanding Charges Amount is 0 or less.");
+                                _log.Debug("serializer step 3");
+                                throw new Exception("ParseCardDetails: soapResponse is null.");
+                            }
+
+                            _log.Debug("serializer step 4");
+
+                            StringReader strReader = new StringReader(outstandingChargesResponse);
+
+                            _log.Debug("serializer step 5");
+
+                            if (strReader == null)
+                            {
+                                _log.Debug("serializer step 6");
+                                throw new Exception("ParseCardDetails: StringReader is null.");
+                            }
+
+                            _log.Debug("serializer step 7");
+                            outstandingCharges = (TravelCardEntity.OutstandingChargesEnvelope)serializer.Deserialize(strReader);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            localContext.TracingService.Trace("Error from ParseCardDetails. Ex: " + ex.Message);
+                            //throw new Exception($"(ParseCardDetails) error: {ex}");
+                            _log.Debug($"InnerError while fetching Outstanding Charges...");
+                            //throw new Exception("Någont oväntat fel skedde när vi försökte hämta outhämtade laddningar (ENDAST TILLFÄLLIGT MEDDELANDE)");
+                        }
+
+                        if (outstandingCharges != null && outstandingCharges.Body != null &&
+                            outstandingCharges.Body.OutstandingChargesResponse != null)
+                        {
+                            if (outstandingCharges.Body.OutstandingChargesResponse.HasOutstandingCharge == true)
+                            {
+
+                                _log.Debug($"Outstanding Charges = {outstandingCharges.Body.OutstandingChargesResponse.Amount} for TravelCard: {valueCode.TravelCard.TravelCardNumber}");
+
+                                decimal amountOutstandingCharges = outstandingCharges.Body.OutstandingChargesResponse.Amount;
+
+                                if (amountOutstandingCharges > 0)
+                                {
+                                    _log.Debug($"There are outstanding charges.");
+
+                                    outstandingChargesWaiting = amountOutstandingCharges;
+
+
+                                    //_log.Debug($"Returning BadRequest for TravelCard {valueCode.TravelCard.TravelCardNumber} having Outstanding Charges.");
+
+                                    //return ReturnApiMessage(threadId,
+                                    //    ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_PendingCharge),
+                                    //    HttpStatusCode.BadRequest);
+                                }
+                                else
+                                {
+                                    _log.Debug("Outstanding Charges Amount is 0 or less.");
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        _log.Debug("Outstanding Charges response (amount) is null");
-                    }
+                        else
+                        {
+                            _log.Debug("Outstanding Charges response (amount) is null");
+                        }
 
-                }
-            }
-            catch (Exception ex)
-            {
-                _log.Debug($"OuterError while fetching Outstanding Charges...");
-            }
-            #endregion
-
-            _log.Debug($"Calling ed_GetCardDetails workflow.");
-            var card = ValueCodeHandler.CallGetCardDetailsFromBiztalkAction(localContext, valueCode.TravelCard.TravelCardNumber);
-            _log.Debug($"GetCardDetails ran successfully.");
-
-            _log.Debug($"Calling ed_ParseBiztalkResponse workflow.");
-            var parsedCard = ValueCodeHandler.CallParseCardDetailsFromBiztalkAction(localContext, card);
-            _log.Debug($"ParseCardDetails ran successfully.");
-            _log.Debug($"Data from parse -\nCardNumberField: {parsedCard?.CardNumberField} \n" +
-                $"CardIssuerField: {parsedCard?.CardIssuerField} \n" +
-                $"CardHotlistedField: {parsedCard?.CardHotlistedField} \n" +
-                $"CardTypePeriodField: {parsedCard?.CardTypePeriodField} \n" +
-                $"CardTypeValueField: {parsedCard?.CardTypeValueField} \n" +
-                $"CardValueProductTypeField: {parsedCard?.CardValueProductTypeField} \n" +
-                $"CardKindField: {parsedCard?.CardKindField} \n" +
-                $"CardCategoryField: {parsedCard?.CardCategoryField} \n" +
-                $"BalanceField: {parsedCard?.BalanceField} \n" +
-                $"CurrencyField: {parsedCard?.CurrencyField} \n" +
-                $"OutstandingDirectedAutoloadField: {parsedCard?.OutstandingDirectedAutoloadField} \n" +
-                $"OutstandingEnableThresholdAutoloadField: {parsedCard?.OutstandingEnableThresholdAutoloadField} \n" +
-                $"PurseHotlistedField: {parsedCard?.PurseHotlistedField} \n" +
-                $"PeriodCardCategoryField: {parsedCard?.PeriodCardCategoryField} \n" +
-                $"ProductTypeField: {parsedCard?.ProductTypeField} \n" +
-                $"PeriodStartField: {parsedCard?.PeriodStartField} \n" +
-                $"PeriodEndField: {parsedCard?.PeriodEndField} \n" +
-                $"WaitingPeriodsField: {parsedCard?.WaitingPeriodsField} \n" +
-                $"ZoneListIDField: {parsedCard?.ZoneListIDField} \n" +
-                $"ZonesListField: {parsedCard?.ZonesListField} \n" +
-                $"PricePaidField: {parsedCard?.PricePaidField} \n" +
-                $"ContractSerialNumberField: {parsedCard?.ContractSerialNumberField} \n" +
-                $"PeriodCurrencyField: {parsedCard?.PeriodCurrencyField} \n" +
-                $"PeriodHotlistedField: {parsedCard?.PeriodHotlistedField} \n" +
-                $"PeriodOutstandingDirectedAutoloadField: {parsedCard?.PeriodOutstandingDirectedAutoloadField} \n" +
-                $"PeriodOutstandingEnableThresholdAutoload: {parsedCard?.PeriodOutstandingEnableThresholdAutoload}");
-
-            _log.Debug($"Validating parsed card from BIFF.");
-            var respBiztalk = ValidateCardDetailsFromBiztalkForPresentkort(localContext, threadId, parsedCard, travelCard);
-            if (respBiztalk.StatusCode == HttpStatusCode.NotFound)
-            {
-                _log.Debug($"Travel card was previously not found. Create a new one with blocked status = true.");
-                var newTravelCard = new TravelCardEntity()
-                {
-                    cgi_travelcardnumber = valueCode.TravelCard.TravelCardNumber,
-                    cgi_TravelCardCVC = valueCode.TravelCard.CVC,
-                    cgi_Blocked = true,
-                    ed_RequestedValueCodeForCard = false,
-                    cgi_Contactid = contact.ToEntityReference()
-                };
-
-                newTravelCard.Id = XrmHelper.Create(localContext, newTravelCard);
-                travelCard = newTravelCard;
-                _log.Debug($"Newly created travel card - Id: {newTravelCard?.Id}, " +
-                    $"cgi_travelcardnumber: {newTravelCard?.cgi_travelcardnumber}, " +
-                    $"cgi_TravelCardCVC: {newTravelCard?.cgi_TravelCardCVC}, " +
-                    $"cgi_Blocked: {newTravelCard?.cgi_Blocked}, " +
-                    $"ed_RequestedValueCodeForCard: {newTravelCard?.ed_RequestedValueCodeForCard}");
-
-
-            }
-            else if (respBiztalk.StatusCode != HttpStatusCode.OK)
-            {
-                return respBiztalk;
-            }
-
-            #endregion
-
-            #region Validation against travel card
-
-            /*
-             * Even if travel card exists in Biff, we need to verify that it also exists in CRM 
-             */
-
-
-            //#region Validation
-
-            //If no travel card is found, create a new one.
-            if (travelCard == null)
-            {
-                _log.Debug($"Specified travelcard '{valueCode?.TravelCard?.TravelCardNumber}' was not found in CRM. Create one in CRM.");
-
-                // 2DO, Refactor to TravelCardEntity and fill more fields!
-
-                var newTravelCard = new TravelCardEntity()
-                {
-                    cgi_travelcardnumber = valueCode.TravelCard.TravelCardNumber,
-                    cgi_TravelCardCVC = valueCode.TravelCard.CVC,
-                    cgi_Blocked = false,
-                    ed_RequestedValueCodeForCard = false,
-                    cgi_Contactid = contact.ToEntityReference()
-                };
-
-                newTravelCard.Id = XrmHelper.Create(localContext, newTravelCard);
-                travelCard = newTravelCard;
-                _log.Debug($"Newly created travel card - Id: {newTravelCard?.Id}, " +
-                    $"cgi_travelcardnumber: {newTravelCard?.cgi_travelcardnumber}, " +
-                    $"cgi_TravelCardCVC: {newTravelCard?.cgi_TravelCardCVC}, " +
-                    $"cgi_Blocked: {newTravelCard?.cgi_Blocked}, " +
-                    $"ed_RequestedValueCodeForCard: {newTravelCard?.ed_RequestedValueCodeForCard}" +
-                    $"ed_Contactid: {newTravelCard?.cgi_Contactid.Id}");
-            }
-
-            ////else _log.Debug($"Found matching travel card '{travelCard?.cgi_travelcardnumber}' in CRM.");
-
-            //#endregion
-
-
-            /*---------------------------------------------------------------
-             * Validation of user input is done, and travel card is valid.
-             * Now, invalidate travel card and create value code
-             * --------------------------------------------------------------
-             */
-
-            _log.Debug($"Fetching maximum value setting.");
-            //Fetch setting for maximum value
-            var maxAmount = CgiSettingEntity.GetSettingDecimal(localContext, CgiSettingEntity.Fields.ed_MaxAmountForGiftCard);
-            if (maxAmount < 0M)
-            {
-                _log.Debug($"Max amount cannot go below 0. Edit your max limit in Setting entity.");
-                return ReturnApiMessage(threadId,
-                    "Max amount cannot be less than 0. Please contact CRM admin.",
-                    HttpStatusCode.BadRequest);
-            }
-
-            _log.Debug($"Fetching valid for days setting.");
-            //Fetch setting for number of valid days
-            var validDays = CgiSettingEntity.GetSettingInt(localContext, CgiSettingEntity.Fields.ed_ValidForDaysValueCode);
-            if (validDays < 0)
-                return ReturnApiMessage(threadId,
-                       "Valid days cannot be less than 0. Please contact CRM admin.",
-                       HttpStatusCode.BadRequest);
-
-
-            //If exceeds max amount, create incident
-
-            //Devop Task 745 - Round decimals
-            if(parsedCard.BalanceField > 0)
-                parsedCard.BalanceField = (decimal)Math.Round(parsedCard.BalanceField, 0, MidpointRounding.AwayFromZero);
-
-            if (outstandingChargesWaiting > 0)
-                parsedCard.BalanceField += outstandingChargesWaiting;
-
-            //If exceeds max amount, create value code approval.
-            if (parsedCard.BalanceField > maxAmount)
-            {
-                HttpResponseMessage blockResponse = null;
-                if (respBiztalk.IsSuccessStatusCode)
-                {
-                    if (!parsedCard.CardHotlistedField)
-                    {
-                        blockResponse = BlockTravelCard(localContext, threadId, travelCard);
-                        if (!blockResponse.IsSuccessStatusCode)
-                            return blockResponse;
                     }
                 }
-
-                _log.Debug($"Travel card balance exceeded limit. Balance: {parsedCard?.BalanceField} - Limit: {maxAmount}");
-
-                IncidentEntity incidentEnt = null;
-
-                //Create case
-                if (valueCode.deliveryMethod == 1)
-                    incidentEnt = IncidentEntity.CreateCaseForTravelCardValueCodeExchange(localContext, parsedCard.CardNumberField, parsedCard.BalanceField, contact, valueCode.Email, null, valueCode.deliveryMethod, travelCard);
-                else //Mobile - 2
-                    incidentEnt = IncidentEntity.CreateCaseForTravelCardValueCodeExchange(localContext, parsedCard.CardNumberField, parsedCard.BalanceField, contact, null, valueCode.Mobile, valueCode.deliveryMethod, travelCard);
-
-                if (incidentEnt == null)
+                catch (Exception ex)
                 {
-                    _log.Debug($"Incident was not created for some reason.");
-                    return ReturnApiMessage(threadId,
-                        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                    HttpStatusCode.BadRequest);
+                    _log.Debug($"OuterError while fetching Outstanding Charges...");
                 }
+                #endregion
 
-                _log.Debug($"Successfully created an incident. Exit function");
-                return ReturnApiMessage(threadId,
-                                        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_AboveMaxAmount),
-                                        HttpStatusCode.OK);
-            }
-            else //Not exceeding maximum amount
-            {
-                HttpResponseMessage blockResponse = null;
-                #region Block Travel Card
-                if (respBiztalk.IsSuccessStatusCode)
+                _log.Debug($"Calling ed_GetCardDetails workflow.");
+                var card = ValueCodeHandler.CallGetCardDetailsFromBiztalkAction(localContext, valueCode.TravelCard.TravelCardNumber);
+                _log.Debug($"GetCardDetails ran successfully.");
+
+                _log.Debug($"Calling ed_ParseBiztalkResponse workflow.");
+                var parsedCard = ValueCodeHandler.CallParseCardDetailsFromBiztalkAction(localContext, card);
+                _log.Debug($"ParseCardDetails ran successfully.");
+                _log.Debug($"Data from parse -\nCardNumberField: {parsedCard?.CardNumberField} \n" +
+                    $"CardIssuerField: {parsedCard?.CardIssuerField} \n" +
+                    $"CardHotlistedField: {parsedCard?.CardHotlistedField} \n" +
+                    $"CardTypePeriodField: {parsedCard?.CardTypePeriodField} \n" +
+                    $"CardTypeValueField: {parsedCard?.CardTypeValueField} \n" +
+                    $"CardValueProductTypeField: {parsedCard?.CardValueProductTypeField} \n" +
+                    $"CardKindField: {parsedCard?.CardKindField} \n" +
+                    $"CardCategoryField: {parsedCard?.CardCategoryField} \n" +
+                    $"BalanceField: {parsedCard?.BalanceField} \n" +
+                    $"CurrencyField: {parsedCard?.CurrencyField} \n" +
+                    $"OutstandingDirectedAutoloadField: {parsedCard?.OutstandingDirectedAutoloadField} \n" +
+                    $"OutstandingEnableThresholdAutoloadField: {parsedCard?.OutstandingEnableThresholdAutoloadField} \n" +
+                    $"PurseHotlistedField: {parsedCard?.PurseHotlistedField} \n" +
+                    $"PeriodCardCategoryField: {parsedCard?.PeriodCardCategoryField} \n" +
+                    $"ProductTypeField: {parsedCard?.ProductTypeField} \n" +
+                    $"PeriodStartField: {parsedCard?.PeriodStartField} \n" +
+                    $"PeriodEndField: {parsedCard?.PeriodEndField} \n" +
+                    $"WaitingPeriodsField: {parsedCard?.WaitingPeriodsField} \n" +
+                    $"ZoneListIDField: {parsedCard?.ZoneListIDField} \n" +
+                    $"ZonesListField: {parsedCard?.ZonesListField} \n" +
+                    $"PricePaidField: {parsedCard?.PricePaidField} \n" +
+                    $"ContractSerialNumberField: {parsedCard?.ContractSerialNumberField} \n" +
+                    $"PeriodCurrencyField: {parsedCard?.PeriodCurrencyField} \n" +
+                    $"PeriodHotlistedField: {parsedCard?.PeriodHotlistedField} \n" +
+                    $"PeriodOutstandingDirectedAutoloadField: {parsedCard?.PeriodOutstandingDirectedAutoloadField} \n" +
+                    $"PeriodOutstandingEnableThresholdAutoload: {parsedCard?.PeriodOutstandingEnableThresholdAutoload}");
+
+                _log.Debug($"Validating parsed card from BIFF.");
+                var respBiztalk = ValidateCardDetailsFromBiztalkForPresentkort(localContext, threadId, parsedCard, travelCard);
+                if (respBiztalk.StatusCode == HttpStatusCode.NotFound)
                 {
-                    if (!parsedCard.CardHotlistedField)
+                    _log.Debug($"Travel card was previously not found. Create a new one with blocked status = true.");
+                    var newTravelCard = new TravelCardEntity()
                     {
-                        blockResponse = BlockTravelCard(localContext, threadId, travelCard);
-                        if (!blockResponse.IsSuccessStatusCode)
-                            return blockResponse;
-                    }
+                        cgi_travelcardnumber = valueCode.TravelCard.TravelCardNumber,
+                        cgi_TravelCardCVC = valueCode.TravelCard.CVC,
+                        cgi_Blocked = true,
+                        ed_RequestedValueCodeForCard = false,
+                        cgi_Contactid = contact.ToEntityReference()
+                    };
+
+                    newTravelCard.Id = XrmHelper.Create(localContext, newTravelCard);
+                    travelCard = newTravelCard;
+                    _log.Debug($"Newly created travel card - Id: {newTravelCard?.Id}, " +
+                        $"cgi_travelcardnumber: {newTravelCard?.cgi_travelcardnumber}, " +
+                        $"cgi_TravelCardCVC: {newTravelCard?.cgi_TravelCardCVC}, " +
+                        $"cgi_Blocked: {newTravelCard?.cgi_Blocked}, " +
+                        $"ed_RequestedValueCodeForCard: {newTravelCard?.ed_RequestedValueCodeForCard}");
+
+
+                }
+                else if (respBiztalk.StatusCode != HttpStatusCode.OK)
+                {
+                    return respBiztalk;
                 }
 
                 #endregion
 
-                EntityReference valueCodeGeneric = null;
+                #region Validation against travel card
 
-                valueCodeGeneric = CreateGiftCardValueCode(localContext, parsedCard, valueCode, travelCard, contact);
+                /*
+                 * Even if travel card exists in Biff, we need to verify that it also exists in CRM 
+                 */
 
-                if (valueCodeGeneric == null)
+
+                //#region Validation
+
+                //If no travel card is found, create a new one.
+                if (travelCard == null)
                 {
-                    _log.Debug($"Value code was not created, abort process.");
-                    return ReturnApiMessage(threadId,
-                        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                    HttpStatusCode.BadRequest);
-                }
+                    _log.Debug($"Specified travelcard '{valueCode?.TravelCard?.TravelCardNumber}' was not found in CRM. Create one in CRM.");
 
-                _log.Debug($"Fetch travel card '{travelCard?.cgi_travelcardnumber}' from CRM.");
-                var crmTravelCard = FetchTravelCardFromCRM(localContext,
-                        travelCard.cgi_travelcardnumber, new ColumnSet(TravelCardEntity.Fields.cgi_Blocked));
+                    // 2DO, Refactor to TravelCardEntity and fill more fields!
 
-                //Update travel card to blocked
-                if (crmTravelCard?.cgi_Blocked == true)
-                {
-                    var updateTravelCard = new TravelCardEntity()
+                    var newTravelCard = new TravelCardEntity()
                     {
-                        Id = crmTravelCard.Id,
-                        ed_RequestedValueCodeForCard = true
+                        cgi_travelcardnumber = valueCode.TravelCard.TravelCardNumber,
+                        cgi_TravelCardCVC = valueCode.TravelCard.CVC,
+                        cgi_Blocked = false,
+                        ed_RequestedValueCodeForCard = false,
+                        cgi_Contactid = contact.ToEntityReference()
                     };
-                    XrmHelper.Update(localContext, updateTravelCard);
 
-                    _log.Debug($"Update travel card ed_RequestedValueCodeForCard: {updateTravelCard?.ed_RequestedValueCodeForCard}");
+                    newTravelCard.Id = XrmHelper.Create(localContext, newTravelCard);
+                    travelCard = newTravelCard;
+                    _log.Debug($"Newly created travel card - Id: {newTravelCard?.Id}, " +
+                        $"cgi_travelcardnumber: {newTravelCard?.cgi_travelcardnumber}, " +
+                        $"cgi_TravelCardCVC: {newTravelCard?.cgi_TravelCardCVC}, " +
+                        $"cgi_Blocked: {newTravelCard?.cgi_Blocked}, " +
+                        $"ed_RequestedValueCodeForCard: {newTravelCard?.ed_RequestedValueCodeForCard}" +
+                        $"ed_Contactid: {newTravelCard?.cgi_Contactid.Id}");
                 }
 
-                var sendValueCode = ValueCodeHandler.CallSendValueCodeAction(localContext, valueCodeGeneric);
-                _log.Debug($"Value code sent.");
+                ////else _log.Debug($"Found matching travel card '{travelCard?.cgi_travelcardnumber}' in CRM.");
 
-                //Successfully created value code
-                return ReturnApiMessage(threadId, ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_OK),
-                    HttpStatusCode.OK);
+                //#endregion
+
+
+                /*---------------------------------------------------------------
+                 * Validation of user input is done, and travel card is valid.
+                 * Now, invalidate travel card and create value code
+                 * --------------------------------------------------------------
+                 */
+
+                _log.Debug($"Fetching maximum value setting.");
+                //Fetch setting for maximum value
+                var maxAmount = CgiSettingEntity.GetSettingDecimal(localContext, CgiSettingEntity.Fields.ed_MaxAmountForGiftCard);
+                if (maxAmount < 0M)
+                {
+                    _log.Debug($"Max amount cannot go below 0. Edit your max limit in Setting entity.");
+                    return ReturnApiMessage(threadId,
+                        "Max amount cannot be less than 0. Please contact CRM admin.",
+                        HttpStatusCode.BadRequest);
+                }
+
+                _log.Debug($"Fetching valid for days setting.");
+                //Fetch setting for number of valid days
+                var validDays = CgiSettingEntity.GetSettingInt(localContext, CgiSettingEntity.Fields.ed_ValidForDaysValueCode);
+                if (validDays < 0)
+                    return ReturnApiMessage(threadId,
+                           "Valid days cannot be less than 0. Please contact CRM admin.",
+                           HttpStatusCode.BadRequest);
+
+
+                //If exceeds max amount, create incident
+
+                //Devop Task 745 - Round decimals
+                if (parsedCard.BalanceField > 0)
+                    parsedCard.BalanceField = (decimal)Math.Round(parsedCard.BalanceField, 0, MidpointRounding.AwayFromZero);
+
+                if (outstandingChargesWaiting > 0)
+                    parsedCard.BalanceField += outstandingChargesWaiting;
+
+                //If exceeds max amount, create value code approval.
+                if (parsedCard.BalanceField > maxAmount)
+                {
+                    HttpResponseMessage blockResponse = null;
+                    if (respBiztalk.IsSuccessStatusCode)
+                    {
+                        if (!parsedCard.CardHotlistedField)
+                        {
+                            blockResponse = BlockTravelCard(localContext, threadId, travelCard);
+                            if (!blockResponse.IsSuccessStatusCode)
+                                return blockResponse;
+                        }
+                    }
+
+                    _log.Debug($"Travel card balance exceeded limit. Balance: {parsedCard?.BalanceField} - Limit: {maxAmount}");
+
+                    IncidentEntity incidentEnt = null;
+
+                    //Create case
+                    if (valueCode.deliveryMethod == 1)
+                        incidentEnt = IncidentEntity.CreateCaseForTravelCardValueCodeExchange(localContext, parsedCard.CardNumberField, parsedCard.BalanceField, contact, valueCode.Email, null, valueCode.deliveryMethod, travelCard);
+                    else //Mobile - 2
+                        incidentEnt = IncidentEntity.CreateCaseForTravelCardValueCodeExchange(localContext, parsedCard.CardNumberField, parsedCard.BalanceField, contact, null, valueCode.Mobile, valueCode.deliveryMethod, travelCard);
+
+                    if (incidentEnt == null)
+                    {
+                        _log.Debug($"Incident was not created for some reason.");
+                        return ReturnApiMessage(threadId,
+                            ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                        HttpStatusCode.BadRequest);
+                    }
+
+                    _log.Debug($"Successfully created an incident. Exit function");
+                    return ReturnApiMessage(threadId,
+                                            ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_AboveMaxAmount),
+                                            HttpStatusCode.OK);
+                }
+                else //Not exceeding maximum amount
+                {
+                    HttpResponseMessage blockResponse = null;
+                    #region Block Travel Card
+                    if (respBiztalk.IsSuccessStatusCode)
+                    {
+                        if (!parsedCard.CardHotlistedField)
+                        {
+                            blockResponse = BlockTravelCard(localContext, threadId, travelCard);
+                            if (!blockResponse.IsSuccessStatusCode)
+                                return blockResponse;
+                        }
+                    }
+
+                    #endregion
+
+                    EntityReference valueCodeGeneric = null;
+
+                    valueCodeGeneric = CreateGiftCardValueCode(localContext, parsedCard, valueCode, travelCard, contact);
+
+                    if (valueCodeGeneric == null)
+                    {
+                        _log.Debug($"Value code was not created, abort process.");
+                        return ReturnApiMessage(threadId,
+                            ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                        HttpStatusCode.BadRequest);
+                    }
+
+                    _log.Debug($"Fetch travel card '{travelCard?.cgi_travelcardnumber}' from CRM.");
+                    var crmTravelCard = FetchTravelCardFromCRM(localContext,
+                            travelCard.cgi_travelcardnumber, new ColumnSet(TravelCardEntity.Fields.cgi_Blocked));
+
+                    //Update travel card to blocked
+                    if (crmTravelCard?.cgi_Blocked == true)
+                    {
+                        var updateTravelCard = new TravelCardEntity()
+                        {
+                            Id = crmTravelCard.Id,
+                            ed_RequestedValueCodeForCard = true
+                        };
+                        XrmHelper.Update(localContext, updateTravelCard);
+
+                        _log.Debug($"Update travel card ed_RequestedValueCodeForCard: {updateTravelCard?.ed_RequestedValueCodeForCard}");
+                    }
+
+                    var sendValueCode = ValueCodeHandler.CallSendValueCodeAction(localContext, valueCodeGeneric);
+                    _log.Debug($"Value code sent.");
+
+                    //Successfully created value code
+                    return ReturnApiMessage(threadId, ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_OK),
+                        HttpStatusCode.OK);
+                }
+
+                #endregion
+            }
+            else {
+                //NEW API
+
+                //Only block card if not one of these cards. This is used for mocking.
+                if ((valueCode.TravelCard.TravelCardNumber == "123456" && valueCode.TravelCard.CVC == "123") ||
+                    (valueCode.TravelCard.TravelCardNumber == "654321" && valueCode.TravelCard.CVC == "321") ||
+                    (valueCode.TravelCard.TravelCardNumber == "45678" && valueCode.TravelCard.CVC == "456") ||
+                    (valueCode.TravelCard.TravelCardNumber == "123456" && valueCode.TravelCard.CVC == "123") ||
+                    (valueCode.TravelCard.TravelCardNumber == "987654" && valueCode.TravelCard.CVC == "987"))
+                {
+                    _log.Debug($"Called mocked travel cards.");
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }
+
+                //Check if there is a TravelCard
+                //If there is no travel Card, create a new travel card
+                if (travelCard == null)
+                {
+                    //res = new HttpResponseMessage(HttpStatusCode.NotFound);
+                    _log.Debug($"Specified travelcard '{valueCode?.TravelCard?.TravelCardNumber}' was not found in CRM. Create one in CRM.");
+
+                    var newTravelCard = new TravelCardEntity()
+                    {
+                        cgi_travelcardnumber = valueCode.TravelCard.TravelCardNumber,
+                        cgi_TravelCardCVC = valueCode.TravelCard.CVC,
+                        cgi_Blocked = true,
+                        ed_RequestedValueCodeForCard = false,
+                        cgi_Contactid = contact.ToEntityReference()
+                    };
+
+                    newTravelCard.Id = XrmHelper.Create(localContext, newTravelCard);
+                    travelCard = newTravelCard;
+
+                    _log.Debug($"Newly created travel card - Id: {newTravelCard?.Id}, " +
+                        $"cgi_travelcardnumber: {newTravelCard?.cgi_travelcardnumber}, " +
+                        $"cgi_TravelCardCVC: {newTravelCard?.cgi_TravelCardCVC}, " +
+                        $"cgi_Blocked: {newTravelCard?.cgi_Blocked}, " +
+                        $"ed_RequestedValueCodeForCard: {newTravelCard?.ed_RequestedValueCodeForCard}");
+                }
+
+                /*---------------------------------------------------------------
+                 * Validation of user input is done, and travel card is valid.
+                 * Now, invalidate travel card and create value code
+                 * --------------------------------------------------------------
+                 */
+
+                //Call new GET API "Card" [Get Card]
+                ValueCodeHandler.GetCardProperties getCardProperties = ValueCodeHandler.CallGetCardAction(localContext, valueCode.TravelCard.TravelCardNumber);
+                //if (getCardProperties == null || getCardProperties.Amount == null || string.IsNullOrWhiteSpace(getCardProperties.CardNumber))
+                //{
+                //    _log.Debug($"CallGetCardAction did not return with relevant values.");
+                //    return ReturnApiMessage(threadId,
+                //        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                //    HttpStatusCode.BadRequest);
+                //}
+
+                _log.Debug($"Fetching maximum value setting.");
+                //Fetch setting for maximum value
+                var maxAmount = CgiSettingEntity.GetSettingDecimal(localContext, CgiSettingEntity.Fields.ed_MaxAmountForGiftCard);
+                if (maxAmount < 0M)
+                {
+                    _log.Debug($"Max amount cannot go below 0. Edit your max limit in Setting entity.");
+                    return ReturnApiMessage(threadId,
+                        "Max amount cannot be less than 0. Please contact CRM admin.",
+                        HttpStatusCode.BadRequest);
+                }
+
+                _log.Debug($"Fetching valid for days setting.");
+                //Fetch setting for number of valid days
+                var validDays = CgiSettingEntity.GetSettingInt(localContext, CgiSettingEntity.Fields.ed_ValidForDaysValueCode);
+                if (validDays < 0)
+                    return ReturnApiMessage(threadId,
+                           "Valid days cannot be less than 0. Please contact CRM admin.",
+                           HttpStatusCode.BadRequest);
+
+                //If exceeds max amount, create incident
+
+                //Devop Task 745 - Round decimals
+                if (getCardProperties.Amount > 0)
+                    getCardProperties.Amount = (decimal)Math.Round(getCardProperties.Amount, 0, MidpointRounding.AwayFromZero);
+
+                //If exceeds max amount, create value code approval.
+                if (getCardProperties.Amount > maxAmount)
+                {
+                    //Block Travel Card (OBS! Using Capture Order and Place Order)
+
+                    //Call "Card Order API" to start the value code creation and travel card block process (requesting a block of the card)
+                    var captureOrderResponse = ValueCodeHandler.CallCaptureOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
+                    if (string.IsNullOrWhiteSpace(captureOrderResponse) || captureOrderResponse != "200 - Success")
+                    {
+                        _log.Debug($"CallCaptureOrderAction did not return a Success.");
+                        return ReturnApiMessage(threadId,
+                            ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                        HttpStatusCode.BadRequest);
+                    }
+
+                    //OBS! We never create a value code here, instead we create an incident bellow.
+                    //[Create a new Value Code before blocking the card through the API / Validate that Value Code has been created]
+
+                    //Call "Place Order API" to actually block the travel card
+                    var placeOrderResponse = ValueCodeHandler.CallPlaceOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
+                    if (string.IsNullOrWhiteSpace(placeOrderResponse) || placeOrderResponse != "200 - Success")
+                    {
+                        _log.Debug($"CallPlaceOrderAction did not return a Success.");
+                        return ReturnApiMessage(threadId,
+                            ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                        HttpStatusCode.BadRequest);
+                    }
+
+                    //Create Incident
+                    _log.Debug($"Travel card balance exceeded limit. Balance: {getCardProperties.Amount} - Limit: {maxAmount}");
+
+                    IncidentEntity incidentEnt = null;
+
+                    //Create case (OBS! Replace "valueCode.TravelCard.TravelCardNumber" with fetched cardNumber from "Card GET" - API)
+                    if (valueCode.deliveryMethod == 1)
+                        incidentEnt = IncidentEntity.CreateCaseForTravelCardValueCodeExchange(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/, getCardProperties.Amount, contact, valueCode.Email, null, valueCode.deliveryMethod, travelCard);
+                    else //Mobile - 2
+                        incidentEnt = IncidentEntity.CreateCaseForTravelCardValueCodeExchange(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/, getCardProperties.Amount, contact, null, valueCode.Mobile, valueCode.deliveryMethod, travelCard);
+
+                    if (incidentEnt == null)
+                    {
+                        _log.Debug($"Incident was not created for some reason.");
+                        return ReturnApiMessage(threadId,
+                            ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                        HttpStatusCode.BadRequest);
+                    }
+
+                    _log.Debug($"Successfully created an incident. Exit function");
+                    return ReturnApiMessage(threadId,
+                                            ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_AboveMaxAmount),
+                                            HttpStatusCode.OK);
+
+                }
+                else //Not exceeding maximum amount
+                {
+                    //Block Travel Card (OBS! Using Capture Order and Place Order)
+
+                    //Call "Card Order API" to start the value code creation and travel card block process (requesting a block of the card)
+                    var captureOrderResponse = ValueCodeHandler.CallCaptureOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
+                    if (string.IsNullOrWhiteSpace(captureOrderResponse) || captureOrderResponse != "200 - Success")
+                    {
+                        _log.Debug($"CallCaptureOrderAction did not return a Success.");
+                        return ReturnApiMessage(threadId,
+                            ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                        HttpStatusCode.BadRequest);
+                    }
+
+                    //Create a new Value Code before blocking the card through the API
+                    EntityReference valueCodeGeneric = null;
+
+                    valueCodeGeneric = CreateGiftCardValueCode(localContext, getCardProperties.Amount, valueCode, travelCard, contact); //new version for new API
+
+                    //Validate that Value Code has been created
+                    if (valueCodeGeneric == null)
+                    {
+                        _log.Debug($"Value code was not created, abort process.");
+                        return ReturnApiMessage(threadId,
+                            ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                        HttpStatusCode.BadRequest);
+                    }
+
+                    //Call "Place Order API" to actually block the travel card
+                    var placeOrderResponse = ValueCodeHandler.CallPlaceOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
+                    if (string.IsNullOrWhiteSpace(placeOrderResponse) || placeOrderResponse != "200 - Success")
+                    {
+                        _log.Debug($"CallPlaceOrderAction did not return a Success.");
+                        return ReturnApiMessage(threadId,
+                            ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                        HttpStatusCode.BadRequest);
+                    }
+
+                    _log.Debug($"Fetch travel card '{travelCard?.cgi_travelcardnumber}' from CRM.");
+                    var crmTravelCard = FetchTravelCardFromCRM(localContext,
+                            travelCard.cgi_travelcardnumber, new ColumnSet(TravelCardEntity.Fields.cgi_Blocked));
+
+                    //Update travel card to blocked
+                    if (crmTravelCard?.cgi_Blocked == true)
+                    {
+                        var updateTravelCard = new TravelCardEntity()
+                        {
+                            Id = crmTravelCard.Id,
+                            ed_RequestedValueCodeForCard = true
+                        };
+                        XrmHelper.Update(localContext, updateTravelCard);
+
+                        _log.Debug($"Update travel card ed_RequestedValueCodeForCard: {updateTravelCard?.ed_RequestedValueCodeForCard}");
+                    }
+
+                    // Notify customer (send mail?) that the travel card has been blocked
+                    var sendValueCode = ValueCodeHandler.CallSendValueCodeAction(localContext, valueCodeGeneric);
+                    _log.Debug($"Value code sent.");
+
+                    //Successfully created value code
+                    return ReturnApiMessage(threadId, ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_OK),
+                        HttpStatusCode.OK);
+
+                }
             }
 
-            #endregion
         }
 
         /// <summary>
@@ -1822,6 +2026,31 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 _log.Debug($"Creating value code - SMS.");
                 var res = ValueCodeHandler.CallCreateValueCodeAction(localContext, (int)Schema.Generated.ed_valuecodetypeglobal.InlostReskassa, parsedCard.BalanceField, parsedCard.PricePaidField,
+                valueCode.Mobile, string.Empty, null, null, contact.ToEntityReference(), null, valueCode.deliveryMethod, travelCard?.ToEntityReference());
+
+                _log.Debug($"Exiting SendGiftCardValueCode");
+                return res;
+            }
+        }
+
+        //New Value Code Creation version for new API (not BIFF)
+        private static EntityReference CreateGiftCardValueCode(Plugin.LocalPluginContext localContext, decimal balance, ValueCodeCreationGiftCard valueCode, TravelCardEntity travelCard, ContactEntity contact)
+        {
+            _log.Debug($"Entering SendGiftCardValueCode");
+            if (valueCode.deliveryMethod == 1)
+            {
+                _log.Debug($"Creating value code - Email.");
+                _log.Debug($"Pass");
+                var res = ValueCodeHandler.CallCreateValueCodeAction(localContext, (int)Schema.Generated.ed_valuecodetypeglobal.InlostReskassa, balance, 0,
+                    string.Empty, valueCode.Email, null, null, contact.ToEntityReference(), null, valueCode.deliveryMethod, travelCard?.ToEntityReference());
+
+                _log.Debug($"Exiting SendGiftCardValueCode");
+                return res;
+            }
+            else //Mobile - 2
+            {
+                _log.Debug($"Creating value code - SMS.");
+                var res = ValueCodeHandler.CallCreateValueCodeAction(localContext, (int)Schema.Generated.ed_valuecodetypeglobal.InlostReskassa, balance, 0,
                 valueCode.Mobile, string.Empty, null, null, contact.ToEntityReference(), null, valueCode.deliveryMethod, travelCard?.ToEntityReference());
 
                 _log.Debug($"Exiting SendGiftCardValueCode");
