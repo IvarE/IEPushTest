@@ -138,6 +138,8 @@
     <Compile Include="Entities\CreditOrderRowEntity.cs" />
     <Compile Include="Entities\EmailTemplateProxyEntity.cs" />
     <Compile Include="Entities\FeatureTogglingEntity.cs" />
+    <Compile Include="Entities\OrderEntity.cs" />
+    <Compile Include="Entities\OrderProductEntity.cs" />
     <Compile Include="Entities\OrderStatusEntity.cs" />
     <Compile Include="Entities\RefundAccountEntity.cs" />
     <Compile Include="Entities\RefundEntity.cs" />

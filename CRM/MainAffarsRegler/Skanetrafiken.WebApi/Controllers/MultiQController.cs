@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Web.Http;
+using Skanetrafiken.Crm.Models;
 
 namespace Skanetrafiken.Crm.Controllers
 {
@@ -29,13 +30,13 @@ namespace Skanetrafiken.Crm.Controllers
         /// Retrieves List of Orders.
         /// </summary>
         /// <remarks>
-        /// Returns an Account-object with full information and all the associated complex types.
+        /// Returns a List of Orders full information.
         /// </remarks>
-        /// <param name="id">Input data to be exactly matched with an organization number.</param>
-        /// <returns>A complete Member object.</returns>
+        /// <param name="probability">Input data.</param>
+        /// <returns>A complete List of Orders.</returns>
         /// <seealso cref="AccountInfo"/>
         [HttpGet]
-        public HttpResponseMessage GetOrders()
+        public HttpResponseMessage GetOrders(int probability)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
             _log.Info($"Th={threadId} - GetValidOrders called");
@@ -58,18 +59,18 @@ namespace Skanetrafiken.Crm.Controllers
                 return rm;
             }
 
-            HttpResponseMessage resp = CrmPlusControl.GetOrders(threadId);
+            HttpResponseMessage resp = CrmPlusControl.GetOrders(threadId, probability);
             _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
             return resp;
         }
 
         [HttpPost]
-        public HttpResponseMessage PostDeliveryReport([FromBody] string fileBase64)
+        public HttpResponseMessage PostDeliveryReport([FromBody] FileInfoMQ fileInfo)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.DebugFormat($"Th={threadId} - Post called with Payload:\n {CrmPlusControl.SerializeNoNull(fileBase64)}");
+            _log.DebugFormat($"Th={threadId} - Post called with Payload:\n {CrmPlusControl.SerializeNoNull(fileInfo)}");
 
-            if (fileBase64 == null)
+            if (fileInfo == null || fileInfo.OrderId == null || fileInfo.FileName == null)
             {
                 HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 erm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
@@ -95,7 +96,7 @@ namespace Skanetrafiken.Crm.Controllers
                 return tokenResponse;
             }
 
-            HttpResponseMessage rm = CrmPlusControl.PostDeliveryReport(threadId, fileBase64);
+            HttpResponseMessage rm = CrmPlusControl.PostDeliveryReport(threadId, fileInfo);
             _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
             return rm;
         }

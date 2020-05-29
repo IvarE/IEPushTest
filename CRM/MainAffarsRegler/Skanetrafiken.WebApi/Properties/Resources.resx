@@ -469,4 +469,7 @@
   <data name="NoContactGuidOnSalesOrderInfo" xml:space="preserve">
     <value>Saknas ContactGuid fält</value>
   </data>
+  <data name="MultipleOrdersFound" xml:space="preserve">
+    <value># Hittade flera orders med ordernummer {0}.</value>
+  </data>
 </root>

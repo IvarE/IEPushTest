@@ -29,7 +29,8 @@
     <entity>queue</entity>
     <entity>team</entity>
     <entity>campaignitem</entity>
-
+    <entity>salesorder</entity>
+    <entity>salesorderdetail</entity>
 
 
     <entity>cgi_categorydetail</entity>
@@ -94,7 +95,7 @@
     <optionset>contact_accountrolecode</optionset>
     <optionset>customeraddress_addresstypecode</optionset>
     <optionset>email_statuscode</optionset>
-
+    <optionset>salesorder_statuscode</optionset>
 
 
     <optionset>incident_casetypecode</optionset>
@@ -142,7 +143,8 @@
     <optionset>ed_valuecodeapproval_statuscode</optionset>
     <optionset>ed_valuecode_statuscode</optionset>
     <optionset>ed_valuecodetype</optionset>
-
+    <optionset>ed_deliveryreportstatus</optionset>
+    
     <optionset>ed_refundingtype</optionset>
     <optionset>ed_valuecodetypeglobal</optionset>
     <optionset>ed_valuecodedeliverytypeglobal</optionset>
