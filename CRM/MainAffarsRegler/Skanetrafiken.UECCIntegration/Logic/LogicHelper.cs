@@ -343,11 +343,12 @@ namespace Skanetrafiken.UECCIntegration.Logic
                     {
                         string message = response.Request.RequestName;
                         Contact contact = (Contact)response.Request["Target"];
+                        Guid id = (Guid)response.Response["id"];
 
-                        if (contact != null && contact.Description != null)
-                            lSuccessContactsFile.Add(contact.Description);
+                        if (id != null)
+                            lSuccessContactsFile.Add(id.ToString());
 
-                        _log.InfoFormat(CultureInfo.InvariantCulture, $"The Contact entity with email: " + contact.EMailAddress1 + " was " + message + "ed sucessfully.");
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"The Contact entity with email: " + contact.EMailAddress1 + " was " + message + "d sucessfully.");
                     }
                     //An error has occurred.
                     else
@@ -378,14 +379,14 @@ namespace Skanetrafiken.UECCIntegration.Logic
             {
                 List<string> lFinalString = lErrorContactsFile.Distinct().ToList();
                 if (lFinalString.Count > 0)
-                    System.IO.File.AppendAllLines(@"C:\S\CRM\MainAffarsRegler\Skanetrafiken.UECCIntegration\Endeavor.ErrorContacts.log", lFinalString);
+                    System.IO.File.AppendAllLines(@"C:\Temp\Skanetrafiken\Endeavor.ErrorContacts.log", lFinalString);
             }
 
             if (lSuccessContactsFile.Count > 0)
             {
                 List<string> lFinalString = lSuccessContactsFile.Distinct().ToList();
                 if (lFinalString.Count > 0)
-                    System.IO.File.AppendAllLines(@"C:\S\CRM\MainAffarsRegler\Skanetrafiken.UECCIntegration\Endeavor.SuccessContacts.log", lFinalString);
+                    System.IO.File.AppendAllLines(@"C:\Temp\Skanetrafiken\Endeavor.SuccessContacts.log", lFinalString);
             }
         }
 
@@ -448,12 +449,12 @@ namespace Skanetrafiken.UECCIntegration.Logic
 
             _log.InfoFormat(CultureInfo.InvariantCulture, "There is no Interceptions between the two lists.");
 
-            //_log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 1 Requests.");
-            //HandleContactsC1C2(localContext, crmContext, lGContactsC1, true);
+            _log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 1 Requests.");
+            HandleContactsC1C2(localContext, crmContext, lGContactsC1, true);
 
-            //SaveChangesResultCollection responsesC1 = crmContext.SaveChanges(optionsChanges);
-            //LogCrmContextMultipleResponses(responsesC1);
-            //crmContext.ClearChanges();
+            SaveChangesResultCollection responsesC1 = crmContext.SaveChanges(optionsChanges);
+            LogCrmContextMultipleResponses(responsesC1);
+            crmContext.ClearChanges();
 
             _log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 2 Logic.");
             HandleContactsC1C2(localContext, crmContext, lGContactsC2, false);
@@ -469,7 +470,7 @@ namespace Skanetrafiken.UECCIntegration.Logic
         public static void RunErrorContacts(Plugin.LocalPluginContext localContext, CrmContext crmContext)
         {
             SaveChangesOptions optionsChanges = SaveChangesOptions.ContinueOnError;
-            string filePath = @"C:\S\CRM\MainAffarsRegler\Skanetrafiken.UECCIntegration\Endeavor.ErrorContacts.log"; //set to new location for the second run
+            string filePath = @"C:\Temp\Skanetrafiken\Endeavor.ErrorContacts.log";
             List<Guid> errorContacts = ReadLogFileContacts(filePath);
 
             if(errorContacts == null || errorContacts.Count == 0)
@@ -516,7 +517,7 @@ namespace Skanetrafiken.UECCIntegration.Logic
 
         public static void RunSuccessContacts(Plugin.LocalPluginContext localContext)
         {
-            string filePath = @"C:\S\CRM\MainAffarsRegler\Skanetrafiken.UECCIntegration\Endeavor.SuccessContacts.log"; //set to new location for the second run
+            string filePath = @"C:\Temp\Skanetrafiken\Endeavor.SuccessContacts.log";
             List<Guid> successContacts = ReadLogFileContacts(filePath);
 
             if (successContacts == null || successContacts.Count == 0)
