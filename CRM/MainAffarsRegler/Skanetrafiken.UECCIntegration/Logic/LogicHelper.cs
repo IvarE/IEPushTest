@@ -6,7 +6,6 @@ using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Skanetrafiken.Crm.Entities;
 using Skanetrafiken.Crm.Schema.Generated;
-using Skanetrafiken.UECCIntegration.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

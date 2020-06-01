@@ -136,7 +136,7 @@ namespace Endeavor.Crm
                     System.Security.Cryptography.DataProtectionScope.CurrentUser);
                 return ToSecureString(System.Text.Encoding.Unicode.GetString(decryptedData));
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return new SecureString();
             }
