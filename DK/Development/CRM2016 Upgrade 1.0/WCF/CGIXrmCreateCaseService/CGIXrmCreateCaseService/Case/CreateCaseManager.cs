@@ -1715,7 +1715,7 @@ namespace CGIXrmCreateCaseService.Case
 
             if(!string.IsNullOrEmpty(request.SKACardNumber))
             {
-                incident.Attributes.Add("ed_UnregisterdSKACard", request.SKACardNumber);
+                incident.Attributes.Add("ed_unregisterdskacard", request.SKACardNumber);
             }
 
             if (!string.IsNullOrEmpty(request.WayOfTravel))
