@@ -51,24 +51,20 @@ namespace Skanetrafiken.UECCIntegration
         {
             try
             {
-                ConnectToMSCRM("D1\\CRMAdmin", "uSEme2!nstal1", "https://sekunduat.skanetrafiken.se/DKCRM/XRMServices/2011/Organization.svc");
+                ConnectToMSCRM("D1\\CRMAdmin", "uSEme2!nstal1", "https://sekundtst.skanetrafiken.se/DKCRM/XRMServices/2011/Organization.svc");
 
                 if (_service == null)
+                {
                     _log.ErrorFormat(CultureInfo.InvariantCulture, "The CRM Service is null.");
+                    return;
+                }
 
                 Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _service, null, new TracingService());
                 CrmContext crmContext = new CrmContext(_service);
 
-                //At the end of each run, save the errorContacts and successContacts on another folder and delete the files. 
-                //For next batch of records
-                bool firstRun = true; //Change this flag to run for the remaining Contacts that throw errors
-
-                if (firstRun)
-                    LogicHelper.RunLogic(localContext, crmContext);
-                else
-                    LogicHelper.RunErrorContacts(localContext, crmContext);
-
-                //LogicHelper.RunSuccessContacts(localContext);
+                LogicHelper.RunLogic(localContext, crmContext);
+                LogicHelper.RunSuccessContacts(localContext);
+                //LogicHelper.RunErrorContacts(localContext, crmContext);
             }
             catch (Exception e)
             {

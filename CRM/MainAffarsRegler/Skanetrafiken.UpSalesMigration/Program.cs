@@ -28,10 +28,13 @@ namespace Skanetrafiken.UpSalesMigration
         public static string rel_contact_note = "Contact_Annotation";
         public static string rel_contact_account = "account_primary_contact";
 
+        public static string cgi_account_contact = "cgi_account_contact";
+
         public static IOrganizationService _service = null;
         static ExcelApp.Application excelApp = new ExcelApp.Application();
         private static ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public static List<Account> lAccountsUpdate = new List<Account>();
+        public static List<Account> lAccountsPrimaryContact = new List<Account>();
+        public static List<Account> lAccountsCGIContact = new List<Account>();
 
         public static void ConnectToMSCRM(string UserName, string Password, string SoapOrgServiceUri)
         {
@@ -284,65 +287,132 @@ namespace Skanetrafiken.UpSalesMigration
                 return null;
         }
 
-        public static void UpdateAccountsWithPrimaryContactId(Plugin.LocalPluginContext localContext, CrmContext crmContext)
+        public static void UpdateAccountsCGIGrid(Plugin.LocalPluginContext localContext, CrmContext crmContext)
         {
-            if (lAccountsUpdate.Count == 0)
+            if (lAccountsCGIContact.Count == 0)
                 return;
 
-            List<Account> lFinalList = lAccountsUpdate.GroupBy(elem => elem.AccountId).Select(group => group.First()).ToList();
+            List<Account> lAddedAccounts = new List<Account>();
+
+            foreach (Account account in lAccountsCGIContact)
+            {
+                try
+                {
+                    string upsalesId = account.Description;
+
+                    if (upsalesId == null)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Account object does not have Contact Upsales Id.");
+                        continue;
+                    }
+
+                    QueryExpression queryContacts = new QueryExpression(Contact.EntityLogicalName);
+                    queryContacts.NoLock = true;
+                    queryContacts.ColumnSet.AddColumns(Contact.Fields.ContactId, Contact.Fields.FirstName, Contact.Fields.LastName);
+                    queryContacts.Criteria.AddCondition(Contact.Fields.ed_UpsalesId, ConditionOperator.Equal, upsalesId);
+
+                    List<Contact> lContact = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts).ToList();
+
+                    if (lContact.Count == 1)
+                    {
+                        Contact contact = lContact.FirstOrDefault();
+                        string firstName = lContact.FirstOrDefault().FirstName;
+                        string lastName = lContact.FirstOrDefault().LastName;
+
+                        List<Account> accountAdded = lAddedAccounts.Where(x => x.Id == account.Id).ToList();
+
+                        if (!crmContext.IsAttached(account) && accountAdded.Count == 0)
+                        {
+                            crmContext.Attach(account);
+                            lAddedAccounts.Add(account);
+                        }
+
+                        if (!crmContext.IsAttached(contact))
+                            crmContext.Attach(contact);
+
+                        if(accountAdded.Count == 0)
+                            crmContext.AddLink(account, new Relationship(cgi_account_contact), contact);
+                        else
+                            crmContext.AddLink(accountAdded.FirstOrDefault(), new Relationship(cgi_account_contact), contact);
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"A Request has been created to relate the Account " + account.Id + " to Contact " + firstName + " " + lastName + " on the CGI Grid.");
+                    }
+                    else
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"There were found zero or more than one Contacts with Upsales Id: " + upsalesId);
+                }
+                catch (Exception e)
+                {
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"CGI Grid Error Exception. Details: " + e.Message);
+                }
+            }
+        }
+
+        public static void UpdateAccountsWithPrimaryContactId(Plugin.LocalPluginContext localContext, CrmContext crmContext)
+        {
+            if (lAccountsPrimaryContact.Count == 0)
+                return;
+
+            List<Account> lFinalList = lAccountsPrimaryContact.GroupBy(elem => elem.AccountId).Select(group => group.First()).ToList();
 
             foreach (Account account in lFinalList)
             {
-                string upsalesId = account.Description;
-
-                if (upsalesId == null)
+                try
                 {
-                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Account object does not have Contact Upsales Id.");
-                    continue;
+                    string upsalesId = account.Description;
+
+                    if (upsalesId == null)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Account object does not have Contact Upsales Id.");
+                        continue;
+                    }
+
+                    QueryExpression queryContacts = new QueryExpression(Contact.EntityLogicalName);
+                    queryContacts.NoLock = true;
+                    queryContacts.ColumnSet.AddColumns(Contact.Fields.ContactId, Contact.Fields.FirstName, Contact.Fields.LastName);
+                    queryContacts.Criteria.AddCondition(Contact.Fields.ed_UpsalesId, ConditionOperator.Equal, upsalesId);
+
+                    List<Contact> lContact = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts).ToList();
+
+                    if (lContact.Count == 1)
+                    {
+                        Guid contactId = (Guid)lContact.FirstOrDefault().ContactId;
+                        string firstName = lContact.FirstOrDefault().FirstName;
+                        string lastName = lContact.FirstOrDefault().LastName;
+
+                        Account uAccount = new Account();
+                        uAccount.Id = account.Id;
+                        uAccount.PrimaryContactId = new EntityReference(Contact.EntityLogicalName, contactId);
+
+                        if (!crmContext.IsAttached(uAccount))
+                            crmContext.Attach(uAccount);
+
+                        crmContext.UpdateObject(uAccount);
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"A Request has been created for the Account " + account.Id + " to be updated with Contact " + firstName + " " + lastName + " as it's Primary Contact.");
+                    }
+                    else
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"There were found zero or more than one Contacts with Upsales Id: " + upsalesId);
                 }
-
-                QueryExpression queryContacts = new QueryExpression(Contact.EntityLogicalName);
-                queryContacts.NoLock = true;
-                queryContacts.ColumnSet.AddColumns(Contact.Fields.ContactId, Contact.Fields.FirstName, Contact.Fields.LastName);
-                queryContacts.Criteria.AddCondition(Contact.Fields.ed_UpsalesId, ConditionOperator.Equal, upsalesId);
-
-                List<Contact> lContact = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts).ToList();
-
-                if (lContact.Count == 1)
+                catch (Exception e)
                 {
-                    Guid contactId = (Guid)lContact.FirstOrDefault().ContactId;
-                    string firstName = lContact.FirstOrDefault().FirstName;
-                    string lastName = lContact.FirstOrDefault().LastName;
-
-                    Account uAccount = new Account();
-                    uAccount.Id = account.Id;
-                    uAccount.PrimaryContactId = new EntityReference(Contact.EntityLogicalName, contactId);
-
-                    if (!crmContext.IsAttached(uAccount))
-                        crmContext.Attach(uAccount);
-
-                    crmContext.UpdateObject(uAccount);
-
-                    _log.InfoFormat(CultureInfo.InvariantCulture, $"A Request has been created for the Account " + account.Id + " to be updated with Contact " + firstName + " " + lastName + " as it's Primary Contact.");
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Primary Contact Error Exception. Details: " + e.Message);
                 }
-                else
-                    _log.InfoFormat(CultureInfo.InvariantCulture, $"There were found zero or more than one Contacts with Upsales Id: " + upsalesId);
             }
         }
 
         public static void LogCrmContextMultipleResponses(SaveChangesResultCollection lResponses)
         {
-            try
+            foreach (SaveChangesResult response in lResponses)
             {
-                foreach (SaveChangesResult response in lResponses)
+                try
                 {
                     // A valid response.
                     if (response.Error == null)
                     {
-                        Entity entity = (Entity)response.Request["Target"];
-
                         if (response.Response.ResponseName == "Update")
                         {
+                            Entity entity = (Entity)response.Request["Target"];
+
                             if (entity == null)
                             {
                                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"A record has been updated, but no Request was retrieved.");
@@ -392,8 +462,9 @@ namespace Skanetrafiken.UpSalesMigration
                                     break;
                             }
                         }
-                        else if(response.Response.ResponseName == "Create")
+                        else if (response.Response.ResponseName == "Create")
                         {
+                            Entity entity = (Entity)response.Request["Target"];
                             Guid id = (Guid)response.Response["id"];
 
                             if (id == null || entity == null)
@@ -445,66 +516,81 @@ namespace Skanetrafiken.UpSalesMigration
                                     break;
                             }
                         }
+                        else if (response.Response.ResponseName == "Associate")
+                        {
+                            EntityReference entityRef = (EntityReference)response.Request["Target"];
+                            EntityReferenceCollection lEntityReference = (EntityReferenceCollection)response.Request["RelatedEntities"];
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The " + entityRef.LogicalName + " with id: " + entityRef.Id + " was associated with " + lEntityReference.Count + " record(s)");
+                        }
                     }
                     //An error has occurred.
                     else
                     {
-                        Entity entity = (Entity)response.Request["Target"];
-
-                        if(entity == null)
+                        if (response.Response.ResponseName == "Associate")
                         {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"A record has failed to be created, but no Request was retrieved.");
-                            continue;
+                            EntityReference entityRef = (EntityReference)response.Request["Target"];
+                            EntityReferenceCollection lEntityReference = (EntityReferenceCollection)response.Request["RelatedEntities"];
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Failed to Associate the " + entityRef.LogicalName + " with id: " + entityRef.Id + " with " + lEntityReference.Count + " record(s). Details: " + response.Error.Message);
                         }
-
-                        switch (entity.LogicalName)
+                        else
                         {
-                            case Account.EntityLogicalName:
+                            Entity entity = (Entity)response.Request["Target"];
 
-                                Account account = (Account)entity;
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Account with Name: " + account.Name + " was not created. Details: " + response.Error.Message);
+                            if (entity == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"A record has failed to be created, but no Request was retrieved.");
+                                continue;
+                            }
 
-                                break;
-                            case Contact.EntityLogicalName:
+                            switch (entity.LogicalName)
+                            {
+                                case Account.EntityLogicalName:
 
-                                Contact contact = (Contact)entity;
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Contact with Name: " + contact.FirstName + " " + contact.LastName + " was not created. Details: " + response.Error.Message);
+                                    Account account = (Account)entity;
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Account with Name: " + account.Name + " was not created. Details: " + response.Error.Message);
 
-                                break;
-                            case PhoneCall.EntityLogicalName:
+                                    break;
+                                case Contact.EntityLogicalName:
 
-                                PhoneCall phoneCall = (PhoneCall)entity;
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - PhoneCall with Subject: " + phoneCall.Subject + " was not created. Details: " + response.Error.Message);
+                                    Contact contact = (Contact)entity;
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Contact with Name: " + contact.FirstName + " " + contact.LastName + " was not created. Details: " + response.Error.Message);
 
-                                break;
-                            case Email.EntityLogicalName:
+                                    break;
+                                case PhoneCall.EntityLogicalName:
 
-                                Email email = (Email)entity;
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Email with Subject: " + email.Subject + " was not created. Details: " + response.Error.Message);
+                                    PhoneCall phoneCall = (PhoneCall)entity;
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - PhoneCall with Subject: " + phoneCall.Subject + " was not created. Details: " + response.Error.Message);
 
-                                break;
-                            case Appointment.EntityLogicalName:
+                                    break;
+                                case Email.EntityLogicalName:
 
-                                Appointment appointment = (Appointment)entity;
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Appointment with Subject: " + appointment.Subject + " was not created. Details: " + response.Error.Message);
+                                    Email email = (Email)entity;
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Email with Subject: " + email.Subject + " was not created. Details: " + response.Error.Message);
 
-                                break;
-                            case SalesOrder.EntityLogicalName:
+                                    break;
+                                case Appointment.EntityLogicalName:
 
-                                SalesOrder salesOrder = (SalesOrder)entity;
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Appointment with Name: " + salesOrder.Name + " was not created. Details: " + response.Error.Message);
+                                    Appointment appointment = (Appointment)entity;
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Appointment with Subject: " + appointment.Subject + " was not created. Details: " + response.Error.Message);
 
-                                break;
-                            default:
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"No logs implemented for " + entity.LogicalName + ". Please contact you administrator.");
-                                break;
+                                    break;
+                                case SalesOrder.EntityLogicalName:
+
+                                    SalesOrder salesOrder = (SalesOrder)entity;
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Appointment with Name: " + salesOrder.Name + " was not created. Details: " + response.Error.Message);
+
+                                    break;
+                                default:
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"No logs implemented for " + entity.LogicalName + ". Please contact you administrator.");
+                                    break;
+                            }
                         }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error logging results. Details: " + e.Message);
+                catch (Exception e)
+                {
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error logging results. Details: " + e.Message);
+                }
             }
         }
 
@@ -1280,6 +1366,8 @@ namespace Skanetrafiken.UpSalesMigration
             {
                 try
                 {
+                    Account eParentAccount = null;
+                    Account ePParentAccount = null;
                     Contact nContact = new Contact();
 
                     string noteText = string.Empty;
@@ -1307,12 +1395,21 @@ namespace Skanetrafiken.UpSalesMigration
                                 break;
                             case " Företag":
 
-                                EntityReference erParent = GetCrmAccountByName(localContext, value);
+                                EntityReference erParentAccount = GetCrmAccountByName(localContext, value);
 
-                                if (erParent != null)
+                                if (erParentAccount != null)
                                 {
                                     _log.InfoFormat(CultureInfo.InvariantCulture, $"The Parent Customer " + value + " of the Contact was updated.");
-                                    nContact.ParentCustomerId = erParent;
+                                    nContact.ParentCustomerId = erParentAccount;
+
+                                    eParentAccount = new Account();
+                                    eParentAccount = XrmRetrieveHelper.Retrieve<Account>(localContext, erParentAccount, new ColumnSet(Account.Fields.ParentAccountId, Account.Fields.Name));
+
+                                    if(eParentAccount != null && eParentAccount.ParentAccountId != null)
+                                    {
+                                        ePParentAccount = new Account();
+                                        ePParentAccount.Id = eParentAccount.ParentAccountId.Id;
+                                    }
                                 }
                                 else
                                     _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Parent Customer " + value + " of the Contact was not found.");
@@ -1377,7 +1474,21 @@ namespace Skanetrafiken.UpSalesMigration
 
                     crmContext.AddObject(nContact);
 
-                    if(nContact.ParentCustomerId != null && nContact.ParentCustomerId.LogicalName == Account.EntityLogicalName)
+                    if(eParentAccount != null)
+                    {
+                        eParentAccount.Description = nContact.ed_UpsalesId;
+                        lAccountsCGIContact.Add(eParentAccount);
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"1Level: Added Link From Account " + eParentAccount.Id + " To Contact " + nContact.ed_UpsalesId);
+                    }
+
+                    if(ePParentAccount != null)
+                    {
+                        ePParentAccount.Description = nContact.ed_UpsalesId;
+                        lAccountsCGIContact.Add(ePParentAccount);
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"2Levels: Added Link From " + ePParentAccount.Name + " To " + nContact.ed_UpsalesId);
+                    }
+
+                    if (nContact.ParentCustomerId != null && nContact.ParentCustomerId.LogicalName == Account.EntityLogicalName)
                     {
                         EntityReference erAccount = new EntityReference(Account.EntityLogicalName, nContact.ParentCustomerId.Id);
                         Account account = XrmRetrieveHelper.Retrieve<Account>(localContext, erAccount, new ColumnSet(Account.Fields.PrimaryContactId));
@@ -1388,7 +1499,7 @@ namespace Skanetrafiken.UpSalesMigration
                             uAccount.Id = account.Id;
                             uAccount.Description = nContact.ed_UpsalesId;
 
-                            lAccountsUpdate.Add(uAccount);
+                            lAccountsPrimaryContact.Add(uAccount);
 
                             _log.InfoFormat(CultureInfo.InvariantCulture, $"Account Object Added to the List.");
                         }
@@ -1405,6 +1516,9 @@ namespace Skanetrafiken.UpSalesMigration
 
                         crmContext.AddRelatedObject(nContact, new Relationship(rel_contact_note), note);
                     }
+
+                    if (i == 10)
+                        return;
                 }
                 catch (Exception e)
                 {
@@ -1539,7 +1653,7 @@ namespace Skanetrafiken.UpSalesMigration
         static void Main(string[] args)
         {
             //Test Connection
-            ConnectToMSCRM("D1\\CRMAdmin", "uSEme2!nstal1", "https://sekundtst.skanetrafiken.se/DKCRM/XRMServices/2011/Organization.svc");
+            ConnectToMSCRM("D1\\CRMAdmin", "uSEme2!nstal1", "https://sekunduat.skanetrafiken.se/DKCRM/XRMServices/2011/Organization.svc");
 
             if (_service == null)
             {
@@ -1555,230 +1669,287 @@ namespace Skanetrafiken.UpSalesMigration
             string relativeExcelPath = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.ExcelRelativePath);
             string fileName = "Spann 1 - unika 2020-05-27.xlsx";
 
-            #region Import Accounts Spann 1
+            //#region Import Accounts Spann 1
 
-            try
+            //try
+            //{
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
+
+            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
+            //    ImportAccountRecords(localContext, crmContext, importExcelInfo);
+            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(responses);
+
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
+
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Publishing Accounts OptionSets--------------");
+
+            //    PublishGlobalOptionSet(localContext, "ed_companytrade");
+            //    PublishGlobalOptionSet(localContext, "ed_businesstype");
+
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished Publishing Accounts OptionSets--------------");
+            //}
+            //catch (Exception e)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
+            //    throw;
+            //}
+
+            //#endregion
+
+            //fileName = "Spann 5 - nya datakällor 2020-05-25.xlsx";
+
+            //#region Import Accounts Spann 5
+
+            //try
+            //{
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
+
+            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
+            //    ImportAccountRecords(localContext, crmContext, importExcelInfo);
+            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(responses);
+
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
+            //}
+            //catch (Exception e)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
+            //    throw;
+            //}
+
+            //#endregion
+
+            //fileName = "Spann 3 - subaccounts_2020-05-28.xlsx";
+
+            //#region Import Accounts Spann 3 SubAccounts
+
+            //try
+            //{
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
+
+            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
+            //    ImportSubAccountsRecords(localContext, crmContext, importExcelInfo);
+            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(responses);
+
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
+            //}
+            //catch (Exception e)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
+            //    throw;
+            //}
+
+            //#endregion
+
+            //fileName = "Spann 2 - unika 2020-05-27.xlsx";
+
+            //#region Import Accounts Spann 2
+
+            //try
+            //{
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
+
+            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
+            //    ImportAccountRecords(localContext, crmContext, importExcelInfo);
+            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(responses);
+
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
+            //}
+            //catch (Exception e)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
+            //    throw;
+            //}
+
+            //#endregion
+
+            //fileName = "Spann 4 - unika 2020-05-27.xlsx";
+
+            //#region Import Accounts Spann 4
+
+            //try
+            //{
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
+
+            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
+            //    ImportAccountRecords(localContext, crmContext, importExcelInfo);
+            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(responses);
+
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
+            //}
+            //catch (Exception e)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
+            //    throw;
+            //}
+
+            //#endregion
+
+            //fileName = "Upsales data clean 2020-05-25_kontakter.xlsx";
+
+            //#region Import Contacts
+
+            //try
+            //{
+            //    crmContext.ClearChanges();
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Contact Entity--------------");
+
+            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Contacts", fileName);
+            //    ImportContactsRecords(localContext, crmContext, importExcelInfo);
+            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(responses);
+
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Contact Entity--------------");
+
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Update Accounts Primary Contact--------------------");
+
+            //    crmContext.ClearChanges();
+            //    UpdateAccountsWithPrimaryContactId(localContext, crmContext);
+            //    SaveChangesResultCollection responsesAccounts = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(responsesAccounts);
+
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished Updating Accounts Primary Contact--------------------");
+
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Update Accounts CGI Grid--------------------");
+
+            //    crmContext.ClearChanges();
+            //    UpdateAccountsCGIGrid(localContext, crmContext);
+            //    responsesAccounts = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(responsesAccounts);
+
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished Updating Accounts CGI Grid--------------------");
+            //}
+            //catch (Exception e)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Contact Records. Details: " + e.Message);
+            //    throw;
+            //}
+
+            //#endregion
+
+            //fileName = "Upsales data clean 2020-05-26_aktiviteter.xlsx";
+
+            //#region Import Activities
+
+            //try
+            //{
+            //    crmContext.ClearChanges();
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Activities Entity--------------");
+
+            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Activities", fileName);
+            //    ImportActivitiesRecords(localContext, crmContext, importExcelInfo);
+            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(responses);
+
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Activities Entity--------------");
+            //}
+            //catch (Exception e)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Activities Records. Details: " + e.Message);
+            //    throw;
+            //}
+
+            //#endregion
+
+            //fileName = "Upsales data clean 2020-05-26_orders.xlsx";
+
+            //#region Import Orders
+
+            //try
+            //{
+            //    crmContext.ClearChanges();
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Orders Entity--------------");
+
+            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Orders", fileName);
+            //    ImportOrdersRecords(localContext, crmContext, importExcelInfo);
+            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(responses);
+
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Orders Entity--------------");
+            //}
+            //catch (Exception e)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Order Records. Details: " + e.Message);
+            //    throw;
+            //}
+
+            //#endregion
+
+            //fileName = "Historical Data företag 2020-04-30.xlsx";
+
+            //#region Import Historical Data
+
+            //try
+            //{
+            //    crmContext.ClearChanges();
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Historical Data Entity--------------");
+
+            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\HistoricalData", fileName);
+            //    ImportHistoricalDataRecords(localContext, crmContext, importExcelInfo);
+            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(responses);
+
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Historical Data Entity--------------");
+            //}
+            //catch (Exception e)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Historical Data Records. Details: " + e.Message);
+            //    throw;
+            //}
+
+            //#endregion
+
+            QueryExpression queryAccounts = new QueryExpression(Account.EntityLogicalName);
+            queryAccounts.NoLock = true;
+            queryAccounts.Criteria.AddCondition(Account.Fields.ed_UpsalesId, ConditionOperator.NotNull);
+
+            List<Account> lAccounts = XrmRetrieveHelper.RetrieveMultiple<Account>(localContext, queryAccounts);
+
+            foreach (Account account in lAccounts)
             {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
+                if (!crmContext.IsAttached(account))
+                    crmContext.Attach(account);
 
-                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
-                ImportAccountRecords(localContext, crmContext, importExcelInfo);
-                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                LogCrmContextMultipleResponses(responses);
-
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
-
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Publishing Accounts OptionSets--------------");
-
-                PublishGlobalOptionSet(localContext, "ed_companytrade");
-                PublishGlobalOptionSet(localContext, "ed_businesstype");
-
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished Publishing Accounts OptionSets--------------");
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
-                throw;
+                crmContext.DeleteObject(account);
             }
 
-            #endregion
+            crmContext.SaveChanges(SaveChangesOptions.ContinueOnError);
 
-            fileName = "Spann 2 - unika 2020-05-27.xlsx";
+            //QueryExpression queryContacts = new QueryExpression(Contact.EntityLogicalName);
+            //queryContacts.NoLock = true;
+            //queryContacts.Criteria.AddCondition(Contact.Fields.ed_UpsalesId, ConditionOperator.NotNull);
 
-            #region Import Accounts Spann 2
+            //List<Contact> lContacts = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts);
 
-            try
-            {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
+            //foreach (Contact contact in lContacts)
+            //{
+            //    Contact nContact = new Contact();
+            //    nContact.Id = contact.Id;
+            //    nContact.StateCode = ContactState.Inactive;
+            //    nContact.StatusCode = contact_statuscode.Inactive;
 
-                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
-                ImportAccountRecords(localContext, crmContext, importExcelInfo);
-                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                LogCrmContextMultipleResponses(responses);
+            //    if(!crmContext.IsAttached(nContact))
+            //        crmContext.Attach(nContact);
 
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
-                throw;
-            }
+            //    crmContext.UpdateObject(nContact);
+            //}
 
-            #endregion
+            //crmContext.SaveChanges(SaveChangesOptions.ContinueOnError);
 
-            fileName = "Spann 3 - subaccounts_2020-05-28.xlsx";
+            //crmContext.ClearChanges();
+            //foreach (Contact contact in lContacts)
+            //{
+            //    if (!crmContext.IsAttached(contact))
+            //        crmContext.Attach(contact);
 
-            #region Import Accounts Spann 3 SubAccounts
+            //    crmContext.DeleteObject(contact);
+            //}
 
-            try
-            {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
-
-                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
-                ImportSubAccountsRecords(localContext, crmContext, importExcelInfo);
-                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                LogCrmContextMultipleResponses(responses);
-
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
-                throw;
-            }
-
-            #endregion
-
-            fileName = "Spann 4 - unika 2020-05-27.xlsx";
-
-            #region Import Accounts Spann 4
-
-            try
-            {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
-
-                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
-                ImportAccountRecords(localContext, crmContext, importExcelInfo);
-                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                LogCrmContextMultipleResponses(responses);
-
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
-                throw;
-            }
-
-            #endregion
-
-            fileName = "Spann 5 - unika 2020-05-27.xlsx";
-
-            #region Import Accounts Spann 5
-
-            try
-            {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
-
-                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
-                ImportAccountRecords(localContext, crmContext, importExcelInfo);
-                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                LogCrmContextMultipleResponses(responses);
-
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
-                throw;
-            }
-
-            #endregion
-
-            fileName = "Upsales data clean 2020-05-25_kontakter.xlsx";
-
-            #region Import Contacts
-
-            try
-            {
-                crmContext.ClearChanges();
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Contact Entity--------------");
-
-                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Contacts", fileName);
-                ImportContactsRecords(localContext, crmContext, importExcelInfo);
-                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                LogCrmContextMultipleResponses(responses);
-
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Contact Entity--------------");
-
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Update Accounts Primary Contact--------------------");
-
-                crmContext.ClearChanges();
-                UpdateAccountsWithPrimaryContactId(localContext, crmContext);
-                SaveChangesResultCollection responsesAccounts = crmContext.SaveChanges(optionsChanges);
-                LogCrmContextMultipleResponses(responsesAccounts);
-
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished Updating Accounts Primary Contact--------------------");
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Contact Records. Details: " + e.Message);
-                throw;
-            }
-
-            #endregion
-
-            fileName = "Upsales data clean 2020-05-26_aktiviteter.xlsx";
-
-            #region Import Activities
-
-            try
-            {
-                crmContext.ClearChanges();
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Activities Entity--------------");
-
-                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Activities", fileName);
-                ImportActivitiesRecords(localContext, crmContext, importExcelInfo);
-                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                LogCrmContextMultipleResponses(responses);
-
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Activities Entity--------------");
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Activities Records. Details: " + e.Message);
-                throw;
-            }
-
-            #endregion
-
-            fileName = "Upsales data clean 2020-05-26_orders.xlsx";
-
-            #region Import Orders
-
-            try
-            {
-                crmContext.ClearChanges();
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Orders Entity--------------");
-
-                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Orders", fileName);
-                ImportOrdersRecords(localContext, crmContext, importExcelInfo);
-                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                LogCrmContextMultipleResponses(responses);
-
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Orders Entity--------------");
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Order Records. Details: " + e.Message);
-                throw;
-            }
-
-            #endregion
-
-            fileName = "Historical Data företag 2020-04-30.xlsx";
-
-            #region Import Historical Data
-
-            try
-            {
-                crmContext.ClearChanges();
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Historical Data Entity--------------");
-
-                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\HistoricalData", fileName);
-                ImportHistoricalDataRecords(localContext, crmContext, importExcelInfo);
-                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                LogCrmContextMultipleResponses(responses);
-
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Historical Data Entity--------------");
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Historical Data Records. Details: " + e.Message);
-                throw;
-            }
-
-            #endregion
+            //crmContext.SaveChanges(SaveChangesOptions.ContinueOnError);
 
             excelApp.Quit();
             System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);

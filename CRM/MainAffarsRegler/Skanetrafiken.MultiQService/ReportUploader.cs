@@ -85,13 +85,17 @@ namespace Skanetrafiken.MultiQService
 
                 List<OrderEntity> lOrders = XrmRetrieveHelper.RetrieveMultiple<OrderEntity>(localContext, queryOrders);
 
+                List<string> dirListFiles = GetFileList(ipAddress, pathToFolder, port, userName, passWord);
+
                 foreach (OrderEntity order in lOrders)
                 {
                     if(order.ed_DeliveryReportName != null)
                     {
-                        List<string> dirListFiles = GetFileList(ipAddress, pathToFolder, port, userName, passWord);
-                        foreach (string file in dirListFiles)
+                        List<string> lFiles = dirListFiles.Where(x => x == order.ed_DeliveryReportName).ToList();
+
+                        if(lFiles.Count == 1)
                         {
+                            string file = lFiles.FirstOrDefault();
                             string base64File = DownloadFile(ipAddress, pathToFolder, port, file, userName, passWord);
 
                             Annotation note = new Annotation();
@@ -105,6 +109,14 @@ namespace Skanetrafiken.MultiQService
 
                             Guid idNote = XrmHelper.Create(localContext, note);
                             _log.Info($"Note: " + idNote + " with Attachment was created on Related Order: " + order.SalesOrderId);
+                        }
+                        else if(lFiles.Count == 0)
+                        {
+                            _log.Info($"There is no file named: " + order.ed_DeliveryReportName + " on the FTP Server.");
+                        }
+                        else if(lFiles.Count > 1)
+                        {
+                            _log.Info($"There is more than one file named: " + order.ed_DeliveryReportName + " on the FTP Server.");
                         }
                     }
                 }

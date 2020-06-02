@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 using log4net;
 using Quartz;
 using Endeavor.Crm;
-using Microsoft.Xrm.Tooling.Connector;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using System.Globalization;
 using Skanetrafiken.Crm.Entities;
 using Quartz.Impl;
+using Microsoft.Xrm.Tooling.Connector;
 
 namespace Skanetrafiken.MultiQService
 {
