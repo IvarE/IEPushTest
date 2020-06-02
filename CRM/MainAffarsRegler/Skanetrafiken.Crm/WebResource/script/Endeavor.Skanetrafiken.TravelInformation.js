@@ -209,9 +209,9 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
             var line = Endeavor.Skanetrafiken.TravelInformation.getLine(cityGid, lineGid);
 
-            if (line && line.getElementsByTagName("LineTransportAuthorityCode") && line.getElementsByTagName("LineTransportAuthorityCode")[0]) {
+            if (line && line.getElementsByTagName("LineOperatorCode") && line.getElementsByTagName("LineOperatorCode")[0]) {
 
-                var authorityCode = line.getElementsByTagName("LineTransportAuthorityCode")[0].firstChild.nodeValue;
+                var lineOpCode = line.getElementsByTagName("LineOperatorCode")[0].firstChild.nodeValue;
 
                 if (organisationsdoc && organisationsdoc.firstChild && organisationsdoc.firstChild.childNodes && organisationsdoc.firstChild.childNodes.length > 0) {
 
@@ -219,11 +219,10 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                         var organisation = organisationsdoc.firstChild.childNodes[i];
 
-                        if (authorityCode == organisation.getAttribute("Code")) {
+                        if (lineOpCode == organisation.getAttribute("Code")) {
                             return organisation;
                         }
                     }
-
                 }
             }
 
@@ -279,6 +278,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             catch (e) {
                 throw new Error("TravelInformationDB is unavailable. Please contact your systems administrator.");
             }
+
             Endeavor.Skanetrafiken.TravelInformation.response = parser.parseFromString(responsetext, "text/xml");
 
             var parsererror = Endeavor.Skanetrafiken.TravelInformation.response.getElementsByTagName('parsererror');
@@ -515,7 +515,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                     var stoparea = stopareas[i];
 
-                    if (!stoparea.getElementsByTagName("StopExistsUptoDate")[0]) {
+                    //if (!stoparea.getElementsByTagName("StopExistsUptoDate")[0]) {
 
                         var name = stoparea.getElementsByTagName("StopAreaName")[0].firstChild.nodeValue;
                         var id = stoparea.getElementsByTagName("StopAreaGid")[0].firstChild.nodeValue;
@@ -525,7 +525,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                         var tooption = { name: name, value: id };
                         tooptions.push(tooption);
-                    }
+                    //}
                 }
 
                 Endeavor.Skanetrafiken.TravelInformation.stopareas = fromoptions;
@@ -676,6 +676,11 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
         populateContractorInformation: function (transporttype, city, line) {
 
+            if ((city == null || city == "") && line) {
+                alert("Denna typ av sökning är förnärvarande inte funktionell.")
+                return;
+            }
+
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
 
             var travelinformationbody = document.getElementById("travelinformationbody");
@@ -699,6 +704,9 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
             debugger;
             var organisation = Endeavor.Skanetrafiken.TravelInformation.getOrganisationFromLine(city, line);
+            var contractor = organisation != "" ? organisation.getAttribute("Name") : "";
+            if (organisation == "" || organisation == null)
+                return;
 
             var contractorrow = travelinformationbody.insertRow();
             var cell = contractorrow.insertCell();
@@ -709,7 +717,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 city: city,
                 directjourney: null,
                 line: line,
-                contractorName: organisation.getAttribute("Name")
+                contractorName: contractor
             };
 
 
@@ -719,18 +727,12 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             savebutton.innerHTML = '+';
             cell.appendChild(savebutton);
 
-            cell = contractorrow.insertCell();
-            cell.colSpan = 5;
-
-            var organisationInfo = "";
-            if (organisation) {
-                organisationInfo = organisation.getAttribute("Name") + " " + organisation.getAttribute("MailAddressName") + " " + organisation.getAttribute("Postcode") + " " + organisation.getAttribute("PostOfficeName") + " " + organisation.getAttribute("CountryName");
-            }
-
-
-
-            cell.innerHTML = organisationInfo;
-
+            cell = contractorrow.insertCell(); //Planerad Avgång
+            cell = contractorrow.insertCell(); //Aktuell Avgång
+            cell = contractorrow.insertCell(); //Planerad Ankomst
+            cell = contractorrow.insertCell(); //Aktuell Ankomst
+            cell = contractorrow.insertCell(); //Operatör
+            cell.innerHTML = contractor;
         },
 
         populateTravelInformation: function (transporttype, city, response) {
@@ -1104,7 +1106,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
 
             var formtype = Xrm.Page.data.entity.getEntityName();
-            if (formtype.toUpperCase() == "INCIDENT") {
+            if (formtype.toUpperCase() == "INCIDENT" && Xrm.Page.ui.getFormType() && Xrm.Page.ui.getFormType() != 1) {
 
                 var cgi_caseid = Xrm.Page.data.entity.getId();
                 cgi_caseid = cgi_caseid.substring(1, cgi_caseid.length - 1);
@@ -1285,47 +1287,104 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
         getCaseEventDate: function (timestamp_label) {
             try {
+
+                var formType = Xrm.Page.ui.getFormType();
+                if (formType == 1)
+                    return;
+
                 var handelseDatumAttr = Xrm.Page.getAttribute("cgi_handelsedatum");
-                if (handelseDatumAttr) {
-                    var handelseDatumVal = handelseDatumAttr.getValue(); //Format: e.g 20170629 1626 or 20180522
-                    if (handelseDatumVal == null) {
-                        var actionDatumAttr = Xrm.Page.getAttribute("cgi_actiondate");
-                        if (actionDatumAttr) {
-                            var actionDatumVal = actionDatumAttr.getValue();
-                            if (actionDatumVal != null)
-                                handelseDatumVal = new Date(actionDatumVal);
-                        }
+                var handelseDatumVal = null;
+
+                var actionDatumAttr = Xrm.Page.getAttribute("cgi_actiondate");
+                var actionDatumVal = null;
+
+                var arrivalAttr = Xrm.Page.getAttribute("cgi_arrival_date");
+                var arrivalVal = null;
+
+                if (handelseDatumAttr)
+                    handelseDatumVal = handelseDatumAttr.getValue();
+                if (actionDatumAttr)
+                    actionDatumVal = actionDatumAttr.getValue();
+                if (arrivalAttr)
+                    arrivalVal = arrivalAttr.getValue();
+                else {
+                    timestamp_label.value = new Date();
+                    return;
+                }
+
+                debugger;
+
+                var year = null;
+                var month = null;
+                var day = null;
+                var hour = null;
+                var minute = null;
+                var dateTime = null;
+
+                if (handelseDatumVal != null && handelseDatumVal != "") {
+                    handelseDatumVal = handelseDatumVal.replace(" ", "");
+                    handelseDatumVal = handelseDatumVal.replace("-", "");
+                    handelseDatumVal = handelseDatumVal.replace("kl", "");
+
+                    if (isNaN(handelseDatumVal)) {
+                        console.log("Handelsedatum is not a number.");
+                        dateTime = new Date();
                     }
 
-                    if (handelseDatumVal) {
+                    //Ex 20190105
+                    if (handelseDatumVal.length == 8) {
+                        year = handelseDatumVal.substring(0, 4);
+                        month = handelseDatumVal.substring(4, 6);
+                        day = handelseDatumVal.substring(6, 8);
+                        dateTime = new Date(year, month, day);
+                    }
 
-                        var dateTime = null;
+                    //Ex 201901051424
+                    else if (handelseDatumVal.length == 12) {
+                        year = handelseDatumVal.substring(0, 4);
+                        month = handelseDatumVal.substring(4, 6);
+                        day = handelseDatumVal.substring(6, 8);
+                        hour = handelseDatumVal.substring(8, 10);
+                        minute = handelseDatumVal.substring(10, 12);
 
-                        if (handelseDatumVal.getDate()) {
-                            if (!isNaN(handelseDatumVal))
-                                dateTime = handelseDatumVal;
-                        } else {
-                            var timeArr = handelseDatumVal.split(" ");
-                            var year = timeArr[0].substring(0, 4);
-                            var month = timeArr[0].substring(4, 6);
+                        //In JS month start with index 0.
+                        var parsedMonth = parseInt(month);
+                        parsedMonth--;
+                        month = "0" + parsedMonth;
 
-                            //In JS month start with index 0.
-                            var parsedMonth = parseInt(month);
-                            parsedMonth--;
-                            month = "0" + parsedMonth;
+                        dateTime = new Date(year, month, day, hour, minute);
+                    }
 
-                            var day = timeArr[0].substring(6, 8);
+                    //Ex 1901051424
+                    else if (handelseDatumVal.length == 10) {
+                        year = handelseDatumVal.substring(0, 2);
+                        month = handelseDatumVal.substring(2, 4);
+                        day = handelseDatumVal.substring(4, 6);
+                        hour = handelseDatumVal.substring(6, 8);
+                        minute = handelseDatumVal.substring(8, 10);
 
-                            if (timeArr.length >= 2) {
-                                var hour = timeArr[1].substring(0, 2);
-                                var minute = timeArr[1].substring(2, 4);
-                                dateTime = new Date(year, month, day, hour, minute);
-                            } else dateTime = new Date(year, month, day);
-                        }
+                        //In JS month start with index 0.
+                        var parsedMonth = parseInt(month);
+                        parsedMonth--;
+                        month = "0" + parsedMonth;
 
-                        timestamp_label.value = dateTime;
+                        dateTime = new Date(year, month, day, hour, minute);
                     }
                 }
+
+                else if (actionDatumVal != null && actionDatumVal != "") {
+                    dateTime = actionDatumVal;
+                }
+
+                else if (arrivalVal != null && arrivalVal != "") {
+                    dateTime = arrivalVal;
+                }
+
+                else
+                    dateTime = new Date();
+
+                timestamp_label.value = dateTime;
+
             } catch (e) {
                 Xrm.Utility.alertDialog("Exception caught in Endeavor.Skanetrafiken.TravelInformation.getCaseActionDate. Error: " + e.message);
             }

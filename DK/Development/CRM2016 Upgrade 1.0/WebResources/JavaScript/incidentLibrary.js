@@ -1,5 +1,5 @@
-﻿if (typeof (CGISweden) == "undefined")
-{ CGISweden = {}; }
+﻿
+if (typeof (CGISweden) == "undefined") { CGISweden = {}; }
 
 // *******************************************************
 // Entity: incident 
@@ -106,11 +106,20 @@ CGISweden.incident =
 
     },
 
+    onLoadHideShowTypeOfContactFields: function () {
+        try {
+            setTimeout(CGISweden.incident.hideOrShowTypeOfContactFields, TIMEOUT_COUNTER);
+        }
+        catch (e) {
+            alert("Fel i CGISweden.incident.onLoadHideShowTypeOfContactFields\n\n" + e.Message);
+        }
+    },
+
     onLoad: function () {
         try {
             setTimeout(CGISweden.incident.timerfunction_BIFF, TIMEOUT_COUNTER);
-            setTimeout(CGISweden.incident.timerfunction_Travel, TIMEOUT_COUNTER);
-            setTimeout(CGISweden.incident.hideOrShowTypeOfContactFields, TIMEOUT_COUNTER);
+            //setTimeout(CGISweden.incident.timerfunction_Travel, TIMEOUT_COUNTER);
+            //setTimeout(CGISweden.incident.hideOrShowTypeOfContactFields, TIMEOUT_COUNTER);
         }
         catch (e) {
             alert("Fel i CGISweden.incident.onLoad\n\n" + e.Message);
@@ -264,7 +273,7 @@ CGISweden.incident =
             if (__cgi_contactid != null) {
                 //if (__customerid != null) {
                 CGISweden.incident.setCustomerFromContact();
-                
+
                 //}
             }
 
@@ -276,7 +285,7 @@ CGISweden.incident =
             alert("Fel i CGISweden.incident.onChangeAccount\n\n" + e.Message);
         }
     },
-    
+
     onChangeTravelCard: function () {
         try {
 
@@ -370,7 +379,7 @@ CGISweden.incident =
 
     hideFields: function (parsedResult) {
         try {
-            
+
         } catch (e) {
             alert("Something went wrong.");
         }
@@ -481,29 +490,29 @@ CGISweden.incident =
                 // Function signature:
                 //assignRequest: function (Assignee, Target, Type, successCallback, errorCallback)
                 SDK.SOAPAssign.assignRequest(currentUserId, entityId, entityType,
-                                          function (p1, p2, p3) {
+                    function (p1, p2, p3) {
 
-                                              Xrm.Page.data.refresh(false);
+                        Xrm.Page.data.refresh(false);
 
-                                              // NOTE: schema name in object properties, with possible upper case letters
-                                              var updateDTO = {
-                                                  cgi_passhasbeenopenedatleastonce: true
-                                              };
+                        // NOTE: schema name in object properties, with possible upper case letters
+                        var updateDTO = {
+                            cgi_passhasbeenopenedatleastonce: true
+                        };
 
-                                              // Function signature:
-                                              //updateRecord: function (id, object, type, successCallback, errorCallback) {
-                                              SDK.REST.updateRecord(entityId, updateDTO, entityType,
-                                                  function (p1, p2, p3) { /*silent success*/ },
-                                                  function (p1, p2, p3) {
-                                                      alert("Fel i CGISweden.incident.setOnUpdate\n\n" + p1);
-                                                      console.log("fail p1 " + p1 + " fail p2 " + p2 + "fail p3 " + p3);
-                                                  });
+                        // Function signature:
+                        //updateRecord: function (id, object, type, successCallback, errorCallback) {
+                        SDK.REST.updateRecord(entityId, updateDTO, entityType,
+                            function (p1, p2, p3) { /*silent success*/ },
+                            function (p1, p2, p3) {
+                                alert("Fel i CGISweden.incident.setOnUpdate\n\n" + p1);
+                                console.log("fail p1 " + p1 + " fail p2 " + p2 + "fail p3 " + p3);
+                            });
 
-                                          },
-                                          function (p1, p2, p3) {
-                                              alert("Fel i CGISweden.incident.setOnUpdate\n\n" + p1);
-                                              console.log("fail p1 " + p1 + " fail p2 " + p2 + "fail p3 " + p3);
-                                          }
+                    },
+                    function (p1, p2, p3) {
+                        alert("Fel i CGISweden.incident.setOnUpdate\n\n" + p1);
+                        console.log("fail p1 " + p1 + " fail p2 " + p2 + "fail p3 " + p3);
+                    }
                 );
 
             }
@@ -914,6 +923,7 @@ CGISweden.incident =
                 var _url = result[0].cgi_rgolurl;
                 var rgolId = Xrm.Page.getAttribute("cgi_rgolissueid").getValue();
                 var rgolPath = "http://" + _url + "/web/index.html?data=issueId%3D" + rgolId + "%26environment%3D" + _url;
+
 
                 if (Xrm.Page.ui.tabs.get("rgol_info_new").getDisplayState() == "expanded") {
                     Xrm.Page.ui.controls.get("IFRAME_RGOLinfo_new").setSrc(rgolPath);
