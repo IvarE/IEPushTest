@@ -56,7 +56,7 @@ namespace Skanetrafiken.UpSalesMigration
 
         public static string cleanMobileTelefon(string value)
         {
-            return value.Replace("+", "").Replace("(", "").Replace(")", "").Replace("-", "").Replace("'", "").Replace(" ", "");
+            return value.Replace("+", "").Replace("(", "").Replace(")", "").Replace("-", "").Replace("'", "").Replace(" ", "").Replace("–", "");
         }
 
         public static string getSubString(string value, int max)
