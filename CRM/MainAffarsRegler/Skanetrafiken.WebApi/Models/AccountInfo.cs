@@ -409,7 +409,12 @@ namespace Skanetrafiken.Crm
                 isChanged = true;
             }
 
-            if (!string.IsNullOrEmpty(accountInfo.Suborgname) && oldAccount.ed_SubOrgNamn != accountInfo.Suborgname)
+            if (accountInfo.Suborgname == null && !string.IsNullOrEmpty(oldAccount.ed_SubOrgNamn))
+            {
+                newAccount.ed_SubOrgNamn = string.Empty;
+                isChanged = true;
+            }
+            else if (!string.IsNullOrEmpty(accountInfo.Suborgname) && oldAccount.ed_SubOrgNamn != accountInfo.Suborgname)
             {
                 newAccount.ed_SubOrgNamn = accountInfo.Suborgname;
                 isChanged = true;

@@ -303,7 +303,7 @@ namespace Skanetrafiken.Crm.Controllers
                 return resp;
             }
 
-            if (!System.Text.RegularExpressions.Regex.Match(valueCode.Mobile, @"^([0-9]{6,16})$").Success)
+            if (!System.Text.RegularExpressions.Regex.Match(valueCode.Mobile, @"^((([+]46)(7)|07)[0-9]{8,8})$").Success)
             {
                 var resp = ReturnApiMessage(threadId, string.Format(Resources.InvalidFormatForMobile, valueCode.Mobile),
                 HttpStatusCode.BadRequest);
