@@ -110,7 +110,7 @@ namespace Skanetrafiken.MultiQService
                             Guid idNote = XrmHelper.Create(localContext, note);
                             _log.Info($"Note: " + idNote + " with Attachment was created on Related Order: " + order.SalesOrderId);
 
-                            //MOVE THE FILE TO AN HISTORY FOLDER
+                            MoveFile(ipAddress, pathToFolder, port, file, userName, passWord, "../History/");
                         }
                         else if(lFiles.Count == 0)
                         {
@@ -159,7 +159,7 @@ namespace Skanetrafiken.MultiQService
             }
         }
 
-        private string DownloadFile(string ipAddress, string path, int port, string fileName, string userName, string passWord)
+        public string DownloadFile(string ipAddress, string path, int port, string fileName, string userName, string passWord)
         {
             try
             {
@@ -199,6 +199,25 @@ namespace Skanetrafiken.MultiQService
             {
                 _log.Error($"Exception Error DownloadFile() from FTP:\n{ex.Message}");
                 return null;
+            }
+        }
+
+        public void MoveFile(string ipAddress, string path, int port, string fileName, string userName, string passWord, string moveToPath)
+        {
+            try
+            {
+                Uri serverFile = new Uri("ftp://" + ipAddress + path + ":" + port + "/" + fileName);
+                FtpWebRequest reqFTP = (FtpWebRequest)WebRequest.Create(serverFile);
+                reqFTP.Method = WebRequestMethods.Ftp.Rename;
+                reqFTP.Credentials = new NetworkCredential(userName, passWord);
+                reqFTP.RenameTo = moveToPath + fileName;
+
+                FtpWebResponse response = (FtpWebResponse)reqFTP.GetResponse();
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Exception Error MoveFile() from FTP:\n{ex.Message}");
+                return;
             }
         }
     }
