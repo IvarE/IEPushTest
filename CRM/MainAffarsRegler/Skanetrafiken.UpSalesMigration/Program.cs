@@ -1595,12 +1595,59 @@ namespace Skanetrafiken.UpSalesMigration
 
                         switch (name)
                         {
-                            case "xpto":
+                            case "Order: Företag":
+
+                                EntityReference erAccount = GetCrmAccountByName(localContext, value);
+
+                                if (erAccount != null)
+                                {
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"The Customer with Name: " + value + " of the Order was updated.");
+                                    nOrder.CustomerId = erAccount;
+                                }
+
+                                break;
+                            case "Order: Kontaktperson":
+
+                                EntityReference erContact = GetCrmContactByFullName(localContext, value);
+
+                                if (erContact != null)
+                                {
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"The Contact with Fullname : " + value + " of the Order was updated.");
+                                    nOrder.ed_contact = erContact;
+                                }
+
+                                break;
+                            case "Order: Orderns ID":
+
+                                //TODO 
+
+                                break;
+
+                            case "Order: Beskrivning":
                                 nOrder.Name = value;
+                                break;
+                            case "Order: Datum":
+
+                                DateTime submitDate = DateTime.MinValue;
+
+                                if (DateTime.TryParse(value, out submitDate))
+                                {
+                                    if (submitDate != DateTime.MinValue)
+                                        nOrder.SubmitDate = submitDate;
+                                }
+                                else
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+
+                                break;
+
+                            case "Order: Värde":
+
+                                nOrder.TotalLineItemAmount = new Money();
+
                                 break;
 
                             default:
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
+                                _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
                                 break;
                         }
                     }
@@ -1622,7 +1669,7 @@ namespace Skanetrafiken.UpSalesMigration
         static void Main(string[] args)
         {
             //Test Connection
-            ConnectToMSCRM("D1\\CRMAdmin", "uSEme2!nstal1", "https://sekunduat.skanetrafiken.se/DKCRM/XRMServices/2011/Organization.svc");
+            ConnectToMSCRM("D1\\CRMAdmin", "uSEme2!nstal1", "https://sekundtst.skanetrafiken.se/DKCRM/XRMServices/2011/Organization.svc");
 
             if (_service == null)
             {
@@ -1760,29 +1807,29 @@ namespace Skanetrafiken.UpSalesMigration
 
             //#endregion
 
-            //fileName = "Upsales data clean 2020-05-26_orders.xlsx";
+            fileName = "Upsales data clean 2020-06-01_order.xlsx";
 
-            //#region Import Orders
+            #region Import Orders
 
-            //try
-            //{
-            //    crmContext.ClearChanges();
-            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Orders Entity--------------");
+            try
+            {
+                crmContext.ClearChanges();
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Orders Entity--------------");
 
-            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Orders", fileName);
-            //    ImportOrdersRecords(localContext, crmContext, importExcelInfo);
-            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-            //    LogCrmContextMultipleResponses(responses);
+                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Orders", fileName);
+                ImportOrdersRecords(localContext, crmContext, importExcelInfo);
+                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                LogCrmContextMultipleResponses(responses);
 
-            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Orders Entity--------------");
-            //}
-            //catch (Exception e)
-            //{
-            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Order Records. Details: " + e.Message);
-            //    throw;
-            //}
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Orders Entity--------------");
+            }
+            catch (Exception e)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Order Records. Details: " + e.Message);
+                throw;
+            }
 
-            //#endregion
+            #endregion
 
             //fileName = "Historical Data företag 2020-04-30.xlsx";
 

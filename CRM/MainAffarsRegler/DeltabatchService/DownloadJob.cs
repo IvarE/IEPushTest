@@ -181,7 +181,8 @@ namespace Endeavor.Crm.DeltabatchService
                                     {
                                         Conditions =
                                         {
-                                            new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, socSec)
+                                            new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, socSec),
+                                            new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active)
 
                                             //// 2018-11-22 - Marcus Stenswed
                                             //// Row added to make sure only Contacts with MKL Id are updated and not sent again to CreditSafe
