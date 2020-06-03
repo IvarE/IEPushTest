@@ -51,7 +51,27 @@ namespace Skanetrafiken.UECCIntegration
         {
             try
             {
-                ConnectToMSCRM("D1\\CRMAdmin", "uSEme2!nstal1", "https://sekundtst.skanetrafiken.se/DKCRM/XRMServices/2011/Organization.svc");
+                string domainUser = string.Empty;
+                string passWord = string.Empty;
+                string urlOrganization = string.Empty;
+
+                Console.WriteLine("Split the Contacts in Production? (y)");
+                string input = Console.ReadLine();
+
+                if (input == "y")
+                {
+                    domainUser = ConfigurationManager.AppSettings["domainUserPROD"];
+                    passWord = ConfigurationManager.AppSettings["passWordPROD"];
+                    urlOrganization = ConfigurationManager.AppSettings["urlOrganizationPROD"];
+                }
+                else
+                {
+                    domainUser = ConfigurationManager.AppSettings["domainUserTST"];
+                    passWord = ConfigurationManager.AppSettings["passWordTST"];
+                    urlOrganization = ConfigurationManager.AppSettings["urlOrganizationTST"];
+                }
+
+                ConnectToMSCRM(domainUser, passWord, urlOrganization);
 
                 if (_service == null)
                 {
@@ -63,8 +83,6 @@ namespace Skanetrafiken.UECCIntegration
                 CrmContext crmContext = new CrmContext(_service);
 
                 LogicHelper.RunLogic(localContext, crmContext);
-                LogicHelper.RunSuccessContacts(localContext);
-                //LogicHelper.RunErrorContacts(localContext, crmContext);
             }
             catch (Exception e)
             {
