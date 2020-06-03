@@ -923,13 +923,13 @@ namespace Skanetrafiken.Crm.Controllers
 
                 //Call new GET API "Card" [Get Card]
                 ValueCodeHandler.GetCardProperties getCardProperties = ValueCodeHandler.CallGetCardAction(localContext, valueCode.TravelCard.TravelCardNumber);
-                //if (getCardProperties == null || getCardProperties.Amount == null || string.IsNullOrWhiteSpace(getCardProperties.CardNumber))
-                //{
-                //    _log.Debug($"CallGetCardAction did not return with relevant values.");
-                //    return ReturnApiMessage(threadId,
-                //        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                //    HttpStatusCode.BadRequest);
-                //}
+                if (getCardProperties == null || getCardProperties.Amount == null || string.IsNullOrWhiteSpace(getCardProperties.CardNumber))
+                {
+                    _log.Debug($"CallGetCardAction did not return with relevant values.");
+                    return ReturnApiMessage(threadId,
+                        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                    HttpStatusCode.BadRequest);
+                }
 
                 _log.Debug($"Fetching maximum value setting.");
                 //Fetch setting for maximum value
@@ -961,11 +961,11 @@ namespace Skanetrafiken.Crm.Controllers
                 {
                     //Block Travel Card (OBS! Using Capture Order and Place Order)
 
-                    //Call "Card Order API" to start the value code creation and travel card block process (requesting a block of the card)
-                    var captureOrderResponse = ValueCodeHandler.CallCaptureOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
-                    if (string.IsNullOrWhiteSpace(captureOrderResponse) || captureOrderResponse != "200 - Success")
+                    //Call "Place Order API" to actually block the travel card
+                    var placeOrderResponse = ValueCodeHandler.CallPlaceOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
+                    if (string.IsNullOrWhiteSpace(placeOrderResponse) || placeOrderResponse != "200 - Success")
                     {
-                        _log.Debug($"CallCaptureOrderAction did not return a Success.");
+                        _log.Debug($"CallPlaceOrderAction did not return a Success.");
                         return ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                         HttpStatusCode.BadRequest);
@@ -974,11 +974,11 @@ namespace Skanetrafiken.Crm.Controllers
                     //OBS! We never create a value code here, instead we create an incident bellow.
                     //[Create a new Value Code before blocking the card through the API / Validate that Value Code has been created]
 
-                    //Call "Place Order API" to actually block the travel card
-                    var placeOrderResponse = ValueCodeHandler.CallPlaceOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
-                    if (string.IsNullOrWhiteSpace(placeOrderResponse) || placeOrderResponse != "200 - Success")
+                    //Call "Card Order API" to start the value code creation and travel card block process (requesting a block of the card)
+                    var captureOrderResponse = ValueCodeHandler.CallCaptureOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
+                    if (string.IsNullOrWhiteSpace(captureOrderResponse) || captureOrderResponse != "200 - Success")
                     {
-                        _log.Debug($"CallPlaceOrderAction did not return a Success.");
+                        _log.Debug($"CallCaptureOrderAction did not return a Success.");
                         return ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                         HttpStatusCode.BadRequest);
@@ -1013,11 +1013,11 @@ namespace Skanetrafiken.Crm.Controllers
                 {
                     //Block Travel Card (OBS! Using Capture Order and Place Order)
 
-                    //Call "Card Order API" to start the value code creation and travel card block process (requesting a block of the card)
-                    var captureOrderResponse = ValueCodeHandler.CallCaptureOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
-                    if (string.IsNullOrWhiteSpace(captureOrderResponse) || captureOrderResponse != "200 - Success")
+                    //Call "Place Order API" to actually block the travel card
+                    var placeOrderResponse = ValueCodeHandler.CallPlaceOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
+                    if (string.IsNullOrWhiteSpace(placeOrderResponse) || placeOrderResponse != "200 - Success")
                     {
-                        _log.Debug($"CallCaptureOrderAction did not return a Success.");
+                        _log.Debug($"CallPlaceOrderAction did not return a Success.");
                         return ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                         HttpStatusCode.BadRequest);
@@ -1037,11 +1037,11 @@ namespace Skanetrafiken.Crm.Controllers
                         HttpStatusCode.BadRequest);
                     }
 
-                    //Call "Place Order API" to actually block the travel card
-                    var placeOrderResponse = ValueCodeHandler.CallPlaceOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
-                    if (string.IsNullOrWhiteSpace(placeOrderResponse) || placeOrderResponse != "200 - Success")
+                    //Call "Card Order API" to start the value code creation and travel card block process (requesting a block of the card)
+                    var captureOrderResponse = ValueCodeHandler.CallCaptureOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
+                    if (string.IsNullOrWhiteSpace(captureOrderResponse) || captureOrderResponse != "200 - Success")
                     {
-                        _log.Debug($"CallPlaceOrderAction did not return a Success.");
+                        _log.Debug($"CallCaptureOrderAction did not return a Success.");
                         return ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                         HttpStatusCode.BadRequest);

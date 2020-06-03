@@ -20,7 +20,7 @@ namespace Skanetrafiken.Crm.ValueCodes
         //private const string typeConst = "mobile";
         //private const string deliveryTypeConst = "api";
 
-        public static Guid CreateMobileValueCodeGeneric(Plugin.LocalPluginContext localContext, int deliveryType, DateTime validTo, float amount, decimal periodPrice, string phoneNumber, int templateNumber, ContactEntity contact,ValueCodeApprovalEntity valueCodeApproval = null, ValueCodeTemplateEntity template = null, LeadEntity lead = null, RefundEntity refund = null, TravelCardEntity travelCard = null)
+        public static Guid CreateMobileValueCodeGeneric(Plugin.LocalPluginContext localContext, int deliveryType, DateTime validTo, float amount, decimal periodPrice, string phoneNumber, int templateNumber, ContactEntity contact, ValueCodeApprovalEntity valueCodeApproval = null, ValueCodeTemplateEntity template = null, LeadEntity lead = null, RefundEntity refund = null, TravelCardEntity travelCard = null)
         {
             localContext.Trace($"(CreateMobileValueCodeGeneric) Entering mobile");
             return CreateValueCodeGeneric(localContext, deliveryType, validTo, amount, periodPrice, Generated.ed_valuecode_ed_typeoption.Mobile, valueCodeApproval, templateNumber, contact, phoneNumber, "", template, lead, refund, travelCard);
@@ -73,14 +73,14 @@ namespace Skanetrafiken.Crm.ValueCodes
         /// <param name="refund"></param>
         /// <param name="travelCardNumber"></param>
         /// <returns></returns>
-        public static Guid CreateValueCodeGeneric(Plugin.LocalPluginContext localContext, int deliveryType, DateTime validTo, float amount, decimal periodPrice, Generated.ed_valuecode_ed_typeoption type, 
+        public static Guid CreateValueCodeGeneric(Plugin.LocalPluginContext localContext, int deliveryType, DateTime validTo, float amount, decimal periodPrice, Generated.ed_valuecode_ed_typeoption type,
             ValueCodeApprovalEntity valueCodeApproval, int voucherType, ContactEntity contact, string phoneNumber, string email, ValueCodeTemplateEntity template, LeadEntity lead, RefundEntity refund, TravelCardEntity travelCard)
         {
             localContext.TracingService.Trace($"---> Entering {nameof(CreateValueCodeGeneric)}.");
 
-            if(phoneNumber != null && phoneNumber != "")
+            if (phoneNumber != null && phoneNumber != "")
             {
-                if(phoneNumber.StartsWith("0046"))
+                if (phoneNumber.StartsWith("0046"))
                 {
                     phoneNumber = "+46" + phoneNumber.Substring(4);
                 }
@@ -218,7 +218,7 @@ namespace Skanetrafiken.Crm.ValueCodes
 
                 // Create ValueCode from Voucher Service
                 localContext.Trace($"(CreateValueCodeGeneric) Entering CreateValueCodeFromVoucherServiceResponseGeneric...");
-                Guid valueCodeGuid = CreateValueCodeFromVoucherServiceResponseGeneric(localContext, responseService, deliveryType, template, 
+                Guid valueCodeGuid = CreateValueCodeFromVoucherServiceResponseGeneric(localContext, responseService, deliveryType, template,
                     contact, lead, type, email, phoneNumber, refund, valueCodeApproval, voucherType, travelCard, amount, totalAmountSentToVoucherService, originalPeriodPrice, originalReskassa);
 
                 if (valueCodeGuid == null)
@@ -449,7 +449,7 @@ namespace Skanetrafiken.Crm.ValueCodes
                 else if (amount <= 0 && periodPrice <= 0)
                     throw new InvalidPluginExecutionException($"Amount and period price cannot both be 0.");
             }
-            
+
 
             if (clientsEmailAddress != null && clientsEmailAddress != "")
             {
@@ -482,7 +482,7 @@ namespace Skanetrafiken.Crm.ValueCodes
                     IncidentEntity.Fields.cgi_ActionDate,
                     IncidentEntity.Fields.cgi_arrival_date));
 
-                if(incidentInfo.cgi_ActionDate != null)
+                if (incidentInfo.cgi_ActionDate != null)
                 {
                     valueCode.voucherText = "<p>Du kan visa QR-koden i en smartphone eller skriv ut den.</p>"
                                         + $"<p>Ersättningen avser din ansökan från {incidentInfo.cgi_ActionDate.Value.Date.ToShortDateString()} med referens {incidentInfo.TicketNumber} / {incidentInfo.cgi_RGOLIssueId}.</p>"
@@ -569,7 +569,7 @@ namespace Skanetrafiken.Crm.ValueCodes
                 valueCode.voucherText = "<p>Du kan visa QR-koden i en smartphone eller skriva ut den. <br>" +
                     $"Referens {incidentInfo.TicketNumber} <br>" +
                     "Värdekoden kan användas som betalning i vår app eller <a href='https://www.skanetrafiken.se/kopstallen'>hos våra kundcenter och utvalda serviceombud</a>. Koden kan endast användas vid köp av Skånetrafikens biljetter.</p>";
-                
+
                 if (incidentInfo.cgi_arrival_date != null)
                 {
                     valueCode.voucherText = "<p>Du kan visa QR-koden i en smartphone eller skriv ut den.</p>"
@@ -590,7 +590,7 @@ namespace Skanetrafiken.Crm.ValueCodes
                 }
 
             }
-            
+
 
             js = new DataContractJsonSerializer(typeof(ValueCodeCouponRequest));
             js.WriteObject(msObj, valueCode);
@@ -715,7 +715,7 @@ namespace Skanetrafiken.Crm.ValueCodes
 
             return (string)response["CardDetailsResponse"];
         }
-        
+
         public static BiztalkParseCardDetailsMessage CallParseCardDetailsFromBiztalkAction(Plugin.LocalPluginContext localContext, string biztalkResponse)
         {
             OrganizationRequest request = new OrganizationRequest("ed_ParseBiztalkResponse");
@@ -816,7 +816,7 @@ namespace Skanetrafiken.Crm.ValueCodes
             return getCardProperties;
         }
 
-        public static EntityReference CallCreateValueCodeAction(Plugin.LocalPluginContext localContext, int voucherType, decimal amount, decimal periodPrice, string mobile, string email, 
+        public static EntityReference CallCreateValueCodeAction(Plugin.LocalPluginContext localContext, int voucherType, decimal amount, decimal periodPrice, string mobile, string email,
             EntityReference refundId, EntityReference leadId, EntityReference contactId, EntityReference valueCodeApprovalId, int deliveryMethod, EntityReference travelCard)
         {
             OrganizationRequest request = new OrganizationRequest("ed_CreateValueCodeGeneric");
@@ -1104,8 +1104,8 @@ namespace Skanetrafiken.Crm.ValueCodes
 
         }
 
-        private static Guid CreateValueCodeFromVoucherServiceResponseGeneric(Plugin.LocalPluginContext localContext, VoucherCrm response, int deliveryType, ValueCodeTemplateEntity template, 
-            ContactEntity contact, LeadEntity lead, Generated.ed_valuecode_ed_typeoption type, string email, string phoneNumber, RefundEntity refund, 
+        private static Guid CreateValueCodeFromVoucherServiceResponseGeneric(Plugin.LocalPluginContext localContext, VoucherCrm response, int deliveryType, ValueCodeTemplateEntity template,
+            ContactEntity contact, LeadEntity lead, Generated.ed_valuecode_ed_typeoption type, string email, string phoneNumber, RefundEntity refund,
             ValueCodeApprovalEntity valueCodeApproval, int voucherType, TravelCardEntity travelCard, float amount, int totalAmountSentToVoucherService, decimal originalPeriodPrice, float originalReskassa)
         {
 
@@ -1170,7 +1170,7 @@ namespace Skanetrafiken.Crm.ValueCodes
                     valueCode.ed_OriginalAmountPeriodPrice = originalPeriodPrice;
                 else
                     valueCode.ed_OriginalAmountPeriodPrice = 9999999;
-                
+
                 if (response.amount != null)
                     valueCode.ed_AmountFromVoucherService = response.amount;
                 else
@@ -1200,7 +1200,7 @@ namespace Skanetrafiken.Crm.ValueCodes
                 //    valueCode.ed_Amount = new Money((decimal)amount);
                 //else if ((amount > 0 && periodPrice == 0) || (amount > 0 && periodPrice > 0) || (amount == 0 && periodPrice == 0))
                 //    valueCode.ed_Amount = new Money((decimal)amount);
-                
+
                 valueCode.ed_Amount = new Money((decimal)amount);
 
                 if (response.voucherCode != null)
@@ -1211,20 +1211,20 @@ namespace Skanetrafiken.Crm.ValueCodes
                 valueCode.ed_CustomImage = "";
                 valueCode.ed_CustomText = "";
 
-                if(response.validToDate != null)
+                if (response.validToDate != null)
                     valueCode.ed_LastRedemptionDate = Convert.ToDateTime(response.validToDate);
-                
+
                 valueCode.ed_Status = response.eanCode.ToString();
-                
+
                 valueCode.ed_TicketReference = "";
 
-                if(type != null)
+                if (type != null)
                     valueCode.ed_TypeOption = type;
 
-                if(response.voucherId != null)
+                if (response.voucherId != null)
                     valueCode.ed_name = response.voucherId.ToString();
 
-                if(template != null)
+                if (template != null)
                     valueCode.ed_ValueCodeTemplate = template.ToEntityReference();
 
 
@@ -1234,22 +1234,22 @@ namespace Skanetrafiken.Crm.ValueCodes
                 valueCode.ed_RgolId = (rgolId != null) ? rgolId : null;
                 valueCode.ed_CaseNumber = (caseNumber != null) ? caseNumber : null;
 
-                if(phoneNumber != null)
+                if (phoneNumber != null)
                     valueCode.ed_MobileNumber = phoneNumber;
 
-                if(email != null)
+                if (email != null)
                     valueCode.ed_Email = email;
 
-                if(valueCodeApproval != null)
+                if (valueCodeApproval != null)
                     valueCode.ed_ValueCodeApprovalId = valueCodeApproval?.ToEntityReference();
 
-                if(contact != null)
+                if (contact != null)
                     valueCode.ed_Contact = contact.ToEntityReference();
 
                 if (travelCard != null)
                     valueCode.ed_TravelCard = travelCard?.ToEntityReference();
 
-                
+
 
                 valueCodeId = XrmHelper.Create(localContext.OrganizationService, valueCode);
                 localContext.TracingService.Trace($"Created ValueCodeEntity.");
@@ -1580,16 +1580,22 @@ namespace Skanetrafiken.Crm.ValueCodes
 
         }
 
+        [DataContract]
         public class GetCardProperties
         {
+            [DataMember(Name = "cardNumber")]
             public string CardNumber { get; set; }
-            
+
+            [DataMember(Name = "isClosed")]
             public bool IsClosed { get; set; }
-            
+
+            [DataMember(Name = "amount")]
             public decimal Amount { get; set; }
-            
+
+            [DataMember(Name = "closedReason")]
             public string ClosedReason { get; set; }
-            
+
+            [DataMember(Name = "isReserved")]
             public bool IsReserved { get; set; }
         }
 

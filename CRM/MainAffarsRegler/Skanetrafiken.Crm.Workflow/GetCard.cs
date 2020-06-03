@@ -64,7 +64,7 @@ namespace Skanetrafiken.Crm
 
                 CardNumberResp.Set(activityContext, "");
                 IsClosed.Set(activityContext, false);
-                Amount.Set(activityContext, 0);
+                Amount.Set(activityContext, (decimal)0);
                 ClosedReason.Set(activityContext, "");
                 IsReserved.Set(activityContext, false);
 
@@ -119,7 +119,7 @@ namespace Skanetrafiken.Crm
             }
             catch (Exception ex)
             {
-                throw new InvalidPluginExecutionException($"{ex.Message}");
+                throw new InvalidPluginExecutionException($"The API call Failed -> {ex.Message}");
             }
 
             return getCardProperties;
