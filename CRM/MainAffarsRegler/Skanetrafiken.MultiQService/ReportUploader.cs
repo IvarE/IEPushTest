@@ -99,7 +99,7 @@ namespace Skanetrafiken.MultiQService
                             string base64File = DownloadFile(ipAddress, pathToFolder, port, file, userName, passWord);
 
                             Annotation note = new Annotation();
-                            note.Subject = "MultiQ Report";
+                            note.Subject = file;
                             note.NoteText = "Generated Report file from MultiQ for this Order.";
                             note.ObjectTypeCode = OrderEntity.EntityLogicalName;
                             note.ObjectId = new EntityReference(OrderEntity.EntityLogicalName, (Guid)order.SalesOrderId);
@@ -109,6 +109,8 @@ namespace Skanetrafiken.MultiQService
 
                             Guid idNote = XrmHelper.Create(localContext, note);
                             _log.Info($"Note: " + idNote + " with Attachment was created on Related Order: " + order.SalesOrderId);
+
+                            //MOVE THE FILE TO AN HISTORY FOLDER
                         }
                         else if(lFiles.Count == 0)
                         {
