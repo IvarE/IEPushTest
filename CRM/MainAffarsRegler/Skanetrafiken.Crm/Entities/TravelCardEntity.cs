@@ -12,6 +12,7 @@ using static Skanetrafiken.Crm.ValueCodes.ValueCodeHandler;
 using System.Net.Http;
 using Microsoft.Xrm.Sdk;
 using Skanetrafiken.Crm.ValueCodes;
+using System.Runtime.Serialization.Json;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -32,19 +33,104 @@ namespace Skanetrafiken.Crm.Entities
         {
             localContext.TracingService.Trace($"Running HandlePlaceOrder.");
             //TODO: Parse information from API to a GetCardProperties Object
-            ValueCodeHandler.GetCardProperties gerCardProperties = null;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
+            FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+
+            CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
+
+            if (settingEntity == null || string.IsNullOrWhiteSpace(settingEntity.ed_JojoCardDetailsAPI))
+            {
+                //Bad request -> exception
+            }
+
+            ValueCodeHandler.GetCardProperties getCardProperties = null;
+
+            localContext.TracingService.Trace("\nJojoAPITest - Place Order:");
+            WebRequest request = WebRequest.Create(string.Format("{0}placeOrder", settingEntity.ed_JojoCardDetailsAPI));
+
+            request.Headers.Add("Card-Number", cardNumber);
+            request.Headers.Add("20", "*/*");
+            request.ContentLength = 0;
+            request.Method = "POST";
+
+            using (WebResponse placeOrderResponse = request.GetResponse())
+            {
+                var checkStatus = (HttpWebResponse)placeOrderResponse;
+                if (checkStatus.StatusCode != HttpStatusCode.OK)
+                {
+                    //Bad Request
+                }
+                else
+                {
+                    using (Stream stream = placeOrderResponse.GetResponseStream())
+                    {
+                        using (StreamReader streamReader = new StreamReader(stream, Encoding.UTF8))
+                        {
+
+                            var jsonResponse = streamReader.ReadToEnd();
+
+                            DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(ValueCodeHandler.GetCardProperties));
+                            MemoryStream streamMemory = new MemoryStream(Encoding.UTF8.GetBytes(jsonResponse));
+                            streamMemory.Position = 0;
+
+                            getCardProperties = (ValueCodeHandler.GetCardProperties)jsonSerializer.ReadObject(streamMemory);
+                            streamMemory.Close();
+
+                            if (getCardProperties != null)
+                            {
+                                //OK
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                    }
+                }
+            }
 
             localContext.TracingService.Trace($"Successfully exiting HandlePlaceOrder.");
-            return gerCardProperties;
+            return getCardProperties;
         }
 
         public static string HandleCaptureOrder(Plugin.LocalPluginContext localContext, string cardNumber)
         {
             localContext.TracingService.Trace($"Running HandleCaptureOrder.");
             //TODO: Parse information from API to a Status String (200 - Success / 400 - Bad Request, error message)
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
+            FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+
+            CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
+
+            localContext.TracingService.Trace("\nJojoAPITest - Capture Order:");
+            string apiStatusResponse = "";
+
+            WebRequest requestCaptureOrder = WebRequest.Create(string.Format("{0}captureOrder/", settingEntity.ed_JojoCardDetailsAPI));
+
+            requestCaptureOrder.Headers.Add("Card-Number", cardNumber);
+            requestCaptureOrder.Headers.Add("20", "*/*");
+            requestCaptureOrder.ContentLength = 0;
+            requestCaptureOrder.Method = "POST";
+
+            var captureOrderResponse = requestCaptureOrder.GetResponse() as HttpWebResponse;
+
+            if (captureOrderResponse.StatusCode != HttpStatusCode.OK)
+            {
+                //Send bad request
+                apiStatusResponse = "400 - Fel";
+            }
+            else
+            {
+                //We are done
+                apiStatusResponse = "200 - Success";
+            }
 
             localContext.TracingService.Trace($"Successfully exiting HandleCaptureOrder.");
-            string apiStatusResponse = "";
+            
             return apiStatusResponse;
         }
 
@@ -52,10 +138,68 @@ namespace Skanetrafiken.Crm.Entities
         {
             localContext.TracingService.Trace($"Running HandleGetCard.");
             //TODO: Parse information from API to a GetCardProperties Object
-            ValueCodeHandler.GetCardProperties gerCardProperties = null;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-            localContext.TracingService.Trace($"Successfully exiting HandleGetCard.");
-            return gerCardProperties;
+            FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+
+            CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
+
+            if (settingEntity == null || string.IsNullOrWhiteSpace(settingEntity.ed_JojoCardDetailsAPI))
+            {
+                //Bad request -> exception
+            }
+
+            ValueCodeHandler.GetCardProperties getCardProperties = null;
+            string message = "";
+            localContext.TracingService.Trace("\nJojoAPITest - get Card:");
+
+            var getCardRequest = WebRequest.Create(string.Format("{0}card/", settingEntity.ed_JojoCardDetailsAPI));
+
+            getCardRequest.Headers.Add("Card-Number", cardNumber);
+            getCardRequest.Headers.Add("20", "*/*");
+
+            getCardRequest.Method = "GET";
+
+            using (WebResponse getCardResponse = getCardRequest.GetResponse())
+            {
+                var checkStatus = (HttpWebResponse)getCardResponse;
+                if (checkStatus.StatusCode != HttpStatusCode.OK)
+                {
+                    //Bad request -> exception
+                }
+                else
+                {
+                    using (Stream stream = getCardResponse.GetResponseStream())
+                    {
+                        using (StreamReader streamReader = new StreamReader(stream, Encoding.UTF8))
+                        {
+
+                            var jsonResponse = streamReader.ReadToEnd();
+
+                            DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(ValueCodeHandler.GetCardProperties));
+                            MemoryStream streamMemory = new MemoryStream(Encoding.UTF8.GetBytes(jsonResponse));
+                            streamMemory.Position = 0;
+
+                            getCardProperties = (ValueCodeHandler.GetCardProperties)jsonSerializer.ReadObject(streamMemory);
+                            streamMemory.Close();
+                            if (getCardProperties != null)
+                            {
+                                //Return this information
+                                message = "Found information!";
+                            }
+                            else
+                            {
+                                //bad
+                                message = "Did not find information!";
+                            }
+                        }
+                    }
+                }
+            }
+
+            localContext.TracingService.Trace($"Successfully exiting HandleGetCard, {message}");
+            return getCardProperties;
         }
 
         public static string BlockCardBiztalk(Plugin.LocalPluginContext localContext, string travelCardNumber, int reasonCode)
