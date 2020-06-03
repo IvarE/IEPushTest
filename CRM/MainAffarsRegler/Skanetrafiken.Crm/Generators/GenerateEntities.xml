@@ -31,6 +31,7 @@
     <entity>campaignitem</entity>
     <entity>salesorder</entity>
     <entity>salesorderdetail</entity>
+    <entity>transactioncurrency</entity>
 
 
     <entity>cgi_categorydetail</entity>
@@ -87,7 +88,7 @@
     <optionset>account_accountcategorycode</optionset>
     <optionset>asyncoperation_statuscode</optionset>
 
-
+    <optionset>appointment_statuscode</optionset>
 
     <optionset>campaign_statuscode</optionset>
     <optionset>campaign_typecode</optionset>
@@ -111,7 +112,7 @@
     <optionset>lead_statuscode</optionset>
     <optionset>lead_leadsourcecode</optionset>
     <optionset>processstage_category</optionset>
-
+    <optionset>phonecall_statuscode</optionset>
 
 
     <optionset>cgi_refund_statuscode</optionset>

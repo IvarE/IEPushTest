@@ -4593,6 +4593,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 transactioncurrency_account
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_account")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_account
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_account", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_account", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 user_accounts
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
@@ -7075,6 +7092,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		Scheduled = 3,
 	}
 	
+	public enum appointment_statuscode
+	{
+		
+		Free = 1,
+		
+		Tentative = 2,
+		
+		Completed = 3,
+		
+		Canceled = 4,
+		
+		Busy = 5,
+		
+		OutofOffice = 6,
+	}
+	
 	/// <summary>
 	/// Commitment representing a time interval with start/end times and duration.
 	/// </summary>
@@ -7922,15 +7955,30 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// Select the appointment's status.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
-		public Microsoft.Xrm.Sdk.OptionSetValue StatusCode
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.appointment_statuscode> StatusCode
 		{
 			get
 			{
-				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.appointment_statuscode)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.appointment_statuscode), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
 			}
 			set
 			{
-				this.SetAttributeValue("statuscode", value);
+				if ((value == null))
+				{
+					this.SetAttributeValue("statuscode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statuscode", new Microsoft.Xrm.Sdk.OptionSetValue((int)value));
+				}
 			}
 		}
 		
@@ -8676,6 +8724,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_appointment", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 TransactionCurrency_Appointment
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_Appointment")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_Appointment
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_Appointment", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_Appointment", null, value);
 			}
 		}
 		
@@ -10614,6 +10679,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Template>("Template_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 TransactionCurrency_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_AsyncOperations", null, value);
 			}
 		}
 		
@@ -12892,6 +12974,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			}
 		}
 		
+		/// <summary>
+		/// N:1 transactioncurrency_campaign
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_campaign")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_campaign
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_campaign", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_campaign", null, value);
+			}
+		}
+		
 		public struct Fields
 		{
 			
@@ -14731,6 +14830,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_campaignresponse", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 TransactionCurrency_CampaignResponse
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_CampaignResponse")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_CampaignResponse
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_CampaignResponse", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_CampaignResponse", null, value);
 			}
 		}
 		
@@ -18175,6 +18291,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_cgi_refund", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 TransactionCurrency_cgi_refund
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_cgi_refund")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_cgi_refund
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_cgi_refund", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_cgi_refund", null, value);
 			}
 		}
 		
@@ -23088,6 +23221,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			}
 		}
 		
+		/// <summary>
+		/// N:1 TransactionCurrency_cgi_setting
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_cgi_setting")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_cgi_setting
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_cgi_setting", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_cgi_setting", null, value);
+			}
+		}
+		
 		public struct Fields
 		{
 			
@@ -25038,6 +25188,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_cgi_travelcard", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 TransactionCurrency_cgi_travelcard
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_cgi_travelcard")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_cgi_travelcard
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_cgi_travelcard", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_cgi_travelcard", null, value);
 			}
 		}
 		
@@ -31389,6 +31556,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			}
 		}
 		
+		/// <summary>
+		/// N:1 transactioncurrency_contact
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_contact")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_contact
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_contact", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_contact", null, value);
+			}
+		}
+		
 		public struct Fields
 		{
 			
@@ -33174,6 +33358,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_customeraddressbase_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 TransactionCurrency_CustomerAddress
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_CustomerAddress")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_CustomerAddress
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_CustomerAddress", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_CustomerAddress", null, value);
 			}
 		}
 		
@@ -42191,6 +42392,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 ed_notifymkl_transactioncurrency_transactioncurrencyid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_notifymkl_transactioncurrency_transactioncurrencyid")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency ed_notifymkl_transactioncurrency_transactioncurrencyid
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("ed_notifymkl_transactioncurrency_transactioncurrencyid", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("ed_notifymkl_transactioncurrency_transactioncurrencyid", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 ed_orderstatus_ed_notifymkls
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -45225,6 +45443,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 TransactionCurrency_ed_SalesOrder
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_ed_SalesOrder")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_ed_SalesOrder
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_ed_SalesOrder", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_ed_SalesOrder", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 user_ed_salesorder
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
@@ -46244,6 +46479,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_salesorderline", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 TransactionCurrency_ed_salesorderline
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_ed_salesorderline")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_ed_salesorderline
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_ed_salesorderline", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_ed_salesorderline", null, value);
 			}
 		}
 		
@@ -50165,6 +50417,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 ed_textmessage_transactioncurrency_transactioncurrencyid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_textmessage_transactioncurrency_transactioncurrencyid")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency ed_textmessage_transactioncurrency_transactioncurrencyid
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("ed_textmessage_transactioncurrency_transactioncurrencyid", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("ed_textmessage_transactioncurrency_transactioncurrencyid", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 ed_textmessagetemplate_ed_TextMessages
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -52705,6 +52974,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_valuecode_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 TransactionCurrency_ed_ValueCode
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_ed_ValueCode")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_ed_ValueCode
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_ed_ValueCode", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_ed_ValueCode", null, value);
 			}
 		}
 		
@@ -58913,6 +59199,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 TransactionCurrency_Email
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_Email")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_Email
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_Email", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_Email", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 user_email
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
@@ -64273,6 +64576,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			}
 		}
 		
+		/// <summary>
+		/// N:1 TransactionCurrency_Incident
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_Incident")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_Incident
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_Incident", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_Incident", null, value);
+			}
+		}
+		
 		public struct Fields
 		{
 			
@@ -68823,6 +69143,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			}
 		}
 		
+		/// <summary>
+		/// N:1 transactioncurrency_lead
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_lead")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_lead
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_lead", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_lead", null, value);
+			}
+		}
+		
 		public struct Fields
 		{
 			
@@ -69390,6 +69727,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		Completed = 1,
 		
 		Canceled = 2,
+	}
+	
+	public enum phonecall_statuscode
+	{
+		
+		Open = 1,
+		
+		Made = 2,
+		
+		Canceled = 3,
+		
+		Received = 4,
 	}
 	
 	/// <summary>
@@ -70095,15 +70444,30 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// Select the phone call's status.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
-		public Microsoft.Xrm.Sdk.OptionSetValue StatusCode
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.phonecall_statuscode> StatusCode
 		{
 			get
 			{
-				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.phonecall_statuscode)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.phonecall_statuscode), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
 			}
 			set
 			{
-				this.SetAttributeValue("statuscode", value);
+				if ((value == null))
+				{
+					this.SetAttributeValue("statuscode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statuscode", new Microsoft.Xrm.Sdk.OptionSetValue((int)value));
+				}
 			}
 		}
 		
@@ -70881,6 +71245,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_phonecall", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 TransactionCurrency_PhoneCall
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_PhoneCall")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_PhoneCall
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_PhoneCall", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_PhoneCall", null, value);
 			}
 		}
 		
@@ -72592,6 +72973,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 transactioncurrency_product
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_product")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_product
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_product", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_product", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 unit_of_measurement_products
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("defaultuomid")]
@@ -73695,6 +74093,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("queue_primary_user", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 TransactionCurrency_Queue
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_Queue")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_Queue
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_Queue", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_Queue", null, value);
 			}
 		}
 		
@@ -74926,6 +75341,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_queueitembase_workerid", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 TransactionCurrency_QueueItem
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_QueueItem")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_QueueItem
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_QueueItem", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_QueueItem", null, value);
 			}
 		}
 		
@@ -77805,6 +78237,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			}
 		}
 		
+		/// <summary>
+		/// N:1 transactioncurrency_salesorder
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_salesorder")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_salesorder
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_salesorder", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_salesorder", null, value);
+			}
+		}
+		
 		public struct Fields
 		{
 			
@@ -79311,6 +79760,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 transactioncurrency_salesorderdetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_salesorderdetail")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_salesorderdetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_salesorderdetail", null);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 unit_of_measurement_order_details
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("uomid")]
@@ -80328,6 +80790,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_st_singaporeticket", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 TransactionCurrency_st_singaporeticket
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_st_singaporeticket")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_st_singaporeticket
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_st_singaporeticket", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_st_singaporeticket", null, value);
 			}
 		}
 		
@@ -86316,6 +86795,70 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N lk_transactioncurrency_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_transactioncurrency_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency> lk_transactioncurrency_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("lk_transactioncurrency_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("lk_transactioncurrency_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_transactioncurrency_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_transactioncurrency_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency> lk_transactioncurrency_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("lk_transactioncurrency_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("lk_transactioncurrency_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_transactioncurrencybase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_transactioncurrencybase_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency> lk_transactioncurrencybase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("lk_transactioncurrencybase_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("lk_transactioncurrencybase_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_transactioncurrencybase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_transactioncurrencybase_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency> lk_transactioncurrencybase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("lk_transactioncurrencybase_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("lk_transactioncurrencybase_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N lk_uom_createdonbehalfby
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_uom_createdonbehalfby")]
@@ -87358,6 +87901,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Queue>("queue_system_user", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 TransactionCurrency_SystemUser
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_SystemUser")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_SystemUser
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_SystemUser", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_SystemUser", null, value);
 			}
 		}
 		
@@ -89225,6 +89785,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			}
 		}
 		
+		/// <summary>
+		/// N:1 TransactionCurrency_Team
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_Team")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_Team
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_Team", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_Team", null, value);
+			}
+		}
+		
 		public struct Fields
 		{
 			
@@ -89966,6 +90543,940 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int SubjectPresentationXml = 1073741823;
 			
 			public const int Title = 200;
+		}
+	}
+	
+	public enum TransactionCurrencyState
+	{
+		
+		Active = 0,
+		
+		Inactive = 1,
+	}
+	
+	/// <summary>
+	/// Currency in which a financial transaction is carried out.
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("transactioncurrency")]
+	public partial class TransactionCurrency : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public TransactionCurrency() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "transactioncurrency";
+		
+		public const int EntityTypeCode = 9105;
+		
+		/// <summary>
+		/// Unique identifier of the user who created the transaction currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the transaction currency was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who created the transactioncurrency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Name of the transaction currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("currencyname")]
+		public string CurrencyName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("currencyname");
+			}
+			set
+			{
+				this.SetAttributeValue("currencyname", value);
+			}
+		}
+		
+		/// <summary>
+		/// Number of decimal places that can be used for currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("currencyprecision")]
+		public System.Nullable<int> CurrencyPrecision
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("currencyprecision");
+			}
+			set
+			{
+				this.SetAttributeValue("currencyprecision", value);
+			}
+		}
+		
+		/// <summary>
+		/// Symbol for the transaction currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("currencysymbol")]
+		public string CurrencySymbol
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("currencysymbol");
+			}
+			set
+			{
+				this.SetAttributeValue("currencysymbol", value);
+			}
+		}
+		
+		/// <summary>
+		/// The default image for the entity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage")]
+		public byte[] EntityImage
+		{
+			get
+			{
+				return this.GetAttributeValue<byte[]>("entityimage");
+			}
+			set
+			{
+				this.SetAttributeValue("entityimage", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage_timestamp")]
+		public System.Nullable<long> EntityImage_Timestamp
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("entityimage_timestamp");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage_url")]
+		public string EntityImage_URL
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("entityimage_url");
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimageid")]
+		public System.Nullable<System.Guid> EntityImageId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("entityimageid");
+			}
+		}
+		
+		/// <summary>
+		/// Exchange rate between the transaction currency and the base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+			set
+			{
+				this.SetAttributeValue("exchangerate", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data import or data migration that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// ISO currency code for the transaction currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isocurrencycode")]
+		public string ISOCurrencyCode
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("isocurrencycode");
+			}
+			set
+			{
+				this.SetAttributeValue("isocurrencycode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who last modified the transaction currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the transaction currency was last modified.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who last modified the transactioncurrency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the organization associated with the transaction currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("organizationid")]
+		public Microsoft.Xrm.Sdk.EntityReference OrganizationId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("organizationid");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Status of the transaction currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.TransactionCurrencyState> StateCode
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.TransactionCurrencyState)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.TransactionCurrencyState), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("statecode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statecode", new Microsoft.Xrm.Sdk.OptionSetValue(((int)(value))));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Reason for the status of the transaction currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue StatusCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+			}
+			set
+			{
+				this.SetAttributeValue("statuscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the transaction currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public System.Nullable<System.Guid> TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.TransactionCurrencyId = value;
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the transaction currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_notifymkl_transactioncurrency_transactioncurrencyid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_notifymkl_transactioncurrency_transactioncurrencyid")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl> ed_notifymkl_transactioncurrency_transactioncurrencyid
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl>("ed_notifymkl_transactioncurrency_transactioncurrencyid", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl>("ed_notifymkl_transactioncurrency_transactioncurrencyid", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_textmessage_transactioncurrency_transactioncurrencyid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_textmessage_transactioncurrency_transactioncurrencyid")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage> ed_textmessage_transactioncurrency_transactioncurrencyid
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage>("ed_textmessage_transactioncurrency_transactioncurrencyid", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage>("ed_textmessage_transactioncurrency_transactioncurrencyid", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N transactioncurrency_account
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_account")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Account> transactioncurrency_account
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Account>("transactioncurrency_account", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Account>("transactioncurrency_account", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_Appointment
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_Appointment")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> TransactionCurrency_Appointment
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("TransactionCurrency_Appointment", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("TransactionCurrency_Appointment", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> TransactionCurrency_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("TransactionCurrency_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("TransactionCurrency_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N transactioncurrency_campaign
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_campaign")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Campaign> transactioncurrency_campaign
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Campaign>("transactioncurrency_campaign", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Campaign>("transactioncurrency_campaign", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_CampaignResponse
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_CampaignResponse")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.CampaignResponse> TransactionCurrency_CampaignResponse
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.CampaignResponse>("TransactionCurrency_CampaignResponse", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.CampaignResponse>("TransactionCurrency_CampaignResponse", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_cgi_refund
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_cgi_refund")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.cgi_refund> TransactionCurrency_cgi_refund
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_refund>("TransactionCurrency_cgi_refund", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_refund>("TransactionCurrency_cgi_refund", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_cgi_setting
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_cgi_setting")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.cgi_setting> TransactionCurrency_cgi_setting
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_setting>("TransactionCurrency_cgi_setting", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_setting>("TransactionCurrency_cgi_setting", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_cgi_travelcard
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_cgi_travelcard")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.cgi_travelcard> TransactionCurrency_cgi_travelcard
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_travelcard>("TransactionCurrency_cgi_travelcard", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.cgi_travelcard>("TransactionCurrency_cgi_travelcard", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N transactioncurrency_contact
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_contact")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Contact> transactioncurrency_contact
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Contact>("transactioncurrency_contact", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Contact>("transactioncurrency_contact", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_CustomerAddress
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_CustomerAddress")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.CustomerAddress> TransactionCurrency_CustomerAddress
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.CustomerAddress>("TransactionCurrency_CustomerAddress", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.CustomerAddress>("TransactionCurrency_CustomerAddress", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_ed_SalesOrder
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_ed_SalesOrder")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_SalesOrder> TransactionCurrency_ed_SalesOrder
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_SalesOrder>("TransactionCurrency_ed_SalesOrder", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_SalesOrder>("TransactionCurrency_ed_SalesOrder", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_ed_salesorderline
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_ed_salesorderline")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline> TransactionCurrency_ed_salesorderline
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("TransactionCurrency_ed_salesorderline", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("TransactionCurrency_ed_salesorderline", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_ed_ValueCode
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_ed_ValueCode")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_ValueCode> TransactionCurrency_ed_ValueCode
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_ValueCode>("TransactionCurrency_ed_ValueCode", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_ValueCode>("TransactionCurrency_ed_ValueCode", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_Email
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_Email")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Email> TransactionCurrency_Email
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("TransactionCurrency_Email", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("TransactionCurrency_Email", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_Incident
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_Incident")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Incident> TransactionCurrency_Incident
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Incident>("TransactionCurrency_Incident", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Incident>("TransactionCurrency_Incident", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N transactioncurrency_lead
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_lead")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Lead> transactioncurrency_lead
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("transactioncurrency_lead", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("transactioncurrency_lead", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_PhoneCall
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_PhoneCall")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> TransactionCurrency_PhoneCall
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("TransactionCurrency_PhoneCall", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("TransactionCurrency_PhoneCall", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N transactioncurrency_product
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_product")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Product> transactioncurrency_product
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Product>("transactioncurrency_product", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Product>("transactioncurrency_product", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_Queue
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_Queue")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Queue> TransactionCurrency_Queue
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Queue>("TransactionCurrency_Queue", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Queue>("TransactionCurrency_Queue", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_QueueItem
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_QueueItem")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QueueItem> TransactionCurrency_QueueItem
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QueueItem>("TransactionCurrency_QueueItem", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QueueItem>("TransactionCurrency_QueueItem", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N transactioncurrency_salesorder
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_salesorder")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.SalesOrder> transactioncurrency_salesorder
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SalesOrder>("transactioncurrency_salesorder", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SalesOrder>("transactioncurrency_salesorder", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N transactioncurrency_salesorderdetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_salesorderdetail")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.SalesOrderDetail> transactioncurrency_salesorderdetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SalesOrderDetail>("transactioncurrency_salesorderdetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SalesOrderDetail>("transactioncurrency_salesorderdetail", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_st_singaporeticket
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_st_singaporeticket")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket> TransactionCurrency_st_singaporeticket
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket>("TransactionCurrency_st_singaporeticket", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket>("TransactionCurrency_st_singaporeticket", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_SystemUser
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_SystemUser")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.SystemUser> TransactionCurrency_SystemUser
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SystemUser>("TransactionCurrency_SystemUser", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SystemUser>("TransactionCurrency_SystemUser", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_Team
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_Team")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> TransactionCurrency_Team
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("TransactionCurrency_Team", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("TransactionCurrency_Team", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N transactioncurrency_usersettings
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_usersettings")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.UserSettings> transactioncurrency_usersettings
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.UserSettings>("transactioncurrency_usersettings", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.UserSettings>("transactioncurrency_usersettings", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_transactioncurrency_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_transactioncurrency_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_transactioncurrency_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_transactioncurrency_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_transactioncurrency_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_transactioncurrency_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_transactioncurrency_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_transactioncurrency_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_transactioncurrencybase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_transactioncurrencybase_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_transactioncurrencybase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_transactioncurrencybase_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_transactioncurrencybase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_transactioncurrencybase_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_transactioncurrencybase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_transactioncurrencybase_modifiedby", null);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string CurrencyName = "currencyname";
+			
+			public const string CurrencyPrecision = "currencyprecision";
+			
+			public const string CurrencySymbol = "currencysymbol";
+			
+			public const string EntityImage = "entityimage";
+			
+			public const string EntityImage_Timestamp = "entityimage_timestamp";
+			
+			public const string EntityImage_URL = "entityimage_url";
+			
+			public const string EntityImageId = "entityimageid";
+			
+			public const string ExchangeRate = "exchangerate";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string ISOCurrencyCode = "isocurrencycode";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string OrganizationId = "organizationid";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string StateCode = "statecode";
+			
+			public const string StatusCode = "statuscode";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
+			
+			public const string Id = "transactioncurrencyid";
+			
+			public const string VersionNumber = "versionnumber";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int CurrencyName = 100;
+			
+			public const int CurrencySymbol = 13;
+			
+			public const int EntityImage_URL = 200;
+			
+			public const int ISOCurrencyCode = 5;
 		}
 	}
 	
@@ -92462,6 +93973,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 transactioncurrency_usersettings
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_usersettings")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_usersettings
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_usersettings", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_usersettings", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 user_settings
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("systemuserid")]
@@ -93397,6 +94925,17 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.Template>();
+			}
+		}
+		
+		/// <summary>
+		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.TransactionCurrency"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency> TransactionCurrencySet
+		{
+			get
+			{
+				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>();
 			}
 		}
 		
