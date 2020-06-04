@@ -82,6 +82,7 @@ namespace Skanetrafiken.UECCIntegration
                 Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _service, null, new TracingService());
                 CrmContext crmContext = new CrmContext(_service);
 
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"Running Logic for Split Contacts.");
                 LogicHelper.RunLogic(localContext, crmContext);
             }
             catch (Exception e)

@@ -603,13 +603,13 @@ namespace Skanetrafiken.UpSalesMigration
 
                         EntityReference erAccount = GetCrmAccountByUpsalesId(localContext, value);
 
-                        if (erAccount == null)
+                        if (erAccount != null)
                         {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Regarding Object of the PhoneCall was not updated.");
-                            break;
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " of the PhoneCall was updated.");
+                            nPhoneCall.RegardingObjectId = erAccount;
                         }
-
-                        nPhoneCall.RegardingObjectId = erAccount;
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " was not found. The PhoneCall on line " + i + " will be ignored.");
 
                         break;
                     case "Företag":
@@ -713,6 +713,9 @@ namespace Skanetrafiken.UpSalesMigration
                 }
             }
 
+            if (nPhoneCall.RegardingObjectId == null)
+                return null;
+
             if(erDefaultUser != null)
             {
                 ActivityParty fromParty = new ActivityParty();
@@ -755,13 +758,13 @@ namespace Skanetrafiken.UpSalesMigration
 
                         EntityReference erAccount = GetCrmAccountByUpsalesId(localContext, value);
 
-                        if (erAccount == null)
+                        if (erAccount != null)
                         {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Regarding Object of the Email was not updated.");
-                            break;
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " of the Email was updated.");
+                            nEmail.RegardingObjectId = erAccount;
                         }
-
-                        nEmail.RegardingObjectId = erAccount;
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " was not found. The Email on line " + i + " will be ignored.");
 
                         break;
                     case "Företag":
@@ -864,6 +867,9 @@ namespace Skanetrafiken.UpSalesMigration
                 }
             }
 
+            if (nEmail.RegardingObjectId == null)
+                return null;
+
             if (erDefaultUser != null)
             {
                 ActivityParty fromParty = new ActivityParty();
@@ -906,13 +912,13 @@ namespace Skanetrafiken.UpSalesMigration
 
                         EntityReference erAccount = GetCrmAccountByUpsalesId(localContext, value);
 
-                        if (erAccount == null)
+                        if (erAccount != null)
                         {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Regarding Object of the Appointment was not updated.");
-                            break;
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " of the Appointment was updated.");
+                            nAppointment.RegardingObjectId = erAccount;
                         }
-
-                        nAppointment.RegardingObjectId = erAccount;
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " was not found. The Appointment on line " + i + " will be ignored.");
 
                         break;
                     case "Företag":
@@ -1015,6 +1021,9 @@ namespace Skanetrafiken.UpSalesMigration
                         break;
                 }
             }
+
+            if (nAppointment.RegardingObjectId == null)
+                return null;
 
             nAppointment.StateCode = AppointmentState.Completed;
 
@@ -1404,6 +1413,8 @@ namespace Skanetrafiken.UpSalesMigration
                                         ePParentAccount.Id = eParentAccount.ParentAccountId.Id;
                                     }
                                 }
+                                else
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Customer with Upsales Id: " + value + " was not found. The Contact on line " + i + " will be ignored.");
 
                                 break;
                             case " Företag":
@@ -1452,6 +1463,9 @@ namespace Skanetrafiken.UpSalesMigration
                         }
                     }
 
+                    if (nContact.ParentCustomerId == null)
+                        continue;
+
                     nContact.ed_InfotainmentContact = true;
                     nContact.StateCode = ContactState.Active;
                     nContact.ed_InformationSource = ed_informationsource.AdmAndraKund;
@@ -1459,10 +1473,10 @@ namespace Skanetrafiken.UpSalesMigration
 
                     //Prevent Plugin Errors
                     if (nContact.FirstName == null)
-                        nContact.FirstName = " ";
+                        nContact.FirstName = ".";
 
                     if (nContact.LastName == null)
-                        nContact.LastName = " ";
+                        nContact.LastName = ".";
 
                     crmContext.AddObject(nContact);
 
@@ -1556,9 +1570,6 @@ namespace Skanetrafiken.UpSalesMigration
                 {
                     _log.ErrorFormat(CultureInfo.InvariantCulture, $"Import Contacts Exception. Details: " + e.Message);
                 }
-
-                if (i == 300)
-                    return;
             }
         }
 
@@ -1578,11 +1589,8 @@ namespace Skanetrafiken.UpSalesMigration
             int maxDescription = 2000;
             ExcelApp.Range excelRange = importExcelInfo.excelRange;
 
-            for (int i = 2; i < importExcelInfo.rowCount; i++)
+            for (int i = 400; i < importExcelInfo.rowCount; i++)
             {
-                if (i == 200)
-                    return;
-
                 try
                 {
                     ExcelColumn activityTypeColumn = GetSelectedExcelColumnByName(importExcelInfo.lColumns, activityTypeNameColumn);
@@ -1605,19 +1613,25 @@ namespace Skanetrafiken.UpSalesMigration
                         case "Telefonsamtal":
 
                             PhoneCall nPhoneCall = GetPhoneCall(localContext, excelRange, importExcelInfo, i, maxSubject, maxDescription, erDefaultUser);
-                            crmContext.AddObject(nPhoneCall);
+
+                            if(nPhoneCall != null)
+                                crmContext.AddObject(nPhoneCall);
 
                             break;
                         case "E-post":
 
                             Email nEmail = GetEmail(localContext, excelRange, importExcelInfo, i, maxSubject, maxDescription, erDefaultUser);
-                            crmContext.AddObject(nEmail);
+
+                            if (nEmail != null)
+                                crmContext.AddObject(nEmail);
 
                             break;
                         case "Övrigt":
 
                             Appointment nAppointment = GetAppointment(localContext, excelRange, importExcelInfo, i, maxSubject, maxDescription, erDefaultUser);
-                            crmContext.AddObject(nAppointment);
+
+                            if (nAppointment != null)
+                                crmContext.AddObject(nAppointment);
 
                             break;
                         default:
@@ -1652,10 +1666,18 @@ namespace Skanetrafiken.UpSalesMigration
             {
                 if (i == 50)
                     return;
+
                 try
                 {
                     SalesOrder nOrder = new SalesOrder();
+
+                    string orderName = "{0} - {1}";
+                    string orderId = string.Empty;
+                    string orderNameValue = string.Empty;
                     string noteText = string.Empty;
+                    string noteTextProduct = string.Empty;
+                    string startProductDate = string.Empty;
+                    string endProductDate = string.Empty;
 
                     for (int j = 1; j <= importExcelInfo.colCount; j++)
                     {
@@ -1684,6 +1706,8 @@ namespace Skanetrafiken.UpSalesMigration
                                     _log.InfoFormat(CultureInfo.InvariantCulture, $"The Customer with Upsales Id: " + value + " of the Order was updated.");
                                     nOrder.CustomerId = erAccount;
                                 }
+                                else
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Customer with Upsales Id: " + value + " was not found. The Order on line " + i + " will be ignored.");
 
                                 break;
                             case "Order: Företag":
@@ -1698,13 +1722,15 @@ namespace Skanetrafiken.UpSalesMigration
                                     _log.InfoFormat(CultureInfo.InvariantCulture, $"The Contact with Fullname : " + value + " of the Order was updated.");
                                     nOrder.ed_contact = erContact;
                                 }
+                                else
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Contact with Fullname : " + value + " was not found.");
 
                                 break;
                             case "Order: Orderns ID":
-                                //TODO 
+                                orderId = value;
                                 break;
                             case "Order: Beskrivning":
-                                nOrder.Name = value;
+                                orderNameValue = value;
                                 break;
                             case "Order: Datum":
 
@@ -1756,10 +1782,7 @@ namespace Skanetrafiken.UpSalesMigration
                                 noteText = value;
                                 break;
                             case "Order: Produkt":
-                                    //TODO ASK Order: Produkt
-                                    //Order: Listpris
-                                    //Order: Pris
-                                    //Order: Antal
+                                noteTextProduct = value;
                                 break;
                             case "Order: Fas":
                                 //Already Handled
@@ -1804,10 +1827,10 @@ namespace Skanetrafiken.UpSalesMigration
 
                                 break;
                             case "Startdatum":
-                                //TODO
+                                startProductDate = value;
                                 break;
                             case "Slutdatum":
-                                //TODO
+                                endProductDate = value;
                                 break;
 
                             default:
@@ -1816,24 +1839,36 @@ namespace Skanetrafiken.UpSalesMigration
                         }
                     }
 
+                    if (nOrder.CustomerId == null)
+                        continue;
+                    
                     nOrder.TransactionCurrencyId = erCurrency;
+
+                    orderName = string.Format(orderName, orderId, orderNameValue);
+                    nOrder.Name = orderName.Replace("{0}", "").Replace("{1}", "");
 
                     crmContext.AddObject(nOrder);
 
-                    //nOrder.StateCode = SalesOrderState.Fulfilled;
-                    //nOrder.StatusCode = salesorder_statuscode.Complete;
+                    if (noteTextProduct != string.Empty)
+                    {
+                        Annotation noteProduct = new Annotation();
 
-                    crmContext.UpdateObject(nOrder);
+                        noteProduct.Subject = "Note from UpSales Integration";
+                        noteProduct.NoteText = noteTextProduct;
+
+                        crmContext.AddRelatedObject(nOrder, new Relationship(rel_order_note), noteProduct);
+                    }
 
                     if (noteText != string.Empty)
                     {
                         Annotation note = new Annotation();
 
                         note.Subject = "Note from UpSales Integration";
-                        note.NoteText = noteText;
+                        note.NoteText = noteText + "\n\nProduct Start Date: " + startProductDate + "\nProduct End Date: " + endProductDate;
 
                         crmContext.AddRelatedObject(nOrder, new Relationship(rel_order_note), note);
                     }
+                    
                 }
                 catch (Exception e)
                 {
@@ -1850,7 +1885,7 @@ namespace Skanetrafiken.UpSalesMigration
         static void Main(string[] args)
         {
             //Test Connection
-            ConnectToMSCRM("D1\\CRMAdmin", "uSEme2!nstal1", "https://sekundtst.skanetrafiken.se/DKCRM/XRMServices/2011/Organization.svc");
+            ConnectToMSCRM("D1\\CRMAdmin", "uSEme2!nstal1", "https://sekunduat.skanetrafiken.se/DKCRM/XRMServices/2011/Organization.svc");
 
             if (_service == null)
             {
@@ -1866,96 +1901,96 @@ namespace Skanetrafiken.UpSalesMigration
             string relativeExcelPath = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.ExcelRelativePath);
             string fileName = "Spann 1 - unika 2020-05-27.xlsx";
 
-            #region Import Accounts Spann 1
+            //#region Import Accounts Spann 1
 
-            try
-            {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
+            //try
+            //{
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
 
-                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
-                ImportAccountRecords(localContext, crmContext, importExcelInfo);
-                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                LogCrmContextMultipleResponses(localContext, responses);
+            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
+            //    ImportAccountRecords(localContext, crmContext, importExcelInfo);
+            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(localContext, responses);
 
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
-                throw;
-            }
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
+            //}
+            //catch (Exception e)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
+            //    throw;
+            //}
 
-            #endregion
+            //#endregion
 
-            fileName = "Spann 5 - nya datakällor 2020-05-25.xlsx";
+            //fileName = "Spann 5 - nya datakällor 2020-05-25.xlsx";
 
-            #region Import Accounts Spann 5
+            //#region Import Accounts Spann 5
 
-            try
-            {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
+            //try
+            //{
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
 
-                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
-                ImportAccountRecords(localContext, crmContext, importExcelInfo);
-                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                LogCrmContextMultipleResponses(localContext, responses);
+            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
+            //    ImportAccountRecords(localContext, crmContext, importExcelInfo);
+            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(localContext, responses);
 
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
-                throw;
-            }
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
+            //}
+            //catch (Exception e)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
+            //    throw;
+            //}
 
-            #endregion
+            //#endregion
 
-            fileName = "Spann 3 - subaccounts_2020-05-28.xlsx";
+            //fileName = "Spann 3 - subaccounts_2020-05-28.xlsx";
 
-            #region Import Accounts Spann 3 SubAccounts
+            //#region Import Accounts Spann 3 SubAccounts
 
-            try
-            {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
+            //try
+            //{
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Account Entity--------------");
 
-                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
-                ImportSubAccountsRecords(localContext, crmContext, importExcelInfo);
-                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                LogCrmContextMultipleResponses(localContext, responses);
+            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
+            //    ImportSubAccountsRecords(localContext, crmContext, importExcelInfo);
+            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(localContext, responses);
 
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
-                throw;
-            }
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Account Entity--------------");
+            //}
+            //catch (Exception e)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
+            //    throw;
+            //}
 
-            #endregion
+            //#endregion
 
-            fileName = "Upsales data clean 2020-05-25_kontakter.xlsx";
+            //fileName = "Upsales data clean 2020-05-25_kontakter.xlsx";
 
-            #region Import Contacts
+            //#region Import Contacts
 
-            try
-            {
-                crmContext.ClearChanges();
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Contact Entity--------------");
+            //try
+            //{
+            //    crmContext.ClearChanges();
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Contact Entity--------------");
 
-                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Contacts", fileName);
-                ImportContactsRecords(localContext, crmContext, importExcelInfo);
-                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                LogCrmContextMultipleResponses(localContext, responses);
+            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Contacts", fileName);
+            //    ImportContactsRecords(localContext, crmContext, importExcelInfo);
+            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(localContext, responses);
 
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Contact Entity--------------");
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Contact Records. Details: " + e.Message);
-                throw;
-            }
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Contact Entity--------------");
+            //}
+            //catch (Exception e)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Contact Records. Details: " + e.Message);
+            //    throw;
+            //}
 
-            #endregion
+            //#endregion
 
             fileName = "Upsales data clean 2020-05-26_aktiviteter.xlsx";
 

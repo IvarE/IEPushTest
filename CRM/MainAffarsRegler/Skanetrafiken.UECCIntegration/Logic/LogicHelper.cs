@@ -123,30 +123,67 @@ namespace Skanetrafiken.UECCIntegration.Logic
         public static List<Guid> GetContactsCriteriaThree(IOrganizationService organizationService, int active, int countOfCompanyRoles, List<Guid> lC1, List<Guid> lC2)
         {
             List<Guid> lGContacts = new List<Guid>();
+            List<Entity> lContacts = new List<Entity>();
 
-            string fetch = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' aggregate='true' no-lock='true' >
+            string fetch = @"<fetch {0} version='1.0' output-format='xml-platform' mapping='logical' distinct='false' aggregate='true' no-lock='true' >
                               <entity name='ed_companyrole' >
                                 <attribute name='ed_companyroleid' alias='companyrole_count' aggregate='countcolumn' />
                                 <link-entity name='contact' from='contactid' to='ed_contact' alias='ab' >
                                   <attribute name='contactid' alias='contactid' groupby='true' />
                                   <filter type='and' >
-                                    <condition attribute='statecode' operator='eq' value='{0}' />
+                                    <condition attribute='statecode' operator='eq' value='{1}' />
                                   </filter>
                                 </link-entity>
                               </entity>
                             </fetch>";
 
-            string getCompanyRoles = string.Format(fetch, active);
-            List<Entity> lContacts = organizationService.RetrieveMultiple(new FetchExpression(getCompanyRoles)).Entities.ToList();
+            bool moreRecords = false;
+            int page = 1;
+            string cookie = string.Empty;
+
+            do
+            {
+                string getCompanyRoles = string.Format(fetch, cookie, active);
+
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"Fetchxml: " + getCompanyRoles);
+
+                EntityCollection collection = organizationService.RetrieveMultiple(new FetchExpression(getCompanyRoles));
+
+                if (collection.Entities.Count >= 0)
+                    lContacts.AddRange(collection.Entities);
+
+                moreRecords = collection.MoreRecords;
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"More Records: " + moreRecords);
+
+                if (moreRecords)
+                {
+                    page++;
+                    cookie = string.Format("paging-cookie='{0}' page='{1}'", System.Security.SecurityElement.Escape(collection.PagingCookie), page);
+                }
+
+            } while (moreRecords);
+
+            //string getCompanyRoles = string.Format(fetch, active);
+            //List<Entity> lContacts = organizationService.RetrieveMultiple(new FetchExpression(getCompanyRoles)).Entities.ToList();
+
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"Found: " + lContacts.Count + " Contact of criteria 3.");
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"Removing the Contacts from C1 and C2");
 
             List<Guid> lToRemove = new List<Guid>();
             lToRemove.AddRange(lC1);
             lToRemove.AddRange(lC2);
 
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"There are " + lToRemove.Count + " contacts to remove.");
+
             foreach (Guid contactid in lToRemove)
             {
                 int index = lContacts.FindIndex(x => ((Guid)(((AliasedValue)x["contactid"]).Value)).Equals(contactid));
-                lContacts.RemoveAt(index);
+
+                if(index != -1)
+                {
+                    _log.InfoFormat("Index Found: " + index + " on ContactId: " + contactid);
+                    lContacts.RemoveAt(index);
+                }
             }
 
             foreach (Entity contact in lContacts)
@@ -312,18 +349,27 @@ namespace Skanetrafiken.UECCIntegration.Logic
 
         public static void LogCrmContextMultipleResponses(SaveChangesResultCollection lResponses)
         {
-            try
+            foreach (SaveChangesResult response in lResponses)
             {
-                foreach (SaveChangesResult response in lResponses)
+                try
                 {
                     // A valid response.
                     if (response.Error == null)
                     {
                         string message = response.Request.RequestName;
                         Contact contact = (Contact)response.Request["Target"];
-                        Guid id = (Guid)response.Response["id"];
+                        Guid id = Guid.Empty;
 
-                        _log.InfoFormat(CultureInfo.InvariantCulture, $"The Contact entity with email: " + contact.EMailAddress1 + " was " + message + "d sucessfully. Resulting Id: " + id);
+                        if(message == "Create")
+                        {
+                            id = (Guid)response.Response["id"];
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The Contact entity with email: " + contact.EMailAddress1 + " was " + message + "d sucessfully. Resulting Id: " + id);
+                        }
+                        else
+                        {
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The Contact entity with email: " + contact.EMailAddress1 + " was " + message + "d sucessfully.");
+                        }
+                            
                     }
                     //An error has occurred.
                     else
@@ -341,10 +387,10 @@ namespace Skanetrafiken.UECCIntegration.Logic
                         }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error logging results. Details: " + e.Message);
+                catch (Exception e)
+                {
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error logging results. Details: " + e.Message);
+                }
             }
         }
 
@@ -357,9 +403,13 @@ namespace Skanetrafiken.UECCIntegration.Logic
             int numberOfCompanyRolesC1 = int.Parse(ConfigurationManager.AppSettings["numberOfCompanyRolesC1"]);
             List<Guid> lGContactsC1 = GetContactsCriteriaOneTwo(localContext.OrganizationService, active, privateCustomerC1, numberOfCompanyRolesC1);
 
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"Found " + lGContactsC1.Count + " Contact of Criteria 1.");
+
             int privateCustomerC2 = 1;
             int numberOfCompanyRolesC2 = int.Parse(ConfigurationManager.AppSettings["numberOfCompanyRolesC2"]);
             List<Guid> lGContactsC2 = GetContactsCriteriaOneTwo(localContext.OrganizationService, active, privateCustomerC2, numberOfCompanyRolesC2);
+
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"Found " + lGContactsC2.Count + " Contact of Criteria 2.");
 
             List<Guid> lGContactsC3 = GetContactsCriteriaThree(localContext.OrganizationService, active, numberOfCompanyRolesC2, lGContactsC1, lGContactsC2);
 
@@ -367,34 +417,34 @@ namespace Skanetrafiken.UECCIntegration.Logic
             _log.InfoFormat(CultureInfo.InvariantCulture, "Number of Contacts Criteria 2: " + lGContactsC2.Count);
             _log.InfoFormat(CultureInfo.InvariantCulture, "Number of Contacts Criteria 3: " + lGContactsC3.Count);
 
-            bool hasInterceptions = CheckInterceptions(lGContactsC1, lGContactsC2, lGContactsC3);
+            //bool hasInterceptions = CheckInterceptions(lGContactsC1, lGContactsC2, lGContactsC3);
 
-            if (hasInterceptions)
-            {
-                _log.InfoFormat(CultureInfo.InvariantCulture, "There is Interceptions between the two lists. Please review Logic");
-                Console.WriteLine("There is Interceptions between the two lists. Please review Logic");
-                Console.ReadLine();
-                return;
-            }
+            //if (hasInterceptions)
+            //{
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, "There is Interceptions between the two lists. Please review Logic");
+            //    Console.WriteLine("There is Interceptions between the two lists. Please review Logic");
+            //    Console.ReadLine();
+            //    return;
+            //}
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, "There is no Interceptions between the two lists.");
+            //_log.InfoFormat(CultureInfo.InvariantCulture, "There is no Interceptions between the two lists.");
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 1 Requests.");
-            HandleContactsC1C2(localContext, crmContext, lGContactsC1, true);
+            //_log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 1 Requests.");
+            //HandleContactsC1C2(localContext, crmContext, lGContactsC1, true);
 
-            SaveChangesResultCollection responsesC1 = crmContext.SaveChanges(optionsChanges);
-            LogCrmContextMultipleResponses(responsesC1);
-            crmContext.ClearChanges();
+            //SaveChangesResultCollection responsesC1 = crmContext.SaveChanges(optionsChanges);
+            //LogCrmContextMultipleResponses(responsesC1);
+            //crmContext.ClearChanges();
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 2 Logic.");
-            HandleContactsC1C2(localContext, crmContext, lGContactsC2, false);
+            //_log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 2 Logic.");
+            //HandleContactsC1C2(localContext, crmContext, lGContactsC2, false);
 
-            SaveChangesResultCollection responsesC2 = crmContext.SaveChanges(optionsChanges);
-            LogCrmContextMultipleResponses(responsesC2);
-            crmContext.ClearChanges();
+            //SaveChangesResultCollection responsesC2 = crmContext.SaveChanges(optionsChanges);
+            //LogCrmContextMultipleResponses(responsesC2);
+            //crmContext.ClearChanges();
 
-            _logC3.InfoFormat(CultureInfo.InvariantCulture, "Logging Criteria 3 Contacts.");
-            HandleContactsC3(localContext, lGContactsC3);
+            //_logC3.InfoFormat(CultureInfo.InvariantCulture, "Logging Criteria 3 Contacts.");
+            //HandleContactsC3(localContext, lGContactsC3);
         }
     }
 }
