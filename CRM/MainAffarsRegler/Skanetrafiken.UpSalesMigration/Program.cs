@@ -352,25 +352,25 @@ namespace Skanetrafiken.UpSalesMigration
                                 case PhoneCall.EntityLogicalName:
 
                                     PhoneCall phoneCall = (PhoneCall)entity;
-                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"PhoneCall with Id: " + phoneCall.Id + " was updated.");
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"PhoneCall with Id: " + phoneCall.Id + " was updated.");
 
                                     break;
                                 case Email.EntityLogicalName:
 
                                     Email email = (Email)entity;
-                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Email with Id: " + email.Id + " was updated.");
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Email with Id: " + email.Id + " was updated.");
 
                                     break;
                                 case Appointment.EntityLogicalName:
 
                                     Appointment appointment = (Appointment)entity;
-                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Appointment with Id: " + appointment.Id + " was updated.");
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Appointment with Id: " + appointment.Id + " was updated.");
 
                                     break;
                                 case SalesOrder.EntityLogicalName:
 
                                     SalesOrder salesOrder = (SalesOrder)entity;
-                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Appointment with Id: " + salesOrder.Id + " was updated.");
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Appointment with Id: " + salesOrder.Id + " was updated.");
 
                                     break;
                                 default:
@@ -406,7 +406,7 @@ namespace Skanetrafiken.UpSalesMigration
                                 case PhoneCall.EntityLogicalName:
 
                                     PhoneCall phoneCall = (PhoneCall)entity;
-                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"PhoneCall with Subject: " + phoneCall.Subject + " was created with id: " + id + ".");
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"PhoneCall with Subject: " + phoneCall.Subject + " was created with id: " + id + ".");
 
                                     SetStateRequest requestPhoneCall = new SetStateRequest
                                     {
@@ -428,7 +428,7 @@ namespace Skanetrafiken.UpSalesMigration
                                 case Email.EntityLogicalName:
 
                                     Email email = (Email)entity;
-                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Email with Subject: " + email.Subject + " was created with id: " + id + ".");
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Email with Subject: " + email.Subject + " was created with id: " + id + ".");
 
                                     SetStateRequest requestEmail = new SetStateRequest
                                     {
@@ -450,7 +450,7 @@ namespace Skanetrafiken.UpSalesMigration
                                 case Appointment.EntityLogicalName:
 
                                     Appointment appointment = (Appointment)entity;
-                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Appointment with Subject: " + appointment.Subject + " was created with id: " + id + ".");
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Appointment with Subject: " + appointment.Subject + " was created with id: " + id + ".");
 
                                     SetStateRequest requestAppointment = new SetStateRequest
                                     {
@@ -472,7 +472,7 @@ namespace Skanetrafiken.UpSalesMigration
                                 case SalesOrder.EntityLogicalName:
 
                                     SalesOrder salesOrder = (SalesOrder)entity;
-                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Sales Order with Name: " + salesOrder.Name + " was created with id: " + id + ".");
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Sales Order with Name: " + salesOrder.Name + " was created with id: " + id + ".");
 
                                     int newStatus = (int)salesorder_statuscode.Complete;
 
@@ -1992,29 +1992,29 @@ namespace Skanetrafiken.UpSalesMigration
 
             //#endregion
 
-            fileName = "Upsales data clean 2020-05-26_aktiviteter.xlsx";
+            //fileName = "Upsales data clean 2020-05-26_aktiviteter.xlsx";
 
-            #region Import Activities
+            //#region Import Activities
 
-            try
-            {
-                crmContext.ClearChanges();
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Activities Entity--------------");
+            //try
+            //{
+            //    crmContext.ClearChanges();
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Activities Entity--------------");
 
-                ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Activities", fileName);
-                ImportActivitiesRecords(localContext, crmContext, importExcelInfo);
-                SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                LogCrmContextMultipleResponses(localContext, responses);
+            //    ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Activities", fileName);
+            //    ImportActivitiesRecords(localContext, crmContext, importExcelInfo);
+            //    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+            //    LogCrmContextMultipleResponses(localContext, responses);
 
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Activities Entity--------------");
-            }
-            catch (Exception e)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Activities Records. Details: " + e.Message);
-                throw;
-            }
+            //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Activities Entity--------------");
+            //}
+            //catch (Exception e)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Activities Records. Details: " + e.Message);
+            //    throw;
+            //}
 
-            #endregion
+            //#endregion
 
             fileName = "Upsales data clean 2020-06-01_order.xlsx";
 
