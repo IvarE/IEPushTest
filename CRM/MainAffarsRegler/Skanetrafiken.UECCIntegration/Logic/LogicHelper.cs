@@ -417,34 +417,34 @@ namespace Skanetrafiken.UECCIntegration.Logic
             _log.InfoFormat(CultureInfo.InvariantCulture, "Number of Contacts Criteria 2: " + lGContactsC2.Count);
             _log.InfoFormat(CultureInfo.InvariantCulture, "Number of Contacts Criteria 3: " + lGContactsC3.Count);
 
-            //bool hasInterceptions = CheckInterceptions(lGContactsC1, lGContactsC2, lGContactsC3);
+            bool hasInterceptions = CheckInterceptions(lGContactsC1, lGContactsC2, lGContactsC3);
 
-            //if (hasInterceptions)
-            //{
-            //    _log.InfoFormat(CultureInfo.InvariantCulture, "There is Interceptions between the two lists. Please review Logic");
-            //    Console.WriteLine("There is Interceptions between the two lists. Please review Logic");
-            //    Console.ReadLine();
-            //    return;
-            //}
+            if (hasInterceptions)
+            {
+                _log.InfoFormat(CultureInfo.InvariantCulture, "There is Interceptions between the two lists. Please review Logic");
+                Console.WriteLine("There is Interceptions between the two lists. Please review Logic");
+                Console.ReadLine();
+                return;
+            }
 
-            //_log.InfoFormat(CultureInfo.InvariantCulture, "There is no Interceptions between the two lists.");
+            _log.InfoFormat(CultureInfo.InvariantCulture, "There is no Interceptions between the two lists.");
 
-            //_log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 1 Requests.");
-            //HandleContactsC1C2(localContext, crmContext, lGContactsC1, true);
+            _log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 1 Requests.");
+            HandleContactsC1C2(localContext, crmContext, lGContactsC1, true);
 
-            //SaveChangesResultCollection responsesC1 = crmContext.SaveChanges(optionsChanges);
-            //LogCrmContextMultipleResponses(responsesC1);
-            //crmContext.ClearChanges();
+            SaveChangesResultCollection responsesC1 = crmContext.SaveChanges(optionsChanges);
+            LogCrmContextMultipleResponses(responsesC1);
+            crmContext.ClearChanges();
 
-            //_log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 2 Logic.");
-            //HandleContactsC1C2(localContext, crmContext, lGContactsC2, false);
+            _log.InfoFormat(CultureInfo.InvariantCulture, "Getting Criteria 2 Logic.");
+            HandleContactsC1C2(localContext, crmContext, lGContactsC2, false);
 
-            //SaveChangesResultCollection responsesC2 = crmContext.SaveChanges(optionsChanges);
-            //LogCrmContextMultipleResponses(responsesC2);
-            //crmContext.ClearChanges();
+            SaveChangesResultCollection responsesC2 = crmContext.SaveChanges(optionsChanges);
+            LogCrmContextMultipleResponses(responsesC2);
+            crmContext.ClearChanges();
 
-            //_logC3.InfoFormat(CultureInfo.InvariantCulture, "Logging Criteria 3 Contacts.");
-            //HandleContactsC3(localContext, lGContactsC3);
+            _logC3.InfoFormat(CultureInfo.InvariantCulture, "Logging Criteria 3 Contacts.");
+            HandleContactsC3(localContext, lGContactsC3);
         }
     }
 }

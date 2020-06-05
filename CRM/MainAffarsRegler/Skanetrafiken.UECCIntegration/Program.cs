@@ -23,12 +23,10 @@ namespace Skanetrafiken.UECCIntegration
 {
     class Program
     {
-        public static IOrganizationService _service = null;
-
         //private static ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static ILog _log = LogManager.GetLogger("FileAppenderLog");
 
-        public static void ConnectToMSCRM(string UserName, string Password, string SoapOrgServiceUri)
+        public static IOrganizationService ConnectToMSCRM(string UserName, string Password, string SoapOrgServiceUri)
         {
             try
             {
@@ -38,12 +36,13 @@ namespace Skanetrafiken.UECCIntegration
                 Uri serviceUri = new Uri(SoapOrgServiceUri);
                 OrganizationServiceProxy proxy = new OrganizationServiceProxy(serviceUri, null, credentials, null);
                 proxy.EnableProxyTypes();
-                _service = (IOrganizationService)proxy;
+                return (IOrganizationService)proxy;
             }
             catch (Exception ex)
             {
                 _log.ErrorFormat(CultureInfo.InvariantCulture, "Error while connecting to CRM " + ex.Message);
                 Console.WriteLine("Error while connecting to CRM " + ex.Message);
+                return null;
             }
         }
 
@@ -71,7 +70,7 @@ namespace Skanetrafiken.UECCIntegration
                     urlOrganization = ConfigurationManager.AppSettings["urlOrganizationTST"];
                 }
 
-                ConnectToMSCRM(domainUser, passWord, urlOrganization);
+                IOrganizationService _service = ConnectToMSCRM(domainUser, passWord, urlOrganization);
 
                 if (_service == null)
                 {
