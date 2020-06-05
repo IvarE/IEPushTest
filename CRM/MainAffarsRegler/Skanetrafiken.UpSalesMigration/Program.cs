@@ -1943,8 +1943,8 @@ namespace Skanetrafiken.UpSalesMigration
 
                         Console.WriteLine("Sending Batch of Accounts to Sekund...");
 
-                        //SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        //LogCrmContextMultipleResponses(localContext, responses);
+                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        LogCrmContextMultipleResponses(localContext, responses);
 
                         Console.WriteLine("Batch Sent. Please check logs.");
 
@@ -1975,8 +1975,8 @@ namespace Skanetrafiken.UpSalesMigration
 
                         Console.WriteLine("Sending Batch of Accounts to Sekund...");
 
-                        //SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        //LogCrmContextMultipleResponses(localContext, responses);
+                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        LogCrmContextMultipleResponses(localContext, responses);
 
                         Console.WriteLine("Batch Sent. Please check logs.");
 
@@ -2007,8 +2007,8 @@ namespace Skanetrafiken.UpSalesMigration
 
                         Console.WriteLine("Sending Batch of Accounts to Sekund...");
 
-                        //SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        //LogCrmContextMultipleResponses(localContext, responses);
+                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        LogCrmContextMultipleResponses(localContext, responses);
 
                         Console.WriteLine("Batch Sent. Please check logs.");
 
@@ -2039,8 +2039,8 @@ namespace Skanetrafiken.UpSalesMigration
 
                         Console.WriteLine("Sending Batch of Accounts to Sekund...");
 
-                        //SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        //LogCrmContextMultipleResponses(localContext, responses);
+                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        LogCrmContextMultipleResponses(localContext, responses);
 
                         Console.WriteLine("Batch Sent. Please check logs.");
 
@@ -2071,8 +2071,8 @@ namespace Skanetrafiken.UpSalesMigration
 
                         Console.WriteLine("Sending Batch of Accounts to Sekund...");
 
-                        //SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        //LogCrmContextMultipleResponses(localContext, responses);
+                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        LogCrmContextMultipleResponses(localContext, responses);
 
                         Console.WriteLine("Batch Sent. Please check logs.");
 
@@ -2103,8 +2103,8 @@ namespace Skanetrafiken.UpSalesMigration
 
                         Console.WriteLine("Sending Batch of Accounts to Sekund...");
 
-                        //SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        //LogCrmContextMultipleResponses(localContext, responses);
+                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        LogCrmContextMultipleResponses(localContext, responses);
 
                         Console.WriteLine("Batch Sent. Please check logs.");
 
@@ -2135,8 +2135,8 @@ namespace Skanetrafiken.UpSalesMigration
 
                         Console.WriteLine("Sending Batch of Accounts to Sekund...");
 
-                        //SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        //LogCrmContextMultipleResponses(localContext, responses);
+                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        LogCrmContextMultipleResponses(localContext, responses);
 
                         Console.WriteLine("Batch Sent. Please check logs.");
 

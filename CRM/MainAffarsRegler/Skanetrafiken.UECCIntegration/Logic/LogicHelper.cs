@@ -163,9 +163,6 @@ namespace Skanetrafiken.UECCIntegration.Logic
 
             } while (moreRecords);
 
-            //string getCompanyRoles = string.Format(fetch, active);
-            //List<Entity> lContacts = organizationService.RetrieveMultiple(new FetchExpression(getCompanyRoles)).Entities.ToList();
-
             _log.InfoFormat(CultureInfo.InvariantCulture, $"Found: " + lContacts.Count + " Contact of criteria 3.");
             _log.InfoFormat(CultureInfo.InvariantCulture, $"Removing the Contacts from C1 and C2");
 
