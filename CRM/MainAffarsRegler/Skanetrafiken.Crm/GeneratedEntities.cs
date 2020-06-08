@@ -7337,6 +7337,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_upsalesid")]
+		public string ed_UpsalesId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_upsalesid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_upsalesid", value);
+			}
+		}
+		
+		/// <summary>
 		/// Shows the conversion rate of the record's currency. The exchange rate is used to convert all money fields in the record from the local currency to the system's default currency.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
@@ -8788,6 +8804,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string Description = "description";
 			
+			public const string ed_UpsalesId = "ed_upsalesid";
+			
 			public const string ExchangeRate = "exchangerate";
 			
 			public const string GlobalObjectId = "globalobjectid";
@@ -8891,6 +8909,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int Category = 250;
 			
 			public const int Description = 2000;
+			
+			public const int ed_UpsalesId = 100;
 			
 			public const int GlobalObjectId = 300;
 			
@@ -28450,6 +28470,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_upsalesid")]
+		public string ed_UpsalesId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_upsalesid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_upsalesid", value);
+			}
+		}
+		
+		/// <summary>
 		/// Contact has a verified social security number
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_verifiedssn")]
@@ -31946,6 +31982,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_UpdatedFBDate = "ed_updatedfbdate";
 			
+			public const string ed_UpsalesId = "ed_upsalesid";
+			
 			public const string ed_VerifiedSSN = "ed_verifiedssn";
 			
 			public const string edp_Address1_CountryId = "edp_address1_countryid";
@@ -32421,6 +32459,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_SocialSecurityNumberBlock = 100;
 			
 			public const int ed_title = 200;
+			
+			public const int ed_UpsalesId = 100;
 			
 			public const int EMailAddress1 = 100;
 			
@@ -57615,6 +57655,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_upsalesid")]
+		public string ed_UpsalesId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_upsalesid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_upsalesid", value);
+			}
+		}
+		
+		/// <summary>
 		/// Shows the sender of the email.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("emailsender")]
@@ -59295,6 +59351,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string DirectionCode = "directioncode";
 			
+			public const string ed_UpsalesId = "ed_upsalesid";
+			
 			public const string EmailSender = "emailsender";
 			
 			public const string ExchangeRate = "exchangerate";
@@ -59416,6 +59474,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ConversationIndex = 2048;
 			
 			public const int Description = 1073741823;
+			
+			public const int ed_UpsalesId = 100;
 			
 			public const int InReplyTo = 320;
 			
@@ -69990,6 +70050,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_upsalesid")]
+		public string ed_UpsalesId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_upsalesid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_upsalesid", value);
+			}
+		}
+		
+		/// <summary>
 		/// Shows the conversion rate of the record's currency. The exchange rate is used to convert all money fields in the record from the local currency to the system's default currency.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
@@ -71311,6 +71387,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string DirectionCode = "directioncode";
 			
+			public const string ed_UpsalesId = "ed_upsalesid";
+			
 			public const string ExchangeRate = "exchangerate";
 			
 			public const string From = "from";
@@ -71398,6 +71476,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int Category = 250;
 			
 			public const int Description = 2000;
+			
+			public const int ed_UpsalesId = 100;
 			
 			public const int PhoneNumber = 200;
 			
@@ -76780,6 +76860,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_upsalesid")]
+		public string ed_UpsalesId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_upsalesid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_upsalesid", value);
+			}
+		}
+		
+		/// <summary>
 		/// The default image for the entity.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage")]
@@ -78339,6 +78435,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_tax_Base = "ed_tax_base";
 			
+			public const string ed_UpsalesId = "ed_upsalesid";
+			
 			public const string EntityImage = "entityimage";
 			
 			public const string EntityImage_Timestamp = "entityimage_timestamp";
@@ -78526,6 +78624,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_peppolnr = 100;
 			
 			public const int ed_reference = 100;
+			
+			public const int ed_UpsalesId = 100;
 			
 			public const int EntityImage_URL = 200;
 			

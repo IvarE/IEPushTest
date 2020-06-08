@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace Skanetrafiken.UpSalesMigration.Model
 {
     public class ExcelColumn
@@ -10,6 +12,19 @@ namespace Skanetrafiken.UpSalesMigration.Model
         {
             index = i;
             name = n;
+        }
+    }
+
+    public class ExcelLineData
+    {
+        public int index { get; set; }
+
+        public string value { get; set; }
+
+        public ExcelLineData(int i, string v)
+        {
+            index = i;
+            value = v;
         }
     }
 }

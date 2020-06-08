@@ -101,7 +101,6 @@
     <Compile Include="..\Skanetrafiken.Crm\XrmRetrieveHelper.cs">
       <Link>CrmHelper\XrmRetrieveHelper.cs</Link>
     </Compile>
-    <Compile Include="CrmHelper\CrmConnection.cs" />
     <Compile Include="CrmHelper\ServiceProvider.cs" />
     <Compile Include="CrmHelper\TracingService.cs" />
     <Compile Include="Logic\LogicHelper.cs" />

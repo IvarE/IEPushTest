@@ -13,11 +13,13 @@ using Skanetrafiken.UpSalesMigration.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
+using System.Data.OleDb;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.ServiceModel.Description;
 using System.Threading;
-using ExcelApp = Microsoft.Office.Interop.Excel;
 
 namespace Skanetrafiken.UpSalesMigration
 {
@@ -31,7 +33,6 @@ namespace Skanetrafiken.UpSalesMigration
 
         public static string cgi_account_contact = "cgi_account_contact";
 
-        static ExcelApp.Application excelApp = new ExcelApp.Application();
         private static ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public static IOrganizationService ConnectToMSCRM(string UserName, string Password, string SoapOrgServiceUri)
@@ -76,17 +77,6 @@ namespace Skanetrafiken.UpSalesMigration
             return value;
         }
 
-        public static List<ExcelColumn> GetListExcelColumns(ExcelApp.Range excelRange, int colCount)
-        {
-            List<ExcelColumn> lColumns = new List<ExcelColumn>();
-
-            for (int c = 1; c <= colCount; c++)
-                if (excelRange.Cells[1, c] != null && excelRange.Cells[1, c].Value2 != null)
-                    lColumns.Add(new ExcelColumn(c, excelRange.Cells[1, c].Value2.ToString()));
-
-            return lColumns;
-        }
-
         public static ExcelColumn GetSelectedExcelColumn(List<ExcelColumn> lColumns, int j)
         {
             List<ExcelColumn> lSelectedColumns = lColumns.Where(x => x.index == j).ToList();
@@ -123,27 +113,44 @@ namespace Skanetrafiken.UpSalesMigration
             return lSelectedColumns.FirstOrDefault();
         }
 
-        public static ImportExcelInfo HandleExcelInformation(string relativeExcelPath, string fileName)
+        public static ImportExcelInfo HandleExcelInformationStreamReader(string relativeExcelPath, string fileName)
         {
             try
             {
-                ExcelApp.Application excelApp = new ExcelApp.Application();
-                ExcelApp.Workbook excelBook = excelApp.Workbooks.Open(relativeExcelPath + "\\" + fileName);
+                int i = 0;
+                List<ExcelColumn> lColumns = new List<ExcelColumn>();
+                List<List<ExcelLineData>> lData = new List<List<ExcelLineData>>();
 
-                int numberOfSheets = excelBook.Worksheets.Count;
+                using (var reader = new StreamReader(relativeExcelPath + "\\" + fileName))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        string line = reader.ReadLine();
+                        List<string> values = line.Split('^').ToList();
+                        if (i == 0)
+                        {
+                            for(int j = 0; j < values.Count; j++)
+                            {
+                                ExcelColumn column = new ExcelColumn(j, values[j]);
+                                lColumns.Add(column);
+                            }
+                        }
+                        else
+                        {
+                            List<ExcelLineData> lLine = new List<ExcelLineData>();
+                            for (int k = 0; k < values.Count; k++)
+                            {
+                                ExcelLineData dataLine = new ExcelLineData(k, values[k]);
+                                lLine.Add(dataLine);
+                            }
 
-                if (numberOfSheets > 1)
-                    _log.InfoFormat(CultureInfo.InvariantCulture, $"There is more than one WorkSheet in this file, by default it will check the first WorkSheet.");
+                            lData.Add(lLine);
+                        }
+                        i++;
+                    }
+                }
 
-                ExcelApp._Worksheet excelSheet = excelBook.Sheets[1];
-                ExcelApp.Range excelRange = excelSheet.UsedRange;
-
-                int rowCount = excelRange.Rows.Count;
-                int colCount = excelRange.Columns.Count;
-
-                List<ExcelColumn> lColumns = GetListExcelColumns(excelRange, colCount);
-
-                return new ImportExcelInfo(rowCount, colCount, excelRange, lColumns);
+                return new ImportExcelInfo(lColumns, lData);
             }
             catch (Exception e)
             {
@@ -216,31 +223,17 @@ namespace Skanetrafiken.UpSalesMigration
             return null;
         }
 
-        public static EntityReference GetCrmAccountByName(Plugin.LocalPluginContext localContext, string name)
-        {
-            FilterExpression filterAccounts = new FilterExpression();
-            filterAccounts.Conditions.Add(new ConditionExpression(Account.Fields.Name, ConditionOperator.Equal, name));
-
-            List<Account> lAccounts = XrmRetrieveHelper.RetrieveMultiple<Account>(localContext, new ColumnSet(Account.Fields.AccountId), filterAccounts).ToList();
-
-            if (lAccounts.Count == 1)
-                return lAccounts.FirstOrDefault().ToEntityReference();
-
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Accounts or More than One Account found with Name: " + name + ".");
-            return null;
-        }
-
-        public static EntityReference GetCrmContactByFullName(Plugin.LocalPluginContext localContext, string name)
+        public static EntityReference GetCrmContactByUpsalesId(Plugin.LocalPluginContext localContext, string upsalesId)
         {
             FilterExpression filterContacts = new FilterExpression();
-            filterContacts.Conditions.Add(new ConditionExpression(Contact.Fields.FullName, ConditionOperator.Equal, name));
+            filterContacts.Conditions.Add(new ConditionExpression(Contact.Fields.ed_UpsalesId, ConditionOperator.Equal, upsalesId));
 
             List<Contact> lContacts = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, new ColumnSet(Contact.Fields.ContactId), filterContacts).ToList();
 
             if (lContacts.Count == 1)
                 return lContacts.FirstOrDefault().ToEntityReference();
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Contacts or More than One Contact found with Name: " + name + ".");
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Contacts or More than One Contact found with Upsales Id: " + upsalesId + ".");
             return null;
         }
 
@@ -293,27 +286,6 @@ namespace Skanetrafiken.UpSalesMigration
                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error getting Global OptionSet " + optionSetName + ". Details: " + e.Message);
                 return null;
             }
-        }
-
-        public static int? InsertLocalOptionSetOption(Plugin.LocalPluginContext localContext, string entityName, string optionSetName, string label, int languageCode)
-        {
-            // Create a request.
-            InsertOptionValueRequest insertOptionValueRequest =
-                new InsertOptionValueRequest
-                {
-                    AttributeLogicalName = optionSetName,
-                    EntityLogicalName = entityName,
-                    Label = new Label(label, languageCode)
-                };
-            // Execute the request.
-            InsertOptionValueResponse response = ((InsertOptionValueResponse)localContext.OrganizationService.Execute(insertOptionValueRequest));
-
-
-            //TODO TEST FOR ERROR RESPONSE
-            if (response != null)
-                return response.NewOptionValue;
-            else
-                return null;
         }
 
         public static void LogCrmContextMultipleResponses(Plugin.LocalPluginContext localContext, SaveChangesResultCollection lResponses)
@@ -577,29 +549,38 @@ namespace Skanetrafiken.UpSalesMigration
             }
         }
 
-        public static PhoneCall GetPhoneCall(Plugin.LocalPluginContext localContext, ExcelApp.Range excelRange, ImportExcelInfo importExcelInfo, int i, int maxSubject, int maxDescription, EntityReference erDefaultUser)
+        public static PhoneCall GetPhoneCall(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo, int i, int maxSubject, int maxDescription, EntityReference erDefaultUser)
         {
             PhoneCall nPhoneCall = new PhoneCall();
+            List<ExcelLineData> line = importExcelInfo.lData[i];
 
-            for (int j = 1; j <= importExcelInfo.colCount; j++)
+            for (int j = 0; j < importExcelInfo.lColumns.Count; j++)
             {
-                if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
+                ExcelLineData selectedData = line[j];
+
+                if (selectedData == null)
+                {
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
                     continue;
+                }
 
                 ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
 
                 if (selectedColumn == null)
                 {
-                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null.");
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
                     continue;
                 }
 
                 string name = selectedColumn.name;
-                string value = excelRange.Cells[i, j].Value2.ToString();
+                string value = selectedData.value;
+
+                if (value == null || string.IsNullOrEmpty(value))
+                    continue;
 
                 switch (name)
                 {
-                    case "U-ID":
+                    case "Account U-ID":
 
                         EntityReference erAccount = GetCrmAccountByUpsalesId(localContext, value);
 
@@ -609,16 +590,12 @@ namespace Skanetrafiken.UpSalesMigration
                             nPhoneCall.RegardingObjectId = erAccount;
                         }
                         else
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " was not found. The PhoneCall on line " + i + " will be ignored.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " was not found. The PhoneCall on line " + (i+2) + " will be ignored.");
 
                         break;
-                    case "Företag":
-                        //Already Handleded
-                        break;
-                    case "Kontaktperson":
+                    case "Contact U-ID":
 
-                        string cleanValue = getCleanToValue(value);
-                        EntityReference erContact = GetCrmContactByFullName(localContext, cleanValue);
+                        EntityReference erContact = GetCrmContactByUpsalesId(localContext, value);
 
                         if (erContact == null)
                         {
@@ -635,7 +612,16 @@ namespace Skanetrafiken.UpSalesMigration
                         nPhoneCall.To = phoneCallTo;
 
                         break;
-                    case "Beskrivning":
+                    case "Activity U-ID":
+                        nPhoneCall.ed_UpsalesId = value;
+                        break;
+                    case "Företag":
+                        //Already Handleded
+                        break;
+                    case "Kontaktperson":
+                        //Already Handleded
+                        break;
+                    case "Activity: Beskrivning":
                         nPhoneCall.Subject = getSubString(value, maxSubject);
                         break;
                     case "Datum":
@@ -703,7 +689,7 @@ namespace Skanetrafiken.UpSalesMigration
                     case "Aktivitetstyp":
                         //Already Handleded
                         break;
-                    case "Anteckningar":
+                    case "Activity: Anteckningar":
                         nPhoneCall.Description = getSubString(value, maxDescription);
                         break;
 
@@ -727,34 +713,41 @@ namespace Skanetrafiken.UpSalesMigration
                 nPhoneCall.From = phoneCallFrom;
             }
 
-            nPhoneCall.StateCode = PhoneCallState.Completed;
-
             return nPhoneCall;
         }
 
-        public static Email GetEmail(Plugin.LocalPluginContext localContext, ExcelApp.Range excelRange, ImportExcelInfo importExcelInfo, int i, int maxSubject, int maxDescription, EntityReference erDefaultUser)
+        public static Email GetEmail(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo, int i, int maxSubject, int maxDescription, EntityReference erDefaultUser)
         {
             Email nEmail = new Email();
+            List<ExcelLineData> line = importExcelInfo.lData[i];
 
-            for (int j = 1; j <= importExcelInfo.colCount; j++)
+            for (int j = 0; j < importExcelInfo.lColumns.Count; j++)
             {
-                if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
+                ExcelLineData selectedData = line[j];
+
+                if (selectedData == null)
+                {
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
                     continue;
+                }
 
                 ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
 
                 if (selectedColumn == null)
                 {
-                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null.");
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
                     continue;
                 }
 
                 string name = selectedColumn.name;
-                string value = excelRange.Cells[i, j].Value2.ToString();
+                string value = selectedData.value;
+
+                if (value == null || string.IsNullOrEmpty(value))
+                    continue;
 
                 switch (name)
                 {
-                    case "U-ID":
+                    case "Account U-ID":
 
                         EntityReference erAccount = GetCrmAccountByUpsalesId(localContext, value);
 
@@ -764,15 +757,12 @@ namespace Skanetrafiken.UpSalesMigration
                             nEmail.RegardingObjectId = erAccount;
                         }
                         else
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " was not found. The Email on line " + i + " will be ignored.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " was not found. The Email on line " + (i+2) + " will be ignored.");
 
                         break;
-                    case "Företag":
-                        //Already Handleded
-                        break;
-                    case "Kontaktperson":
+                    case "Contact U-ID":
 
-                        EntityReference erContact = GetCrmContactByFullName(localContext, value);
+                        EntityReference erContact = GetCrmContactByUpsalesId(localContext, value);
 
                         if (erContact == null)
                         {
@@ -783,13 +773,23 @@ namespace Skanetrafiken.UpSalesMigration
                         ActivityParty toParty = new ActivityParty();
                         toParty.PartyId = erContact;
 
-                        List<ActivityParty> phoneCallTo = new List<ActivityParty>();
-                        phoneCallTo.Add(toParty);
+                        List<ActivityParty> EmailTo = new List<ActivityParty>();
+                        EmailTo.Add(toParty);
 
-                        nEmail.To = phoneCallTo;
+                        nEmail.To = EmailTo;
 
                         break;
-                    case "Beskrivning":
+                    case "Activity U-ID":
+                        nEmail.ed_UpsalesId = value;
+                        break;
+                    case "Företag":
+                        //Already Handleded
+                        break;
+                    case "Kontaktperson":
+                        //Already Handleded
+                        break;
+
+                    case "Activity: Beskrivning":
                         nEmail.Subject = getSubString(value, maxSubject);
                         break;
                     case "Datum":
@@ -819,7 +819,7 @@ namespace Skanetrafiken.UpSalesMigration
 
                         break;
                     case "Modifierad":
-                        //Not Possible Unsuported
+                        //Not Possible to Update Modified On Unsuported
                         break;
                     case "Skapad":
 
@@ -857,7 +857,7 @@ namespace Skanetrafiken.UpSalesMigration
                     case "Aktivitetstyp":
                         //Already Handleded
                         break;
-                    case "Anteckningar":
+                    case "Activity: Anteckningar":
                         nEmail.Description = getSubString(value, maxDescription);
                         break;
 
@@ -881,34 +881,41 @@ namespace Skanetrafiken.UpSalesMigration
                 nEmail.From = emailFrom;
             }
 
-            nEmail.StateCode = EmailState.Completed;
-
             return nEmail;
         }
 
-        public static Appointment GetAppointment(Plugin.LocalPluginContext localContext, ExcelApp.Range excelRange, ImportExcelInfo importExcelInfo, int i, int maxSubject, int maxDescription, EntityReference erDefaultUser)
+        public static Appointment GetAppointment(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo, int i, int maxSubject, int maxDescription, EntityReference erDefaultUser)
         {
             Appointment nAppointment = new Appointment();
+            List<ExcelLineData> line = importExcelInfo.lData[i];
 
-            for (int j = 1; j <= importExcelInfo.colCount; j++)
+            for (int j = 0; j < importExcelInfo.lColumns.Count; j++)
             {
-                if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
+                ExcelLineData selectedData = line[j];
+
+                if (selectedData == null)
+                {
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
                     continue;
+                }
 
                 ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
 
                 if (selectedColumn == null)
                 {
-                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null.");
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
                     continue;
                 }
 
                 string name = selectedColumn.name;
-                string value = excelRange.Cells[i, j].Value2.ToString();
+                string value = selectedData.value;
+
+                if (value == null || string.IsNullOrEmpty(value))
+                    continue;
 
                 switch (name)
                 {
-                    case "U-ID":
+                    case "Account U-ID":
 
                         EntityReference erAccount = GetCrmAccountByUpsalesId(localContext, value);
 
@@ -918,32 +925,39 @@ namespace Skanetrafiken.UpSalesMigration
                             nAppointment.RegardingObjectId = erAccount;
                         }
                         else
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " was not found. The Appointment on line " + i + " will be ignored.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " was not found. The Appointment on line " + (i + 2) + " will be ignored.");
 
                         break;
-                    case "Företag":
-                        //Already Handleded
-                        break;
-                    case "Kontaktperson":
+                    case "Contact U-ID":
 
-                        EntityReference erContact = GetCrmContactByFullName(localContext, value);
+                        EntityReference erContact = GetCrmContactByUpsalesId(localContext, value);
 
                         if (erContact == null)
                         {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The To of the Appointment was not found.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The To of the Email was not found.");
                             break;
                         }
 
                         ActivityParty toParty = new ActivityParty();
                         toParty.PartyId = erContact;
 
-                        List<ActivityParty> phoneCallTo = new List<ActivityParty>();
-                        phoneCallTo.Add(toParty);
+                        List<ActivityParty> AppointmentTo = new List<ActivityParty>();
+                        AppointmentTo.Add(toParty);
 
-                        nAppointment.RequiredAttendees = phoneCallTo;
+                        nAppointment.RequiredAttendees = AppointmentTo;
 
                         break;
-                    case "Beskrivning":
+                    case "Activity U-ID":
+                        nAppointment.ed_UpsalesId = value;
+                        break;
+                    case "Företag":
+                        //Already Handleded
+                        break;
+                    case "Kontaktperson":
+                        //Already Handleded
+                        break;
+
+                    case "Activity: Beskrivning":
                         nAppointment.Subject = getSubString(value, maxSubject);
                         break;
                     case "Datum":
@@ -975,7 +989,6 @@ namespace Skanetrafiken.UpSalesMigration
                     case "Modifierad":
                         //Not Possible to Update Modified On Unsuported
                         break;
-
                     case "Skapad":
 
                         DateTime createdOn = DateTime.MinValue;
@@ -993,7 +1006,7 @@ namespace Skanetrafiken.UpSalesMigration
 
                         if (value == "Alexander Zaragoza")
                         {
-                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The Owner " + value + " of the PhoneCall was not found. The default user was updated.");
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The Owner " + value + " of the Appointment was not found. The default user was updated.");
                             nAppointment.OwnerId = erDefaultUser;
                             break;
                         }
@@ -1012,7 +1025,7 @@ namespace Skanetrafiken.UpSalesMigration
                     case "Aktivitetstyp":
                         //Already Handleded
                         break;
-                    case "Anteckningar":
+                    case "Activity: Anteckningar":
                         nAppointment.Description = getSubString(value, maxDescription);
                         break;
 
@@ -1025,48 +1038,54 @@ namespace Skanetrafiken.UpSalesMigration
             if (nAppointment.RegardingObjectId == null)
                 return null;
 
-            nAppointment.StateCode = AppointmentState.Completed;
-
             return nAppointment;
         }
 
         public static void ImportAccountRecords(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
         {
-            if(importExcelInfo == null || importExcelInfo.excelRange == null || importExcelInfo.lColumns == null || importExcelInfo.rowCount == null || importExcelInfo.colCount == null)
+            if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
             {
                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
                 return;
             }
 
-            ExcelApp.Range excelRange = importExcelInfo.excelRange;
             OptionMetadataCollection colOpCompanyTrade = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_companytrade);
             OptionMetadataCollection colOpBusinessType = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_BusinessType);
 
             Console.Write("Creating Batch of Accounts... ");
             using (ProgressBar progress = new ProgressBar())
             {
-                for (int i = 2; i <= importExcelInfo.rowCount; i++)
+                for (int i = 0; i < importExcelInfo.lData.Count; i++)
                 {
                     try
                     {
-                        progress.Report((double)i / (double)importExcelInfo.rowCount);
+                        progress.Report((double)i / (double)importExcelInfo.lData.Count);
                         Account nAccount = new Account();
+                        List<ExcelLineData> line = importExcelInfo.lData[i];
 
-                        for (int j = 1; j <= importExcelInfo.colCount; j++)
+                        for (int j = 1; j <= importExcelInfo.lColumns.Count; j++)
                         {
-                            if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
+                            ExcelLineData selectedData = line[j];
+
+                            if (selectedData == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
                                 continue;
+                            }
 
                             ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
 
                             if (selectedColumn == null)
                             {
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null.");
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
                                 continue;
                             }
 
                             string name = selectedColumn.name;
-                            string value = excelRange.Cells[i, j].Value2.ToString();
+                            string value = selectedData.value;
+
+                            if (value == null || string.IsNullOrEmpty(value))
+                                continue;
 
                             switch (name)
                             {
@@ -1077,7 +1096,6 @@ namespace Skanetrafiken.UpSalesMigration
                                     nAccount.Name = value;
                                     break;
                                 case "Organisationsnummer":
-                                    //nAccount.edp_OrgNo = value;
                                     nAccount.cgi_organizational_number = value;
                                     break;
                                 case "Besöksadress - Gatuadress":
@@ -1183,71 +1201,6 @@ namespace Skanetrafiken.UpSalesMigration
 
                                     break;
 
-
-                                //-----------------------------------------------------OLD MAPPINGS---------------------------------------------------------
-
-                                #region OldMappings
-
-                                case "CreateOn - test":
-
-                                    DateTime dateTime = DateTime.MinValue;
-
-                                    if (DateTime.TryParse(value, out dateTime))
-                                    {
-                                        if (dateTime != DateTime.MinValue)
-                                            nAccount.OverriddenCreatedOn = dateTime;
-                                    }
-                                    else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
-
-                                    break;
-                                case "Owner - ToBeDefined - test":
-
-                                    EntityReference erOwner = GetCrmUserOrTeamByName(localContext, value);
-
-                                    if (erOwner == null)
-                                    {
-                                        string defaultUserName = "Admin"; //TODO Put on App Config
-                                        erOwner = GetCrmUserOrTeamByName(localContext, defaultUserName);
-                                    }
-
-                                    if (erOwner != null)
-                                        nAccount.OwnerId = erOwner;
-                                    else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Owner of the Account was not found.");
-
-                                    break;
-                                case "Företag: Moderbolag - test":
-
-                                    EntityReference erParentAccount = GetCrmAccountByName(localContext, value);
-
-                                    if (erParentAccount != null)
-                                        nAccount.ParentAccountId = erParentAccount;
-                                    else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Parent Account of the Account was not found or it was already null.");
-
-                                    break;
-                                case "Företag: Besöksadress: Län - test":
-                                    nAccount.Address1_County = value;
-                                    break;
-                                case "Företag: Faktureringsadress: Fullständig adress - test":
-                                    nAccount.Address2_Line1 = value;
-                                    break;
-                                case "Företag: Faktureringsadress: Stad - test":
-                                    nAccount.Address2_City = value;
-                                    break;
-                                case "Företag: Faktureringsadress: Land - test":
-                                    nAccount.Address2_Country = value;
-                                    break;
-                                case "Företag: Faktureringsadress: Län - test":
-                                    nAccount.Address2_County = value;
-                                    break;
-                                case "Företag: Faktureringsadress: Postnummer - test":
-                                    nAccount.Address2_PostalCode = value;
-                                    break;
-
-                                #endregion
-
                                 default:
                                     _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
                                     break;
@@ -1270,39 +1223,46 @@ namespace Skanetrafiken.UpSalesMigration
 
         public static void ImportSubAccountsRecords(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
         {
-            if (importExcelInfo == null || importExcelInfo.excelRange == null || importExcelInfo.lColumns == null || importExcelInfo.rowCount == null || importExcelInfo.colCount == null)
+            if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
             {
                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
                 return;
             }
 
-            ExcelApp.Range excelRange = importExcelInfo.excelRange;
-
             Console.Write("Creating Batch of Sub Accounts... ");
             using (ProgressBar progress = new ProgressBar())
             {
-                for (int i = 2; i <= importExcelInfo.rowCount; i++)
+                for (int i = 0; i < importExcelInfo.lData.Count; i++)
                 {
                     try
                     {
-                        progress.Report((double)i / (double)importExcelInfo.rowCount);
+                        progress.Report((double)i / (double)importExcelInfo.lData.Count);
                         Account nSubAccount = new Account();
+                        List<ExcelLineData> line = importExcelInfo.lData[i];
 
-                        for (int j = 1; j <= importExcelInfo.colCount; j++)
+                        for (int j = 1; j <= importExcelInfo.lColumns.Count; j++)
                         {
-                            if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
+                            ExcelLineData selectedData = line[j];
+
+                            if (selectedData == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
                                 continue;
+                            }
 
                             ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
 
                             if (selectedColumn == null)
                             {
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null.");
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
                                 continue;
                             }
 
                             string name = selectedColumn.name;
-                            string value = excelRange.Cells[i, j].Value2.ToString();
+                            string value = selectedData.value;
+
+                            if (value == null || string.IsNullOrEmpty(value))
+                                continue;
 
                             switch (name)
                             {
@@ -1371,47 +1331,55 @@ namespace Skanetrafiken.UpSalesMigration
 
         public static void ImportContactsRecords(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
         {
-            if (importExcelInfo == null || importExcelInfo.excelRange == null || importExcelInfo.lColumns == null || importExcelInfo.rowCount == null || importExcelInfo.colCount == null)
+            if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
             {
                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
                 return;
             }
 
             List<Account> lAddedAccounts = new List<Account>();
-            ExcelApp.Range excelRange = importExcelInfo.excelRange;
 
             Console.Write("Creating Batch of Contacts... ");
             using (ProgressBar progress = new ProgressBar())
             {
-                for (int i = 2; i <= importExcelInfo.rowCount; i++)
+                for (int i = 0; i < importExcelInfo.lData.Count; i++)
                 {
                     try
                     {
-                        progress.Report((double)i / (double)importExcelInfo.rowCount);
+                        progress.Report((double)i / (double)importExcelInfo.lData.Count);
                         Account eParentAccount = null;
                         Account ePParentAccount = null;
 
                         Contact nContact = new Contact();
+                        List<ExcelLineData> line = importExcelInfo.lData[i];
 
-                        for (int j = 1; j <= importExcelInfo.colCount; j++)
+                        for (int j = 0; j < importExcelInfo.lColumns.Count; j++)
                         {
-                            if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
+                            ExcelLineData selectedData = line[j];
+
+                            if (selectedData == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
                                 continue;
+                            }
 
                             ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
 
                             if (selectedColumn == null)
                             {
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null.");
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
                                 continue;
                             }
 
                             string name = selectedColumn.name;
-                            string value = excelRange.Cells[i, j].Value2.ToString();
+                            string value = selectedData.value;
+
+                            if (value == null || string.IsNullOrEmpty(value))
+                                continue;
 
                             switch (name)
                             {
-                                case " Upsales-ID":
+                                case "Account U-ID":
 
                                     EntityReference erParentAccount = GetCrmAccountByUpsalesId(localContext, value);
 
@@ -1430,16 +1398,22 @@ namespace Skanetrafiken.UpSalesMigration
                                         }
                                     }
                                     else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Customer with Upsales Id: " + value + " was not found. The Contact on line " + i + " will be ignored.");
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Customer with Upsales Id: " + value + " was not found. The Contact on line " + (i+2) + " will be ignored.");
 
                                     break;
-                                case " Företag":
+                                case "Contact U-ID":
+                                    nContact.ed_UpsalesId = value;
+                                    break;
+                                case "Account":
+                                    //Already Handleded
+                                    break;
+                                case "Namn":
                                     //Already Handleded
                                     break;
                                 case "Förnamn":
                                     nContact.FirstName = value;
                                     break;
-                                case " Efternamn":
+                                case "Efternamn":
                                     nContact.LastName = value;
                                     break;
                                 case "Titel":
@@ -1454,24 +1428,6 @@ namespace Skanetrafiken.UpSalesMigration
                                 case "Email":
                                     nContact.EMailAddress1 = value;
                                     break;
-
-                                //-----------------------------------------------------OLD MAPPINGS---------------------------------------------------------
-
-                                #region OldMappings
-
-                                case "CreateOn - test":
-
-                                    DateTime dateTime = DateTime.MinValue;
-
-                                    if (DateTime.TryParse(value, out dateTime))
-                                    {
-                                        if (dateTime != DateTime.MinValue)
-                                            nContact.OverriddenCreatedOn = dateTime;
-                                    }
-
-                                    break;
-
-                                #endregion
 
                                 default:
                                     _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
@@ -1593,48 +1549,55 @@ namespace Skanetrafiken.UpSalesMigration
 
         public static void ImportActivitiesRecords(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
         {
-            if (importExcelInfo == null || importExcelInfo.excelRange == null || importExcelInfo.lColumns == null || importExcelInfo.rowCount == null || importExcelInfo.colCount == null)
+            if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
             {
                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
                 return;
             }
 
-            string defaultUserName = "Kristina Paulsson";
+            string defaultUserName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.DefaultOwner);
             EntityReference erDefaultUser = GetCrmUserOrTeamByName(localContext, defaultUserName);
 
             string activityTypeNameColumn = "Aktivitetstyp";
             int maxSubject = 200;
             int maxDescription = 2000;
-            ExcelApp.Range excelRange = importExcelInfo.excelRange;
 
             Console.Write("Creating Batch of Activities... ");
             using (ProgressBar progress = new ProgressBar())
             {
-                for (int i = 2; i < importExcelInfo.rowCount; i++)
+                for (int i = 0; i < importExcelInfo.lData.Count; i++)
                 {
                     try
                     {
-                        progress.Report((double)i / (double)importExcelInfo.rowCount);
+                        progress.Report((double)i / (double)importExcelInfo.lData.Count);
                         ExcelColumn activityTypeColumn = GetSelectedExcelColumnByName(importExcelInfo.lColumns, activityTypeNameColumn);
 
                         if (activityTypeColumn == null)
                         {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
                             continue;
                         }
 
                         int j = activityTypeColumn.index;
+                        List<ExcelLineData> line = importExcelInfo.lData[i];
+                        ExcelLineData selectedData = line[j];
 
-                        if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
+                        if (selectedData == null)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
                             continue;
+                        }
 
-                        string activityType = excelRange.Cells[i, j].Value2.ToString();
+                        string activityType = selectedData.value;
+
+                        if (activityType == null || string.IsNullOrEmpty(activityType))
+                            continue;
 
                         switch (activityType)
                         {
                             case "Telefonsamtal":
 
-                                PhoneCall nPhoneCall = GetPhoneCall(localContext, excelRange, importExcelInfo, i, maxSubject, maxDescription, erDefaultUser);
+                                PhoneCall nPhoneCall = GetPhoneCall(localContext, importExcelInfo, i, maxSubject, maxDescription, erDefaultUser);
 
                                 if (nPhoneCall != null)
                                     crmContext.AddObject(nPhoneCall);
@@ -1642,7 +1605,7 @@ namespace Skanetrafiken.UpSalesMigration
                                 break;
                             case "E-post":
 
-                                Email nEmail = GetEmail(localContext, excelRange, importExcelInfo, i, maxSubject, maxDescription, erDefaultUser);
+                                Email nEmail = GetEmail(localContext, importExcelInfo, i, maxSubject, maxDescription, erDefaultUser);
 
                                 if (nEmail != null)
                                     crmContext.AddObject(nEmail);
@@ -1650,7 +1613,7 @@ namespace Skanetrafiken.UpSalesMigration
                                 break;
                             case "Övrigt":
 
-                                Appointment nAppointment = GetAppointment(localContext, excelRange, importExcelInfo, i, maxSubject, maxDescription, erDefaultUser);
+                                Appointment nAppointment = GetAppointment(localContext, importExcelInfo, i, maxSubject, maxDescription, erDefaultUser);
 
                                 if (nAppointment != null)
                                     crmContext.AddObject(nAppointment);
@@ -1672,57 +1635,63 @@ namespace Skanetrafiken.UpSalesMigration
 
         public static void ImportOrdersRecords(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
         {
-            if (importExcelInfo == null || importExcelInfo.excelRange == null || importExcelInfo.lColumns == null || importExcelInfo.rowCount == null || importExcelInfo.colCount == null)
+            if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
             {
                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
                 return;
-            }
+            }            
 
-            string defaultUserName = "Kristina Paulsson";
+            string defaultUserName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.DefaultOwner);
             EntityReference erDefaultUser = GetCrmUserOrTeamByName(localContext, defaultUserName);
 
-            string currencyName = "Svensk krona";
+            string currencyName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.DefaultCurrency);
             EntityReference erCurrency = GetCrmCurrencyByName(localContext, currencyName);
-
-            ExcelApp.Range excelRange = importExcelInfo.excelRange;
 
             Console.Write("Creating Batch of Orders... ");
             using (ProgressBar progress = new ProgressBar())
             {
-                for (int i = 2; i <= importExcelInfo.rowCount; i++)
+                for (int i = 0; i < importExcelInfo.lData.Count; i++)
                 {
                     try
                     {
-                        progress.Report((double)i / (double)importExcelInfo.rowCount);
+                        progress.Report((double)i / (double)importExcelInfo.lData.Count);
                         SalesOrder nOrder = new SalesOrder();
 
-                        string orderName = "{0} - {1}";
-                        string orderId = string.Empty;
-                        string orderNameValue = string.Empty;
                         string noteText = string.Empty;
                         string noteTextProduct = string.Empty;
                         string startProductDate = string.Empty;
                         string endProductDate = string.Empty;
+                        string productColibri = string.Empty;
 
-                        for (int j = 1; j <= importExcelInfo.colCount; j++)
+                        List<ExcelLineData> line = importExcelInfo.lData[i];
+
+                        for (int j = 0; j < importExcelInfo.lColumns.Count; j++)
                         {
-                            if (excelRange.Cells[i, j] == null || excelRange.Cells[i, j].Value2 == null || string.IsNullOrEmpty(excelRange.Cells[i, j].Value2.ToString()))
+                            ExcelLineData selectedData = line[j];
+
+                            if(selectedData == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
                                 continue;
+                            }
 
                             ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
 
                             if (selectedColumn == null)
                             {
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null.");
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
                                 continue;
                             }
 
                             string name = selectedColumn.name;
-                            string value = excelRange.Cells[i, j].Value2.ToString();
+                            string value = selectedData.value;
+
+                            if (value == null || string.IsNullOrEmpty(value))
+                                continue;
 
                             switch (name)
                             {
-                                case "Företag: Upsales-ID":
+                                case "Account U-ID":
 
                                     EntityReference erAccount = GetCrmAccountByUpsalesId(localContext, value);
 
@@ -1735,29 +1704,32 @@ namespace Skanetrafiken.UpSalesMigration
                                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Customer with Upsales Id: " + value + " was not found. The Order on line " + i + " will be ignored.");
 
                                     break;
-                                case "Order: Företag":
-                                    //Already Handled
-                                    break;
-                                case "Order: Kontaktperson":
+                                case "Contact: U-ID":
 
-                                    EntityReference erContact = GetCrmContactByFullName(localContext, value);
+                                    EntityReference erContact = GetCrmContactByUpsalesId(localContext, value);
 
                                     if (erContact != null)
                                     {
-                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"The Contact with Fullname : " + value + " of the Order was updated.");
+                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"The Contact with Upsales Id: " + value + " of the Order was updated.");
                                         nOrder.ed_contact = erContact;
                                     }
                                     else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Contact with Fullname : " + value + " was not found.");
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Contact with Upsales Id: " + value + " was not found.");
 
                                     break;
-                                case "Order: Orderns ID":
-                                    orderId = value;
+                                case "Orderns U-ID":
+                                    nOrder.ed_UpsalesId = value;
                                     break;
-                                case "Order: Beskrivning":
-                                    orderNameValue = value;
+                                case "Företag":
+                                    //Already Handled
                                     break;
-                                case "Order: Datum":
+                                case "Kontaktperson":
+                                    //Already Handled
+                                    break;
+                                case "Beskrivning":
+                                    nOrder.Name = value;
+                                    break;
+                                case "Datum":
 
                                     DateTime submitDate = DateTime.MinValue;
 
@@ -1770,7 +1742,7 @@ namespace Skanetrafiken.UpSalesMigration
                                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
 
                                     break;
-                                case "Order: Värde":
+                                case "Värde":
 
                                     decimal dtotalLineAmount = decimal.MinValue;
 
@@ -1803,16 +1775,16 @@ namespace Skanetrafiken.UpSalesMigration
                                     }
 
                                     break;
-                                case "Order: Anteckningar":
+                                case "Anteckningar":
                                     noteText = value;
                                     break;
-                                case "Order: Produkt":
+                                case "Produkt":
                                     noteTextProduct = value;
                                     break;
                                 case "Order: Fas":
                                     //Already Handled
                                     break;
-                                case "Order: Skapad":
+                                case "Skapad":
 
                                     DateTime createdOn = DateTime.MinValue;
 
@@ -1857,6 +1829,9 @@ namespace Skanetrafiken.UpSalesMigration
                                 case "Slutdatum":
                                     endProductDate = value;
                                     break;
+                                case "Produkt (Colibri)":
+                                    productColibri = value;
+                                    break;
 
                                 default:
                                     _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
@@ -1868,9 +1843,6 @@ namespace Skanetrafiken.UpSalesMigration
                             continue;
 
                         nOrder.TransactionCurrencyId = erCurrency;
-
-                        orderName = string.Format(orderName, orderId, orderNameValue);
-                        nOrder.Name = orderName.Replace("{0}", "").Replace("{1}", "");
 
                         crmContext.AddObject(nOrder);
 
@@ -1889,7 +1861,7 @@ namespace Skanetrafiken.UpSalesMigration
                             Annotation note = new Annotation();
 
                             note.Subject = "Note from UpSales Integration";
-                            note.NoteText = noteText + "\n\nProduct Start Date: " + startProductDate + "\nProduct End Date: " + endProductDate;
+                            note.NoteText = noteText + "\n\nProduct Start Date: " + startProductDate + "\nProduct End Date: " + endProductDate + "\n\nProduct (Colibri): " + productColibri;
 
                             crmContext.AddRelatedObject(nOrder, new Relationship(rel_order_note), note);
                         }
@@ -1933,12 +1905,11 @@ namespace Skanetrafiken.UpSalesMigration
 
                     try
                     {
-                        string fileName = "Spann 1 - unika 2020-05-27.xlsx";
-
                         crmContext.ClearChanges();
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload Bucket 1 of the Account Entity--------------");
 
-                        ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
+                        string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Bucket1Accounts);
+                        ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
                         ImportAccountRecords(localContext, crmContext, importExcelInfo);
 
                         Console.WriteLine("Sending Batch of Accounts to Sekund...");
@@ -1965,12 +1936,11 @@ namespace Skanetrafiken.UpSalesMigration
 
                     try
                     {
-                        string fileName = "Spann 5 - nya datakällor 2020-05-25.xlsx";
-
                         crmContext.ClearChanges();
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload Bucket 5 of the Account Entity--------------");
 
-                        ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
+                        string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Bucket5Accounts);
+                        ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
                         ImportAccountRecords(localContext, crmContext, importExcelInfo);
 
                         Console.WriteLine("Sending Batch of Accounts to Sekund...");
@@ -1997,15 +1967,14 @@ namespace Skanetrafiken.UpSalesMigration
 
                     try
                     {
-                        string fileName = "Spann 3 - subaccounts_2020-05-28.xlsx";
-
                         crmContext.ClearChanges();
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload Bucket 3 of the Account Entity--------------");
 
-                        ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Accounts", fileName);
+                        string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Bucket3SubAccounts);
+                        ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
                         ImportSubAccountsRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Sending Batch of Accounts to Sekund...");
+                        Console.WriteLine("Sending Batch of Sub Accounts to Sekund...");
 
                         SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
                         LogCrmContextMultipleResponses(localContext, responses);
@@ -2029,15 +1998,14 @@ namespace Skanetrafiken.UpSalesMigration
 
                     try
                     {
-                        string fileName = "Upsales data clean 2020-05-25_kontakter.xlsx";
-
                         crmContext.ClearChanges();
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Contact Entity--------------");
 
-                        ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Contacts", fileName);
+                        string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Contacts);
+                        ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
                         ImportContactsRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Sending Batch of Accounts to Sekund...");
+                        Console.WriteLine("Sending Batch of Contacts to Sekund...");
 
                         SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
                         LogCrmContextMultipleResponses(localContext, responses);
@@ -2061,15 +2029,14 @@ namespace Skanetrafiken.UpSalesMigration
 
                     try
                     {
-                        string fileName = "Upsales data clean 2020-05-26_aktiviteter.xlsx";
-
                         crmContext.ClearChanges();
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Activities Entity--------------");
 
-                        ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Activities", fileName);
+                        string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Activities);
+                        ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
                         ImportActivitiesRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Sending Batch of Accounts to Sekund...");
+                        Console.WriteLine("Sending Batch of Activities to Sekund...");
 
                         SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
                         LogCrmContextMultipleResponses(localContext, responses);
@@ -2093,15 +2060,14 @@ namespace Skanetrafiken.UpSalesMigration
 
                     try
                     {
-                        string fileName = "Upsales data clean 2020-06-01_order.xlsx";
-
                         crmContext.ClearChanges();
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Orders Entity--------------");
 
-                        ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\Orders", fileName);
+                        string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Orders);
+                        ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
                         ImportOrdersRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Sending Batch of Accounts to Sekund...");
+                        Console.WriteLine("Sending Batch of Orders to Sekund...");
 
                         SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
                         LogCrmContextMultipleResponses(localContext, responses);
@@ -2123,14 +2089,15 @@ namespace Skanetrafiken.UpSalesMigration
 
                     #region Import Historical Data
 
+                    throw new NotImplementedException();
+
                     try
                     {
-                        string fileName = "Historical Data företag 2020-04-30.xlsx";
-
                         crmContext.ClearChanges();
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Historical Data Entity--------------");
 
-                        ImportExcelInfo importExcelInfo = HandleExcelInformation(relativeExcelPath + "\\HistoricalData", fileName);
+                        string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.HistoricalData);
+                        ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
                         ImportHistoricalDataRecords(localContext, crmContext, importExcelInfo);
 
                         Console.WriteLine("Sending Batch of Accounts to Sekund...");
@@ -2194,9 +2161,9 @@ namespace Skanetrafiken.UpSalesMigration
             }
             else
             {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"No Enviroment Selected.");
-                Console.WriteLine("No Enviroment Selected.");
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"No Enviroment Selected. No Changes were made.");
+                Console.WriteLine("ERROR: No Enviroment Selected.");
+                Console.ReadLine();
                 return;
             }
             
@@ -2204,15 +2171,25 @@ namespace Skanetrafiken.UpSalesMigration
             if (_service == null)
             {
                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"The CRM Service is null.");
-                Console.WriteLine("The CRM Service is null.");
+                Console.WriteLine("ERROR: The CRM Service is null.");
+                Console.ReadLine();
                 return;
             }
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"Sucessfully logged in.");
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"The CRM Service is not null.");
+            Console.WriteLine("The CRM Service is not null.");
 
             Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _service, null, new TracingService());
             CrmContext crmContext = new CrmContext(_service);
             SaveChangesOptions optionsChanges = SaveChangesOptions.ContinueOnError;
+
+            if(localContext == null || crmContext == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The CRM localContext or the CRM EarlyBound Context is null.");
+                Console.WriteLine("The CRM localContext or the CRM EarlyBound Context is null.");
+                Console.ReadLine();
+                return;
+            }
 
             string relativeExcelPath = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.ExcelRelativePath);
 
@@ -2221,9 +2198,6 @@ namespace Skanetrafiken.UpSalesMigration
             {
                 showMenu = MainMenu(localContext, crmContext, optionsChanges, relativeExcelPath);
             }
-
-            excelApp.Quit();
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
         }
     }
 }
