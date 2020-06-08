@@ -1023,19 +1023,64 @@ namespace Skanetrafiken.Crm.Controllers
                         HttpStatusCode.BadRequest);
                     }
 
-                    //Create a new Value Code before blocking the card through the API
                     EntityReference valueCodeGeneric = null;
 
-                    valueCodeGeneric = CreateGiftCardValueCode(localContext, getCardProperties.Amount, valueCode, travelCard, contact); //new version for new API
-
-                    //Validate that Value Code has been created
-                    if (valueCodeGeneric == null)
+                    try
                     {
-                        _log.Debug($"Value code was not created, abort process.");
+                        //Create a new Value Code before blocking the card through the API
+
+                        valueCodeGeneric = CreateGiftCardValueCode(localContext, getCardProperties.Amount, valueCode, travelCard, contact); //new version for new API
+
+                        //Validate that Value Code has been created
+                        if (valueCodeGeneric == null)
+                        {
+                            _log.Debug("CreateGiftCardValueCode returned null. Throwing exception!");
+                            throw new Exception(string.Format("Could not create Gift Card Value Code."));
+                            //_log.Debug($"Value code was not created, abort process.");
+                            //return ReturnApiMessage(threadId,
+                            //    ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                            //HttpStatusCode.BadRequest);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        //TODO: CallCancelOrder API
+                        ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
+                        FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+
+                        CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
+
+                        localContext.TracingService.Trace("\nJojoAPITest - Capture Order:");
+                        string apiStatusResponse = "";
+
+                        WebRequest requestCancelOrder = WebRequest.Create(string.Format("{0}cancelOrder/", settingEntity.ed_JojoCardDetailsAPI));
+
+                        requestCancelOrder.Headers.Add("Card-Number", getCardProperties.CardNumber);
+                        requestCancelOrder.Headers.Add("20", "*/*");
+                        requestCancelOrder.ContentLength = 0;
+                        requestCancelOrder.Method = "POST";
+
+                        var cancelOrderResponse = requestCancelOrder.GetResponse() as HttpWebResponse;
+
+                        if (cancelOrderResponse.StatusCode != HttpStatusCode.OK)
+                        {
+                            //Send bad request
+                            apiStatusResponse = "Could not Cancel Order!";
+                        }
+                        else
+                        {
+                            //We are done
+                            apiStatusResponse = "Order was canceled!";
+                        }
+
+                        _log.Debug($"Value code was not created, aborting process. Card Status: " + apiStatusResponse);
                         return ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                         HttpStatusCode.BadRequest);
                     }
+                    
 
                     //Call "Card Order API" to start the value code creation and travel card block process (requesting a block of the card)
                     var captureOrderResponse = ValueCodeHandler.CallCaptureOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);

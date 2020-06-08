@@ -2113,7 +2113,9 @@ namespace Skanetrafiken.Crm.Entities
                     }
                     else if (socseccontacts.Count > 1)
                     {
-                        throw new Exception(string.Format("multiple contacts found with the same social security number: {0}", customerInfo.SocialSecurityNumber));
+                        contact = socseccontacts[0];
+                        localContext.Trace($"Found multiple contacts by SocialSecurityNumber");
+                        //throw new Exception(string.Format("multiple contacts found with the same social security number: {0}", customerInfo.SocialSecurityNumber));
                     }
                     // Match by social security number END
                 }
