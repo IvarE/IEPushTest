@@ -1071,6 +1071,11 @@ namespace Skanetrafiken.Crm.Entities
             query.Criteria.AddCondition(Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active);
             query.Criteria.AddCondition(Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true);
 
+            if (!isCreate)
+            {
+                query.Criteria.AddCondition(Fields.ContactId, ConditionOperator.NotEqual, this.Id);
+            }
+
             var filterByEmail = new FilterExpression();
             query.Criteria.AddFilter(filterByEmail);
             filterByEmail.FilterOperator = LogicalOperator.Or;
