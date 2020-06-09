@@ -6,22 +6,22 @@
       <Value Profile="(Default)">C:\Users\Pedro\OneDrive\Ambiente de Trabalho\Skanetrafiken\Upsales Migration\</Value>
     </Setting>
     <Setting Name="Bucket1Accounts" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Accounts\Spann 1 - unika 2020-05-27-UTF8.csv</Value>
+      <Value Profile="(Default)">Accounts\Spann 1 - unika 2020-05-27.csv</Value>
     </Setting>
     <Setting Name="Bucket5Accounts" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Accounts\Spann 5 - nya datakällor 2020-05-25.csv</Value>
     </Setting>
     <Setting Name="Bucket3SubAccounts" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Accounts\Spann 3 - subaccounts_2020-05-28.csv</Value>
     </Setting>
     <Setting Name="Contacts" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Contacts\Upsales kontakter 2020-06-08.csv</Value>
     </Setting>
     <Setting Name="Activities" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Activities\Upsales aktiviteter 2020-06-08.csv</Value>
     </Setting>
     <Setting Name="Orders" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Orders\Upsales order 2020-06-08.csv</Value>
     </Setting>
     <Setting Name="HistoricalData" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />

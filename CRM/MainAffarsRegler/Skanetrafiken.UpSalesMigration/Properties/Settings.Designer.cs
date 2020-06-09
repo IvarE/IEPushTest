@@ -34,7 +34,7 @@ namespace Skanetrafiken.UpSalesMigration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Accounts\\Spann 1 - unika 2020-05-27-UTF8.csv")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Accounts\\Spann 1 - unika 2020-05-27.csv")]
         public string Bucket1Accounts {
             get {
                 return ((string)(this["Bucket1Accounts"]));
@@ -43,7 +43,7 @@ namespace Skanetrafiken.UpSalesMigration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Accounts\\Spann 5 - nya datakällor 2020-05-25.csv")]
         public string Bucket5Accounts {
             get {
                 return ((string)(this["Bucket5Accounts"]));
@@ -52,7 +52,7 @@ namespace Skanetrafiken.UpSalesMigration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Accounts\\Spann 3 - subaccounts_2020-05-28.csv")]
         public string Bucket3SubAccounts {
             get {
                 return ((string)(this["Bucket3SubAccounts"]));
@@ -61,7 +61,7 @@ namespace Skanetrafiken.UpSalesMigration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Contacts\\Upsales kontakter 2020-06-08.csv")]
         public string Contacts {
             get {
                 return ((string)(this["Contacts"]));
@@ -70,7 +70,7 @@ namespace Skanetrafiken.UpSalesMigration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Activities\\Upsales aktiviteter 2020-06-08.csv")]
         public string Activities {
             get {
                 return ((string)(this["Activities"]));
@@ -79,7 +79,7 @@ namespace Skanetrafiken.UpSalesMigration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Orders\\Upsales order 2020-06-08.csv")]
         public string Orders {
             get {
                 return ((string)(this["Orders"]));
