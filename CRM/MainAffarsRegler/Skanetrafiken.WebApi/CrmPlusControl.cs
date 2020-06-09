@@ -3838,6 +3838,114 @@ namespace Skanetrafiken.Crm.Controllers
         }
 
         /// <summary>
+        /// Finds Contact based on socialSecurityNumber and portalId. Updates Contact with new email. Returns ContactId of Contact.
+        /// </summary>
+        /// <param name="threadId"></param>
+        /// <param name="socialSecurityNumber"></param>
+        /// <param name="portalId"></param>
+        /// <param name="emailAddress"></param>
+        /// <returns></returns>
+        public static HttpResponseMessage SynchronizeContactData(int threadId, string socialSecurityNumber, string portalId, string emailAddress)
+        {
+            try
+            {
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+
+                // Cast the proxy client to the IOrganizationService interface.
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                {
+                    Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    // Get Contact(-s)
+                    QueryExpression contactQuery = new QueryExpression()
+                    {
+                        EntityName = ContactEntity.EntityLogicalName,
+                        ColumnSet = new ColumnSet(ContactEntity.Fields.ContactId, ContactEntity.Fields.EMailAddress1),
+                        Criteria =
+                        {
+                            Conditions =
+                            {
+                                new ConditionExpression(ContactEntity.Fields.ed_SocialSecurityNumberBlock, ConditionOperator.Equal, socialSecurityNumber),
+                                new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
+                                new ConditionExpression(ContactEntity.Fields.ed_BusinessContact, ConditionOperator.Equal, true)
+                            }
+                        },
+                        LinkEntities =
+                        {
+                            new LinkEntity()
+                            {
+                                LinkFromEntityName = ContactEntity.EntityLogicalName,
+                                LinkToEntityName = CompanyRoleEntity.EntityLogicalName,
+                                LinkFromAttributeName = ContactEntity.Fields.ContactId,
+                                LinkToAttributeName = CompanyRoleEntity.Fields.ed_Contact,
+                                EntityAlias = CompanyRoleEntity.EntityLogicalName,
+                                JoinOperator = JoinOperator.Inner,
+                                LinkCriteria =
+                                {
+                                    Conditions =
+                                    {
+                                        new ConditionExpression(CompanyRoleEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.ed_CompanyRoleState.Active)
+                                    }
+                                },
+
+                                LinkEntities =
+                                {
+                                    new LinkEntity()
+                                    {
+                                        LinkFromEntityName = CompanyRoleEntity.EntityLogicalName,
+                                        LinkToEntityName = AccountEntity.EntityLogicalName,
+                                        LinkFromAttributeName = CompanyRoleEntity.Fields.ed_Account,
+                                        LinkToAttributeName = AccountEntity.Fields.AccountId,
+                                        EntityAlias = AccountEntity.EntityLogicalName,
+                                        JoinOperator = JoinOperator.Inner,
+                                        LinkCriteria =
+                                        {
+                                            Conditions =
+                                            {
+                                                new ConditionExpression(AccountEntity.Fields.AccountNumber, ConditionOperator.Equal, portalId),
+                                                new ConditionExpression(AccountEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.AccountState.Active)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    };
+
+                    List<ContactEntity> contacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactQuery);
+                    ContactEntity contact = contacts.First();
+
+                    // Update Contact with new email
+                    if (contact.EMailAddress1.ToLower() != emailAddress.ToLower())
+                    {
+                        contact.EMailAddress1 = emailAddress;
+                        contact.ed_InformationSource = Generated.ed_informationsource.AdmAndraKund;
+                        XrmHelper.Update(localContext, contact);
+                    }
+
+                    // Return ContactId
+                    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.OK);
+                    rm.Content = new StringContent(contact.ContactId.ToString());
+                    return rm;
+                }
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
+            }
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="threadId"></param>

@@ -234,6 +234,20 @@ namespace Skanetrafiken.Crm
                 }
                 );
 
+            config.Routes.MapHttpRoute(
+                name: "SyncCosntact",
+                routeTemplate: "api/{controller}/SyncContact",
+                defaults: new
+                {
+                    action = "SyncContact"
+                },
+
+                constraints: new
+                {
+                    httpMethod = new HttpMethodConstraint(HttpMethod.Post)
+                }
+                );
+
             //See ValueCodeController.GetMaxAmountValueCode (Route is configured there)
             //config.Routes.MapHttpRoute(
             //    name: "GetMaxAmountValueCodes",
