@@ -3,7 +3,34 @@
   <Profiles />
   <Settings>
     <Setting Name="ExcelRelativePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Users\Pedro\OneDrive\Ambiente de Trabalho\Skanetrafiken\Upsales Migration</Value>
+      <Value Profile="(Default)">C:\Users\Pedro\OneDrive\Ambiente de Trabalho\Skanetrafiken\Upsales Migration\</Value>
+    </Setting>
+    <Setting Name="Bucket1Accounts" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Accounts\Spann 1 - unika 2020-05-27-UTF8.csv</Value>
+    </Setting>
+    <Setting Name="Bucket5Accounts" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Bucket3SubAccounts" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Contacts" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Activities" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Orders" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="HistoricalData" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DefaultOwner" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Kristina Paulsson</Value>
+    </Setting>
+    <Setting Name="DefaultCurrency" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Svensk krona</Value>
     </Setting>
   </Settings>
 </SettingsFile>

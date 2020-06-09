@@ -133,6 +133,7 @@
     <Compile Include="Entities\AsyncOperationEntity.cs" />
     <Compile Include="Entities\CgiCategoryDetailEntity.cs" />
     <Compile Include="Entities\CompanyRoleEntity.cs" />
+    <Compile Include="Entities\CurrencyEntity.cs" />
     <Compile Include="Entities\CustomerAddressEntity.cs" />
     <Compile Include="Entities\CampaignResponseEntity.cs" />
     <Compile Include="Entities\CreditOrderRowEntity.cs" />

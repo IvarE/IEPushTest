@@ -25,10 +25,91 @@ namespace Skanetrafiken.UpSalesMigration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Pedro\\OneDrive\\Ambiente de Trabalho\\Skanetrafiken\\Upsales Migration")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Pedro\\OneDrive\\Ambiente de Trabalho\\Skanetrafiken\\Upsales Migration\\")]
         public string ExcelRelativePath {
             get {
                 return ((string)(this["ExcelRelativePath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Accounts\\Spann 1 - unika 2020-05-27-UTF8.csv")]
+        public string Bucket1Accounts {
+            get {
+                return ((string)(this["Bucket1Accounts"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Bucket5Accounts {
+            get {
+                return ((string)(this["Bucket5Accounts"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Bucket3SubAccounts {
+            get {
+                return ((string)(this["Bucket3SubAccounts"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Contacts {
+            get {
+                return ((string)(this["Contacts"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Activities {
+            get {
+                return ((string)(this["Activities"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Orders {
+            get {
+                return ((string)(this["Orders"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HistoricalData {
+            get {
+                return ((string)(this["HistoricalData"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Kristina Paulsson")]
+        public string DefaultOwner {
+            get {
+                return ((string)(this["DefaultOwner"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Svensk krona")]
+        public string DefaultCurrency {
+            get {
+                return ((string)(this["DefaultCurrency"]));
             }
         }
     }

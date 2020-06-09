@@ -159,6 +159,212 @@ namespace Endeavor.Crm.UnitTest
             }
         }
 
+        [Test]
+        public void JojoAPITest2()
+        {
+            // Connect to the Organization service. 
+            // The using statement assures that the service proxy will be properly disposed.
+            using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+            {
+                // This statement is required to enable early-bound type support.
+                _serviceProxy.EnableProxyTypes();
+
+                Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
+
+                System.Diagnostics.Stopwatch _totalTimer = new System.Diagnostics.Stopwatch();
+                System.Diagnostics.Stopwatch _partTimer = new System.Diagnostics.Stopwatch();
+                _totalTimer.Restart();
+                _partTimer.Restart();
+
+                try
+                {
+                    //Test Get Card API
+
+                    //TravelCardEntity.HandleGetCard(localContext, "9999184389");
+                    //EntityReference valueCodeApprovalId = new EntityReference("", new Guid(""));
+                    //ValueCodeApprovalEntity valueCodeApproval = null;
+                    //if (valueCodeApprovalId != null)
+                    //{
+                    //    localContext.Trace($"(ExecuteCodeActivity) Retrieving Approval.");
+                    //    valueCodeApproval = XrmRetrieveHelper.Retrieve<ValueCodeApprovalEntity>(localContext, valueCodeApprovalId,
+                    //        new ColumnSet(true));
+                    //    localContext.Trace($"(ExecuteCodeActivity) Retrieving Approval finished.");
+                    //}
+
+                    EntityReference travelCardNumber = new EntityReference("cgi_travelcard", new Guid("04a00c1e-eba4-ea11-80f9-005056b61fff"));
+                    TravelCardEntity travelCard = null;
+                    if (travelCardNumber != null)
+                    {
+                        localContext.Trace($"(ExecuteCodeActivity) Retrieving Travel Card.");
+                        travelCard = XrmRetrieveHelper.Retrieve<TravelCardEntity>(localContext, travelCardNumber, new ColumnSet());
+                        localContext.Trace($"(ExecuteCodeActivity) Retrieving Travel Card finished.");
+                    }
+
+                    int validTo_Months = CgiSettingEntity.GetSettingInt(localContext, CgiSettingEntity.Fields.cgi_ValueCodeValidForMonths);//DateTime.Now.AddDays(365);
+                    DateTime validTo_Date = CgiSettingEntity.GetSettingDate(localContext, CgiSettingEntity.Fields.ed_ValueCodeValidDate).Date;
+
+                    DateTime validTo = DateTime.MinValue;
+                    if (validTo_Months == 0 && validTo_Date >= DateTime.Now.Date)
+                        validTo = validTo_Date;
+                    else if (validTo_Months > 0 && (validTo_Date == DateTime.MinValue || validTo_Date == DateTime.MaxValue))
+                        validTo = DateTime.Now.AddMonths(validTo_Months);
+                    else
+                        validTo = DateTime.Now.AddYears(1);
+
+                    var contact = new EntityReference("contact", new Guid("58fcc616-eba4-ea11-80f9-005056b61fff"));
+                    ContactEntity contactEntity = null;
+                    if (contact != null)
+                    {
+
+                        localContext.Trace($"(ExecuteCodeActivity) Retrieving Contact.");
+                        contactEntity = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, contact, new ColumnSet(
+                            ContactEntity.Fields.MobilePhone, ContactEntity.Fields.EMailAddress1));
+                        localContext.Trace($"(ExecuteCodeActivity) Retrieving Contact finished.");
+                    }
+
+                    EntityReference lead = null;
+                    int voucherType = 2;
+                    string email = "christian.kangaji@testmore.se";
+                    var amount = (float)0.0;
+                    int deliveryType = 1;
+
+                    var valueCodeResponse = CreateValueCodeGeneric(localContext, deliveryType, validTo, amount, 0,
+                    Generated.ed_valuecode_ed_typeoption.Email, null, voucherType, contactEntity, string.Empty, email, null, null, null, travelCard);
+                    //-----------------
+                    //string result = string.Empty;
+
+                    ////Get API Endpoint from Setting Entity
+                    //FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                    //settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+
+                    //CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
+
+                    //localContext.TracingService.Trace("TotalTime elapsed: {0}. Since last reset: {1}", _totalTimer.ElapsedMilliseconds, _partTimer.ElapsedMilliseconds);
+                    //_partTimer.Restart();
+
+                    ////Get Card
+                    //localContext.TracingService.Trace("\nJojoAPITest - get Card:");
+
+                    //var getCardRequest = WebRequest.Create(string.Format("{0}card/", settingEntity.ed_JojoCardDetailsAPI));
+
+                    //getCardRequest.Headers.Add("Card-Number", "9999184389");
+                    //getCardRequest.Headers.Add("20", "*/*");
+
+                    //getCardRequest.Method = "GET";
+
+                    //using (WebResponse getCardResponse = getCardRequest.GetResponse())
+                    //{
+                    //    var checkStatus = (HttpWebResponse)getCardResponse;
+                    //    if (checkStatus.StatusCode != HttpStatusCode.OK)
+                    //    {
+                    //        //Bad Request
+                    //        var felfelfel = "";
+                    //    }
+                    //    else
+                    //    {
+                    //        using (Stream stream = getCardResponse.GetResponseStream())
+                    //        {
+                    //            using (StreamReader streamReader = new StreamReader(stream, Encoding.UTF8))
+                    //            {
+
+                    //                var jsonResponse = streamReader.ReadToEnd();
+
+                    //                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(ValueCodeHandler.GetCardProperties));
+                    //                MemoryStream streamMemory = new MemoryStream(Encoding.UTF8.GetBytes(jsonResponse));
+                    //                streamMemory.Position = 0;
+
+                    //                ValueCodeHandler.GetCardProperties getCardProperties = (ValueCodeHandler.GetCardProperties)jsonSerializer.ReadObject(streamMemory);
+                    //                streamMemory.Close();
+                    //                if (getCardProperties != null)
+                    //                {
+                    //                    //Return this information
+                    //                    var hello = "";
+                    //                }
+                    //                else
+                    //                {
+                    //                    //bad
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
+
+                    ////Place Order
+                    //localContext.TracingService.Trace("\nJojoAPITest - Place Order:");
+                    //WebRequest request = WebRequest.Create(string.Format("{0}placeOrder", settingEntity.ed_JojoCardDetailsAPI));
+
+                    //request.Headers.Add("Card-Number", "9999184385");
+                    //request.Headers.Add("20", "*/*");
+                    //request.ContentLength = 0;
+                    //request.Method = "POST";
+
+                    //using (WebResponse placeOrderResponse = request.GetResponse())
+                    //{
+                    //    var checkStatus = (HttpWebResponse)placeOrderResponse;
+                    //    if (checkStatus.StatusCode != HttpStatusCode.OK)
+                    //    {
+                    //        //Bad Request
+                    //        var felfel = "";
+                    //    }
+                    //    else
+                    //    {
+                    //        using (Stream stream = placeOrderResponse.GetResponseStream())
+                    //        {
+                    //            using (StreamReader streamReader = new StreamReader(stream, Encoding.UTF8))
+                    //            {
+
+                    //                var jsonResponse = streamReader.ReadToEnd();
+
+                    //                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(ValueCodeHandler.GetCardProperties));
+                    //                MemoryStream streamMemory = new MemoryStream(Encoding.UTF8.GetBytes(jsonResponse));
+                    //                streamMemory.Position = 0;
+
+                    //                ValueCodeHandler.GetCardProperties getCardProperties = (ValueCodeHandler.GetCardProperties)jsonSerializer.ReadObject(streamMemory);
+                    //                streamMemory.Close();
+
+                    //                if (getCardProperties != null)
+                    //                {
+                    //                    var hello = "";
+                    //                }
+                    //                else
+                    //                {
+
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
+
+                    ////Capture Order
+                    //localContext.TracingService.Trace("\nJojoAPITest - Capture Order:");
+
+                    //WebRequest requestCaptureOrder = WebRequest.Create(string.Format("{0}captureOrder/", settingEntity.ed_JojoCardDetailsAPI));
+
+                    //requestCaptureOrder.Headers.Add("Card-Number", "9999184385");
+                    //requestCaptureOrder.Headers.Add("20", "*/*");
+                    //requestCaptureOrder.ContentLength = 0;
+                    //requestCaptureOrder.Method = "POST";
+
+                    //var captureOrderResponse = requestCaptureOrder.GetResponse() as HttpWebResponse;
+
+                    //if (captureOrderResponse.StatusCode != HttpStatusCode.OK)
+                    //{
+                    //    //Send bad request
+                    //    var fel = "";
+                    //}
+                    //else
+                    //{
+                    //    //We are done
+                    //    var nice = "";
+                    //}
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.Message);
+                }
+            }
+        }
+
 
         [Test]
         public void TestResendValueCode()
