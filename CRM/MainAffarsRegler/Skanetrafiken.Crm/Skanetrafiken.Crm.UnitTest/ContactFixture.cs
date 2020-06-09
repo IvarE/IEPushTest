@@ -399,6 +399,35 @@ namespace Endeavor.Crm.UnitTest
             }
         }
 
+        [Test, Category("Debug")]
+        public void ValidateDuplicatesByContactType_Debug()
+        {
+            // Connect to the Organization service. 
+            // The using statement assures that the service proxy will be properly disposed.
+            using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+            {
+                // This statement is required to enable early-bound type support.
+                _serviceProxy.EnableProxyTypes();
+
+                Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
+
+
+                //ContactEntity contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, new Guid("d1fefc59-7ba6-e611-8112-00155d0a6b01"), new ColumnSet(false));
+                ContactEntity target = new ContactEntity()
+                {
+                    //ed_PrivateCustomerContact = true,
+                    FirstName = "Rafael",
+                    LastName = "Silva",
+                    cgi_socialsecuritynumber = "202006091348",
+                    ed_InfotainmentContact = true
+                    //EMailAddress1 = "rafa3@email.pt",
+                    //EMailAddress2 = "rafa@email.pt"
+                };
+
+                target.ValidateDuplicatesByContactType(localContext, true);
+            }
+        }
+
         public static ContactEntity CreateUnitTestContact(Plugin.LocalPluginContext localContext, Generated.ed_informationsource source)
         {
             ContactEntity contact = BuildUnitTestContactNoCreate(localContext, source);

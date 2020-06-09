@@ -60,7 +60,10 @@ namespace Skanetrafiken.Crm.Entities
             ContactEntity.Fields.ed_SeniorContact,
             ContactEntity.Fields.ed_AgentContact,
             ContactEntity.Fields.ed_SocialSecurityNumberBlock,
-            ContactEntity.Fields.CreatedOn);
+            ContactEntity.Fields.CreatedOn,
+            ContactEntity.Fields.ed_CollaborationContact,
+            ContactEntity.Fields.ed_Reseller
+                );
 
 
         public ContactEntity()
@@ -118,8 +121,8 @@ namespace Skanetrafiken.Crm.Entities
                         this.Address1_PostalCode = customerInfo.AddressBlock.PostalCode;
                     }
                 }
-                else if ((customerInfo.Source == (int)Generated.ed_informationsource.ForetagsPortal || 
-                    customerInfo.Source == (int)Generated.ed_informationsource.SkolPortal || 
+                else if ((customerInfo.Source == (int)Generated.ed_informationsource.ForetagsPortal ||
+                    customerInfo.Source == (int)Generated.ed_informationsource.SkolPortal ||
                     customerInfo.Source == (int)Generated.ed_informationsource.SeniorPortal) && (feature == null || (feature != null && feature.ed_SplittCompany == false))) //Old Logic
                 {
                     if (!string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Telephone))
@@ -877,8 +880,10 @@ namespace Skanetrafiken.Crm.Entities
                 throw new InvalidPluginExecutionException(errorMess);
             }
 
+            //[2020-09-06]: Added validaton by contact Type
+            bool wasAlreadyValidated = ValidateDuplicatesByContactType(localContext, true);
 
-            if (this.ed_InformationSource == Generated.ed_informationsource.AdmSkapaKund)
+            if (this.ed_InformationSource == Generated.ed_informationsource.AdmSkapaKund && wasAlreadyValidated == false)
             {
                 if (!Contains(ContactEntity.Fields.EMailAddress1) && !string.IsNullOrWhiteSpace(this.EMailAddress1))
                     throw new Exception(Properties.Resources.AdminCantCreateValidatedContact);
@@ -992,14 +997,134 @@ namespace Skanetrafiken.Crm.Entities
             if (ed_InformationSource == Generated.ed_informationsource.BytEpost && ed_EmailToBeVerified == ContactEntity._NEWEMAILDONE)
                 ed_EmailToBeVerified = null;
 
+            //[2020-09-06]: Added validaton by contact Type
+            bool wasAlreadyValidated = ValidateDuplicatesByContactType(localContext, false, combined);
+
             // Validera dubletter.
-            if (combined.ed_InformationSource == Generated.ed_informationsource.AdmAndraKund)
+            if (combined.ed_InformationSource == Generated.ed_informationsource.AdmAndraKund && wasAlreadyValidated == false)
             {
                 combined.VerifyNoDuplicates(localContext, Generated.ed_informationsource.AdmAndraKund);
             }
-            if (combined.ed_InformationSource == Generated.ed_informationsource.Folkbokforing)
+            if (combined.ed_InformationSource == Generated.ed_informationsource.Folkbokforing && wasAlreadyValidated == false)
             {
                 combined.VerifyNoDuplicates(localContext, Generated.ed_informationsource.Folkbokforing);
+            }
+        }
+
+        public bool ValidateDuplicatesByContactType(Plugin.LocalPluginContext localContext, bool isCreate, ContactEntity combined = null)
+        {
+            bool wasAlreadyValidated = false;
+            localContext.Trace("Start ValidateDuplicatesByContactType");
+            ContactEntity contactToProcess = combined != null ? combined : this;
+
+            ColumnSet contactTypeFields = new ColumnSet(
+                ContactEntity.Fields.ed_CollaborationContact,
+                ContactEntity.Fields.ed_AgentContact,
+                ContactEntity.Fields.ed_Reseller,
+                ContactEntity.Fields.ed_BusinessContact,
+                ContactEntity.Fields.ed_SchoolContact,
+                ContactEntity.Fields.ed_SeniorContact,
+                ContactEntity.Fields.ed_InfotainmentContact,
+                ContactEntity.Fields.ed_PrivateCustomerContact,
+                ContactEntity.Fields.EMailAddress1,
+                ContactEntity.Fields.EMailAddress2,
+                ContactEntity.Fields.cgi_socialsecuritynumber
+                );
+
+            if (!this.Attributes.Any(x => contactTypeFields.Columns.Any(y => y == x.Key)))
+            {
+                localContext.Trace("Target does not contains any Type field. Return...");
+                return wasAlreadyValidated;
+            }
+
+            if (
+                contactToProcess.ed_PrivateCustomerContact == true &&
+                (!string.IsNullOrEmpty(contactToProcess.EMailAddress1) || !string.IsNullOrEmpty(contactToProcess.EMailAddress2)
+                ))
+            {
+                localContext.Trace("CheckPrivateContactsByEmail");
+                CheckPrivateContactsByEmail(localContext, contactToProcess.EMailAddress1, contactToProcess.EMailAddress2, isCreate);
+                //Should not validate again through old functionality
+                wasAlreadyValidated = true;
+            }
+            else if (!string.IsNullOrEmpty(contactToProcess.cgi_socialsecuritynumber) && 
+                (contactToProcess.ed_CollaborationContact == true || contactToProcess.ed_AgentContact == true ||
+                contactToProcess.ed_Reseller == true || contactToProcess.ed_BusinessContact == true ||
+                contactToProcess.ed_SchoolContact == true || contactToProcess.ed_SeniorContact == true ||
+                contactToProcess.ed_InfotainmentContact == true))
+            {
+                localContext.Trace("CheckContactsBySocialSecurityNumber");
+                CheckContactsBySocialSecurityNumber(localContext, contactToProcess.cgi_socialsecuritynumber, isCreate);
+                //Should still validate through old functionality
+                wasAlreadyValidated = false;
+            }
+
+            localContext.Trace("End ValidateDuplicatesByContactType");
+            return wasAlreadyValidated;
+        }
+
+        private void CheckPrivateContactsByEmail(Plugin.LocalPluginContext localContext, string email1, string email2, bool isCreate)
+        {
+            QueryExpression query = new QueryExpression(LogicalName);
+            query.NoLock = true;
+            query.ColumnSet.AddColumn(Fields.ContactId);
+            query.Criteria.AddCondition(Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active);
+            query.Criteria.AddCondition(Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true);
+
+            var filterByEmail = new FilterExpression();
+            query.Criteria.AddFilter(filterByEmail);
+            filterByEmail.FilterOperator = LogicalOperator.Or;
+
+            if (!string.IsNullOrEmpty(email1))
+            {
+                var filterByEmail1 = new FilterExpression();
+                filterByEmail.AddFilter(filterByEmail1);
+
+                // Define filter QEcontact_Criteria_0_0
+                filterByEmail1.FilterOperator = LogicalOperator.Or;
+                filterByEmail1.AddCondition(Fields.EMailAddress1, ConditionOperator.Equal, email1);
+                filterByEmail1.AddCondition(Fields.EMailAddress2, ConditionOperator.Equal, email1);
+            }
+
+            if (!string.IsNullOrEmpty(email2))
+            {
+                var filterByEmail2 = new FilterExpression();
+                filterByEmail.AddFilter(filterByEmail2);
+
+                filterByEmail2.FilterOperator = LogicalOperator.Or;
+                filterByEmail2.AddCondition(Fields.EMailAddress1, ConditionOperator.Equal, email2);
+                filterByEmail2.AddCondition(Fields.EMailAddress2, ConditionOperator.Equal, email2);
+            }
+
+            ContactEntity duplicate = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, query);
+
+            if (duplicate != null)
+            {
+
+                throw new InvalidPluginExecutionException(
+                    isCreate ?
+                    string.Format(Properties.Resources.CouldNotCreateCustomerEmail) :
+                    string.Format(Properties.Resources.CouldNotUpdateCustomerEmail));
+            }
+        }
+
+        private void CheckContactsBySocialSecurityNumber(Plugin.LocalPluginContext localContext, string socialNumber, bool isCreate)
+        {
+            QueryExpression query = new QueryExpression(LogicalName);
+            query.NoLock = true;
+            query.ColumnSet.AddColumn(Fields.ContactId);
+            query.Criteria.AddCondition(Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active);
+            query.Criteria.AddCondition(Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, socialNumber);
+
+            ContactEntity duplicate = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, query);
+
+            if (duplicate != null)
+            {
+
+                throw new InvalidPluginExecutionException(
+                    isCreate ?
+                    string.Format(Properties.Resources.CouldNotCreateCustomerSocSec) :
+                    string.Format(Properties.Resources.CouldNotUpdateContactSocialSecurityConflict));
             }
         }
 
@@ -1588,7 +1713,7 @@ namespace Skanetrafiken.Crm.Entities
                 });
             return userInRole != null;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -1642,8 +1767,8 @@ namespace Skanetrafiken.Crm.Entities
                 }
             }
             //FÖRETAGSKUND FTG/SKOLA
-            else if (customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal || 
-                customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.SkolPortal || 
+            else if (customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal ||
+                customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.SkolPortal ||
                 customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.SeniorPortal)
             {
                 //4. Kontrollera ifall cotact har en "Role" värde, om inte - uppdatera till antingen admin.FTG/admin.SKOL/Admin.Senior
@@ -1669,7 +1794,7 @@ namespace Skanetrafiken.Crm.Entities
                         contact.ed_BusinessContact = true;
                         contact.AccountRoleCode = Generated.contact_accountrolecode.PortalAdministratorFTG;
                     }
-                    
+
                     // Create new Portal Customer
                     contact.Id = XrmHelper.Create(localContext.OrganizationService, contact);
                 }
@@ -1718,10 +1843,11 @@ namespace Skanetrafiken.Crm.Entities
                             // Create new Portal Customer
                             contact.Id = XrmHelper.Create(localContext.OrganizationService, contact);
                         }
-                        else {
+                        else
+                        {
                             throw new BadRequestException($"Did not find account with AccountNumber {customerInfo.CompanyRole[0].PortalId}.");
                         }
-                        
+
                     }
                 }
             }
@@ -1879,13 +2005,13 @@ namespace Skanetrafiken.Crm.Entities
                 }
 
                 // Has Email changed?
-                if(!string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Email) && this.EMailAddress1 != customerInfo.CompanyRole[0].Email)
+                if (!string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Email) && this.EMailAddress1 != customerInfo.CompanyRole[0].Email)
                 {
                     this.EMailAddress1 = customerInfo.CompanyRole[0].Email;
                     updateContact.EMailAddress1 = customerInfo.CompanyRole[0].Email;
                     updated = true;
                 }
-                
+
                 if (customerInfo.isLockedPortalSpecified && this.ed_isLockedPortal != customerInfo.isLockedPortal)
                 {
                     this.ed_isLockedPortal = customerInfo.isLockedPortal;
@@ -2366,7 +2492,7 @@ namespace Skanetrafiken.Crm.Entities
                     }
                 }
 
-                
+
             }
             #endregion
 
