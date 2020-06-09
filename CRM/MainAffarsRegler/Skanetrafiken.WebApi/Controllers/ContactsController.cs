@@ -104,7 +104,7 @@ namespace Skanetrafiken.Crm.Controllers
             _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
             return resp;
         }
-
+        
         /// <summary>
         /// Controller used for create customers of different types
         /// </summary>
