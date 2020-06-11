@@ -57,12 +57,13 @@ namespace Skanetrafiken.UpSalesMigration
 
         public static string cleanMobileTelefon(string value)
         {
-            return value.Replace("+", "").Replace("(", "").Replace(")", "").Replace("-", "").Replace("'", "").Replace(" ", "").Replace("–", "");
+            return value.Replace("+", "").Replace("(", "").Replace(")", "").Replace("-", "").Replace("'", "").Replace(" ", "").Replace("–", "").Replace("/","").Replace(":","").Replace("Mobil", "");
         }
 
         public static string getSubString(string value, int max)
         {
-            return value.Length > max ? value.Substring(0, max - 1) : value;
+            string cleanValue = System.Text.RegularExpressions.Regex.Unescape(value);
+            return cleanValue.Length > max ? cleanValue.Substring(0, max - 1) : cleanValue;
         }
 
         public static string getCleanToValue(string value)
@@ -75,6 +76,21 @@ namespace Skanetrafiken.UpSalesMigration
             }
 
             return value;
+        }
+
+        public static bool GetParsingStatus(ImportExcelInfo importExcelInfo)
+        {
+            if (importExcelInfo == null)
+                return true;
+
+            int nColumns = importExcelInfo.lColumns.Count;
+
+            List<List<ExcelLineData>> lAux = importExcelInfo.lData.Where(x => x.Count != nColumns).ToList();
+
+            if (lAux.Count == 0)
+                return true;
+            else
+                return false;
         }
 
         public static ExcelColumn GetSelectedExcelColumn(List<ExcelColumn> lColumns, int j)
@@ -590,7 +606,7 @@ namespace Skanetrafiken.UpSalesMigration
                             nPhoneCall.RegardingObjectId = erAccount;
                         }
                         else
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " was not found. The PhoneCall on line " + (i+2) + " will be ignored.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " was not found. The PhoneCall on line " + (i + 1) + " will be ignored.");
 
                         break;
                     case "Contact U-ID":
@@ -757,7 +773,7 @@ namespace Skanetrafiken.UpSalesMigration
                             nEmail.RegardingObjectId = erAccount;
                         }
                         else
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " was not found. The Email on line " + (i+2) + " will be ignored.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " was not found. The Email on line " + (i + 1) + " will be ignored.");
 
                         break;
                     case "Contact U-ID":
@@ -925,7 +941,7 @@ namespace Skanetrafiken.UpSalesMigration
                             nAppointment.RegardingObjectId = erAccount;
                         }
                         else
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " was not found. The Appointment on line " + (i + 2) + " will be ignored.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " was not found. The Appointment on line " + (i + 1) + " will be ignored.");
 
                         break;
                     case "Contact U-ID":
@@ -1063,7 +1079,13 @@ namespace Skanetrafiken.UpSalesMigration
                         Account nAccount = new Account();
                         List<ExcelLineData> line = importExcelInfo.lData[i];
 
-                        for (int j = 1; j <= importExcelInfo.lColumns.Count; j++)
+                        if(line.Count != importExcelInfo.lColumns.Count)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The line " + (i + 1) + " was not imported, because the data count is not equal to the column count.");
+                            continue;
+                        }
+
+                        for (int j = 0; j < importExcelInfo.lColumns.Count; j++)
                         {
                             ExcelLineData selectedData = line[j];
 
@@ -1240,7 +1262,13 @@ namespace Skanetrafiken.UpSalesMigration
                         Account nSubAccount = new Account();
                         List<ExcelLineData> line = importExcelInfo.lData[i];
 
-                        for (int j = 1; j <= importExcelInfo.lColumns.Count; j++)
+                        if (line.Count != importExcelInfo.lColumns.Count)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The line " + (i + 1) + " was not imported, because the data count is not equal to the column count.");
+                            continue;
+                        }
+
+                        for (int j = 0; j < importExcelInfo.lColumns.Count; j++)
                         {
                             ExcelLineData selectedData = line[j];
 
@@ -1338,6 +1366,7 @@ namespace Skanetrafiken.UpSalesMigration
             }
 
             List<Account> lAddedAccounts = new List<Account>();
+            List<Account> lPrimaryContactAccounts = new List<Account>();
 
             Console.Write("Creating Batch of Contacts... ");
             using (ProgressBar progress = new ProgressBar())
@@ -1352,6 +1381,12 @@ namespace Skanetrafiken.UpSalesMigration
 
                         Contact nContact = new Contact();
                         List<ExcelLineData> line = importExcelInfo.lData[i];
+
+                        if (line.Count != importExcelInfo.lColumns.Count)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The line " + (i + 1) + " was not imported, because the data count is not equal to the column count.");
+                            continue;
+                        }
 
                         for (int j = 0; j < importExcelInfo.lColumns.Count; j++)
                         {
@@ -1398,7 +1433,7 @@ namespace Skanetrafiken.UpSalesMigration
                                         }
                                     }
                                     else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Customer with Upsales Id: " + value + " was not found. The Contact on line " + (i+2) + " will be ignored.");
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Customer with Upsales Id: " + value + " was not found. The Contact on line " + (i + 1) + " will be ignored.");
 
                                     break;
                                 case "Contact U-ID":
@@ -1520,12 +1555,18 @@ namespace Skanetrafiken.UpSalesMigration
                                     List<Account> accountAdded = lAddedAccounts.Where(x => x.Id == eParentAccount.Id).ToList();
 
                                     if (!crmContext.IsAttached(eParentAccount) && accountAdded.Count == 0)
+                                    {
                                         crmContext.Attach(eParentAccount);
+                                        lAddedAccounts.Add(eParentAccount);
+                                    }
 
                                     if (!crmContext.IsAttached(nContact))
                                         crmContext.Attach(nContact);
 
-                                    crmContext.AddLink(eParentAccount, new Relationship(rel_contact_account), nContact);
+                                    if(accountAdded.Count == 0)
+                                        crmContext.AddLink(eParentAccount, new Relationship(rel_contact_account), nContact);
+                                    else
+                                        crmContext.AddLink(accountAdded.FirstOrDefault(), new Relationship(rel_contact_account), nContact);
 
                                     _log.InfoFormat(CultureInfo.InvariantCulture, $"A Request has been created for the Account " + eParentAccount.Id + " to be updated with Contact " + nContact.FirstName + " " + nContact.LastName + " as it's Primary Contact.");
                                 }
@@ -1580,6 +1621,13 @@ namespace Skanetrafiken.UpSalesMigration
 
                         int j = activityTypeColumn.index;
                         List<ExcelLineData> line = importExcelInfo.lData[i];
+
+                        if (line.Count != importExcelInfo.lColumns.Count)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The line " + (i + 1) + " was not imported, because the data count is not equal to the column count.");
+                            continue;
+                        }
+
                         ExcelLineData selectedData = line[j];
 
                         if (selectedData == null)
@@ -1665,6 +1713,12 @@ namespace Skanetrafiken.UpSalesMigration
 
                         List<ExcelLineData> line = importExcelInfo.lData[i];
 
+                        if (line.Count != importExcelInfo.lColumns.Count)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The line " + (i + 1) + " was not imported, because the data count is not equal to the column count.");
+                            continue;
+                        }
+
                         for (int j = 0; j < importExcelInfo.lColumns.Count; j++)
                         {
                             ExcelLineData selectedData = line[j];
@@ -1701,7 +1755,7 @@ namespace Skanetrafiken.UpSalesMigration
                                         nOrder.CustomerId = erAccount;
                                     }
                                     else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Customer with Upsales Id: " + value + " was not found. The Order on line " + i + " will be ignored.");
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Customer with Upsales Id: " + value + " was not found. The Order on line " + (i + 1) + " will be ignored.");
 
                                     break;
                                 case "Contact: U-ID":
@@ -1910,14 +1964,23 @@ namespace Skanetrafiken.UpSalesMigration
 
                         string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Bucket1Accounts);
                         ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
-                        ImportAccountRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Sending Batch of Accounts to Sekund...");
+                        bool isParsingOk = GetParsingStatus(importExcelInfo);
 
-                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        LogCrmContextMultipleResponses(localContext, responses);
+                        if (isParsingOk)
+                        {
+                            ImportAccountRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Batch Sent. Please check logs.");
+                            Console.WriteLine("Sending Batch of Accounts to Sekund...");
+
+                            SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                            LogCrmContextMultipleResponses(localContext, responses);
+
+                            Console.WriteLine("Batch Sent. Please check logs.");
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
+
 
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload Bucket 1 of the Account Entity--------------");
                     }
@@ -1941,14 +2004,22 @@ namespace Skanetrafiken.UpSalesMigration
 
                         string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Bucket5Accounts);
                         ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
-                        ImportAccountRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Sending Batch of Accounts to Sekund...");
+                        bool isParsingOk = GetParsingStatus(importExcelInfo);
 
-                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        LogCrmContextMultipleResponses(localContext, responses);
+                        if (isParsingOk)
+                        {
+                            ImportAccountRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Batch Sent. Please check logs.");
+                            Console.WriteLine("Sending Batch of Accounts to Sekund...");
+
+                            SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                            LogCrmContextMultipleResponses(localContext, responses);
+
+                            Console.WriteLine("Batch Sent. Please check logs.");
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
 
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload Bucket 5 of the Account Entity--------------");
                     }
@@ -1972,14 +2043,23 @@ namespace Skanetrafiken.UpSalesMigration
 
                         string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Bucket3SubAccounts);
                         ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
-                        ImportSubAccountsRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Sending Batch of Sub Accounts to Sekund...");
+                        bool isParsingOk = GetParsingStatus(importExcelInfo);
 
-                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        LogCrmContextMultipleResponses(localContext, responses);
+                        if (isParsingOk)
+                        {
+                            ImportSubAccountsRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Batch Sent. Please check logs.");
+                            Console.WriteLine("Sending Batch of Sub Accounts to Sekund...");
+
+                            SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                            LogCrmContextMultipleResponses(localContext, responses);
+
+                            Console.WriteLine("Batch Sent. Please check logs.");
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
+
 
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload Bucket 3 of the Account Entity--------------");
                     }
@@ -2003,14 +2083,22 @@ namespace Skanetrafiken.UpSalesMigration
 
                         string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Contacts);
                         ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
-                        ImportContactsRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Sending Batch of Contacts to Sekund...");
+                        bool isParsingOk = GetParsingStatus(importExcelInfo);
 
-                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        LogCrmContextMultipleResponses(localContext, responses);
+                        if (isParsingOk)
+                        {
+                            ImportContactsRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Batch Sent. Please check logs.");
+                            Console.WriteLine("Sending Batch of Contacts to Sekund...");
+
+                            SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                            LogCrmContextMultipleResponses(localContext, responses);
+
+                            Console.WriteLine("Batch Sent. Please check logs.");
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
 
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Contact Entity--------------");
                     }
@@ -2034,14 +2122,22 @@ namespace Skanetrafiken.UpSalesMigration
 
                         string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Activities);
                         ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
-                        ImportActivitiesRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Sending Batch of Activities to Sekund...");
+                        bool isParsingOk = GetParsingStatus(importExcelInfo);
 
-                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        LogCrmContextMultipleResponses(localContext, responses);
+                        if (isParsingOk)
+                        {
+                            ImportActivitiesRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Batch Sent. Please check logs.");
+                            Console.WriteLine("Sending Batch of Activities to Sekund...");
+
+                            SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                            LogCrmContextMultipleResponses(localContext, responses);
+
+                            Console.WriteLine("Batch Sent. Please check logs.");
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
 
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Activities Entity--------------");
                     }
@@ -2065,14 +2161,22 @@ namespace Skanetrafiken.UpSalesMigration
 
                         string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Orders);
                         ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
-                        ImportOrdersRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Sending Batch of Orders to Sekund...");
+                        bool isParsingOk = GetParsingStatus(importExcelInfo);
 
-                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        LogCrmContextMultipleResponses(localContext, responses);
+                        if (isParsingOk)
+                        {
+                            ImportOrdersRecords(localContext, crmContext, importExcelInfo);
 
-                        Console.WriteLine("Batch Sent. Please check logs.");
+                            Console.WriteLine("Sending Batch of Orders to Sekund...");
+
+                            SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                            LogCrmContextMultipleResponses(localContext, responses);
+
+                            Console.WriteLine("Batch Sent. Please check logs.");
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
 
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Orders Entity--------------");
                     }
