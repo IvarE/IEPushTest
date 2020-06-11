@@ -4052,11 +4052,11 @@ namespace Skanetrafiken.Crm.Controllers
                                     new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
                                     new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, contact.ed_EmailToBeVerified),
                                     //new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, contact.MobilePhone),
-                                    (contact.MobilePhone != null) ? new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, contact.MobilePhone) : new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Null),
+                                    //(contact.MobilePhone != null) ? new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, contact.MobilePhone) : new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Null),
                                     //new ConditionExpression(ContactEntity.Fields.FirstName, ConditionOperator.Equal, contact.FirstName),
                                     //new ConditionExpression(ContactEntity.Fields.LastName, ConditionOperator.Equal, contact.LastName),
                                     new ConditionExpression(ContactEntity.Fields.Id, ConditionOperator.NotEqual, contact.Id),
-                                    new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.NotEqual, true)
+                                    new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true)
                                 }
                             };
                             conflictFilter.AddFilter(mailFilter);
@@ -4374,56 +4374,63 @@ namespace Skanetrafiken.Crm.Controllers
                             if (conflictContacts.Count > 0)
                             {
 
-                                _log.DebugFormat($"Th={threadId} - Found one or more conflicting Contacts with the same EMailAddress / Telephone.");
-                                HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                respMess.Content = new StringContent("Found one or more conflicting Contacts with the same EMailAddress / Telephone.");
-                                return respMess;
+                                //_log.DebugFormat($"Th={threadId} - Found one or more conflicting Contacts with the same EMailAddress / Telephone.");
+                                //HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                //respMess.Content = new StringContent("Found one or more conflicting Contacts with the same EMailAddress / Telephone.");
+                                //return respMess;
 
                                 //ContactEntity socialSecurityConflict = null;
-                                //ContactEntity emailAddress1Conflict = null;
+                                ContactEntity emailAddress1Conflict = null;
 
-                                //foreach (ContactEntity c in conflictContacts)
-                                //{
-                                //    // 2020-02-19 - Marcus Stenswed
-                                //    // Remove conflicting SSN (New Business Rules)
-                                //    /*if (lead.ed_Personnummer != null && lead.ed_Personnummer.Equals(c.cgi_socialsecuritynumber))
-                                //    {
-                                //        if (socialSecurityConflict == null)
-                                //        {
-                                //            _log.DebugFormat($"Th={threadId} - Found Contact matching on social security number.");
-                                //            socialSecurityConflict = c;
-                                //        }
-                                //        else
-                                //        {
-                                //            _log.DebugFormat($"Th={threadId} - Multiple conflicting Contacts with the same socialSecurityNumber were found.");
-                                //            HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                //            respMess.Content = new StringContent(Resources.MultipleSocSecConflictsFound);
-                                //            return respMess;
-                                //        }
-                                //    }
-                                //    else */
-                                //    if (lead.EMailAddress1 != null && lead.EMailAddress1.Equals(c.EMailAddress1))
-                                //    {
-                                //        if (emailAddress1Conflict == null)
-                                //        {
-                                //            _log.DebugFormat($"Th={threadId} - Found Contact matching on emailaddress1.");
-                                //            emailAddress1Conflict = c;
-                                //        }
-                                //        else
-                                //        {
-                                //            _log.DebugFormat($"Th={threadId} - Multiple conflicting Contacts with the same EMailAddress1 were found.");
-                                //            HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                //            respMess.Content = new StringContent("Found multiple Contacts with the same first-/lastname and email");
-                                //            return respMess;
-                                //        }
-                                //    }
-                                //}
+                                foreach (ContactEntity c in conflictContacts)
+                                {
+                                    // 2020-02-19 - Marcus Stenswed
+                                    // Remove conflicting SSN (New Business Rules)
+                                    /*if (lead.ed_Personnummer != null && lead.ed_Personnummer.Equals(c.cgi_socialsecuritynumber))
+                                    {
+                                        if (socialSecurityConflict == null)
+                                        {
+                                            _log.DebugFormat($"Th={threadId} - Found Contact matching on social security number.");
+                                            socialSecurityConflict = c;
+                                        }
+                                        else
+                                        {
+                                            _log.DebugFormat($"Th={threadId} - Multiple conflicting Contacts with the same socialSecurityNumber were found.");
+                                            HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                            respMess.Content = new StringContent(Resources.MultipleSocSecConflictsFound);
+                                            return respMess;
+                                        }
+                                    }
+                                    else */
+                                    if (lead.EMailAddress1 != null && lead.EMailAddress1.Equals(c.EMailAddress1))
+                                    {
+                                        // 2020-06-09 - Marcus Stenswed
+                                        // If a conflicting Contact is found with the same EMailAddress1
+                                        // it should result in a BadRequest
+                                        HttpResponseMessage respMess2 = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                        respMess2.Content = new StringContent("Duplicate Contact found with the same primary email.");
+                                        return respMess2;
+
+                                        //if (emailAddress1Conflict == null)
+                                        //{
+                                        //    _log.DebugFormat($"Th={threadId} - Found Contact matching on emailaddress1.");
+                                        //    emailAddress1Conflict = c;
+                                        //}
+                                        //else
+                                        //{
+                                        //    _log.DebugFormat($"Th={threadId} - Multiple conflicting Contacts with the same EMailAddress1 were found.");
+                                        //    HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                        //    respMess.Content = new StringContent("Found multiple Contacts with the same first-/lastname and email");
+                                        //    return respMess;
+                                        //}
+                                    }
+                                }
                                 //if (socialSecurityConflict != null)
                                 //{
                                 //    conflictContacts.Remove(socialSecurityConflict);
                                 //    newContact = socialSecurityConflict;
                                 //    UpdateContactWithAuthorityLead(ref newContact, lead);
-
+                                //
                                 //    SetStateRequest req = new SetStateRequest()
                                 //    {
                                 //        EntityMoniker = lead.ToEntityReference(),
@@ -4431,46 +4438,49 @@ namespace Skanetrafiken.Crm.Controllers
                                 //        Status = new OptionSetValue((int)Generated.lead_statuscode.Canceled)
                                 //    };
                                 //    SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
-
+                                //
                                 //    newContact.EMailAddress1 = lead.EMailAddress1;
                                 //    newContact.EMailAddress2 = null;
                                 //}
-                                //// If there's a match on existing Business Contact (not Private Customer) based on EMailAddress1
-                                //else if (socialSecurityConflict == null && emailAddress1Conflict != null && conflictContacts.First().ed_PrivateCustomerContact == false)
-                                //{
-                                //    conflictContacts.Remove(emailAddress1Conflict);
-                                //    newContact = emailAddress1Conflict;
-                                //    UpdateContactWithAuthorityLead(ref newContact, lead);
+                                // If there's a match on existing Business Contact (not Private Customer) based on EMailAddress1
+                                //else
 
+                                //if (socialSecurityConflict == null && emailAddress1Conflict != null && conflictContacts.First().ed_PrivateCustomerContact == false)
+                                if (emailAddress1Conflict != null)
+                                {
+                                    conflictContacts.Remove(emailAddress1Conflict);
+                                    newContact = emailAddress1Conflict;
+                                    UpdateContactWithAuthorityLead(ref newContact, lead);
+
+                                    SetStateRequest req = new SetStateRequest()
+                                    {
+                                        EntityMoniker = lead.ToEntityReference(),
+                                        State = new OptionSetValue((int)Generated.LeadState.Disqualified),
+                                        Status = new OptionSetValue((int)Generated.lead_statuscode.Canceled)
+                                    };
+                                    SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
+                                }
+                                else
+                                {
+                                    //newContact = new ContactEntity(lead.ToCustomerInfo());
+                                    //newContact.Id = localContext.OrganizationService.Create(newContact);
+                                    _log.DebugFormat($"Th={threadId} - No SocialSecurity conflict was found. Qualifying Lead.");
+                                    newContact = QualifyLeadToContact(localContext, lead);
+                                }
+                                _log.DebugFormat($"Th={threadId} - Combining {conflictContacts.Count} conflicting contacts.");
+                                newContact.CombineContacts(localContext, conflictContacts);
+
+                                ////inactivate other customers
+                                //foreach (ContactEntity c in conflictContacts)
+                                //{
                                 //    SetStateRequest req = new SetStateRequest()
                                 //    {
-                                //        EntityMoniker = lead.ToEntityReference(),
-                                //        State = new OptionSetValue((int)Generated.LeadState.Disqualified),
-                                //        Status = new OptionSetValue((int)Generated.lead_statuscode.Canceled)
+                                //        EntityMoniker = c.ToEntityReference(),
+                                //        State = new OptionSetValue((int)Generated.ContactState.Inactive),
+                                //        Status = new OptionSetValue((int)Generated.contact_statuscode.Inactive)
                                 //    };
-                                //    SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
+                                //    localContext.OrganizationService.Execute(req);
                                 //}
-                                //else
-                                //{
-                                //    //newContact = new ContactEntity(lead.ToCustomerInfo());
-                                //    //newContact.Id = localContext.OrganizationService.Create(newContact);
-                                //    _log.DebugFormat($"Th={threadId} - No SocialSecurity conflict was found. Qualifying Lead.");
-                                //    newContact = QualifyLeadToContact(localContext, lead);
-                                //}
-                                //_log.DebugFormat($"Th={threadId} - Combining {conflictContacts.Count} conflicting contacts.");
-                                //newContact.CombineContacts(localContext, conflictContacts);
-
-                                //////inactivate other customers
-                                ////foreach (ContactEntity c in conflictContacts)
-                                ////{
-                                ////    SetStateRequest req = new SetStateRequest()
-                                ////    {
-                                ////        EntityMoniker = c.ToEntityReference(),
-                                ////        State = new OptionSetValue((int)Generated.ContactState.Inactive),
-                                ////        Status = new OptionSetValue((int)Generated.contact_statuscode.Inactive)
-                                ////    };
-                                ////    localContext.OrganizationService.Execute(req);
-                                ////}
                             }
                             #endregion
                             else
@@ -4490,12 +4500,7 @@ namespace Skanetrafiken.Crm.Controllers
                                 respMess.Content = new StringContent(Resources.UnexpectedErrorWhenValidatingEmail);
                                 return respMess;
                             }
-
-                            // TODO - Marcus, nedan måste testas!
-                            // Måste även sätta
-                            // contact.ed_PrivateCustomerContact = true
-                            // Done 20190719 /Marcus
-
+                            
                             // Object used for update.
                             ContactEntity updContact2 = new ContactEntity()
                             {
@@ -5010,7 +5015,7 @@ namespace Skanetrafiken.Crm.Controllers
                 {
                     new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
                     new ConditionExpression(ContactEntity.Fields.EMailAddress2, ConditionOperator.Equal, lead.EMailAddress1),
-                    new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, lead.MobilePhone),
+                    //new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, lead.MobilePhone),
                     new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true),
                 },
                 //Filters =
@@ -5080,7 +5085,7 @@ namespace Skanetrafiken.Crm.Controllers
                 {
                     new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
                     new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, lead.EMailAddress1),
-                    new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, lead.MobilePhone),
+                    //new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, lead.MobilePhone),
                     new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true)
                 },
                 //Filters =

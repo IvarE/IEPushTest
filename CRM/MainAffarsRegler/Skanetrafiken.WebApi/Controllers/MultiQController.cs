@@ -64,6 +64,11 @@ namespace Skanetrafiken.Crm.Controllers
             return resp;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileInfo"></param>
+        /// <returns></returns>
         [HttpPost]
         public HttpResponseMessage PostDeliveryReport([FromBody] FileInfoMQ fileInfo)
         {

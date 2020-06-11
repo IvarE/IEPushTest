@@ -235,11 +235,38 @@ namespace Skanetrafiken.Crm
                 );
 
             config.Routes.MapHttpRoute(
-                name: "SyncCosntact",
+                name: "SyncContact",
                 routeTemplate: "api/{controller}/SyncContact",
                 defaults: new
                 {
                     action = "SyncContact"
+                },
+
+                constraints: new
+                {
+                    httpMethod = new HttpMethodConstraint(HttpMethod.Post)
+                }
+                );
+
+            config.Routes.MapHttpRoute(
+                name: "GetOrders",
+                routeTemplate: "api/{controller}/GetOrders/probability",
+                defaults: new
+                {
+                    action = "GetOrders"
+                },
+                constraints: new
+                {
+                    httpMethod = new HttpMethodConstraint(HttpMethod.Get)
+                }
+                );
+
+            config.Routes.MapHttpRoute(
+                name: "PostDeliveryReport",
+                routeTemplate: "api/{controller}/PostDeliveryReport",
+                defaults: new
+                {
+                    action = "PostDeliveryReport"
                 },
 
                 constraints: new

@@ -33,7 +33,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiffIntegration", "..\BiffI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BIFFIntegration.UnitTest", "..\BiffIntegration\BIFFIntegration.UnitTest\BIFFIntegration.UnitTest.csproj", "{FCD24F84-07CC-4902-8D6F-93EF488B9532}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.MultiQService", "..\Skanetrafiken.MultiQService\Skanetrafiken.MultiQService.csproj", "{29EFD712-FEE7-4752-BF9B-C1BCA876DF0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiQService", "..\Skanetrafiken.MultiQService\MultiQService.csproj", "{29EFD712-FEE7-4752-BF9B-C1BCA876DF0A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.UpSalesMigration", "..\Skanetrafiken.UpSalesMigration\Skanetrafiken.UpSalesMigration.csproj", "{B5C4DAAF-327D-4256-8E47-5EDA11C7B832}"
 EndProject
