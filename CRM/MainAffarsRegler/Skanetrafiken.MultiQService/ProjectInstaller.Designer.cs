@@ -1,6 +1,6 @@
 ﻿namespace Skanetrafiken.MultiQService
 {
-    partial class OrdersService
+    partial class ProjectInstaller
     {
         /// <summary>
         /// Required designer variable.
@@ -28,14 +28,29 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.serviceProcessInstaller1 = new System.ServiceProcess.ServiceProcessInstaller();
+            this.serviceInstaller1 = new System.ServiceProcess.ServiceInstaller();
             // 
-            // OrdersService
+            // serviceProcessInstaller1
             // 
-            components = new System.ComponentModel.Container();
-            this.ServiceName = "MultiQService";
+            this.serviceProcessInstaller1.Password = null;
+            this.serviceProcessInstaller1.Username = null;
+            // 
+            // serviceInstaller1
+            // 
+            this.serviceInstaller1.ServiceName = "MultiQService";
+            // 
+            // ProjectInstaller
+            // 
+            this.Installers.AddRange(new System.Configuration.Install.Installer[] {
+            this.serviceProcessInstaller1,
+            this.serviceInstaller1});
 
         }
 
         #endregion
+
+        private System.ServiceProcess.ServiceProcessInstaller serviceProcessInstaller1;
+        private System.ServiceProcess.ServiceInstaller serviceInstaller1;
     }
 }
