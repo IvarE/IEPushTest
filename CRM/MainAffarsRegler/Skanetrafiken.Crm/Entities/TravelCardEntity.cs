@@ -13,6 +13,7 @@ using System.Net.Http;
 using Microsoft.Xrm.Sdk;
 using Skanetrafiken.Crm.ValueCodes;
 using System.Runtime.Serialization.Json;
+using System.Configuration;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -48,7 +49,14 @@ namespace Skanetrafiken.Crm.Entities
             ValueCodeHandler.GetCardProperties getCardProperties = null;
 
             localContext.TracingService.Trace("\nJojoAPITest - Place Order:");
-            WebRequest request = WebRequest.Create(string.Format("{0}placeOrder", settingEntity.ed_JojoCardDetailsAPI));
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(string.Format("{0}placeOrder", settingEntity.ed_JojoCardDetailsAPI));
+
+            #region Certificate
+
+            string certName = ConfigurationManager.AppSettings["SeKundFasadenCertificateName"];
+            request.ClientCertificates.Add(Identity.GetCertToUse(certName));
+
+            #endregion
 
             request.Headers.Add("Card-Number", cardNumber);
             request.Headers.Add("20", "*/*");
@@ -109,7 +117,14 @@ namespace Skanetrafiken.Crm.Entities
             localContext.TracingService.Trace("\nJojoAPITest - Capture Order:");
             string apiStatusResponse = "";
 
-            WebRequest requestCaptureOrder = WebRequest.Create(string.Format("{0}captureOrder/", settingEntity.ed_JojoCardDetailsAPI));
+            HttpWebRequest requestCaptureOrder = (HttpWebRequest)WebRequest.Create(string.Format("{0}captureOrder/", settingEntity.ed_JojoCardDetailsAPI));
+
+            #region Certificate
+
+            string certName = ConfigurationManager.AppSettings["SeKundFasadenCertificateName"];
+            requestCaptureOrder.ClientCertificates.Add(Identity.GetCertToUse(certName));
+
+            #endregion
 
             requestCaptureOrder.Headers.Add("Card-Number", cardNumber);
             requestCaptureOrder.Headers.Add("20", "*/*");
@@ -137,6 +152,7 @@ namespace Skanetrafiken.Crm.Entities
         public static ValueCodeHandler.GetCardProperties HandleGetCard(Plugin.LocalPluginContext localContext, string cardNumber)
         {
             localContext.TracingService.Trace($"Running HandleGetCard.");
+
             //TODO: Parse information from API to a GetCardProperties Object
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
@@ -154,7 +170,31 @@ namespace Skanetrafiken.Crm.Entities
             string message = "";
             localContext.TracingService.Trace("\nJojoAPITest - get Card:");
 
-            var getCardRequest = WebRequest.Create(string.Format("{0}card/", settingEntity.ed_JojoCardDetailsAPI));
+            HttpWebRequest getCardRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}card/", settingEntity.ed_JojoCardDetailsAPI));
+
+            #region Certificate
+
+            string certName = ConfigurationManager.AppSettings["SeKundFasadenCertificateName"];
+            getCardRequest.ClientCertificates.Add(Identity.GetCertToUse(certName));
+
+            #endregion
+
+            #region Header Token (Not Used)
+
+            //const long tokenLifetimeSeconds = 30 * 60 + 60 * 60 * 1;  // Add 1h for Summertime UTC
+            //Int32 unixTimeStamp;
+            //DateTime currentTime = DateTime.Now;
+            //DateTime zuluTime = currentTime.ToUniversalTime();
+            //DateTime unixEpoch = new DateTime(1970, 1, 1);
+            //unixTimeStamp = (Int32)(zuluTime.Subtract(unixEpoch)).TotalSeconds;
+            //long validTo = unixTimeStamp + tokenLifetimeSeconds;
+            //var tokenClass = new IdentityContract();
+            //tokenClass.exp = validTo;
+
+            //var token = ApiHelper.EncodeTokenEncryption(tokenClass, certName);
+            //getCardRequest.Headers["X-SekundFasadToken"] = token; //X-CRMPlusToken
+
+            #endregion
 
             getCardRequest.Headers.Add("Card-Number", cardNumber);
             getCardRequest.Headers.Add("20", "*/*");
@@ -167,6 +207,7 @@ namespace Skanetrafiken.Crm.Entities
                 if (checkStatus.StatusCode != HttpStatusCode.OK)
                 {
                     //Bad request -> exception
+                    throw new Exception($"Exception caught - API returned StatusCode {checkStatus.StatusCode}");
                 }
                 else
                 {
@@ -200,6 +241,52 @@ namespace Skanetrafiken.Crm.Entities
 
             localContext.TracingService.Trace($"Successfully exiting HandleGetCard, {message}");
             return getCardProperties;
+        }
+
+        public static string HandleCancelOrder(Plugin.LocalPluginContext localContext, string cardNumber)
+        {
+            localContext.TracingService.Trace($"Running HandleCancelOrder.");
+            //TODO: Parse information from API to a Status String (200 - Success / 400 - Bad Request, error message)
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
+            FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+
+            CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
+
+            localContext.TracingService.Trace("\nJojoAPITest - Capture Order:");
+            string apiStatusResponse = "";
+
+            HttpWebRequest requestCancelOrder = (HttpWebRequest)WebRequest.Create(string.Format("{0}cancelOrder/", settingEntity.ed_JojoCardDetailsAPI));
+
+            #region Certificate
+
+            string certName = ConfigurationManager.AppSettings["SeKundFasadenCertificateName"];
+            requestCancelOrder.ClientCertificates.Add(Identity.GetCertToUse(certName));
+
+            #endregion
+
+            requestCancelOrder.Headers.Add("Card-Number", cardNumber);
+            requestCancelOrder.Headers.Add("20", "*/*");
+            requestCancelOrder.ContentLength = 0;
+            requestCancelOrder.Method = "POST";
+
+            var cancelOrderResponse = requestCancelOrder.GetResponse() as HttpWebResponse;
+
+            if (cancelOrderResponse.StatusCode != HttpStatusCode.OK)
+            {
+                //Send bad request
+                apiStatusResponse = "Could not Cancel Order!";
+            }
+            else
+            {
+                //We are done
+                apiStatusResponse = "Order was canceled!";
+            }
+
+            localContext.TracingService.Trace($"Successfully exiting HandleCaptureOrder.");
+
+            return apiStatusResponse;
         }
 
         public static string BlockCardBiztalk(Plugin.LocalPluginContext localContext, string travelCardNumber, int reasonCode)

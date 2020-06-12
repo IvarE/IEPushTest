@@ -23,6 +23,7 @@ using Microsoft.Xrm.Sdk.Query;
 using Endeavor.Crm.Extensions;
 using Microsoft.Xrm.Sdk;
 using static Skanetrafiken.Crm.ValueCodes.ValueCodeHandler;
+using System.Configuration;
 
 namespace Skanetrafiken.Crm.Controllers
 {
@@ -1055,7 +1056,14 @@ namespace Skanetrafiken.Crm.Controllers
                         localContext.TracingService.Trace("\nJojoAPITest - Capture Order:");
                         string apiStatusResponse = "";
 
-                        WebRequest requestCancelOrder = WebRequest.Create(string.Format("{0}cancelOrder/", settingEntity.ed_JojoCardDetailsAPI));
+                        HttpWebRequest requestCancelOrder = (HttpWebRequest)WebRequest.Create(string.Format("{0}cancelOrder/", settingEntity.ed_JojoCardDetailsAPI));
+
+                        #region Certificate
+
+                        string certName = ConfigurationManager.AppSettings["SeKundFasadenCertificateName"];
+                        requestCancelOrder.ClientCertificates.Add(Identity.GetCertToUse(certName));
+
+                        #endregion
 
                         requestCancelOrder.Headers.Add("Card-Number", getCardProperties.CardNumber);
                         requestCancelOrder.Headers.Add("20", "*/*");

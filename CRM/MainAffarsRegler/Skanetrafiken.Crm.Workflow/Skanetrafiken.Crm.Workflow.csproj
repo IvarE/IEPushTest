@@ -93,6 +93,7 @@
     <Reference Include="System" />
     <Reference Include="System.Activities" />
     <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -299,6 +300,7 @@
     <Compile Include="ApproveValueCodeApproval.cs" />
     <Compile Include="BigInteger.cs" />
     <Compile Include="BlockAccountPortal.cs" />
+    <Compile Include="CancelOrder.cs" />
     <Compile Include="GetCard.cs" />
     <Compile Include="PlaceOrder.cs" />
     <Compile Include="CaptureOrder.cs" />

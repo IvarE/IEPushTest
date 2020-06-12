@@ -21,6 +21,7 @@ namespace Skanetrafiken.MultiQService
                 _log.Debug("Main Started");
 
                 string passwordArgument = null;
+                string passwordCreditsafeArgument = null;
 
                 string[] args = System.Environment.GetCommandLineArgs();
                 if (args != null)
@@ -29,6 +30,11 @@ namespace Skanetrafiken.MultiQService
                     if (passwordArgs.Count() > 0)
                     {
                         passwordArgument = passwordArgs.First();
+                    }
+                    var passwordCreditsafeArgs = args.Where(s => s.Contains("PasswordCreditsafe:"));
+                    if (passwordCreditsafeArgs.Count() > 0)
+                    {
+                        passwordCreditsafeArgument = passwordCreditsafeArgs.First();
                     }
                 }
 
@@ -39,6 +45,13 @@ namespace Skanetrafiken.MultiQService
 
                     CrmConnection.SaveCredentials(OrdersService.CredentialFilePath, password, OrdersService.Entropy);
                 }
+                //if (!string.IsNullOrEmpty(passwordCreditsafeArgument))
+                //{
+                //    _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
+                //    string password = passwordCreditsafeArgument.Substring(passwordCreditsafeArgument.IndexOf(":") + 1);
+
+                //    CrmConnection.SaveCredentials(OrdersService.CreditsafeCredentialFilePath, password, OrdersService.Entropy);
+                //}
 
 #if DEBUG
                 //Workaround to make it possible to debug a service.
