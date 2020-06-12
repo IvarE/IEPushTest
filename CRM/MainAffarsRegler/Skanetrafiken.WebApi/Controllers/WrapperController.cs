@@ -52,11 +52,12 @@ namespace Skanetrafiken.Crm.Controllers
             string MKLHeaderName = ConfigurationManager.AppSettings["MKLTokenHeaderName"];
             string InternalHeaderName = ConfigurationManager.AppSettings["InternalTokenHeaderName"];
             string EcommerceHeaderName = ConfigurationManager.AppSettings["EcommerceTokenHeaderName"];
+            string SeKundFasadenHeaderName = ConfigurationManager.AppSettings["SeKundFasadenHeaderName"];
 
-            if (!(this.Request.Headers.Contains(MKLHeaderName) || this.Request.Headers.Contains(InternalHeaderName) || this.Request.Headers.Contains(EcommerceHeaderName)))
+            if (!(this.Request.Headers.Contains(MKLHeaderName) || this.Request.Headers.Contains(InternalHeaderName) || this.Request.Headers.Contains(EcommerceHeaderName) || this.Request.Headers.Contains(SeKundFasadenHeaderName)))
             {
                 HttpResponseMessage hdrResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                hdrResp.Content = new StringContent(string.Format(Resources.TokenHeaderMissing, MKLHeaderName, InternalHeaderName, EcommerceHeaderName));
+                hdrResp.Content = new StringContent(string.Format(Resources.TokenHeaderMissing, MKLHeaderName, InternalHeaderName, EcommerceHeaderName, SeKundFasadenHeaderName));
                 return hdrResp;
             }
 
@@ -77,6 +78,12 @@ namespace Skanetrafiken.Crm.Controllers
                 IEnumerable<string> headerValues = this.Request.Headers.GetValues(EcommerceHeaderName);
                 token = headerValues.FirstOrDefault();
                 certName = ConfigurationManager.AppSettings["EcommerceTokenCertificateName"];
+            }
+            else if (this.Request.Headers.Contains(SeKundFasadenHeaderName))
+            {
+                IEnumerable<string> headerValues = this.Request.Headers.GetValues(SeKundFasadenHeaderName);
+                token = headerValues.FirstOrDefault();
+                certName = ConfigurationManager.AppSettings["SeKundFasadenCertificateName"];
             }
 
             StatusBlock tokenEncryptionStatusBlock = CrmPlusUtility.GetConfigBoolSetting("TokenEncryptionEnabled");
