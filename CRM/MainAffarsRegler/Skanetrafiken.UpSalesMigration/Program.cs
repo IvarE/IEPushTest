@@ -1065,14 +1065,14 @@ namespace Skanetrafiken.UpSalesMigration
                 return;
             }
 
-            OptionMetadataCollection colOpCompanyTrade = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_companytrade);
-            OptionMetadataCollection colOpBusinessType = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_BusinessType);
-
             Console.Write("Creating Batch of Accounts... ");
             using (ProgressBar progress = new ProgressBar())
             {
                 for (int i = 0; i < importExcelInfo.lData.Count; i++)
                 {
+                    OptionMetadataCollection colOpCompanyTrade = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_companytrade);
+                    OptionMetadataCollection colOpBusinessType = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_BusinessType);
+
                     try
                     {
                         progress.Report((double)i / (double)importExcelInfo.lData.Count);
@@ -1946,6 +1946,8 @@ namespace Skanetrafiken.UpSalesMigration
             Console.WriteLine("4) Import Contacts");
             Console.WriteLine("5) Import Activities");
             Console.WriteLine("6) Import Orders");
+            Console.WriteLine("7) Import Historical Data");
+            Console.WriteLine("8) Fix Duplicate OptionSets on Account/Branch");
             Console.WriteLine("0) Exit");
             Console.Write("\r\nSelect an option: ");
 
@@ -2216,6 +2218,134 @@ namespace Skanetrafiken.UpSalesMigration
                     catch (Exception e)
                     {
                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Historical Data Records. Details: " + e.Message);
+                        throw;
+                    }
+
+                    #endregion
+
+                    return true;
+                case "8":
+
+                    #region Fix DuplicatedOptionSets On Account/Branch
+
+                    try
+                    {
+                        crmContext.ClearChanges();
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting Logic to Eliminate Duplicate OptionSets--------------");
+
+                        OptionMetadataCollection colOpCompanyTrade = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_companytrade);
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Count: " + colOpCompanyTrade.Count);
+
+                        List<OptionMetadata> lOpDelete = new List<OptionMetadata>();
+
+                        List<OptionMetadata> lFinal = colOpCompanyTrade.OrderBy(x => x.Label.UserLocalizedLabel.Label).ToList();
+
+                        foreach (OptionMetadata item in lFinal)
+                        {
+                            Console.WriteLine(item.Value + " ---- " + item.Label.UserLocalizedLabel.Label);
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"" + item.Value + " ---- " + item.Label.UserLocalizedLabel.Label);
+                        }
+
+                        foreach (OptionMetadata item in lFinal)
+                        {
+                            int uniqueOption = int.MinValue;
+                            string optionLabel = item.Label.UserLocalizedLabel.Label;
+
+                            if(!string.IsNullOrEmpty(optionLabel))
+                            {
+                                if (lOpDelete.Exists(x => x.Label.UserLocalizedLabel.Label == optionLabel))
+                                {
+                                    //skip this one
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"The Option with name: " + optionLabel + " has already been handled.");
+                                    continue;
+                                }
+
+                                List<OptionMetadata> lOptionsName = colOpCompanyTrade.Where(x => x.Label.UserLocalizedLabel.Label == optionLabel).OrderBy(x => x.Value).ToList();
+
+                                if(lOptionsName.Count == 1)
+                                {
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Only One Option with name: " + optionLabel);
+                                    continue;
+                                }
+
+                                foreach (OptionMetadata itemDuplicate in lOptionsName)
+                                {
+                                    if (itemDuplicate == lOptionsName.FirstOrDefault())
+                                    {
+                                        //option with lesser value to keep
+                                        uniqueOption = (int)itemDuplicate.Value;
+                                    }
+                                    else
+                                    {
+                                        //options to delete
+                                        if(!lOpDelete.Exists(x => x.Value == itemDuplicate.Value))
+                                            lOpDelete.Add(itemDuplicate);
+                                    }
+                                }
+
+                                QueryExpression queryAccounts = new QueryExpression(Account.EntityLogicalName);
+                                queryAccounts.NoLock = true;
+                                queryAccounts.ColumnSet.AddColumns(Account.Fields.ed_companytrade, Account.Fields.Name);
+                                queryAccounts.Criteria.AddCondition(Account.Fields.ed_UpsalesId, ConditionOperator.NotNull);
+
+                                FilterExpression filter = new FilterExpression();
+                                queryAccounts.Criteria.AddFilter(filter);
+
+                                filter.FilterOperator = LogicalOperator.Or;
+
+                                foreach (OptionMetadata metadata in lOptionsName)
+                                {
+                                    filter.AddCondition(Account.Fields.ed_companytrade, ConditionOperator.Equal, metadata.Value);
+                                }
+
+                                List<Account> lAccounts = XrmRetrieveHelper.RetrieveMultiple<Account>(localContext, queryAccounts);
+
+                                _log.InfoFormat(CultureInfo.InvariantCulture, $"Account Count: " + lAccounts.Count);
+
+                                if (uniqueOption != int.MinValue)
+                                {
+                                    foreach (Account account in lAccounts)
+                                    {
+                                        Account uAccount = new Account();
+                                        uAccount.Id = account.Id;
+                                        uAccount.ed_companytrade = new OptionSetValue(uniqueOption);
+
+                                        XrmHelper.Update(localContext, uAccount);
+                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"A request has been sent to update the Account: " + account.Id + " with company trade: " + uniqueOption);
+                                    }
+                                }
+                                else
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Unique Option is equal to the Min Value. Contact your administrator.");
+                            }
+                        }
+
+                        foreach (OptionMetadata opDelete in lOpDelete)
+                        {
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Option to Delete: " + opDelete.Value + " and Name: " + opDelete.Label.UserLocalizedLabel.Label);
+
+                            DeleteOptionValueRequest request = new DeleteOptionValueRequest
+                            {
+                                OptionSetName = "ed_companytrade",
+                                Value = (int)opDelete.Value
+                            };
+
+                            try
+                            {
+                                localContext.OrganizationService.Execute(request);
+                            }
+                            catch (Exception)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to delete option from 'ed_companytrade': " + opDelete.Value);
+                            }
+
+                        }
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished Logic to Eliminate Duplicate OptionSets--------------");
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Fixing Duplicated OptionSets. Details: " + e.Message);
                         throw;
                     }
 
