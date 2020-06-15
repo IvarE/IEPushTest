@@ -1935,6 +1935,64 @@ namespace Skanetrafiken.UpSalesMigration
 
         }
 
+        public static List<UpsalesFile> GetFileList(string path, string filter)
+        {
+            try
+            {
+                string[] files = Directory.GetFiles(path, filter);
+
+                List<UpsalesFile> lFiles = new List<UpsalesFile>();
+
+                for (int i = 0; i < files.Length; i++)
+                {
+                    UpsalesFile uFile = new UpsalesFile();
+                    uFile.fileName = Path.GetFileName(files[i]);
+                    uFile.filePath = files[i];
+
+                    lFiles.Add(uFile);
+                }
+
+                return lFiles;
+            }
+            catch (Exception e)
+            {
+                _log.Error(string.Format("The List of files was not retrieved: {0}", e.ToString()));
+                return null;
+            }
+        }
+
+        public static void ImportPDFOrders(Plugin.LocalPluginContext localContext, CrmContext crmContext)
+        {
+            string path = "";
+            string filter = "";
+
+            List<UpsalesFile> lFiles = GetFileList(path, filter);
+
+            foreach (UpsalesFile file in lFiles)
+            {
+                try
+                {
+                    string fileName = file.fileName;
+                    byte[] fileBytes = File.ReadAllBytes(file.filePath);
+                    string base64 = Convert.ToBase64String(fileBytes);
+
+                    //string orderId = GetOrderId();
+
+                    //Get Order from UpsalesId
+
+                }
+                catch (Exception e)
+                {
+                    _log.Error(string.Format("The file was downloaded: {0}", e.ToString()));
+                }
+            }
+        }
+
+        public static void ImportPDFAgreements(Plugin.LocalPluginContext localContext, CrmContext crmContext)
+        {
+
+        }
+
         public static bool MainMenu(Plugin.LocalPluginContext localContext, CrmContext crmContext, SaveChangesOptions optionsChanges, string relativeExcelPath)
         {
             Console.WriteLine();
@@ -2352,6 +2410,22 @@ namespace Skanetrafiken.UpSalesMigration
                     #endregion
 
                     return true;
+
+                case "9":
+
+                    #region Import PDF Orders
+
+                    #endregion
+
+                    return true;
+
+                case "10":
+
+                    #region Import PDF Agreements
+
+                    #endregion
+
+                    return true;
                 case "0":
                     return false;
                 default:
@@ -2359,6 +2433,8 @@ namespace Skanetrafiken.UpSalesMigration
                     return true;
             }
         }
+
+
 
         static void Main(string[] args)
         {

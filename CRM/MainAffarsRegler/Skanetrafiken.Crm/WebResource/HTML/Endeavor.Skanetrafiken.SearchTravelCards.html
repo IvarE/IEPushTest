@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.98em;
+        }
+
+        .container {
+            width: 100%;
+        }
+
+        .row {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        /* content */
+        .row div {
+            /*border: 1px solid black;*/
+            border-radius: 5px;
+        }
+
+        .col-1 {
+            width: 6%;
+        }
+
+        /* 1/6 */
+        .col-2 {
+            width: 16.5%;
+        }
+
+        .info {
+            width: 100%;
+            height: 24px;
+        }
+
+        /* viewport <= 1000px */
+        @media screen and (max-width: 1000px) {
+            * {
+                font-size: 0.95em;
+            }
+        }
+
+        /* viewport <= 630px */
+        @media screen and (max-width: 630px) {
+            .row div {
+                padding: 1.5%;
+            }
+        }
+
+        /* viewport <= 500px */
+        @media screen and (max-width: 500px) {
+            * {
+                font-size: 0.9em;
+            }
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-1">Search:</div>
+            <div class="col-2"><input style="width:100%;" type="text"> </div>
+            <div class="col-1"><button type="button">Sök</button></div>
+        </div>
+
+        <hr style="width:100%;text-align:left;margin-left:0;margin-top: 10px;margin-bottom: 10px;">
+
+        <div class="row">
+            <div class="col-2">CRM</div>
+            <div class="col-2">CardInformation</div>
+            <div class="col-2">PurseInformation</div>
+            <div class="col-2">PeriodCardInformation</div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-2"><div class="info">ContactName:</div><div class="info" id="contactname"></div></div>
+            <div class="col-2"><div class="info">HotListed:</div><div class="info" id="hotlisted"></div></div>
+            <div class="col-2"><div class="info">PurseOutstandingDirectedAutoload:</div><div class="info" id="purseodirectedautoload"></div></div>
+            <div class="col-2"><div class="info">PeriodProductType:</div><div class="info" id="periodproducttype"></div></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-2"><div class="info">CardName:</div><div class="info" id="cardname"></div></div>
+            <div class="col-2"><div class="info">PurseHotlistReason:</div><div class="info" id="pursehotlistreason"></div></div>
+            <div class="col-2"><div class="info">PurseBalance:</div><div class="info" id="pursebalance"></div></div>
+            <div class="col-2"><div class="info">PeriodPeriodStart:</div><div class="info" id="periodperiodstart"></div></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-2"><div class="info">Autoload:</div><div class="info" id="autoload"></div></div>
+            <div class="col-2"><div class="info">PeriodHotlisted:</div><div class="info" id="periodhotlisted"></div></div>
+            <div class="col-2"><div class="info">Outhäntad ladding:</div><div class="info" id="outhantadladding"></div></div>
+            <div class="col-2"><div class="info">PeriodPeriodEnd:</div><div class="info" id="periodperiodend"></div></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-2"><div class="info">Autoload start date:</div><div class="info" id="autoloadstartdate"></div></div>
+            <div class="col-2"><div class="info">PurseHotlisted:</div><div class="info" id="pursehotlisted"></div></div>
+            <div class="col-2"><button type="button" disabled>Reload</button></div>
+            <div class="col-2"><div class="info">PeriodPeriodPaid:</div><div class="info" id="periodperiodpaid"></div></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-2"><div class="info">Autoload end date:</div><div class="info" id="autoloadenddate"></div></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+            <div class="col-2"><div class="info">PeriodWaitingPeriods:</div><div class="info" id="periodwaitingperiods"></div></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-2"><div class="info">CreditCard:</div><div class="info" id="creditcard"></div></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+            <div class="col-2"><div class="info">PeriodOutstandingEnableThreshold:</div><div class="info" id="periodoutstandingenable"></div></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-2"><div class="info">Failed attemps to charge money:</div><div class="info" id="failedattempschargemoney"></div></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-2"><div class="info">Latest failed attempt:</div><div class="info" id="latestfailedattempt"></div></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+        </div>
+
+    </div>
+</body>
+</html>

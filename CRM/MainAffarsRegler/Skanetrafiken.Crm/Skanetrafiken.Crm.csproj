@@ -352,6 +352,7 @@
     </None>
     <Content Include="Sql\QueryDuplicatePersonnummer.sql" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MargeAccounts.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.SearchTravelCards.html" />
     <Content Include="WebResource\image\ed_account_block16.png" />
     <Content Include="WebResource\image\ed_account_block32.png" />
     <Content Include="WebResource\image\ed_account_unblock16.png" />

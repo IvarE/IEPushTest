@@ -7,6 +7,7 @@ using Microsoft.Xrm.Tooling.Connector;
 using Quartz;
 using Skanetrafiken.Crm.Entities;
 using Skanetrafiken.Crm.Schema.Generated;
+using Skanetrafiken.MultiQService.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -72,58 +73,57 @@ namespace Skanetrafiken.MultiQService
                 }
 
                 string pdfMimeType = @"application/pdf";
-                string ipAddress = "192.168.2.110";
-                string pathToFolder = "/lib1";
-                int port = 21;
-                string userName = "user1";
-                string passWord = "pass1";
 
                 QueryExpression queryOrders = new QueryExpression(OrderEntity.EntityLogicalName);
                 queryOrders.NoLock = true;
                 queryOrders.ColumnSet.AddColumns(OrderEntity.Fields.SalesOrderId, OrderEntity.Fields.ed_DeliveryReportName);
                 queryOrders.Criteria.AddCondition(OrderEntity.Fields.ed_DeliveryReportStatus, ConditionOperator.Equal, (int)ed_deliveryreportstatus.Creatednotuploaded);
+                queryOrders.Criteria.AddCondition(OrderEntity.Fields.ed_DeliveryReportName, ConditionOperator.NotNull);
 
                 List<OrderEntity> lOrders = XrmRetrieveHelper.RetrieveMultiple<OrderEntity>(localContext, queryOrders);
+                _log.Info($"Found " + lOrders.Count + " that have a Delivery Report Name and have a Status of 'Created and Not Uploaded'.");
 
-                List<string> dirListFiles = GetFileList(ipAddress, pathToFolder, port, userName, passWord);
+                List<MultiQFile> pdfFiles = GetFileList(Properties.Settings.Default.MultiQStoreFiles, "*.pdf");
+                _log.Info($"Found " + pdfFiles.Count + " PDF files in the location: " + Properties.Settings.Default.MultiQStoreFiles);
 
                 foreach (OrderEntity order in lOrders)
                 {
                     if(order.ed_DeliveryReportName != null)
                     {
-                        List<string> lFiles = dirListFiles.Where(x => x == order.ed_DeliveryReportName).ToList();
+                        List<MultiQFile> lFiles = pdfFiles.Where(x => x.fileName == order.ed_DeliveryReportName).ToList();
 
                         if(lFiles.Count == 1)
                         {
-                            string file = lFiles.FirstOrDefault();
-                            string base64File = DownloadFile(ipAddress, pathToFolder, port, file, userName, passWord);
+                            MultiQFile file = lFiles.FirstOrDefault();
+                            string base64File = DownloadFile(file.filePath);
 
-                            Annotation note = new Annotation();
-                            note.Subject = file;
-                            note.NoteText = "Generated Report file from MultiQ for this Order.";
-                            note.ObjectTypeCode = OrderEntity.EntityLogicalName;
-                            note.ObjectId = new EntityReference(OrderEntity.EntityLogicalName, (Guid)order.SalesOrderId);
-                            note.MimeType = pdfMimeType;
-                            note.FileName = file;
-                            note.DocumentBody = base64File;
+                            if (base64File != null)
+                            {
+                                Annotation note = new Annotation();
+                                note.Subject = file.fileName;
+                                note.NoteText = "Generated Report file from MultiQ for this Order.";
+                                note.ObjectTypeCode = OrderEntity.EntityLogicalName;
+                                note.ObjectId = new EntityReference(OrderEntity.EntityLogicalName, (Guid)order.SalesOrderId);
+                                note.MimeType = pdfMimeType;
+                                note.FileName = file.fileName;
+                                note.DocumentBody = base64File;
 
-                            Guid idNote = XrmHelper.Create(localContext, note);
-                            _log.Info($"Note: " + idNote + " with Attachment was created on Related Order: " + order.SalesOrderId);
+                                Guid idNote = XrmHelper.Create(localContext, note);
+                                _log.Info($"Note: " + idNote + " with Attachment was created on Related Order: " + order.SalesOrderId);
 
-                            bool isMoved = MoveFile(ipAddress, pathToFolder, port, file, userName, passWord, "../History/");
-                            if (isMoved)
-                                _log.Info($"The file " + file + " was moved to History.");
+                                bool isMoved = MoveFile(file.filePath, Properties.Settings.Default.MultiQArchive + file.fileName);
+                                if (isMoved)
+                                    _log.Info($"The file " + file + " was moved to History.");
+                                else
+                                    _log.Info($"The file " + file + " was not moved to History. Please check the Exception for more details.");
+                            }
                             else
-                                _log.Info($"The file " + file + " was not moved to History. Please check the Exception for more details.");
+                                _log.Error($"The Base64 for the file: " + file.fileName + " is null.");
                         }
                         else if(lFiles.Count == 0)
-                        {
-                            _log.Info($"There is no file named: " + order.ed_DeliveryReportName + " on the FTP Server.");
-                        }
+                            _log.Info($"There is no file named: " + order.ed_DeliveryReportName + " on the Shared Folder: " + Properties.Settings.Default.MultiQStoreFiles + ".");
                         else if(lFiles.Count > 1)
-                        {
-                            _log.Info($"There is more than one file named: " + order.ed_DeliveryReportName + " on the FTP Server.");
-                        }
+                            _log.Info($"There is more than one file named: " + order.ed_DeliveryReportName + " on the Shared Folder: " + Properties.Settings.Default.MultiQStoreFiles + ".");
                     }
                 }
 
@@ -135,7 +135,84 @@ namespace Skanetrafiken.MultiQService
             }
         }
 
-        public List<string> GetFileList(string ipAddress, string path, int port, string userName, string passWord)
+        public List<MultiQFile> GetFileList(string path, string filter)
+        {
+            try
+            {
+                string[] files = Directory.GetFiles(path, filter);
+
+                List<MultiQFile> lFiles = new List<MultiQFile>();
+
+                for (int i = 0; i < files.Length; i++)
+                {
+                    MultiQFile mFile = new MultiQFile();
+                    mFile.fileName = Path.GetFileName(files[i]);
+                    mFile.filePath = files[i];
+
+                    lFiles.Add(mFile);
+                }
+
+                return lFiles;
+            }
+            catch (Exception e)
+            {
+                _log.Error(string.Format("The List of files was not retrieved: {0}", e.ToString()));
+                return null;
+            }
+        }
+
+        public string DownloadFile(string path)
+        {
+            try
+            {
+                byte[] fileBytes = File.ReadAllBytes(path);
+                string base64 = Convert.ToBase64String(fileBytes);
+
+                return base64;
+            }
+            catch (Exception e)
+            {
+                _log.Error(string.Format("The file was not downloaded: {0}", e.ToString()));
+                return null;
+            }
+        }
+
+        public bool MoveFile(string sourcePath, string targetPath)
+        {
+            try
+            {
+                if (!File.Exists(sourcePath))
+                {
+                    _log.Error($"The Source File does not exist. Contact your administrator.");
+                    return false;
+                }
+
+                if (File.Exists(targetPath))
+                {
+                    _log.Error($"The Target File already exists. Contact your administrator.");
+                    return false;
+                }
+
+                // Move the file.
+                File.Move(sourcePath, targetPath);
+                _log.Info(string.Format("{0} was moved to {1}.", sourcePath, targetPath));
+
+                // See if the original exists now.
+                if (File.Exists(sourcePath))
+                    _log.Info($"The original file still exists, which is unexpected.");
+                else
+                    _log.Info($"The original file no longer exists, which is expected.");
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                _log.Error(string.Format("The file was not moved: {0}", e.ToString()));
+                return false;
+            }
+        }
+
+        public List<string> GetFileListFTP(string ipAddress, string path, int port, string userName, string passWord)
         {
             try
             {
@@ -163,7 +240,7 @@ namespace Skanetrafiken.MultiQService
             }
         }
 
-        public string DownloadFile(string ipAddress, string path, int port, string fileName, string userName, string passWord)
+        public string DownloadFileFTP(string ipAddress, string path, int port, string fileName, string userName, string passWord)
         {
             try
             {
@@ -206,7 +283,7 @@ namespace Skanetrafiken.MultiQService
             }
         }
 
-        public bool MoveFile(string ipAddress, string path, int port, string fileName, string userName, string passWord, string moveToPath)
+        public bool MoveFileFTP(string ipAddress, string path, int port, string fileName, string userName, string passWord, string moveToPath)
         {
             try
             {

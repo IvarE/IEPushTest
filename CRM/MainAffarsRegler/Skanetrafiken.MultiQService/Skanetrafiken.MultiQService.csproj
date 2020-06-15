@@ -99,6 +99,7 @@
   <ItemGroup>
     <Compile Include="CrmConnection.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="Model\MultiQFile.cs" />
     <Compile Include="OrdersService.cs">
       <SubType>Component</SubType>
     </Compile>

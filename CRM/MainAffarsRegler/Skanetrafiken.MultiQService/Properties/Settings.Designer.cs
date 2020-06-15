@@ -40,5 +40,23 @@ namespace Skanetrafiken.MultiQService.Properties {
                 return ((string)(this["FileUploadScheduleCronExpression"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Import\\MultiQ")]
+        public string MultiQStoreFiles {
+            get {
+                return ((string)(this["MultiQStoreFiles"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Import\\MultiQ\\Old\\")]
+        public string MultiQArchive {
+            get {
+                return ((string)(this["MultiQArchive"]));
+            }
+        }
     }
 }
