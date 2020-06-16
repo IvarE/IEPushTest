@@ -93,6 +93,52 @@ namespace Skanetrafiken.UpSalesMigration
                 return false;
         }
 
+        public static string GetOrderId(string fileName)
+        {
+            //Leveransrapport_NowaKommunikationAB_1282
+            List<string> nameParts = fileName.Split('_').ToList();
+            string orderIdExtension = nameParts.LastOrDefault();
+
+            List<string> orderIdParts = orderIdExtension.Split('.').ToList();
+            string orderId = orderIdParts.FirstOrDefault();
+
+            int iOrderId = int.MinValue;
+
+            if (int.TryParse(orderId, out iOrderId))
+                return orderId;
+            else
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to Convert " + orderId + " to an integer.");
+                return null;
+            }
+        }
+
+        public static List<UpsalesFile> GetFileList(string path, string filter)
+        {
+            try
+            {
+                string[] files = Directory.GetFiles(path, filter);
+
+                List<UpsalesFile> lFiles = new List<UpsalesFile>();
+
+                for (int i = 0; i < files.Length; i++)
+                {
+                    UpsalesFile uFile = new UpsalesFile();
+                    uFile.fileName = Path.GetFileName(files[i]);
+                    uFile.filePath = files[i];
+
+                    lFiles.Add(uFile);
+                }
+
+                return lFiles;
+            }
+            catch (Exception e)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, string.Format("The List of files was not retrieved: {0}", e.ToString()));
+                return null;
+            }
+        }
+
         public static ExcelColumn GetSelectedExcelColumn(List<ExcelColumn> lColumns, int j)
         {
             List<ExcelColumn> lSelectedColumns = lColumns.Where(x => x.index == j).ToList();
@@ -358,7 +404,14 @@ namespace Skanetrafiken.UpSalesMigration
                                 case SalesOrder.EntityLogicalName:
 
                                     SalesOrder salesOrder = (SalesOrder)entity;
-                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Appointment with Id: " + salesOrder.Id + " was updated.");
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Sales Order with Id: " + salesOrder.Id + " was updated.");
+
+                                    break;
+
+                                case Annotation.EntityLogicalName:
+
+                                    Annotation annotation = (Annotation)entity;
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Annotation with Id: " + annotation.Id + " was updated.");
 
                                     break;
                                 default:
@@ -482,6 +535,12 @@ namespace Skanetrafiken.UpSalesMigration
                                     }
 
                                     break;
+                                case Annotation.EntityLogicalName:
+
+                                    Annotation annotation = (Annotation)entity;
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Annotation with Name: " + annotation.Subject + " was created with id: " + id + ".");
+
+                                    break;
                                 default:
                                     _log.ErrorFormat(CultureInfo.InvariantCulture, $"No logs implemented for " + entity.LogicalName + ". Please contact you administrator.");
                                     break;
@@ -548,7 +607,13 @@ namespace Skanetrafiken.UpSalesMigration
                                 case SalesOrder.EntityLogicalName:
 
                                     SalesOrder salesOrder = (SalesOrder)entity;
-                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Appointment with Name: " + salesOrder.Name + " was not created. Details: " + response.Error.Message);
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Sales Order with Name: " + salesOrder.Name + " was not created. Details: " + response.Error.Message);
+
+                                    break;
+                                case Annotation.EntityLogicalName:
+
+                                    Annotation annotation = (Annotation)entity;
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Annotation with Name: " + annotation.Subject + " was not created. Details: " + response.Error.Message);
 
                                     break;
                                 default:
@@ -1935,62 +2000,128 @@ namespace Skanetrafiken.UpSalesMigration
 
         }
 
-        public static List<UpsalesFile> GetFileList(string path, string filter)
+        public static void ImportPDFOrders(Plugin.LocalPluginContext localContext, CrmContext crmContext, string path, string filter)
         {
-            try
-            {
-                string[] files = Directory.GetFiles(path, filter);
-
-                List<UpsalesFile> lFiles = new List<UpsalesFile>();
-
-                for (int i = 0; i < files.Length; i++)
-                {
-                    UpsalesFile uFile = new UpsalesFile();
-                    uFile.fileName = Path.GetFileName(files[i]);
-                    uFile.filePath = files[i];
-
-                    lFiles.Add(uFile);
-                }
-
-                return lFiles;
-            }
-            catch (Exception e)
-            {
-                _log.Error(string.Format("The List of files was not retrieved: {0}", e.ToString()));
-                return null;
-            }
-        }
-
-        public static void ImportPDFOrders(Plugin.LocalPluginContext localContext, CrmContext crmContext)
-        {
-            string path = "";
-            string filter = "";
-
             List<UpsalesFile> lFiles = GetFileList(path, filter);
 
             foreach (UpsalesFile file in lFiles)
             {
                 try
                 {
+                    string pdfMimeType = @"application/pdf";
                     string fileName = file.fileName;
                     byte[] fileBytes = File.ReadAllBytes(file.filePath);
                     string base64 = Convert.ToBase64String(fileBytes);
 
-                    //string orderId = GetOrderId();
+                    if(base64 == null)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Base64 for the file: " + file.fileName + " is null.");
+                        continue;
+                    }
 
-                    //Get Order from UpsalesId
+                    string orderId = GetOrderId(fileName);
 
+                    if(orderId == null)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Upsales Id for the Order is null. File: " + fileName + " will be ignored.");
+                        continue;
+                    }
+
+                    QueryExpression queryOrders = new QueryExpression(SalesOrder.EntityLogicalName);
+                    queryOrders.NoLock = true;
+                    queryOrders.ColumnSet.AddColumns(SalesOrder.Fields.SalesOrderId);
+                    queryOrders.Criteria.AddCondition(SalesOrder.Fields.ed_UpsalesId, ConditionOperator.Equal, orderId);
+
+                    List<SalesOrder> lOrders = XrmRetrieveHelper.RetrieveMultiple<SalesOrder>(localContext, queryOrders);
+
+                    if(lOrders.Count == 1)
+                    {
+                        SalesOrder salesOrder = lOrders.FirstOrDefault();
+
+                        Annotation note = new Annotation();
+                        note.Subject = file.fileName;
+                        note.NoteText = "Leveransrapport file for this Order.";
+                        note.ObjectTypeCode = SalesOrder.EntityLogicalName;
+                        note.ObjectId = new EntityReference(SalesOrder.EntityLogicalName, (Guid)salesOrder.SalesOrderId);
+                        note.MimeType = pdfMimeType;
+                        note.FileName = file.fileName;
+                        note.DocumentBody = base64;
+
+                        crmContext.AddObject(note);
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"A request has been sent to CRM to create an Attachment on Related Order: " + salesOrder.SalesOrderId);
+                    }
+                    else if(lOrders.Count == 0)
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"No Orders found with  Upsales Id " + orderId + ". File: " + fileName + " will be ignored.");
+                    else if(lOrders.Count > 1)
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"No Orders found with  Upsales Id " + orderId + ". File: " + fileName + " will be ignored.");
                 }
                 catch (Exception e)
                 {
-                    _log.Error(string.Format("The file was downloaded: {0}", e.ToString()));
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, string.Format("The file was downloaded: {0}", e.ToString()));
                 }
             }
         }
 
-        public static void ImportPDFAgreements(Plugin.LocalPluginContext localContext, CrmContext crmContext)
+        public static void ImportPDFAgreements(Plugin.LocalPluginContext localContext, CrmContext crmContext, string path, string filter)
         {
+            List<UpsalesFile> lFiles = GetFileList(path, filter);
 
+            foreach (UpsalesFile file in lFiles)
+            {
+                try
+                {
+                    string pdfMimeType = @"application/pdf";
+                    string fileName = file.fileName;
+                    byte[] fileBytes = File.ReadAllBytes(file.filePath);
+                    string base64 = Convert.ToBase64String(fileBytes);
+
+                    if (base64 == null)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Base64 for the file: " + file.fileName + " is null.");
+                        continue;
+                    }
+
+                    string orderId = GetOrderId(fileName);
+
+                    if (orderId == null)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Upsales Id for the Order is null. File: " + fileName + " will be ignored.");
+                        continue;
+                    }
+
+                    QueryExpression queryOrders = new QueryExpression(SalesOrder.EntityLogicalName);
+                    queryOrders.NoLock = true;
+                    queryOrders.ColumnSet.AddColumns(SalesOrder.Fields.SalesOrderId);
+                    queryOrders.Criteria.AddCondition(SalesOrder.Fields.ed_UpsalesId, ConditionOperator.Equal, orderId);
+
+                    List<SalesOrder> lOrders = XrmRetrieveHelper.RetrieveMultiple<SalesOrder>(localContext, queryOrders);
+
+                    if (lOrders.Count == 1)
+                    {
+                        SalesOrder salesOrder = lOrders.FirstOrDefault();
+
+                        Annotation note = new Annotation();
+                        note.Subject = file.fileName;
+                        note.NoteText = "Agreement file for this Order.";
+                        note.ObjectTypeCode = SalesOrder.EntityLogicalName;
+                        note.ObjectId = new EntityReference(SalesOrder.EntityLogicalName, (Guid)salesOrder.SalesOrderId);
+                        note.MimeType = pdfMimeType;
+                        note.FileName = file.fileName;
+                        note.DocumentBody = base64;
+
+                        crmContext.AddObject(note);
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"A request has been sent to CRM to create an Attachment on Related Order: " + salesOrder.SalesOrderId);
+                    }
+                    else if (lOrders.Count == 0)
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"No Orders found with  Upsales Id " + orderId + ". File: " + fileName + " will be ignored.");
+                    else if (lOrders.Count > 1)
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"No Orders found with  Upsales Id " + orderId + ". File: " + fileName + " will be ignored.");
+                }
+                catch (Exception e)
+                {
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, string.Format("The file was downloaded: {0}", e.ToString()));
+                }
+            }
         }
 
         public static bool MainMenu(Plugin.LocalPluginContext localContext, CrmContext crmContext, SaveChangesOptions optionsChanges, string relativeExcelPath)
@@ -2006,6 +2137,8 @@ namespace Skanetrafiken.UpSalesMigration
             Console.WriteLine("6) Import Orders");
             Console.WriteLine("7) Import Historical Data");
             Console.WriteLine("8) Fix Duplicate OptionSets on Account/Branch");
+            Console.WriteLine("9) Import PDF Orders");
+            Console.WriteLine("10) Import PDF Agreements");
             Console.WriteLine("0) Exit");
             Console.Write("\r\nSelect an option: ");
 
@@ -2415,6 +2548,31 @@ namespace Skanetrafiken.UpSalesMigration
 
                     #region Import PDF Orders
 
+                    try
+                    {
+                        crmContext.ClearChanges();
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload PDF Orders Leveransrapport--------------");
+
+                        string path = Properties.Settings.Default.PDFilesReports;
+                        string filter = "*.pdf";
+
+                        ImportPDFOrders(localContext, crmContext, path, filter);
+
+                        Console.WriteLine("Sending Batch of Orders to Sekund...");
+
+                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        LogCrmContextMultipleResponses(localContext, responses);
+
+                        Console.WriteLine("Batch Sent. Please check logs.");
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload PDF Orders Leveransrapport--------------");
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing PDF Orders Leveransrapport. Details: " + e.Message);
+                        throw;
+                    }
+
                     #endregion
 
                     return true;
@@ -2422,6 +2580,31 @@ namespace Skanetrafiken.UpSalesMigration
                 case "10":
 
                     #region Import PDF Agreements
+
+                    try
+                    {
+                        crmContext.ClearChanges();
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload PDF Agreements--------------");
+
+                        string path = Properties.Settings.Default.PDFilesAgreements;
+                        string filter = "*.pdf";
+
+                        ImportPDFAgreements(localContext, crmContext, path, filter);
+
+                        Console.WriteLine("Sending Batch of Orders to Sekund...");
+
+                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        LogCrmContextMultipleResponses(localContext, responses);
+
+                        Console.WriteLine("Batch Sent. Please check logs.");
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload PDF Agreements--------------");
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Order Records. Details: " + e.Message);
+                        throw;
+                    }
 
                     #endregion
 
@@ -2433,8 +2616,6 @@ namespace Skanetrafiken.UpSalesMigration
                     return true;
             }
         }
-
-
 
         static void Main(string[] args)
         {

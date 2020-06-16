@@ -73,6 +73,7 @@ namespace Skanetrafiken.MultiQService
                 }
 
                 string pdfMimeType = @"application/pdf";
+                string pdfFilter = "*.pdf";
 
                 QueryExpression queryOrders = new QueryExpression(OrderEntity.EntityLogicalName);
                 queryOrders.NoLock = true;
@@ -83,7 +84,7 @@ namespace Skanetrafiken.MultiQService
                 List<OrderEntity> lOrders = XrmRetrieveHelper.RetrieveMultiple<OrderEntity>(localContext, queryOrders);
                 _log.Info($"Found " + lOrders.Count + " that have a Delivery Report Name and have a Status of 'Created and Not Uploaded'.");
 
-                List<MultiQFile> pdfFiles = GetFileList(Properties.Settings.Default.MultiQStoreFiles, "*.pdf");
+                List<MultiQFile> pdfFiles = GetFileList(Properties.Settings.Default.MultiQStoreFiles, pdfFilter);
                 _log.Info($"Found " + pdfFiles.Count + " PDF files in the location: " + Properties.Settings.Default.MultiQStoreFiles);
 
                 foreach (OrderEntity order in lOrders)

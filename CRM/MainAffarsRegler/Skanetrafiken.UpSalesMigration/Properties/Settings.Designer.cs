@@ -112,5 +112,23 @@ namespace Skanetrafiken.UpSalesMigration.Properties {
                 return ((string)(this["DefaultCurrency"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Pedro\\OneDrive\\Ambiente de Trabalho\\Testdata_LR+K\\Agreements")]
+        public string PDFilesAgreements {
+            get {
+                return ((string)(this["PDFilesAgreements"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Pedro\\OneDrive\\Ambiente de Trabalho\\Testdata_LR+K\\Leveransrapport")]
+        public string PDFilesReports {
+            get {
+                return ((string)(this["PDFilesReports"]));
+            }
+        }
     }
 }
