@@ -45,13 +45,6 @@ namespace Skanetrafiken.MultiQService
 
                     CrmConnection.SaveCredentials(OrdersService.CredentialFilePath, password, OrdersService.Entropy);
                 }
-                //if (!string.IsNullOrEmpty(passwordCreditsafeArgument))
-                //{
-                //    _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
-                //    string password = passwordCreditsafeArgument.Substring(passwordCreditsafeArgument.IndexOf(":") + 1);
-
-                //    CrmConnection.SaveCredentials(OrdersService.CreditsafeCredentialFilePath, password, OrdersService.Entropy);
-                //}
 
 #if DEBUG
                 //Workaround to make it possible to debug a service.
