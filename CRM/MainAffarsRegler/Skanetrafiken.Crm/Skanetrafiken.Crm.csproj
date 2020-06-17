@@ -130,6 +130,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiHelper.cs" />
+    <Compile Include="PreAccountUpdate.cs" />
+    <Compile Include="PreAccountCreate.cs" />
     <Compile Include="CountryUtility.cs" />
     <Compile Include="Entities\AsyncOperationEntity.cs" />
     <Compile Include="Entities\CgiCategoryDetailEntity.cs" />
