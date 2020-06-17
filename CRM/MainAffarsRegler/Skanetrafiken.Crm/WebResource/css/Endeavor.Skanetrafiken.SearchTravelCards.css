@@ -1,0 +1,60 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+    font-size: 0.98em;
+}
+
+.container {
+    width: 100%;
+}
+
+.row {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.col-1 {
+    width: 6%;
+}
+
+/* 1/6 */
+.col-2 {
+    width: 16.5%;
+}
+
+.label {
+    font-weight: bold;
+    width: 100%;
+    height: 24px;
+}
+
+.info {
+    width: 100%;
+    height: 24px;
+}
+
+/* viewport <= 1000px */
+@media screen and (max-width: 1000px) {
+    * {
+        font-size: 0.95em;
+    }
+}
+
+/* viewport <= 630px */
+@media screen and (max-width: 630px) {
+    .row div {
+        padding: 1.5%;
+    }
+}
+
+/* viewport <= 500px */
+@media screen and (max-width: 500px) {
+    * {
+        font-size: 0.9em;
+    }
+}

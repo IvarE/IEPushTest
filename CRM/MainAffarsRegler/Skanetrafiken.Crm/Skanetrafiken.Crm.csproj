@@ -351,6 +351,7 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <Content Include="Sql\QueryDuplicatePersonnummer.sql" />
+    <Content Include="WebResource\css\Endeavor.Skanetrafiken.SearchTravelCards.css" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MargeAccounts.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.SearchTravelCards.html" />
     <Content Include="WebResource\image\ed_account_block16.png" />
