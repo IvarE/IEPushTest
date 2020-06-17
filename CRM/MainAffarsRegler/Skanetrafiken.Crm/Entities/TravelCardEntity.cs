@@ -173,9 +173,12 @@ namespace Skanetrafiken.Crm.Entities
             HttpWebRequest getCardRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}card/", settingEntity.ed_JojoCardDetailsAPI));
 
             #region Certificate
-
+            
+            //Maybe we never found the name from web config... maybe hard code the name and see if it wokrs?
             string certName = ConfigurationManager.AppSettings["SeKundFasadenCertificateName"];
-            getCardRequest.ClientCertificates.Add(Identity.GetCertToUse(certName));
+
+            string clientCertName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_ClientCertNameReskassa);
+            getCardRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCertName));
 
             #endregion
 

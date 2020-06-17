@@ -379,8 +379,41 @@ namespace Skanetrafiken.Crm.Entities
                 DeactivateAccount(localContext, oldAcc);
         }
 
+        internal void HandlePreAccountCreate(Plugin.LocalPluginContext localContext)
+        {
+            string orgNumber = this.cgi_organizational_number;
+
+            localContext.Trace($"Entered HandlePreAccountCreate() OrgNumber value: {orgNumber}");
+            if (!string.IsNullOrWhiteSpace(orgNumber))
+                this.cgi_organizational_number = FormatOrgNumber(localContext, orgNumber);
+        }
+
+        internal void HandlePreAccountUpdate(Plugin.LocalPluginContext localContext, AccountEntity preImage)
+        {
+            string orgNumber = this.cgi_organizational_number;
+
+            localContext.Trace($"Entered HandlePreAccountUpdate() OrgNumber value: {orgNumber}");
+            if (!string.IsNullOrWhiteSpace(orgNumber))
+                this.cgi_organizational_number = FormatOrgNumber(localContext, orgNumber);
+        }
 
         #region Helpers
+
+        private static string FormatOrgNumber(Plugin.LocalPluginContext localContext, string orgNumber)
+        {
+            localContext.Trace($"Entered FormatOrgNumber. OrgNumber value: {orgNumber}");
+            if (orgNumber.Length < 10)
+                throw new InvalidPluginExecutionException("Organisationsnummer innehåller mindre än 10 tecken.");
+            foreach (char c in orgNumber.ToCharArray())
+            {
+                if (!char.IsDigit(c))
+                    orgNumber = orgNumber.Replace(string.Format("{0}", (object)c), "");
+            }
+            if (orgNumber.Length != 10)
+                throw new InvalidPluginExecutionException("Organisationsnummer måste vara exakt 10 siffror.");
+            localContext.Trace($"Leaving FormatOrgNumber. OrgNumber value: {orgNumber}");
+            return orgNumber;
+        }
 
         public static AccountEntity GetAccountByPortalId(Plugin.LocalPluginContext localContext, ColumnSet columnSet, string portalId)
         {
@@ -489,6 +522,7 @@ namespace Skanetrafiken.Crm.Entities
                 throw new InvalidPluginExecutionException("Organization number has to be exactly 10 numbers.");
             return orgNr;
         }
+
         private static bool DoesAddressMatch(CustomerAddressEntity old, CustomerAddressEntity new_addr)
         {
             string replaceWhitespace1 = Format_ToLowerAndReplaceWhitespace(old.Name);
