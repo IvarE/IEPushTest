@@ -422,7 +422,7 @@ namespace Skanetrafiken.Crm.Controllers
                         contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, new Guid(salesOrderInfo.ContactGuid), new ColumnSet(ContactEntity.Fields.StateCode));
                     else if (!string.IsNullOrEmpty(salesOrderInfo.Customer.Guid))
                         contact = ContactEntity.GetContactById(localContext, new ColumnSet(ContactEntity.Fields.StateCode), Guid.Parse(salesOrderInfo.Customer.Guid));
-                    
+
                     salesOrderInfo.Customer = new CustomerInfo() { Guid = salesOrderInfo.ContactGuid };
 
                     if (salesOrderInfo.Customer.Source == 0)
@@ -447,7 +447,7 @@ namespace Skanetrafiken.Crm.Controllers
                 else
                 {
                     account = AccountEntity.GetAccountByPortalId(localContext, new ColumnSet(AccountEntity.Fields.StateCode), salesOrderInfo.PortalId);
-                    
+
                     if (account == null || account.StateCode == Generated.AccountState.Inactive)
                     {
                         var accountresp = new HttpResponseMessage(HttpStatusCode.BadRequest);
@@ -520,7 +520,7 @@ namespace Skanetrafiken.Crm.Controllers
                                     skaKort.ed_InformationSource = Generated.ed_informationsource.KopOchSkickaFTG;
                                     skaKort.ed_Account = account.ToEntityReference();
                                 }
-                                
+
 
                                 localContext.TracingService.Trace($"Creating a new SkaKort.");
                                 skaKort.Trace(localContext.TracingService);
@@ -544,10 +544,10 @@ namespace Skanetrafiken.Crm.Controllers
                                 orderStatus.ToEntityReference(),
                                 (skaKortEnt != null && skaKortEnt.Id != null && skaKortEnt.Id != Guid.Empty) ? skaKortEnt.ToEntityReference() : null
                             );
-                        
+
 
                         newSalesOrderLine.Id = XrmHelper.Create(localContext, newSalesOrderLine);
-                        
+
                         #endregion
                     }
                     #endregion
@@ -1075,8 +1075,8 @@ namespace Skanetrafiken.Crm.Controllers
                     {
                         if (string.IsNullOrWhiteSpace(salesOrderLineTraveller.PortalId) && !missingSalesOrderLineTravellerFields.Contains("PortalId"))
                             missingSalesOrderLineTravellerFields.Add("PortalId");
-                        
-                        
+
+
 
                         //if (!Enum.IsDefined(typeof(Generated.ed_salesorderlinetraveller_ed_travellertype), salesOrderLineTraveller.TravellerType))
                         //{
@@ -1331,7 +1331,8 @@ namespace Skanetrafiken.Crm.Controllers
                     bool updated = false;
 
                     // Object used for update.
-                    ContactEntity updContact = new ContactEntity(){
+                    ContactEntity updContact = new ContactEntity()
+                    {
                         ContactId = contact.ContactId
                     };
 
@@ -1488,7 +1489,8 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (contact == null)
                     {
-                        return new HttpResponseMessage(HttpStatusCode.BadRequest) {
+                        return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                        {
                             Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, string.Format("{0} + {1}", customer.SocialSecurityNumber, customer.Email)))
                         };
                     }
@@ -1501,9 +1503,10 @@ namespace Skanetrafiken.Crm.Controllers
                     catch (MissingFieldException e)
                     {
                         _log.Error($"Th={threadId} - Error caught when calling GetSettingInt() for {CgiSettingEntity.Fields.ed_LeadValidityHours}. Message = {e.Message}");
-                        return new HttpResponseMessage(HttpStatusCode.InternalServerError) {
-                                        Content = new StringContent(string.Format(Resources.SettingsFetchError, e.Message))
-                                    };
+                        return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                        {
+                            Content = new StringContent(string.Format(Resources.SettingsFetchError, e.Message))
+                        };
                     }
                     catch (Exception)
                     {
@@ -1518,16 +1521,18 @@ namespace Skanetrafiken.Crm.Controllers
 
                     SendEmailResponse resp = CrmPlusUtility.SendValidationEmail(localContext, threadId, contact);
 
-                    return new HttpResponseMessage(HttpStatusCode.OK) {
-                                    Content = new StringContent(SerializeNoNull(contact.ToContactInfo(localContext)))
-                                };
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent(SerializeNoNull(contact.ToContactInfo(localContext)))
+                    };
                 }
             }
             catch (Exception ex)
             {
-                return new HttpResponseMessage(HttpStatusCode.InternalServerError) {
-                                Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message))
-                            };
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message))
+                };
             }
             finally
             {
@@ -1599,7 +1604,8 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (customer == null)
                     {
-                        return new HttpResponseMessage(HttpStatusCode.BadRequest) {
+                        return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                        {
                             Content = new StringContent(Resources.IncomingDataCannotBeNull)
                         };
                     }
@@ -1613,7 +1619,8 @@ namespace Skanetrafiken.Crm.Controllers
                     StatusBlock validationStatus = CustomerUtility.ValidateCustomerInfo(localContext, customer);
                     if (!validationStatus.TransactionOk)
                     {
-                        return new HttpResponseMessage(HttpStatusCode.BadRequest) {
+                        return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                        {
                             Content = new StringContent(validationStatus.ErrorMessage)
                         };
                     }
@@ -1952,7 +1959,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                     ContactEntity contact;
                     Guid newGuid;
-                    if(Guid.TryParse(id, out newGuid))
+                    if (Guid.TryParse(id, out newGuid))
                     {
                         contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, newGuid, new ColumnSet(false));
                     }
@@ -1969,8 +1976,8 @@ namespace Skanetrafiken.Crm.Controllers
                             }
                         });
                     }
-                    
-                    if(contact == null)
+
+                    if (contact == null)
                     {
                         HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest);
                         response.Content = new StringContent($"No Contact found with Id = {id}");
@@ -1994,7 +2001,7 @@ namespace Skanetrafiken.Crm.Controllers
                             }
                         });
 
-                    if(valueCodeCollection == null)
+                    if (valueCodeCollection == null)
                     {
                         if (valueCodeCollection.Count() < 1)
                         {
@@ -2003,7 +2010,7 @@ namespace Skanetrafiken.Crm.Controllers
                             return response;
                         }
                     }
-                    
+
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                     resp.Content = new StringContent(JsonConvert.SerializeObject(valueCodeCollection));
                     return resp;
@@ -2053,7 +2060,7 @@ namespace Skanetrafiken.Crm.Controllers
                                 new ConditionExpression(AccountEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.AccountState.Active)
                         }
                     });
-                    
+
                     if (accounts == null || accounts.Count == 0)
                     {
                         // SEARCH ON PORTALID/ORG NR (PARENT ACCOUNT)
@@ -2155,7 +2162,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                     List<OrderEntity> lOrders = XrmRetrieveHelper.RetrieveMultiple<OrderEntity>(localContext, queryOrders);
 
-                    if(lOrders.Count == 0)
+                    if (lOrders.Count == 0)
                     {
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.NoContent);
                         rm.Content = new StringContent(string.Format(Resources.NoSalesOrderFoundWithInfo, ""));
@@ -2228,14 +2235,14 @@ namespace Skanetrafiken.Crm.Controllers
 
                     List<OrderEntity> lOrders = XrmRetrieveHelper.RetrieveMultiple<OrderEntity>(localContext, queryOrder);
 
-                    if(lOrders.Count == 0)
+                    if (lOrders.Count == 0)
                     {
                         _log.Debug(string.Format(Resources.NoSalesOrderFoundWithInfo, fileInfo.OrderId));
                         HttpResponseMessage respNoOrders = new HttpResponseMessage(HttpStatusCode.NotFound);
                         respNoOrders.Content = new StringContent(string.Format(Resources.NoSalesOrderFoundWithInfo, fileInfo.OrderId));
                         return respNoOrders;
                     }
-                    else if(lOrders.Count > 1)
+                    else if (lOrders.Count > 1)
                     {
                         _log.Debug(string.Format(Resources.MultipleOrdersFound, fileInfo.OrderId));
                         HttpResponseMessage respNoOrders = new HttpResponseMessage(HttpStatusCode.NotFound);
@@ -2315,7 +2322,7 @@ namespace Skanetrafiken.Crm.Controllers
                         return error;
                     }
 
-                    
+
                     _log.Debug($"Creating (at least) new Cost Site for {accountInfo.PortalId}");
 
                     // Create new Cost Site
@@ -2515,16 +2522,16 @@ namespace Skanetrafiken.Crm.Controllers
                                 new ConditionExpression(AccountEntity.Fields.AccountId, ConditionOperator.Equal, accountInfo.Guid)
                             }
                         });
-                    
+
                     if (accounts == null || accounts.Count == 0)
                     {
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
                         error.Content = new StringContent($"Found no accounts with ID {accountInfo.Guid}.");
                         return error;
                     }
-                    
+
                     AccountEntity existingAccount = accounts[0];
-                    if(existingAccount.StateCode != Generated.AccountState.Active)
+                    if (existingAccount.StateCode != Generated.AccountState.Active)
                     {
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.Forbidden);
                         error.Content = new StringContent($"The requsted Account must be active.");
@@ -2534,7 +2541,8 @@ namespace Skanetrafiken.Crm.Controllers
                     AccountEntity newAccount = new AccountEntity();
                     if (AccountInfo.GetChangedAccountEntity(accounts[0], accountInfo, ref newAccount))
                     {
-                        if (!string.IsNullOrEmpty(newAccount.cgi_organizational_number)){
+                        if (!string.IsNullOrEmpty(newAccount.cgi_organizational_number))
+                        {
                             HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
                             error.Content = new StringContent($"Cannot change value of existing OrganizationNumber.");
                             return error;
@@ -2635,7 +2643,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                     // Validates Email (from Company Role) and Social Security Number
                     StatusBlock validateEmailAndSocialSecurityNumberStatus = CustomerUtility.ValidateCustomerInfo(localContext, customerInfo);
-                    
+
                     // Return 400 Bad Request if not validated
                     if (!validateEmailAndSocialSecurityNumberStatus.TransactionOk)
                     {
@@ -2761,7 +2769,8 @@ namespace Skanetrafiken.Crm.Controllers
                         });
 
                     // Object used for update.
-                    ContactEntity updContact = new ContactEntity(){
+                    ContactEntity updContact = new ContactEntity()
+                    {
                         ContactId = contact.ContactId
                     };
 
@@ -2784,9 +2793,10 @@ namespace Skanetrafiken.Crm.Controllers
                         localContext.OrganizationService.Update(updContact);
                     }
 
-                    return new HttpResponseMessage(HttpStatusCode.OK) {
-                                    Content = new StringContent(SerializeNoNull(contact.ToContactInfo(localContext)))
-                                };
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent(SerializeNoNull(contact.ToContactInfo(localContext)))
+                    };
                 }
             }
             catch (Exception ex)
@@ -2855,7 +2865,8 @@ namespace Skanetrafiken.Crm.Controllers
                     bool updated = false;
 
                     // Object used for update.
-                    ContactEntity updContact = new ContactEntity() {
+                    ContactEntity updContact = new ContactEntity()
+                    {
                         ContactId = contact.ContactId
                     };
 
@@ -3060,7 +3071,8 @@ namespace Skanetrafiken.Crm.Controllers
 
 
                         // Object used for update.
-                        ContactEntity updContact = new ContactEntity(){
+                        ContactEntity updContact = new ContactEntity()
+                        {
                             ContactId = contact.ContactId
                         };
                         bool updated = false;
@@ -3077,16 +3089,18 @@ namespace Skanetrafiken.Crm.Controllers
                         }
                     }
 
-                    return new HttpResponseMessage(HttpStatusCode.OK) {
-                                    Content = new StringContent(SerializeNoNull(contact.ToContactInfo(localContext)))
-                                };
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent(SerializeNoNull(contact.ToContactInfo(localContext)))
+                    };
                 }
             }
             catch (Exception ex)
             {
-                return new HttpResponseMessage(HttpStatusCode.InternalServerError) {
-                                Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message))
-                            };
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message))
+                };
             }
             finally
             {
@@ -3108,7 +3122,7 @@ namespace Skanetrafiken.Crm.Controllers
                 CreateAccount = false,
                 CreateContact = true,
                 CreateOpportunity = false,
-                Status = new OptionSetValue((int)Generated.lead_statuscode.Qualified)                
+                Status = new OptionSetValue((int)Generated.lead_statuscode.Qualified)
             };
 
             QualifyLeadResponse resp = (QualifyLeadResponse)localContext.OrganizationService.Execute(req);
@@ -3130,7 +3144,8 @@ namespace Skanetrafiken.Crm.Controllers
             }
 
             // Object used for update.
-            ContactEntity updContact = new ContactEntity(){
+            ContactEntity updContact = new ContactEntity()
+            {
                 ContactId = qualifiedContact.ContactId
             };
 
@@ -3340,7 +3355,7 @@ namespace Skanetrafiken.Crm.Controllers
                     }
                 };
                 notification.Id = XrmHelper.Create(localContext.OrganizationService, notification);
-                
+
                 // Update the contact. 
                 if (notificationInfo.NotificationType == (int)Generated.ed_notifymkl_ed_notificationtype.Login && notificationInfo.TimeStamp.HasValue && notificationInfo.Status.Value == 1)
                 {
@@ -3455,7 +3470,7 @@ namespace Skanetrafiken.Crm.Controllers
                 returnStatus.StatusBlockCode = (int)CustomerUtility.StatusBlockCode.InvalidInput;
                 return returnStatus;
             }
-            
+
 
             if (notificationInfo.ContactType != (int)Generated.ed_notifymkl_ed_method.Mail &&
                 notificationInfo.ContactType != (int)Generated.ed_notifymkl_ed_method.NotApplicable &&
@@ -3548,9 +3563,10 @@ namespace Skanetrafiken.Crm.Controllers
                     StatusBlock validateStatus = CustomerUtility.ValidateCustomerInfo(localContext, customer); //CHECK
                     if (!validateStatus.TransactionOk)
                     {
-                        return new HttpResponseMessage(HttpStatusCode.BadRequest) {
-                                        Content = new StringContent(validateStatus.ErrorMessage)
-                                    };
+                        return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                        {
+                            Content = new StringContent(validateStatus.ErrorMessage)
+                        };
                     }
 
                     // Get contact and verify that it is active
@@ -3605,7 +3621,7 @@ namespace Skanetrafiken.Crm.Controllers
                             return response;
                         }
                     }
-                    
+
 
                     // Validera att en eventuell uppdatering inte skulle bryta mot affärsregler (inga dubletter) - Om så returnera lämpligt felmeddelande
                     if (customer.SwedishSocialSecurityNumberSpecified && customer.SwedishSocialSecurityNumber)
@@ -3681,7 +3697,7 @@ namespace Skanetrafiken.Crm.Controllers
                         //contact.CombineAttributes(newInfo);
 
                         string[] attrs = new string[newInfo.Attributes.Count];
-                        
+
                         int i = 0;
                         foreach (var attr in newInfo.Attributes)
                         {
@@ -3693,7 +3709,8 @@ namespace Skanetrafiken.Crm.Controllers
                         AttributeCollection collection = newInfo.GetModifiedAttributes(contact, attrs);
                         Guid contactId = contact.Id;
 
-                        ContactEntity updContact = new ContactEntity() {
+                        ContactEntity updContact = new ContactEntity()
+                        {
                             Attributes = collection,
                             Id = contactId
                         };
@@ -3708,14 +3725,16 @@ namespace Skanetrafiken.Crm.Controllers
 
                     contact.Attributes = newInfo.Attributes;
 
-                    return new HttpResponseMessage(HttpStatusCode.OK) {
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
                         Content = new StringContent(SerializeNoNull(contact.ToContactInfo(localContext)))
                     };
                 }
             }
             catch (Exception ex)
             {
-                return new HttpResponseMessage(HttpStatusCode.InternalServerError) {
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
                     Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message))
                 };
             }
@@ -3782,9 +3801,9 @@ namespace Skanetrafiken.Crm.Controllers
                             responseMessage.Content = new StringContent(validateBlockContactInfo.ErrorMessage);
                             return responseMessage;
                         }
-                        
-                        ContactEntity contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, 
-                            new Guid(customerInfo.Guid), 
+
+                        ContactEntity contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext,
+                            new Guid(customerInfo.Guid),
                             new ColumnSet(ContactEntity.Fields.ed_isLockedPortal));
 
                         if (contact.ed_isLockedPortal != null)
@@ -3917,13 +3936,22 @@ namespace Skanetrafiken.Crm.Controllers
                     };
 
                     List<ContactEntity> contacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactQuery);
+
+                    if (contacts == null || contacts.Count > 1)
+                    {
+                        HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        rmNoContactFound.Content = new StringContent(string.Format(Resources.UnexpectedException, 
+                            $"Found no matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}"));
+                        return rmNoContactFound;
+                    }
+
                     ContactEntity contact = contacts.First();
 
                     // Update Contact with new email
                     if (contact.EMailAddress1.ToLower() != emailAddress.ToLower())
                     {
                         contact.EMailAddress1 = emailAddress;
-                        contact.ed_InformationSource = Generated.ed_informationsource.AdmAndraKund;
+                        contact.ed_InformationSource = Generated.ed_informationsource.ForetagsPortal;
                         XrmHelper.Update(localContext, contact);
                     }
 
@@ -4079,7 +4107,7 @@ namespace Skanetrafiken.Crm.Controllers
                                     conflictFilter.AddFilter(socsecFilter);
                                 }
                             }
-                            
+
                             QueryExpression conflictContactQuery = new QueryExpression()
                             {
                                 EntityName = ContactEntity.EntityLogicalName,
@@ -4167,7 +4195,7 @@ namespace Skanetrafiken.Crm.Controllers
                                     mergeContactFilter.AddFilter(persNrFilter);
                                 }
                             }
-                            
+
                             FilterExpression epostFilter = new FilterExpression(LogicalOperator.And)
                             {
                                 Conditions =
@@ -4228,7 +4256,8 @@ namespace Skanetrafiken.Crm.Controllers
                             // Varför inte uppdatera bara det som är ändrat!
 
                             // Object used for update.
-                            ContactEntity updContact = new ContactEntity(){
+                            ContactEntity updContact = new ContactEntity()
+                            {
                                 ContactId = contact.ContactId
                             };
 
@@ -4245,8 +4274,8 @@ namespace Skanetrafiken.Crm.Controllers
                             contact.ed_LatestLinkGuid = null;
                             contact.ed_MklId = mklId;
                             contact.ed_InformationSource = Generated.ed_informationsource.BytEpost;
-                            
-                            
+
+
                             AttributeCollection attributesToUpdate = new AttributeCollection();
 
                             // todo - marcus
@@ -4272,12 +4301,13 @@ namespace Skanetrafiken.Crm.Controllers
 
                             updContact.Attributes = attributesToUpdate;
                             localContext.OrganizationService.Update(updContact);
-                            
+
                             CrmPlusUtility.SendConfirmationEmail(localContext, threadId, contact);
 
-                            return new HttpResponseMessage(HttpStatusCode.OK) {
-                                            Content = new StringContent(SerializeNoNull(contact.ToContactInfo(localContext)))
-                                        };
+                            return new HttpResponseMessage(HttpStatusCode.OK)
+                            {
+                                Content = new StringContent(SerializeNoNull(contact.ToContactInfo(localContext)))
+                            };
                         #endregion
 
                         #region case Lead
@@ -4500,7 +4530,7 @@ namespace Skanetrafiken.Crm.Controllers
                                 respMess.Content = new StringContent(Resources.UnexpectedErrorWhenValidatingEmail);
                                 return respMess;
                             }
-                            
+
                             // Object used for update.
                             ContactEntity updContact2 = new ContactEntity()
                             {
@@ -4531,7 +4561,7 @@ namespace Skanetrafiken.Crm.Controllers
                             localContext.OrganizationService.Update(updContact2);
 
                             CrmPlusUtility.SendConfirmationEmail(localContext, threadId, newContact);
-                            
+
                             HttpResponseMessage rm4 = new HttpResponseMessage(HttpStatusCode.OK);
                             rm4.Content = new StringContent(SerializeNoNull(newContact.ToContactInfo(localContext)));
                             return rm4;
@@ -4590,8 +4620,8 @@ namespace Skanetrafiken.Crm.Controllers
                         FilterExpression skaKortFilter = new FilterExpression(LogicalOperator.And);
                         skaKortFilter.AddCondition(SkaKortEntity.Fields.ed_CardNumber, ConditionOperator.Equal, skaKortInfo.CardNumber);
                         SkaKortEntity skakort = XrmRetrieveHelper.RetrieveFirst<SkaKortEntity>(localContext, new ColumnSet(
-                            SkaKortEntity.Fields.Id, 
-                            SkaKortEntity.Fields.ed_Contact, 
+                            SkaKortEntity.Fields.Id,
+                            SkaKortEntity.Fields.ed_Contact,
                             SkaKortEntity.Fields.ed_Account,
                             SkaKortEntity.Fields.ed_CardNumber,
                             SkaKortEntity.Fields.ed_name), skaKortFilter);
@@ -4609,7 +4639,7 @@ namespace Skanetrafiken.Crm.Controllers
                             else
                             {
                                 _log.Debug($"Updating SkaKort with CardNumber {skaKortInfo.CardNumber}.");
-                                
+
                                 SkaKortEntity updateSkaKort = new SkaKortEntity();
                                 updateSkaKort.Id = skakort.Id;
                                 updateSkaKort.ed_Contact = contact.ToEntityReference();
@@ -4641,13 +4671,13 @@ namespace Skanetrafiken.Crm.Controllers
                         else //Create new
                         {
                             _log.Debug($"Creating new SkaKort with CardNumber {skaKortInfo.CardNumber}.");
-                            
+
                             SkaKortEntity newSkaKort = new SkaKortEntity();
                             newSkaKort.ed_name = skaKortInfo.CardNumber;
                             newSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
                             newSkaKort.ed_Contact = contact.ToEntityReference();
                             newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
-                            
+
                             newSkaKort.Id = XrmHelper.Create(localContext, newSkaKort);
 
                             _log.Debug($"New SkaKort created. SkaKortId: {newSkaKort.Id}.");
@@ -4714,8 +4744,8 @@ namespace Skanetrafiken.Crm.Controllers
                         skaKortFilter.AddCondition(SkaKortEntity.Fields.ed_CardNumber, ConditionOperator.Equal, skaKortInfo.CardNumber);
 
                         SkaKortEntity skakort = XrmRetrieveHelper.RetrieveFirst<SkaKortEntity>(localContext, new ColumnSet(
-                            SkaKortEntity.Fields.Id, 
-                            SkaKortEntity.Fields.ed_Contact, 
+                            SkaKortEntity.Fields.Id,
+                            SkaKortEntity.Fields.ed_Contact,
                             SkaKortEntity.Fields.ed_Account,
                             SkaKortEntity.Fields.ed_name,
                             SkaKortEntity.Fields.ed_CardNumber), skaKortFilter);
@@ -4752,7 +4782,7 @@ namespace Skanetrafiken.Crm.Controllers
                                 if (skakort.ed_InformationSource != Crm.Schema.Generated.ed_informationsource.ForetagsPortal)
                                 {
                                     updateSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
-                                }                                
+                                }
 
                                 XrmHelper.Update(localContext, updateSkaKort);
 
@@ -4782,7 +4812,7 @@ namespace Skanetrafiken.Crm.Controllers
                             resp.Content = new StringContent("SkaKort created.");
                             return resp;
                         }
-                        
+
                     }
                     else
                     {
@@ -4834,8 +4864,8 @@ namespace Skanetrafiken.Crm.Controllers
                     FilterExpression skaKortFilter = new FilterExpression(LogicalOperator.And);
                     skaKortFilter.AddCondition(SkaKortEntity.Fields.ed_CardNumber, ConditionOperator.Equal, skaKortInfo.CardNumber);
                     skakort = XrmRetrieveHelper.RetrieveFirst<SkaKortEntity>(localContext, new ColumnSet(
-                        SkaKortEntity.Fields.Id, 
-                        SkaKortEntity.Fields.statuscode, 
+                        SkaKortEntity.Fields.Id,
+                        SkaKortEntity.Fields.statuscode,
                         SkaKortEntity.Fields.statecode,
                         SkaKortEntity.Fields.ed_Contact,
                         SkaKortEntity.Fields.ed_Account), skaKortFilter);
@@ -4853,8 +4883,8 @@ namespace Skanetrafiken.Crm.Controllers
                         {
                             SkaKortEntity updateSkakort = new SkaKortEntity();
                             updateSkakort.Id = skakort.Id;
-                            
-                            if(skaKortInfo.InformationSource == (int)Generated.ed_informationsource.ForetagsPortal &&
+
+                            if (skaKortInfo.InformationSource == (int)Generated.ed_informationsource.ForetagsPortal &&
                                 skakort.ed_Account != null)
                             {
                                 updateSkakort.ed_Account = null;
@@ -4864,7 +4894,7 @@ namespace Skanetrafiken.Crm.Controllers
                             {
                                 updateSkakort.ed_Contact = null;
                             }
-                            
+
                             XrmHelper.Update(localContext, updateSkakort);
 
                             _log.Debug($"SkaKort updated. SkaKortId: {skakort.Id}.");
@@ -5078,7 +5108,7 @@ namespace Skanetrafiken.Crm.Controllers
             //        }
             //    };
             //}
-            
+
             FilterExpression nameMailFilter = new FilterExpression(LogicalOperator.And)
             {
                 Conditions =

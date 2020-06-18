@@ -15,7 +15,7 @@ namespace Skanetrafiken.Crm.Entities
                 State = new OptionSetValue((int)Generated.ed_notifymklState.Completed),
                 Status = new OptionSetValue((int)Generated.ed_notifymkl_statuscode.Completed)
             };
-
+            
             localContext.OrganizationService.Execute(req);
         }
     }
