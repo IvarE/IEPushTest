@@ -210,6 +210,49 @@ namespace Endeavor.Crm.UnitTest
             }
         }
 
+        [Test, Explicit]
+        public void testOrgNumberFormat()
+        {
+
+            // Connect to the Organization service. 
+            // The using statement assures that the service proxy will be properly disposed.
+            using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+            {
+                // This statement is required to enable early-bound type support.
+                _serviceProxy.EnableProxyTypes();
+
+                Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
+
+                System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+                stopwatch.Start();
+
+                string testOrgNumberFormat = "123456789-1";
+
+                testOrgNumberFormat = FormatOrgNumber(localContext, testOrgNumberFormat);
+
+
+                localContext.TracingService.Trace($"test avslutat orgnummer är nu: {testOrgNumberFormat}");
+
+                localContext.TracingService.Trace("Stop Sequences, ElapsedMilliseconds: {0}.", stopwatch.ElapsedMilliseconds);
+            }
+        }
+        string FormatOrgNumber(Plugin.LocalPluginContext localContext, string orgNumber)
+        {
+            localContext.Trace($"Entered FormatOrgNumber. OrgNumber value: {orgNumber}");
+            if (orgNumber.Length < 10)
+                localContext.Trace($"This will fail org.number to SHORT");
+
+            foreach (char c in orgNumber.ToCharArray())
+            {
+                if (!char.IsDigit(c))
+                    orgNumber = orgNumber.Replace(string.Format("{0}", (object)c), "");
+            }
+            if (orgNumber.Length != 10)
+                localContext.Trace($"This will fail org.number to LONG");
+
+            localContext.Trace($"Leaving FormatOrgNumber. OrgNumber value: {orgNumber}");
+            return orgNumber;
+        }
 
         internal ServerConnection ServerConnection
         {

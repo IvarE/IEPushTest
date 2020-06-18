@@ -137,6 +137,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiHelper.cs" />
+    <Compile Include="PreAccountUpdate.cs" />
+    <Compile Include="PreAccountCreate.cs" />
     <Compile Include="CountryUtility.cs" />
     <Compile Include="Entities\AsyncOperationEntity.cs" />
     <Compile Include="Entities\CgiCategoryDetailEntity.cs" />
@@ -358,6 +360,7 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <Content Include="Sql\QueryDuplicatePersonnummer.sql" />
+    <Content Include="WebResource\css\Endeavor.Skanetrafiken.SearchTravelCards.css" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MargeAccounts.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.SearchTravelCards.html" />
     <Content Include="WebResource\image\ed_account_block16.png" />
