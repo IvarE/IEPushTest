@@ -18,6 +18,14 @@
     margin-top: 10px;
 }
 
+.row-header {
+    width: 100%;
+    height: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
 .col-1 {
     width: 6%;
 }
