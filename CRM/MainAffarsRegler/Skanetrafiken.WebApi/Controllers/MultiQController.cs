@@ -84,22 +84,22 @@ namespace Skanetrafiken.Crm.Controllers
             }
 
             // TOKEN VERIFICATION - TO CHECK
-            //try
-            //{
-            //    HttpResponseMessage tokenResp = TokenValidation();
-            //    if (tokenResp.StatusCode != HttpStatusCode.OK)
-            //    {
-            //        _log.Info($"Th={threadId} - Returning statuscode = {tokenResp.StatusCode}, Content = {tokenResp.Content.ReadAsStringAsync().Result}\n");
-            //        return tokenResp;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    HttpResponseMessage tokenResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-            //    tokenResponse.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-            //    _log.Info($"Th={threadId} - Returning statuscode = {tokenResponse.StatusCode}, Content = {tokenResponse.Content.ReadAsStringAsync().Result}\n");
-            //    return tokenResponse;
-            //}
+            try
+            {
+                HttpResponseMessage tokenResp = TokenValidation();
+                if (tokenResp.StatusCode != HttpStatusCode.OK)
+                {
+                    _log.Info($"Th={threadId} - Returning statuscode = {tokenResp.StatusCode}, Content = {tokenResp.Content.ReadAsStringAsync().Result}\n");
+                    return tokenResp;
+                }
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage tokenResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                tokenResponse.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                _log.Info($"Th={threadId} - Returning statuscode = {tokenResponse.StatusCode}, Content = {tokenResponse.Content.ReadAsStringAsync().Result}\n");
+                return tokenResponse;
+            }
 
             HttpResponseMessage rm = CrmPlusControl.PostDeliveryReport(threadId, fileInfo);
             _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
