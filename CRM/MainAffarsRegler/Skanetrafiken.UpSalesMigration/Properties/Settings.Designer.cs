@@ -26,9 +26,9 @@ namespace Skanetrafiken.UpSalesMigration.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("D:\\Endeavor\\Upsales Data\\")]
-        public string ExcelRelativePath {
+        public string RelativePath {
             get {
-                return ((string)(this["ExcelRelativePath"]));
+                return ((string)(this["RelativePath"]));
             }
         }
         
@@ -115,7 +115,7 @@ namespace Skanetrafiken.UpSalesMigration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Pedro\\OneDrive\\Ambiente de Trabalho\\Testdata_LR+K\\Agreements")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Agreements")]
         public string PDFilesAgreements {
             get {
                 return ((string)(this["PDFilesAgreements"]));
@@ -124,7 +124,7 @@ namespace Skanetrafiken.UpSalesMigration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Pedro\\OneDrive\\Ambiente de Trabalho\\Testdata_LR+K\\Leveransrapport")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Leveransrapport")]
         public string PDFilesReports {
             get {
                 return ((string)(this["PDFilesReports"]));

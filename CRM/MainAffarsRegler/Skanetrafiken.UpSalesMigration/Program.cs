@@ -2553,15 +2553,18 @@ namespace Skanetrafiken.UpSalesMigration
                         crmContext.ClearChanges();
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload PDF Orders Leveransrapport--------------");
 
+                        string relativePath = Properties.Settings.Default.RelativePath;
                         string path = Properties.Settings.Default.PDFilesReports;
                         string filter = "*.pdf";
 
-                        ImportPDFOrders(localContext, crmContext, path, filter);
+                        string fullPath = relativePath + path;
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Full Path: " + fullPath);
+                        ImportPDFOrders(localContext, crmContext, fullPath, filter);
 
                         Console.WriteLine("Sending Batch of Orders to Sekund...");
 
-                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        LogCrmContextMultipleResponses(localContext, responses);
+                        //SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        //LogCrmContextMultipleResponses(localContext, responses);
 
                         Console.WriteLine("Batch Sent. Please check logs.");
 
@@ -2586,15 +2589,18 @@ namespace Skanetrafiken.UpSalesMigration
                         crmContext.ClearChanges();
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload PDF Agreements--------------");
 
+                        string relativePath = Properties.Settings.Default.RelativePath;
                         string path = Properties.Settings.Default.PDFilesAgreements;
                         string filter = "*.pdf";
 
-                        ImportPDFAgreements(localContext, crmContext, path, filter);
+                        string fullPath = relativePath + path;
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Full Path: " + fullPath);
+                        ImportPDFAgreements(localContext, crmContext, fullPath, filter);
 
                         Console.WriteLine("Sending Batch of Orders to Sekund...");
 
-                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        LogCrmContextMultipleResponses(localContext, responses);
+                        //SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        //LogCrmContextMultipleResponses(localContext, responses);
 
                         Console.WriteLine("Batch Sent. Please check logs.");
 
@@ -2682,7 +2688,7 @@ namespace Skanetrafiken.UpSalesMigration
                 return;
             }
 
-            string relativeExcelPath = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.ExcelRelativePath);
+            string relativeExcelPath = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.RelativePath);
 
             bool showMenu = true;
             while (showMenu)
