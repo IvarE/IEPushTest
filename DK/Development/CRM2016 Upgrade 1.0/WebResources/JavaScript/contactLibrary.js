@@ -28,6 +28,7 @@ CGISweden.contact =
                 case FORM_TYPE_UPDATE:
                     CGISweden.contact.checkIfUserHasSecRole();
                     CGISweden.contact.timerfunction_eHandel();
+                    //CGISweden.contact.checkIfAdmForm();
                 case FORM_TYPE_READONLY:
                 case FORM_TYPE_DISABLED:
                     break;
@@ -52,6 +53,8 @@ CGISweden.contact =
         if (_check_soc == false) {
             eventArgs.preventDefault();
         }
+
+        //CGISweden.contact.checkIfAdmForm();
     },
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     checkIfUserHasSecRole: function () {
@@ -67,6 +70,18 @@ CGISweden.contact =
         }
     },
 
+    //checkIfAdmForm: function () {
+    //    var currForm = Xrm.Page.ui.formSelector.getCurrentItem();
+    //    var currFormId = currForm.getId()
+
+    //    if (currFormId == "aa39956c-0a06-4963-873a-2b3e574dbea5" || currFormId == "4b94250e-b88f-4439-9184-750d56a84fcf") { //"Tre Kolumner (Test)" or "Labbvy Admin"
+    //        Xrm.Page.getAttribute("ed_isadmform").setValue(true);
+    //    }
+    //    else {
+    //        Xrm.Page.getAttribute("ed_isadmform").setValue(false);
+    //    }
+    //},
+
     checkIfUserHasRole_complete: function () {
     },
 
@@ -80,22 +95,33 @@ CGISweden.contact =
                 var _handlingOfficerPlus = "Skånetrafiken Handläggare plus";
 
                 var _roleName = result[0].Name;
-                try {
-                    var emailField = Xrm.Page.getAttribute("emailaddress1").getValue();
 
-                    if (emailField && emailField.Length !== 0) {
-                        if (_roleName.indexOf("Handläggare") > 0) {
-                            CGISweden.formscriptfunctions.SetState("emailaddress1", "true"); //The field should be editable until it has content
+                
+                    try {
+                        var emailField = Xrm.Page.getAttribute("emailaddress1").getValue();
+
+                        var currForm = Xrm.Page.ui.formSelector.getCurrentItem();
+
+                        var currFormId = currForm.getId()
+
+                        if (currFormId !== "aa39956c-0a06-4963-873a-2b3e574dbea5") {
+                            if (currFormId !== "4b94250e-b88f-4439-9184-750d56a84fcf") { //dont lock email field when using form "Tre Kolumner (Test)" or "Labbvy Admin"
+                                if (emailField && emailField.Length !== 0) {
+                                    if (_roleName.indexOf("Handläggare") > 0) {
+                                        CGISweden.formscriptfunctions.SetState("emailaddress1", "true"); //The field should be editable until it has content
+                                    }
+                                }
+                            }
                         }
                     }
-                }
-                catch (ex) {
-                    if (emailField === undefined) {
+                    catch (ex) {
+                        if (emailField === undefined) {
 
-                    } else {
-                        alert("Fel i CGISweden.account.checkIfUserHasRole_callback\n\n" + e.Message);
+                        } else {
+                            alert("Fel i CGISweden.account.checkIfUserHasRole_callback\n\n" + e.Message);
+                        }
                     }
-                }
+                
             }
         }
         catch (e) {

@@ -1039,11 +1039,11 @@ namespace Skanetrafiken.Crm.Entities
 
             if (
                 contactToProcess.ed_PrivateCustomerContact == true &&
-                (!string.IsNullOrEmpty(contactToProcess.EMailAddress1) || !string.IsNullOrEmpty(contactToProcess.EMailAddress2)
-                ))
+                (!string.IsNullOrEmpty(contactToProcess.EMailAddress1)) // || !string.IsNullOrEmpty(contactToProcess.EMailAddress2)
+                )
             {
                 localContext.Trace("CheckPrivateContactsByEmail");
-                CheckPrivateContactsByEmail(localContext, contactToProcess.EMailAddress1, contactToProcess.EMailAddress2, isCreate);
+                CheckPrivateContactsByEmail(localContext, contactToProcess.EMailAddress1, isCreate); // , contactToProcess.EMailAddress2
                 //Should not validate again through old functionality
                 wasAlreadyValidated = true;
             }
@@ -1063,7 +1063,7 @@ namespace Skanetrafiken.Crm.Entities
             return wasAlreadyValidated;
         }
 
-        private void CheckPrivateContactsByEmail(Plugin.LocalPluginContext localContext, string email1, string email2, bool isCreate)
+        private void CheckPrivateContactsByEmail(Plugin.LocalPluginContext localContext, string email1, bool isCreate) // string email2,
         {
             QueryExpression query = new QueryExpression(LogicalName);
             query.NoLock = true;
@@ -1088,22 +1088,24 @@ namespace Skanetrafiken.Crm.Entities
                 // Define filter QEcontact_Criteria_0_0
                 filterByEmail1.FilterOperator = LogicalOperator.Or;
                 filterByEmail1.AddCondition(Fields.EMailAddress1, ConditionOperator.Equal, email1);
-                filterByEmail1.AddCondition(Fields.EMailAddress2, ConditionOperator.Equal, email1);
+                //filterByEmail1.AddCondition(Fields.EMailAddress2, ConditionOperator.Equal, email1);
             }
 
-            if (!string.IsNullOrEmpty(email2))
-            {
-                var filterByEmail2 = new FilterExpression();
-                filterByEmail.AddFilter(filterByEmail2);
+            //if (!string.IsNullOrEmpty(email2))
+            //{
+            //    var filterByEmail2 = new FilterExpression();
+            //    filterByEmail.AddFilter(filterByEmail2);
 
-                filterByEmail2.FilterOperator = LogicalOperator.Or;
-                filterByEmail2.AddCondition(Fields.EMailAddress1, ConditionOperator.Equal, email2);
-                filterByEmail2.AddCondition(Fields.EMailAddress2, ConditionOperator.Equal, email2);
-            }
+            //    filterByEmail2.FilterOperator = LogicalOperator.Or;
+            //    filterByEmail2.AddCondition(Fields.EMailAddress1, ConditionOperator.Equal, email2);
+            //    filterByEmail2.AddCondition(Fields.EMailAddress2, ConditionOperator.Equal, email2);
+            //}
 
             ContactEntity duplicate = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, query);
 
-            if (duplicate != null)
+
+
+            if (duplicate != null) //temporarily removed to allow duplicate contacts
             {
 
                 throw new InvalidPluginExecutionException(
