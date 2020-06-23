@@ -518,6 +518,14 @@
                             }],
                             function (result) {
                                 debugger;
+                                var cardNumberResp = result.CardNumberResp;
+                                var isClosed = result.IsClosed;
+                                var amount = result.Amount;
+                                var closedReason = result.ClosedReason;
+                                var isReserved = result.IsReserved;
+
+
+
                             },
                             function (e, t) {
                                 debugger;
@@ -544,7 +552,7 @@
                             return;
                         }
 
-                        Process.callAction("ed_GetCard",
+                        Process.callAction("ed_PlaceOrder",
                             [{
                                 key: "CardNumber",
                                 type: Process.Type.String,
@@ -552,6 +560,14 @@
                             }],
                             function (result) {
                                 debugger;
+
+                                var placeOrderResponse = result.PlaceOrderResponse;
+                                var cardNumberResp = result.CardNumberResp;
+                                var isClosed = result.IsClosed;
+                                var amount = result.Amount;
+                                var closedReason = result.ClosedReason;
+                                var isReserved = result.IsReserved;
+
                                 Process.callAction("ed_CaptureOrder",
                                     [{
                                         key: "CardNumber",
@@ -560,6 +576,8 @@
                                     }],
                                     function (result) {
                                         debugger;
+
+                                        var captureOrderResponse = result.CaptureOrderResponse;
                                     },
                                     function (e, t) {
                                         debugger;

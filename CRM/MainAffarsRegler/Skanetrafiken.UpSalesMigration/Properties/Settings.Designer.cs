@@ -130,5 +130,14 @@ namespace Skanetrafiken.UpSalesMigration.Properties {
                 return ((string)(this["PDFilesReports"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Accounts\\Spann 2 - dubbletter_2020-05-28.csv")]
+        public string Bucket2Accounts {
+            get {
+                return ((string)(this["Bucket2Accounts"]));
+            }
+        }
     }
 }

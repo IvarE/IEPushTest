@@ -38,5 +38,8 @@
     <Setting Name="PDFilesReports" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Leveransrapport</Value>
     </Setting>
+    <Setting Name="Bucket2Accounts" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Accounts\Spann 2 - dubbletter_2020-05-28.csv</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
