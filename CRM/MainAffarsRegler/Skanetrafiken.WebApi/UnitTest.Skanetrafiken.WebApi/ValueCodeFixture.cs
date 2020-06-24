@@ -26,6 +26,9 @@ using Microsoft.Xrm.Sdk;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Endeavor.Crm.UnitTest
 {
@@ -234,60 +237,60 @@ namespace Endeavor.Crm.UnitTest
                     //string result = string.Empty;
 
                     //Get API Endpoint from Setting Entity
-                    FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+                    //FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                    //settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
 
-                    CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
+                    //CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
 
-                    localContext.TracingService.Trace("TotalTime elapsed: {0}. Since last reset: {1}", _totalTimer.ElapsedMilliseconds, _partTimer.ElapsedMilliseconds);
-                    _partTimer.Restart();
+                    //localContext.TracingService.Trace("TotalTime elapsed: {0}. Since last reset: {1}", _totalTimer.ElapsedMilliseconds, _partTimer.ElapsedMilliseconds);
+                    //_partTimer.Restart();
 
-                    //Get Card
-                    localContext.TracingService.Trace("\nJojoAPITest - get Card:");
+                    ////Get Card
+                    //localContext.TracingService.Trace("\nJojoAPITest - get Card:");
 
-                    var getCardRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}card/", settingEntity.ed_JojoCardDetailsAPI));
+                    //var getCardRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}card/", settingEntity.ed_JojoCardDetailsAPI));
 
-                    getCardRequest.Headers.Add("Card-Number", "9999184527");
-                    getCardRequest.Headers.Add("20", "*/*");
+                    //getCardRequest.Headers.Add("Card-Number", "9999184527");
+                    //getCardRequest.Headers.Add("20", "*/*");
 
-                    getCardRequest.Method = "GET";
+                    //getCardRequest.Method = "GET";
 
-                    using (WebResponse getCardResponse = getCardRequest.GetResponse())
-                    {
-                        var checkStatus = (HttpWebResponse)getCardResponse;
-                        if (checkStatus.StatusCode != HttpStatusCode.OK)
-                        {
-                            //Bad Request
-                            var felfelfel = "";
-                        }
-                        else
-                        {
-                            using (Stream stream = getCardResponse.GetResponseStream())
-                            {
-                                using (StreamReader streamReader = new StreamReader(stream, Encoding.UTF8))
-                                {
+                    //using (WebResponse getCardResponse = getCardRequest.GetResponse())
+                    //{
+                    //    var checkStatus = (HttpWebResponse)getCardResponse;
+                    //    if (checkStatus.StatusCode != HttpStatusCode.OK)
+                    //    {
+                    //        //Bad Request
+                    //        var felfelfel = "";
+                    //    }
+                    //    else
+                    //    {
+                    //        using (Stream stream = getCardResponse.GetResponseStream())
+                    //        {
+                    //            using (StreamReader streamReader = new StreamReader(stream, Encoding.UTF8))
+                    //            {
 
-                                    var jsonResponse = streamReader.ReadToEnd();
+                    //                var jsonResponse = streamReader.ReadToEnd();
 
-                                    DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(ValueCodeHandler.GetCardProperties));
-                                    MemoryStream streamMemory = new MemoryStream(Encoding.UTF8.GetBytes(jsonResponse));
-                                    streamMemory.Position = 0;
+                    //                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(ValueCodeHandler.GetCardProperties));
+                    //                MemoryStream streamMemory = new MemoryStream(Encoding.UTF8.GetBytes(jsonResponse));
+                    //                streamMemory.Position = 0;
 
-                                    ValueCodeHandler.GetCardProperties getCardProperties = (ValueCodeHandler.GetCardProperties)jsonSerializer.ReadObject(streamMemory);
-                                    streamMemory.Close();
-                                    if (getCardProperties != null)
-                                    {
-                                        //Return this information
-                                        var hello = "";
-                                    }
-                                    else
-                                    {
-                                        //bad
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    //                ValueCodeHandler.GetCardProperties getCardProperties = (ValueCodeHandler.GetCardProperties)jsonSerializer.ReadObject(streamMemory);
+                    //                streamMemory.Close();
+                    //                if (getCardProperties != null)
+                    //                {
+                    //                    //Return this information
+                    //                    var hello = "";
+                    //                }
+                    //                else
+                    //                {
+                    //                    //bad
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
 
                     ////Place Order
                     //localContext.TracingService.Trace("\nJojoAPITest - Place Order:");
