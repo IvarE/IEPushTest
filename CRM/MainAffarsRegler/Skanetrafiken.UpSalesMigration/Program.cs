@@ -30,6 +30,7 @@ namespace Skanetrafiken.UpSalesMigration
         public static string rel_contact_note = "Contact_Annotation";
         public static string rel_contact_account = "account_primary_contact";
         public static string rel_order_note = "SalesOrder_Annotation";
+        public static string rel_order_orderdetail = "order_details";
 
         public static string cgi_account_contact = "cgi_account_contact";
 
@@ -171,7 +172,7 @@ namespace Skanetrafiken.UpSalesMigration
             }
             else if (lSelectedColumns.Count > 1)
             {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"One Or More Columns found with Index: " + j);
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"More than One Columns found with Index: " + j);
                 return null;
             }
 
@@ -189,7 +190,7 @@ namespace Skanetrafiken.UpSalesMigration
             }
             else if (lSelectedColumns.Count > 1)
             {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"One Or More Columns found with Name: " + name);
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"More than One Columns found with Name: " + name);
                 return null;
             }
 
@@ -251,8 +252,11 @@ namespace Skanetrafiken.UpSalesMigration
 
             if (lCurrencies.Count == 1)
                 return lCurrencies.FirstOrDefault().ToEntityReference();
+            else if(lCurrencies.Count == 0)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"No Currencies found with Currency Name: " + name + ".");
+            else if(lCurrencies.Count > 1)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"More than One Currency found with Currency Name: " + name + ".");
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Currencies or More than One Currency found with Currency Name: " + name + ".");
             return null;
         }
 
@@ -273,8 +277,11 @@ namespace Skanetrafiken.UpSalesMigration
 
             if (lTeams.Count == 1)
                 return lTeams.FirstOrDefault().ToEntityReference();
+            else if (lTeams.Count == 0)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"No Users/Teams found with Name: " + name + ".");
+            else if (lTeams.Count > 1)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"More than One User/Team found with Name: " + name + ".");
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Users/Teams or More than One User/Team found with Name: " + name + ".");
             return null;
         }
 
@@ -287,8 +294,11 @@ namespace Skanetrafiken.UpSalesMigration
 
             if (lAccounts.Count == 1)
                 return lAccounts.FirstOrDefault().ToEntityReference();
+            else if (lAccounts.Count == 0)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"No Accounts found with field 'cgi_organizational_number' = " + orgNumber + ".");
+            else if (lAccounts.Count > 1)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"More than One Account found with field 'cgi_organizational_number' = " + orgNumber + ".");
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Accounts or More than One Account found with field 'cgi_organizational_number' = " + orgNumber + ".");
             return null;
         }
 
@@ -301,8 +311,11 @@ namespace Skanetrafiken.UpSalesMigration
 
             if (lAccounts.Count == 1)
                 return lAccounts.FirstOrDefault().ToEntityReference();
+            else if (lAccounts.Count == 0)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"No Accounts found with Upsales Id: " + upsalesId + ".");
+            else if (lAccounts.Count > 1)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"More than One Account found with Upsales Id: " + upsalesId + ".");
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Accounts or More than One Account found with Upsales Id: " + upsalesId + ".");
             return null;
         }
 
@@ -315,8 +328,11 @@ namespace Skanetrafiken.UpSalesMigration
 
             if (lContacts.Count == 1)
                 return lContacts.FirstOrDefault().ToEntityReference();
+            else if (lContacts.Count == 0)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"No Contacts found with Upsales Id: " + upsalesId + ".");
+            else if (lContacts.Count > 1)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"More than One Contact found with Upsales Id: " + upsalesId + ".");
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Contacts or More than One Contact found with Upsales Id: " + upsalesId + ".");
             return null;
         }
 
@@ -329,8 +345,11 @@ namespace Skanetrafiken.UpSalesMigration
 
             if (lPhoneCall.Count == 1)
                 return lPhoneCall.FirstOrDefault().ToEntityReference();
+            else if (lPhoneCall.Count == 0)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"No PhoneCalls found with Upsales Id: " + upsalesId + ".");
+            else if (lPhoneCall.Count > 1)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"More than One PhoneCall found with Upsales Id: " + upsalesId + ".");
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"No PhoneCalls or More than One PhoneCall found with Upsales Id: " + upsalesId + ".");
             return null;
         }
 
@@ -343,8 +362,11 @@ namespace Skanetrafiken.UpSalesMigration
 
             if (lEmail.Count == 1)
                 return lEmail.FirstOrDefault().ToEntityReference();
+            else if (lEmail.Count == 0)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"No Emails found with Upsales Id: " + upsalesId + ".");
+            else if (lEmail.Count > 1)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"More than One Email found with Upsales Id: " + upsalesId + ".");
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Emails or More than One Email found with Upsales Id: " + upsalesId + ".");
             return null;
         }
 
@@ -357,8 +379,11 @@ namespace Skanetrafiken.UpSalesMigration
 
             if (lAppointments.Count == 1)
                 return lAppointments.FirstOrDefault().ToEntityReference();
+            else if (lAppointments.Count == 0)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"No Appointments found with Upsales Id: " + upsalesId + ".");
+            else if (lAppointments.Count > 1)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"More than One Appointment found with Upsales Id: " + upsalesId + ".");
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Appointments or More than One Appointment found with Upsales Id: " + upsalesId + ".");
             return null;
         }
 
@@ -371,9 +396,58 @@ namespace Skanetrafiken.UpSalesMigration
 
             if (lSalesOrder.Count == 1)
                 return lSalesOrder.FirstOrDefault().ToEntityReference();
+            else if (lSalesOrder.Count == 0)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"No Orders found with Upsales Id: " + upsalesId + ".");
+            else if (lSalesOrder.Count > 1)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"More than One Order found with Upsales Id: " + upsalesId + ".");
 
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Orders or More than One Order found with Upsales Id: " + upsalesId + ".");
             return null;
+        }
+
+        public static void FulFillOrder(Plugin.LocalPluginContext localContext, Guid orderId)
+        {
+            //int newStatus = (int)salesorder_statuscode.Complete;
+
+            //Entity orderClose = new Entity("orderclose");
+            //orderClose["salesorderid"] = new EntityReference(SalesOrder.EntityLogicalName, orderId);
+            //FulfillSalesOrderRequest request = new FulfillSalesOrderRequest
+            //{
+            //    OrderClose = orderClose,
+            //    Status = new OptionSetValue(newStatus)
+            //};
+
+            //try
+            //{
+            //    localContext.OrganizationService.Execute(request);
+            //}
+            //catch (Exception e)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error setting the Sales Order to Completed. Details: " + e.Message);
+            //}
+        }
+
+        public static void CreateSalesOrderDetail(Plugin.LocalPluginContext localContext, CrmContext crmContext, decimal dtotalLineAmount, EntityReference erOrder)
+        {
+            SalesOrderDetail nOrderProduct = null;
+
+            try
+            {
+                nOrderProduct = new SalesOrderDetail();
+                nOrderProduct.IsProductOverridden = true;
+                nOrderProduct.IsPriceOverridden = true;
+                nOrderProduct.ProductDescription = "Upsales Order Value";
+                nOrderProduct.Quantity = 1M;
+                nOrderProduct.PricePerUnit = new Money(dtotalLineAmount);
+                nOrderProduct.ManualDiscountAmount = new Money(0M);
+                nOrderProduct.Tax = new Money(0M);
+                nOrderProduct.SalesOrderId = erOrder;
+
+                crmContext.AddObject(nOrderProduct);
+            }
+            catch (Exception e)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error adding Order Product to Batch. Details: " + e.Message);
+            }
         }
 
         public static OptionMetadataCollection GetOptionSetMetadata(Plugin.LocalPluginContext localContext, string entityName, string attributeName)
@@ -592,23 +666,19 @@ namespace Skanetrafiken.UpSalesMigration
                                     SalesOrder salesOrder = (SalesOrder)entity;
                                     _log.InfoFormat(CultureInfo.InvariantCulture, $"Sales Order with Name: " + salesOrder.Name + " was created with id: " + id + ".");
 
-                                    int newStatus = (int)salesorder_statuscode.Complete;
+                                    FulFillOrder(localContext, id);
+                                    
+                                    break;
+                                case SalesOrderDetail.EntityLogicalName:
 
-                                    Entity orderClose = new Entity("orderclose");
-                                    orderClose["salesorderid"] = new EntityReference(SalesOrder.EntityLogicalName, id);
-                                    FulfillSalesOrderRequest request = new FulfillSalesOrderRequest
-                                    {
-                                        OrderClose = orderClose,
-                                        Status = new OptionSetValue(newStatus)
-                                    };
+                                    SalesOrderDetail salesOrderDetail = (SalesOrderDetail)entity;
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Sales Order Detail with value: " + salesOrderDetail.PricePerUnit?.Value + " was created with id: " + id + ".");
 
-                                    try
+                                    EntityReference erOrder = salesOrderDetail.SalesOrderId;
+
+                                    if(erOrder != null)
                                     {
-                                        localContext.OrganizationService.Execute(request);
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error setting the Sales Order to Completed. Details: " + e.Message);
+                                        FulFillOrder(localContext, erOrder.Id);
                                     }
 
                                     break;
@@ -685,6 +755,12 @@ namespace Skanetrafiken.UpSalesMigration
 
                                     SalesOrder salesOrder = (SalesOrder)entity;
                                     _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Sales Order with Name: " + salesOrder.Name + " was not created. Details: " + response.Error.Message);
+
+                                    break;
+                                case SalesOrderDetail.EntityLogicalName:
+
+                                    SalesOrderDetail salesOrderDetail = (SalesOrderDetail)entity;
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"ERROR - Sales Order Detail with value: " + salesOrderDetail.PricePerUnit?.Value + " was not created. Details: " + response.Error.Message);
 
                                     break;
                                 case Annotation.EntityLogicalName:
@@ -1990,7 +2066,7 @@ namespace Skanetrafiken.UpSalesMigration
             {
                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
                 return;
-            }            
+            }
 
             string defaultUserName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.DefaultOwner);
             EntityReference erDefaultUser = GetCrmUserOrTeamByName(localContext, defaultUserName);
@@ -2366,6 +2442,72 @@ namespace Skanetrafiken.UpSalesMigration
             }
         }
 
+        public static void UpdateTotalAmmountonOrders(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
+        {
+            if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
+                return;
+            }
+
+            Console.Write("Creating Batch of Orders... ");
+            using (ProgressBar progress = new ProgressBar())
+            {
+                for (int i = 0; i < importExcelInfo.lData.Count; i++)
+                {
+
+                    if (i == 2)
+                        return;
+
+                    try
+                    {
+                        progress.Report((double)i / (double)importExcelInfo.lData.Count);
+                        
+
+                        List<ExcelLineData> line = importExcelInfo.lData[i];
+
+                        if (line.Count != importExcelInfo.lColumns.Count)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The line " + (i + 1) + " was not imported, because the data count is not equal to the column count.");
+                            continue;
+                        }
+
+                        string orderUID = "Orderns U-ID";
+                        string orderUIDValue = GetValueFromLine(importExcelInfo, line, orderUID);
+
+                        if (orderUIDValue == null || string.IsNullOrEmpty(orderUIDValue))
+                            continue;
+
+                        EntityReference erOrder = GetCrmOrderByUpsalesId(localContext, orderUIDValue);
+
+                        if (erOrder != null)
+                        {
+                            string totalLineAmmount = "Värde";
+                            string totalLineAmmountValue = GetValueFromLine(importExcelInfo, line, totalLineAmmount);
+
+                            if (totalLineAmmountValue == null || string.IsNullOrEmpty(totalLineAmmountValue))
+                                continue;
+
+                            decimal dtotalLineAmount = decimal.MinValue;
+
+                            if (decimal.TryParse(totalLineAmmountValue, out dtotalLineAmount))
+                            {
+                                if (dtotalLineAmount != decimal.MinValue)
+                                    CreateSalesOrderDetail(localContext, crmContext, dtotalLineAmount, erOrder);
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + totalLineAmmountValue + " to a decimal value.");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Import Orders Exception. Details: " + e.Message);
+                    }
+                }
+            }
+            Console.WriteLine("Done.");
+        }
+
         public static bool MainMenu(Plugin.LocalPluginContext localContext, CrmContext crmContext, SaveChangesOptions optionsChanges, string relativeExcelPath)
         {
             Console.WriteLine();
@@ -2384,6 +2526,7 @@ namespace Skanetrafiken.UpSalesMigration
             Console.WriteLine("11) Delete Duplicated Accounts");
             Console.WriteLine("12) Check for Duplicate Records");
             Console.WriteLine("13) Update SubAccounts Records");
+            Console.WriteLine("14) Update Total Amount on Orders");
             Console.WriteLine("0) Exit");
             Console.Write("\r\nSelect an option: ");
 
@@ -3009,6 +3152,47 @@ namespace Skanetrafiken.UpSalesMigration
 
                     return true;
 
+                case "14":
+
+                    #region Update Total Ammount on Orders
+
+                    try
+                    {
+                        crmContext.ClearChanges();
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Update Total Ammount on Orders of the Order Entity--------------");
+
+                        string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Orders);
+                        ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
+
+                        bool isParsingOk = GetParsingStatus(importExcelInfo);
+
+                        if (isParsingOk)
+                        {
+                            UpdateTotalAmmountonOrders(localContext, crmContext, importExcelInfo);
+
+                            Console.WriteLine("Sending Batch of Orders to Sekund...");
+
+                            SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                            LogCrmContextMultipleResponses(localContext, responses);
+
+                            Console.WriteLine("Batch Sent. Please check logs.");
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
+
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Update Total Ammount on Orders of the Order Entity--------------");
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Order Records. Details: " + e.Message);
+                        throw;
+                    }
+
+                    #endregion
+
+                    return true;
+
                 case "0":
                     return false;
                 default:
@@ -3087,6 +3271,7 @@ namespace Skanetrafiken.UpSalesMigration
                 Console.ReadLine();
                 return;
             }
+
 
             bool showMenu = true;
             while (showMenu)

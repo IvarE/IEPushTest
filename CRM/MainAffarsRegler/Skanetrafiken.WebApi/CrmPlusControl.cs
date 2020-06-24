@@ -2142,6 +2142,9 @@ namespace Skanetrafiken.Crm.Controllers
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
                 _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
 
+                if (serviceClient == null)
+                    throw new Exception(string.Format("Failed to retrieve CrmServiceClient. Please check Available Connections. serviceClient is null."));
+
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -2219,6 +2222,9 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
                 _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+
+                if (serviceClient == null)
+                    throw new Exception(string.Format("Failed to retrieve CrmServiceClient. Please check Available Connections. serviceClient is null."));
 
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
