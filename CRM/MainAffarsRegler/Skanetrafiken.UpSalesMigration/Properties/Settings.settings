@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Skanetrafiken.UpSalesMigration.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="ExcelRelativePath" Type="System.String" Scope="Application">
+    <Setting Name="RelativePath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">D:\Endeavor\Upsales Data\</Value>
     </Setting>
     <Setting Name="Bucket1Accounts" Type="System.String" Scope="Application">
@@ -33,10 +33,13 @@
       <Value Profile="(Default)">Svensk krona</Value>
     </Setting>
     <Setting Name="PDFilesAgreements" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Users\Pedro\OneDrive\Ambiente de Trabalho\Testdata_LR+K\Agreements</Value>
+      <Value Profile="(Default)">Agreements</Value>
     </Setting>
     <Setting Name="PDFilesReports" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Users\Pedro\OneDrive\Ambiente de Trabalho\Testdata_LR+K\Leveransrapport</Value>
+      <Value Profile="(Default)">Leveransrapport</Value>
+    </Setting>
+    <Setting Name="Bucket2Accounts" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Accounts\Spann 2 - dubbletter_2020-05-28.csv</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -416,12 +416,12 @@ namespace Endeavor.Crm.UnitTest
                 ContactEntity target = new ContactEntity()
                 {
                     //ed_PrivateCustomerContact = true,
-                    FirstName = "Rafael",
-                    LastName = "Silva",
-                    cgi_socialsecuritynumber = "202006091348",
-                    ed_InfotainmentContact = true
-                    //EMailAddress1 = "rafa3@email.pt",
-                    //EMailAddress2 = "rafa@email.pt"
+                    FirstName = "Viggo",
+                    LastName = "Oldertz",
+                    cgi_socialsecuritynumber = "202006111348",
+                    ed_InfotainmentContact = true,
+                    //EMailAddress1 = "viggo@email.pt",
+                    EMailAddress2 = "viggo@email.pt"
                 };
 
                 target.ValidateDuplicatesByContactType(localContext, true);

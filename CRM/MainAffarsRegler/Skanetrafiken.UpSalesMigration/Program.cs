@@ -113,6 +113,27 @@ namespace Skanetrafiken.UpSalesMigration
             }
         }
 
+        public static string GetValueFromLine(ImportExcelInfo importExcelInfo, List<ExcelLineData> line, string labelCsv)
+        {
+            ExcelColumn column = GetSelectedExcelColumnByName(importExcelInfo.lColumns, labelCsv);
+
+            if (column == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
+                return null;
+            }
+
+            ExcelLineData selectedData = line[column.index];
+
+            if (selectedData == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
+                return null;
+            }
+
+            return selectedData.value;
+        }
+
         public static List<UpsalesFile> GetFileList(string path, string filter)
         {
             try
@@ -296,6 +317,62 @@ namespace Skanetrafiken.UpSalesMigration
                 return lContacts.FirstOrDefault().ToEntityReference();
 
             _log.InfoFormat(CultureInfo.InvariantCulture, $"No Contacts or More than One Contact found with Upsales Id: " + upsalesId + ".");
+            return null;
+        }
+
+        public static EntityReference GetCrmPhoneCallByUpsalesId(Plugin.LocalPluginContext localContext, string upsalesId)
+        {
+            FilterExpression filterPhoneCall = new FilterExpression();
+            filterPhoneCall.Conditions.Add(new ConditionExpression(PhoneCall.Fields.ed_UpsalesId, ConditionOperator.Equal, upsalesId));
+
+            List<PhoneCall> lPhoneCall = XrmRetrieveHelper.RetrieveMultiple<PhoneCall>(localContext, new ColumnSet(PhoneCall.Fields.ActivityId), filterPhoneCall).ToList();
+
+            if (lPhoneCall.Count == 1)
+                return lPhoneCall.FirstOrDefault().ToEntityReference();
+
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"No PhoneCalls or More than One PhoneCall found with Upsales Id: " + upsalesId + ".");
+            return null;
+        }
+
+        public static EntityReference GetCrmEmailByUpsalesId(Plugin.LocalPluginContext localContext, string upsalesId)
+        {
+            FilterExpression filterEmail = new FilterExpression();
+            filterEmail.Conditions.Add(new ConditionExpression(Email.Fields.ed_UpsalesId, ConditionOperator.Equal, upsalesId));
+
+            List<Email> lEmail = XrmRetrieveHelper.RetrieveMultiple<Email>(localContext, new ColumnSet(Email.Fields.ActivityId), filterEmail).ToList();
+
+            if (lEmail.Count == 1)
+                return lEmail.FirstOrDefault().ToEntityReference();
+
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Emails or More than One Email found with Upsales Id: " + upsalesId + ".");
+            return null;
+        }
+
+        public static EntityReference GetCrmAppointmentByUpsalesId(Plugin.LocalPluginContext localContext, string upsalesId)
+        {
+            FilterExpression filterAppointment = new FilterExpression();
+            filterAppointment.Conditions.Add(new ConditionExpression(Appointment.Fields.ed_UpsalesId, ConditionOperator.Equal, upsalesId));
+
+            List<Appointment> lAppointments = XrmRetrieveHelper.RetrieveMultiple<Appointment>(localContext, new ColumnSet(Appointment.Fields.ActivityId), filterAppointment).ToList();
+
+            if (lAppointments.Count == 1)
+                return lAppointments.FirstOrDefault().ToEntityReference();
+
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Appointments or More than One Appointment found with Upsales Id: " + upsalesId + ".");
+            return null;
+        }
+
+        public static EntityReference GetCrmOrderByUpsalesId(Plugin.LocalPluginContext localContext, string upsalesId)
+        {
+            FilterExpression filterOrder = new FilterExpression();
+            filterOrder.Conditions.Add(new ConditionExpression(SalesOrder.Fields.ed_UpsalesId, ConditionOperator.Equal, upsalesId));
+
+            List<SalesOrder> lSalesOrder = XrmRetrieveHelper.RetrieveMultiple<SalesOrder>(localContext, new ColumnSet(SalesOrder.Fields.SalesOrderId), filterOrder).ToList();
+
+            if (lSalesOrder.Count == 1)
+                return lSalesOrder.FirstOrDefault().ToEntityReference();
+
+            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Orders or More than One Order found with Upsales Id: " + upsalesId + ".");
             return null;
         }
 
@@ -667,7 +744,7 @@ namespace Skanetrafiken.UpSalesMigration
 
                         if (erAccount != null)
                         {
-                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " of the PhoneCall was updated.");
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The RegardingObjectId with Upsales Id: " + value + " of the PhoneCall was updated.");
                             nPhoneCall.RegardingObjectId = erAccount;
                         }
                         else
@@ -680,7 +757,7 @@ namespace Skanetrafiken.UpSalesMigration
 
                         if (erContact == null)
                         {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The To of the PhoneCall was not found.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The To of the PhoneCall was not found.");
                             break;
                         }
 
@@ -694,6 +771,15 @@ namespace Skanetrafiken.UpSalesMigration
 
                         break;
                     case "Activity U-ID":
+
+                        EntityReference erPhoneCall = GetCrmPhoneCallByUpsalesId(localContext, value);
+
+                        if (erPhoneCall != null)
+                        {
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Phone Call with Upsales Id: " + value + " was already imported.");
+                            continue;
+                        }
+
                         nPhoneCall.ed_UpsalesId = value;
                         break;
                     case "Företag":
@@ -715,7 +801,7 @@ namespace Skanetrafiken.UpSalesMigration
                                 nPhoneCall.ScheduledStart = scheduleStart;
                         }
                         else
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
 
                         break;
                     case "Faktiskt avslutsdatum":
@@ -728,7 +814,7 @@ namespace Skanetrafiken.UpSalesMigration
                                 nPhoneCall.ScheduledEnd = scheduleEnd;
                         }
                         else
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
 
                         break;
                     case "Modifierad":
@@ -744,14 +830,14 @@ namespace Skanetrafiken.UpSalesMigration
                                 nPhoneCall.OverriddenCreatedOn = createdOn;
                         }
                         else
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
 
                         break;
                     case "Användare":
 
                         if (value == "Alexander Zaragoza")
                         {
-                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The Owner " + value + " of the PhoneCall was not found. The default user was updated.");
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Owner " + value + " of the PhoneCall was not found. The default user was updated.");
                             nPhoneCall.OwnerId = erDefaultUser;
                             break;
                         }
@@ -763,7 +849,7 @@ namespace Skanetrafiken.UpSalesMigration
                         else
                         {
                             nPhoneCall.OwnerId = erDefaultUser;
-                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The Owner was updated with the default user.");
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Owner was updated with the default user.");
                         }
 
                         break;
@@ -780,7 +866,7 @@ namespace Skanetrafiken.UpSalesMigration
                 }
             }
 
-            if (nPhoneCall.RegardingObjectId == null)
+            if (nPhoneCall.RegardingObjectId == null || nPhoneCall.ed_UpsalesId == null)
                 return null;
 
             if(erDefaultUser != null)
@@ -834,7 +920,7 @@ namespace Skanetrafiken.UpSalesMigration
 
                         if (erAccount != null)
                         {
-                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " of the Email was updated.");
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The RegardingObjectId with Upsales Id: " + value + " of the Email was updated.");
                             nEmail.RegardingObjectId = erAccount;
                         }
                         else
@@ -847,7 +933,7 @@ namespace Skanetrafiken.UpSalesMigration
 
                         if (erContact == null)
                         {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The To of the Email was not found.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The To of the Email was not found.");
                             break;
                         }
 
@@ -861,6 +947,15 @@ namespace Skanetrafiken.UpSalesMigration
 
                         break;
                     case "Activity U-ID":
+
+                        EntityReference erEmail = GetCrmEmailByUpsalesId(localContext, value);
+
+                        if (erEmail != null)
+                        {
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Email with Upsales Id: " + value + " was already imported.");
+                            continue;
+                        }
+
                         nEmail.ed_UpsalesId = value;
                         break;
                     case "Företag":
@@ -883,7 +978,7 @@ namespace Skanetrafiken.UpSalesMigration
                                 nEmail.ScheduledStart = scheduleStart;
                         }
                         else
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
 
                         break;
                     case "Faktiskt avslutsdatum":
@@ -896,7 +991,7 @@ namespace Skanetrafiken.UpSalesMigration
                                 nEmail.ScheduledEnd = scheduleEnd;
                         }
                         else
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
 
                         break;
                     case "Modifierad":
@@ -912,14 +1007,14 @@ namespace Skanetrafiken.UpSalesMigration
                                 nEmail.OverriddenCreatedOn = createdOn;
                         }
                         else
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
 
                         break;
                     case "Användare":
 
                         if (value == "Alexander Zaragoza")
                         {
-                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The Owner " + value + " of the Email was not found. The default user was updated.");
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Owner " + value + " of the Email was not found. The default user was updated.");
                             nEmail.OwnerId = erDefaultUser;
                             break;
                         }
@@ -931,7 +1026,7 @@ namespace Skanetrafiken.UpSalesMigration
                         else
                         {
                             nEmail.OwnerId = erDefaultUser;
-                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The Owner was updated with the default user.");
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Owner was updated with the default user.");
                         }
 
                         break;
@@ -943,12 +1038,12 @@ namespace Skanetrafiken.UpSalesMigration
                         break;
 
                     default:
-                        _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Column " + name + " is not on the mappings initially set.");
                         break;
                 }
             }
 
-            if (nEmail.RegardingObjectId == null)
+            if (nEmail.RegardingObjectId == null || nEmail.ed_UpsalesId == null)
                 return null;
 
             if (erDefaultUser != null)
@@ -1002,7 +1097,7 @@ namespace Skanetrafiken.UpSalesMigration
 
                         if (erAccount != null)
                         {
-                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The RegardingObjectId with Upsales Id: " + value + " of the Appointment was updated.");
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The RegardingObjectId with Upsales Id: " + value + " of the Appointment was updated.");
                             nAppointment.RegardingObjectId = erAccount;
                         }
                         else
@@ -1015,7 +1110,7 @@ namespace Skanetrafiken.UpSalesMigration
 
                         if (erContact == null)
                         {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The To of the Email was not found.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The To of the Email was not found.");
                             break;
                         }
 
@@ -1029,6 +1124,15 @@ namespace Skanetrafiken.UpSalesMigration
 
                         break;
                     case "Activity U-ID":
+
+                        EntityReference erAppointment = GetCrmAppointmentByUpsalesId(localContext, value);
+
+                        if (erAppointment != null)
+                        {
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Appointment with Upsales Id: " + value + " was already imported.");
+                            continue;
+                        }
+
                         nAppointment.ed_UpsalesId = value;
                         break;
                     case "Företag":
@@ -1051,7 +1155,7 @@ namespace Skanetrafiken.UpSalesMigration
                                 nAppointment.ScheduledStart = scheduleStart;
                         }
                         else
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
 
                         break;
                     case "Faktiskt avslutsdatum":
@@ -1064,7 +1168,7 @@ namespace Skanetrafiken.UpSalesMigration
                                 nAppointment.ScheduledEnd = scheduleEnd;
                         }
                         else
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
 
                         break;
                     case "Modifierad":
@@ -1080,14 +1184,14 @@ namespace Skanetrafiken.UpSalesMigration
                                 nAppointment.OverriddenCreatedOn = createdOn;
                         }
                         else
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
 
                         break;
                     case "Användare":
 
                         if (value == "Alexander Zaragoza")
                         {
-                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The Owner " + value + " of the Appointment was not found. The default user was updated.");
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Owner " + value + " of the Appointment was not found. The default user was updated.");
                             nAppointment.OwnerId = erDefaultUser;
                             break;
                         }
@@ -1099,7 +1203,7 @@ namespace Skanetrafiken.UpSalesMigration
                         else
                         {
                             nAppointment.OwnerId = erDefaultUser;
-                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The Owner was updated with the default user.");
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Owner was updated with the default user.");
                         }
 
                         break;
@@ -1116,7 +1220,7 @@ namespace Skanetrafiken.UpSalesMigration
                 }
             }
 
-            if (nAppointment.RegardingObjectId == null)
+            if (nAppointment.RegardingObjectId == null || nAppointment.ed_UpsalesId == null)
                 return null;
 
             return nAppointment;
@@ -1177,6 +1281,15 @@ namespace Skanetrafiken.UpSalesMigration
                             switch (name)
                             {
                                 case "U-ID":
+
+                                    EntityReference erAccount = GetCrmAccountByUpsalesId(localContext, value);
+
+                                    if (erAccount != null)
+                                    {
+                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"The Account with Upsales Id: " + value + " was already imported.");
+                                        continue;
+                                    }
+
                                     nAccount.ed_UpsalesId = value;
                                     break;
                                 case "Företagsnamn":
@@ -1294,6 +1407,9 @@ namespace Skanetrafiken.UpSalesMigration
                             }
                         }
 
+                        if (nAccount.ed_UpsalesId == null)
+                            continue;
+
                         nAccount.ed_InfotainmentCustomer = true;
                         nAccount.StateCode = AccountState.Active;
 
@@ -1360,6 +1476,15 @@ namespace Skanetrafiken.UpSalesMigration
                             switch (name)
                             {
                                 case "U-ID":
+
+                                    EntityReference erSubAccount = GetCrmAccountByUpsalesId(localContext, value);
+
+                                    if (erSubAccount != null)
+                                    {
+                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Sub Account with Upsales Id: " + value + " was already imported.");
+                                        continue;
+                                    }
+
                                     nSubAccount.ed_UpsalesId = value;
                                     break;
                                 case "Företagsnamn":
@@ -1371,8 +1496,6 @@ namespace Skanetrafiken.UpSalesMigration
 
                                     if (erParentAccount != null)
                                         nSubAccount.ParentAccountId = erParentAccount;
-                                    else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Parent Account with Organization Number: " + value + " was not found.");
 
                                     break;
                                 case "Besöksadress - Gatuadress":
@@ -1408,10 +1531,133 @@ namespace Skanetrafiken.UpSalesMigration
                             }
                         }
 
+                        if (nSubAccount.ed_UpsalesId == null)
+                            continue;
+
                         nSubAccount.ed_InfotainmentCustomer = true;
                         nSubAccount.StateCode = AccountState.Active;
 
                         crmContext.AddObject(nSubAccount);
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Import Sub Accounts Exception. Details: " + e.Message);
+                    }
+                }
+            }
+            Console.WriteLine("Done.");
+        }
+
+        public static void UpdateUpsalesIdExistingAccounts(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
+        {
+            if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
+                return;
+            }
+
+            Console.Write("Creating Batch of Accounts... ");
+            using (ProgressBar progress = new ProgressBar())
+            {
+                for (int i = 0; i < importExcelInfo.lData.Count; i++)
+                {
+                    try
+                    {
+                        progress.Report((double)i / (double)importExcelInfo.lData.Count);
+                        List<ExcelLineData> line = importExcelInfo.lData[i];
+
+                        if (line.Count != importExcelInfo.lColumns.Count)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The line " + (i + 1) + " was not imported, because the data count is not equal to the column count.");
+                            continue;
+                        }
+
+                        string orgNumber = "Organisationsnummer";
+                        string orgNumberValue = GetValueFromLine(importExcelInfo, line, orgNumber);
+
+                        if (orgNumberValue == null || string.IsNullOrEmpty(orgNumberValue))
+                            continue;
+
+                        EntityReference erAccount = GetCrmAccountByOrganizationNumber(localContext, orgNumberValue);
+
+                        if (erAccount != null)
+                        {
+                            string upsalesId = "U-ID";
+                            string upsalesIdValue = GetValueFromLine(importExcelInfo, line, upsalesId);
+
+                            if (upsalesIdValue == null || string.IsNullOrEmpty(upsalesIdValue))
+                                continue;
+
+                            Account uAccount = new Account();
+                            uAccount.Id = erAccount.Id;
+                            uAccount.ed_UpsalesId = upsalesIdValue;
+                            uAccount.ed_InfotainmentCustomer = true;
+
+                            crmContext.Attach(uAccount);
+                            crmContext.UpdateObject(uAccount);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Import Sub Accounts Exception. Details: " + e.Message);
+                    }
+                }
+            }
+            Console.WriteLine("Done.");
+        }
+
+        public static void UpdateParentAccountExistingSubAccounts(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
+        {
+            if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
+                return;
+            }
+
+            Console.Write("Creating Batch of Accounts... ");
+            using (ProgressBar progress = new ProgressBar())
+            {
+                for (int i = 0; i < importExcelInfo.lData.Count; i++)
+                {
+                    try
+                    {
+                        progress.Report((double)i / (double)importExcelInfo.lData.Count);
+                        List<ExcelLineData> line = importExcelInfo.lData[i];
+
+                        if (line.Count != importExcelInfo.lColumns.Count)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The line " + (i + 1) + " was not imported, because the data count is not equal to the column count.");
+                            continue;
+                        }
+
+                        string orgNumber = "Organisationsnummer";
+                        string orgNumberValue = GetValueFromLine(importExcelInfo, line, orgNumber);
+
+                        if (orgNumberValue == null || string.IsNullOrEmpty(orgNumberValue))
+                            continue;
+
+                        EntityReference erParentAccount = GetCrmAccountByOrganizationNumber(localContext, orgNumberValue);
+
+                        if (erParentAccount != null)
+                        {
+                            string upsalesId = "U-ID";
+                            string upsalesIdValue = GetValueFromLine(importExcelInfo, line, upsalesId);
+
+                            if (upsalesIdValue == null || string.IsNullOrEmpty(upsalesIdValue))
+                                continue;
+
+                            EntityReference erSubAccount = GetCrmAccountByUpsalesId(localContext, upsalesIdValue);
+
+                            if(erSubAccount != null)
+                            {
+                                Account uAccount = new Account();
+                                uAccount.Id = erSubAccount.Id;
+                                uAccount.ParentAccountId = erParentAccount;
+
+                                crmContext.Attach(uAccount);
+                                crmContext.UpdateObject(uAccount);
+                            }
+                        }
                     }
                     catch (Exception e)
                     {
@@ -1485,7 +1731,7 @@ namespace Skanetrafiken.UpSalesMigration
 
                                     if (erParentAccount != null)
                                     {
-                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"The Parent Customer with Upsales Id: " + value + " of the Contact was updated.");
+                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Parent Customer with Upsales Id: " + value + " of the Contact was updated.");
                                         nContact.ParentCustomerId = erParentAccount;
 
                                         eParentAccount = new Account();
@@ -1498,10 +1744,19 @@ namespace Skanetrafiken.UpSalesMigration
                                         }
                                     }
                                     else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Customer with Upsales Id: " + value + " was not found. The Contact on line " + (i + 1) + " will be ignored.");
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Customer with Upsales Id: " + value + " was not found. The Contact on line " + (i + 1) + " will be ignored.");
 
                                     break;
                                 case "Contact U-ID":
+
+                                    EntityReference erContact = GetCrmContactByUpsalesId(localContext, value);
+
+                                    if(erContact != null)
+                                    {
+                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Contact with Upsales Id: " + value + " was already imported.");
+                                        continue;
+                                    }
+
                                     nContact.ed_UpsalesId = value;
                                     break;
                                 case "Account":
@@ -1535,7 +1790,7 @@ namespace Skanetrafiken.UpSalesMigration
                             }
                         }
 
-                        if (nContact.ParentCustomerId == null)
+                        if (nContact.ParentCustomerId == null || nContact.ed_UpsalesId == null)
                             continue;
 
                         nContact.ed_InfotainmentContact = true;
@@ -1572,11 +1827,11 @@ namespace Skanetrafiken.UpSalesMigration
                                 else
                                     crmContext.AddLink(accountAdded.FirstOrDefault(), new Relationship(cgi_account_contact), nContact);
 
-                                _log.InfoFormat(CultureInfo.InvariantCulture, $"1Level: A Request has been created to relate the Account " + eParentAccount.Id + " to Contact " + nContact.FirstName + " " + nContact.LastName + " on the CGI Grid.");
+                                _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": 1Level: A Request has been created to relate the Account " + eParentAccount.Id + " to Contact " + nContact.FirstName + " " + nContact.LastName + " on the CGI Grid.");
                             }
                             catch (Exception e)
                             {
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"CGI Grid Error Exception. Details: " + e.Message);
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": CGI Grid Error Exception. Details: " + e.Message);
                             }
                         }
 
@@ -1600,11 +1855,11 @@ namespace Skanetrafiken.UpSalesMigration
                                 else
                                     crmContext.AddLink(accountAdded.FirstOrDefault(), new Relationship(cgi_account_contact), nContact);
 
-                                _log.InfoFormat(CultureInfo.InvariantCulture, $"2Level: A Request has been created to relate the Account " + ePParentAccount.Id + " to Contact " + nContact.FirstName + " " + nContact.LastName + " on the CGI Grid.");
+                                _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": 2Level: A Request has been created to relate the Account " + ePParentAccount.Id + " to Contact " + nContact.FirstName + " " + nContact.LastName + " on the CGI Grid.");
                             }
                             catch (Exception e)
                             {
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"CGI Grid Error Exception. Details: " + e.Message);
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": CGI Grid Error Exception. Details: " + e.Message);
                             }
                         }
 
@@ -1633,20 +1888,20 @@ namespace Skanetrafiken.UpSalesMigration
                                     else
                                         crmContext.AddLink(accountAdded.FirstOrDefault(), new Relationship(rel_contact_account), nContact);
 
-                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"A Request has been created for the Account " + eParentAccount.Id + " to be updated with Contact " + nContact.FirstName + " " + nContact.LastName + " as it's Primary Contact.");
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": A Request has been created for the Account " + eParentAccount.Id + " to be updated with Contact " + nContact.FirstName + " " + nContact.LastName + " as it's Primary Contact.");
                                 }
                                 else
-                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"The Account " + account.Id + " already has a Primary Contact.");
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Account " + account.Id + " already has a Primary Contact.");
                             }
                             catch (Exception e)
                             {
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Primary Contact Error Exception. Details: " + e.Message);
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Primary Contact Error Exception. Details: " + e.Message);
                             }
                         }
                     }
                     catch (Exception e)
                     {
-                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Import Contacts Exception. Details: " + e.Message);
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Import Contacts Exception. Details: " + e.Message);
                     }
                 }
             }
@@ -1676,15 +1931,6 @@ namespace Skanetrafiken.UpSalesMigration
                     try
                     {
                         progress.Report((double)i / (double)importExcelInfo.lData.Count);
-                        ExcelColumn activityTypeColumn = GetSelectedExcelColumnByName(importExcelInfo.lColumns, activityTypeNameColumn);
-
-                        if (activityTypeColumn == null)
-                        {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
-                            continue;
-                        }
-
-                        int j = activityTypeColumn.index;
                         List<ExcelLineData> line = importExcelInfo.lData[i];
 
                         if (line.Count != importExcelInfo.lColumns.Count)
@@ -1693,15 +1939,7 @@ namespace Skanetrafiken.UpSalesMigration
                             continue;
                         }
 
-                        ExcelLineData selectedData = line[j];
-
-                        if (selectedData == null)
-                        {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
-                            continue;
-                        }
-
-                        string activityType = selectedData.value;
+                        string activityType = GetValueFromLine(importExcelInfo, line, activityTypeNameColumn);
 
                         if (activityType == null || string.IsNullOrEmpty(activityType))
                             continue;
@@ -1816,7 +2054,7 @@ namespace Skanetrafiken.UpSalesMigration
 
                                     if (erAccount != null)
                                     {
-                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"The Customer with Upsales Id: " + value + " of the Order was updated.");
+                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Customer with Upsales Id: " + value + " of the Order was updated.");
                                         nOrder.CustomerId = erAccount;
                                     }
                                     else
@@ -1829,14 +2067,23 @@ namespace Skanetrafiken.UpSalesMigration
 
                                     if (erContact != null)
                                     {
-                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"The Contact with Upsales Id: " + value + " of the Order was updated.");
+                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Contact with Upsales Id: " + value + " of the Order was updated.");
                                         nOrder.ed_contact = erContact;
                                     }
                                     else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Contact with Upsales Id: " + value + " was not found.");
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Contact with Upsales Id: " + value + " was not found.");
 
                                     break;
                                 case "Orderns U-ID":
+
+                                    EntityReference erOrder = GetCrmOrderByUpsalesId(localContext, value);
+
+                                    if (erOrder != null)
+                                    {
+                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Order with Upsales Id: " + value + " was already imported.");
+                                        continue;
+                                    }
+
                                     nOrder.ed_UpsalesId = value;
                                     break;
                                 case "Företag":
@@ -1858,7 +2105,7 @@ namespace Skanetrafiken.UpSalesMigration
                                             nOrder.SubmitDate = submitDate;
                                     }
                                     else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
 
                                     break;
                                 case "Värde":
@@ -1871,14 +2118,14 @@ namespace Skanetrafiken.UpSalesMigration
                                             nOrder.TotalLineItemAmount = new Money(dtotalLineAmount);
                                     }
                                     else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a decimal value.");
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a decimal value.");
 
                                     break;
                                 case "Order: Användare":
 
                                     if (value == "Alexander Zaragoza")
                                     {
-                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"The Owner " + value + " of the PhoneCall was not found. The default user was updated.");
+                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Owner " + value + " of the PhoneCall was not found. The default user was updated.");
                                         nOrder.OwnerId = erDefaultUser;
                                         break;
                                     }
@@ -1890,7 +2137,7 @@ namespace Skanetrafiken.UpSalesMigration
                                     else
                                     {
                                         nOrder.OwnerId = erDefaultUser;
-                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"The Owner was updated with the default user.");
+                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Owner was updated with the default user.");
                                     }
 
                                     break;
@@ -1913,7 +2160,7 @@ namespace Skanetrafiken.UpSalesMigration
                                             nOrder.OverriddenCreatedOn = createdOn;
                                     }
                                     else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
 
                                     break;
                                 case "Kampanj start":
@@ -1926,7 +2173,7 @@ namespace Skanetrafiken.UpSalesMigration
                                             nOrder.ed_campaigndatestart = campaignStart;
                                     }
                                     else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
 
                                     break;
                                 case "Kampanj slut":
@@ -1939,7 +2186,7 @@ namespace Skanetrafiken.UpSalesMigration
                                             nOrder.ed_campaigndateend = campaignEnd;
                                     }
                                     else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
 
                                     break;
                                 case "Startdatum":
@@ -1958,7 +2205,7 @@ namespace Skanetrafiken.UpSalesMigration
                             }
                         }
 
-                        if (nOrder.CustomerId == null)
+                        if (nOrder.CustomerId == null || nOrder.ed_UpsalesId == null)
                             continue;
 
                         nOrder.TransactionCurrencyId = erCurrency;
@@ -1988,16 +2235,11 @@ namespace Skanetrafiken.UpSalesMigration
                     }
                     catch (Exception e)
                     {
-                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Import Orders Exception. Details: " + e.Message);
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Import Orders Exception. Details: " + e.Message);
                     }
                 }
             }
             Console.WriteLine("Done.");
-        }
-
-        public static void ImportHistoricalDataRecords(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
-        {
-
         }
 
         public static void ImportPDFOrders(Plugin.LocalPluginContext localContext, CrmContext crmContext, string path, string filter)
@@ -2131,14 +2373,17 @@ namespace Skanetrafiken.UpSalesMigration
             Console.WriteLine("Choose an option:");
             Console.WriteLine("1) Import Spann 1 Accounts");
             Console.WriteLine("2) Import Spann 5 Accounts");
-            Console.WriteLine("3) Import Spann 3 Accounts");
-            Console.WriteLine("4) Import Contacts");
-            Console.WriteLine("5) Import Activities");
-            Console.WriteLine("6) Import Orders");
-            Console.WriteLine("7) Import Historical Data");
+            Console.WriteLine("3) Import Spann 2 Accounts");
+            Console.WriteLine("4) Import Spann 3 Sub Accounts");
+            Console.WriteLine("5) Import Contacts");
+            Console.WriteLine("6) Import Activities");
+            Console.WriteLine("7) Import Orders");
             Console.WriteLine("8) Fix Duplicate OptionSets on Account/Branch");
             Console.WriteLine("9) Import PDF Orders");
             Console.WriteLine("10) Import PDF Agreements");
+            Console.WriteLine("11) Delete Duplicated Accounts");
+            Console.WriteLine("12) Check for Duplicate Records");
+            Console.WriteLine("13) Update SubAccounts Records");
             Console.WriteLine("0) Exit");
             Console.Write("\r\nSelect an option: ");
 
@@ -2227,6 +2472,47 @@ namespace Skanetrafiken.UpSalesMigration
                     return true;
                 case "3":
 
+                    #region Update Upsales Id from Spann 2
+
+                    try
+                    {
+                        crmContext.ClearChanges();
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Update Upsales Id from Spann 2 of the Account Entity--------------");
+
+                        string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Bucket2Accounts);
+                        ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
+
+                        bool isParsingOk = GetParsingStatus(importExcelInfo);
+
+                        if (isParsingOk)
+                        {
+                            UpdateUpsalesIdExistingAccounts(localContext, crmContext, importExcelInfo);
+
+                            Console.WriteLine("Sending Batch of Accounts to Sekund...");
+
+                            SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                            LogCrmContextMultipleResponses(localContext, responses);
+
+                            Console.WriteLine("Batch Sent. Please check logs.");
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
+
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Update Upsales Id from Spann 2 of the Account Entity--------------");
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
+                        throw;
+                    }
+
+                    #endregion
+
+                    return true;
+
+                case "4":
+
                     #region Import Accounts Spann 3 SubAccounts
 
                     try
@@ -2265,7 +2551,8 @@ namespace Skanetrafiken.UpSalesMigration
                     #endregion
 
                     return true;
-                case "4":
+
+                case "5":
 
                     #region Import Contacts
 
@@ -2304,7 +2591,7 @@ namespace Skanetrafiken.UpSalesMigration
                     #endregion
 
                     return true;
-                case "5":
+                case "6":
 
                     #region Import Activities
 
@@ -2343,7 +2630,7 @@ namespace Skanetrafiken.UpSalesMigration
                     #endregion
 
                     return true;
-                case "6":
+                case "7":
 
                     #region Import Orders
 
@@ -2376,39 +2663,6 @@ namespace Skanetrafiken.UpSalesMigration
                     catch (Exception e)
                     {
                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Order Records. Details: " + e.Message);
-                        throw;
-                    }
-
-                    #endregion
-
-                    return true;
-                case "7":
-
-                    #region Import Historical Data
-
-                    throw new NotImplementedException();
-
-                    try
-                    {
-                        crmContext.ClearChanges();
-                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Historical Data Entity--------------");
-
-                        string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.HistoricalData);
-                        ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
-                        ImportHistoricalDataRecords(localContext, crmContext, importExcelInfo);
-
-                        Console.WriteLine("Sending Batch of Accounts to Sekund...");
-
-                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        LogCrmContextMultipleResponses(localContext, responses);
-
-                        Console.WriteLine("Batch Sent. Please check logs.");
-
-                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Historical Data Entity--------------");
-                    }
-                    catch (Exception e)
-                    {
-                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Historical Data Records. Details: " + e.Message);
                         throw;
                     }
 
@@ -2553,10 +2807,13 @@ namespace Skanetrafiken.UpSalesMigration
                         crmContext.ClearChanges();
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload PDF Orders Leveransrapport--------------");
 
+                        string relativePath = Properties.Settings.Default.RelativePath;
                         string path = Properties.Settings.Default.PDFilesReports;
                         string filter = "*.pdf";
 
-                        ImportPDFOrders(localContext, crmContext, path, filter);
+                        string fullPath = relativePath + path;
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Full Path: " + fullPath);
+                        ImportPDFOrders(localContext, crmContext, fullPath, filter);
 
                         Console.WriteLine("Sending Batch of Orders to Sekund...");
 
@@ -2586,10 +2843,13 @@ namespace Skanetrafiken.UpSalesMigration
                         crmContext.ClearChanges();
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload PDF Agreements--------------");
 
+                        string relativePath = Properties.Settings.Default.RelativePath;
                         string path = Properties.Settings.Default.PDFilesAgreements;
                         string filter = "*.pdf";
 
-                        ImportPDFAgreements(localContext, crmContext, path, filter);
+                        string fullPath = relativePath + path;
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Full Path: " + fullPath);
+                        ImportPDFAgreements(localContext, crmContext, fullPath, filter);
 
                         Console.WriteLine("Sending Batch of Orders to Sekund...");
 
@@ -2609,6 +2869,146 @@ namespace Skanetrafiken.UpSalesMigration
                     #endregion
 
                     return true;
+
+                case "11":
+
+                    #region Delete Duplicated Account
+
+                    QueryExpression queryAccountsD = new QueryExpression(Account.EntityLogicalName);
+                    queryAccountsD.NoLock = true;
+                    queryAccountsD.ColumnSet.AddColumns(Account.Fields.AccountId);
+                    queryAccountsD.Criteria.AddCondition(Account.Fields.CreatedOn, ConditionOperator.Today);
+                    queryAccountsD.Criteria.AddCondition(Account.Fields.ed_InfotainmentCustomer, ConditionOperator.Equal, true);
+
+                    List<Account> lAccountsDelete = XrmRetrieveHelper.RetrieveMultiple<Account>(localContext, queryAccountsD);
+
+                    Console.WriteLine("The are " + lAccountsDelete.Count + " Accounts Duplicated. Do you want to delete them?");
+                    string answer = Console.ReadLine();
+
+                    if(answer == "y" && lAccountsDelete.Count > 0)
+                    {
+                        int i = 0;
+                        Console.Write("Deleting Duplicated Accounts... ");
+
+                        using (ProgressBar progress = new ProgressBar())
+                        {
+                            foreach (Account account in lAccountsDelete)
+                            {
+                                try
+                                {
+                                    progress.Report((double)i / (double)lAccountsDelete.Count);
+                                    XrmHelper.Delete(localContext, account.ToEntityReference());
+                                }
+                                catch (Exception e)
+                                {
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Account " + account.Id + " was not deleted. Details: " + e.Message);
+                                }
+
+                                i++;
+                            }
+                        }
+                        Console.WriteLine("Done."); 
+                    }
+
+                    #endregion
+
+                    return true;
+
+                case "12":
+
+                    #region Check for Account Duplicate Records
+
+                    Console.WriteLine("What's the logical name of the entity?");
+                    string entityName = Console.ReadLine();
+
+                    Console.WriteLine("What's the string unique schema name of the field for that entity?");
+                    string uniqueField = Console.ReadLine();
+
+                    if(entityName == null || string.IsNullOrEmpty(entityName))
+                    {
+                        Console.WriteLine("The entity name is null or empty");
+                        return true;
+                    }
+
+                    if (uniqueField == null || string.IsNullOrEmpty(uniqueField))
+                    {
+                        Console.WriteLine("The unique field name is null or empty");
+                        return true;
+                    }
+
+                    QueryExpression queryDuplicates = new QueryExpression(entityName);
+                    queryDuplicates.NoLock = true;
+                    queryDuplicates.ColumnSet.AddColumns(uniqueField);
+                    queryDuplicates.Criteria.AddCondition(uniqueField, ConditionOperator.NotNull);
+
+                    List<Entity> lRecords = XrmRetrieveHelper.RetrieveMultiple<Entity>(localContext, queryDuplicates);
+
+                    if(lRecords.Count == 0)
+                    {
+                        Console.WriteLine("No Accounts found.");
+                        return true;
+                    }
+
+                    List<List<Entity>> lDuplicates = lRecords.GroupBy(i => i.GetAttributeValue<string>(uniqueField)).Where(x => x.ToList().Count > 1).Select(x => x.ToList()).ToList();
+
+                    if(lDuplicates.Count == 0)
+                    {
+                        Console.WriteLine("No Duplicates found with entity name: " + entityName + " and unique field: " + uniqueField);
+                        return true;
+                    }
+
+                    foreach (List<Entity> duplicate in lDuplicates)
+                    {
+                        Entity dEntity = duplicate.FirstOrDefault();
+                        if(dEntity != null)
+                            Console.WriteLine("The " + entityName + " is duplicated on field " + uniqueField + " with value: " + dEntity.GetAttributeValue<string>(uniqueField));
+                    }
+
+                    #endregion
+
+                    return true;
+
+                case "13":
+
+                    #region Update SubAccounts Records
+
+                    try
+                    {
+                        crmContext.ClearChanges();
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Update SubAccounts Records of the Account Entity--------------");
+
+                        string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Bucket3SubAccounts);
+                        ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
+
+                        bool isParsingOk = GetParsingStatus(importExcelInfo);
+
+                        if (isParsingOk)
+                        {
+                            UpdateParentAccountExistingSubAccounts(localContext, crmContext, importExcelInfo);
+
+                            Console.WriteLine("Sending Batch of Accounts to Sekund...");
+
+                            SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                            LogCrmContextMultipleResponses(localContext, responses);
+
+                            Console.WriteLine("Batch Sent. Please check logs.");
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
+
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Update SubAccounts Records of the Account Entity--------------");
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
+                        throw;
+                    }
+
+                    #endregion
+
+                    return true;
+
                 case "0":
                     return false;
                 default:
@@ -2626,13 +3026,17 @@ namespace Skanetrafiken.UpSalesMigration
             Console.WriteLine("Perform the Upsales Migration in? [tst]/[uat]/[prod]");
             string input = Console.ReadLine();
 
-            if(input == "tst")
+            string relativeExcelPath = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.RelativePath);
+
+            if (input == "tst")
             {
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"TEST Enviroment Selected.");
                 Console.WriteLine("TEST Enviroment Selected.");
                 domainUser = ConfigurationManager.AppSettings["domainUserTST"];
                 passWord = ConfigurationManager.AppSettings["passWordTST"];
                 urlOrganization = ConfigurationManager.AppSettings["urlOrganizationTST"];
+
+                relativeExcelPath = @"C:\Users\Pedro\OneDrive\Ambiente de Trabalho\Skanetrafiken\Upsales Migration\";
             }
             else if(input == "uat")
             {
@@ -2641,6 +3045,8 @@ namespace Skanetrafiken.UpSalesMigration
                 domainUser = ConfigurationManager.AppSettings["domainUserUAT"];
                 passWord = ConfigurationManager.AppSettings["passWordUAT"];
                 urlOrganization = ConfigurationManager.AppSettings["urlOrganizationUAT"];
+
+                relativeExcelPath = @"C:\Users\Pedro\OneDrive\Ambiente de Trabalho\Skanetrafiken\Upsales Migration\";
             }
             else if (input == "prod")
             {
@@ -2681,8 +3087,6 @@ namespace Skanetrafiken.UpSalesMigration
                 Console.ReadLine();
                 return;
             }
-
-            string relativeExcelPath = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.ExcelRelativePath);
 
             bool showMenu = true;
             while (showMenu)
