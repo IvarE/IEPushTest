@@ -262,6 +262,58 @@ namespace Skanetrafiken.Crm
                 );
 
             config.Routes.MapHttpRoute(
+                name: "GetCardWithCardNumber",
+                routeTemplate: "api/{controller}/GetCardWithCardNumber/cardNumber",
+                defaults: new
+                {
+                    action = "GetCardWithCardNumber"
+                },
+                constraints: new
+                {
+                    httpMethod = new HttpMethodConstraint(HttpMethod.Get)
+                }
+                );
+
+            config.Routes.MapHttpRoute(
+                name: "PlaceOrderWithCardNumber",
+                routeTemplate: "api/{controller}/PlaceOrderWithCardNumber/cardNumber",
+                defaults: new
+                {
+                    action = "PlaceOrderWithCardNumber"
+                },
+                constraints: new
+                {
+                    httpMethod = new HttpMethodConstraint(HttpMethod.Get)
+                }
+                );
+
+            config.Routes.MapHttpRoute(
+                name: "CancelOrderWithCardNumber",
+                routeTemplate: "api/{controller}/CancelOrderWithCardNumber/cardNumber",
+                defaults: new
+                {
+                    action = "CancelOrderWithCardNumber"
+                },
+                constraints: new
+                {
+                    httpMethod = new HttpMethodConstraint(HttpMethod.Get)
+                }
+                );
+
+            config.Routes.MapHttpRoute(
+                name: "CaptureOrderWithCardNumber",
+                routeTemplate: "api/{controller}/CaptureOrderWithCardNumber/cardNumber",
+                defaults: new
+                {
+                    action = "CaptureOrderWithCardNumber"
+                },
+                constraints: new
+                {
+                    httpMethod = new HttpMethodConstraint(HttpMethod.Get)
+                }
+                );
+
+            config.Routes.MapHttpRoute(
                 name: "PostDeliveryReport",
                 routeTemplate: "api/{controller}/PostDeliveryReport",
                 defaults: new

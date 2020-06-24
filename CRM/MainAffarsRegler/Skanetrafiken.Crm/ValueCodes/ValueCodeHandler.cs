@@ -19,7 +19,6 @@ namespace Skanetrafiken.Crm.ValueCodes
     {
         //private const string typeConst = "mobile";
         //private const string deliveryTypeConst = "api";
-
         public static Guid CreateMobileValueCodeGeneric(Plugin.LocalPluginContext localContext, int deliveryType, DateTime validTo, float amount, decimal periodPrice, string phoneNumber, int templateNumber, ContactEntity contact, ValueCodeApprovalEntity valueCodeApproval = null, ValueCodeTemplateEntity template = null, LeadEntity lead = null, RefundEntity refund = null, TravelCardEntity travelCard = null)
         {
             localContext.Trace($"(CreateMobileValueCodeGeneric) Entering mobile");
@@ -794,6 +793,8 @@ namespace Skanetrafiken.Crm.ValueCodes
             request["CardNumber"] = cardNumber;
 
             OrganizationResponse response = (OrganizationResponse)localContext.OrganizationService.Execute(request);
+            
+            //var testtmp = (string)response["PlaceOrderResponse"];
 
             return (string)response["PlaceOrderResponse"];
         }

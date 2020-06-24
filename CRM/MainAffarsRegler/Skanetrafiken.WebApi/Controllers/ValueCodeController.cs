@@ -952,11 +952,12 @@ namespace Skanetrafiken.Crm.Controllers
                            HttpStatusCode.BadRequest);
 
                 //If exceeds max amount, create incident
-
+                _log.Debug($"Step 1.");
                 //Devop Task 745 - Round decimals
                 if (getCardProperties.Amount > 0)
                     getCardProperties.Amount = (decimal)Math.Round(getCardProperties.Amount, 0, MidpointRounding.AwayFromZero);
 
+                _log.Debug($"Step 2.");
                 //If exceeds max amount, create value code approval.
                 if (getCardProperties.Amount > maxAmount)
                 {
@@ -1013,8 +1014,9 @@ namespace Skanetrafiken.Crm.Controllers
                 else //Not exceeding maximum amount
                 {
                     //Block Travel Card (OBS! Using Capture Order and Place Order)
-
+                    _log.Debug($"Step 3.");
                     //Call "Place Order API" to actually block the travel card
+                    _log.Debug($"Step 3.1. - {getCardProperties.CardNumber}");
                     var placeOrderResponse = ValueCodeHandler.CallPlaceOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
                     if (string.IsNullOrWhiteSpace(placeOrderResponse) || placeOrderResponse != "200 - Success")
                     {
@@ -1024,6 +1026,16 @@ namespace Skanetrafiken.Crm.Controllers
                         HttpStatusCode.BadRequest);
                     }
 
+                    //GetCardProperties getCardPropertiesTEST = TravelCardEntity.HandlePlaceOrder(localContext, getCardProperties.CardNumber);
+                    //if (string.IsNullOrWhiteSpace(placeOrderResponse) || placeOrderResponse != "200 - Success")
+                    //{
+                    //    _log.Debug($"CallPlaceOrderAction did not return a Success.");
+                    //    return ReturnApiMessage(threadId,
+                    //        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                    //    HttpStatusCode.BadRequest);
+                    //}
+
+                    _log.Debug($"Step 4.");
                     EntityReference valueCodeGeneric = null;
 
                     try
@@ -1031,7 +1043,7 @@ namespace Skanetrafiken.Crm.Controllers
                         //Create a new Value Code before blocking the card through the API
 
                         valueCodeGeneric = CreateGiftCardValueCode(localContext, getCardProperties.Amount, valueCode, travelCard, contact); //new version for new API
-
+                        _log.Debug($"Step 5.");
                         //Validate that Value Code has been created
                         if (valueCodeGeneric == null)
                         {
@@ -1052,7 +1064,7 @@ namespace Skanetrafiken.Crm.Controllers
                         settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
 
                         CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
-
+                        _log.Debug($"Step 5.5 Error.");
                         localContext.TracingService.Trace("\nJojoAPITest - Capture Order:");
                         string apiStatusResponse = "";
 
@@ -1088,8 +1100,8 @@ namespace Skanetrafiken.Crm.Controllers
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                         HttpStatusCode.BadRequest);
                     }
-                    
 
+                    _log.Debug($"Step 6.");
                     //Call "Card Order API" to start the value code creation and travel card block process (requesting a block of the card)
                     var captureOrderResponse = ValueCodeHandler.CallCaptureOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
                     if (string.IsNullOrWhiteSpace(captureOrderResponse) || captureOrderResponse != "200 - Success")
@@ -1099,7 +1111,7 @@ namespace Skanetrafiken.Crm.Controllers
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                         HttpStatusCode.BadRequest);
                     }
-
+                    _log.Debug($"Step 7.");
                     _log.Debug($"Fetch travel card '{travelCard?.cgi_travelcardnumber}' from CRM.");
                     var crmTravelCard = FetchTravelCardFromCRM(localContext,
                             travelCard.cgi_travelcardnumber, new ColumnSet(TravelCardEntity.Fields.cgi_Blocked));

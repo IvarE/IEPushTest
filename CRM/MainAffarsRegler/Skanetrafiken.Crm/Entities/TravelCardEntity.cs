@@ -25,21 +25,7 @@ namespace Skanetrafiken.Crm.Entities
     public class TravelCardEntity : Generated.cgi_travelcard
     {
         public static readonly string _NotDefined = "Ej Definierat";
-
-        private static IConfidentialClientApplication _msalApplication => _msalApplicationFactory.Value;
-
-        private static Lazy<IConfidentialClientApplication> _msalApplicationFactory =
-            new Lazy<IConfidentialClientApplication>(() =>
-            {
-                var certificate = Identity.GetCertToUse("crm-sekundfasaden-acc-sp");
-                var authority = string.Format(CultureInfo.InvariantCulture, "https://skanetrafiken.se/apps/jojocardserviceacc", "e1fcb9f3-e5f9-496f-a583-e495dfd57497");
-
-                return ConfidentialClientApplicationBuilder
-                    .Create("9e84b58e-20aa-4ceb-aa89-abd98253afd2")
-                    .WithCertificate(certificate)
-                    .WithAuthority(new Uri(authority))
-                    .Build();
-            });
+        
 
         public enum BlockCardProductReasonCode
         {
@@ -50,9 +36,12 @@ namespace Skanetrafiken.Crm.Entities
             Other = 5
         }
 
+        //Done
         public static ValueCodeHandler.GetCardProperties HandlePlaceOrder(Plugin.LocalPluginContext localContext, string cardNumber)
         {
+
             localContext.TracingService.Trace($"Running HandlePlaceOrder.");
+
             //TODO: Parse information from API to a GetCardProperties Object
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
@@ -60,7 +49,6 @@ namespace Skanetrafiken.Crm.Entities
             settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
 
             CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
-
             if (settingEntity == null || string.IsNullOrWhiteSpace(settingEntity.ed_JojoCardDetailsAPI))
             {
                 //Bad request -> exception
@@ -69,111 +57,154 @@ namespace Skanetrafiken.Crm.Entities
             ValueCodeHandler.GetCardProperties getCardProperties = null;
 
             localContext.TracingService.Trace("\nJojoAPITest - Place Order:");
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(string.Format("{0}placeOrder", settingEntity.ed_JojoCardDetailsAPI));
 
-            #region Certificate
-
-            string certName = ConfigurationManager.AppSettings["SeKundFasadenCertificateName"];
-            request.ClientCertificates.Add(Identity.GetCertToUse(certName));
-
-            #endregion
-
-            request.Headers.Add("Card-Number", cardNumber);
-            request.Headers.Add("20", "*/*");
-            request.ContentLength = 0;
-            request.Method = "POST";
-
-            using (WebResponse placeOrderResponse = request.GetResponse())
+            try
             {
-                var checkStatus = (HttpWebResponse)placeOrderResponse;
-                if (checkStatus.StatusCode != HttpStatusCode.OK)
+                // 2020-06-23 - Chris
+                string message = "";
+
+                const long tokenLifetimeSeconds = 30 * 60 + 60 * 60 * 1;  // Add 1h for Summertime UTC
+
+                Int32 unixTimeStamp;
+                DateTime currentTime = DateTime.Now;
+                DateTime zuluTime = currentTime.ToUniversalTime();
+                DateTime unixEpoch = new DateTime(1970, 1, 1);
+                unixTimeStamp = (Int32)(zuluTime.Subtract(unixEpoch)).TotalSeconds;
+
+                long validTo = unixTimeStamp + tokenLifetimeSeconds;
+
+                Identity tokenClass = new Identity();
+                //if (crmId != null)
+                //    tokenClass.crmId = (Guid)crmId;
+                tokenClass.exp = validTo;
+                string clientCert = "SE162321000255-F16675";
+
+                localContext.TracingService.Trace("\nHandlePlaceOrder:");
+                string fasadEndpoint = "https://crmwebapi-acc.skanetrafiken.se/api/travelcard/PlaceOrderWithCardNumber/cardNumber?cardNumber=";
+                //string url = $"{fasadEndpoint}{cardNumber}";
+                string url = $"{fasadEndpoint}{cardNumber}"; //Test
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+                httpWebRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCert));
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "GET";
+
+                //var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                //var httpResponse = httpWebRequest.GetResponse();
+                using (WebResponse getCardHttpResponse = httpWebRequest.GetResponse())
                 {
-                    //Bad Request
-                }
-                else
-                {
-                    using (Stream stream = placeOrderResponse.GetResponseStream())
+                    var checkStatus = (HttpWebResponse)getCardHttpResponse;
+                    if (checkStatus.StatusCode != HttpStatusCode.OK)
                     {
-                        using (StreamReader streamReader = new StreamReader(stream, Encoding.UTF8))
+                        //Bad request -> exception
+                        throw new Exception($"Exception caught - API returned StatusCode {checkStatus.StatusCode}");
+                    }
+                    else
+                    {
+                        using (Stream stream = getCardHttpResponse.GetResponseStream())
                         {
-
-                            var jsonResponse = streamReader.ReadToEnd();
-
-                            DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(ValueCodeHandler.GetCardProperties));
-                            MemoryStream streamMemory = new MemoryStream(Encoding.UTF8.GetBytes(jsonResponse));
-                            streamMemory.Position = 0;
-
-                            getCardProperties = (ValueCodeHandler.GetCardProperties)jsonSerializer.ReadObject(streamMemory);
-                            streamMemory.Close();
-
-                            if (getCardProperties != null)
+                            using (StreamReader streamReader = new StreamReader(stream, Encoding.UTF8))
                             {
-                                //OK
-                            }
-                            else
-                            {
+
+                                var jsonResponse = streamReader.ReadToEnd();
+
+                                var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                                getCardProperties = (ValueCodeHandler.GetCardProperties)serializer.Deserialize(jsonResponse, typeof(ValueCodeHandler.GetCardProperties));
 
                             }
                         }
                     }
                 }
+
+                localContext.TracingService.Trace($"Successfully exiting HandlePlaceOrder.");
+                return getCardProperties;
+
             }
-
-            localContext.TracingService.Trace($"Successfully exiting HandlePlaceOrder.");
-            return getCardProperties;
+            catch (Exception ex)
+            {
+                //_integrationLog.Error("Error accured in GetCardDetailIntegration", ex);
+                throw new InvalidPluginExecutionException("Error getting card: " + ex.Message);
+            }
         }
-
+        //Done
         public static string HandleCaptureOrder(Plugin.LocalPluginContext localContext, string cardNumber)
         {
+
             localContext.TracingService.Trace($"Running HandleCaptureOrder.");
-            //TODO: Parse information from API to a Status String (200 - Success / 400 - Bad Request, error message)
+
+            //TODO: Parse information from API to a GetCardProperties Object
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
             FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
             settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
 
             CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
+            if (settingEntity == null || string.IsNullOrWhiteSpace(settingEntity.ed_JojoCardDetailsAPI))
+            {
+                //Bad request -> exception
+            }
+
+            ValueCodeHandler.GetCardProperties getCardProperties = null;
 
             localContext.TracingService.Trace("\nJojoAPITest - Capture Order:");
             string apiStatusResponse = "";
 
-            HttpWebRequest requestCaptureOrder = (HttpWebRequest)WebRequest.Create(string.Format("{0}captureOrder/", settingEntity.ed_JojoCardDetailsAPI));
-
-            #region Certificate
-
-            string certName = ConfigurationManager.AppSettings["SeKundFasadenCertificateName"];
-            requestCaptureOrder.ClientCertificates.Add(Identity.GetCertToUse(certName));
-
-            #endregion
-
-            requestCaptureOrder.Headers.Add("Card-Number", cardNumber);
-            requestCaptureOrder.Headers.Add("20", "*/*");
-            requestCaptureOrder.ContentLength = 0;
-            requestCaptureOrder.Method = "POST";
-
-            var captureOrderResponse = requestCaptureOrder.GetResponse() as HttpWebResponse;
-
-            if (captureOrderResponse.StatusCode != HttpStatusCode.OK)
+            try
             {
-                //Send bad request
-                apiStatusResponse = "400 - Fel";
+                // 2020-06-23 - Chris
+                string message = "";
+
+                const long tokenLifetimeSeconds = 30 * 60 + 60 * 60 * 1;  // Add 1h for Summertime UTC
+
+                Int32 unixTimeStamp;
+                DateTime currentTime = DateTime.Now;
+                DateTime zuluTime = currentTime.ToUniversalTime();
+                DateTime unixEpoch = new DateTime(1970, 1, 1);
+                unixTimeStamp = (Int32)(zuluTime.Subtract(unixEpoch)).TotalSeconds;
+
+                long validTo = unixTimeStamp + tokenLifetimeSeconds;
+
+                Identity tokenClass = new Identity();
+                //if (crmId != null)
+                //    tokenClass.crmId = (Guid)crmId;
+                tokenClass.exp = validTo;
+                string clientCert = "SE162321000255-F16675";
+
+                localContext.TracingService.Trace("\nHandleCaptureOrder:");
+                string fasadEndpoint = "https://crmwebapi-acc.skanetrafiken.se/api/travelcard/CaptureOrderWithCardNumber/cardNumber?cardNumber=";
+                //string url = $"{fasadEndpoint}{cardNumber}";
+                string url = $"{fasadEndpoint}{cardNumber}"; //Test
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+                httpWebRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCert));
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "GET";
+
+                //var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                //var httpResponse = httpWebRequest.GetResponse();
+                using (WebResponse getCardHttpResponse = httpWebRequest.GetResponse())
+                {
+                    var checkStatus = (HttpWebResponse)getCardHttpResponse;
+                    if (checkStatus.StatusCode != HttpStatusCode.OK)
+                    {
+                        //Send bad request
+                        apiStatusResponse = "400 - Fel";
+                    }
+                    else
+                    {
+                        //We are done
+                        apiStatusResponse = "200 - Success";
+                    }
+                }
+
+                localContext.TracingService.Trace($"Successfully exiting HandleCaptureOrder.");
+
+                return apiStatusResponse;
             }
-            else
+            catch (Exception ex)
             {
-                //We are done
-                apiStatusResponse = "200 - Success";
+                //_integrationLog.Error("Error accured in GetCardDetailIntegration", ex);
+                throw new InvalidPluginExecutionException("Error getting card: " + ex.Message);
             }
-
-            localContext.TracingService.Trace($"Successfully exiting HandleCaptureOrder.");
-
-            return apiStatusResponse;
         }
-
-        private static readonly TaskFactory _taskFactory = new
-        TaskFactory(CancellationToken.None,
-                    TaskCreationOptions.None,
-                    TaskContinuationOptions.None,
-                    TaskScheduler.Default);
 
         public static ValueCodeHandler.GetCardProperties HandleGetCard(Plugin.LocalPluginContext localContext, string cardNumber)
         {
@@ -186,73 +217,121 @@ namespace Skanetrafiken.Crm.Entities
             settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
 
             CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
-
             if (settingEntity == null || string.IsNullOrWhiteSpace(settingEntity.ed_JojoCardDetailsAPI))
             {
                 //Bad request -> exception
             }
 
             ValueCodeHandler.GetCardProperties getCardProperties = null;
-            string message = "";
+
             localContext.TracingService.Trace("\nJojoAPITest - get Card:");
 
-            
-            // 2020-05-18 - Marcus Stenswed
-            // Code to fetch Card Details from JojoCardService
             try
             {
-                AuthenticationResult authenticationResponse = _taskFactory
-                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardserviceacc/.default" }).ExecuteAsync)
-                    .Unwrap()
-                    .GetAwaiter()
-                    .GetResult();
+                // 2020-06-23 - Chris
+                string message = "";
 
-                string baseUrl = "https://skanetrafiken.se";
-                
-                using (var client = new System.Net.Http.HttpClient())
+                const long tokenLifetimeSeconds = 30 * 60 + 60 * 60 * 1;  // Add 1h for Summertime UTC
+
+                Int32 unixTimeStamp;
+                DateTime currentTime = DateTime.Now;
+                DateTime zuluTime = currentTime.ToUniversalTime();
+                DateTime unixEpoch = new DateTime(1970, 1, 1);
+                unixTimeStamp = (Int32)(zuluTime.Subtract(unixEpoch)).TotalSeconds;
+
+                long validTo = unixTimeStamp + tokenLifetimeSeconds;
+
+                Identity tokenClass = new Identity();
+                //if (crmId != null)
+                //    tokenClass.crmId = (Guid)crmId;
+                tokenClass.exp = validTo;
+                string clientCert = "SE162321000255-F16675";
+
+                localContext.TracingService.Trace("\nHandleGetCard:");
+                //string fasadEndpoint = "https://crmwebapi-acc.skanetrafiken.se/api/travelcard/";
+
+                string fasadEndpoint = "https://crmwebapi-acc.skanetrafiken.se/api/travelcard/GetCardWithCardNumber/cardNumber?cardNumber=";
+                //string url = $"{fasadEndpoint}{cardNumber}";
+                string url = $"{fasadEndpoint}{cardNumber}"; //Test
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+                httpWebRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCert));
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "GET";
+
+                //var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                //var httpResponse = httpWebRequest.GetResponse();
+                using (WebResponse getCardHttpResponse = httpWebRequest.GetResponse())
                 {
-                    HttpRequestHeaders defaultRequetHeaders = client.DefaultRequestHeaders;
-                    if (defaultRequetHeaders.Accept == null/* || !defaultRequetHeaders.Accept.Any(m => m.MediaType == "application/json")*/)
+                    var checkStatus = (HttpWebResponse)getCardHttpResponse;
+                    if (checkStatus.StatusCode != HttpStatusCode.OK)
                     {
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        //Bad request -> exception
+                        throw new Exception($"Exception caught - API returned StatusCode {checkStatus.StatusCode}");
                     }
-                    defaultRequetHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationResponse.AccessToken);
-                    defaultRequetHeaders.Add("Card-Number", cardNumber.ToString(CultureInfo.InvariantCulture));
-
-                    HttpResponseMessage response = _taskFactory
-                        .StartNew(() => client.GetAsync(baseUrl + "/v1/card"))
-                        .Unwrap()
-                        .GetAwaiter()
-                        .GetResult();
-
-                    var bodyResult = response.Content.ReadAsStringAsync().ToString();
-                    
-                    if(bodyResult != null)
+                    else
                     {
-                        DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(ValueCodeHandler.GetCardProperties));
-                        
-                        using (MemoryStream DeSerializememoryStream = new MemoryStream())
+                        using (Stream stream = getCardHttpResponse.GetResponseStream())
                         {
-                            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ValueCodeHandler.GetCardProperties));
+                            using (StreamReader streamReader = new StreamReader(stream, Encoding.UTF8))
+                            {
 
-                            //user stream writer to write JSON string data to memory stream
-                            StreamWriter writer = new StreamWriter(DeSerializememoryStream);
-                            writer.Write(bodyResult);
-                            writer.Flush();
+                                var jsonResponse = streamReader.ReadToEnd();
 
-                            DeSerializememoryStream.Position = 0;
-                            //get the Desrialized data in object of type Student
-                            ValueCodeHandler.GetCardProperties cardResponse = (ValueCodeHandler.GetCardProperties)serializer.ReadObject(DeSerializememoryStream);
+                                var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                                getCardProperties = (ValueCodeHandler.GetCardProperties)serializer.Deserialize(jsonResponse, typeof(ValueCodeHandler.GetCardProperties));
 
-                            message = "Found information!";
-                            return cardResponse;
+                                #region Update Contact With Response From API
+
+                                ContactEntity contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, new Guid("0453c5e5-cca0-ea11-80fa-005056b665ec"), new ColumnSet(ContactEntity.Fields.ed_title));
+
+                                DateTime ourTime = DateTime.UtcNow;
+
+                                string minmin = ourTime.Minute.ToString();
+                                string seconds = ourTime.Second.ToString();
+
+                                string didItWork = "";
+
+                                if (getCardProperties != null && !string.IsNullOrWhiteSpace(getCardProperties.CardNumber))
+                                {
+                                    didItWork += "CardNR " + getCardProperties.CardNumber;
+                                }
+
+                                if (getCardProperties != null && getCardProperties.IsClosed != null)
+                                {
+                                    didItWork += " - IscLosed " + getCardProperties.IsClosed.ToString();
+                                }
+
+                                if (getCardProperties != null && getCardProperties.Amount != null)
+                                {
+                                    didItWork += " - aMoUnT " + getCardProperties.Amount.ToString();
+                                }
+
+                                if (getCardProperties != null && !string.IsNullOrWhiteSpace(getCardProperties.ClosedReason))
+                                {
+                                    didItWork += " - ClsReason " + getCardProperties.ClosedReason;
+                                }
+
+                                if (getCardProperties != null && getCardProperties.IsReserved != null)
+                                {
+                                    didItWork += " - iSReserVed " + getCardProperties.IsReserved.ToString();
+                                }
+
+                                string finalAnswer = minmin + ":" + seconds + " - " + jsonResponse + " - " + didItWork;
+
+                                ContactEntity updateContact = new ContactEntity();
+                                updateContact.Id = contact.Id;
+                                updateContact.ed_title = finalAnswer;
+                                XrmHelper.Update(localContext, updateContact);
+
+                                #endregion
+
+                            }
                         }
-                        
                     }
-                    
                 }
 
-                return null;
+                return getCardProperties;
+
             }
             catch (Exception ex)
             {
@@ -260,163 +339,86 @@ namespace Skanetrafiken.Crm.Entities
                 throw new InvalidPluginExecutionException("Error getting card: " + ex.Message);
             }
 
-
-
-
-
-
-
-
-
-            //HttpWebRequest getCardRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}card/", settingEntity.ed_JojoCardDetailsAPI));
-
-
-
-            #region Certificate
-
-            ////Maybe we never found the name from web config... maybe hard code the name and see if it wokrs?
-            //string certName = ConfigurationManager.AppSettings["SeKundFasadenCertificateName"];
-
-            //string clientCertName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_ClientCertNameReskassa);
-            //getCardRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCertName));
-
-            #endregion
-
-            #region Header Token (Not Used)
-            #region new code
-            // With client credentials flows, the scope is always of the shape "resource/.default" because the
-            // application permissions need to be set statically (in the portal or by PowerShell), and then granted by
-            // a tenant administrator.
-            //string[] scopes = new string[] { "https://skanetrafiken.se/apps/sekundfasadenacc/.default" };
-
-            //AuthenticationResult result = null;
-
-            //try
-            //{
-            //    result = AcquireTokenForClient(scopes)
-            //                     .ExecuteAsync();
-            //}
-            //catch (MsalUiRequiredException ex)
-            //{
-            //    // The application doesn't have sufficient permissions.
-            //    // - Did you declare enough app permissions during app creation?
-            //    // - Did the tenant admin grant permissions to the application?
-            //}
-            //catch (MsalServiceException ex) when (ex.Message.Contains("AADSTS70011"))
-            //{
-            //    // Invalid scope. The scope has to be in the form "https://resourceurl/.default"
-            //    // Mitigation: Change the scope to be as expected.
-            //}
-
-            #endregion
-            #region old
-            //const long tokenLifetimeSeconds = 30 * 60 + 60 * 60 * 1;  // Add 1h for Summertime UTC
-            //Int32 unixTimeStamp;
-            //DateTime currentTime = DateTime.Now;
-            //DateTime zuluTime = currentTime.ToUniversalTime();
-            //DateTime unixEpoch = new DateTime(1970, 1, 1);
-            //unixTimeStamp = (Int32)(zuluTime.Subtract(unixEpoch)).TotalSeconds;
-            //long validTo = unixTimeStamp + tokenLifetimeSeconds;
-            //var tokenClass = new IdentityContract();
-            //tokenClass.exp = validTo;
-
-            //var token = ApiHelper.EncodeTokenEncryption(tokenClass, certName);
-            //getCardRequest.Headers["X-SekundFasadToken"] = token; //X-CRMPlusToken
-            #endregion
-
-            #endregion
-
-            //getCardRequest.Headers.Add("Card-Number", cardNumber);
-            //getCardRequest.Headers.Add("20", "*/*");
-
-            //getCardRequest.Method = "GET";
-
-            //using (WebResponse getCardResponse = getCardRequest.GetResponse())
-            //{
-            //    var checkStatus = (HttpWebResponse)getCardResponse;
-            //    if (checkStatus.StatusCode != HttpStatusCode.OK)
-            //    {
-            //        //Bad request -> exception
-            //        throw new Exception($"Exception caught - API returned StatusCode {checkStatus.StatusCode}");
-            //    }
-            //    else
-            //    {
-            //        using (Stream stream = getCardResponse.GetResponseStream())
-            //        {
-            //            using (StreamReader streamReader = new StreamReader(stream, Encoding.UTF8))
-            //            {
-
-            //                var jsonResponse = streamReader.ReadToEnd();
-
-            //                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(ValueCodeHandler.GetCardProperties));
-            //                MemoryStream streamMemory = new MemoryStream(Encoding.UTF8.GetBytes(jsonResponse));
-            //                streamMemory.Position = 0;
-
-            //                getCardProperties = (ValueCodeHandler.GetCardProperties)jsonSerializer.ReadObject(streamMemory);
-            //                streamMemory.Close();
-            //                if (getCardProperties != null)
-            //                {
-            //                    //Return this information
-            //                    message = "Found information!";
-            //                }
-            //                else
-            //                {
-            //                    //bad
-            //                    message = "Did not find information!";
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-
-            //localContext.TracingService.Trace($"Successfully exiting HandleGetCard, {message}");
-            //return getCardProperties;
         }
 
         public static string HandleCancelOrder(Plugin.LocalPluginContext localContext, string cardNumber)
         {
+
             localContext.TracingService.Trace($"Running HandleCancelOrder.");
-            //TODO: Parse information from API to a Status String (200 - Success / 400 - Bad Request, error message)
+
+            //TODO: Parse information from API to a GetCardProperties Object
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
             FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
             settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
 
             CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
+            if (settingEntity == null || string.IsNullOrWhiteSpace(settingEntity.ed_JojoCardDetailsAPI))
+            {
+                //Bad request -> exception
+            }
 
-            localContext.TracingService.Trace("\nJojoAPITest - Capture Order:");
+            ValueCodeHandler.GetCardProperties getCardProperties = null;
+
+            localContext.TracingService.Trace("\nJojoAPITest - Cancel Order:");
             string apiStatusResponse = "";
 
-            HttpWebRequest requestCancelOrder = (HttpWebRequest)WebRequest.Create(string.Format("{0}cancelOrder/", settingEntity.ed_JojoCardDetailsAPI));
-
-            #region Certificate
-
-            string certName = ConfigurationManager.AppSettings["SeKundFasadenCertificateName"];
-            requestCancelOrder.ClientCertificates.Add(Identity.GetCertToUse(certName));
-
-            #endregion
-
-            requestCancelOrder.Headers.Add("Card-Number", cardNumber);
-            requestCancelOrder.Headers.Add("20", "*/*");
-            requestCancelOrder.ContentLength = 0;
-            requestCancelOrder.Method = "POST";
-
-            var cancelOrderResponse = requestCancelOrder.GetResponse() as HttpWebResponse;
-
-            if (cancelOrderResponse.StatusCode != HttpStatusCode.OK)
+            try
             {
-                //Send bad request
-                apiStatusResponse = "Could not Cancel Order!";
+                // 2020-06-23 - Chris
+                string message = "";
+
+                const long tokenLifetimeSeconds = 30 * 60 + 60 * 60 * 1;  // Add 1h for Summertime UTC
+
+                Int32 unixTimeStamp;
+                DateTime currentTime = DateTime.Now;
+                DateTime zuluTime = currentTime.ToUniversalTime();
+                DateTime unixEpoch = new DateTime(1970, 1, 1);
+                unixTimeStamp = (Int32)(zuluTime.Subtract(unixEpoch)).TotalSeconds;
+
+                long validTo = unixTimeStamp + tokenLifetimeSeconds;
+
+                Identity tokenClass = new Identity();
+                //if (crmId != null)
+                //    tokenClass.crmId = (Guid)crmId;
+                tokenClass.exp = validTo;
+                string clientCert = "SE162321000255-F16675";
+
+                localContext.TracingService.Trace("\nHandleCancelOrder:");
+                string fasadEndpoint = "https://crmwebapi-acc.skanetrafiken.se/api/travelcard/CancelOrderWithCardNumber/cardNumber?cardNumber=";
+                //string url = $"{fasadEndpoint}{cardNumber}";
+                string url = $"{fasadEndpoint}{cardNumber}"; //Test
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+                httpWebRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCert));
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "GET";
+
+                //var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                //var httpResponse = httpWebRequest.GetResponse();
+                using (WebResponse getCardHttpResponse = httpWebRequest.GetResponse())
+                {
+                    var checkStatus = (HttpWebResponse)getCardHttpResponse;
+                    if (checkStatus.StatusCode != HttpStatusCode.OK)
+                    {
+                        //Send bad request
+                        apiStatusResponse = "Could not Cancel Order!";
+                    }
+                    else
+                    {
+                        //We are done
+                        apiStatusResponse = "Order was canceled!";
+                    }
+                }
+
+                localContext.TracingService.Trace($"Successfully exiting HandleCCancelOrder.");
+
+                return apiStatusResponse;
             }
-            else
+            catch (Exception ex)
             {
-                //We are done
-                apiStatusResponse = "Order was canceled!";
+                //_integrationLog.Error("Error accured in GetCardDetailIntegration", ex);
+                throw new InvalidPluginExecutionException("Error getting card: " + ex.Message);
             }
-
-            localContext.TracingService.Trace($"Successfully exiting HandleCaptureOrder.");
-
-            return apiStatusResponse;
         }
 
         public static string BlockCardBiztalk(Plugin.LocalPluginContext localContext, string travelCardNumber, int reasonCode)
