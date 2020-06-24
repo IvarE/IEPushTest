@@ -793,8 +793,6 @@ namespace Skanetrafiken.Crm.ValueCodes
             request["CardNumber"] = cardNumber;
 
             OrganizationResponse response = (OrganizationResponse)localContext.OrganizationService.Execute(request);
-            
-            //var testtmp = (string)response["PlaceOrderResponse"];
 
             return (string)response["PlaceOrderResponse"];
         }
