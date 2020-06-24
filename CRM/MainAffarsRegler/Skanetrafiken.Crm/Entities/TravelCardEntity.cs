@@ -122,7 +122,7 @@ namespace Skanetrafiken.Crm.Entities
             catch (Exception ex)
             {
                 //_integrationLog.Error("Error accured in GetCardDetailIntegration", ex);
-                throw new InvalidPluginExecutionException("Error getting card: " + ex.Message);
+                throw new InvalidPluginExecutionException("Error getting card (PlaceOrder): " + ex.Message + " - " + ex.StackTrace + " - " + ex.ToString());
             }
         }
         //Done
@@ -202,7 +202,7 @@ namespace Skanetrafiken.Crm.Entities
             catch (Exception ex)
             {
                 //_integrationLog.Error("Error accured in GetCardDetailIntegration", ex);
-                throw new InvalidPluginExecutionException("Error getting card: " + ex.Message);
+                throw new InvalidPluginExecutionException("Error getting card (CaptureOrder): " + ex.Message + " - " + ex.StackTrace + " - " + ex.ToString());
             }
         }
 
@@ -336,7 +336,7 @@ namespace Skanetrafiken.Crm.Entities
             catch (Exception ex)
             {
                 //_integrationLog.Error("Error accured in GetCardDetailIntegration", ex);
-                throw new InvalidPluginExecutionException("Error getting card: " + ex.Message);
+                throw new InvalidPluginExecutionException("Error getting card (GetCard): " + ex.Message + " - " + ex.StackTrace + " - " + ex.ToString());
             }
 
         }
@@ -417,7 +417,7 @@ namespace Skanetrafiken.Crm.Entities
             catch (Exception ex)
             {
                 //_integrationLog.Error("Error accured in GetCardDetailIntegration", ex);
-                throw new InvalidPluginExecutionException("Error getting card: " + ex.Message);
+                throw new InvalidPluginExecutionException("Error getting card (CancelOrder): " + ex.Message + " - " + ex.StackTrace + " - " + ex.ToString());
             }
         }
 
