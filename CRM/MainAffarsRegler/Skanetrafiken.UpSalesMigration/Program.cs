@@ -243,6 +243,23 @@ namespace Skanetrafiken.UpSalesMigration
             }
         }
 
+        public static EntityReference GetCRMPriceListByName(Plugin.LocalPluginContext localContext, string name)
+        {
+            FilterExpression filterPriceList = new FilterExpression();
+            filterPriceList.Conditions.Add(new ConditionExpression(PriceLevel.Fields.Name, ConditionOperator.Equal, name));
+
+            List<PriceLevel> lPriceLevels = XrmRetrieveHelper.RetrieveMultiple<PriceLevel>(localContext, new ColumnSet(PriceLevel.Fields.PriceLevelId), filterPriceList).ToList();
+
+            if (lPriceLevels.Count == 1)
+                return lPriceLevels.FirstOrDefault().ToEntityReference();
+            else if (lPriceLevels.Count == 0)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"No Price Lists found with Name: " + name + ".");
+            else if (lPriceLevels.Count > 1)
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"More than One Price List found with Name: " + name + ".");
+
+            return null;
+        }
+
         public static EntityReference GetCrmCurrencyByName(Plugin.LocalPluginContext localContext, string name)
         {
             FilterExpression filterCurrencies = new FilterExpression();
@@ -406,24 +423,24 @@ namespace Skanetrafiken.UpSalesMigration
 
         public static void FulFillOrder(Plugin.LocalPluginContext localContext, Guid orderId)
         {
-            //int newStatus = (int)salesorder_statuscode.Complete;
+            int newStatus = (int)salesorder_statuscode.Complete;
 
-            //Entity orderClose = new Entity("orderclose");
-            //orderClose["salesorderid"] = new EntityReference(SalesOrder.EntityLogicalName, orderId);
-            //FulfillSalesOrderRequest request = new FulfillSalesOrderRequest
-            //{
-            //    OrderClose = orderClose,
-            //    Status = new OptionSetValue(newStatus)
-            //};
+            Entity orderClose = new Entity("orderclose");
+            orderClose["salesorderid"] = new EntityReference(SalesOrder.EntityLogicalName, orderId);
+            FulfillSalesOrderRequest request = new FulfillSalesOrderRequest
+            {
+                OrderClose = orderClose,
+                Status = new OptionSetValue(newStatus)
+            };
 
-            //try
-            //{
-            //    localContext.OrganizationService.Execute(request);
-            //}
-            //catch (Exception e)
-            //{
-            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error setting the Sales Order to Completed. Details: " + e.Message);
-            //}
+            try
+            {
+                localContext.OrganizationService.Execute(request);
+            }
+            catch (Exception e)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error setting the Sales Order to Completed. Details: " + e.Message);
+            }
         }
 
         public static void CreateSalesOrderDetail(Plugin.LocalPluginContext localContext, CrmContext crmContext, decimal dtotalLineAmount, EntityReference erOrder)
@@ -2074,6 +2091,9 @@ namespace Skanetrafiken.UpSalesMigration
             string currencyName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.DefaultCurrency);
             EntityReference erCurrency = GetCrmCurrencyByName(localContext, currencyName);
 
+            string defaultPriceList = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.DefaultPriceList);
+            EntityReference erPriceList = GetCRMPriceListByName(localContext, defaultPriceList);
+
             Console.Write("Creating Batch of Orders... ");
             using (ProgressBar progress = new ProgressBar())
             {
@@ -2089,6 +2109,7 @@ namespace Skanetrafiken.UpSalesMigration
                         string startProductDate = string.Empty;
                         string endProductDate = string.Empty;
                         string productColibri = string.Empty;
+                        string totalLineAmmount = string.Empty;
 
                         List<ExcelLineData> line = importExcelInfo.lData[i];
 
@@ -2185,17 +2206,7 @@ namespace Skanetrafiken.UpSalesMigration
 
                                     break;
                                 case "Värde":
-
-                                    decimal dtotalLineAmount = decimal.MinValue;
-
-                                    if (decimal.TryParse(value, out dtotalLineAmount))
-                                    {
-                                        if (dtotalLineAmount != decimal.MinValue)
-                                            nOrder.TotalLineItemAmount = new Money(dtotalLineAmount);
-                                    }
-                                    else
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a decimal value.");
-
+                                    totalLineAmmount = value;
                                     break;
                                 case "Order: Användare":
 
@@ -2285,8 +2296,33 @@ namespace Skanetrafiken.UpSalesMigration
                             continue;
 
                         nOrder.TransactionCurrencyId = erCurrency;
+                        nOrder.PriceLevelId = erPriceList;
 
                         crmContext.AddObject(nOrder);
+
+                        if(totalLineAmmount != string.Empty)
+                        {
+                            decimal dtotalLineAmount = decimal.MinValue;
+
+                            if (decimal.TryParse(totalLineAmmount, out dtotalLineAmount))
+                            {
+                                if (dtotalLineAmount != decimal.MinValue)
+                                {
+                                    SalesOrderDetail nOrderProduct = nOrderProduct = new SalesOrderDetail();
+                                    nOrderProduct.IsProductOverridden = true;
+                                    nOrderProduct.IsPriceOverridden = true;
+                                    nOrderProduct.ProductDescription = "Upsales Order Value";
+                                    nOrderProduct.Quantity = 1M;
+                                    nOrderProduct.PricePerUnit = new Money(dtotalLineAmount);
+                                    nOrderProduct.ManualDiscountAmount = new Money(0M);
+                                    nOrderProduct.Tax = new Money(0M);
+
+                                    crmContext.AddRelatedObject(nOrder, new Relationship(rel_order_orderdetail), nOrderProduct);
+                                }
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + totalLineAmmount + " to a decimal value.");
+                        }
 
                         if (noteTextProduct != string.Empty)
                         {
@@ -2455,15 +2491,9 @@ namespace Skanetrafiken.UpSalesMigration
             {
                 for (int i = 0; i < importExcelInfo.lData.Count; i++)
                 {
-
-                    if (i == 2)
-                        return;
-
                     try
                     {
                         progress.Report((double)i / (double)importExcelInfo.lData.Count);
-                        
-
                         List<ExcelLineData> line = importExcelInfo.lData[i];
 
                         if (line.Count != importExcelInfo.lColumns.Count)
@@ -2520,13 +2550,17 @@ namespace Skanetrafiken.UpSalesMigration
             Console.WriteLine("5) Import Contacts");
             Console.WriteLine("6) Import Activities");
             Console.WriteLine("7) Import Orders");
-            Console.WriteLine("8) Fix Duplicate OptionSets on Account/Branch");
-            Console.WriteLine("9) Import PDF Orders");
-            Console.WriteLine("10) Import PDF Agreements");
-            Console.WriteLine("11) Delete Duplicated Accounts");
-            Console.WriteLine("12) Check for Duplicate Records");
-            Console.WriteLine("13) Update SubAccounts Records");
-            Console.WriteLine("14) Update Total Amount on Orders");
+            Console.WriteLine("8) Import PDF Orders");
+            Console.WriteLine("9) Import PDF Agreements");
+
+            Console.WriteLine("-------Fixes-------");
+            Console.WriteLine("10) Fix: Duplicate OptionSets on Account/Branch");
+            Console.WriteLine("11) Fix: Check for Duplicate Records");
+            Console.WriteLine("12) Fix: Update SubAccounts Records");
+            Console.WriteLine("13) Fix: Update Price List on Orders");
+            Console.WriteLine("14) Fix: Update Total Amount on Orders");
+
+
             Console.WriteLine("0) Exit");
             Console.Write("\r\nSelect an option: ");
 
@@ -2814,7 +2848,82 @@ namespace Skanetrafiken.UpSalesMigration
                     return true;
                 case "8":
 
-                    #region Fix DuplicatedOptionSets On Account/Branch
+                    #region Import PDF Orders
+
+                    try
+                    {
+                        crmContext.ClearChanges();
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload PDF Orders Leveransrapport--------------");
+
+                        string relativePath = Properties.Settings.Default.RelativePath;
+                        string path = Properties.Settings.Default.PDFilesReports;
+                        string filter = "*.pdf";
+
+                        string fullPath = relativePath + path;
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Full Path: " + fullPath);
+                        ImportPDFOrders(localContext, crmContext, fullPath, filter);
+
+                        Console.WriteLine("Sending Batch of Orders to Sekund...");
+
+                        Console.ReadLine();
+                        //SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        //LogCrmContextMultipleResponses(localContext, responses);
+
+                        Console.WriteLine("Batch Sent. Please check logs.");
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload PDF Orders Leveransrapport--------------");
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing PDF Orders Leveransrapport. Details: " + e.Message);
+                        throw;
+                    }
+
+                    #endregion
+
+                    return true;
+                case "9":
+
+                    #region Import PDF Agreements
+
+                    try
+                    {
+                        crmContext.ClearChanges();
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload PDF Agreements--------------");
+
+                        string relativePath = Properties.Settings.Default.RelativePath;
+                        string path = Properties.Settings.Default.PDFilesAgreements;
+                        string filter = "*.pdf";
+
+                        string fullPath = relativePath + path;
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Full Path: " + fullPath);
+                        ImportPDFAgreements(localContext, crmContext, fullPath, filter);
+
+                        Console.WriteLine("Sending Batch of Orders to Sekund...");
+
+                        Console.ReadLine();
+                        //SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        //LogCrmContextMultipleResponses(localContext, responses);
+
+                        Console.WriteLine("Batch Sent. Please check logs.");
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload PDF Agreements--------------");
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Order Records. Details: " + e.Message);
+                        throw;
+                    }
+
+                    #endregion
+
+                    return true;
+
+                //-----------------------FIXES-----------------------
+
+                case "10":
+
+                    #region Fix Duplicated OptionSets On Account/Branch
 
                     try
                     {
@@ -2941,123 +3050,8 @@ namespace Skanetrafiken.UpSalesMigration
 
                     return true;
 
-                case "9":
-
-                    #region Import PDF Orders
-
-                    try
-                    {
-                        crmContext.ClearChanges();
-                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload PDF Orders Leveransrapport--------------");
-
-                        string relativePath = Properties.Settings.Default.RelativePath;
-                        string path = Properties.Settings.Default.PDFilesReports;
-                        string filter = "*.pdf";
-
-                        string fullPath = relativePath + path;
-                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Full Path: " + fullPath);
-                        ImportPDFOrders(localContext, crmContext, fullPath, filter);
-
-                        Console.WriteLine("Sending Batch of Orders to Sekund...");
-
-                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        LogCrmContextMultipleResponses(localContext, responses);
-
-                        Console.WriteLine("Batch Sent. Please check logs.");
-
-                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload PDF Orders Leveransrapport--------------");
-                    }
-                    catch (Exception e)
-                    {
-                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing PDF Orders Leveransrapport. Details: " + e.Message);
-                        throw;
-                    }
-
-                    #endregion
-
-                    return true;
-
-                case "10":
-
-                    #region Import PDF Agreements
-
-                    try
-                    {
-                        crmContext.ClearChanges();
-                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload PDF Agreements--------------");
-
-                        string relativePath = Properties.Settings.Default.RelativePath;
-                        string path = Properties.Settings.Default.PDFilesAgreements;
-                        string filter = "*.pdf";
-
-                        string fullPath = relativePath + path;
-                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Full Path: " + fullPath);
-                        ImportPDFAgreements(localContext, crmContext, fullPath, filter);
-
-                        Console.WriteLine("Sending Batch of Orders to Sekund...");
-
-                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        LogCrmContextMultipleResponses(localContext, responses);
-
-                        Console.WriteLine("Batch Sent. Please check logs.");
-
-                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload PDF Agreements--------------");
-                    }
-                    catch (Exception e)
-                    {
-                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Order Records. Details: " + e.Message);
-                        throw;
-                    }
-
-                    #endregion
-
-                    return true;
 
                 case "11":
-
-                    #region Delete Duplicated Account
-
-                    QueryExpression queryAccountsD = new QueryExpression(Account.EntityLogicalName);
-                    queryAccountsD.NoLock = true;
-                    queryAccountsD.ColumnSet.AddColumns(Account.Fields.AccountId);
-                    queryAccountsD.Criteria.AddCondition(Account.Fields.CreatedOn, ConditionOperator.Today);
-                    queryAccountsD.Criteria.AddCondition(Account.Fields.ed_InfotainmentCustomer, ConditionOperator.Equal, true);
-
-                    List<Account> lAccountsDelete = XrmRetrieveHelper.RetrieveMultiple<Account>(localContext, queryAccountsD);
-
-                    Console.WriteLine("The are " + lAccountsDelete.Count + " Accounts Duplicated. Do you want to delete them?");
-                    string answer = Console.ReadLine();
-
-                    if(answer == "y" && lAccountsDelete.Count > 0)
-                    {
-                        int i = 0;
-                        Console.Write("Deleting Duplicated Accounts... ");
-
-                        using (ProgressBar progress = new ProgressBar())
-                        {
-                            foreach (Account account in lAccountsDelete)
-                            {
-                                try
-                                {
-                                    progress.Report((double)i / (double)lAccountsDelete.Count);
-                                    XrmHelper.Delete(localContext, account.ToEntityReference());
-                                }
-                                catch (Exception e)
-                                {
-                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Account " + account.Id + " was not deleted. Details: " + e.Message);
-                                }
-
-                                i++;
-                            }
-                        }
-                        Console.WriteLine("Done."); 
-                    }
-
-                    #endregion
-
-                    return true;
-
-                case "12":
 
                     #region Check for Account Duplicate Records
 
@@ -3111,7 +3105,7 @@ namespace Skanetrafiken.UpSalesMigration
 
                     return true;
 
-                case "13":
+                case "12":
 
                     #region Update SubAccounts Records
 
@@ -3151,7 +3145,68 @@ namespace Skanetrafiken.UpSalesMigration
                     #endregion
 
                     return true;
+                case "13":
 
+                    #region Update Price List on Orders
+
+                    try
+                    {
+                        crmContext.ClearChanges();
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Update Price List on Orders Entity--------------");
+
+                        QueryExpression queryOrders = new QueryExpression(SalesOrder.EntityLogicalName);
+                        queryOrders.NoLock = true;
+                        queryOrders.ColumnSet.AddColumns(SalesOrder.Fields.SalesOrderId);
+                        queryOrders.Criteria.AddCondition(SalesOrder.Fields.ed_UpsalesId, ConditionOperator.NotNull);
+                        queryOrders.Criteria.AddCondition(SalesOrder.Fields.PriceLevelId, ConditionOperator.Null);
+
+                        List<SalesOrder> lOrders = XrmRetrieveHelper.RetrieveMultiple<SalesOrder>(localContext, queryOrders);
+
+                        if (lOrders.Count == 0)
+                        {
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"No Orders with Upsales Id and no Price List.");
+                            return true;
+                        }
+
+                        Console.WriteLine("Found " + lOrders.Count + " Order that need a Price List.");
+
+                        string defaultPriceList = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.DefaultPriceList);
+                        EntityReference erPriceList = GetCRMPriceListByName(localContext, defaultPriceList);
+
+                        if (erPriceList == null)
+                        {
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The Default Price List: " + defaultPriceList + " was not found.");
+                            return true;
+                        }
+
+                        foreach (SalesOrder order in lOrders)
+                        {
+                            SalesOrder uOrder = new SalesOrder();
+                            uOrder.Id = order.Id;
+                            uOrder.PriceLevelId = erPriceList;
+
+                            crmContext.Attach(uOrder);
+                            crmContext.UpdateObject(uOrder);
+                        }
+
+                        Console.WriteLine("Sending Batch of Orders to Sekund...");
+
+                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        LogCrmContextMultipleResponses(localContext, responses);
+
+                        Console.WriteLine("Batch Sent. Please check logs.");
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Update Price List on Orders Entity--------------");
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Updating Order Records. Details: " + e.Message);
+                        throw;
+                    }
+
+                    #endregion
+
+                    return true;
                 case "14":
 
                     #region Update Total Ammount on Orders
@@ -3271,7 +3326,6 @@ namespace Skanetrafiken.UpSalesMigration
                 Console.ReadLine();
                 return;
             }
-
 
             bool showMenu = true;
             while (showMenu)

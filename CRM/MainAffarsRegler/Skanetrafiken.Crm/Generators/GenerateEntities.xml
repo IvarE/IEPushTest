@@ -14,6 +14,7 @@
     <entity>email</entity>
     <entity>incident</entity>
     <entity>lead</entity>
+    <entity>pricelevel</entity>
     <entity>product</entity>
     <entity>processstage</entity>
     <entity>phonecall</entity>

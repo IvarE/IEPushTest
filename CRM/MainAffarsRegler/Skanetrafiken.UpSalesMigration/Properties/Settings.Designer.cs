@@ -88,15 +88,6 @@ namespace Skanetrafiken.UpSalesMigration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string HistoricalData {
-            get {
-                return ((string)(this["HistoricalData"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Kristina Paulsson")]
         public string DefaultOwner {
             get {
@@ -137,6 +128,15 @@ namespace Skanetrafiken.UpSalesMigration.Properties {
         public string Bucket2Accounts {
             get {
                 return ((string)(this["Bucket2Accounts"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Infotainment")]
+        public string DefaultPriceList {
+            get {
+                return ((string)(this["DefaultPriceList"]));
             }
         }
     }

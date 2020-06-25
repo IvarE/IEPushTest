@@ -23,9 +23,6 @@
     <Setting Name="Orders" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Orders\Upsales order 2020-06-08.csv</Value>
     </Setting>
-    <Setting Name="HistoricalData" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="DefaultOwner" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Kristina Paulsson</Value>
     </Setting>
@@ -40,6 +37,9 @@
     </Setting>
     <Setting Name="Bucket2Accounts" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Accounts\Spann 2 - dubbletter_2020-05-28.csv</Value>
+    </Setting>
+    <Setting Name="DefaultPriceList" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Infotainment</Value>
     </Setting>
   </Settings>
 </SettingsFile>
