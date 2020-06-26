@@ -35,6 +35,10 @@
     width: 16.5%;
 }
 
+.col-3 {
+    width: 33%;
+}
+
 .label {
     font-weight: bold;
     width: 100%;

@@ -506,7 +506,7 @@
                         var cardId = document.getElementById("cardId").value;
 
                         if (cardId == null || cardId == "") {
-                            document.getElementById("errorMessageSpace").innerText = "Card Number is null or empty.";
+                            document.getElementById("messageSpace").innerText = "Card Number is null or empty.";
                             return;
                         }
 
@@ -524,19 +524,22 @@
                                 var closedReason = result.ClosedReason;
                                 var isReserved = result.IsReserved;
 
+                                document.getElementById("hotlisted").innerText = isClosed;
+                                document.getElementById("pursebalance").innerText = amount;
+                                document.getElementById("pursehotlistreason").innerText = closedReason;
 
-
+                                document.getElementById("block").disabled = false;
                             },
                             function (e, t) {
                                 debugger;
-
+                                alert(t);
                                 if (window.console && console.error) {
                                     console.error(e + "\n" + t);
                                 }
                             });
                     }
                     catch (error) {
-                        document.getElementById("errorMessageSpace").innerText = ("Oväntat fel: " + error.message);
+                        document.getElementById("messageSpace").innerText = ("Oväntat fel: " + error.message);
                     }
                 },
 
@@ -548,7 +551,7 @@
                         var cardId = document.getElementById("cardId").value;
 
                         if (cardId == null || cardId == "") {
-                            document.getElementById("errorMessageSpace").innerText = "Card Number is null or empty.";
+                            document.getElementById("messageSpace").innerText = "Card Number is null or empty.";
                             return;
                         }
 
@@ -568,6 +571,12 @@
                                 var closedReason = result.ClosedReason;
                                 var isReserved = result.IsReserved;
 
+                                alert(placeOrderResponse);
+                                document.getElementById("messageSpace").innerText = placeOrderResponse;
+                                document.getElementById("hotlisted").innerText = isClosed;
+                                document.getElementById("pursebalance").innerText = amount;
+                                document.getElementById("pursehotlistreason").innerText = closedReason;
+
                                 Process.callAction("ed_CaptureOrder",
                                     [{
                                         key: "CardNumber",
@@ -578,10 +587,12 @@
                                         debugger;
 
                                         var captureOrderResponse = result.CaptureOrderResponse;
+                                        document.getElementById("messageSpace").innerText = captureOrderResponse;
+                                        document.getElementById("pursebalance").innerText = "0";
                                     },
                                     function (e, t) {
                                         debugger;
-
+                                        alert(t);
                                         if (window.console && console.error) {
                                             console.error(e + "\n" + t);
                                         }
@@ -589,14 +600,14 @@
                             },
                             function (e, t) {
                                 debugger;
-
+                                alert(t);
                                 if (window.console && console.error) {
                                     console.error(e + "\n" + t);
                                 }
                             });
                     }
                     catch (error) {
-                        document.getElementById("errorMessageSpace").innerText = ("Oväntat fel: " + error.message);
+                        document.getElementById("messageSpace").innerText = ("Oväntat fel: " + error.message);
                     }
                 }
             };
@@ -613,7 +624,7 @@
             <div class="col-1"><div class="label">Search:</div></div>
             <div class="col-2"><input style="width:100%;" type="text" id="cardId"></div>
             <div class="col-1"><button onclick="Endeavor.Skanetrafiken.SearchTravelCards.getInfoFromCardId()" type="button" style="width:50px;margin-left:5px;">Sök</button></div>
-            <div class="col-2" id="errorMessageSpace"></div>
+            <div class="col-3" id="messageSpace"></div>
         </div>
 
         <hr style="width:100%;text-align:left;margin-left:0;margin-bottom: 10px;">
@@ -657,7 +668,7 @@
         <div class="row">
             <div class="col-2"><div class="label">Autoload start date:</div><div class="info" id="autoloadstartdate"></div></div>
             <div class="col-2"><div class="label">PurseHotlisted:</div><div class="info" id="pursehotlisted"></div></div>
-            <div class="col-2"><button type="button" disabled>Reload</button></div>
+            <div class="col-2"><button onclick="Endeavor.Skanetrafiken.SearchTravelCards.reloadButtonPlaceCaptureOrder()" id="block" type="button" disabled>Block</button></div>
             <div class="col-2"><div class="label">PeriodPeriodPaid:</div><div class="info" id="periodperiodpaid"></div></div>
             <div class="col-2"></div>
             <div class="col-2"></div>
