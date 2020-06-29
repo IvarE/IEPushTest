@@ -528,7 +528,8 @@
                                 document.getElementById("pursebalance").innerText = amount;
                                 document.getElementById("pursehotlistreason").innerText = closedReason;
 
-                                document.getElementById("block").disabled = false;
+                                if (amount > 0 || isClosed == true)
+                                    document.getElementById("block").disabled = false;
                             },
                             function (e, t) {
                                 debugger;
@@ -589,6 +590,7 @@
                                         var captureOrderResponse = result.CaptureOrderResponse;
                                         document.getElementById("messageSpace").innerText = captureOrderResponse;
                                         document.getElementById("pursebalance").innerText = "0";
+                                        document.getElementById("block").disabled = true;
                                     },
                                     function (e, t) {
                                         debugger;
