@@ -44,7 +44,8 @@ namespace Skanetrafiken.Crm.Controllers
         private static Lazy<IConfidentialClientApplication> _msalApplicationFactory =
             new Lazy<IConfidentialClientApplication>(() =>
             {
-                var certificate = Identity.GetCertToUse("crm-sekundfasaden-acc-sp");
+                //var certificate = Identity.GetCertToUse("crm-sekundfasaden-acc-sp");
+                var certificate = Identity.GetCertToUse("crm-sekundfasaden-prod-sp");
                 _log.DebugFormat($"<----- Initializing: Cert - {certificate?.Subject} ----->");
 
                 //var TentantId = "e1fcb9f3-e5f9-496f-a583-e495dfd57497";
@@ -82,7 +83,7 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 _log.DebugFormat($"GetCardWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
                 AuthenticationResult authenticationResponse = _taskFactory
-                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardserviceacc/.default" }).ExecuteAsync)
+                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
                     .Unwrap()
                     .GetAwaiter()
                     .GetResult();
@@ -98,7 +99,8 @@ namespace Skanetrafiken.Crm.Controllers
 
                 _log.DebugFormat($"GetCardWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
 
-                string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/card/";
+                //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/card/";
+                string endPoint = "https://stjojocardservice.azurewebsites.net/v1/card/";
                 _log.DebugFormat($"GetCardWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
 
                 _log.DebugFormat($"GetCardWithCardNumber: Building Jojo Card GetCard GET Call...");
@@ -158,7 +160,7 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 _log.DebugFormat($"PlaceOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
                 AuthenticationResult authenticationResponse = _taskFactory
-                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardserviceacc/.default" }).ExecuteAsync)
+                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
                     .Unwrap()
                     .GetAwaiter()
                     .GetResult();
@@ -174,7 +176,8 @@ namespace Skanetrafiken.Crm.Controllers
 
                 _log.DebugFormat($"PlaceOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
 
-                string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/placeOrder/";
+                //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/placeOrder/";
+                string endPoint = "https://stjojocardservice.azurewebsites.net/v1/placeOrder/";
                 _log.DebugFormat($"PlaceOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
 
                 _log.DebugFormat($"PlaceOrderWithCardNumber: Building Jojo Card PlaceOrder POST Call...");
@@ -237,7 +240,7 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 _log.DebugFormat($"CancelOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
                 AuthenticationResult authenticationResponse = _taskFactory
-                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardserviceacc/.default" }).ExecuteAsync)
+                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
                     .Unwrap()
                     .GetAwaiter()
                     .GetResult();
@@ -253,7 +256,8 @@ namespace Skanetrafiken.Crm.Controllers
 
                 _log.DebugFormat($"CancelOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
 
-                string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/cancelOrder/";
+                //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/cancelOrder/";
+                string endPoint = "https://stjojocardservice.azurewebsites.net/v1/cancelOrder/";
                 _log.DebugFormat($"CancelOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
 
                 _log.DebugFormat($"CancelOrderWithCardNumber: Building Jojo Card CancelOrder POST Call...");
@@ -317,7 +321,7 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 _log.DebugFormat($"CaptureOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
                 AuthenticationResult authenticationResponse = _taskFactory
-                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardserviceacc/.default" }).ExecuteAsync)
+                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
                     .Unwrap()
                     .GetAwaiter()
                     .GetResult();
@@ -333,7 +337,8 @@ namespace Skanetrafiken.Crm.Controllers
 
                 _log.DebugFormat($"CaptureOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
 
-                string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/captureOrder/";
+                //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/captureOrder/";
+                string endPoint = "https://stjojocardservice.azurewebsites.net/v1/captureOrder/";
                 _log.DebugFormat($"CaptureOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
 
                 _log.DebugFormat($"CaptureOrderWithCardNumber: Building Jojo Card CaptureOrder POST Call...");

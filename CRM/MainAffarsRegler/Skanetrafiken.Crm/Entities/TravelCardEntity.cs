@@ -80,7 +80,8 @@ namespace Skanetrafiken.Crm.Entities
                 string clientCert = "SE162321000255-F16675";
 
                 localContext.TracingService.Trace("\nHandlePlaceOrder:");
-                string fasadEndpoint = "https://crmwebapi-acc.skanetrafiken.se/api/travelcard/PlaceOrderWithCardNumber/cardNumber?cardNumber=";
+                //string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/PlaceOrderWithCardNumber/cardNumber?cardNumber=";
+                string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/PlaceOrderWithCardNumber/cardNumber?cardNumber=";
                 //string url = $"{fasadEndpoint}{cardNumber}";
                 string url = $"{fasadEndpoint}{cardNumber}"; //Test
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -170,7 +171,8 @@ namespace Skanetrafiken.Crm.Entities
                 string clientCert = "SE162321000255-F16675";
 
                 localContext.TracingService.Trace("\nHandleCaptureOrder:");
-                string fasadEndpoint = "https://crmwebapi-acc.skanetrafiken.se/api/travelcard/CaptureOrderWithCardNumber/cardNumber?cardNumber=";
+                //string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/CaptureOrderWithCardNumber/cardNumber?cardNumber=";
+                string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/CaptureOrderWithCardNumber/cardNumber?cardNumber=";
                 //string url = $"{fasadEndpoint}{cardNumber}";
                 string url = $"{fasadEndpoint}{cardNumber}"; //Test
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -249,8 +251,11 @@ namespace Skanetrafiken.Crm.Entities
 
                 localContext.TracingService.Trace("\nHandleGetCard:");
                 //string fasadEndpoint = "https://crmwebapi-acc.skanetrafiken.se/api/travelcard/";
+                //string testtest = "crmwebapi-acc-n1.skanetrafiken.se";
+                //string fasadEndpoint = "https://crmwebapi-acc.skanetrafiken.se/api/travelcard/GetCardWithCardNumber/cardNumber?cardNumber=";
 
-                string fasadEndpoint = "https://crmwebapi-acc.skanetrafiken.se/api/travelcard/GetCardWithCardNumber/cardNumber?cardNumber=";
+                //string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/GetCardWithCardNumber/cardNumber?cardNumber=";
+                string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/GetCardWithCardNumber/cardNumber?cardNumber=";
                 //string url = $"{fasadEndpoint}{cardNumber}";
                 string url = $"{fasadEndpoint}{cardNumber}"; //Test
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -280,51 +285,6 @@ namespace Skanetrafiken.Crm.Entities
                                 var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                                 getCardProperties = (ValueCodeHandler.GetCardProperties)serializer.Deserialize(jsonResponse, typeof(ValueCodeHandler.GetCardProperties));
 
-                                #region Update Contact With Response From API
-
-                                ContactEntity contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, new Guid("0453c5e5-cca0-ea11-80fa-005056b665ec"), new ColumnSet(ContactEntity.Fields.ed_title));
-
-                                DateTime ourTime = DateTime.UtcNow;
-
-                                string minmin = ourTime.Minute.ToString();
-                                string seconds = ourTime.Second.ToString();
-
-                                string didItWork = "";
-
-                                if (getCardProperties != null && !string.IsNullOrWhiteSpace(getCardProperties.CardNumber))
-                                {
-                                    didItWork += "CardNR " + getCardProperties.CardNumber;
-                                }
-
-                                if (getCardProperties != null && getCardProperties.IsClosed != null)
-                                {
-                                    didItWork += " - IscLosed " + getCardProperties.IsClosed.ToString();
-                                }
-
-                                if (getCardProperties != null && getCardProperties.Amount != null)
-                                {
-                                    didItWork += " - aMoUnT " + getCardProperties.Amount.ToString();
-                                }
-
-                                if (getCardProperties != null && !string.IsNullOrWhiteSpace(getCardProperties.ClosedReason))
-                                {
-                                    didItWork += " - ClsReason " + getCardProperties.ClosedReason;
-                                }
-
-                                if (getCardProperties != null && getCardProperties.IsReserved != null)
-                                {
-                                    didItWork += " - iSReserVed " + getCardProperties.IsReserved.ToString();
-                                }
-
-                                string finalAnswer = minmin + ":" + seconds + " - " + jsonResponse + " - " + didItWork;
-
-                                ContactEntity updateContact = new ContactEntity();
-                                updateContact.Id = contact.Id;
-                                updateContact.ed_title = finalAnswer;
-                                XrmHelper.Update(localContext, updateContact);
-
-                                #endregion
-
                             }
                         }
                     }
@@ -332,6 +292,14 @@ namespace Skanetrafiken.Crm.Entities
 
                 return getCardProperties;
 
+            }
+            catch (WebException ez) when (ez.Status == WebExceptionStatus.NameResolutionFailure)
+            { /* Do something with e, please.*/
+                throw new InvalidPluginExecutionException("DNS ERROR!!! - " + ez.InnerException);
+            }
+            catch (HttpRequestException e)
+            {
+                throw new InvalidPluginExecutionException("HTTP ERROR!!! - " + e.InnerException);
             }
             catch (Exception ex)
             {
@@ -385,7 +353,8 @@ namespace Skanetrafiken.Crm.Entities
                 string clientCert = "SE162321000255-F16675";
 
                 localContext.TracingService.Trace("\nHandleCancelOrder:");
-                string fasadEndpoint = "https://crmwebapi-acc.skanetrafiken.se/api/travelcard/CancelOrderWithCardNumber/cardNumber?cardNumber=";
+                //string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/CancelOrderWithCardNumber/cardNumber?cardNumber=";
+                string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/CancelOrderWithCardNumber/cardNumber?cardNumber=";
                 //string url = $"{fasadEndpoint}{cardNumber}";
                 string url = $"{fasadEndpoint}{cardNumber}"; //Test
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
