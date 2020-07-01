@@ -18,6 +18,52 @@ if (typeof (Endeavor.Skanetrafiken) == "undefined") {
 if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
     Endeavor.Skanetrafiken.Account = {
 
+        alertCustomDialog: function (msgText) {
+
+            var message = { confirmButtonLabel: "Ok", text: msgText };
+            var alertOptions = { height: 150, width: 280 };
+
+            Xrm.Navigation.openAlertDialog(message, alertOptions).then(
+                function success(result) {
+                    console.log("Alert dialog closed");
+                },
+                function (error) {
+                    console.log(error.message);
+                }
+            );
+        },
+
+        confirmCustomDialog: function (msgText) {
+
+            var confirmStrings = { text: msgText, title: "Confirmation Dialog", "cancelButtonLabel": "Cancel", confirmButtonLabel: "Confirm" };
+            var confirmOptions = { height: 200, width: 500 };
+            Xrm.Navigation.openConfirmDialog(confirmStrings, confirmOptions).then(
+                function (success) {
+                    if (success.confirmed) {
+
+                        console.log("Dialog closed using OK button.");
+                        try {
+                            Endeavor.Skanetrafiken.Account.headLoad(Endeavor.Skanetrafiken.Account.blockAccountPortalSuccessCallback);
+                        } catch (e) {
+                            Endeavor.Skanetrafiken.Account.alertCustomDialog(e.message);
+                        }
+                    }
+                    else
+                        console.log("Dialog closed using Cancel button or X.");
+                });
+        },
+
+        errorCustomDialog: function (details, message) {
+
+            Xrm.Navigation.openErrorDialog({ details: details, message: message }).then(
+                function (success) {
+                    console.log(success);
+                },
+                function (error) {
+                    console.log(error);
+                });
+        },
+
         onLoad: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
@@ -40,25 +86,26 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             }
         },
 
-        //29/06/2020 - TODO
         headLoad: function (successCallback) {
             var jsUrls = [];
             var jsUrl;
 
+            var globalContext = Xrm.Utility.getGlobalContext();
+
             if (typeof SDK == "undefined" || typeof SDK.REST == "undefined") {
-                jsUrl = Xrm.Page.context.getClientUrl() + "/WebResources/ed_/script/SDK.Rest.js";
+                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/SDK.Rest.js";
                 jsUrls.push(jsUrl);
             }
             if (typeof Sdk == "undefined" || typeof SDK.REST == "undefined") {
-                jsUrl = Xrm.Page.context.getClientUrl() + "/WebResources/ed_/script/Sdk.Soap.min.js";
+                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.Soap.min.js";
                 jsUrls.push(jsUrl);
             }
             if (typeof Endeavor == "undefined" || typeof Endeavor.Common == "undefined" || typeof Endeavor.Common.Data == "undefined") {
-                jsUrl = Xrm.Page.context.getClientUrl() + "/WebResources/ed_/script/Endeavor.Common.Data.js";
+                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Endeavor.Common.Data.js";
                 jsUrls.push(jsUrl);
             }
             if (typeof Sdk == "undefined" || typeof Sdk.ed_BlockAccountPortalRequest == "undefined") {
-                jsUrl = Xrm.Page.context.getClientUrl() + "/WebResources/ed_/script/Sdk.ed_BlockAccountPortal.min.js";
+                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.ed_BlockAccountPortal.min.js";
                 jsUrls.push(jsUrl);
             }
 
@@ -313,10 +360,6 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
                 if (formContext.ui.tabs.get("Sales History") !== null && formContext.ui.tabs.get("Sales History") !== 'undefined')
                     formContext.ui.tabs.get("Sales History").setVisible(false);
-
-                //if (Xrm.Page.ui.tabs.get("SUMMARY_TAB") !== null && Xrm.Page.ui.tabs.get("SUMMARY_TAB") !== 'undefined')
-                //    Xrm.Page.ui.tabs.get("SUMMARY_TAB").setVisible(false);
-                //Xrm.Page.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_7").setVisible(false);
             }
             else {
                 if (formContext.ui.tabs.get("Cost Sites") !== null && formContext.ui.tabs.get("Cost Sites") !== 'undefined')
@@ -324,9 +367,6 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
                 if (formContext.ui.tabs.get("Sales History") !== null && formContext.ui.tabs.get("Sales History") !== 'undefined')
                     formContext.ui.tabs.get("Sales History").setVisible(true);
-
-                //if (Xrm.Page.ui.tabs.get("SUMMARY_TAB") !== null && Xrm.Page.ui.tabs.get("SUMMARY_TAB") !== 'undefined')
-                //    Xrm.Page.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_7").setVisible(true);
             }
 
             var accountType = formContext.getAttribute("ed_typeofaccount");
@@ -378,146 +418,113 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 msgText = "Är du säker på att du vill avblockera detta kostnadsställe och ge åtkomst till hemsidan?";
             }
 
-            var confirmStrings = { text: msgText, title: "Confirmation Dialog", "cancelButtonLabel": "Cancel", confirmButtonLabel: "Confirm" };
-            var confirmOptions = { height: 200, width: 500 };
-            Xrm.Navigation.openConfirmDialog(confirmStrings, confirmOptions).then(
-                function (success) {
-                    if (success.confirmed) {
-
-                        console.log("Dialog closed using OK button.");
-                        try {
-                            Endeavor.Skanetrafiken.Account.headLoad(Endeavor.Skanetrafiken.Account.blockAccountPortalSuccessCallback);
-                        } catch (e) {
-                            //Xrm.Utility.alertDialog(e.message);
-
-                            var message = { confirmButtonLabel: "Ok", text: e.message };
-                            var alertOptions = { height: 150, width: 280 };
-                            Xrm.Navigation.openAlertDialog(message, alertOptions).then(
-                                function success(result) {
-                                    console.log("Alert dialog closed");
-                                },
-                                function (error) {
-                                    console.log(error.message);
-                                }
-                            );
-                        }
-                    }
-                    else
-                        console.log("Dialog closed using Cancel button or X.");
-                });
-
-            //Xrm.Utility.confirmDialog(msgText, function () {
-            //    try {
-            //        Endeavor.Skanetrafiken.Account.headLoad(Endeavor.Skanetrafiken.Account.blockAccountPortalSuccessCallback);
-            //    } catch (e) {
-            //        Xrm.Utility.alertDialog(e.message);
-            //    }
-
-            //}, function () {
-            //    return;
-            //});
+            Endeavor.Skanetrafiken.Account.confirmCustomDialog(msgText);
         },
 
-        //29/06/2020 - TODO
-        blockAccountPortalSuccessCallback: function () {
-            var portalID = Xrm.Page.getAttribute("accountnumber").getValue();
-            var blocked = Xrm.Page.getAttribute("ed_islockedportal").getValue();
+        blockAccountPortalSuccessCallback: function (formContext) {
+
+            var portalID = formContext.getAttribute("accountnumber").getValue();
+            var blocked = formContext.getAttribute("ed_islockedportal").getValue();
             var parentID = "";
             var organizationNumber = "";
 
-            if (Xrm.Page.getAttribute("parentaccountid").getValue()) {
+            if (formContext.getAttribute("parentaccountid").getValue()) {
 
                 if (blocked === true) {
                     try {
                         var request = new Sdk.ed_BlockAccountPortalRequest(portalID, parentID, organizationNumber, false);
                         var response = Sdk.Sync.execute(request);
-                        Xrm.Utility.alertDialog("Företag avblockerat!");
+                        Endeavor.Skanetrafiken.Account.alertCustomDialog("Företag avblockerat!");
                     }
                     catch (e) {
-                        Xrm.Utility.alertDialog("Kunde inte avblockera företag. Var god försök igen senare.");
+                        Endeavor.Skanetrafiken.Account.alertCustomDialog("Kunde inte avblockera företag. Var god försök igen senare.");
                     }
                 }
                 else {
                     try {
                         var request = new Sdk.ed_BlockAccountPortalRequest(portalID, parentID, organizationNumber, true);
                         var response = Sdk.Sync.execute(request);
-                        Xrm.Utility.alertDialog("Företag spärrat!");
+                        Endeavor.Skanetrafiken.Account.alertCustomDialog("Företag spärrat!");
                     }
                     catch (e) {
-                        Xrm.Utility.alertDialog("Kunde inte spärra företag. Var god försök igen senare.");
+                        Endeavor.Skanetrafiken.Account.alertCustomDialog("Kunde inte spärra företag. Var god försök igen senare.");
                     }
                 }
-
             }
             else {
-                var ID = Xrm.Page.data.entity.getId();
+                var ID = formContext.data.entity.getId();
                 ID = ID.substring(1, ID.length - 1);
 
-                var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "AccountSet?$select=AccountNumber&$filter=ParentAccountId/Id%20eq(guid'" + ID + "')";
-                var results = Endeavor.Common.Data.fetchJSONResults(url);
+                Xrm.WebApi.retrieveMultipleRecords("account", "?$select=accountnumber&$filter=parentaccountid eq " + ID).then(
+                    function success(result) {
 
-                if (blocked === true) {
-                    var success = "";
-                    var failed = "";
+                        if (blocked === true) {
+                            var success = "";
+                            var failed = "";
 
-                    for (var i = 0; i < results.length; i++) {
+                            for (var i = 0; i < results.entities.length; i++) {
 
-                        var account = results[i];
+                                var account = results.entities[i];
+                                if (account.AccountNumber) {
 
-                        if (account.AccountNumber) {
-
-                            try {
-                                var request = new Sdk.ed_BlockAccountPortalRequest(account.AccountNumber, parentID, organizationNumber, false);
-                                var response = Sdk.Sync.execute(request);
-                                success = success + ", " + account.AccountNumber;
+                                    try {
+                                        var request = new Sdk.ed_BlockAccountPortalRequest(account.AccountNumber, parentID, organizationNumber, false);
+                                        var response = Sdk.Sync.execute(request);
+                                        success = success + ", " + account.AccountNumber;
+                                    }
+                                    catch (e) {
+                                        failed = failed + ", " + account.AccountNumber;
+                                    }
+                                }
+                                else {
+                                    failed = failed + ", (PortalID saknas)";
+                                }
                             }
-                            catch (e) {
-                                failed = failed + ", " + account.AccountNumber;
+
+                            if (!failed) {
+                                Endeavor.Skanetrafiken.Account.alertCustomDialog("Företag avblockerat.");
+                            }
+                            else {
+                                Endeavor.Skanetrafiken.Account.alertCustomDialog("Avblockering av kostnadsställe(n) misslyckades" + failed);
                             }
                         }
                         else {
-                            failed = failed + ", (PortalID saknas)";
-                        }
-                    }
+                            var success = "";
+                            var failed = "";
 
-                    if (!failed) {
-                        Xrm.Utility.alertDialog("Företag avblockerat.");
-                    }
-                    else {
-                        Xrm.Utility.alertDialog("Avblockering av kostnadsställe(n) misslyckades" + failed);
-                    }
-                }
-                else {
-                    var success = "";
-                    var failed = "";
+                            for (var i = 0; i < results.entities.length; i++) {
 
-                    for (var i = 0; i < results.length; i++) {
+                                var account = results.entities[i];
+                                if (account.AccountNumber) {
+                                    try {
+                                        var request = new Sdk.ed_BlockAccountPortalRequest(account.AccountNumber, parentID, organizationNumber, true);
+                                        var response = Sdk.Sync.execute(request);
+                                        success = success + ", " + account.AccountNumber;
+                                    }
+                                    catch (e) {
+                                        failed = failed + ", " + account.AccountNumber;
+                                    }
 
-                        var account = results[i];
-
-                        if (account.AccountNumber) {
-                            try {
-                                var request = new Sdk.ed_BlockAccountPortalRequest(account.AccountNumber, parentID, organizationNumber, true);
-                                var response = Sdk.Sync.execute(request);
-                                success = success + ", " + account.AccountNumber;
-                            }
-                            catch (e) {
-                                failed = failed + ", " + account.AccountNumber;
+                                }
+                                else {
+                                    failed = failed + ", (PortalID saknas)";
+                                }
                             }
 
+                            if (!failed) {
+                                Endeavor.Skanetrafiken.Account.alertCustomDialog("Företag spärrat.");
+                            }
+                            else {
+                                Endeavor.Skanetrafiken.Account.alertCustomDialog("Spärr av kostnadsställe(n) misslyckades" + failed);
+                            }
                         }
-                        else {
-                            failed = failed + ", (PortalID saknas)";
-                        }
-                    }
 
-                    if (!failed) {
-                        Xrm.Utility.alertDialog("Företag spärrat.");
+                    },
+                    function (error) {
+                        console.log(error.message);
+                        Endeavor.Skanetrafiken.Account.errorCustomDialog(error.message, "Retrieve Multiple Records Error");
                     }
-                    else {
-                        Xrm.Utility.alertDialog("Spärr av kostnadsställe(n) misslyckades" + failed);
-                    }
-                }
+                );
             }
         },
 
@@ -560,7 +567,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 return true;
         },
 
-        //29/06/2020 - Syncronos Calls are not supported using the Xrm.WebApi - TODO
+        //29/06/2020 - Syncronos Calls are not supported using the TODO - Xrm.WebApi
         ExecuteFetch: function (originalFetch, entityname) {
             var count = 0;
             var fetch = encodeURI(originalFetch);
@@ -593,15 +600,13 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
         },
 
         /**
-         * This function opens upp a new window.
+         * This function opens up a new window.
          * */
         openMigration_WebResource: function () {
             try {
 
                 var windowOptions = { height: 400, width: 400 };
                 Xrm.Navigation.openWebResource("ed_/html/Endeavor.Skanetrafiken.AccountMigration.html", windowOptions);
-
-                //Xrm.Utility.openWebResource("ed_/html/Endeavor.Skanetrafiken.AccountMigration.html");
 
             } catch (e) {
                 alert("Exception caught in Endeavor.Skanetrafiken.Account.openMigration_WebResource");
@@ -610,13 +615,9 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
         hideMigration_Button: function () {
             try {
-                //var adminUser = "892E5446-53A1-E411-80D4-005056903A38";
-                //var danielLopez = "A15204E6-71D8-E411-80D8-005056903A38";
-                //var user = Xrm.Page.context.getUserId().replace(/[{}]/g, '');
-                //if (user == adminUser ||
-                //    user == danielLopez)
+
                 return true;
-                //return false;
+
             } catch (e) {
                 alert("Exception caught in Endeavor.Skanetrafiken.Account.hideMigration_Button. Error: +" + e.message);
             }
