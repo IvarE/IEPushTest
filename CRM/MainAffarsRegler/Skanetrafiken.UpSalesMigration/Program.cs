@@ -306,15 +306,16 @@ namespace Skanetrafiken.UpSalesMigration
         {
             FilterExpression filterAccounts = new FilterExpression();
             filterAccounts.Conditions.Add(new ConditionExpression(Account.Fields.cgi_organizational_number, ConditionOperator.Equal, orgNumber));
+            filterAccounts.Conditions.Add(new ConditionExpression(Account.Fields.StateCode, ConditionOperator.Equal, (int)AccountState.Active));
 
             List<Account> lAccounts = XrmRetrieveHelper.RetrieveMultiple<Account>(localContext, new ColumnSet(Account.Fields.AccountId), filterAccounts).ToList();
 
             if (lAccounts.Count == 1)
                 return lAccounts.FirstOrDefault().ToEntityReference();
             else if (lAccounts.Count == 0)
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"No Accounts found with field 'cgi_organizational_number' = " + orgNumber + ".");
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"No Active Accounts found with field 'cgi_organizational_number' = " + orgNumber + ".");
             else if (lAccounts.Count > 1)
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"More than One Account found with field 'cgi_organizational_number' = " + orgNumber + ".");
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"More than One Active Account found with field 'cgi_organizational_number' = " + orgNumber + ".");
 
             return null;
         }

@@ -437,9 +437,7 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
             }
         },
 
-        transactionSearch: function (executionContext) {
-
-            var formContext = executionContext.getFormContext();
+        transactionSearch: function (formContext) {
 
             if (Endeavor.Skanetrafiken.BiffTransactions.cardnumber) {
 

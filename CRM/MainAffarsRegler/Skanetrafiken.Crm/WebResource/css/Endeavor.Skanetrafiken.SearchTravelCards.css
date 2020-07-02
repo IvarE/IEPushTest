@@ -41,13 +41,16 @@
 
 .label {
     font-weight: bold;
-    width: 100%;
+    width: 49%;
     height: 24px;
+    float: left;
 }
 
 .info {
-    width: 100%;
+    width: 49%;
     height: 24px;
+    float: right;
+    margin-right: 5px;
 }
 
 /* viewport <= 1000px */
