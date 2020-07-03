@@ -2348,8 +2348,8 @@ namespace Skanetrafiken.Crm.Controllers
                             {
                                 new ConditionExpression(AccountEntity.Fields.cgi_organizational_number, ConditionOperator.Equal, accountInfo.OrganizationNumber),
                                 new ConditionExpression(AccountEntity.Fields.ParentAccountId, ConditionOperator.Null),
-                                new ConditionExpression(AccountEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.AccountState.Active),
-                                new ConditionExpression(AccountEntity.Fields.ed_TypeOfAccount, ConditionOperator.Equal, (int)Generated.ed_account_ed_typeofaccount.Companycustomerportal)
+                                new ConditionExpression(AccountEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.AccountState.Active)
+                                //new ConditionExpression(AccountEntity.Fields.ed_TypeOfAccount, ConditionOperator.Equal, (int)Generated.ed_account_ed_typeofaccount.Companycustomerportal)
                             }
                         });
 
