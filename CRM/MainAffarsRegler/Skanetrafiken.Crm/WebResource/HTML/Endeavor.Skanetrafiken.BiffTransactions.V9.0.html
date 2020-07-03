@@ -3,6 +3,12 @@
     <link href="../css/Endeavor.Skanetrafiken.BiffTransactions.css" rel="stylesheet" type="text/css" />
 
     <script>
+
+        function setClientApiContext(xrm, formContext) {
+            window._Xrm = xrm;
+            window._formContext = formContext;
+        }
+
         function onLoad(document) {
 
             var datefrom = new Date();
@@ -10,8 +16,8 @@
             document.getElementById('datefrom').value = datefrom.toISOString().substring(0, 10);
             document.getElementById('dateto').value = (new Date()).toISOString().substring(0, 10);
 
-            if (parent != null && parent.Xrm != null && parent.Xrm.Page != null && parent.Xrm.Page.getAttribute("cgi_travelcardnumber") != null) {
-                document.getElementById('cardnr').value = parent.Xrm.Page.getAttribute("cgi_travelcardnumber").getValue();
+            if (_formContext != null && _formContext.getAttribute("cgi_travelcardnumber") != null) {
+                document.getElementById('cardnr').value = _formContext.getAttribute("cgi_travelcardnumber").getValue();
             }
 
             setDocument();
@@ -62,7 +68,7 @@
             var formContext = getFormContext();
             if (formContext) {
                 try {
-                    formContext.Endeavor.Skanetrafiken.BiffTransactions.transactionSearch();
+                    formContext.Endeavor.Skanetrafiken.BiffTransactions.transactionSearch(_formContext);
                 }
                 catch (e) {
                     alert(e.message)

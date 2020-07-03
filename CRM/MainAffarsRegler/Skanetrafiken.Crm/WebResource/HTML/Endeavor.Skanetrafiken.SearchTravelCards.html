@@ -506,7 +506,7 @@
                         var cardId = document.getElementById("cardId").value;
 
                         if (cardId == null || cardId == "") {
-                            document.getElementById("messageSpace").innerText = "Card Number is null or empty.";
+                            document.getElementById("messageSpace").innerText = "Kortnummer är noll eller tomt.";
                             return;
                         }
 
@@ -524,9 +524,10 @@
                                 var closedReason = result.ClosedReason;
                                 var isReserved = result.IsReserved;
 
-                                document.getElementById("hotlisted").innerText = isClosed;
-                                document.getElementById("pursebalance").innerText = amount;
-                                document.getElementById("pursehotlistreason").innerText = closedReason;
+                                document.getElementById("arsparrat").checked = isClosed;
+                                document.getElementById("belopp").innerText = amount;
+                                document.getElementById("sparradav").innerText = closedReason;
+                                document.getElementById("reserveread").checked = isReserved;
 
                                 if (amount > 0 || isClosed == true)
                                     document.getElementById("block").disabled = false;
@@ -544,7 +545,7 @@
                     }
                 },
 
-                reloadButtonPlaceCaptureOrder: function () {
+                blockButtonPlaceCaptureOrder: function () {
 
                     debugger;
                     try {
@@ -565,18 +566,18 @@
                             function (result) {
                                 debugger;
 
-                                var placeOrderResponse = result.PlaceOrderResponse;
                                 var cardNumberResp = result.CardNumberResp;
+                                var placeOrderResponse = result.PlaceOrderResponse;
                                 var isClosed = result.IsClosed;
                                 var amount = result.Amount;
                                 var closedReason = result.ClosedReason;
                                 var isReserved = result.IsReserved;
 
-                                alert(placeOrderResponse);
                                 document.getElementById("messageSpace").innerText = placeOrderResponse;
-                                document.getElementById("hotlisted").innerText = isClosed;
-                                document.getElementById("pursebalance").innerText = amount;
-                                document.getElementById("pursehotlistreason").innerText = closedReason;
+                                document.getElementById("arsparrat").checked = isClosed;
+                                document.getElementById("belopp").innerText = amount;
+                                document.getElementById("sparradav").innerText = closedReason;
+                                document.getElementById("reserveread").checked = isReserved;
 
                                 Process.callAction("ed_CaptureOrder",
                                     [{
@@ -589,7 +590,7 @@
 
                                         var captureOrderResponse = result.CaptureOrderResponse;
                                         document.getElementById("messageSpace").innerText = captureOrderResponse;
-                                        document.getElementById("pursebalance").innerText = "0";
+                                        document.getElementById("belopp").innerText = "0";
                                         document.getElementById("block").disabled = true;
                                     },
                                     function (e, t) {
@@ -631,71 +632,8 @@
 
         <hr style="width:100%;text-align:left;margin-left:0;margin-bottom: 10px;">
 
-        <div class="row-header">
-            <div class="col-2"><div class="label">CRM</div></div>
-            <div class="col-2"><div class="label">CardInformation</div></div>
-            <div class="col-2"><div class="label">PurseInformation</div></div>
-            <div class="col-2"><div class="label">PeriodCardInformation</div></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-        </div>
-
         <div class="row">
-            <div class="col-2"><div class="label">ContactName:</div><div class="info" id="contactname"></div></div>
-            <div class="col-2"><div class="label">HotListed:</div><div class="info" id="hotlisted"></div></div>
-            <div class="col-2"><div class="label">PurseOutstandingDirectedAutoload:</div><div class="info" id="purseodirectedautoload"></div></div>
-            <div class="col-2"><div class="label">PeriodProductType:</div><div class="info" id="periodproducttype"></div></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-        </div>
-
-        <div class="row">
-            <div class="col-2"><div class="label">CardName:</div><div class="info" id="cardname"></div></div>
-            <div class="col-2"><div class="label">PurseHotlistReason:</div><div class="info" id="pursehotlistreason"></div></div>
-            <div class="col-2"><div class="label">PurseBalance:</div><div class="info" id="pursebalance"></div></div>
-            <div class="col-2"><div class="label">PeriodPeriodStart:</div><div class="info" id="periodperiodstart"></div></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-        </div>
-
-        <div class="row">
-            <div class="col-2"><div class="label">Autoload:</div><div class="info" id="autoload"></div></div>
-            <div class="col-2"><div class="label">PeriodHotlisted:</div><div class="info" id="periodhotlisted"></div></div>
-            <div class="col-2"><div class="label">Outhäntad ladding:</div><div class="info" id="outhantadladding"></div></div>
-            <div class="col-2"><div class="label">PeriodPeriodEnd:</div><div class="info" id="periodperiodend"></div></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-        </div>
-
-        <div class="row">
-            <div class="col-2"><div class="label">Autoload start date:</div><div class="info" id="autoloadstartdate"></div></div>
-            <div class="col-2"><div class="label">PurseHotlisted:</div><div class="info" id="pursehotlisted"></div></div>
-            <div class="col-2"><button onclick="Endeavor.Skanetrafiken.SearchTravelCards.reloadButtonPlaceCaptureOrder()" id="block" type="button" disabled>Block</button></div>
-            <div class="col-2"><div class="label">PeriodPeriodPaid:</div><div class="info" id="periodperiodpaid"></div></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-        </div>
-
-        <div class="row">
-            <div class="col-2"><div class="label">Autoload end date:</div><div class="info" id="autoloadenddate"></div></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            <div class="col-2"><div class="label">PeriodWaitingPeriods:</div><div class="info" id="periodwaitingperiods"></div></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-        </div>
-
-        <div class="row">
-            <div class="col-2"><div class="label">CreditCard:</div><div class="info" id="creditcard"></div></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            <div class="col-2"><div class="label">PeriodOutstandingEnableThreshold:</div><div class="info" id="periodoutstandingenable"></div></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-        </div>
-
-        <div class="row">
-            <div class="col-2"><div class="label">Failed attemps to charge money:</div><div class="info" id="failedattempschargemoney"></div></div>
+            <div class="col-2"><div class="label">Belopp:</div><div class="info" id="belopp"></div></div>
             <div class="col-2"></div>
             <div class="col-2"></div>
             <div class="col-2"></div>
@@ -704,8 +642,26 @@
         </div>
 
         <div class="row">
-            <div class="col-2"><div class="label">Latest failed attempt:</div><div class="info" id="latestfailedattempt"></div></div>
+            <div class="col-2"><div class="label">Är Spärrat:</div><input type="checkbox" id="arsparrat" /></div>
             <div class="col-2"></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-2"><div class="label">Spärrad av:</div><div class="info" id="sparradav"></div></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-2"><div class="label">Reserveread:</div><input type="checkbox" id="reserveread" /></div>
+            <div class="col-2"><button onclick="Endeavor.Skanetrafiken.SearchTravelCards.blockButtonPlaceCaptureOrder()" id="block" type="button" disabled>SPÄRRA KORT</button></div>
             <div class="col-2"></div>
             <div class="col-2"></div>
             <div class="col-2"></div>
