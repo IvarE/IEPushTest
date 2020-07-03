@@ -80,8 +80,8 @@ namespace Skanetrafiken.Crm.Entities
                 string clientCert = "SE162321000255-F16675";
 
                 localContext.TracingService.Trace("\nHandlePlaceOrder:");
-                //string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/PlaceOrderWithCardNumber/cardNumber?cardNumber=";
-                string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/PlaceOrderWithCardNumber/cardNumber?cardNumber=";
+                string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/PlaceOrderWithCardNumber/cardNumber?cardNumber=";
+                //string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/PlaceOrderWithCardNumber/cardNumber?cardNumber=";
                 //string url = $"{fasadEndpoint}{cardNumber}";
                 string url = $"{fasadEndpoint}{cardNumber}"; //Test
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -171,8 +171,8 @@ namespace Skanetrafiken.Crm.Entities
                 string clientCert = "SE162321000255-F16675";
 
                 localContext.TracingService.Trace("\nHandleCaptureOrder:");
-                //string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/CaptureOrderWithCardNumber/cardNumber?cardNumber=";
-                string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/CaptureOrderWithCardNumber/cardNumber?cardNumber=";
+                string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/CaptureOrderWithCardNumber/cardNumber?cardNumber=";
+                //string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/CaptureOrderWithCardNumber/cardNumber?cardNumber=";
                 //string url = $"{fasadEndpoint}{cardNumber}";
                 string url = $"{fasadEndpoint}{cardNumber}"; //Test
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -254,8 +254,8 @@ namespace Skanetrafiken.Crm.Entities
                 //string testtest = "crmwebapi-acc-n1.skanetrafiken.se";
                 //string fasadEndpoint = "https://crmwebapi-acc.skanetrafiken.se/api/travelcard/GetCardWithCardNumber/cardNumber?cardNumber=";
 
-                //string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/GetCardWithCardNumber/cardNumber?cardNumber=";
-                string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/GetCardWithCardNumber/cardNumber?cardNumber=";
+                string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/GetCardWithCardNumber/cardNumber?cardNumber=";
+                //string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/GetCardWithCardNumber/cardNumber?cardNumber=";
                 //string url = $"{fasadEndpoint}{cardNumber}";
                 string url = $"{fasadEndpoint}{cardNumber}"; //Test
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -353,8 +353,8 @@ namespace Skanetrafiken.Crm.Entities
                 string clientCert = "SE162321000255-F16675";
 
                 localContext.TracingService.Trace("\nHandleCancelOrder:");
-                //string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/CancelOrderWithCardNumber/cardNumber?cardNumber=";
-                string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/CancelOrderWithCardNumber/cardNumber?cardNumber=";
+                string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/CancelOrderWithCardNumber/cardNumber?cardNumber=";
+                //string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/CancelOrderWithCardNumber/cardNumber?cardNumber=";
                 //string url = $"{fasadEndpoint}{cardNumber}";
                 string url = $"{fasadEndpoint}{cardNumber}"; //Test
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);

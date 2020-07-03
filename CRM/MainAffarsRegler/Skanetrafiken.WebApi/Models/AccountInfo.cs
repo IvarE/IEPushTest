@@ -329,7 +329,7 @@ namespace Skanetrafiken.Crm
             ae.ed_BillingEmailAddress = ai.BillingEmailAddress;
             ae.ed_BillingMethod = (Crm.Schema.Generated.ed_account_ed_billingmethod?)ai.BillingMethod;
             ae.ed_ReferencePortal = ai.ReferencePortal;
-            ae.cgi_organizational_number = ai.OrganizationNumber;
+            //ae.cgi_organizational_number = ai.OrganizationNumber;
             ae.ed_AllowCreate = ai.AllowCreate;
 
             //Account Description
