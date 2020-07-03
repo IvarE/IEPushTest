@@ -2408,7 +2408,7 @@ namespace Skanetrafiken.UpSalesMigration
                     else if(lOrders.Count == 0)
                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"No Orders found with  Upsales Id " + orderId + ". File: " + fileName + " will be ignored.");
                     else if(lOrders.Count > 1)
-                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"No Orders found with  Upsales Id " + orderId + ". File: " + fileName + " will be ignored.");
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"More than one Order found with Upsales Id " + orderId + ". File: " + fileName + " will be ignored.");
                 }
                 catch (Exception e)
                 {
@@ -2470,7 +2470,7 @@ namespace Skanetrafiken.UpSalesMigration
                     else if (lOrders.Count == 0)
                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"No Orders found with  Upsales Id " + orderId + ". File: " + fileName + " will be ignored.");
                     else if (lOrders.Count > 1)
-                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"No Orders found with  Upsales Id " + orderId + ". File: " + fileName + " will be ignored.");
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"More than one Order found with Upsales Id " + orderId + ". File: " + fileName + " will be ignored.");
                 }
                 catch (Exception e)
                 {
