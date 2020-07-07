@@ -46,10 +46,14 @@ namespace Skanetrafiken.Crm.Entities
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
             FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
-            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_CRMPlusService, ConditionOperator.NotNull);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertName, ConditionOperator.NotNull);
 
-            CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
-            if (settingEntity == null || string.IsNullOrWhiteSpace(settingEntity.ed_JojoCardDetailsAPI))
+            CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                CgiSettingEntity.Fields.ed_CRMPlusService, 
+                CgiSettingEntity.Fields.ed_ClientCertName), settingFilter);
+
+            if (settingEntity == null || string.IsNullOrWhiteSpace(settingEntity.ed_CRMPlusService) || string.IsNullOrWhiteSpace(settingEntity.ed_ClientCertName))
             {
                 //Bad request -> exception
             }
@@ -77,13 +81,15 @@ namespace Skanetrafiken.Crm.Entities
                 //if (crmId != null)
                 //    tokenClass.crmId = (Guid)crmId;
                 tokenClass.exp = validTo;
-                string clientCert = "SE162321000255-F16675";
+                //string clientCert = "SE162321000255-F16675";
+                string clientCert = settingEntity.ed_ClientCertName;
 
                 localContext.TracingService.Trace("\nHandlePlaceOrder:");
-                string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/PlaceOrderWithCardNumber/cardNumber?cardNumber=";
+                //string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/PlaceOrderWithCardNumber/cardNumber?cardNumber=";
                 //string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/PlaceOrderWithCardNumber/cardNumber?cardNumber=";
-                //string url = $"{fasadEndpoint}{cardNumber}";
-                string url = $"{fasadEndpoint}{cardNumber}"; //Test
+                string fasadEndpoint = settingEntity.ed_CRMPlusService + "/api/travelcard/PlaceOrderWithCardNumber/cardNumber?cardNumber=";
+
+                string url = $"{fasadEndpoint}{cardNumber}";
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
                 httpWebRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCert));
                 httpWebRequest.ContentType = "application/json";
@@ -136,10 +142,14 @@ namespace Skanetrafiken.Crm.Entities
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
             FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
-            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_CRMPlusService, ConditionOperator.NotNull);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertName, ConditionOperator.NotNull);
 
-            CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
-            if (settingEntity == null || string.IsNullOrWhiteSpace(settingEntity.ed_JojoCardDetailsAPI))
+            CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                CgiSettingEntity.Fields.ed_CRMPlusService,
+                CgiSettingEntity.Fields.ed_ClientCertName), settingFilter);
+
+            if (settingEntity == null || string.IsNullOrWhiteSpace(settingEntity.ed_CRMPlusService) || string.IsNullOrWhiteSpace(settingEntity.ed_ClientCertName))
             {
                 //Bad request -> exception
             }
@@ -168,12 +178,14 @@ namespace Skanetrafiken.Crm.Entities
                 //if (crmId != null)
                 //    tokenClass.crmId = (Guid)crmId;
                 tokenClass.exp = validTo;
-                string clientCert = "SE162321000255-F16675";
+                //string clientCert = "SE162321000255-F16675";
+                string clientCert = settingEntity.ed_ClientCertName;
 
                 localContext.TracingService.Trace("\nHandleCaptureOrder:");
-                string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/CaptureOrderWithCardNumber/cardNumber?cardNumber=";
+                //string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/CaptureOrderWithCardNumber/cardNumber?cardNumber=";
                 //string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/CaptureOrderWithCardNumber/cardNumber?cardNumber=";
-                //string url = $"{fasadEndpoint}{cardNumber}";
+                string fasadEndpoint = settingEntity.ed_CRMPlusService + "/api/travelcard/CaptureOrderWithCardNumber/cardNumber?cardNumber=";
+
                 string url = $"{fasadEndpoint}{cardNumber}"; //Test
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
                 httpWebRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCert));
@@ -216,10 +228,14 @@ namespace Skanetrafiken.Crm.Entities
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
             FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
-            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_CRMPlusService, ConditionOperator.NotNull);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertName, ConditionOperator.NotNull);
 
-            CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
-            if (settingEntity == null || string.IsNullOrWhiteSpace(settingEntity.ed_JojoCardDetailsAPI))
+            CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                CgiSettingEntity.Fields.ed_CRMPlusService,
+                CgiSettingEntity.Fields.ed_ClientCertName), settingFilter);
+
+            if (settingEntity == null || string.IsNullOrWhiteSpace(settingEntity.ed_CRMPlusService) || string.IsNullOrWhiteSpace(settingEntity.ed_ClientCertName))
             {
                 //Bad request -> exception
             }
@@ -247,17 +263,15 @@ namespace Skanetrafiken.Crm.Entities
                 //if (crmId != null)
                 //    tokenClass.crmId = (Guid)crmId;
                 tokenClass.exp = validTo;
-                string clientCert = "SE162321000255-F16675";
+                //string clientCert = "SE162321000255-F16675";
+                string clientCert = settingEntity.ed_ClientCertName;
 
                 localContext.TracingService.Trace("\nHandleGetCard:");
-                //string fasadEndpoint = "https://crmwebapi-acc.skanetrafiken.se/api/travelcard/";
-                //string testtest = "crmwebapi-acc-n1.skanetrafiken.se";
-                //string fasadEndpoint = "https://crmwebapi-acc.skanetrafiken.se/api/travelcard/GetCardWithCardNumber/cardNumber?cardNumber=";
-
-                string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/GetCardWithCardNumber/cardNumber?cardNumber=";
+                //string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/GetCardWithCardNumber/cardNumber?cardNumber=";
                 //string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/GetCardWithCardNumber/cardNumber?cardNumber=";
-                //string url = $"{fasadEndpoint}{cardNumber}";
-                string url = $"{fasadEndpoint}{cardNumber}"; //Test
+                string fasadEndpoint = settingEntity.ed_CRMPlusService + "/api/travelcard/GetCardWithCardNumber/cardNumber?cardNumber=";
+
+                string url = $"{fasadEndpoint}{cardNumber}";
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
                 httpWebRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCert));
                 httpWebRequest.ContentType = "application/json";
@@ -318,10 +332,14 @@ namespace Skanetrafiken.Crm.Entities
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
             FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
-            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_CRMPlusService, ConditionOperator.NotNull);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertName, ConditionOperator.NotNull);
 
-            CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
-            if (settingEntity == null || string.IsNullOrWhiteSpace(settingEntity.ed_JojoCardDetailsAPI))
+            CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                CgiSettingEntity.Fields.ed_CRMPlusService,
+                CgiSettingEntity.Fields.ed_ClientCertName), settingFilter);
+
+            if (settingEntity == null || string.IsNullOrWhiteSpace(settingEntity.ed_CRMPlusService) || string.IsNullOrWhiteSpace(settingEntity.ed_ClientCertName))
             {
                 //Bad request -> exception
             }
@@ -350,12 +368,14 @@ namespace Skanetrafiken.Crm.Entities
                 //if (crmId != null)
                 //    tokenClass.crmId = (Guid)crmId;
                 tokenClass.exp = validTo;
-                string clientCert = "SE162321000255-F16675";
+                //string clientCert = "SE162321000255-F16675";
+                string clientCert = settingEntity.ed_ClientCertName;
 
                 localContext.TracingService.Trace("\nHandleCancelOrder:");
-                string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/CancelOrderWithCardNumber/cardNumber?cardNumber=";
+                //string fasadEndpoint = "https://crmwebapi-acc-n1.skanetrafiken.se/api/travelcard/CancelOrderWithCardNumber/cardNumber?cardNumber=";
                 //string fasadEndpoint = "https://crmwebapi-n1.skanetrafiken.se/api/travelcard/CancelOrderWithCardNumber/cardNumber?cardNumber=";
-                //string url = $"{fasadEndpoint}{cardNumber}";
+                string fasadEndpoint = settingEntity.ed_CRMPlusService + "/api/travelcard/CancelOrderWithCardNumber/cardNumber?cardNumber=";
+
                 string url = $"{fasadEndpoint}{cardNumber}"; //Test
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
                 httpWebRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCert));
