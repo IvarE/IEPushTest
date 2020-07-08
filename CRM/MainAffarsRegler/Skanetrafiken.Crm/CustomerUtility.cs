@@ -598,25 +598,31 @@ namespace Skanetrafiken.Crm
                 messages.Add(string.Format(Resources.InvalidFormatForMobile, customerInfo.Mobile));
             }
 
-            // Make sure socialSecurityNumber is not a empty string
-            if (customerInfo.SwedishSocialSecurityNumber && customerInfo.SocialSecurityNumber == string.Empty) {
+            //// Make sure socialSecurityNumber is not a empty string
+            //if (customerInfo.SwedishSocialSecurityNumber && customerInfo.SocialSecurityNumber == string.Empty) {
+            //    error = true;
+            //    //messages.Add(string.Format(Resources.InvalidFormatForSocialSecurityNumber, $"{customerInfo.SocialSecurityNumber} mess: {errorMessage}"));
+            //    messages.Add(string.Format(Resources.InvalidFormatForSocialSecurityNumber, customerInfo.SocialSecurityNumber));
+            //}
+
+            if(!string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) && (!CheckPersonnummerFormat(customerInfo.SocialSecurityNumber) && !CheckDateFormat(customerInfo.SocialSecurityNumber)))
+            {
                 error = true;
-                //messages.Add(string.Format(Resources.InvalidFormatForSocialSecurityNumber, $"{customerInfo.SocialSecurityNumber} mess: {errorMessage}"));
-                messages.Add(string.Format(Resources.InvalidFormatForSocialSecurityNumber, customerInfo.SocialSecurityNumber));
+                messages.Add(string.Format("Ogiltigt format på personnummer/persondatum: {0}", customerInfo.SocialSecurityNumber));
             }
 
-            //string errorMessage;
-            if (!string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) && customerInfo.SwedishSocialSecurityNumber && !CheckPersonnummerFormat(customerInfo.SocialSecurityNumber/*, out errorMessage*/))
-            {
-                error = true;
-                //messages.Add(string.Format(Resources.InvalidFormatForSocialSecurityNumber, $"{customerInfo.SocialSecurityNumber} mess: {errorMessage}"));
-                messages.Add(string.Format(Resources.InvalidFormatForSocialSecurityNumber, customerInfo.SocialSecurityNumber));
-            }
-            if (!string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) && !customerInfo.SwedishSocialSecurityNumber && !CheckDateFormat(customerInfo.SocialSecurityNumber))
-            {
-                error = true;
-                messages.Add(string.Format(Resources.InvalidFormatForIntenationalSocialSecurityNumber, customerInfo.SocialSecurityNumber));
-            }
+            ////string errorMessage;
+            //if (!string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) && customerInfo.SwedishSocialSecurityNumber && !CheckPersonnummerFormat(customerInfo.SocialSecurityNumber/*, out errorMessage*/))
+            //{
+            //    error = true;
+            //    //messages.Add(string.Format(Resources.InvalidFormatForSocialSecurityNumber, $"{customerInfo.SocialSecurityNumber} mess: {errorMessage}"));
+            //    messages.Add(string.Format(Resources.InvalidFormatForSocialSecurityNumber, customerInfo.SocialSecurityNumber));
+            //}
+            //if (!string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) && !customerInfo.SwedishSocialSecurityNumber && !CheckDateFormat(customerInfo.SocialSecurityNumber))
+            //{
+            //    error = true;
+            //    messages.Add(string.Format(Resources.InvalidFormatForIntenationalSocialSecurityNumber, customerInfo.SocialSecurityNumber));
+            //}
             if (!string.IsNullOrWhiteSpace(customerInfo.Email) && !CheckEmailFormat(customerInfo.Email))
             {
                 error = true;

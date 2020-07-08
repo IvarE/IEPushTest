@@ -2135,6 +2135,12 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
+        /// <summary>
+        /// Getting valid orders to be sent to MultiQ
+        /// </summary>
+        /// <param name="threadId"></param>
+        /// <param name="probability"></param>
+        /// <returns></returns>
         public static HttpResponseMessage GetOrders(int threadId, int probability)
         {
             try
@@ -2163,9 +2169,13 @@ namespace Skanetrafiken.Crm.Controllers
                     queryOrders.Criteria.AddCondition(OrderEntity.Fields.ed_Probability, ConditionOperator.GreaterEqual, probability);
                     queryOrders.Criteria.AddCondition(OrderEntity.Fields.StatusCode, ConditionOperator.Equal, (int)salesorder_statuscode.Complete);
 
+                    _log.Debug($"Query Orders. query: {queryOrders}");
                     List<OrderEntity> lOrders = XrmRetrieveHelper.RetrieveMultiple<OrderEntity>(localContext, queryOrders);
 
-                    if (lOrders.Count == 0)
+                    if (lOrders != null)
+                        _log.Debug($"Number of orders retrieved: {lOrders.Count}");
+
+                    if (lOrders == null || lOrders.Count == 0)
                     {
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.NoContent);
                         rm.Content = new StringContent(string.Format(Resources.NoSalesOrderFoundWithInfo, ""));
@@ -2176,14 +2186,20 @@ namespace Skanetrafiken.Crm.Controllers
 
                     orderMQInfo.error = null;
 
+                    
                     foreach (OrderEntity order in lOrders)
                     {
+                        _log.Debug($"Looping orders. OrderId: {order.Id}");
+
                         try
                         {
-                            OrderMQ orderMQ = OrderMQ.GetOrderMQInfoFromOrderEntity(localContext, order);
+                            OrderMQ orderMQ = OrderMQ.GetOrderMQInfoFromOrderEntity(localContext, order, _log);
 
                             if (orderMQ != null)
+                            {
+                                orderMQInfo.data = new List<OrderMQ>();
                                 orderMQInfo.data.Add(orderMQ);
+                            }
                         }
                         catch (Exception e)
                         {

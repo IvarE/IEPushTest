@@ -98,8 +98,10 @@ namespace Skanetrafiken.Crm.Models
         public bool userRemovable { get; set; }
         public bool userEditable { get; set; }
 
-        internal static List<OrderRow> GetOrderProductsFromOrder(Plugin.LocalPluginContext localContext, Guid orderId, string pattern)
+        internal static List<OrderRow> GetOrderProductsFromOrder(Plugin.LocalPluginContext localContext, Guid orderId, string pattern, log4net.ILog _log)
         {
+            _log.Debug($"Entered GetOrderProductsFromOrder");
+
             if (orderId == null)
                 return new List<OrderRow>();
 
@@ -108,11 +110,22 @@ namespace Skanetrafiken.Crm.Models
             queryOrderProducts.ColumnSet.AddColumns(OrderProductEntity.Fields.SalesOrderDetailId, OrderProductEntity.Fields.ProductId);
             queryOrderProducts.Criteria.AddCondition(OrderProductEntity.Fields.SalesOrderId, ConditionOperator.Equal, orderId);
 
+            _log.Debug($"Query OrderRows. query: {queryOrderProducts}");
+
             List<OrderRow> lOrderRows = new List<OrderRow>();
             List<OrderProductEntity> lOrderProducts = XrmRetrieveHelper.RetrieveMultiple<OrderProductEntity>(localContext, queryOrderProducts);
 
+            if(lOrderProducts == null || lOrderProducts.Count() < 1)
+            {
+                _log.Debug($"No Order Rows (products) found...");
+            }
+
+            _log.Debug($"Looping Order Products");
+
             foreach (OrderProductEntity orderProduct in lOrderProducts)
             {
+                _log.Debug($"OrderProductId: {orderProduct.Id}");
+                   
                 OrderRow orderRow = new OrderRow();
 
                 orderRow.id = 1;
@@ -134,14 +147,20 @@ namespace Skanetrafiken.Crm.Models
                 lOrderRows.Add(orderRow);
             }
 
+            _log.Debug($"Returning OrderRows (Order Products)");
+
             return lOrderRows;
         }
 
-        internal static OrderMQ GetOrderMQInfoFromOrderEntity(Plugin.LocalPluginContext localContext, OrderEntity orderCRM)
+        internal static OrderMQ GetOrderMQInfoFromOrderEntity(Plugin.LocalPluginContext localContext, OrderEntity orderCRM, log4net.ILog _log)
         {
+            _log.Debug($"Entered GetOrderMQInfoFromOrderEntity");
+
             DateTime now = DateTime.Now;
             string pattern = "yyyy-MM-dd";
             string dateNow = DateTime.Now.ToString(pattern);
+
+            _log.Debug("Creting OrderMQ");
 
             OrderMQ orderMQ = new OrderMQ();
             orderMQ.id = orderCRM.OrderNumber;
@@ -151,10 +170,16 @@ namespace Skanetrafiken.Crm.Models
             orderMQ.notes = "";
 
             if (orderCRM.ed_DeliveryReportStatus != null && orderCRM.ed_DeliveryReportStatus.Value == ed_deliveryreportstatus.Createduploaded)
+            {
+                _log.Debug($"DeliveryReportCreated=True");
                 orderMQ.deliveryReportCreated = true;
+            }
             else if (orderCRM.ed_DeliveryReportStatus != null && (orderCRM.ed_DeliveryReportStatus.Value == ed_deliveryreportstatus.Notcreated ||
-                                                                orderCRM.ed_DeliveryReportStatus.Value == ed_deliveryreportstatus.Creatednotuploaded))
+                     orderCRM.ed_DeliveryReportStatus.Value == ed_deliveryreportstatus.Creatednotuploaded))
+            {
+                _log.Debug($"DeliveryReportCreated=False");
                 orderMQ.deliveryReportCreated = false;
+            }
 
             EntityReference erOwner = orderCRM.OwnerId;
 
@@ -162,6 +187,8 @@ namespace Skanetrafiken.Crm.Models
 
             if (erOwner != null)
             {
+                _log.Debug($"Setting Owner");
+
                 SystemUserEntity erUser = XrmRetrieveHelper.Retrieve<SystemUserEntity>(localContext, erOwner, new ColumnSet(SystemUserEntity.Fields.FullName, SystemUserEntity.Fields.InternalEMailAddress));
 
                 userMQ = new User();
@@ -169,17 +196,33 @@ namespace Skanetrafiken.Crm.Models
                 userMQ.email = erUser.InternalEMailAddress;
 
                 orderMQ.user = userMQ;
+
+                _log.Debug($"Owner Email: {erUser.InternalEMailAddress}");
             }
 
             EntityReference erCustomer = orderCRM.CustomerId;
 
-            if (erCustomer != null && erCustomer.LogicalName == AccountEntity.EntityLogicalName)
+            try
             {
-                Client clientMQ = new Client();
-                clientMQ.name = erCustomer.Name;
+                if (erCustomer != null && erCustomer.LogicalName == AccountEntity.EntityLogicalName)
+                {
+                    _log.Debug($"Setting Customer/Client");
 
-                if (userMQ != null)
-                    clientMQ.users.Add(userMQ);
+                    Client clientMQ = new Client();
+                    clientMQ.name = erCustomer.Name;
+
+                    if (userMQ != null)
+                    {
+                        clientMQ.users = new List<User>();
+                        clientMQ.users.Add(userMQ);
+                    }
+
+                    _log.Debug($"Customer/Client Name: {erCustomer.Name}");
+                }
+            }
+            catch(Exception ex)
+            {
+                _log.Debug($"Error adding ClientMQ. Ex: {ex.Message}");
             }
 
             orderMQ.contact = null;
@@ -194,35 +237,68 @@ namespace Skanetrafiken.Crm.Models
             orderMQ.currency = "SEK";
             orderMQ.locked = 0;
 
+            _log.Debug($"Creating object Custom");
+
             Custom custom = new Custom();
 
-            string endDate = orderCRM.ed_campaigndateend != null ? orderCRM.ed_campaigndateend.Value.ToString(pattern) : null;
-            custom.value = endDate;
-            custom.valueDate = endDate;
-            custom.fieldId = 2; //End Date
+            try
+            {
+                _log.Debug($"CustomObject 1");
+                string endDate = orderCRM.ed_campaigndateend != null ? orderCRM.ed_campaigndateend.Value.ToString(pattern) : null;
+                custom.value = endDate;
+                custom.valueDate = endDate;
+                custom.fieldId = 2; //End Date
 
-            orderMQ.custom.Add(custom);
+                orderMQ.custom = new List<Custom>();
+                orderMQ.custom.Add(custom);
+            }
+            catch(Exception ex)
+            {
+                _log.Debug($"Error from custom object 1. Ex: {ex.Message}");
+            }
 
             custom = new Custom();
 
-            string startDate = orderCRM.ed_campaigndatestart != null ? orderCRM.ed_campaigndatestart.Value.ToString(pattern) : null;
-            custom.value = startDate;
-            custom.valueDate = startDate;
-            custom.fieldId = 1; //Start Date
+            try
+            {
+                string startDate = orderCRM.ed_campaigndatestart != null ? orderCRM.ed_campaigndatestart.Value.ToString(pattern) : null;
+                custom.value = startDate;
+                custom.valueDate = startDate;
+                custom.fieldId = 1; //Start Date
+                
+                orderMQ.custom.Add(custom);
+            }
+            catch(Exception ex)
+            {
+                _log.Debug($"Error from custom object 2. Ex: {ex.Message}");
+            }
 
-            orderMQ.custom.Add(custom);
+            try
+            {
+                orderMQ.value = int.MinValue;
+                orderMQ.weightedValue = int.MinValue;
+                orderMQ.valueInMasterCurrency = int.MinValue;
+                orderMQ.weightedValueInMasterCurrency = int.MinValue;
+                orderMQ.agreement = null;
+                orderMQ.userRemovable = true;
+                orderMQ.userEditable = true;
+            }
+            catch(Exception ex)
+            {
+                _log.Debug($"Error from other values. Ex: {ex.Message}");
+            }
 
-            orderMQ.value = int.MinValue;
-            orderMQ.weightedValue = int.MinValue;
-            orderMQ.valueInMasterCurrency = int.MinValue;
-            orderMQ.weightedValueInMasterCurrency = int.MinValue;
-            orderMQ.agreement = null;
-            orderMQ.userRemovable = true;
-            orderMQ.userEditable = true;
+            try
+            {
+                List<OrderRow> lOrderProducts = GetOrderProductsFromOrder(localContext, orderCRM.Id, pattern, _log);
+                orderMQ.orderRow = lOrderProducts;
+            }
+            catch(Exception ex)
+            {
+                _log.Debug($"Error when adding OrderProducts. Ex: {ex.Message}");
+            }
 
-            List<OrderRow> lOrderProducts = GetOrderProductsFromOrder(localContext, orderCRM.Id, pattern);
-            orderMQ.orderRow = lOrderProducts;
-
+            _log.Debug($"Returning OrderMQ");
             return orderMQ;
         }
     }
