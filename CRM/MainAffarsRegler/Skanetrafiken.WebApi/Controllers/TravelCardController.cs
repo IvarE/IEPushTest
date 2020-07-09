@@ -33,6 +33,11 @@ namespace Skanetrafiken.Crm.Controllers
     {
         protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        public static string applicationId = "";
+        public static string tenentId = "";
+        public static string jojoCertificateName = "";
+        public static string msAuthScope = "";
+
         private static readonly TaskFactory _taskFactory = new
         TaskFactory(CancellationToken.None,
                     TaskCreationOptions.None,
@@ -45,24 +50,29 @@ namespace Skanetrafiken.Crm.Controllers
             new Lazy<IConfidentialClientApplication>(() =>
             {
                 //var certificate = Identity.GetCertToUse("crm-sekundfasaden-acc-sp");
-                var certificate = Identity.GetCertToUse("crm-sekundfasaden-prod-sp");
+                //var certificate = Identity.GetCertToUse("crm-sekundfasaden-prod-sp");
+                var certificate = Identity.GetCertToUse(jojoCertificateName);
                 _log.DebugFormat($"<----- Initializing: Cert - {certificate?.Subject} ----->");
-
-
-                //var TentantId = "e1fcb9f3-e5f9-496f-a583-e495dfd57497";
-                var authority = string.Format(CultureInfo.InvariantCulture, "https://login.microsoftonline.com/e1fcb9f3-e5f9-496f-a583-e495dfd57497");
+                
+                //var authority = string.Format(CultureInfo.InvariantCulture, "https://login.microsoftonline.com/e1fcb9f3-e5f9-496f-a583-e495dfd57497"); //Tenent
+                var authority = string.Format(CultureInfo.InvariantCulture, "https://login.microsoftonline.com/" + tenentId);
 
                 _log.DebugFormat($"<----- Initializing: Authority - {authority} ----->");
-
-
                 _log.DebugFormat($"<----- Initializing: ConfidentialClientApplication ----->");
 
-                // PROD
+                // Dynamic
                 return ConfidentialClientApplicationBuilder
-                    .Create("64c45900-b2dc-4818-8f29-a4b41cbcc21f")
+                    .Create(applicationId)
                     .WithCertificate(certificate)
                     .WithAuthority(new Uri(authority))
                     .Build();
+
+                //// PROD
+                //return ConfidentialClientApplicationBuilder
+                //    .Create("64c45900-b2dc-4818-8f29-a4b41cbcc21f")
+                //    .WithCertificate(certificate)
+                //    .WithAuthority(new Uri(authority))
+                //    .Build();
 
                 //// ACC
                 //return ConfidentialClientApplicationBuilder
@@ -88,57 +98,109 @@ namespace Skanetrafiken.Crm.Controllers
                 return badReq;
             }
 
+            Plugin.LocalPluginContext localContext = null;
+
             try
             {
-                _log.DebugFormat($"GetCardWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
-                AuthenticationResult authenticationResponse = _taskFactory
-                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
-                    .Unwrap()
-                    .GetAwaiter()
-                    .GetResult();
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
 
-                if (authenticationResponse == null)
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
-                    _log.DebugFormat($"GetCardWithCardNumber: Error -> Could not aquire token for client!");
-                    HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    badReq.Content = new StringContent("Error: Could not aquire token for client!");
-                    _log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
-                    return badReq;
+                    localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    _log.DebugFormat($"PlaceOrderWithCardNumber: Calling -> Get information from settings");
+                    //Get information from settings
+                    FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
+                    CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
+                        CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
+
+                    if (settings != null)
+                    {
+                        applicationId = settings.ed_JojoCardDetailsApplicationId;
+                        tenentId = settings.ed_JojoCardDetailsTenentId;
+                        jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                        msAuthScope = settings.ed_JojoCardDetailsScope;
+                    }
+                    else
+                    {
+                        HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (GetCardWithCardNumber)");
+                        _log.Info($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
+                        return badReqSetting;
+                    }
+
+                    //_log.DebugFormat($"GetCardWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
+                    //AuthenticationResult authenticationResponse = _taskFactory
+                    //    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
+                    //    .Unwrap()
+                    //    .GetAwaiter()
+                    //    .GetResult();
+
+                    _log.DebugFormat($"GetCardWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
+                    AuthenticationResult authenticationResponse = _taskFactory
+                        .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync)
+                        .Unwrap()
+                        .GetAwaiter()
+                        .GetResult();
+
+                    if (authenticationResponse == null)
+                    {
+                        _log.DebugFormat($"GetCardWithCardNumber: Error -> Could not aquire token for client!");
+                        HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        badReq.Content = new StringContent("Error: Could not aquire token for client!");
+                        _log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
+                        return badReq;
+                    }
+
+                    _log.DebugFormat($"GetCardWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
+
+                    //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/card/";
+                    //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/card/";
+                    string endPoint = settings.ed_JojoCardDetailsAPI + "card/";
+
+                    _log.DebugFormat($"GetCardWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
+
+                    _log.DebugFormat($"GetCardWithCardNumber: Building Jojo Card GetCard GET Call...");
+                    var myUri = new Uri(endPoint);
+                    var myWebRequest = WebRequest.Create(myUri);
+                    var myHttpWebRequest = (HttpWebRequest)myWebRequest;
+                    myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
+                    myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
+                    myHttpWebRequest.Headers.Add("20", "*/*");
+                    myHttpWebRequest.Method = "GET";
+
+                    _log.DebugFormat($"GetCardWithCardNumber: Calling Jojo Card GetCard GET...");
+                    var myWebResponse = myWebRequest.GetResponse();
+                    var responseStream = myWebResponse.GetResponseStream();
+                    if (responseStream == null) return null;
+
+                    var myStreamReader = new StreamReader(responseStream, Encoding.Default);
+                    var json = myStreamReader.ReadToEnd();
+
+                    responseStream.Close();
+                    myWebResponse.Close();
+
+                    var returnJson = new StringContent(json);
+                    _log.DebugFormat($"GetCardWithCardNumber: Jojo Card GET returned -> {returnJson}");
+
+                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                    resp.Content = returnJson;
+                    _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content}\n");
+                    return resp;
                 }
-
-                _log.DebugFormat($"GetCardWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
-
-                //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/card/";
-                string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/card/";
-                _log.DebugFormat($"GetCardWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
-
-                _log.DebugFormat($"GetCardWithCardNumber: Building Jojo Card GetCard GET Call...");
-                var myUri = new Uri(endPoint);
-                var myWebRequest = WebRequest.Create(myUri);
-                var myHttpWebRequest = (HttpWebRequest)myWebRequest;
-                myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
-                myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
-                myHttpWebRequest.Headers.Add("20", "*/*");
-                myHttpWebRequest.Method = "GET";
-
-                _log.DebugFormat($"GetCardWithCardNumber: Calling Jojo Card GetCard GET...");
-                var myWebResponse = myWebRequest.GetResponse();
-                var responseStream = myWebResponse.GetResponseStream();
-                if (responseStream == null) return null;
-
-                var myStreamReader = new StreamReader(responseStream, Encoding.Default);
-                var json = myStreamReader.ReadToEnd();
-
-                responseStream.Close();
-                myWebResponse.Close();
-
-                var returnJson = new StringContent(json);
-                _log.DebugFormat($"GetCardWithCardNumber: Jojo Card GET returned -> {returnJson}");
-
-                HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                resp.Content = returnJson;
-                _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content}\n");
-                return resp;
             }
             catch (Exception ex)
             {
@@ -146,6 +208,10 @@ namespace Skanetrafiken.Crm.Controllers
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
             }
         }
 
@@ -165,60 +231,112 @@ namespace Skanetrafiken.Crm.Controllers
                 return badReq;
             }
 
+            Plugin.LocalPluginContext localContext = null;
+
             try
             {
-                _log.DebugFormat($"PlaceOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
-                AuthenticationResult authenticationResponse = _taskFactory
-                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
-                    .Unwrap()
-                    .GetAwaiter()
-                    .GetResult();
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
 
-                if (authenticationResponse == null)
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
-                    _log.DebugFormat($"PlaceOrderWithCardNumber: Error -> Could not aquire token for client!");
-                    HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    badReq.Content = new StringContent("Error: Could not aquire token for client!");
-                    _log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
-                    return badReq;
+                    localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    _log.DebugFormat($"PlaceOrderWithCardNumber: Calling -> Get information from settings");
+                    //Get information from settings
+                    FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
+                    CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
+                        CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
+
+                    if (settings != null)
+                    {
+                        applicationId = settings.ed_JojoCardDetailsApplicationId;
+                        tenentId = settings.ed_JojoCardDetailsTenentId;
+                        jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                        msAuthScope = settings.ed_JojoCardDetailsScope;
+                    }
+                    else
+                    {
+                        HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (PlaceOrderWithCardNumber)");
+                        _log.Info($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
+                        return badReqSetting;
+                    }
+
+                    //_log.DebugFormat($"PlaceOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
+                    //AuthenticationResult authenticationResponse = _taskFactory
+                    //    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
+                    //    .Unwrap()
+                    //    .GetAwaiter()
+                    //    .GetResult();
+
+                    _log.DebugFormat($"PlaceOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
+                    AuthenticationResult authenticationResponse = _taskFactory
+                        .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync)
+                        .Unwrap()
+                        .GetAwaiter()
+                        .GetResult();
+
+                    if (authenticationResponse == null)
+                    {
+                        _log.DebugFormat($"PlaceOrderWithCardNumber: Error -> Could not aquire token for client!");
+                        HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        badReq.Content = new StringContent("Error: Could not aquire token for client!");
+                        _log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
+                        return badReq;
+                    }
+
+                    _log.DebugFormat($"PlaceOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
+
+                    //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/placeOrder/";
+                    //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/placeOrder/";
+                    string endPoint = settings.ed_JojoCardDetailsAPI + "placeOrder/";
+
+                    _log.DebugFormat($"PlaceOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
+
+                    _log.DebugFormat($"PlaceOrderWithCardNumber: Building Jojo Card PlaceOrder POST Call...");
+                    var myUri = new Uri(endPoint);
+                    var myWebRequest = WebRequest.Create(myUri);
+                    var myHttpWebRequest = (HttpWebRequest)myWebRequest;
+
+                    myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
+                    myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
+                    myHttpWebRequest.Headers.Add("20", "*/*");
+
+                    myHttpWebRequest.ContentLength = 0;
+                    myHttpWebRequest.Method = "POST";
+
+                    _log.DebugFormat($"PlaceOrderWithCardNumber: Calling Jojo Card PlaceOrder POST...");
+                    var myWebResponse = myWebRequest.GetResponse();
+                    var responseStream = myWebResponse.GetResponseStream();
+                    if (responseStream == null) return null;
+
+                    var myStreamReader = new StreamReader(responseStream, Encoding.Default);
+                    var json = myStreamReader.ReadToEnd();
+
+                    responseStream.Close();
+                    myWebResponse.Close();
+
+                    var returnJson = new StringContent(json);
+                    _log.DebugFormat($"PlaceOrderWithCardNumber: Jojo Card PlaceOrder POST returned -> {returnJson}");
+
+                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                    resp.Content = returnJson;
+                    _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content}\n");
+                    return resp;
                 }
-
-                _log.DebugFormat($"PlaceOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
-
-                //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/placeOrder/";
-                string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/placeOrder/";
-                _log.DebugFormat($"PlaceOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
-
-                _log.DebugFormat($"PlaceOrderWithCardNumber: Building Jojo Card PlaceOrder POST Call...");
-                var myUri = new Uri(endPoint);
-                var myWebRequest = WebRequest.Create(myUri);
-                var myHttpWebRequest = (HttpWebRequest)myWebRequest;
-
-                myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
-                myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
-                myHttpWebRequest.Headers.Add("20", "*/*");
-
-                myHttpWebRequest.ContentLength = 0;
-                myHttpWebRequest.Method = "POST";
-
-                _log.DebugFormat($"PlaceOrderWithCardNumber: Calling Jojo Card PlaceOrder POST...");
-                var myWebResponse = myWebRequest.GetResponse();
-                var responseStream = myWebResponse.GetResponseStream();
-                if (responseStream == null) return null;
-
-                var myStreamReader = new StreamReader(responseStream, Encoding.Default);
-                var json = myStreamReader.ReadToEnd();
-
-                responseStream.Close();
-                myWebResponse.Close();
-
-                var returnJson = new StringContent(json);
-                _log.DebugFormat($"PlaceOrderWithCardNumber: Jojo Card PlaceOrder POST returned -> {returnJson}");
-
-                HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                resp.Content = returnJson;
-                _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content}\n");
-                return resp;
             }
             catch (Exception ex)
             {
@@ -226,6 +344,10 @@ namespace Skanetrafiken.Crm.Controllers
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
             }
         }
 
@@ -245,61 +367,113 @@ namespace Skanetrafiken.Crm.Controllers
                 return badReq;
             }
 
+            Plugin.LocalPluginContext localContext = null;
+
             try
             {
-                _log.DebugFormat($"CancelOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
-                AuthenticationResult authenticationResponse = _taskFactory
-                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
-                    .Unwrap()
-                    .GetAwaiter()
-                    .GetResult();
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
 
-                if (authenticationResponse == null)
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
-                    _log.DebugFormat($"CancelOrderWithCardNumber: Error -> Could not aquire token for client!");
-                    HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    badReq.Content = new StringContent("Error: Could not aquire token for client!");
-                    _log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
-                    return badReq;
+                    localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    _log.DebugFormat($"PlaceOrderWithCardNumber: Calling -> Get information from settings");
+                    //Get information from settings
+                    FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
+                    CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
+                        CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
+
+                    if (settings != null)
+                    {
+                        applicationId = settings.ed_JojoCardDetailsApplicationId;
+                        tenentId = settings.ed_JojoCardDetailsTenentId;
+                        jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                        msAuthScope = settings.ed_JojoCardDetailsScope;
+                    }
+                    else
+                    {
+                        HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (CancelOrderWithCardNumber)");
+                        _log.Info($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
+                        return badReqSetting;
+                    }
+
+                    //_log.DebugFormat($"CancelOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
+                    //AuthenticationResult authenticationResponse = _taskFactory
+                    //    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
+                    //    .Unwrap()
+                    //    .GetAwaiter()
+                    //    .GetResult();
+
+                    _log.DebugFormat($"CancelOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
+                    AuthenticationResult authenticationResponse = _taskFactory
+                        .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync)
+                        .Unwrap()
+                        .GetAwaiter()
+                        .GetResult();
+
+                    if (authenticationResponse == null)
+                    {
+                        _log.DebugFormat($"CancelOrderWithCardNumber: Error -> Could not aquire token for client!");
+                        HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        badReq.Content = new StringContent("Error: Could not aquire token for client!");
+                        _log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
+                        return badReq;
+                    }
+
+                    _log.DebugFormat($"CancelOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
+
+                    //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/cancelOrder/";
+                    //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/cancelOrder/";
+                    string endPoint = settings.ed_JojoCardDetailsAPI + "cancelOrder/";
+
+                    _log.DebugFormat($"CancelOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
+
+                    _log.DebugFormat($"CancelOrderWithCardNumber: Building Jojo Card CancelOrder POST Call...");
+                    var myUri = new Uri(endPoint);
+                    var myWebRequest = WebRequest.Create(myUri);
+                    var myHttpWebRequest = (HttpWebRequest)myWebRequest;
+                    myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
+                    myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
+
+                    myHttpWebRequest.ContentLength = 0;
+                    myHttpWebRequest.Headers.Add("20", "*/*");
+                    myHttpWebRequest.Method = "POST";
+
+                    _log.DebugFormat($"GetCardWithCardNumber: Calling Jojo Card CancelOrder POST...");
+                    var myWebResponse = myWebRequest.GetResponse();
+                    //Check Status and return ok or not ok
+
+                    var responseStream = myWebResponse.GetResponseStream();
+                    if (responseStream == null) return null;
+
+                    var myStreamReader = new StreamReader(responseStream, Encoding.Default);
+                    var json = myStreamReader.ReadToEnd();
+
+                    responseStream.Close();
+                    myWebResponse.Close();
+
+                    var returnJson = new StringContent(json);
+                    _log.DebugFormat($"GetCardWithCardNumber: Jojo Card CancelOrder POST returned -> {returnJson}");
+
+                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                    resp.Content = returnJson;
+                    _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content}\n");
+                    return resp;
                 }
-
-                _log.DebugFormat($"CancelOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
-
-                //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/cancelOrder/";
-                string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/cancelOrder/";
-                _log.DebugFormat($"CancelOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
-
-                _log.DebugFormat($"CancelOrderWithCardNumber: Building Jojo Card CancelOrder POST Call...");
-                var myUri = new Uri(endPoint);
-                var myWebRequest = WebRequest.Create(myUri);
-                var myHttpWebRequest = (HttpWebRequest)myWebRequest;
-                myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
-                myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
-
-                myHttpWebRequest.ContentLength = 0;
-                myHttpWebRequest.Headers.Add("20", "*/*");
-                myHttpWebRequest.Method = "POST";
-
-                _log.DebugFormat($"GetCardWithCardNumber: Calling Jojo Card CancelOrder POST...");
-                var myWebResponse = myWebRequest.GetResponse();
-                //Check Status and return ok or not ok
-
-                var responseStream = myWebResponse.GetResponseStream();
-                if (responseStream == null) return null;
-
-                var myStreamReader = new StreamReader(responseStream, Encoding.Default);
-                var json = myStreamReader.ReadToEnd();
-
-                responseStream.Close();
-                myWebResponse.Close();
-
-                var returnJson = new StringContent(json);
-                _log.DebugFormat($"GetCardWithCardNumber: Jojo Card CancelOrder POST returned -> {returnJson}");
-
-                HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                resp.Content = returnJson;
-                _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content}\n");
-                return resp;
             }
             catch (Exception ex)
             {
@@ -307,6 +481,10 @@ namespace Skanetrafiken.Crm.Controllers
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
             }
         }
 
@@ -326,60 +504,112 @@ namespace Skanetrafiken.Crm.Controllers
                 return badReq;
             }
 
+            Plugin.LocalPluginContext localContext = null;
+
             try
             {
-                _log.DebugFormat($"CaptureOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
-                AuthenticationResult authenticationResponse = _taskFactory
-                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
-                    .Unwrap()
-                    .GetAwaiter()
-                    .GetResult();
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
 
-                if (authenticationResponse == null)
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
-                    _log.DebugFormat($"CaptureOrderWithCardNumber: Error -> Could not aquire token for client!");
-                    HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    badReq.Content = new StringContent("Error: Could not aquire token for client!");
-                    _log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
-                    return badReq;
+                    localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    _log.DebugFormat($"PlaceOrderWithCardNumber: Calling -> Get information from settings");
+                    //Get information from settings
+                    FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
+                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
+                    CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
+                        CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
+
+                    if (settings != null)
+                    {
+                        applicationId = settings.ed_JojoCardDetailsApplicationId;
+                        tenentId = settings.ed_JojoCardDetailsTenentId;
+                        jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                        msAuthScope = settings.ed_JojoCardDetailsScope;
+                    }
+                    else
+                    {
+                        HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (CaptureOrderWithCardNumber)");
+                        _log.Info($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
+                        return badReqSetting;
+                    }
+
+                    //_log.DebugFormat($"CaptureOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
+                    //AuthenticationResult authenticationResponse = _taskFactory
+                    //    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
+                    //    .Unwrap()
+                    //    .GetAwaiter()
+                    //    .GetResult();
+
+                    _log.DebugFormat($"CaptureOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
+                    AuthenticationResult authenticationResponse = _taskFactory
+                        .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync)
+                        .Unwrap()
+                        .GetAwaiter()
+                        .GetResult();
+
+                    if (authenticationResponse == null)
+                    {
+                        _log.DebugFormat($"CaptureOrderWithCardNumber: Error -> Could not aquire token for client!");
+                        HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        badReq.Content = new StringContent("Error: Could not aquire token for client!");
+                        _log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
+                        return badReq;
+                    }
+
+                    _log.DebugFormat($"CaptureOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
+
+                    //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/captureOrder/";
+                    //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/captureOrder/";
+                    string endPoint = settings.ed_JojoCardDetailsAPI + "captureOrder/";
+
+                    _log.DebugFormat($"CaptureOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
+
+                    _log.DebugFormat($"CaptureOrderWithCardNumber: Building Jojo Card CaptureOrder POST Call...");
+                    var myUri = new Uri(endPoint);
+                    var myWebRequest = WebRequest.Create(myUri);
+                    var myHttpWebRequest = (HttpWebRequest)myWebRequest;
+                    myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
+                    myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
+                    myHttpWebRequest.Headers.Add("20", "*");
+                    myHttpWebRequest.ContentLength = 0;
+                    myHttpWebRequest.Method = "POST";
+
+                    _log.DebugFormat($"CaptureOrderWithCardNumber: Calling Jojo Card CaptureOrder POST...");
+                    var myWebResponse = myWebRequest.GetResponse();
+                    //Check Status and return ok or not ok
+
+                    var responseStream = myWebResponse.GetResponseStream();
+                    if (responseStream == null) return null;
+
+                    var myStreamReader = new StreamReader(responseStream, Encoding.Default);
+                    var json = myStreamReader.ReadToEnd();
+
+                    responseStream.Close();
+                    myWebResponse.Close();
+
+                    var returnJson = new StringContent(json);
+                    _log.DebugFormat($"CaptureOrderWithCardNumber: Jojo Card CaptureOrder POST returned -> {returnJson}");
+
+                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                    resp.Content = returnJson;
+                    _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content}\n");
+                    return resp;
                 }
-
-                _log.DebugFormat($"CaptureOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
-
-                //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/captureOrder/";
-                string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/captureOrder/";
-                _log.DebugFormat($"CaptureOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
-
-                _log.DebugFormat($"CaptureOrderWithCardNumber: Building Jojo Card CaptureOrder POST Call...");
-                var myUri = new Uri(endPoint);
-                var myWebRequest = WebRequest.Create(myUri);
-                var myHttpWebRequest = (HttpWebRequest)myWebRequest;
-                myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
-                myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
-                myHttpWebRequest.Headers.Add("20", "*");
-                myHttpWebRequest.ContentLength = 0;
-                myHttpWebRequest.Method = "POST";
-
-                _log.DebugFormat($"CaptureOrderWithCardNumber: Calling Jojo Card CaptureOrder POST...");
-                var myWebResponse = myWebRequest.GetResponse();
-                //Check Status and return ok or not ok
-
-                var responseStream = myWebResponse.GetResponseStream();
-                if (responseStream == null) return null;
-
-                var myStreamReader = new StreamReader(responseStream, Encoding.Default);
-                var json = myStreamReader.ReadToEnd();
-
-                responseStream.Close();
-                myWebResponse.Close();
-
-                var returnJson = new StringContent(json);
-                _log.DebugFormat($"CaptureOrderWithCardNumber: Jojo Card CaptureOrder POST returned -> {returnJson}");
-
-                HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                resp.Content = returnJson;
-                _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content}\n");
-                return resp;
             }
             catch (Exception ex)
             {
@@ -388,6 +618,10 @@ namespace Skanetrafiken.Crm.Controllers
                 _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 return rm;
             }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
+            }
         }
 
         //Testing New API Call
@@ -395,79 +629,6 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage Get()
         {
             return new HttpResponseMessage(HttpStatusCode.OK);
-
-            //var cardNumber = "9999184770";
-            //int threadId = Thread.CurrentThread.ManagedThreadId;
-            //_log.Info($"Th={threadId} - GetCardWithCardNumber called with parameter: {cardNumber}");
-
-            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-
-            //if (string.IsNullOrWhiteSpace(cardNumber))
-            //{
-            //    HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
-            //    badReq.Content = new StringContent("Could not find a 'CardNumber' parameter in url");
-            //    _log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
-            //    return badReq;
-            //}
-
-            //try
-            //{
-            //    _log.DebugFormat($"GetCardWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
-            //    AuthenticationResult authenticationResponse = _taskFactory
-            //        .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardserviceacc/.default" }).ExecuteAsync)
-            //        .Unwrap()
-            //        .GetAwaiter()
-            //        .GetResult();
-
-            //    if (authenticationResponse == null)
-            //    {
-            //        _log.DebugFormat($"GetCardWithCardNumber: Error -> Could not aquire token for client!");
-            //        HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
-            //        badReq.Content = new StringContent("Error: Could not aquire token for client!");
-            //        _log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
-            //        return badReq;
-            //    }
-
-            //    _log.DebugFormat($"GetCardWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
-
-            //    string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/card/";
-            //    _log.DebugFormat($"GetCardWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
-
-            //    _log.DebugFormat($"GetCardWithCardNumber: Building Jojo Card GET Call...");
-            //    var myUri = new Uri(endPoint);
-            //    var myWebRequest = WebRequest.Create(myUri);
-            //    var myHttpWebRequest = (HttpWebRequest)myWebRequest;
-            //    myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
-            //    myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
-            //    myHttpWebRequest.Headers.Add("20", "*/*");
-            //    myHttpWebRequest.Method = "GET";
-
-            //    _log.DebugFormat($"GetCardWithCardNumber: Calling Jojo Card GET...");
-            //    var myWebResponse = myWebRequest.GetResponse();
-            //    var responseStream = myWebResponse.GetResponseStream();
-            //    if (responseStream == null) return null;
-
-            //    var myStreamReader = new StreamReader(responseStream, Encoding.Default);
-            //    var json = myStreamReader.ReadToEnd();
-
-            //    responseStream.Close();
-            //    myWebResponse.Close();
-
-            //    var returnJson = new StringContent(json);
-            //    _log.DebugFormat($"GetCardWithCardNumber: Jojo Card GET returned -> {returnJson}");
-
-            //    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-            //    resp.Content = returnJson;
-            //    _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content}\n");
-            //    return resp;
-            //}
-            //catch (Exception ex)
-            //{
-            //    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-            //    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-            //    _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-            //    return rm;
-            //}
         }
 
         /// <summary>

@@ -135,7 +135,7 @@
                                     EntityReference = { id: "guid", name: "name", entityType: "account" }
                                     Entity = { logicalName: "account", id: "guid", attributes: {}, formattedValues: {} }
                                     EntityCollection = [{ logicalName: "account", id: "guid", attributes: {}, formattedValues: {} }]
-            
+
                                 Attributes for entity accessed like: entity.attributes["new_fieldname"].value
                                 For entityreference: entity.attributes["new_fieldname"].value.id
                                 Make sure attributes["new_fieldname"] is not null before using .value
@@ -524,8 +524,16 @@
                                 var closedReason = result.ClosedReason;
                                 var isReserved = result.IsReserved;
 
-                                document.getElementById("arsparrat").checked = isClosed;
-                                document.getElementById("belopp").innerText = amount;
+                                if (isClosed == true) {
+                                    document.getElementById("isBlockedYes").style.display = "block";
+                                    document.getElementById("isBlockedNo").style.display = "none";
+                                } else {
+                                    document.getElementById("isBlockedYes").style.display = "none";
+                                    document.getElementById("isBlockedNo").style.display = "block";
+                                }
+
+                                //document.getElementById("arsparrat").checked = isClosed;
+                                document.getElementById("belopp").innerText = amount + " kr";
                                 document.getElementById("sparradav").innerText = closedReason;
                                 document.getElementById("reserveread").checked = isReserved;
 
@@ -534,13 +542,14 @@
                             },
                             function (e, t) {
                                 debugger;
-                                alert(t);
+                                alert("Något gick fel. Vänligen försök igen.");
                                 if (window.console && console.error) {
                                     console.error(e + "\n" + t);
                                 }
                             });
                     }
                     catch (error) {
+                        console.log("Oväntat fel: " + error.message);
                         document.getElementById("messageSpace").innerText = ("Oväntat fel: " + error.message);
                     }
                 },
@@ -553,7 +562,7 @@
                         var cardId = document.getElementById("cardId").value;
 
                         if (cardId == null || cardId == "") {
-                            document.getElementById("messageSpace").innerText = "Card Number is null or empty.";
+                            document.getElementById("messageSpace").innerText = "Ange kortnummer";
                             return;
                         }
 
@@ -573,8 +582,21 @@
                                 var closedReason = result.ClosedReason;
                                 var isReserved = result.IsReserved;
 
-                                document.getElementById("messageSpace").innerText = placeOrderResponse;
-                                document.getElementById("arsparrat").checked = isClosed;
+                                if (placeOrderResponse.includes("200")) {
+                                    document.getElementById("messageSpace").innerText = "Kortet är spärrat";
+                                } else {
+                                    document.getElementById("messageSpace").innerText = placeOrderResponse;
+                                }
+
+                                if (isClosed == true) {
+                                    document.getElementById("isBlockedYes").style.display = "block";
+                                    document.getElementById("isBlockedNo").style.display = "none";
+                                } else {
+                                    document.getElementById("isBlockedYes").style.display = "none";
+                                    document.getElementById("isBlockedNo").style.display = "block";
+                                }
+
+                                //document.getElementById("arsparrat").checked = isClosed;
                                 document.getElementById("belopp").innerText = amount;
                                 document.getElementById("sparradav").innerText = closedReason;
                                 document.getElementById("reserveread").checked = isReserved;
@@ -589,13 +611,27 @@
                                         debugger;
 
                                         var captureOrderResponse = result.CaptureOrderResponse;
-                                        document.getElementById("messageSpace").innerText = captureOrderResponse;
-                                        document.getElementById("belopp").innerText = "0";
+
+                                        if (captureOrderResponse.includes("200")) {
+                                            document.getElementById("messageSpace").innerText = "Kortet är spärrat";
+                                        } else {
+                                            document.getElementById("messageSpace").innerText = captureOrderResponse;
+                                        }
+                                        document.getElementById("belopp").innerText = "0 kr";
                                         document.getElementById("block").disabled = true;
+
+                                        if (isClosed == true) {
+                                            document.getElementById("isBlockedYes").style.display = "block";
+                                            document.getElementById("isBlockedNo").style.display = "none";
+                                        } else {
+                                            document.getElementById("isBlockedYes").style.display = "none";
+                                            document.getElementById("isBlockedNo").style.display = "block";
+                                        }
                                     },
                                     function (e, t) {
                                         debugger;
-                                        alert(t);
+                                        //alert(t);
+                                        alert("Något gick fel. Vänligen försök igen.");
                                         if (window.console && console.error) {
                                             console.error(e + "\n" + t);
                                         }
@@ -603,7 +639,8 @@
                             },
                             function (e, t) {
                                 debugger;
-                                alert(t);
+                                //alert(t);
+                                alert("Något gick fel. Vänligen försök igen.");
                                 if (window.console && console.error) {
                                     console.error(e + "\n" + t);
                                 }
@@ -624,9 +661,9 @@
     <div class="container">
 
         <div class="row">
-            <div class="col-1"><div class="label">Search:</div></div>
+            <div class="col-1"><div class="label" id="headerLabel">Sök Jojo-kort:</div></div>
             <div class="col-2"><input style="width:100%;" type="text" id="cardId"></div>
-            <div class="col-1"><button onclick="Endeavor.Skanetrafiken.SearchTravelCards.getInfoFromCardId()" type="button" style="width:50px;margin-left:5px;">Sök</button></div>
+            <div class="col-1"><button onclick="Endeavor.Skanetrafiken.SearchTravelCards.getInfoFromCardId()" id="searchBtn" type="button" style="width:50px;margin-left:5px;">Sök</button></div>
             <div class="col-3" id="messageSpace"></div>
         </div>
 
@@ -642,7 +679,16 @@
         </div>
 
         <div class="row">
-            <div class="col-2"><div class="label">Är Spärrat:</div><input type="checkbox" id="arsparrat" /></div>
+            <div class="col-2">
+                <div class="label">Är Spärrat:</div>
+                <!--<input type="radio" id="isBlockedYes" name="isBlocked" value="Nej" checked />
+                <input type="radio" id="isBlockedNo" name="isBlocked" value="Ja" />-->
+            </div>
+            <div class="col-2">
+                <p id="isBlockedYes" style="display: none">Ja</p>
+                <p id="isBlockedNo">Nej</p>
+            </div>
+            <!--<div class="col-2"><div class="label">Är Spärrat:</div><input type="checkbox" id="arsparrat" /></div>-->
             <div class="col-2"></div>
             <div class="col-2"></div>
             <div class="col-2"></div>
@@ -660,8 +706,9 @@
         </div>
 
         <div class="row">
-            <div class="col-2"><div class="label">Reserveread:</div><input type="checkbox" id="reserveread" /></div>
+            <div class="col-2"><div class="label" style="display: none;">Reserverad:</div><input type="checkbox" id="reserveread" style="display: none;" /></div>
             <div class="col-2"><button onclick="Endeavor.Skanetrafiken.SearchTravelCards.blockButtonPlaceCaptureOrder()" id="block" type="button" disabled>SPÄRRA KORT</button></div>
+            <div class="col-2"></div>
             <div class="col-2"></div>
             <div class="col-2"></div>
             <div class="col-2"></div>

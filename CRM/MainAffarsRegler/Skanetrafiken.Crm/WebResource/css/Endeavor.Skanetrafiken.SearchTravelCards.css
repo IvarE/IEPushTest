@@ -3,11 +3,12 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Arial', sans-serif;
-    font-size: 0.96em;
+    font-size: 0.99em;
 }
 
 .container {
-    width: 100%;
+    width: 90%;
+    margin-left: 1%;
 }
 
 .row {
@@ -27,7 +28,7 @@
 }
 
 .col-1 {
-    width: 6%;
+    width: 16.5%;
 }
 
 /* 1/6 */
@@ -51,6 +52,31 @@
     height: 24px;
     float: right;
     margin-right: 5px;
+}
+
+#block {
+    padding: 5px;
+    border-radius: 5px;
+    background: none;
+    background-color: white;
+    border-color: #e0e0e0;
+}
+
+#searchBtn {
+    padding: 5px;
+    border-radius: 5px;
+    background: none;
+    background-color: white;
+    border-color: #e0e0e0;
+}
+
+#cardId {
+    padding: 5px;
+}
+
+#headerLabel {
+    font-size: 130%;
+    padding: 3px;
 }
 
 /* viewport <= 1000px */
