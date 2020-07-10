@@ -385,7 +385,15 @@ namespace Skanetrafiken.Crm.Entities
 
             localContext.Trace($"Entered HandlePreAccountCreate() OrgNumber value: {orgNumber}");
             if (!string.IsNullOrWhiteSpace(orgNumber))
+            {
+                EntityReference erParentAccount = this.ParentAccountId;
+                bool isAllowed = CheckParentAccountOrganizationNumber(localContext, erParentAccount);
+
+                if (!isAllowed)
+                    throw new InvalidPluginExecutionException("Det går inte att ange organisationsnummer på ett underliggande konto");
+
                 this.cgi_organizational_number = FormatOrgNumber(localContext, orgNumber);
+            }
         }
 
         internal void HandlePreAccountUpdate(Plugin.LocalPluginContext localContext, AccountEntity preImage)
@@ -394,10 +402,33 @@ namespace Skanetrafiken.Crm.Entities
 
             localContext.Trace($"Entered HandlePreAccountUpdate() OrgNumber value: {orgNumber}");
             if (!string.IsNullOrWhiteSpace(orgNumber))
+            {
+                EntityReference erParentAccount = preImage.ParentAccountId;
+                bool isAllowed = CheckParentAccountOrganizationNumber(localContext, erParentAccount);
+
+                if (!isAllowed)
+                    throw new InvalidPluginExecutionException("Det går inte att ange organisationsnummer på ett underliggande konto");
+
                 this.cgi_organizational_number = FormatOrgNumber(localContext, orgNumber);
+            }
         }
 
         #region Helpers
+
+        private static bool CheckParentAccountOrganizationNumber(Plugin.LocalPluginContext localContext, EntityReference parentAccount)
+        {
+            localContext.Trace($"Entered CheckParentAccountOrganizationNumber. Parent Account Id: {parentAccount.Id}");
+            bool isAllowed = true;
+            if (parentAccount != null)
+            {
+                AccountEntity eAccount = XrmRetrieveHelper.Retrieve<AccountEntity>(localContext, parentAccount.Id, new ColumnSet(AccountEntity.Fields.cgi_organizational_number));
+
+                if (eAccount != null && eAccount.cgi_organizational_number != null)
+                    return false;
+            }
+            localContext.Trace($"Leaving CheckParentAccountOrganizationNumber. Parent Account Id: {parentAccount.Id}");
+            return isAllowed;
+        }
 
         private static string FormatOrgNumber(Plugin.LocalPluginContext localContext, string orgNumber)
         {
