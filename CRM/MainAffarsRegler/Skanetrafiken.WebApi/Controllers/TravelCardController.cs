@@ -144,7 +144,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                     //_log.DebugFormat($"GetCardWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
                     //AuthenticationResult authenticationResponse = _taskFactory
-                    //    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
+                    //    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardserviceprod/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
                     //    .Unwrap()
                     //    .GetAwaiter()
                     //    .GetResult();

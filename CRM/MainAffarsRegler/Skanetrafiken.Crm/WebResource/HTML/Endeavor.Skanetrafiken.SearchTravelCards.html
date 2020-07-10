@@ -581,8 +581,10 @@
                                 var amount = result.Amount;
                                 var closedReason = result.ClosedReason;
                                 var isReserved = result.IsReserved;
+                                
 
-                                if (placeOrderResponse.includes("200")) {
+                                //if (placeOrderResponse.includes("200")) {
+                                if (placeOrderResponse.indexOf("200") > -1) {
                                     document.getElementById("messageSpace").innerText = "Kortet är spärrat";
                                 } else {
                                     document.getElementById("messageSpace").innerText = placeOrderResponse;
@@ -612,7 +614,7 @@
 
                                         var captureOrderResponse = result.CaptureOrderResponse;
 
-                                        if (captureOrderResponse.includes("200")) {
+                                        if (placeOrderResponse.indexOf("200") > -1) {
                                             document.getElementById("messageSpace").innerText = "Kortet är spärrat";
                                         } else {
                                             document.getElementById("messageSpace").innerText = captureOrderResponse;
