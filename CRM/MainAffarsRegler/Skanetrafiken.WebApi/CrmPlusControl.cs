@@ -2185,6 +2185,7 @@ namespace Skanetrafiken.Crm.Controllers
                     OrderMQInfo orderMQInfo = new OrderMQInfo();
 
                     orderMQInfo.error = null;
+                    orderMQInfo.data = new List<OrderMQ>();
 
                     
                     foreach (OrderEntity order in lOrders)
