@@ -107,7 +107,8 @@ namespace Skanetrafiken.Crm.Models
 
             QueryExpression queryOrderProducts = new QueryExpression(OrderProductEntity.EntityLogicalName);
             queryOrderProducts.NoLock = true;
-            queryOrderProducts.ColumnSet.AddColumns(OrderProductEntity.Fields.SalesOrderDetailId, OrderProductEntity.Fields.ProductId);
+            queryOrderProducts.ColumnSet.AddColumns(OrderProductEntity.Fields.SalesOrderDetailId, OrderProductEntity.Fields.ProductId,
+                OrderProductEntity.Fields.ed_FromDate, OrderProductEntity.Fields.ed_ToDate);
             queryOrderProducts.Criteria.AddCondition(OrderProductEntity.Fields.SalesOrderId, ConditionOperator.Equal, orderId);
 
             _log.Debug($"Query OrderRows. query: {queryOrderProducts}");
@@ -140,8 +141,16 @@ namespace Skanetrafiken.Crm.Models
                 productObject.name = orderProduct.ProductId?.Name;
                 productObject.id = 1;
                 productObject.category = null;
-                productObject.startDate = orderProduct.ed_FromDate?.ToString(pattern);
-                productObject.endDate = orderProduct.ed_ToDate?.ToString(pattern);
+
+                if (orderProduct.ed_FromDate != null)
+                    productObject.startDate = orderProduct.ed_FromDate?.ToString(pattern);
+                else
+                    productObject.startDate = "2020-01-01";
+
+                if (orderProduct.ed_ToDate != null)
+                    productObject.endDate = orderProduct.ed_ToDate?.ToString(pattern);
+                else
+                    productObject.endDate = "2020-12-31";
 
                 orderRow.product = productObject;
                 lOrderRows.Add(orderRow);

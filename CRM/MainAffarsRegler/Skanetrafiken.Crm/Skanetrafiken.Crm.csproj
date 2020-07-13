@@ -242,6 +242,7 @@
     <Compile Include="ValueCodes\ValueCodeHandler.cs" />
     <Compile Include="XrmHelper.cs" />
     <Compile Include="XrmRetrieveHelper.cs" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.FrontOffice.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.getOrders.V9.0.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MargeAccounts.V9.0.html" />
     <Content Include="WebResource\script\Endeavor.Common.Data.js" />

@@ -2198,7 +2198,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                             if (orderMQ != null)
                             {
-                                orderMQInfo.data = new List<OrderMQ>();
                                 orderMQInfo.data.Add(orderMQ);
                             }
                         }

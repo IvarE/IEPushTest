@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <script type="text/javascript">
+
+        // On Load
+        function onLoad() {
+            debugger;
+            var formContext = getFormContext();
+            document.getElementById("frontOfficeiFrameId").src = "https://sttravelconfiguratorweb.azurewebsites.net/ticketdetails/12345";
+        }
+
+        // Get Form Context
+        function getFormContext() {
+            for (i = 0; i < window.parent.frames.length; i++) {
+                var frame = window.parent.frames[i];
+                if (typeof frame.Endeavor !== "undefined" && typeof frame.Endeavor.Skanetrafiken !== "undefined" && typeof frame.Endeavor.Skanetrafiken.getOrders !== "undefined") {
+                    return frame;
+                }
+            }
+
+            for (i = 0; i < window.parent.parent.frames.length; i++) {
+                var frame = window.parent.parent.frames[i];
+                if (typeof frame.Endeavor !== "undefined" && typeof frame.Endeavor.Skanetrafiken !== "undefined" && typeof frame.Endeavor.Skanetrafiken.getOrders !== "undefined") {
+                    return frame;
+                }
+            }
+
+            alert("Front Office is unavailable. Please contact your systems administrator.")
+
+            return null;
+        }
+
+    </script>
+
+</head>
+<body onload="window.onLoad();">
+    <iframe id="frontOfficeiFrameId" src=""></iframe>
+</body>
+</html>
