@@ -31,22 +31,33 @@ CASE_ORIGIN_RESEGARANTIONLINE = 285050007;
 CGISweden.incident =
 {
 
-    onFormLoad: function () {
+    onFormLoad: function (executionContext) {
+        var formContext = executionContext.getFormContext();
 
-        CGISweden.incident.setVisibilityOnLoad();
+        var wrControl = formContext.getControl("cgi_/CRM.GetBIFFTransactionsPage.html");
+        if (wrControl) {
+            wrControl.getContentWindow().then(
+                function (contentWindow) {
+                    contentWindow.setClientApiContext(Xrm, formContext);
+                }
+            )
+        }
 
-        switch (Xrm.Page.ui.getFormType()) {
+
+        CGISweden.incident.setVisibilityOnLoad(formContext);
+
+        switch (formContext.ui.getFormType()) {
             case FORM_TYPE_CREATE:
-                CGISweden.incident.setCustomerOnLoad();
-                CGISweden.incident.setDefaultOnCreate();
-                //CGISweden.incident.setAccountOrContactVisibility();
+                CGISweden.incident.setCustomerOnLoad(formContext);
+                CGISweden.incident.setDefaultOnCreate(formContext);
+                //CGISweden.incident.setAccountOrContactVisibility(formContext);
                 break;
             case FORM_TYPE_UPDATE:
-                CGISweden.incident.setOnUpdate();
+                CGISweden.incident.setOnUpdate(formContext);
             case FORM_TYPE_READONLY:
             case FORM_TYPE_DISABLED:
-                CGISweden.incident.onLoad();
-                //CGISweden.incident.setAccountOrContactVisibility();
+                CGISweden.incident.onLoad(formContext);
+                //CGISweden.incident.setAccountOrContactVisibility(formContext);
                 break;
             case FORM_TYPE_QUICKCREATE:
             case FORM_TYPE_BULKEDIT:
@@ -57,14 +68,16 @@ CGISweden.incident =
         }
     },
 
-    onSave: function (prmContext) {
-        var _case_stage = CGISweden.formscriptfunctions.GetValue("incidentstagecode");
+    onSave: function (executionContext) {
+        var formContext = executionContext.getFormContext();
+
+        var _case_stage = CGISweden.formscriptfunctions.GetValue("incidentstagecode", formContext);
         if (_case_stage == 1 || _case_stage == 285050003) {
-            Xrm.Page.getAttribute("incidentstagecode").setValue(285050000);
+            formContext.getAttribute("incidentstagecode").setValue(285050000);
         }
 
-        var _cgi_accountid = Xrm.Page.getAttribute("cgi_accountid").getValue();
-        var _cgi_contactid = Xrm.Page.getAttribute("cgi_contactid").getValue();
+        var _cgi_accountid = formContext.getAttribute("cgi_accountid").getValue();
+        var _cgi_contactid = formContext.getAttribute("cgi_contactid").getValue();
 
         if (_cgi_accountid != null) {
             CGISweden.incident.setCustomerFromAccount();
@@ -115,10 +128,10 @@ CGISweden.incident =
         }
     },
 
-    onLoad: function () {
+    onLoad: function (formContext) {
         try {
-            setTimeout(CGISweden.incident.timerfunction_BIFF, TIMEOUT_COUNTER);
-            //setTimeout(CGISweden.incident.timerfunction_Travel, TIMEOUT_COUNTER);
+            setTimeout(CGISweden.incident.timerfunction_BIFF(formContext), TIMEOUT_COUNTER);
+            //setTimeout(CGISweden.incident.timerfunction_Travel(formContext), TIMEOUT_COUNTER);
             //setTimeout(CGISweden.incident.hideOrShowTypeOfContactFields, TIMEOUT_COUNTER);
         }
         catch (e) {
@@ -126,29 +139,31 @@ CGISweden.incident =
         }
     },
 
-    onSendToQueue: function () {
+    onSendToQueue: function (executionContext) {
+        var formContext = executionContext.getFormContext();
+
         CGISweden.incident.onSave();
-        CGISweden.formscriptfunctions.SaveAndCloseEntity();
+        CGISweden.formscriptfunctions.SaveAndCloseEntity(formContext);
     },
 
-    setAccountOrContactVisibility: function () {
+    setAccountOrContactVisibility: function (formContext) {
         try {
-            var _cgi_accountid = Xrm.Page.getAttribute("cgi_accountid").getValue();
-            var _cgi_contactid = Xrm.Page.getAttribute("cgi_contactid").getValue();
+            var _cgi_accountid = formContext.getAttribute("cgi_accountid").getValue();
+            var _cgi_contactid = formContext.getAttribute("cgi_contactid").getValue();
 
             if (_cgi_accountid == null && _cgi_contactid == null) {
                 //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", true);
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_contactid", true);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_contactid", true, formContext);
             }
 
             if (_cgi_accountid != null && _cgi_contactid == null) {
                 //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", true);
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_contactid", false);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_contactid", false, formContext);
             }
 
             if (_cgi_accountid == null && _cgi_contactid != null) {
                 //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false);
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_contactid", true);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_contactid", true, formContext);
             }
 
         } catch (e) {
@@ -156,13 +171,17 @@ CGISweden.incident =
         }
     },
 
-    onChangeDate: function () {
-        var datetime = Xrm.Page.getAttribute("cgi_actiondate").getValue();
+    onChangeDate: function (executionContext) {
+        var formContext = executionContext.getFormContext();
+
+        var datetime = formContext.getAttribute("cgi_actiondate").getValue();
     },
 
-    onChangeOrigin: function () {
+    onChangeOrigin: function (executionContext) {
         try {
-            var origin = Xrm.Page.getAttribute("caseorigincode").getValue();
+            var formContext = executionContext.getFormContext();
+
+            var origin = formContext.getAttribute("caseorigincode").getValue();
             var priority = 0;
 
             switch (origin) {
@@ -214,17 +233,19 @@ CGISweden.incident =
                     priority = 2;
             }
 
-            Xrm.Page.getAttribute("prioritycode").setValue(priority);
-            Xrm.Page.getAttribute("cgi_runpriorityworkflow").setValue(0);
+            formContext.getAttribute("prioritycode").setValue(priority);
+            formContext.getAttribute("cgi_runpriorityworkflow").setValue(0);
 
         } catch (e) {
             alert("Fel i CGISweden.incident.onChangeOrigin\n\n" + e.Message);
         }
     },
 
-    onChangeAccount: function () {
+    onChangeAccount: function (executionContext) {
         try {
-            var __cgi_accountid = Xrm.Page.getAttribute("cgi_accountid").getValue();
+            var formContext = executionContext.getFormContext();
+
+            var __cgi_accountid = formContext.getAttribute("cgi_accountid").getValue();
 
             if (__cgi_accountid != null) {
                 //CGISweden.formscriptfunctions.SetValue("cgi_contactid", null);
@@ -234,18 +255,18 @@ CGISweden.incident =
                 //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_contactid", true);
             }
 
-            var __customerid = Xrm.Page.getAttribute("customerid").getValue();
-            //Xrm.Page.getAttribute("cgi_contactid").setValue(null);
+            var __customerid = formContext.getAttribute("customerid").getValue();
+            //formContext.getAttribute("cgi_contactid").setValue(null);
 
             if (__cgi_accountid != null) {
                 //if (__customerid != null) {
-                CGISweden.incident.setCustomerFromAccount();
+                CGISweden.incident.setCustomerFromAccount(formContext);
                 //}
             }
 
             if (__cgi_accountid == null) {
-                CGISweden.incident.setCustomerOnLoad();
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_contactid", true);
+                CGISweden.incident.setCustomerOnLoad(formContext);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_contactid", true, formContext);
             }
         }
         catch (e) {
@@ -253,32 +274,34 @@ CGISweden.incident =
         }
     },
 
-    onChangeContact: function () {
+    onChangeContact: function (executionContext) {
         try {
-            var __cgi_contactid = Xrm.Page.getAttribute("cgi_contactid").getValue();
+            var formContext = executionContext.getFormContext();
+
+            var __cgi_contactid = formContext.getAttribute("cgi_contactid").getValue();
 
             if (__cgi_contactid != null) {
-                //CGISweden.formscriptfunctions.SetValue("cgi_accountid", null);
-                //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false);
-                CGISweden.incident.hideOrShowTypeOfContactFields();
+                //CGISweden.formscriptfunctions.SetValue("cgi_accountid", null, formContext);
+                //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false, formContext);
+                CGISweden.incident.hideOrShowTypeOfContactFields(formContext);
 
             }
             else {
-                //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", true);
+                //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", true, formContext);
             }
 
-            var __customerid = Xrm.Page.getAttribute("customerid").getValue();
-            //Xrm.Page.getAttribute("cgi_accountid").setValue(null);
+            var __customerid = formContext.getAttribute("customerid").getValue();
+            //formContext.getAttribute("cgi_accountid").setValue(null);
 
             if (__cgi_contactid != null) {
                 //if (__customerid != null) {
-                CGISweden.incident.setCustomerFromContact();
+                CGISweden.incident.setCustomerFromContact(formContext);
 
                 //}
             }
 
             if (__cgi_contactid == null) {
-                CGISweden.incident.setCustomerOnLoad();
+                CGISweden.incident.setCustomerOnLoad(formContext);
             }
         }
         catch (e) {
@@ -286,15 +309,16 @@ CGISweden.incident =
         }
     },
 
-    onChangeTravelCard: function () {
+    onChangeTravelCard: function (executionContext) {
         try {
+            var formContext = executionContext.getFormContext();
 
             // MaxP 2016-04-28 Har lagt till så att kortnummer inte sätts i BIFF kontrollen när den är kollapsad
-            var _tab_biffinformation = Xrm.Page.ui.tabs.get("tab_BIFFInformation").getDisplayState()
+            var _tab_biffinformation = formContext.ui.tabs.get("tab_BIFFInformation").getDisplayState()
             if (_tab_biffinformation == "expanded") {
                 var arg = 'WebResource_BIFFTransactions';
-                var obj = Xrm.Page.getControl(arg).getObject();
-                var travelcardid = CGISweden.formscriptfunctions.GetValue("cgi_unregisterdtravelcard");
+                var obj = formContext.getControl(arg).getObject();
+                var travelcardid = CGISweden.formscriptfunctions.GetValue("cgi_unregisterdtravelcard", formContext);
                 obj.contentWindow.SetTravelCardNumber(travelcardid);
             }
         } catch (e) {
@@ -306,9 +330,9 @@ CGISweden.incident =
      * This function runs on onLoad.
      * It hides fields from 'Type Of Contact' quick view form if fields are 'false', otherwise show it.
      * */
-    hideOrShowTypeOfContactFields: function () {
+    hideOrShowTypeOfContactFields: function (formContext) {
         try {
-            var contactId = Xrm.Page.getAttribute("cgi_contactid");
+            var contactId = formContext.getAttribute("cgi_contactid");
             if (contactId) {
                 var contactValue = contactId.getValue();
                 if (contactValue) {
@@ -385,17 +409,17 @@ CGISweden.incident =
         }
     },
 
-    timerfunction_BIFF: function () {
+    timerfunction_BIFF: function (formContext) {
         try {
             var arg = 'WebResource_BIFFTransactions';
-            var obj = Xrm.Page.getControl(arg).getObject();
-            var entid = Xrm.Page.data.entity.getId();
+            var obj = formContext.getControl(arg).getObject();
+            var entid = formContext.data.entity.getId();
 
             try {
                 obj.contentWindow.SetID(entid);
             }
             catch (e) {
-                setTimeout(CGISweden.incident.timerfunction_BIFF, TIMEOUT_COUNTER);
+                setTimeout(CGISweden.incident.timerfunction_BIFF(formContext), TIMEOUT_COUNTER);
             }
         }
         catch (e) {
@@ -403,17 +427,17 @@ CGISweden.incident =
         }
     },
 
-    timerfunction_Travel: function () {
+    timerfunction_Travel: function (formContext) {
         try {
             var arg = 'WebResource_TravelInfo';
-            var obj = Xrm.Page.getControl(arg).getObject();
-            var entid = Xrm.Page.data.entity.getId();
+            var obj = formContext.getControl(arg).getObject();
+            var entid = formContext.data.entity.getId();
 
             try {
                 obj.contentWindow.SetID(entid);
             }
             catch (e) {
-                setTimeout(CGISweden.incident.timerfunction_Travel, TIMEOUT_COUNTER);
+                setTimeout(CGISweden.incident.timerfunction_Travel(formContext), TIMEOUT_COUNTER);
             }
         }
         catch (e) {
@@ -423,33 +447,33 @@ CGISweden.incident =
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set customer to account attribute
-    setCustomerFromAccount: function () {
-        var __customerid = Xrm.Page.getAttribute("customerid").getValue();
-        var _cgi_accountid_logicalname = "account" //Xrm.Page.getAttribute("cgi_accountid").getValue()[0].logicalname;
-        var _cgi_accountid_id = Xrm.Page.getAttribute("cgi_accountid").getValue()[0].id;
-        var _cgi_accountid_name = Xrm.Page.getAttribute("cgi_accountid").getValue()[0].name;
-        CGISweden.formscriptfunctions.SetLookup("customerid", _cgi_accountid_logicalname, _cgi_accountid_id, _cgi_accountid_name);
+    setCustomerFromAccount: function (formContext) {
+        var __customerid = formContext.getAttribute("customerid").getValue();
+        var _cgi_accountid_logicalname = "account" //formContext.getAttribute("cgi_accountid").getValue()[0].logicalname;
+        var _cgi_accountid_id = formContext.getAttribute("cgi_accountid").getValue()[0].id;
+        var _cgi_accountid_name = formContext.getAttribute("cgi_accountid").getValue()[0].name;
+        CGISweden.formscriptfunctions.SetLookup("customerid", _cgi_accountid_logicalname, _cgi_accountid_id, _cgi_accountid_name, formContext);
     },
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set customer to contact attribute
-    setCustomerFromContact: function () {
-        var __customerid = Xrm.Page.getAttribute("customerid").getValue();
-        var _cgi_contactid_logicalname = "contact"; //Xrm.Page.getAttribute("cgi_contactid").getValue()[0].logicalname;
-        var _cgi_contactid_id = Xrm.Page.getAttribute("cgi_contactid").getValue()[0].id;
-        var _cgi_contactid_name = Xrm.Page.getAttribute("cgi_contactid").getValue()[0].name;
+    setCustomerFromContact: function (formContext) {
+        var __customerid = formContext.getAttribute("customerid").getValue();
+        var _cgi_contactid_logicalname = "contact"; //formContext.getAttribute("cgi_contactid").getValue()[0].logicalname;
+        var _cgi_contactid_id = formContext.getAttribute("cgi_contactid").getValue()[0].id;
+        var _cgi_contactid_name = formContext.getAttribute("cgi_contactid").getValue()[0].name;
 
-        CGISweden.formscriptfunctions.SetLookup("customerid", _cgi_contactid_logicalname, _cgi_contactid_id, _cgi_contactid_name);
+        CGISweden.formscriptfunctions.SetLookup("customerid", _cgi_contactid_logicalname, _cgi_contactid_id, _cgi_contactid_name, formContext);
 
     },
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set default values on create
-    setDefaultOnCreate: function () {
+    setDefaultOnCreate: function (formContext) {
         try {
             var _currentdate = new Date();
-            Xrm.Page.getAttribute("cgi_arrival_date").setValue(_currentdate);
+            formContext.getAttribute("cgi_arrival_date").setValue(_currentdate);
         }
         catch (e) {
             alert("Fel i CGISweden.incident.setCaseDefaultOnLoad\n\n" + e.Message);
@@ -458,31 +482,33 @@ CGISweden.incident =
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Show fields on update
-    setOnUpdate: function () {
+    setOnUpdate: function (formContext) {
         try {
-            var lookupObject = Xrm.Page.getAttribute("cgi_casdet_row2_cat3id");
+            var globalContext = Xrm.Utility.getGlobalContext();
+
+            var lookupObject = formContext.getAttribute("cgi_casdet_row2_cat3id");
 
             if (lookupObject != null) {
                 var lookUpObjectValue = lookupObject.getValue();
 
                 if ((lookUpObjectValue != null)) {
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row3_cat3id", true);
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row3_cat2id", true);
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row3_cat1id", true);
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row4_cat3id", true);
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row4_cat2id", true);
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row4_cat1id", true);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row3_cat3id", true, formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row3_cat2id", true, formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row3_cat1id", true, formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row4_cat3id", true, formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row4_cat2id", true, formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row4_cat1id", true, formContext);
                 }
             }
 
-            var entityId = Xrm.Page.data.entity.getId();
-            var currentUserId = Xrm.Page.context.getUserId();
+            var entityId = formContext.data.entity.getId();
+            var currentUserId = globalContext.userSettings.userId();
             var entityType = "Incident";
 
             // We check paas fields, and hidden field to find out if incident has been opened from paas more then once.
-            var isPaasIncident = Xrm.Page.getAttribute("cgi_sfn").getValue() !== null;
+            var isPaasIncident = formContext.getAttribute("cgi_sfn").getValue() !== null;
             // NOTE: should be lowercase name we use in getAttribute
-            var cgi_passhasbeenopenedatleastonce_value = Xrm.Page.getAttribute("cgi_passhasbeenopenedatleastonce".toLowerCase()).getValue();
+            var cgi_passhasbeenopenedatleastonce_value = formContext.getAttribute("cgi_passhasbeenopenedatleastonce".toLowerCase()).getValue();
             var isOpenedFromPaasFirstTime = cgi_passhasbeenopenedatleastonce_value === null;
 
             if (isPaasIncident && isOpenedFromPaasFirstTime) {
@@ -492,7 +518,7 @@ CGISweden.incident =
                 SDK.SOAPAssign.assignRequest(currentUserId, entityId, entityType,
                     function (p1, p2, p3) {
 
-                        Xrm.Page.data.refresh(false);
+                        formContext.data.refresh(false);
 
                         // NOTE: schema name in object properties, with possible upper case letters
                         var updateDTO = {
@@ -524,9 +550,9 @@ CGISweden.incident =
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set tab epanded/collapsed and visible/not visible
-    toggleTabDisplayState: function (tabName, tabDisplayState, tabIsVisible) {
+    toggleTabDisplayState: function (tabName, tabDisplayState, tabIsVisible formContext) {
         //Hide/Show and/or Expand/Collapse tabs     
-        var tabs = Xrm.Page.ui.tabs.get();
+        var tabs = formContext.ui.tabs.get();
         for (var i in tabs) {
             var tab = tabs[i];
             //alert("Namn p� tab " + tab.getName());
@@ -539,19 +565,17 @@ CGISweden.incident =
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set default customer to customerid attribute
-    setCustomerOnLoad: function () {
+    setCustomerOnLoad: function (formContext) {
         try {
             var _currentdate = CGISweden.formscriptfunctions.GetDateTime();
-            CGISweden.odata.GetDefaultCustomerFromSetting(_currentdate, CGISweden.incident.setCustomerOnLoad_callback, CGISweden.incident.setCustomerOnLoad_complete);
+            CGISweden.odata.GetDefaultCustomerFromSetting(_currentdate, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.incident.setCustomerOnLoad\n\n" + e.Message);
         }
     },
 
-    setCustomerOnLoad_complete: function () { },
-
-    setCustomerOnLoad_callback: function (result) {
+    setCustomerOnLoad_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Det finns ingen default kund definerad!");
@@ -560,7 +584,7 @@ CGISweden.incident =
                 var _id = result[0].cgi_DefaultCustomerOnCase.Id;
                 var _logicalname = result[0].cgi_DefaultCustomerOnCase.LogicalName;
                 var _name = result[0].cgi_DefaultCustomerOnCase.Name;
-                CGISweden.formscriptfunctions.SetLookup("customerid", _logicalname, _id, _name);
+                CGISweden.formscriptfunctions.SetLookup("customerid", _logicalname, _id, _name, formContext);
             }
         }
         catch (e) {
@@ -570,21 +594,21 @@ CGISweden.incident =
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Show facebook or chat section
-    setVisibilityOnLoad: function () {
+    setVisibilityOnLoad: function (formContext) {
         try {
-            //Xrm.Page.getControl("description").setFocus();
+            //formContext.getControl("description").setFocus();
 
-            var _origin = CGISweden.formscriptfunctions.GetValue("caseorigincode");
+            var _origin = CGISweden.formscriptfunctions.GetValue("caseorigincode", formContext);
             if (_origin != null) {
 
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_chatid", false);
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_facebookpostid", false);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_chatid", false, formContext);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_facebookpostid", false, formContext);
 
                 if (_origin == 285050001) {
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_chatid", true);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_chatid", true, formContext);
                 }
                 else if (_origin == 285050000) {
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_facebookpostid", true);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_facebookpostid", true, formContext);
                 }
             }
 
@@ -594,11 +618,12 @@ CGISweden.incident =
         }
     },
 
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    getStateofCase: function () {
+    getStateofCase: function (executionContext) {
         try {
-            return CGISweden.formscriptfunctions.GetValue("statecode");
+            var formContext = executionContext.getFormContext();
+
+            return CGISweden.formscriptfunctions.GetValue("statecode", formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.incident.setVisibilityOnLoad\n\n" + e.Message);
@@ -606,27 +631,29 @@ CGISweden.incident =
     },
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    category2_onchange: function (context) {
+    category2_onchange: function (executionContext) {
         try {
-            var _attribute = context.getEventSource();
+            var formContext = executionContext.getFormContext();
+
+            var _attribute = formContext.getEventSource();
             var _fieldName = _attribute.getName();
-            var _case_category = Xrm.Page.getControl(_fieldName);
+            var _case_category = formContext.getControl(_fieldName);
 
             var _split = _fieldName.split("_");
             var _row = _split[2];
             var _col = _split[3];
 
             _category2_onchange_rownr = _row.substring(3, 4)
-            var lookupObject = Xrm.Page.getAttribute(_fieldName);
+            var lookupObject = formContext.getAttribute(_fieldName);
             if (lookupObject != null) {
                 var lookUpObjectValue = lookupObject.getValue();
                 if ((lookUpObjectValue != null)) {
-                    var _categoryid = Xrm.Page.getAttribute(_fieldName).getValue()[0].id;
-                    CGISweden.odata.GetParentCategory(_categoryid, CGISweden.incident.category2_onchange_callback, CGISweden.incident.category2_onchange_completed);
+                    var _categoryid = formContext.getAttribute(_fieldName).getValue()[0].id;
+                    CGISweden.odata.GetParentCategory(_categoryid, formContext);
                 }
                 else {
                     var _update_fieldname = "cgi_casdet_row" + _category2_onchange_rownr + "_cat2id";
-                    Xrm.Page.getAttribute(_update_fieldname).setValue(null);
+                    formContext.getAttribute(_update_fieldname).setValue(null);
                 }
             }
             else {
@@ -638,9 +665,7 @@ CGISweden.incident =
         }
     },
 
-    category2_onchange_completed: function () { },
-
-    category2_onchange_callback: function (result) {
+    category2_onchange_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Hittar ingen kategori 2");
@@ -651,11 +676,11 @@ CGISweden.incident =
                 var _id = result[0].cgi_Parentid.Id;
                 var _logicalname = result[0].cgi_Parentid.LogicalName;
                 var _name = result[0].cgi_Parentid.Name;
-                CGISweden.formscriptfunctions.SetLookup(_update_fieldname, _logicalname, _id, _name);
+                CGISweden.formscriptfunctions.SetLookup(_update_fieldname, _logicalname, _id, _name, formContext);
 
                 //Always clear category 3 then category 2 is changed
                 var _update_fieldname = "cgi_casdet_row" + _category2_onchange_rownr + "_cat3id";
-                Xrm.Page.getAttribute(_update_fieldname).setValue(null);
+                formContext.getAttribute(_update_fieldname).setValue(null);
             }
         }
         catch (e) {
@@ -664,26 +689,28 @@ CGISweden.incident =
     },
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    category3_onchange: function (context) {
+    category3_onchange: function (executionContext) {
         try {
-            var _attribute = context.getEventSource();
+            var formContext = executionContext.getFormContext();
+
+            var _attribute = formContext.getEventSource();
             var _fieldName = _attribute.getName();
-            CGISweden.incident.category3_onchange_nocontext(_fieldName);
+            CGISweden.incident.category3_onchange_nocontext(_fieldName, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.incident.category3_onchange\n\n" + e.Message);
         }
     },
 
-    category3_onchange_nocontext: function (_fieldName) {
+    category3_onchange_nocontext: function (_fieldName, formContext) {
         try {
-            var _case_category = Xrm.Page.getControl(_fieldName);
+            var _case_category = formContext.getControl(_fieldName);
 
             var _split = _fieldName.split("_");
             var _row = _split[2];
             _category3_onchange_rownr = _row.substring(3, 4)
 
-            var lookupObject = Xrm.Page.getAttribute(_fieldName);
+            var lookupObject = formContext.getAttribute(_fieldName);
 
 
             if (lookupObject != null) {
@@ -691,27 +718,27 @@ CGISweden.incident =
 
                 if ((lookUpObjectValue != null)) {
                     if (_row == "row2") {
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row3_cat3id", true);
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row3_cat2id", true);
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row3_cat1id", true);
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row3_cat3id", true, formContext);
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row3_cat2id", true, formContext);
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row3_cat1id", true, formContext);
                     }
                     if (_row == "row3") {
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row4_cat3id", true);
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row4_cat2id", true);
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row4_cat1id", true);
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row4_cat3id", true, formContext);
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row4_cat2id", true, formContext);
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_casdet_row4_cat1id", true, formContext);
                     }
 
-                    var _categoryid = Xrm.Page.getAttribute(_fieldName).getValue()[0].id;
-                    CGISweden.odata.GetParentCategory(_categoryid, CGISweden.incident.category3_onchange_callback, CGISweden.incident.category3_onchange_completed);
+                    var _categoryid = formContext.getAttribute(_fieldName).getValue()[0].id;
+                    CGISweden.odata.GetParentCategory3(_categoryid, formContext);
                 }
                 else {
                     var _update_fieldname_cat1 = "cgi_casdet_row" + _category3_onchange_rownr + "_cat1id";
-                    Xrm.Page.getAttribute(_update_fieldname_cat1).setValue(null);
+                    formContext.getAttribute(_update_fieldname_cat1).setValue(null);
                     var _update_fieldname_cat2 = "cgi_casdet_row" + _category3_onchange_rownr + "_cat2id";
-                    Xrm.Page.getAttribute(_update_fieldname_cat2).setValue(null);
+                    formContext.getAttribute(_update_fieldname_cat2).setValue(null);
 
-                    CGISweden.formscriptfunctions.SetSubmitModeAlways(_update_fieldname_cat1);
-                    CGISweden.formscriptfunctions.SetSubmitModeAlways(_update_fieldname_cat2);
+                    CGISweden.formscriptfunctions.SetSubmitModeAlways(_update_fieldname_cat1, formContext);
+                    CGISweden.formscriptfunctions.SetSubmitModeAlways(_update_fieldname_cat2, formContext);
                 }
             }
             else {
@@ -723,9 +750,7 @@ CGISweden.incident =
         }
     },
 
-    category3_onchange_completed: function () { },
-
-    category3_onchange_callback: function (result) {
+    category3_onchange_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Hittar ingen kategori 3");
@@ -736,18 +761,18 @@ CGISweden.incident =
                 var _id = result[0].cgi_Parentid.Id;
                 var _logicalname = result[0].cgi_Parentid.LogicalName;
                 var _name = result[0].cgi_Parentid.Name;
-                CGISweden.formscriptfunctions.SetLookup(_update_fieldname1, _logicalname, _id, _name);
+                CGISweden.formscriptfunctions.SetLookup(_update_fieldname1, _logicalname, _id, _name, formContext);
 
-                CGISweden.formscriptfunctions.SetSubmitModeAlways(_update_fieldname1);
+                CGISweden.formscriptfunctions.SetSubmitModeAlways(_update_fieldname1, formContext);
 
                 var _update_fieldname2 = "cgi_casdet_row" + _category3_onchange_rownr + "_cat2id";
                 var _id = result[0].cgi_parentid2.Id;
                 var _logicalname = result[0].cgi_parentid2.LogicalName;
                 var _name = result[0].cgi_parentid2.Name;
-                CGISweden.formscriptfunctions.SetLookup(_update_fieldname2, _logicalname, _id, _name);
+                CGISweden.formscriptfunctions.SetLookup(_update_fieldname2, _logicalname, _id, _name, formContext);
 
 
-                CGISweden.formscriptfunctions.SetSubmitModeAlways(_update_fieldname2);
+                CGISweden.formscriptfunctions.SetSubmitModeAlways(_update_fieldname2, formContext);
 
                 //CGISweden.incident.category3_onchange_get_cat1(_id);
 
@@ -758,9 +783,11 @@ CGISweden.incident =
         }
     },
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    onChangeHandelseDatum: function () {
+    onChangeHandelseDatum: function (executionContext) {
         try {
-            var handelsedatum = Xrm.Page.getAttribute("cgi_handelsedatum").getValue();
+            var formContext = executionContext.getFormContext();
+
+            var handelsedatum = formContext.getAttribute("cgi_handelsedatum").getValue();
 
             //var handelsedatum = "15-01/03 15g27";
             handelsedatum = handelsedatum.replace(/\D/g, '');
@@ -804,7 +831,7 @@ CGISweden.incident =
                     dto.setMinutes(0);
                     dto.setSeconds(0);
                 }
-                Xrm.Page.getAttribute("cgi_actiondate").setValue(dto);
+                formContext.getAttribute("cgi_actiondate").setValue(dto);
             }
         } catch (e) {
             alert("Fel i CGISweden.incident.onChangeHandelseDatum\n\n" + e.Message);
@@ -812,6 +839,8 @@ CGISweden.incident =
     },
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // function not used. Commented out
+    //  CGISweden.odata.GetParentCategory2 - does not exist
     category3_onchange_get_cat1: function (_id) {
         try {
             CGISweden.odata.GetParentCategory2(_id, CGISweden.incident.category3_sub_onchange_callback, CGISweden.incident.category3_sub_onchange_completed);
@@ -844,16 +873,18 @@ CGISweden.incident =
         }
     },
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    letter_template_onchange: function () {
+    letter_template_onchange: function (executionContext) {
         try {
-            var _id = CGISweden.formscriptfunctions.GetLookupid("cgi_letter_templateid");
+            var formContext = executionContext.getFormContext();
+
+            var _id = CGISweden.formscriptfunctions.GetLookupid("cgi_letter_templateid", formContext);
 
             if (_id != null) {
-                CGISweden.odata.GetLetterTemplate(_id, CGISweden.incident.letter_template_onchange_callback, CGISweden.incident.letter_template_onchange_completed);
+                CGISweden.odata.GetLetterTemplate(_id, formContext);
             }
             else {
-                CGISweden.formscriptfunctions.SetValue("cgi_letter_title", "");
-                CGISweden.formscriptfunctions.SetValue("cgi_letter_body", "");
+                CGISweden.formscriptfunctions.SetValue("cgi_letter_title", "", formContext);
+                CGISweden.formscriptfunctions.SetValue("cgi_letter_body", "", formContext);
             }
         }
         catch (e) {
@@ -861,9 +892,7 @@ CGISweden.incident =
         }
     },
 
-    letter_template_onchange_completed: function () { },
-
-    letter_template_onchange_callback: function (result) {
+    letter_template_onchange_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Hittar inte brevmallen.");
@@ -872,8 +901,8 @@ CGISweden.incident =
                 var _title = result[0].cgi_title;
                 var _letter_body = result[0].cgi_template_body;
 
-                Xrm.Page.getAttribute("cgi_letter_title").setValue(_title);
-                Xrm.Page.getAttribute("cgi_letter_body").setValue(_letter_body);
+                formContext.getAttribute("cgi_letter_title").setValue(_title);
+                formContext.getAttribute("cgi_letter_body").setValue(_letter_body);
             }
         }
         catch (e) {
@@ -881,15 +910,16 @@ CGISweden.incident =
         }
     },
     //Körs istället för affärsregel. Observera att funktionen även sätter nivå 2 och nivå 1
-    casetypecode_onchange: function () {
+    casetypecode_onchange: function (executionContext) {
+        var formContext = executionContext.getFormContext();
 
-        var cgi_casdet_row1_cat3id = Xrm.Page.getAttribute('cgi_casdet_row1_cat3id').getValue();
+        var cgi_casdet_row1_cat3id = formContext.getAttribute('cgi_casdet_row1_cat3id').getValue();
         if (cgi_casdet_row1_cat3id == null) {
-            var casetypecode = Xrm.Page.getAttribute('casetypecode').getValue();
+            var casetypecode = formContext.getAttribute('casetypecode').getValue();
             if (casetypecode == 285050003) {//travel waranty 
                 try {
                     var _currentdate = CGISweden.formscriptfunctions.GetDateTime();
-                    CGISweden.odata.GetDefaultCaseCategory3Setting(_currentdate, CGISweden.incident.casetypecode_onchange_callback, CGISweden.incident.casetypecode_onchange_complete);
+                    CGISweden.odata.GetDefaultCaseCategory3Setting(_currentdate, formContext);
                 }
                 catch (e) {
                     alert("Fel i CGISweden.incident.casetypecode_onchange\n\n" + e.Message);
@@ -900,20 +930,18 @@ CGISweden.incident =
 
     },
 
-
-    getRGOLapiurl: function () {
+    
+    getRGOLapiurl: function (formContext) {
         try {
             var _currentdate = CGISweden.formscriptfunctions.GetDateTime();
-            CGISweden.odata.GetRGOLUrlFromSetting(_currentdate, CGISweden.incident.getRGOLapiurl_callback, CGISweden.incident.getRGOLapiurl_complete);
+            CGISweden.odata.GetRGOLUrlFromSetting(_currentdate, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.incidentLibrary.getRGOLapiurl\n\n" + e.Message);
         }
     },
 
-    getRGOLapiurl_complete: function () { },
-
-    getRGOLapiurl_callback: function (result) {
+    getRGOLapiurl_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Det finns ingen url definierad för RGOL!");
@@ -921,12 +949,12 @@ CGISweden.incident =
             else {
 
                 var _url = result[0].cgi_rgolurl;
-                var rgolId = Xrm.Page.getAttribute("cgi_rgolissueid").getValue();
+                var rgolId = formContext.getAttribute("cgi_rgolissueid").getValue();
                 var rgolPath = "http://" + _url + "/web/index.html?data=issueId%3D" + rgolId + "%26environment%3D" + _url;
 
 
-                if (Xrm.Page.ui.tabs.get("rgol_info_new").getDisplayState() == "expanded") {
-                    Xrm.Page.ui.controls.get("IFRAME_RGOLinfo_new").setSrc(rgolPath);
+                if (formContext.ui.tabs.get("rgol_info_new").getDisplayState() == "expanded") {
+                    formContext.ui.controls.get("IFRAME_RGOLinfo_new").setSrc(rgolPath);
 
                 }
 
@@ -938,23 +966,23 @@ CGISweden.incident =
     },
 
     //laddar rgolinfo i en iframe
-    rgoliframe_onchange: function () {
-        CGISweden.incident.getRGOLapiurl();
+    rgoliframe_onchange: function (executionContext) {
+        var formContext = executionContext.getFormContext();
+
+        CGISweden.incident.getRGOLapiurl(formContext);
     },
 
-    getRGOLapiurlNew: function () {
+    getRGOLapiurlNew: function (formContext) {
         try {
             var _currentdate = CGISweden.formscriptfunctions.GetDateTime();
-            CGISweden.odata.GetRGOLUrlFromSetting(_currentdate, CGISweden.incident.getRGOLapiurl_callbackNew, CGISweden.incident.getRGOLapiurl_completeNew);
+            CGISweden.odata.GetRGOLUrlFromSettingNew(_currentdate, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.incidentLibrary.getRGOLapiurl\n\n" + e.Message);
         }
     },
 
-    getRGOLapiurl_completeNew: function () { },
-
-    getRGOLapiurl_callbackNew: function (result) {
+    getRGOLapiurl_callbackNew: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Det finns ingen url definierad för RGOL!");
@@ -965,13 +993,13 @@ CGISweden.incident =
                 var splitUrl = _url.split("/");
                 _url = splitUrl[0];
 
-                var rgolId = Xrm.Page.getAttribute("cgi_rgolissueid").getValue();
+                var rgolId = formContext.getAttribute("cgi_rgolissueid").getValue();
                 //var rgolPath = "http://" + _url + "/web/index.html?data=issueId%3D" + rgolId + "%26environment%3D" + _url;
                 var rgolPath = "http://" + _url + "/Pages/IssueSimple.aspx?id=" + rgolId;
 
 
-                if (Xrm.Page.ui.tabs.get("rgol_info_new").getDisplayState() == "expanded") {
-                    Xrm.Page.ui.controls.get("IFRAME_RGOLinfo_new").setSrc(rgolPath);
+                if (formContext.ui.tabs.get("rgol_info_new").getDisplayState() == "expanded") {
+                    formContext.ui.controls.get("IFRAME_RGOLinfo_new").setSrc(rgolPath);
 
                 }
 
@@ -982,13 +1010,13 @@ CGISweden.incident =
         }
     },
 
-    rgoliframe_onchange_new: function () {
-        CGISweden.incident.getRGOLapiurlNew();
+    rgoliframe_onchange_new: function (executionContext) {
+        var formContext = executionContext.getFormContext();
+
+        CGISweden.incident.getRGOLapiurlNew(formContext);
     },
 
-    casetypecode_onchange_complete: function () { },
-
-    casetypecode_onchange_callback: function (result) {
+    casetypecode_onchange_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Det finns ingen default kategori 3 definerad!");
@@ -997,8 +1025,8 @@ CGISweden.incident =
                 var _id = result[0].cgi_category_detail3id.Id;
                 var _logicalname = result[0].cgi_category_detail3id.LogicalName;
                 var _name = result[0].cgi_category_detail3id.Name;
-                CGISweden.formscriptfunctions.SetLookup("cgi_casdet_row1_cat3id", _logicalname, _id, _name);
-                CGISweden.incident.category3_onchange_nocontext("cgi_casdet_row1_cat3id");
+                CGISweden.formscriptfunctions.SetLookup("cgi_casdet_row1_cat3id", _logicalname, _id, _name, formContext);
+                CGISweden.incident.category3_onchange_nocontext("cgi_casdet_row1_cat3id", formContext);
             }
         }
         catch (e) {

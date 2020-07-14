@@ -13,7 +13,7 @@ CGISweden.queueitemRibbon =
         try {
 
             // Open the window.
-            Xrm.Utility.openEntityForm("incident");
+            Xrm.Navigation.openForm("incident");
 
         }
         catch (e) {

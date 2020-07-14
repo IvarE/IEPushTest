@@ -50,15 +50,16 @@ CGISweden.odata =
             alert("Fel i CGISweden.odata.IsTravelInformationRequired\n\n" + e.Message);
         }
     },
-    GetTravelInfoForCase: function (caseid) {
+    GetTravelInfoForCase: function (caseid, formContext) {
         try {
+            var globalContext = Xrm.Utility.getGlobalContext();
             //Return the number of travelinformation posts registered on this case
             //This is done synchronously because it is part of a validation process
             var serverUrl;
-            if (Xrm.Page.context.getClientUrl !== undefined) {
-                serverUrl = Xrm.Page.context.getClientUrl();
+            if (globalContext.getClientUrl !== undefined) {
+                serverUrl = globalContext.getClientUrl();
             } else {
-                serverUrl = Xrm.Page.context.getServerUrl();
+                serverUrl = globalContext.getServerUrl();
             }
             var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc";
 
@@ -106,59 +107,102 @@ CGISweden.odata =
         }
     },
 
-    GetDefaultCustomerFromSetting: function (nowdate, CallBackFunction, CompleteFunction) {
+    GetDefaultCustomerFromSetting: function (nowdate, formContext) {
         try {
-            var _options = "$select=cgi_DefaultCustomerOnCase&";
-            var _filter = "$filter=statecode/Value eq 0 and cgi_ValidFrom le datetime'" + nowdate + "' and (cgi_ValidTo ge datetime'" + nowdate + "' or cgi_ValidTo eq null)";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("cgi_setting", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetDefaultCustomerFromSetting\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_defaultcustomeroncase&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+                function success(result) {
+                    CGISweden.incident.setCustomerOnLoad_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetDefaultCustomerFromSetting\n\n" + e.Message);
         }
     },
 
-    GetDefaultCaseCategory3Setting: function (nowdate, CallBackFunction, CompleteFunction) {
+    GetDefaultCaseCategory3Setting: function (nowdate, formContext) {
         try {
-            var _options = "$select=cgi_category_detail3id&";
-            var _filter = "$filter=statecode/Value eq 0 and cgi_ValidFrom le datetime'" + nowdate + "' and (cgi_ValidTo ge datetime'" + nowdate + "' or cgi_ValidTo eq null)";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("cgi_setting", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetDefaultCaseCategory3Setting\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_category_detail3id&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+                function success(result) {
+                    CGISweden.incident.casetypecode_onchange_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetDefaultCaseCategory3Setting\n\n" + e.Message);
         }
+        
     },
 
-    Getcgi_refundtypeproductnotrequiredidSetting: function (nowdate, CallBackFunction, CompleteFunction) {
+    Getcgi_refundtypeproductnotrequiredidSetting: function (nowdate, formContext) {
         try {
-            var _options = "$select=cgi_refundtypeproductnotrequiredid&";
-            var _filter = "$filter=statecode/Value eq 0 and cgi_ValidFrom le datetime'" + nowdate + "' and (cgi_ValidTo ge datetime'" + nowdate + "' or cgi_ValidTo eq null)";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("cgi_setting", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.Getcgi_refundtypeproductnotrequiredidSetting\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_refundtypeproductnotrequiredid&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+                function success(result) {
+                    CGISweden.refund.Getcgi_refundtypeproductnotrequiredidSetting_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.Getcgi_refundtypeproductnotrequiredidSetting\n\n" + e.Message);
         }
     },
-    GetBOMBUrlFromSetting: function (nowdate, CallBackFunction, CompleteFunction) {
+    GetBOMBUrlFromSetting: function (nowdate, formContext) {
         try {
-            var _options = "$select=cgi_BOMBUrl&";
-            var _filter = "$filter=statecode/Value eq 0 and cgi_ValidFrom le datetime'" + nowdate + "' and (cgi_ValidTo ge datetime'" + nowdate + "' or cgi_ValidTo eq null)";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("cgi_setting", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetBOMBUrlFromSetting\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_bomburl&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+                function success(result) {
+                    CGISweden.incident.Ribbon.openBombApp_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetBOMBUrlFromSetting\n\n" + e.Message);
         }
     },
 
-    GetRGOLUrlFromSetting: function (nowdate, CallBackFunction, CompleteFunction) {
+    GetRGOLUrlFromSetting: function (nowdate, formContext) {
         try {
-            var _options = "$select=cgi_rgolurl&";
-            var _filter = "$filter=statecode/Value eq 0 and cgi_ValidFrom le datetime'" + nowdate + "' and (cgi_ValidTo ge datetime'" + nowdate + "' or cgi_ValidTo eq null)";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("cgi_setting", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetRGOLUrlFromSetting\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_rgolurl&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+                function success(result) {
+                    CGISweden.incident.getRGOLapiurl_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
+        }
+        catch (e) {
+            alert("Fel i CGISweden.odata.GetRGOLUrlFromSetting\n\n" + e.Message);
+        }
+    },
+
+    GetRGOLUrlFromSettingNew: function (nowdate, formContext) {
+        try {
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_rgolurl&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+                function success(result) {
+                    CGISweden.incident.getRGOLapiurl_callbackNew(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetRGOLUrlFromSetting\n\n" + e.Message);
@@ -166,12 +210,35 @@ CGISweden.odata =
     },
 
     //Returns category guid for level 1 and level 2
-    GetParentCategory: function (_categoryid, CallBackFunction, CompleteFunction) {
+    GetParentCategory: function (_categoryid, formContext) {
         try {
-            var _options = "$select=cgi_Parentid,cgi_parentid2&";
-            var _filter = "$filter=cgi_categorydetailId eq guid'" + _categoryid + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("cgi_categorydetail", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetParentCategory\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_parentid,cgi_parentid2&$filter=cgi_categorydetailid eq" + _categoryid).then(
+                function success(result) {
+                    CGISweden.incident.category2_onchange_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
+        }
+        catch (e) {
+            alert("Fel i CGISweden.odata.GetParentCategory\n\n" + e.Message);
+        }
+    },
+
+    //Returns category guid for level 1 and level 2
+    GetParentCategory3: function (_categoryid, formContext) {
+        try {
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_parentid,cgi_parentid2&$filter=cgi_categorydetailid eq" + _categoryid).then(
+                function success(result) {
+                    CGISweden.incident.category3_onchange_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetParentCategory\n\n" + e.Message);
@@ -179,12 +246,17 @@ CGISweden.odata =
     },
 
     //Get default queue from user
-    GetDefaultQueue: function (userId, CallBackFunction, CompleteFunction) {
+    GetDefaultQueue: function (userId, formContext) {
         try {
-            var _options = "$select=QueueId&";
-            var _filter = "$filter=SystemUserId eq guid'" + userId + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("SystemUser", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetDefaultQueue\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("email", "?$select=queueid&$filter=systemuserid eq" + userId).then(
+                function success(result) {
+                    CGISweden.email.SetSenderEmail_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetDefaultQueue\n\n" + e.Message);
@@ -192,12 +264,17 @@ CGISweden.odata =
     },
 
     //Get letter template
-    GetLetterTemplate: function (_id, CallBackFunction, CompleteFunction) {
+    GetLetterTemplate: function (_id, formContext) {
         try {
-            var _options = "$select=cgi_title,cgi_template_body&";
-            var _filter = "$filter=cgi_letter_templateId eq guid'" + _id + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("cgi_letter_template", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetLetterTemplate\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_title,cgi_template_body&$filter=cgi_letter_templateid eq" + _id).then(
+                function success(result) {
+                    CGISweden.incident.letter_template_onchange_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetLetterTemplate\n\n" + e.Message);
@@ -205,74 +282,131 @@ CGISweden.odata =
     },
     // *** End Queries used for entity Case
 
-    // *** Start Queries used for entity cgi_refund
+    // *** Start Queries used for entity account
 
-    GetSecRolesName: function (userRoleId, CallBackFunction, CompleteFunction) {
+    GetSecRolesNameAccount: function (userRoleId, formContext) {
         try {
-            var _options = "$select=Name&";
-            var _filter = "$filter=RoleId eq guid'" + userRoleId + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("Role", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetSecRolesName\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("account", "?$select=name&$filter=roleid eq" + userRoleId).then(
+                function success(result) {
+                    CGISweden.account.checkIfUserHasRole_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
-            alert("Fel i CGISweden.odata.GetSecRolesName\n\n" + e.Message);
+            alert("Fel i CGISweden.odata.GetSecRolesNameAccount\n\n" + e.Message);
         }
     },
 
-    GetAmountLimitFromSetting: function (nowdate, CallBackFunction, CompleteFunction) {
+    // *** End Queries used for entity account
+
+    // *** Start Queries used for entity cgi_refund
+
+
+
+    GetAmountLimitFromSetting: function (nowdate, formContext) {
         try {
-            var _options = "$select=cgi_amount_limit, cgi_amount_limit_warn&";
-            var _filter = "$filter=statecode/Value eq 0 and cgi_ValidFrom le datetime'" + nowdate + "' and (cgi_ValidTo ge datetime'" + nowdate + "' or cgi_ValidTo eq null)";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("cgi_setting", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetAmountLimitFromSetting\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_amount_limit, cgi_amount_limit_warn&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+                function success(result) {
+                    CGISweden.refund.ctrlAmountLimit_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetAmountLimitFromSetting\n\n" + e.Message);
         }
+
+        
     },
 
-    GetRefundSetting: function (refundid, CallBackFunction, CompleteFunction) {
+    GetRefundSetting: function (refundid, formContext) {
         try {
-            var _options = "$select=cgi_RefundOption,cgi_FinancialTransaction,cgi_refundtypeId,cgi_refundtypename,cgi_refundaccountid,cgi_refundresponsibleId,cgi_refundproductid,cgi_reinvoice&";
-            var _filter = "$filter=statecode/Value eq 0 and cgi_refundtypeId eq guid'" + refundid + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("cgi_refundtype", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetRefundSetting\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?select=cgi_refundoption,cgi_financialtransaction,cgi_refundtypeid,cgi_refundtypename,cgi_refundaccountid,cgi_refundresponsibleid,cgi_refundproductid,cgi_reinvoice&$filter=statecode eq 0 and cgi_refundtypeid eq " + refundid).then(
+                function success(result) {
+                    CGISweden.refund.refundtypeid_OnChange_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
+
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetRefundSetting\n\n" + e.Message);
         }
     },
-    Getcgi_refundaccountNumber: function (cgi_refundaccountid, CallBackFunction, CompleteFunction) {
+
+    GetRefundSettingOnLoad: function (refundid, formContext) {
         try {
-            var _options = "$select=cgi_Account,cgi_refundaccountId&";
-            var _filter = "$filter=cgi_refundaccountId eq guid'" + cgi_refundaccountid + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("cgi_refundaccount", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.Getcgi_refundaccountNumber\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?select=cgi_refundoption,cgi_financialtransaction,cgi_refundtypeid,cgi_refundtypename,cgi_refundaccountid,cgi_refundresponsibleid,cgi_refundproductid,cgi_reinvoice&$filter=statecode eq 0 and cgi_refundtypeid eq " + refundid).then(
+                function success(result) {
+                    CGISweden.refund.refundtypeid_Onload_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
+
+        }
+        catch (e) {
+            alert("Fel i CGISweden.odata.GetRefundSettingOnLoad\n\n" + e.Message);
+        }
+    },
+
+    Getcgi_refundaccountNumber: function (cgi_refundaccountid, formContext) {
+        try {   
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_account,cgi_refundaccountid&$filter=cgi_refundaccountid eq" + cgi_refundaccountid).then(
+                function success(result) {
+                    CGISweden.refund.Getcgi_refundaccountNumber_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.Getcgi_refundaccountNumber\n\n" + e.Message);
         }
     },
 
-    GetDefaultMilageContributionFromSetting: function (nowdate, CallBackFunction, CompleteFunction) {
+    GetDefaultMilageContributionFromSetting: function (nowdate, formContext) {
         try {
-            var _options = "$select=cgi_milage_contribution&";
-            var _filter = "$filter=statecode/Value eq 0 and cgi_ValidFrom le datetime'" + nowdate + "' and (cgi_ValidTo ge datetime'" + nowdate + "' or cgi_ValidTo eq null)";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("cgi_setting", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetDefaultCustomerFromSetting\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_milage_contribution&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+                function success(result) {
+                    CGISweden.refund.setMilageContributionOnLoad_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetDefaultCustomerFromSetting\n\n" + e.Message);
         }
     },
     //MaxP 2016-04-20 ytterligare en kolumner som returneras i svaret. Ursprung, ärendetyp och flagga för manuella ärenden
-    GetCaseNumber: function (caseid, CallBackFunction, CompleteFunction) {
+    GetCaseNumber: function (caseid, formContext) {
         try {
-            //var _options = "$select=TicketNumber,cgi_UnregisterdTravelCard&";
-            var _options = "$select=TicketNumber,cgi_UnregisterdTravelCard,CaseOriginCode,CaseTypeCode,cgi_iscompleted,cgi_milagekilometers,cgi_milagelicenseplatenumber,cgi_milagefrom,cgi_milageto,cgi_taxifrom,cgi_taxito,cgi_taxiclaimedamount,cgi_compensationclaimfromrgol,cgi_RefundTypes,cgi_RefundReimbursementForm&";
-            var _filter = "$filter=IncidentId eq guid'" + caseid + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("Incident", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetCaseNumber\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=ticketnumber,cgi_unregisterdtravelcard,caseorigincode,casetypecode,cgi_iscompleted,cgi_milagekilometers,cgi_milagelicenseplatenumber,cgi_milagefrom,cgi_milageto,cgi_taxifrom,cgi_taxito,cgi_taxiclaimedamount,cgi_compensationclaimfromrgol,cgi_refundtypes,cgi_refundreimbursementform&$filter=incidentid eq" + caseid).then(
+                function success(result) {
+                    CGISweden.refund.getCaseNumber_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetCaseNumber\n\n" + e.Message);
@@ -280,16 +414,24 @@ CGISweden.odata =
     },
     //MaxP 2016-05-09 Ytterligare kolulmn cgi_emailaddress för att sätta leverans epostadress på beslut
     //MaxP 2016-05-11 Hämtar nytt fält (cgi_rgol_delivery_email) från ärende för att sätta leverans epostadress på beslut
-    GetEmailAddress: function (caseid, CallBackFunction, CompleteFunction) {
+    GetEmailAddress: function (caseid, formContext) {
         try {
-            var _options = "$select=cgi_customer_email,cgi_EmailAddress,cgi_rgol_delivery_email,cgi_iscompleted&";
-            var _filter = "$filter=IncidentId eq guid'" + caseid + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("Incident", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetEmailAddress\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_customer_email,cgi_emailaddress,cgi_rgol_delivery_email,cgi_iscompleted&$filter=incidentid eq" + caseid).then(
+                function success(result) {
+                    CGISweden.refund.getGetEmailAddress_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
+
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetEmailAddress\n\n" + e.Message);
         }
+
+        
     },
 
     GetTravelCardNumber: function (travelcardid, CallBackFunction, CompleteFunction) {
@@ -309,25 +451,53 @@ CGISweden.odata =
     },
 
     //
-    GetReimbursementForm: function (reimbursementid, CallBackFunction, CompleteFunction) {
+    GetReimbursementForm: function (reimbursementid, formContext) {
         try {
-            var _options = "$select=cgi_reimbursementformId,cgi_reimbursementname,cgi_ReInvoicing,cgi_UseAccount,cgi_useresponsible,cgi_UseProduct,cgi_loadcard,cgi_payment,cgi_payment_abroad,cgi_time_valid,cgi_attestation,cgi_giftcard,cgi_sendtostralfors,cgi_couponsms&";
-            var _filter = "$filter=statecode/Value eq 0 and cgi_reimbursementformId eq guid'" + reimbursementid + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("cgi_reimbursementform", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetReimbursementForm\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_reimbursementformid,cgi_reimbursementname,cgi_reinvoicing,cgi_useaccount,cgi_useresponsible,cgi_useproduct,cgi_loadcard,cgi_payment,cgi_payment_abroad,cgi_time_valid,cgi_attestation,cgi_giftcard,cgi_sendtostralfors,cgi_couponsms&$filter=statecode eq 0 and cgi_reimbursementformid eq" + reimbursementid).then(
+                function success(result) {
+                    CGISweden.refund.reimbursementformid_OnChange_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetReimbursementForm\n\n" + e.Message);
         }
     },
 
-    //Get bic and iban from incident. MaxP 2016-04-20
-    GetBicIban: function (caseid, CallBackFunction, CompleteFunction) {
+    GetReimbursementFormOnLoad: function (reimbursementid, formContext) {
         try {
-            var _options = "$select=cgi_bic,cgi_iban,cgi_iscompleted&";
-            var _filter = "$filter=IncidentId eq guid'" + caseid + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("Incident", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetBicIban\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_reimbursementformid,cgi_reimbursementname,cgi_reinvoicing,cgi_useaccount,cgi_useresponsible,cgi_useproduct,cgi_loadcard,cgi_payment,cgi_payment_abroad,cgi_time_valid,cgi_attestation,cgi_giftcard,cgi_sendtostralfors,cgi_couponsms&$filter=statecode eq 0 and cgi_reimbursementformid eq" + reimbursementid).then(
+                function success(result) {
+                    CGISweden.refund.reimbursementformid_OnLoad_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
+        }
+        catch (e) {
+            alert("Fel i CGISweden.odata.GetReimbursementFormOnLoad\n\n" + e.Message);
+        }
+    },
+
+    //Get bic and iban from incident. MaxP 2016-04-20
+    GetBicIban: function (caseid, formContext) {
+        try {
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_bic,cgi_iban,cgi_iscompleted&$filter=incidentid eq" + caseid).then(
+                function success(result) {
+                    CGISweden.refund.setBicIban_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
+
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetBicIban\n\n" + e.Message);
@@ -335,25 +505,37 @@ CGISweden.odata =
     },
 
     //Get social sec number from incident.
-    GetSocSecNumber: function (caseid, CallBackFunction, CompleteFunction) {
+    GetSocSecNumber: function (caseid, formContext) {
         try {
-            var _options = "$select=cgi_soc_sec_number,cgi_rgol_socialsecuritynumber,cgi_iscompleted&";
-            var _filter = "$filter=IncidentId eq guid'" + caseid + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("Incident", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetSocSecNumber\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_soc_sec_number,cgi_rgol_socialsecuritynumber,cgi_iscompleted&$filter=incidentid eq" + caseid).then(
+                function success(result) {
+                    CGISweden.refund.setSocSecOnLoad_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetGetSocSecNumber\n\n" + e.Message);
         }
+
+        
     },
 
     //Get mobilenumber from incident.
-    GetMobileNumber: function (caseid, CallBackFunction, CompleteFunction) {
+    GetMobileNumber: function (caseid, formContext) {
         try {
-            var _options = "$select=cgi_customer_telephonenumber,cgi_rgol_telephonenumber,cgi_iscompleted&";
-            var _filter = "$filter=IncidentId eq guid'" + caseid + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("Incident", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetMobileNumber\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_customer_telephonenumber,cgi_rgol_telephonenumber,cgi_iscompleted&$filter=incidentid eq" + caseid).then(
+                function success(result) {
+                    CGISweden.refund.setMobileNumber_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetMobileNumber\n\n" + e.Message);
@@ -361,12 +543,17 @@ CGISweden.odata =
     },
 
     //Get cgi_contact and cgi_account from incident.
-    GetContactAccount: function (caseid, CallBackFunction, CompleteFunction) {
+    GetContactAccount: function (caseid, formContext) {
         try {
-            var _options = "$select=cgi_Contactid,cgi_Accountid&";
-            var _filter = "$filter=IncidentId eq guid'" + caseid + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("Incident", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetContactAccount\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_contactid,cgi_accountid&$filter=incidentid eq" + caseid).then(
+                function success(result) {
+                    CGISweden.refund.GetContactAccount_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetContactAccount\n\n" + e.Message);
@@ -374,16 +561,39 @@ CGISweden.odata =
     },
 
     //Get RSID from user
-    GetRSID: function (userId, CallBackFunction, CompleteFunction) {
+    GetRSID: function (userId, formContext) {
         try {
-            var _options = "$select=cgi_RSID&";
-            var _filter = "$filter=SystemUserId eq guid'" + userId + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("SystemUser", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetRSID\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_rsid&$filter=systemuserid eq" + userId).then(
+                function success(result) {
+                    CGISweden.refund.ctrlAttest_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetRSIDe\n\n" + e.Message);
         }
+    },
+
+    GetSecRolesNameRefund: function (userRoleId, formContext) {
+        try {
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=name&$filter=roleid eq" + userRoleId).then(
+                function success(result) {
+                    CGISweden.refund.CheckUserRoleOnchange_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
+        }
+        catch (e) {
+            alert("Fel i CGISweden.odata.GetSecRolesName\n\n" + e.Message);
+        }
+        
     },
 
     // *** End Queries used for entity cgi_refund
@@ -402,12 +612,17 @@ CGISweden.odata =
         }
     },
 
-    GetDefaultUserFromSetting: function (nowdate, CallBackFunction, CompleteFunction) {
+    GetDefaultUserFromSetting: function (nowdate, formContext) {
         try {
-            var _options = "$select=cgi_userid&";
-            var _filter = "$filter=statecode/Value eq 0 and cgi_ValidFrom le datetime'" + nowdate + "' and (cgi_ValidTo ge datetime'" + nowdate + "' or cgi_ValidTo eq null)";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("cgi_setting", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetDefaultCustomerFromSetting\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("email", "?$select=cgi_userid&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+                function success(result) {
+                    CGISweden.email.SetSenderEmailNoReply_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetDefaultCustomerFromSetting\n\n" + e.Message);
@@ -421,15 +636,20 @@ CGISweden.odata =
 
     // *** Start Queries used for contact
 
-    GetSecRolesName: function (userRoleId, CallBackFunction, CompleteFunction) {
+    GetSecRolesNameContact: function (userRoleId, formContext) {
         try {
-            var _options = "$select=Name&";
-            var _filter = "$filter=RoleId eq guid'" + userRoleId + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("Role", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetSecRolesName\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("contact", "?$select=name&$filter=roleid eq" + userRoleId).then(
+                function success(result) {
+                    CGISweden.contact.checkIfUserHasRole_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
-            alert("Fel i CGISweden.odata.GetSecRolesName\n\n" + e.Message);
+            alert("Fel i CGISweden.odata.GetSecRolesNameContact\n\n" + e.Message);
         }
     },
 
@@ -437,13 +657,17 @@ CGISweden.odata =
 
     // *** Start Queries for entity filelinks
 
-    GetFilelinks: function (incidentId, CallBackFunction, CompleteFunction) {
+    GetFilelinks: function (incidentId, formContext) {
         try {
-            var _options = "$select=cgi_URL&";
-            var _filter = "$filter=cgi_IncidentId/Id eq guid'" + incidentId + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("cgi_filelink", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetFilelinks\n\n" + error.message); }, CompleteFunction);
-
+            Xrm.WebApi.retrieveMultipleRecords("email", "?$select=cgi_url&$filter=cgi_incidentid eq" + incidentId).then(
+                function success(result) {
+                    CGISweden.email.set_filelinks_onchange_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetFilelinks\n\n" + e.Message);
@@ -454,16 +678,22 @@ CGISweden.odata =
 
     // *** Start Queries for entity article
 
-    GetSecRolesNameArticle: function (userRoleId, CallBackFunction, CompleteFunction) {
+    GetSecRolesNameArticle: function (userRoleId, formContext) {
         try {
-            var _options = "$select=Name&";
-            var _filter = "$filter=RoleId eq guid'" + userRoleId + "'";
-            var _odata = _options + _filter;
-            SDK.REST.retrieveMultipleRecords("Role", _odata, CallBackFunction, function (error) { alert("SDK.REST.retrieveMultipleRecords.GetSecRolesNameArticle\n\n" + error.message); }, CompleteFunction);
+            Xrm.WebApi.retrieveMultipleRecords("kbarticle", "?$select=name&$filter=roleid eq" + userRoleId).then(
+                function success(result) {
+                    CGISweden.article.checkIfUserHasMarketingRole_callback(result, formContext);
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetSecRolesNameArticle\n\n" + e.Message);
         }
+        
     }
 
     // *** End Queries for entity article

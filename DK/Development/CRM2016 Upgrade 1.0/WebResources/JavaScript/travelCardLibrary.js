@@ -15,9 +15,10 @@ FORM_TYPE_BULKEDIT = 6;
 CGISweden.travelcard =
 {
 
-    onFormLoad: function () {
+    onFormLoad: function (executionContext) {
+        var formContext = executionContext.getFormContext();
 
-        switch (Xrm.Page.ui.getFormType()) {
+        switch (formContext.ui.getFormType()) {
             case FORM_TYPE_CREATE:
             case FORM_TYPE_UPDATE:
             case FORM_TYPE_READONLY:
@@ -32,9 +33,11 @@ CGISweden.travelcard =
 
     },
 
-    getTravelCardNumber: function () {
+    getTravelCardNumber: function (executionContext) {
         try {
-            var _cardNumber = CGISweden.formscriptfunctions.GetValue("cgi_travelcardnumber");
+            var formContext = executionContext.getFormContext();
+
+            var _cardNumber = CGISweden.formscriptfunctions.GetValue("cgi_travelcardnumber", formContext);
             if (_cardNumber != null) {
                 return _cardNumber;
             }

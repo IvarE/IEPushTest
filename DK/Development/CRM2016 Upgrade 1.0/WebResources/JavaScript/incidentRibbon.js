@@ -13,31 +13,32 @@ CGISweden.incident.Ribbon =
 
         },
 
-        resolveCase: function (caseid) {
+        resolveCase: function (caseid, primaryControl) {
             try {
-                if (CGISweden.formscriptfunctions.MandatoryPopulated() == false) {
+                var formContext = primaryControl;
+                if (CGISweden.formscriptfunctions.MandatoryPopulated(formContext) == false) {
                     alert("Ett eller flera obligatoriska fält saknar värde!");
                     return;
                 }
 
                 //START validera trafikinfo START
                 //fortsätt valideringen endast ifall användaren INTE explicit angivit att ingen trafikinformation ska registreras
-                if (Xrm.Page.getAttribute("cgi_notravelinfo").getValue() != 1) {
+                if (formContext.getAttribute("cgi_notravelinfo").getValue() != 1) {
 
                     //fortsätt med valideringen endast om trafikinfo saknas
-                    var noOfTI = CGISweden.odata.GetTravelInfoForCase(caseid);
+                    var noOfTI = CGISweden.odata.GetTravelInfoForCase(caseid, formContext);
                     if (noOfTI === 0) {
 
                         //fortsätt med valideringen endast ifall trafikinformation krävs för aktuell kategori
                         var IsTravelInformationRequired = false;
-                        var cgi_casdet_row1_cat3idLookup = Xrm.Page.getAttribute("cgi_casdet_row1_cat3id").getValue();
+                        var cgi_casdet_row1_cat3idLookup = formContext.getAttribute("cgi_casdet_row1_cat3id").getValue();
                         IsTravelInformationRequired = CGISweden.odata.IsTravelInformationRequired(cgi_casdet_row1_cat3idLookup[0].id);
                         if (IsTravelInformationRequired) {
 
                             //ge användaren en möljighet att avsluta ärendet ändå utan trafikinfo genom att klicka ok
                             if (confirm("Ärenden i kategori " + cgi_casdet_row1_cat3idLookup[0].name + " förväntas innehålla trafikinformation, vilken saknas i detta ärende. Vill du verkligen avsluta ärendet utan trafikinformation? ") == true) {
                                 //ange explicit att ärendet ska sparas utan trafikinfo. Annars kommer en plugin förhindra att det avslutas utan trafikinformation
-                                Xrm.Page.getAttribute("cgi_notravelinfo").setValue(1);
+                                formContext.getAttribute("cgi_notravelinfo").setValue(1);
                             }
                             else {
                                 //genom att avbryta exekveringen undviks att ärendet att avslutas
@@ -50,26 +51,26 @@ CGISweden.incident.Ribbon =
                 //END validera trafikinfo END
 
 
-                if (CGISweden.formscriptfunctions.GetDisabledField("cgi_casesolved") == true) {
+                if (CGISweden.formscriptfunctions.GetDisabledField("cgi_casesolved", formContext) == true) {
                     alert("Du saknar behörighet att avsluta detta ärende!");
                     return;
                 }
 
 
-                var _incidentstagecode = CGISweden.formscriptfunctions.GetValue("incidentstagecode");
+                var _incidentstagecode = CGISweden.formscriptfunctions.GetValue("incidentstagecode", formContext);
 
                 if (_incidentstagecode != 285050002) {
-                    Xrm.Page.getAttribute("incidentstagecode").setValue(285050004);
-                    CGISweden.formscriptfunctions.SetValue("cgi_case_reopen", "1");
-                    CGISweden.formscriptfunctions.SetValue("cgi_casesolved", "2");
-                    CGISweden.formscriptfunctions.SaveAndCloseEntity();
+                    formContext.getAttribute("incidentstagecode").setValue(285050004);
+                    CGISweden.formscriptfunctions.SetValue("cgi_case_reopen", "1", formContext);
+                    CGISweden.formscriptfunctions.SetValue("cgi_casesolved", "2", formContext);
+                    CGISweden.formscriptfunctions.SaveAndCloseEntity(formContext);
                 }
                 else {
                     if (confirm("Ärendet har status Obesvarad kund. Vill du avsluta ärendet ändå?") == true) {
-                        Xrm.Page.getAttribute("incidentstagecode").setValue(285050004);
-                        CGISweden.formscriptfunctions.SetValue("cgi_case_reopen", "1");
-                        CGISweden.formscriptfunctions.SetValue("cgi_casesolved", "2");
-                        CGISweden.formscriptfunctions.SaveAndCloseEntity();
+                        formContext.getAttribute("incidentstagecode").setValue(285050004);
+                        CGISweden.formscriptfunctions.SetValue("cgi_case_reopen", "1", formContext);
+                        CGISweden.formscriptfunctions.SetValue("cgi_casesolved", "2", formContext);
+                        CGISweden.formscriptfunctions.SaveAndCloseEntity(formContext);
                     }
                 }
 
@@ -80,15 +81,17 @@ CGISweden.incident.Ribbon =
             }
         },
 
-        sendAttentionEmail: function () {
+        sendAttentionEmail: function (primaryControl) {
             try {
+                var formContext = primaryControl;
+                var globalContext = Xrm.Utility.getGlobalContext();
 
-                if (CGISweden.incident.Ribbon.chechIfAnyFieldIsDirty() == true) {
+                if (CGISweden.incident.Ribbon.chechIfAnyFieldIsDirty(formContext) == true) {
                     alert("Spara ärendet innan mail skickas!");
                     return;
                 }
 
-                var parameters = CGISweden.incident.Ribbon.setArgs();
+                var parameters = CGISweden.incident.Ribbon.setArgs(formContext);
                 //type of email
                 parameters += "&cgi_attention=true";
 
@@ -96,7 +99,7 @@ CGISweden.incident.Ribbon =
                 var url = "/main.aspx?etn=email&pagetype=entityrecord";
                 var features = "location=no,menubar=no,status=no,toolbar=no,resizable=1";
 
-                url = Xrm.Page.context.prependOrgName(url);
+                url = globalContext.userSettings.prependOrgName(url);
                 url = url + "&extraqs=" + encodeURIComponent(parameters);
                 url = url + "&histKey=" + Math.floor(Math.random() * 10000) + "&newWindow=true"
                 window.open(url, "_blank", features, false);
@@ -107,22 +110,24 @@ CGISweden.incident.Ribbon =
             }
         },
 
-        sendRemitteceEmail: function () {
+        sendRemitteceEmail: function (primaryControl) {
             try {
+                var formContext = primaryControl;
+                var globalContext = Xrm.Utility.getGlobalContext();
 
-                if (CGISweden.incident.Ribbon.chechIfAnyFieldIsDirty() == true) {
+                if (CGISweden.incident.Ribbon.chechIfAnyFieldIsDirty(formContext) == true) {
                     alert("Spara ärendet innan mail skickas!");
                     return;
                 }
 
-                var parameters = CGISweden.incident.Ribbon.setArgs();
+                var parameters = CGISweden.incident.Ribbon.setArgs(formContext);
                 //type of email
                 parameters += "&cgi_remittance=true";
 
                 var url = "/main.aspx?etn=email&pagetype=entityrecord";
                 var features = "location=no,menubar=no,status=no,toolbar=no,resizable=1";
 
-                url = Xrm.Page.context.prependOrgName(url);
+                url = globalContext.userSettings.prependOrgName(url);
                 url = url + "&extraqs=" + encodeURIComponent(parameters);
                 url = url + "&histKey=" + Math.floor(Math.random() * 10000) + "&newWindow=true"
                 window.open(url, "_blank", features, false);
@@ -133,23 +138,25 @@ CGISweden.incident.Ribbon =
             }
         },
 
-        sendCustomermail: function () {
+        sendCustomermail: function (primaryControl) {
             try {
+                var formContext = primaryControl;
+                var globalContext = Xrm.Utility.getGlobalContext();
 
-                if (CGISweden.incident.Ribbon.chechIfAnyFieldIsDirty() == true) {
+                if (CGISweden.incident.Ribbon.chechIfAnyFieldIsDirty(formContext) == true) {
                     alert("Spara ärendet innan e-post kan skickas!");
                     return;
                 }
 
 
                 var argValues = "";
-                argValues += CGISweden.incident.Ribbon.setArgs();
-                if (CGISweden.formscriptfunctions.GetValue("cgi_accountid") == null && CGISweden.formscriptfunctions.GetValue("cgi_contactid") == null) {
+                argValues += CGISweden.incident.Ribbon.setArgs(formContext);
+                if (CGISweden.formscriptfunctions.GetValue("cgi_accountid", formContext) == null && CGISweden.formscriptfunctions.GetValue("cgi_contactid", formContext) == null) {
                     alert("Ingen kund är kopplad till ärendet!");
                     return;
                 }
                 else {
-                    argValues += "&" + CGISweden.incident.Ribbon.setArgsCustomer();
+                    argValues += "&" + CGISweden.incident.Ribbon.setArgsCustomer(formContext);
                     //type of email
                     argValues += "&cgi_button_customer=1";
                 }
@@ -160,22 +167,22 @@ CGISweden.incident.Ribbon =
 
                 debugger;
                 var hasRep = null;
-                var cgi_representativ = Xrm.Page.getAttribute("cgi_representativid").getValue();
+                var cgi_representativ = formContext.getAttribute("cgi_representativid").getValue();
 
-                hasRep = CGISweden.incident.Ribbon.hasRepresentativEmail(cgi_representativ);
+                hasRep = CGISweden.incident.Ribbon.hasRepresentativEmail(cgi_representativ, formContext); // sync request TODO
                 if (hasRep == false) {
                     return;
                 }
 
                 if (cgi_representativ == null)
-                    if (CGISweden.incident.Ribbon.hasContactEmail() == false)
+                    if (CGISweden.incident.Ribbon.hasContactEmail(formContext) == false)
                         return;
 
                 // Open the window.
                 var url = "/main.aspx?etn=email&pagetype=entityrecord";
                 var features = "location=no,menubar=no,status=no,toolbar=no,resizable=1";
 
-                url = Xrm.Page.context.prependOrgName(url);
+                url = globalContext.userSettings.prependOrgName(url);
                 url = url + "&extraqs=" + encodeURIComponent(argValues);
                 url = url + "&histKey=" + Math.floor(Math.random() * 10000) + "&newWindow=true"
                 window.open(url, "_blank", features, false);
@@ -185,9 +192,9 @@ CGISweden.incident.Ribbon =
             }
         },
 
-        hasContactEmail: function () {
+        hasContactEmail: function (formContext) {
 
-            var contact = Xrm.Page.getAttribute("cgi_contactid").getValue();
+            var contact = formContext.getAttribute("cgi_contactid").getValue();
             if (contact == null)
                 return;
 
@@ -230,8 +237,8 @@ CGISweden.incident.Ribbon =
             }
         },
 
-        hasRepresentativEmail: function (cgi_representativ) {
-
+        hasRepresentativEmail: function (cgi_representativ, formContext) {
+            var globalContext = Xrm.Utility.getGlobalContext();
 
 
             if (cgi_representativ == null)
@@ -239,10 +246,10 @@ CGISweden.incident.Ribbon =
 
             var serverUrl;
 
-            if (Xrm.Page.context.getClientUrl !== undefined) {
-                serverUrl = Xrm.Page.context.getClientUrl();
+            if (globalContext.getClientUrl !== undefined) {
+                serverUrl = globalContext.getClientUrl();
             } else {
-                serverUrl = Xrm.Page.context.getServerUrl();
+                serverUrl = globalContext.getServerUrl();
             }
 
             var cgi_representativId = cgi_representativ[0].id;
@@ -275,12 +282,13 @@ CGISweden.incident.Ribbon =
             }
         },
 
-        setParameters: function () {
+        setParameters: function (primaryControl) {
             var _returnValue = {};
             try {
+                var formContext = primaryControl;
                 //regardingobjectid
-                _returnValue["parameter_regardingid"] = CGISweden.formscriptfunctions.GetObjectID();
-                _returnValue["parameter_regardingname"] = CGISweden.formscriptfunctions.GetValue("title");
+                _returnValue["parameter_regardingid"] = CGISweden.formscriptfunctions.GetObjectID(formContext);
+                _returnValue["parameter_regardingname"] = CGISweden.formscriptfunctions.GetValue("title", formContext);
                 _returnValue["parameter_regardingtype"] = "incident";
             }
             catch (e) {
@@ -289,10 +297,10 @@ CGISweden.incident.Ribbon =
             return _returnValue;
         },
 
-        setArgs: function () {
+        setArgs: function (formContext) {
             try {
-                var _returnValue = "parameter_regardingid=" + CGISweden.formscriptfunctions.GetObjectID();
-                var title = CGISweden.formscriptfunctions.GetValue("title");
+                var _returnValue = "parameter_regardingid=" + CGISweden.formscriptfunctions.GetObjectID(formContext);
+                var title = CGISweden.formscriptfunctions.GetValue("title", formContext);
                 debugger;
                 title = title.replace("%", " procent");
                 _returnValue += "&parameter_regardingname=" + title;
@@ -305,27 +313,27 @@ CGISweden.incident.Ribbon =
             return _returnValue;
         },
 
-        setArgsCustomer: function () {
+        setArgsCustomer: function (formContext) {
             try {
                 var parameterValue = "";
-                var _cgi_accountid = CGISweden.formscriptfunctions.GetLookupid("cgi_accountid"),
-                    _representative = CGISweden.formscriptfunctions.GetLookupid("cgi_representativid");
+                var _cgi_accountid = CGISweden.formscriptfunctions.GetLookupid("cgi_accountid", formContext),
+                    _representative = CGISweden.formscriptfunctions.GetLookupid("cgi_representativid", formContext);
 
                 // If the customer as a representative all communication should go through the representative.
                 if (_representative != null) {
-                    parameterValue += "parameter_customerid=" + CGISweden.formscriptfunctions.GetLookupid("cgi_representativid");
-                    parameterValue += "&parameter_customername=" + CGISweden.formscriptfunctions.GetLookupName("cgi_representativid");
+                    parameterValue += "parameter_customerid=" + CGISweden.formscriptfunctions.GetLookupid("cgi_representativid", formContext);
+                    parameterValue += "&parameter_customername=" + CGISweden.formscriptfunctions.GetLookupName("cgi_representativid", formContext);
                     parameterValue += "&parameter_customertype=cgi_representative";
                 }
                 else if (_cgi_accountid != null) {
                     //cgi_accountid
-                    parameterValue += "parameter_customerid=" + CGISweden.formscriptfunctions.GetLookupid("cgi_accountid");
-                    parameterValue += "&parameter_customername=" + CGISweden.formscriptfunctions.GetLookupName("cgi_accountid");
+                    parameterValue += "parameter_customerid=" + CGISweden.formscriptfunctions.GetLookupid("cgi_accountid", formContext);
+                    parameterValue += "&parameter_customername=" + CGISweden.formscriptfunctions.GetLookupName("cgi_accountid", formContext);
                     parameterValue += "&parameter_customertype=account";
                 }
                 else {
-                    parameterValue += "parameter_customerid=" + CGISweden.formscriptfunctions.GetLookupid("cgi_contactid");
-                    parameterValue += "&parameter_customername=" + CGISweden.formscriptfunctions.GetLookupName("cgi_contactid");
+                    parameterValue += "parameter_customerid=" + CGISweden.formscriptfunctions.GetLookupid("cgi_contactid", formContext);
+                    parameterValue += "&parameter_customername=" + CGISweden.formscriptfunctions.GetLookupName("cgi_contactid", formContext);
                     parameterValue += "&parameter_customertype=contact";
                 }
 
@@ -337,26 +345,28 @@ CGISweden.incident.Ribbon =
             return param;
         },
 
-        setParametersCustomer: function (param) {
+        setParametersCustomer: function (param, primaryControl) {
             try {
-                var _cgi_accountid = CGISweden.formscriptfunctions.GetLookupid("cgi_accountid"),
-                    _representative = CGISweden.formscriptfunctions.GetLookupid("cgi_representativid");
+                var formContext = primaryControl;
+
+                var _cgi_accountid = CGISweden.formscriptfunctions.GetLookupid("cgi_accountid", formContext),
+                    _representative = CGISweden.formscriptfunctions.GetLookupid("cgi_representativid", formContext);
 
                 // If the customer as a representative all communication should go through the representative.
                 if (_representative != null) {
                     param["parameter_customerid"] = _representative;
-                    param["parameter_customername"] = CGISweden.formscriptfunctions.GetLookupName("cgi_representativid");
+                    param["parameter_customername"] = CGISweden.formscriptfunctions.GetLookupName("cgi_representativid", formContext);
                     param["parameter_customertype"] = "cgi_representative";
                 }
                 else if (_cgi_accountid != null) {
                     //cgi_accountid
-                    param["parameter_customerid"] = CGISweden.formscriptfunctions.GetLookupid("cgi_accountid");
-                    param["parameter_customername"] = CGISweden.formscriptfunctions.GetLookupName("cgi_accountid");
+                    param["parameter_customerid"] = CGISweden.formscriptfunctions.GetLookupid("cgi_accountid", formContext);
+                    param["parameter_customername"] = CGISweden.formscriptfunctions.GetLookupName("cgi_accountid", formContext);
                     param["parameter_customertype"] = "account";
                 }
                 else {
-                    param["parameter_customerid"] = CGISweden.formscriptfunctions.GetLookupid("cgi_contactid");
-                    param["parameter_customername"] = CGISweden.formscriptfunctions.GetLookupName("cgi_contactid");
+                    param["parameter_customerid"] = CGISweden.formscriptfunctions.GetLookupid("cgi_contactid", formContext);
+                    param["parameter_customername"] = CGISweden.formscriptfunctions.GetLookupName("cgi_contactid", formContext);
                     param["parameter_customertype"] = "contact";
                 }
             }
@@ -370,7 +380,9 @@ CGISweden.incident.Ribbon =
             alert("Namnet på kön " + queueName);
         },
 
-        validateEmail: function () {
+        validateEmail: function (primaryControl) {
+            var formContext = primaryControl;
+
             var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
 
             var email = "";
@@ -378,7 +390,7 @@ CGISweden.incident.Ribbon =
             var cgi_representativid = "";
 
             try {
-                email = CGISweden.formscriptfunctions.GetValue("cgi_customer_email");
+                email = CGISweden.formscriptfunctions.GetValue("cgi_customer_email", formContext);
             }
             catch (e) {
                 alert("Fel i CGISweden.incidentRibbon.validateEmail:1\n\n" + e.Message);
@@ -386,7 +398,7 @@ CGISweden.incident.Ribbon =
             }
 
             try {
-                cgi_representativid = CGISweden.formscriptfunctions.GetLookupid("cgi_representativid");
+                cgi_representativid = CGISweden.formscriptfunctions.GetLookupid("cgi_representativid", formContext);
             }
             catch (e) {
 
@@ -437,19 +449,19 @@ CGISweden.incident.Ribbon =
             return true;
         },
 
-        openBombApp: function () {
+        openBombApp: function (primaryControl) {
             try {
+                var formContext = primaryControl;
+
                 var _currentdate = CGISweden.formscriptfunctions.GetDateTime();
-                CGISweden.odata.GetBOMBUrlFromSetting(_currentdate, CGISweden.incident.Ribbon.openBombApp_callback, CGISweden.incident.Ribbon.openBombApp_complete);
+                CGISweden.odata.GetBOMBUrlFromSetting(_currentdate, formContext);
             }
             catch (e) {
                 alert("Fel i CGISweden.incidentRibbon.openBombApp\n\n" + e.Message);
             }
         },
 
-        openBombApp_complete: function () { },
-
-        openBombApp_callback: function (result) {
+        openBombApp_callback: function (result, formContext) {
             try {
                 if (result == null || result[0] == null) {
                     alert("Det finns ingen url definierad för BOMB!");
@@ -457,7 +469,7 @@ CGISweden.incident.Ribbon =
                 else {
                     var _features = "status=1,toolbar=1,location=1,menubar=1,directories=1,resizable=1,scrollbars=1";
                     var _url = result[0].cgi_BOMBUrl;
-                    var _param = CGISweden.formscriptfunctions.GetValue("cgi_bombmobilenumber")
+                    var _param = CGISweden.formscriptfunctions.GetValue("cgi_bombmobilenumber", formContext)
                     if (_param == null) {
                         alert("Inget mobilnummer är angivet!");
                         return;
@@ -473,9 +485,9 @@ CGISweden.incident.Ribbon =
         },
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        chechIfAnyFieldIsDirty: function () {
+        chechIfAnyFieldIsDirty: function (formContext) {
             try {
-                return Xrm.Page.data.entity.getIsDirty();
+                return formContext.data.entity.getIsDirty();
             }
             catch (e) {
                 alert("Fel i CGISweden.incidentRibbon.chechIfAnyFieldIsDirty\n\n" + e.Message);

@@ -15,9 +15,10 @@ FORM_TYPE_BULKEDIT = 6;
 CGISweden.representativ =
 {
 
-    onFormLoad: function () {
+    onFormLoad: function (executionContext) {
+        var formContext = executionContext.getFormContext();
 
-        switch (Xrm.Page.ui.getFormType()) {
+        switch (formContext.ui.getFormType()) {
             case FORM_TYPE_CREATE:
             case FORM_TYPE_UPDATE:
             case FORM_TYPE_READONLY:
@@ -32,30 +33,34 @@ CGISweden.representativ =
 
     },
 
-    firstName_OnChange: function () {
+    firstName_OnChange: function (executionContext) {
         try {
-            var _name = CGISweden.representativ.getFirstAndLastName();
-            CGISweden.formscriptfunctions.SetValue("cgi_name", _name);
+            var formContext = executionContext.getFormContext();
+
+            var _name = CGISweden.representativ.getFirstAndLastName(formContext);
+            CGISweden.formscriptfunctions.SetValue("cgi_name", _name, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.incident.firstName_OnChange\n\n" + e.Message);
         }
     },
 
-    lastName_OnChange: function () {
+    lastName_OnChange: function (executionContext) {
         try {
-            var _name = CGISweden.representativ.getFirstAndLastName();
-            CGISweden.formscriptfunctions.SetValue("cgi_name", _name);
+            var formContext = executionContext.getFormContext();
+
+            var _name = CGISweden.representativ.getFirstAndLastName(formContext);
+            CGISweden.formscriptfunctions.SetValue("cgi_name", _name, formContext);
         } catch (e) {
             alert("Fel i CGISweden.incident.lastName_OnChange\n\n" + e.Message);
         }
     },
 
-    getFirstAndLastName: function () {
+    getFirstAndLastName: function (formContext) {
         var _name = "";
         try {
-            var _firstName = CGISweden.formscriptfunctions.GetValue("cgi_firstname");
-            var _lastName = CGISweden.formscriptfunctions.GetValue("cgi_lastname");
+            var _firstName = CGISweden.formscriptfunctions.GetValue("cgi_firstname", formContext);
+            var _lastName = CGISweden.formscriptfunctions.GetValue("cgi_lastname", formContext);
 
             if (_firstName != null)
                 _name = _firstName;
@@ -70,10 +75,12 @@ CGISweden.representativ =
     },
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    format_phonenumber: function (context) {
+    format_phonenumber: function (executionContext) {
         try {
-            var phoneNumberStr = context.getEventSource();
-            var control = Xrm.Page.getControl(phoneNumberStr.getName());
+            var formContext = executionContext.getFormContext();
+
+            var phoneNumberStr = formContext.getEventSource();
+            var control = formContext.getControl(phoneNumberStr.getName());
 
             // Verify that the field is valid
             if (typeof (phoneNumberStr) != "undefined" && phoneNumberStr != null) {

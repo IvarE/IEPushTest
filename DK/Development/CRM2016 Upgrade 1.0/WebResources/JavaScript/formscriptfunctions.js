@@ -12,9 +12,9 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Add a onchange function to a field. 
-    SetOnChangeFunction: function (name, functionname) {
+    SetOnChangeFunction: function (name, functionname, formContext) {
         try {
-            Xrm.Page.data.entity.attributes.get(name).addOnChange(functionname);
+            formContext.data.entity.attributes.get(name).addOnChange(functionname);
         }
         catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.SetOnChangeFunction\n\n" + e.Message);
@@ -23,9 +23,9 @@ CGISweden.formscriptfunctions =
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Save entity
-    SaveEntity: function () {
+    SaveEntity: function (formContext) {
         try {
-            Xrm.Page.data.entity.save();
+            formContext.data.entity.save();
         }
         catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.SaveEntity\n\n" + e.Message);
@@ -34,9 +34,9 @@ CGISweden.formscriptfunctions =
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Save and close entity
-    SaveAndCloseEntity: function () {
+    SaveAndCloseEntity: function (formContext) {
         try {
-            Xrm.Page.data.entity.save("saveandclose");
+            formContext.data.entity.save("saveandclose");
         }
         catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.SaveAndCloseEntity\n\n" + e.Message);
@@ -45,9 +45,9 @@ CGISweden.formscriptfunctions =
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Get objectid of entity
-    GetObjectID: function () {
+    GetObjectID: function (formContext) {
         try {
-            return Xrm.Page.data.entity.getId();
+            return formContext.data.entity.getId();
         }
         catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.GetObjectID\n\n" + e.Message);
@@ -56,10 +56,10 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Get formtype.
-    GetFormType: function () {
+    GetFormType: function (formContext) {
         var _returnvalue = null;
         try {
-            _returnvalue = Xrm.Page.ui.getFormType();
+            _returnvalue = formContext.ui.getFormType();
         }
         catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.GetFormType\n\n" + e.Message);
@@ -69,9 +69,9 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Hide or display tab.
-    HideOrDisplayTab: function (name, visible) {
+    HideOrDisplayTab: function (name, visible, formContext) {
         try {
-            Xrm.Page.ui.tabs.get(name).setVisible(visible);
+            formContext.ui.tabs.get(name).setVisible(visible);
         }
         catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.HideOrDisplayTab\n\n" + e.Message);
@@ -80,9 +80,9 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //expanded or collapsed
-    SetDisplayState: function (name, state) {
+    SetDisplayState: function (name, state, formContext) {
         try {
-            Xrm.Page.ui.tabs.get(name).setDisplayState(state);
+            formContext.ui.tabs.get(name).setDisplayState(state);
         }
         catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.SetDisplayState\n\n" + e.Message);
@@ -91,9 +91,9 @@ CGISweden.formscriptfunctions =
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Hide or display section.
-    HideOrDisplaySection: function (tabname, sectionname, visible) {
+    HideOrDisplaySection: function (tabname, sectionname, visible, formContext) {
         try {
-            Xrm.Page.ui.tabs.get(tabname).sections.get(sectionname).setVisible(visible)
+            formContext.ui.tabs.get(tabname).sections.get(sectionname).setVisible(visible)
         }
         catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.HideOrDisplaySection\n\n" + e.Message);
@@ -102,9 +102,9 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Hide or display field.
-    HideOrDisplayField: function (name, visible) {
+    HideOrDisplayField: function (name, visible, formContext) {
         try {
-            Xrm.Page.getControl(name).setVisible(visible);
+            formContext.getControl(name).setVisible(visible);
         }
         catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.HideOrDisplayField\n\n" + e.Message + name);
@@ -113,9 +113,9 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set value to a field
-    SetValue: function (name, value) {
+    SetValue: function (name, value, formContext) {
         try {
-            Xrm.Page.data.entity.attributes.get(name).setValue(value);
+            formContext.data.entity.attributes.get(name).setValue(value);
         }
         catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.SetValue\n\n" + e.Message);
@@ -124,10 +124,10 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Get value from a field
-    GetValue: function (name) {
+    GetValue: function (name, formContext) {
         var _returnvalue = null;
         try {
-            _returnvalue = Xrm.Page.data.entity.attributes.get(name).getValue();
+            _returnvalue = formContext.data.entity.attributes.get(name).getValue();
         }
         catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.GetValue\n\n" + e.Message);
@@ -137,9 +137,9 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set field enabled or disabled.
-    SetState: function (name, state) {
+    SetState: function (name, state, formContext) {
         try {
-            var _field = Xrm.Page.ui.controls.get(name);
+            var _field = formContext.ui.controls.get(name);
             _field.setDisabled(state);
         }
         catch (e) {
@@ -147,9 +147,9 @@ CGISweden.formscriptfunctions =
         }
     },
 
-    SetSubmitModeAlways: function (name) {
+    SetSubmitModeAlways: function (name, formContext) {
         try {
-            Xrm.Page.getAttribute(name).setSubmitMode("always");
+            formContext.getAttribute(name).setSubmitMode("always");
         } catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.SetSubmitModeAlways\n\n" + e.Message);
         }
@@ -157,10 +157,10 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Get control state. Enabled or disabled
-    GetState: function (name) {
+    GetState: function (name, formContext) {
         var _returnvalue = null;
         try {
-            _returnvalue = Xrm.Page.getControl(name).getDisabled();
+            _returnvalue = formContext.getControl(name).getDisabled();
         } catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.GetState\n\n" + e.Message);
         }
@@ -171,9 +171,9 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // none, required, recommended
-    SetRequiredLevel: function (name, state) {
+    SetRequiredLevel: function (name, state, formContext) {
         try {
-            Xrm.Page.getAttribute(name).setRequiredLevel(state);
+            formContext.getAttribute(name).setRequiredLevel(state);
         }
         catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.SetRequiredLevel\n\n" + e.Message + name);
@@ -183,9 +183,9 @@ CGISweden.formscriptfunctions =
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set submitmode for field
     // always, never, dirty
-    SetSubmitMode: function (name, state) {
+    SetSubmitMode: function (name, state, formContext) {
         try {
-            Xrm.Page.data.entity.attributes.get(name).setSubmitMode(state);
+            formContext.data.entity.attributes.get(name).setSubmitMode(state);
         }
         catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.SetSubmitMode\n\n" + e.Message);
@@ -194,9 +194,9 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set value to lookupfield.
-    SetLookup: function (attributeName, entityType, id, name) {
+    SetLookup: function (attributeName, entityType, id, name, formContext) {
         try {
-            var _attribute = Xrm.Page.getAttribute(attributeName);
+            var _attribute = formContext.getAttribute(attributeName);
             var _item = new Object();
             _item.id = id;
             _item.name = name;
@@ -212,11 +212,11 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Get id value from lookupfield.
-    GetLookupid: function (name) {
+    GetLookupid: function (name, formContext) {
         var _returnvalue = null;
         try {
             var _id = null;
-            var _attribute = Xrm.Page.getAttribute(name);
+            var _attribute = formContext.getAttribute(name);
             var _lookup = _attribute.getValue();
             if (_lookup != null)
                 _id = _lookup[0].id;
@@ -230,11 +230,11 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Get name value from lookupfield.
-    GetLookupName: function (name) {
+    GetLookupName: function (name, formContext) {
         var _returnvalue = null;
         try {
             var _idName = null;
-            var _attribute = Xrm.Page.getAttribute(name);
+            var _attribute = formContext.getAttribute(name);
             var _lookup = _attribute.getValue();
             if (_lookup != null)
                 _idName = _lookup[0].name;
@@ -248,9 +248,9 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set focus on field.
-    SetFocusOnField: function (name) {
+    SetFocusOnField: function (name, formContext) {
         try {
-            Xrm.Page.ui.controls.get(name).setFocus();
+            formContext.ui.controls.get(name).setFocus();
         }
         catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.SetFocusOnField\n\n" + e.Message);
@@ -259,9 +259,9 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Check if field is disabled.
-    GetDisabledField: function (arg) {
+    GetDisabledField: function (arg, formContext) {
         try {
-            return Xrm.Page.getControl(arg).getDisabled();
+            return formContext.getControl(arg).getDisabled();
         } catch (e) {
             alert("Fel i CGISweden.formscriptfunctions.GetDisabledField\n\n" + e.Message);
         }
@@ -269,10 +269,10 @@ CGISweden.formscriptfunctions =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Check if mandatory fields is not empty
-    MandatoryPopulated: function () {
+    MandatoryPopulated: function (formContext) {
         populated = true;
 
-        Xrm.Page.getAttribute(function (attribute, index) {
+        formContext.getAttribute(function (attribute, index) {
             if (attribute.getRequiredLevel() == "required") {
                 if (attribute.getValue() === null) {
                     populated = false;
