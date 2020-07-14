@@ -16,17 +16,18 @@ FORM_TYPE_BULKEDIT = 6;
 CGISweden.article =
 {
 
-    onFormLoad: function () {
+    onFormLoad: function (executionContext) {
         try {
+            var formContext = executionContext.getFormContext();
 
             CGISweden.article.setPublishAllowed(0);
 
-            switch (Xrm.Page.ui.getFormType()) {
+            switch (formContext.ui.getFormType()) {
                 case FORM_TYPE_CREATE:
-                    CGISweden.article.checkIfUserHasMarketingRole();
+                    CGISweden.article.checkIfUserHasMarketingRole(formContext);
                     break;
                 case FORM_TYPE_UPDATE:
-                    CGISweden.article.checkIfUserHasMarketingRole();
+                    CGISweden.article.checkIfUserHasMarketingRole(formContext);
                     break;
                 case FORM_TYPE_READONLY:
                 case FORM_TYPE_DISABLED:
@@ -46,12 +47,14 @@ CGISweden.article =
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    checkIfUserHasMarketingRole: function () {
+    checkIfUserHasMarketingRole: function (formContext) {
         try {
-            var currentUserRoles = Xrm.Page.context.getUserRoles();
+            var globalContext = Xrm.Utility.getGlobalContext();
+
+            var currentUserRoles = globalContext.userSettings.securityRoles();
             for (var i = 0; i < currentUserRoles.length; i++) {
                 var _roleId = currentUserRoles[i];
-                CGISweden.odata.GetSecRolesNameArticle(_roleId, CGISweden.article.checkIfUserHasMarketingRole_callback, CGISweden.article.checkIfUserHasMarketingRole_complete);
+                CGISweden.odata.GetSecRolesNameArticle(_roleId, formContext);
             }
         }
         catch (e) {
@@ -59,10 +62,7 @@ CGISweden.article =
         }
     },
 
-    checkIfUserHasMarketingRole_complete: function () {
-    },
-
-    checkIfUserHasMarketingRole_callback: function (result) {
+    checkIfUserHasMarketingRole_callback: function (result, formContext) {
         try {
             if (result == null) {
                 alert("Inga säkerhetsroller definierade!");
@@ -73,7 +73,7 @@ CGISweden.article =
 
                 //if has role eq _marketingRoleName, user can change field cgi_auth_approved
                 if (_roleName == _marketingRoleName) {
-                    CGISweden.article.setPublishAllowed(1);
+                    CGISweden.article.setPublishAllowed(1, formContext);
                 }
             }
         }
@@ -82,14 +82,14 @@ CGISweden.article =
         }
     },
 
-    setPublishAllowed: function (publishallowed) {
+    setPublishAllowed: function (publishallowed, formContext) {
         try {
             var _setstate = true;
 
             if (publishallowed == 1)
                 _setstate = false;
 
-            CGISweden.formscriptfunctions.SetState("cgi_appoval", _setstate);
+            CGISweden.formscriptfunctions.SetState("cgi_appoval", _setstate, formContext);
 
         }
         catch (e) {
@@ -97,18 +97,20 @@ CGISweden.article =
         }
     },
 
-    cgi_publishonweb_OnChange: function () {
+    cgi_publishonweb_OnChange: function (executionContext) {
         try {
-            var _cgi_publishonweb = CGISweden.formscriptfunctions.GetValue("cgi_publishonweb");
+            var formContext = executionContext.getFormContext();
+
+            var _cgi_publishonweb = CGISweden.formscriptfunctions.GetValue("cgi_publishonweb", formContext);
 
             if (_cgi_publishonweb == true) {
-                CGISweden.formscriptfunctions.SetValue("cgi_appoval", 285050001);
-                CGISweden.formscriptfunctions.SetSubmitModeAlways("cgi_appoval");
+                CGISweden.formscriptfunctions.SetValue("cgi_appoval", 285050001, formContext);
+                CGISweden.formscriptfunctions.SetSubmitModeAlways("cgi_appoval", formContext);
             }
 
             if (_cgi_publishonweb == false) {
-                CGISweden.formscriptfunctions.SetValue("cgi_appoval", 285050002);
-                CGISweden.formscriptfunctions.SetSubmitModeAlways("cgi_appoval");
+                CGISweden.formscriptfunctions.SetValue("cgi_appoval", 285050002, formContext);
+                CGISweden.formscriptfunctions.SetSubmitModeAlways("cgi_appoval", formContext);
             }
         }
         catch (e) {

@@ -23,16 +23,16 @@ CGISweden.account =
 {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    onFormLoad: function () {
+    onFormLoad: function (executionContext) {
         try {
+            var formContext = executionContext.getFormContext();
 
-
-            switch (Xrm.Page.ui.getFormType()) {
+            switch (formContext.ui.getFormType()) {
                 case FORM_TYPE_CREATE:
                     break;
                 case FORM_TYPE_UPDATE:
-                    CGISweden.account.checkIfUserHasSecRole();
-                    CGISweden.account.timerfunction_eHandel();
+                    CGISweden.account.checkIfUserHasSecRole(formContext);
+                    CGISweden.account.timerfunction_eHandel(formContext);
                     break;
                 case FORM_TYPE_READONLY:
                 case FORM_TYPE_DISABLED:
@@ -50,12 +50,14 @@ CGISweden.account =
     },
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    checkIfUserHasSecRole: function () {
+    checkIfUserHasSecRole: function (formContext) {
         try {
-            var currentUserRoles = Xrm.Page.context.getUserRoles();
+            var globalContext = Xrm.Utility.getGlobalContext();
+
+            var currentUserRoles = globalContext.userSettings.securityRoles();
             for (var i = 0; i < currentUserRoles.length; i++) {
                 var userRoleId = currentUserRoles[i];
-                CGISweden.odata.GetSecRolesName(userRoleId, CGISweden.account.checkIfUserHasRole_callback, CGISweden.account.checkIfUserHasRole_complete);
+                CGISweden.odata.GetSecRolesNameAccount(userRoleId, formContext);
             }
         }
         catch (e) {
@@ -64,12 +66,7 @@ CGISweden.account =
     },
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    checkIfUserHasRole_complete: function () {
-    },
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    checkIfUserHasRole_callback: function (result) {
+    checkIfUserHasRole_callback: function (result, formContext) {
         try {
             if (result == null) {
                 alert("Inga säkerhetsroller definierade!");
@@ -78,11 +75,11 @@ CGISweden.account =
 
                 var _roleName = result[0].Name;
 
-                var emailField = Xrm.Page.getAttribute("emailaddress1").getValue();
+                var emailField = formContext.getAttribute("emailaddress1").getValue();
 
                 if (emailField && emailField.Length !== 0) {
                     if (_roleName.indexOf("Handläggare") > 0) {
-                        CGISweden.formscriptfunctions.SetState("emailaddress1", "true"); //The field should only be editable until it has content
+                        CGISweden.formscriptfunctions.SetState("emailaddress1", "true", formContext); //The field should only be editable until it has content
                     }
                 }
 
@@ -95,11 +92,11 @@ CGISweden.account =
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    timerfunction_eHandel: function () {
+    timerfunction_eHandel: function (formContext) {
         try {
             var arg = 'WebResource_eHandelOrders';
-            var obj = Xrm.Page.getControl(arg).getObject();
-            var entid = Xrm.Page.data.entity.getId();
+            var obj = formContext.getControl(arg).getObject();
+            var entid = formContext.data.entity.getId();
 
             try {
                 obj.contentWindow.SetID(entid);
@@ -114,10 +111,12 @@ CGISweden.account =
     },
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    format_phonenumber: function (context) {
+    format_phonenumber: function (executionContext) {
         try {
-            var phoneNumberStr = context.getEventSource();
-            var control = Xrm.Page.getControl(phoneNumberStr.getName());
+            var formContext = executionContext.getFormContext();
+
+            var phoneNumberStr = formContext.getEventSource();
+            var control = formContext.getControl(phoneNumberStr.getName());
 
             // Verify that the field is valid
             if (typeof (phoneNumberStr) != "undefined" && phoneNumberStr != null) {

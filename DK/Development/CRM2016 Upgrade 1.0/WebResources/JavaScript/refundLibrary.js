@@ -24,25 +24,26 @@ FORM_TYPE_BULKEDIT = 6;
 
 CGISweden.refund =
 {
-    onFormLoad: function () {
+    onFormLoad: function (executionContext) {
+        var formContext = executionContext.getFormContext();
 
-        if (Xrm.Page.ui.getFormType() == 0) {
+        if (formContext.ui.getFormType() == 0) {
             setTimeout(CGISweden.refund.onFormLoad(), 1000);
             return;
         }
 
-        switch (Xrm.Page.ui.getFormType()) {
+        switch (formContext.ui.getFormType()) {
             case FORM_TYPE_CREATE:
 
-                CGISweden.refund.getCaseNumber();
-                CGISweden.refund.setDefaultValues();
-                CGISweden.refund.ctrlAttest();
-                CGISweden.refund.ctrlAmountLimit();
+                CGISweden.refund.getCaseNumber(formContext);
+                CGISweden.refund.setDefaultValues(formContext);
+                CGISweden.refund.ctrlAttest(formContext);
+                CGISweden.refund.ctrlAmountLimit(formContext);
 
                 break;
             case FORM_TYPE_UPDATE:
-                CGISweden.refund.refund_Onload();
-                //CGISweden.refund.reimbursementformid_OnLoad();
+                CGISweden.refund.refund_Onload(formContext);
+                //CGISweden.refund.reimbursementformid_OnLoad(formContext);
                 //CGISweden.refund.ctrlAttest();
                 break;
             case FORM_TYPE_READONLY:
@@ -54,25 +55,26 @@ CGISweden.refund =
                 alert("Form type error!");
                 break;
         }
-        CGISweden.refund.Getcgi_refundtypeproductnotrequiredidSetting();
+        CGISweden.refund.Getcgi_refundtypeproductnotrequiredidSetting(formContext);
     },
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    onsave: function (context) {
+    onsave: function (executionContext) {
+        var formContext = executionContext.getFormContext();
 
-        var eventArgs = context.getEventArgs();
+        var eventArgs = formContext.getEventArgs();
 
-        var _auth_approved = Xrm.Page.getAttribute("cgi_auth_approved").getValue();
-        var _attest_req = Xrm.Page.getAttribute("cgi_attest_req").getValue();
+        var _auth_approved = formContext.getAttribute("cgi_auth_approved").getValue();
+        var _attest_req = formContext.getAttribute("cgi_attest_req").getValue();
 
         if (_auth_approved == false && _attest_req == "1") {
             alert("Ni är inte behörig att göra utbetalningar till bankkonto.");
             eventArgs.preventDefault();
         }
 
-        var _amount_above_limit = Xrm.Page.getAttribute("cgi_amount_above_limit").getValue();
-        var _amount = Xrm.Page.getAttribute("cgi_amount").getValue();
-        var _amount_limit_warn = Xrm.Page.getAttribute("cgi_amount_limit_warn").getValue();
+        var _amount_above_limit = formContext.getAttribute("cgi_amount_above_limit").getValue();
+        var _amount = formContext.getAttribute("cgi_amount").getValue();
+        var _amount_limit_warn = formContext.getAttribute("cgi_amount_limit_warn").getValue();
 
         if (_amount > _amount_above_limit) {
             alert("Beloppet du försöker betala ut överstiger maxbeloppet: " + _amount_above_limit + " kr.");
@@ -84,7 +86,7 @@ CGISweden.refund =
             }
         }
 
-        var _check_cust = Xrm.Page.getAttribute("cgi_mandcust").getValue();
+        var _check_cust = formContext.getAttribute("cgi_mandcust").getValue();
 
         if (_check_cust == 1) {
             alert("Ni kan inte skapa ett beslut utan att ange privatkund eller organisationskund.");
@@ -92,10 +94,10 @@ CGISweden.refund =
         }
 
         //MaxP 2016-06-07 Kontrollerar om personnummer är angivet
-        var _socialsecuritynumber = Xrm.Page.getAttribute("cgi_soc_sec_number").getValue();
+        var _socialsecuritynumber = formContext.getAttribute("cgi_soc_sec_number").getValue();
 
         if (_show_soc_sec != 0 && _socialsecuritynumber != null && _socialsecuritynumber != "") {
-            var _check_soc = CGISweden.refund.SocSecNoOnChange();
+            var _check_soc = CGISweden.refund.SocSecNoOnChange(formContext);
             if (_check_soc == false) {
                 eventArgs.preventDefault();
             }
@@ -103,11 +105,11 @@ CGISweden.refund =
     },
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    getContactAccount: function () {
+    getContactAccount: function (formContext) {
         try {
-            var _caseid = CGISweden.formscriptfunctions.GetLookupid("cgi_caseid");
+            var _caseid = CGISweden.formscriptfunctions.GetLookupid("cgi_caseid", formContext);
             if (_caseid != null) {
-                CGISweden.odata.GetContactAccount(_caseid, CGISweden.refund.GetContactAccount_callback, CGISweden.refund.GetContactAccount_complete);
+                CGISweden.odata.GetContactAccount(_caseid, formContext);
             }
         }
         catch (e) {
@@ -115,22 +117,20 @@ CGISweden.refund =
         }
     },
 
-    GetContactAccount_complete: function () { },
-
-    GetContactAccount_callback: function (result) {
+    GetContactAccount_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Du kan inte spara beslut utan kopplling till ärende!");
             }
             else {
                 var _cgi_app_value = "0";
-                Xrm.Page.getAttribute("cgi_mandcust").setValue(_cgi_app_value);
+                formContext.getAttribute("cgi_mandcust").setValue(_cgi_app_value);
                 var _cgi_contact = result[0].cgi_Contactid.Id;
                 var _cgi_account = result[0].cgi_Accountid.Id;
 
                 if (_cgi_account == null && _cgi_contact == null) {
                     _cgi_app_value = "1";
-                    Xrm.Page.getAttribute("cgi_mandcust").setValue(_cgi_app_value);
+                    formContext.getAttribute("cgi_mandcust").setValue(_cgi_app_value);
                     alert("Ni kan inte skapa ett beslut utan att ange privatkund eller organisationskund.");
                 }
             }
@@ -141,19 +141,19 @@ CGISweden.refund =
     },
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ctrlAttest: function () {
+    ctrlAttest: function (formContext) {
         try {
-            var userId = Xrm.Page.context.getUserId();
-            CGISweden.odata.GetRSID(userId, CGISweden.refund.ctrlAttest_callback, CGISweden.refund.ctrlAttest_complete);
+           var globalContext = Xrm.Utility.getGlobalContext();
+
+            var userId = globalContext.userSettings.userId();
+            CGISweden.odata.GetRSID(userId, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.ctrlAttest\n\n" + e.Message);
         }
     },
 
-    ctrlAttest_complete: function () { },
-
-    ctrlAttest_callback: function (result) {
+    ctrlAttest_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Användaren hittas inte!");
@@ -161,10 +161,10 @@ CGISweden.refund =
             else {
                 var _cgi_RSID = result[0].cgi_RSID;
                 if (_cgi_RSID == null) {
-                    Xrm.Page.getAttribute("cgi_auth_approved").setValue(false);
+                    formContext.getAttribute("cgi_auth_approved").setValue(false);
                 }
                 else {
-                    Xrm.Page.getAttribute("cgi_auth_approved").setValue(true);
+                    formContext.getAttribute("cgi_auth_approved").setValue(true);
                 }
             }
         }
@@ -173,19 +173,17 @@ CGISweden.refund =
         }
     },
 
-    ctrlAmountLimit: function () {
+    ctrlAmountLimit: function (formContext) {
         try {
             var _currentdate = CGISweden.formscriptfunctions.GetDateTime();
-            CGISweden.odata.GetAmountLimitFromSetting(_currentdate, CGISweden.refund.ctrlAmountLimit_callback, CGISweden.refund.ctrlAmountLimit_complete);
+            CGISweden.odata.GetAmountLimitFromSetting(_currentdate, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.ctrlAmountLimit\n\n" + e.Message);
         }
     },
-
-    ctrlAmountLimit_complete: function () { },
-
-    ctrlAmountLimit_callback: function (result) {
+    
+    ctrlAmountLimit_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Inställning hittas inte!");
@@ -197,8 +195,8 @@ CGISweden.refund =
                 var __cgi_amount_limit = parseFloat(_cgi_amount_limit);
                 var __cgi_amount_limit_warn = parseFloat(_cgi_amount_limit_warn);
 
-                Xrm.Page.getAttribute("cgi_amount_above_limit").setValue(__cgi_amount_limit);
-                Xrm.Page.getAttribute("cgi_amount_limit_warn").setValue(__cgi_amount_limit_warn);
+                formContext.getAttribute("cgi_amount_above_limit").setValue(__cgi_amount_limit);
+                formContext.getAttribute("cgi_amount_limit_warn").setValue(__cgi_amount_limit_warn);
 
             }
         }
@@ -208,23 +206,26 @@ CGISweden.refund =
     },
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    cgi_accountidOnChange: function () {
-        CGISweden.refund.Getcgi_refundaccountNumber();
+    //Cant find function in CRM TODO
+    cgi_accountidOnChange: function (executionContext) {
+        var formContext = executionContext.getFormContext();
+
+        CGISweden.refund.Getcgi_refundaccountNumber(formContext);
     },
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    Getcgi_refundaccountNumber: function () {
+    Getcgi_refundaccountNumber: function (formContext) {
         try {
-            var _refundaccountid = CGISweden.formscriptfunctions.GetLookupid("cgi_accountid");
+            var _refundaccountid = CGISweden.formscriptfunctions.GetLookupid("cgi_accountid", formContext);
             if (_refundaccountid != null) {
-                CGISweden.odata.Getcgi_refundaccountNumber(_refundaccountid, CGISweden.refund.Getcgi_refundaccountNumber_callback, CGISweden.refund.Getcgi_refundaccountNumber_complete);
+                CGISweden.odata.Getcgi_refundaccountNumber(_refundaccountid, formContext);
             }
             else {
                 _RefundAccountIdCache = null;
 
 
-                CGISweden.refund.SetProductFieldRequired();
+                CGISweden.refund.SetProductFieldRequired(formContext);
             }
         }
         catch (e) {
@@ -232,9 +233,7 @@ CGISweden.refund =
         }
     },
 
-    Getcgi_refundaccountNumber_complete: function () { },
-
-    Getcgi_refundaccountNumber_callback: function (result) {
+    Getcgi_refundaccountNumber_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Failed to retrieve RefundAccountNumber!");
@@ -242,7 +241,7 @@ CGISweden.refund =
             else {
                 _RefundAccountIdCache = result[0];
 
-                CGISweden.refund.SetProductFieldRequired();
+                CGISweden.refund.SetProductFieldRequired(formContext);
             }
         }
         catch (e) {
@@ -254,19 +253,17 @@ CGISweden.refund =
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    Getcgi_refundtypeproductnotrequiredidSetting: function () {
+    Getcgi_refundtypeproductnotrequiredidSetting: function (formContext) {
         try {
             var _currentdate = CGISweden.formscriptfunctions.GetDateTime();
-            CGISweden.odata.Getcgi_refundtypeproductnotrequiredidSetting(_currentdate, CGISweden.refund.Getcgi_refundtypeproductnotrequiredidSetting_callback, CGISweden.refund.Getcgi_refundtypeproductnotrequiredidSetting_complete);
+            CGISweden.odata.Getcgi_refundtypeproductnotrequiredidSetting(_currentdate, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.Getcgi_refundtypeproductnotrequiredidSetting\n\n" + e.Message);
         }
     },
 
-    Getcgi_refundtypeproductnotrequiredidSetting_complete: function () { },
-
-    Getcgi_refundtypeproductnotrequiredidSetting_callback: function (result) {
+    Getcgi_refundtypeproductnotrequiredidSetting_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Required setting is missing: cgi_refundtypeproductnotrequiredid!");
@@ -277,7 +274,7 @@ CGISweden.refund =
                 }
                 _RefundTypeProductNotrequiredIdCache = result[0].cgi_refundtypeproductnotrequiredid;
 
-                CGISweden.refund.SetProductFieldRequired();
+                CGISweden.refund.SetProductFieldRequired(formContext);
 
             }
         }
@@ -287,7 +284,7 @@ CGISweden.refund =
     },
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    SetProductFieldRequired: function () {
+    SetProductFieldRequired: function (formContext) {
 
         var ProductRequired = false;
 
@@ -295,14 +292,14 @@ CGISweden.refund =
             if (_ReimbursementFormIdCache.cgi_UseProduct != null) {
                 var _useproduct = _ReimbursementFormIdCache.cgi_UseProduct;
                 if (_useproduct == false) {
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false);
-                    Xrm.Page.getAttribute("cgi_productid").setValue(null);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false, formContext);
+                    formContext.getAttribute("cgi_productid").setValue(null);
                 }
                 else {
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", true);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", true, formContext);
                     ProductRequired = true;
-                    var _Currentcgi_accountid = CGISweden.formscriptfunctions.GetLookupid("cgi_accountid");
-                    var _Currentcgi_refundtypeid = CGISweden.formscriptfunctions.GetLookupid("cgi_refundtypeid");
+                    var _Currentcgi_accountid = CGISweden.formscriptfunctions.GetLookupid("cgi_accountid", formContext);
+                    var _Currentcgi_refundtypeid = CGISweden.formscriptfunctions.GetLookupid("cgi_refundtypeid", formContext);
 
                     if (_Currentcgi_refundtypeid != null) {//Check that cgi_refundtypeid is set
                         if (_Currentcgi_accountid != null) {//Check that cgi_accountid is set
@@ -316,16 +313,16 @@ CGISweden.refund =
                                             }
                                         }
                                         else {
-                                            CGISweden.refund.Getcgi_refundaccountNumber();
+                                            CGISweden.refund.Getcgi_refundaccountNumber(formContext);
                                         }
                                     }
                                     else {
-                                        CGISweden.refund.Getcgi_refundaccountNumber();
+                                        CGISweden.refund.Getcgi_refundaccountNumber(formContext);
                                     }
                                 }
                             }
                             else {
-                                CGISweden.refund.Getcgi_refundtypeproductnotrequiredidSetting();
+                                CGISweden.refund.Getcgi_refundtypeproductnotrequiredidSetting(formContext);
                             }
                         }
                         else {
@@ -335,21 +332,21 @@ CGISweden.refund =
                 }
             }
             else {
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false);
-                Xrm.Page.getAttribute("cgi_productid").setValue(null);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false, formContext);
+                formContext.getAttribute("cgi_productid").setValue(null);
             }
         }
         else {
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false);
-            Xrm.Page.getAttribute("cgi_productid").setValue(null);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false, formContext);
+            formContext.getAttribute("cgi_productid").setValue(null);
         }
 
 
         if (ProductRequired) {
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_productid", "required");
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_productid", "required", formContext);
         }
         else {
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_productid", "none");
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_productid", "none", formContext);
         }
 
     },
@@ -402,39 +399,30 @@ CGISweden.refund =
     },
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //Tömd och flyttad till onsave.
-    AmountOnChange: function () {
-        //    var _amount_limit_warn = Xrm.Page.getAttribute("cgi_amount_limit_warn").getValue();
-        //    var _amount = Xrm.Page.getAttribute("cgi_amount").getValue();
-        //	
-        //    if (_amount > _amount_limit_warn) {
-        //        alert("Du vill betala ut " + _amount + " kronor - är du säker?");
-        //    }
-    },
 
-    SocSecNoOnChange: function () {
-        var _soc = Xrm.Page.getAttribute("cgi_soc_sec_number").getValue();
+    SocSecNoOnChange: function (formContext) {
+        var _soc = formContext.getAttribute("cgi_soc_sec_number").getValue();
         var _sectrue = CGISweden.refund.validatePersonalNumber(_soc);
         var _return_save = true;
 
         if (_sectrue == false) {
-            //Xrm.Page.getAttribute("cgi_soc_sec_number").setValue();
+            //formContext.getAttribute("cgi_soc_sec_number").setValue();
             alert("Personnummer är inte giltigt.");
-            Xrm.Page.getControl("cgi_soc_sec_number").setFocus();
+            formContext.getControl("cgi_soc_sec_number").setFocus();
             _return_save = false;
         }
         else {
             var _soc_trim = _soc.replace('-', '');
             var _soc_trim_length = _soc_trim.length;
             if (_soc_trim_length != 12) {
-                //Xrm.Page.getAttribute("cgi_soc_sec_number").setValue();
+                //formContext.getAttribute("cgi_soc_sec_number").setValue();
                 alert("Personnummer måste anges med sekel-siffra");
-                Xrm.Page.getControl("cgi_soc_sec_number").setFocus();
+                formContext.getControl("cgi_soc_sec_number").setFocus();
                 _return_save = false;
             }
             else {
                 if (_soc.length == 13) {
-                    Xrm.Page.getAttribute("cgi_soc_sec_number").setValue(_soc_trim);
+                    formContext.getAttribute("cgi_soc_sec_number").setValue(_soc_trim);
                     _return_save = false;
                 }
             }
@@ -442,11 +430,11 @@ CGISweden.refund =
         return (_return_save);
     },
 
-    getCaseNumber: function () {
+    getCaseNumber: function (formContext) {
         try {
-            var _caseid = CGISweden.formscriptfunctions.GetLookupid("cgi_caseid");
+            var _caseid = CGISweden.formscriptfunctions.GetLookupid("cgi_caseid", formContext);
             if (_caseid != null) {
-                CGISweden.odata.GetCaseNumber(_caseid, CGISweden.refund.getCaseNumber_callback, CGISweden.refund.getCaseNumber_complete);
+                CGISweden.odata.GetCaseNumber(_caseid, formContext);
             }
         }
         catch (e) {
@@ -454,9 +442,7 @@ CGISweden.refund =
         }
     },
 
-    getCaseNumber_complete: function () { },
-
-    getCaseNumber_callback: function (result) {
+    getCaseNumber_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Hittar inga ärendenummer!");
@@ -464,7 +450,7 @@ CGISweden.refund =
             else {
                 if (result[0].TicketNumber != null) {
                     var _caseidvalue = result[0].TicketNumber;
-                    CGISweden.formscriptfunctions.SetValue("cgi_refundnumber", _caseidvalue);
+                    CGISweden.formscriptfunctions.SetValue("cgi_refundnumber", _caseidvalue, formContext);
                 }
                 _travelcardnumber = result[0].cgi_UnregisterdTravelCard;
                 //MaxP 2016-03-24 
@@ -480,12 +466,12 @@ CGISweden.refund =
                     var _id = result[0].cgi_RefundTypes.Id;
                     var _logicalname = result[0].cgi_RefundTypes.LogicalName;
                     var _name = result[0].cgi_RefundTypes.Name;
-                    CGISweden.formscriptfunctions.SetLookup("cgi_refundtypeid", _logicalname, _id, _name);
-                    CGISweden.refund.refund_Onload();
+                    CGISweden.formscriptfunctions.SetLookup("cgi_refundtypeid", _logicalname, _id, _name, formContext);
+                    CGISweden.refund.refund_Onload(formContext);
 
                     if (_milagekilometers != null && _milagekilometers != 0) {
                         var _milagekilometers_decimal = parseFloat(_milagekilometers / 10);
-                        Xrm.Page.getAttribute("cgi_milage").setValue(_milagekilometers_decimal);
+                        formContext.getAttribute("cgi_milage").setValue(_milagekilometers_decimal);
 
                         var _cgi_amount = parseFloat(Math.round(_milagekilometers_decimal * 18.50));
                         //var _cgi_amount_1 = parseFloat(Math.round(_milagekilometers_decimal * 18.50));
@@ -493,24 +479,24 @@ CGISweden.refund =
                         var _rgolclaimedamountdecimal = parseFloat(_rgolclaimedamount);
                         var _cgi_amount_2 = _rgolclaimedamountdecimal;
 
-                        Xrm.Page.getAttribute("cgi_calculated_amount").setValue(_cgi_amount);
-                        Xrm.Page.getAttribute("cgi_amount").setValue(_cgi_amount_2);
+                        formContext.getAttribute("cgi_calculated_amount").setValue(_cgi_amount);
+                        formContext.getAttribute("cgi_amount").setValue(_cgi_amount_2);
                     }
                     else if (_taxiclaimedamount != null && _taxiclaimedamount != 0) {
                         var _taxiclaimedamount_decimal = parseFloat(_taxiclaimedamount);
-                        Xrm.Page.getAttribute("cgi_amount").setValue(_taxiclaimedamount_decimal);
+                        formContext.getAttribute("cgi_amount").setValue(_taxiclaimedamount_decimal);
                     }
                     else {
                         var _rgolclaimedamountdecimal_1 = parseFloat(_compensationclaimfromrgol);
-                        Xrm.Page.getAttribute("cgi_amount").setValue(_rgolclaimedamountdecimal_1);
+                        formContext.getAttribute("cgi_amount").setValue(_rgolclaimedamountdecimal_1);
                     }
 
                     var _id = result[0].cgi_RefundReimbursementForm.Id;
                     var _logicalname = result[0].cgi_RefundReimbursementForm.LogicalName;
                     var _name = result[0].cgi_RefundReimbursementForm.Name;
-                    CGISweden.formscriptfunctions.SetLookup("cgi_reimbursementformid", _logicalname, _id, _name);
+                    CGISweden.formscriptfunctions.SetLookup("cgi_reimbursementformid", _logicalname, _id, _name, formContext);
 
-                    CGISweden.refund.reimbursementformid_OnChange();
+                    CGISweden.refund.reimbursementformid_OnChange(formContext);
                 }
             }
         }
@@ -520,19 +506,19 @@ CGISweden.refund =
     },
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    reimbursementformid_OnLoad: function () {
+    reimbursementformid_OnLoad: function (formContext) {
 
         try {
             //debugger;
-            var _refundtypeid = CGISweden.formscriptfunctions.GetLookupid("cgi_reimbursementformid");
+            var _refundtypeid = CGISweden.formscriptfunctions.GetLookupid("cgi_reimbursementformid", formContext);
             if (_refundtypeid != null) {
-                CGISweden.odata.GetReimbursementForm(_refundtypeid, CGISweden.refund.reimbursementformid_OnLoad_callback, CGISweden.refund.reimbursementformid_OnLoad_complete);
+                CGISweden.odata.GetReimbursementFormOnLoad(_refundtypeid, formContext);
             }
             else {
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false);
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false);
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false);
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", false);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false, formContext);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false, formContext);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false, formContext);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", false, formContext);
             }
         }
         catch (e) {
@@ -540,9 +526,7 @@ CGISweden.refund =
         }
     },
 
-    reimbursementformid_OnLoad_complete: function () { },
-
-    reimbursementformid_OnLoad_callback: function (result) {
+    reimbursementformid_OnLoad_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Hittar inga inställningar ()!");
@@ -554,43 +538,43 @@ CGISweden.refund =
                     var _useaccount = result[0].cgi_UseAccount;
 
                     if (_useaccount == false) {
-                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountid", "none");
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false);
-                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_vat_code", "none");
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", false);
+                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountid", "none", formContext);
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false, formContext);
+                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_vat_code", "none", formContext);
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", false, formContext);
                     }
                     else {
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", true);
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", true);
-                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountid", "required");
-                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_vat_code", "required");
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", true, formContext);
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", true, formContext);
+                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountid", "required", formContext);
+                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_vat_code", "required", formContext);
                     }
                 }
                 else {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountid", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountid", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false, formContext);
                 }
 
                 //Use responsible 
                 if (result[0].cgi_useresponsible != null) {
                     var _usereponsible = result[0].cgi_useresponsible;
                     if (_usereponsible == false) {
-                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "none");
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false);
+                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "none", formContext);
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false, formContext);
                     }
                     else {
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", true);
-                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "required");
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", true, formContext);
+                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "required", formContext);
                     }
                 }
                 else {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false, formContext);
                 }
 
                 //Product
 
-                CGISweden.refund.SetProductFieldRequired();
+                CGISweden.refund.SetProductFieldRequired(formContext);
 
                 //Field Travelcard Number          
                 var _loadcard = result[0].cgi_loadcard;
@@ -598,55 +582,55 @@ CGISweden.refund =
 
                 //if (_loadcard == true || _sendtostralfors == true) {
                 if (_loadcard == true) {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "required");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", true);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "required", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", true, formContext);
                 }
                 else {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
                 }
 
                 //Social Security Number
                 var _cgi_payment = result[0].cgi_payment;
 
                 if (_cgi_payment == true) {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_soc_sec_number", "required");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_soc_sec_number", true);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_soc_sec_number", "required", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_soc_sec_number", true, formContext);
                 }
                 else {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_soc_sec_number", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_soc_sec_number", false);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_soc_sec_number", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_soc_sec_number", false, formContext);
                 }
 
                 //IBAN and SWIFT and accountnumber
                 var _cgi_payment_abroad = result[0].cgi_payment_abroad;
 
                 if (_cgi_payment_abroad == true) {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false);
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", true);
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_iban", "required");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", true);
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_swift", "required");
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false, formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", true, formContext);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_iban", "required", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", true, formContext);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_swift", "required", formContext);
                 }
                 else {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false);
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_iban", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", false);
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_swift", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", false);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false, formContext);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_iban", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", false, formContext);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_swift", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", false, formContext);
                 }
                 //Last valid
                 var _cgi_last_valid = result[0].cgi_time_valid;
 
                 if (_cgi_last_valid == true) {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "required");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", true);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "required", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", true, formContext);
                 }
                 else {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false, formContext);
                 }
             }
         }
@@ -657,25 +641,25 @@ CGISweden.refund =
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    reimbursementformid_OnChange: function () {
+    reimbursementformid_OnChange: function (formContext) {
         try {
             //debugger;
-            var _refundtypeid = CGISweden.formscriptfunctions.GetLookupid("cgi_reimbursementformid");
+            var _refundtypeid = CGISweden.formscriptfunctions.GetLookupid("cgi_reimbursementformid", formContext);
             if (_refundtypeid != null) {
-                CGISweden.odata.GetReimbursementForm(_refundtypeid, CGISweden.refund.reimbursementformid_OnChange_callback, CGISweden.refund.reimbursementformid_OnChange_complete);
+                CGISweden.odata.GetReimbursementForm(_refundtypeid, formContext);
             }
             else {
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false);
-                Xrm.Page.getAttribute("cgi_accountid").setValue(null);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false, formContext);
+                formContext.getAttribute("cgi_accountid").setValue(null);
 
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false);
-                Xrm.Page.getAttribute("cgi_responsibleid").setValue(null);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false, formContext);
+                formContext.getAttribute("cgi_responsibleid").setValue(null);
 
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false);
-                Xrm.Page.getAttribute("cgi_productid").setValue(null);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false, formContext);
+                formContext.getAttribute("cgi_productid").setValue(null);
 
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", false);
-                Xrm.Page.getAttribute("cgi_vat_code").setValue(null);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", false, formContext);
+                formContext.getAttribute("cgi_vat_code").setValue(null);
 
             }
         }
@@ -684,9 +668,7 @@ CGISweden.refund =
         }
     },
 
-    reimbursementformid_OnChange_complete: function () { },
-
-    reimbursementformid_OnChange_callback: function (result) {
+    reimbursementformid_OnChange_callback: function (result, formContext) {
         try {
             debugger;
             if (result == null || result[0] == null) {
@@ -700,14 +682,14 @@ CGISweden.refund =
                     var _useattestation = result[0].cgi_attestation;
 
                     if (_useattestation == true) {
-                        Xrm.Page.getAttribute("cgi_attest_req").setValue("1");
+                        formContext.getAttribute("cgi_attest_req").setValue("1");
                     }
                     else {
-                        Xrm.Page.getAttribute("cgi_attest_req").setValue("0");
+                        formContext.getAttribute("cgi_attest_req").setValue("0");
                     }
                 }
                 else {
-                    Xrm.Page.getAttribute("cgi_attest_req").setValue("0");
+                    formContext.getAttribute("cgi_attest_req").setValue("0");
                 }
 
                 //Use account
@@ -715,64 +697,64 @@ CGISweden.refund =
                     var _useaccount = result[0].cgi_UseAccount;
 
                     if (_useaccount == false) {
-                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountid", "none");
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false);
-                        Xrm.Page.getAttribute("cgi_accountid").setValue(null);
-                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_vat_code", "none");
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", false);
-                        Xrm.Page.getAttribute("cgi_vat_code").setValue(null);
+                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountid", "none", formContext);
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false, formContext);
+                        formContext.getAttribute("cgi_accountid").setValue(null);
+                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_vat_code", "none", formContext);
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", false, formContext);
+                        formContext.getAttribute("cgi_vat_code").setValue(null);
                     }
                     else {
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", true);
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", true);
-                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountid", "required");
-                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_vat_code", "required");
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", true, formContext);
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", true, formContext);
+                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountid", "required", formContext);
+                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_vat_code", "required", formContext);
                     }
                 }
                 else {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountid", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false);
-                    Xrm.Page.getAttribute("cgi_accountid").setValue(null);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountid", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false, formContext);
+                    formContext.getAttribute("cgi_accountid").setValue(null);
                 }
 
                 //Use responsible 
                 if (result[0].cgi_useresponsible != null) {
                     var _usereponsible = result[0].cgi_useresponsible;
                     if (_usereponsible == false) {
-                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "none");
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false);
-                        Xrm.Page.getAttribute("cgi_responsibleid").setValue(null);
+                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "none", formContext);
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false, formContext);
+                        formContext.getAttribute("cgi_responsibleid").setValue(null);
                     }
                     else {
-                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", true);
-                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "required");
+                        CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", true, formContext);
+                        CGISweden.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "required", formContext);
                     }
                 }
                 else {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false);
-                    Xrm.Page.getAttribute("cgi_responsibleid").setValue(null);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false, formContext);
+                    formContext.getAttribute("cgi_responsibleid").setValue(null);
                 }
 
                 //Product
 
-                CGISweden.refund.SetProductFieldRequired();
+                CGISweden.refund.SetProductFieldRequired(formContext);
 
                 //Field Email
-                CGISweden.refund.SetEmailVisibilityAndRequirement(result);
+                CGISweden.refund.SetEmailVisibilityAndRequirement(result, formContext);
 
 
                 //Field Travelcard Number          
                 var _loadcard = result[0].cgi_loadcard;
 
                 if (_loadcard == true) {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "required");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", true);
-                    CGISweden.formscriptfunctions.SetValue("cgi_travelcard_number", _travelcardnumber);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "required", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", true, formContext);
+                    CGISweden.formscriptfunctions.SetValue("cgi_travelcard_number", _travelcardnumber, formContext);
                 }
                 else {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
                     //CGISweden.formscriptfunctions.SetValue("cgi_travelcard_number", "");
                 }
 
@@ -781,17 +763,17 @@ CGISweden.refund =
                 var _cgi_payment = result[0].cgi_payment;
 
                 if (_cgi_payment == true) {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_soc_sec_number", "required");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_soc_sec_number", true);
-                    CGISweden.refund.setSocSecNumber();
-                    CGISweden.refund.ctrlAmountLimit();
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_soc_sec_number", "required", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_soc_sec_number", true, formContext);
+                    CGISweden.refund.setSocSecNumber(formContext);
+                    CGISweden.refund.ctrlAmountLimit(formContext);
                     _show_soc_sec = 1;
 
                 }
                 else {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_soc_sec_number", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_soc_sec_number", false);
-                    CGISweden.formscriptfunctions.SetValue("cgi_soc_sec_number", "");
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_soc_sec_number", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_soc_sec_number", false, formContext);
+                    CGISweden.formscriptfunctions.SetValue("cgi_soc_sec_number", "", formContext);
                     _show_soc_sec = 0;
                 }
 
@@ -799,29 +781,29 @@ CGISweden.refund =
                 var _cgi_payment_abroad = result[0].cgi_payment_abroad;
 
                 if (_cgi_payment_abroad == true) {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false, formContext);
 
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", true);
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_iban", "required");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", true);
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_swift", "required");
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", true, formContext);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_iban", "required", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", true, formContext);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_swift", "required", formContext);
 
                     //MaxP 2016-04-20
-                    CGISweden.refund.SetBicIban();
+                    CGISweden.refund.SetBicIban(formContext);
 
-                    CGISweden.refund.ctrlAmountLimit();
+                    CGISweden.refund.ctrlAmountLimit(formContext);
                 }
                 else {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false);
-                    CGISweden.formscriptfunctions.SetValue("cgi_accountno", "");
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_iban", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", false);
-                    CGISweden.formscriptfunctions.SetValue("cgi_iban", "");
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_swift", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", false);
-                    CGISweden.formscriptfunctions.SetValue("cgi_swift", "");
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false, formContext);
+                    CGISweden.formscriptfunctions.SetValue("cgi_accountno", "", formContext);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_iban", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", false, formContext);
+                    CGISweden.formscriptfunctions.SetValue("cgi_iban", "", formContext);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_swift", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", false, formContext);
+                    CGISweden.formscriptfunctions.SetValue("cgi_swift", "", formContext);
                 }
 
                 //Last valid
@@ -829,9 +811,9 @@ CGISweden.refund =
                 var _cgi_last_valid = result[0].cgi_time_valid;
 
                 if (_cgi_last_valid == true) {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "required");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", true);
-                    CGISweden.refund.SetDateValidField();
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "required", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", true, formContext);
+                    CGISweden.refund.SetDateValidField(formContext);
                 }
                 /*
                 else {
@@ -860,7 +842,7 @@ CGISweden.refund =
         }
     },
 
-    SetEmailVisibilityAndRequirement: function (result) {
+    SetEmailVisibilityAndRequirement: function (result, formContext) {
 
         var _emailRequiredAndVisible = false;
         var _phoneRequired = false;
@@ -921,67 +903,76 @@ CGISweden.refund =
         }
 
         if (_phoneRequired) {
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", true);
-            CGISweden.refund.setMobileNumber();
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", true, formContext);
+            CGISweden.refund.setMobileNumber(formContext);
         }
         else {
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", false, formContext);
         }
 
         if (_emailRequiredAndVisible) {
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", true);
-            CGISweden.refund.setEmail();
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", true, formContext);
+            CGISweden.refund.setEmail(formContext);
         }
         else {
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", false, formContext);
         }
 
     },
 
-    ReInvoice_OnChange: function () {
-        _show_reinvoice = Xrm.Page.getAttribute("cgi_reinvoicing").getValue()
+    ReInvoice_OnChange: function (executionContext) {
+        var formContext = executionContext.getFormContext();
+
+        _show_reinvoice = formContext.getAttribute("cgi_reinvoicing").getValue()
 
         if (_show_reinvoice == true) {
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_invoicerecipient", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_invoicerecipient", true);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_invoicerecipient", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_invoicerecipient", true, formContext);
 
         }
         else {
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_invoicerecipient", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_invoicerecipient", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_invoicerecipient", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_invoicerecipient", false, formContext);
         }
 
     },
 
-    ShowTravelcardNumber: function () {
+    ShowTravelcardNumber: function (executionContext) {
         try {
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", true);
+            var formContext = executionContext.getFormContext();
+
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", true, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.ShowTravelcardNumber\n\n" + e.Message);
         }
     },
 
-    SetReinvoicingFALSE: function () {
+    SetReinvoicingFALSE: function (executionContext) {
         try {
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reinvoicing", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_invoicerecipient", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reference", false);
+            var formContext = executionContext.getFormContext();
+
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reinvoicing", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_invoicerecipient", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reference", false, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.SetReinvoicingFALSE\n\n" + e.Message);
         }
     },
 
-    SetReinvoicingTRUE: function () {
+    //verkar inte användas TODO
+    SetReinvoicingTRUE: function (executionContext) {
         try {
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reinvoicing", true);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_invoicerecipient", true);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reference", true);
+            var formContext = executionContext.getFormContext();
+
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reinvoicing", true, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_invoicerecipient", true, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reference", true, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.SetReinvoicingTRUE\n\n" + e.Message);
@@ -989,14 +980,14 @@ CGISweden.refund =
     },
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    refund_Onload: function () {
+    refund_Onload: function (formContext) {
         try {
-            var _refundtypeid = CGISweden.formscriptfunctions.GetLookupid("cgi_refundtypeid");
+            var _refundtypeid = CGISweden.formscriptfunctions.GetLookupid("cgi_refundtypeid", formContext);
             if (_refundtypeid != null) {
-                CGISweden.odata.GetRefundSetting(_refundtypeid, CGISweden.refund.refundtypeid_Onload_callback, CGISweden.refund.refundtypeid_Onload_complete);
+                CGISweden.odata.GetRefundSettingOnLoad(_refundtypeid, formContext);
             }
             else {
-                CGISweden.refund.refundtypeNONE();
+                CGISweden.refund.refundtypeNONE(formContext);
             }
         }
         catch (e) {
@@ -1004,9 +995,7 @@ CGISweden.refund =
         }
     },
 
-    refundtypeid_Onload_complete: function () { },
-
-    refundtypeid_Onload_callback: function (result) {
+    refundtypeid_Onload_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Hittar inga inställningar (ersättningsbeslut)!");
@@ -1014,17 +1003,17 @@ CGISweden.refund =
             else {
 
                 //Field amount editable
-                CGISweden.refund.setFieldToEditable();
+                CGISweden.refund.setFieldToEditable(formContext);
 
                 //The field cgi_FinancialTransaction on refundtype defines if reimbursementformid shall show
                 var _cgi_FinancialTransaction = result[0].cgi_FinancialTransaction;
                 if (_cgi_FinancialTransaction == false) {
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reimbursementformid", false);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reimbursementformid", false, formContext);
                 }
                 else {
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reimbursementformid", true);
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "none");
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reimbursementformid", true, formContext);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "none", formContext);
                 }
 
                 //The field cgi_reinvoice defines if its possible to reinvoice reimbursement
@@ -1046,7 +1035,7 @@ CGISweden.refund =
                     var _logicalname = result[0].cgi_refundaccountid.LogicalName;
                     var _name = result[0].cgi_refundaccountid.Name;
 
-                    CGISweden.formscriptfunctions.SetLookup("cgi_accountid", _logicalname, _id, _name);
+                    CGISweden.formscriptfunctions.SetLookup("cgi_accountid", _logicalname, _id, _name, formContext);
                 }
 
                 if (result[0].cgi_refundresponsibleId.Id != null) {
@@ -1055,7 +1044,7 @@ CGISweden.refund =
                     var _logicalname = result[0].cgi_refundresponsibleId.LogicalName;
                     var _name = result[0].cgi_refundresponsibleId.Name;
 
-                    CGISweden.formscriptfunctions.SetLookup("cgi_responsibleid", _logicalname, _id, _name);
+                    CGISweden.formscriptfunctions.SetLookup("cgi_responsibleid", _logicalname, _id, _name, formContext);
                 }
 
                 if (result[0].cgi_refundproductid.Id != null) {
@@ -1064,63 +1053,63 @@ CGISweden.refund =
                     var _logicalname = result[0].cgi_refundproductid.LogicalName;
                     var _name = result[0].cgi_refundproductid.Name;
 
-                    CGISweden.formscriptfunctions.SetLookup("cgi_productid", _logicalname, _id, _name);
+                    CGISweden.formscriptfunctions.SetLookup("cgi_productid", _logicalname, _id, _name, formContext);
                 }
 
 
                 if (result[0].cgi_RefundOption != null) {
                     var _refundoptionvalue = result[0].cgi_RefundOption.Value;
                     if (_refundoptionvalue == 285050000) {
-                        CGISweden.refund.refundtypeNONE();
+                        CGISweden.refund.refundtypeNONE(formContext);
                     }
 
                     if (_refundoptionvalue == 285050001) {
-                        CGISweden.refund.refundtypeQUANTITY(_cgi_FinancialTransaction);
+                        CGISweden.refund.refundtypeQUANTITY(_cgi_FinancialTransaction, formContext);
                     }
 
                     if (_refundoptionvalue == 285050002) {
-                        CGISweden.refund.refundtypeMONEY();
+                        CGISweden.refund.refundtypeMONEY(formContext);
                     }
 
                     if (_refundoptionvalue == 285050003) {
-                        CGISweden.refund.refundtypeMILAGE();
+                        CGISweden.refund.refundtypeMILAGE(formContext);
                     }
 
                     if (_refundoptionvalue == 285050004) {
-                        CGISweden.refund.refundtypeTAXI();
+                        CGISweden.refund.refundtypeTAXI(formContext);
                     }
 
                     if (_refundoptionvalue == 285050005) {
-                        CGISweden.refund.refundtypeOTHER();
+                        CGISweden.refund.refundtypeOTHER(formContext);
                     }
 
                     if (_refundoptionvalue == 285050006) {
-                        CGISweden.refund.refundtypeFORWARD();
+                        CGISweden.refund.refundtypeFORWARD(formContext);
                     }
 
                     ////// MOSCGI
                     if (_refundoptionvalue == 285050008) {
-                        CGISweden.refund.refundtypeCOUPONSMS();
+                        CGISweden.refund.refundtypeCOUPONSMS(formContext);
                     }
                     if (_refundoptionvalue == 285050009) {
-                        CGISweden.refund.refundtypeCOUPONEMAIL();
+                        CGISweden.refund.refundtypeCOUPONEMAIL(formContext);
                     }
                     ////// END MOSCGI
 
                     debugger;
                     if (_refundoptionvalue == 285050010 || _refundoptionvalue == 285050012 || _refundoptionvalue == 285050014) {
-                        CGISweden.refund.refundtypeVALUECODESMS();
+                        CGISweden.refund.refundtypeVALUECODESMS(formContext);
                     }
                     if (_refundoptionvalue == 285050011 || _refundoptionvalue == 285050013 || _refundoptionvalue == 285050015) {
-                        CGISweden.refund.refundtypeVALUECODEEMAIL();
+                        CGISweden.refund.refundtypeVALUECODEEMAIL(formContext);
                     }
                 }
                 else {
-                    CGISweden.refund.refundtypeNONE();
+                    CGISweden.refund.refundtypeNONE(formContext);
                 }
                 //Exeption onload event
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", true);
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", true);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", true, formContext);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", true, formContext);
             }
         }
         catch (e) {
@@ -1129,17 +1118,18 @@ CGISweden.refund =
     },
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    refundtypeid_OnChange: function () {
 
+    refundtypeid_OnChange: function (executionContext) {
+        var formContext = executionContext.getFormContext();
 
-        CGISweden.refund.SetProductFieldRequired();
+        CGISweden.refund.SetProductFieldRequired(formContext);
         try {
-            var _refundtypeid = CGISweden.formscriptfunctions.GetLookupid("cgi_refundtypeid");
+            var _refundtypeid = CGISweden.formscriptfunctions.GetLookupid("cgi_refundtypeid", formContext);
             if (_refundtypeid != null) {
-                CGISweden.odata.GetRefundSetting(_refundtypeid, CGISweden.refund.refundtypeid_OnChange_callback, CGISweden.refund.refundtypeid_OnChange_complete);
+                CGISweden.odata.GetRefundSetting(_refundtypeid, formContext);
             }
             else {
-                CGISweden.refund.refundtypeNONE();
+                CGISweden.refund.refundtypeNONE(formContext);
             }
         }
         catch (e) {
@@ -1147,9 +1137,7 @@ CGISweden.refund =
         }
     },
 
-    refundtypeid_OnChange_complete: function () { },
-
-    refundtypeid_OnChange_callback: function (result) {
+    refundtypeid_OnChange_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Hittar inga inställningar (ersättningsbeslut)!");
@@ -1157,91 +1145,91 @@ CGISweden.refund =
             else {
                 //The field cgi_FinancialTransaction on refundtype defines if reimbursementformid shall show
                 var _cgi_FinancialTransaction = result[0].cgi_FinancialTransaction;
-                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "none");
+                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "none", formContext);
 
                 if (_cgi_FinancialTransaction == false) {
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reimbursementformid", false);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reimbursementformid", false, formContext);
                     //MaxP 2016-07-25 The field cgi_FinancialTransaction on refundtype defines that authorization-rights is not needed
-                    Xrm.Page.getAttribute("cgi_attest_req").setValue("0");
+                    formContext.getAttribute("cgi_attest_req").setValue("0");
                     //Social security is not needed
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_soc_sec_number", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_soc_sec_number", false);
-                    CGISweden.formscriptfunctions.SetValue("cgi_soc_sec_number", "");
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_soc_sec_number", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_soc_sec_number", false, formContext);
+                    CGISweden.formscriptfunctions.SetValue("cgi_soc_sec_number", "", formContext);
                     _show_soc_sec = 0;
                     // Iban and BIC is not needed
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false);
-                    CGISweden.formscriptfunctions.SetValue("cgi_accountno", "");
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_iban", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", false);
-                    CGISweden.formscriptfunctions.SetValue("cgi_iban", "");
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_swift", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", false);
-                    CGISweden.formscriptfunctions.SetValue("cgi_swift", "");
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false, formContext);
+                    CGISweden.formscriptfunctions.SetValue("cgi_accountno", "", formContext);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_iban", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", false, formContext);
+                    CGISweden.formscriptfunctions.SetValue("cgi_iban", "", formContext);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_swift", "none", formContext);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", false, formContext);
+                    CGISweden.formscriptfunctions.SetValue("cgi_swift", "", formContext);
                     //Product is not needed
                     //CGISweden.formscriptfunctions.SetRequiredLevel("cgi_productid", "none");
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false);
-                    Xrm.Page.getAttribute("cgi_productid").setValue(null);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false, formContext);
+                    formContext.getAttribute("cgi_productid").setValue(null);
                 }
                 else {
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reimbursementformid", true);
-                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "none");
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reimbursementformid", true, formContext);
+                    CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "none", formContext);
                 }
 
                 //The field cgi_reinvoice defines if its possible to reinvoice reimbursement
                 var _cgi_reinvoice = result[0].cgi_reinvoice;
                 if (_cgi_reinvoice == true) {
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reinvoicing", true);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reinvoicing", true, formContext);
                 }
                 else {
-                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reinvoicing", false);
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reinvoicing", false, formContext);
                 }
 
                 //Set no attestation
-                Xrm.Page.getAttribute("cgi_attestation").setValue(285050004);
+                formContext.getAttribute("cgi_attestation").setValue(285050004);
 
                 //Emty values in all fields
-                CGISweden.refund.setEmptyAllValues();
+                CGISweden.refund.setEmptyAllValues(formContext);
 
                 //Field amount editable
-                CGISweden.refund.setFieldToEditable();
+                CGISweden.refund.setFieldToEditable(formContext);
 
                 //Hide cgi_iban, cgi_swift, cgi_accountno, cgi_foreign_account, if refundtype changes
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", false);
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", false);
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", false, formContext);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", false, formContext);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false, formContext);
 
-                CGISweden.formscriptfunctions.SetValue("cgi_soc_sec_number", "");
-                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_soc_sec_number", "none");
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_soc_sec_number", false);
+                CGISweden.formscriptfunctions.SetValue("cgi_soc_sec_number", "", formContext);
+                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_soc_sec_number", "none", formContext);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_soc_sec_number", false, formContext);
 
-                CGISweden.formscriptfunctions.SetValue("cgi_accountno", "");
-                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none");
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false);
+                CGISweden.formscriptfunctions.SetValue("cgi_accountno", "", formContext);
+                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none", formContext);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false, formContext);
 
-                CGISweden.formscriptfunctions.SetValue("cgi_iban", "");
-                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_iban", "none");
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", false);
+                CGISweden.formscriptfunctions.SetValue("cgi_iban", "", formContext);
+                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_iban", "none", formContext);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", false, formContext);
 
-                CGISweden.formscriptfunctions.SetValue("cgi_swift", "");
-                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_swift", "none");
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", false);
+                CGISweden.formscriptfunctions.SetValue("cgi_swift", "", formContext);
+                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_swift", "none", formContext);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", false, formContext);
 
-                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountid", "none");
-                Xrm.Page.getAttribute("cgi_accountid").setValue(null);
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false);
+                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_accountid", "none", formContext);
+                formContext.getAttribute("cgi_accountid").setValue(null);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false, formContext);
 
-                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_vat_code", "none");
-                Xrm.Page.getAttribute("cgi_vat_code").setValue(null);
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", false);
+                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_vat_code", "none", formContext);
+                formContext.getAttribute("cgi_vat_code").setValue(null);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", false, formContext);
 
-                Xrm.Page.getAttribute("cgi_responsibleid").setValue(null);
-                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "none");
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false);
+                formContext.getAttribute("cgi_responsibleid").setValue(null);
+                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "none", formContext);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false, formContext);
 
-                Xrm.Page.getAttribute("cgi_productid").setValue(null);
-                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_productid", "none");
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false);
+                formContext.getAttribute("cgi_productid").setValue(null);
+                CGISweden.formscriptfunctions.SetRequiredLevel("cgi_productid", "none", formContext);
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false, formContext);
 
                 //Set default account
                 if (result[0].cgi_refundaccountid.Id != null) {
@@ -1249,7 +1237,7 @@ CGISweden.refund =
                     var _logicalname = result[0].cgi_refundaccountid.LogicalName;
                     var _name = result[0].cgi_refundaccountid.Name;
 
-                    CGISweden.formscriptfunctions.SetLookup("cgi_accountid", _logicalname, _id, _name);
+                    CGISweden.formscriptfunctions.SetLookup("cgi_accountid", _logicalname, _id, _name, formContext);
                 }
 
                 //Set default responsible
@@ -1258,7 +1246,7 @@ CGISweden.refund =
                     var _logicalname = result[0].cgi_refundresponsibleId.LogicalName;
                     var _name = result[0].cgi_refundresponsibleId.Name;
 
-                    CGISweden.formscriptfunctions.SetLookup("cgi_responsibleid", _logicalname, _id, _name);
+                    CGISweden.formscriptfunctions.SetLookup("cgi_responsibleid", _logicalname, _id, _name, formContext);
                 }
 
                 //Set default product
@@ -1267,62 +1255,62 @@ CGISweden.refund =
                     var _logicalname = result[0].cgi_refundproductid.LogicalName;
                     var _name = result[0].cgi_refundproductid.Name;
 
-                    CGISweden.formscriptfunctions.SetLookup("cgi_productid", _logicalname, _id, _name);
+                    CGISweden.formscriptfunctions.SetLookup("cgi_productid", _logicalname, _id, _name, formContext);
                 }
 
                 if (result[0].cgi_RefundOption != null) {
                     var _refundoptionvalue = result[0].cgi_RefundOption.Value;
 
                     if (_refundoptionvalue == 285050000) {
-                        CGISweden.refund.refundtypeNONE();
+                        CGISweden.refund.refundtypeNONE(formContext);
                     }
 
                     if (_refundoptionvalue == 285050001) {
-                        CGISweden.refund.refundtypeQUANTITY();
+                        CGISweden.refund.refundtypeQUANTITY(formContext);
                     }
 
                     if (_refundoptionvalue == 285050002) {
-                        CGISweden.refund.refundtypeMONEY();
+                        CGISweden.refund.refundtypeMONEY(formContext);
                     }
 
                     if (_refundoptionvalue == 285050003) {
-                        CGISweden.refund.refundtypeMILAGE();
+                        CGISweden.refund.refundtypeMILAGE(formContext);
                     }
 
                     if (_refundoptionvalue == 285050004) {
-                        CGISweden.refund.refundtypeTAXI();
+                        CGISweden.refund.refundtypeTAXI(formContext);
                     }
 
                     if (_refundoptionvalue == 285050005) {
-                        CGISweden.refund.refundtypeOTHER();
+                        CGISweden.refund.refundtypeOTHER(formContext);
                     }
 
                     if (_refundoptionvalue == 285050006) {
-                        CGISweden.refund.refundtypeFORWARD();
+                        CGISweden.refund.refundtypeFORWARD(formContext);
                     }
 
                     if (_refundoptionvalue == 285050007) {
-                        CGISweden.refund.refundtypeTRAVEL();
+                        CGISweden.refund.refundtypeTRAVEL(formContext);
                     }
 
                     ////// MOSCGI
                     if (_refundoptionvalue == 285050008) {
-                        CGISweden.refund.refundtypeCOUPONSMS();
+                        CGISweden.refund.refundtypeCOUPONSMS(formContext);
                     }
                     if (_refundoptionvalue == 285050009) {
-                        CGISweden.refund.refundtypeCOUPONEMAIL();
+                        CGISweden.refund.refundtypeCOUPONEMAIL(formContext);
                     }
                     ////// END MOSCGI
 
                     if (_refundoptionvalue == 285050010) {
-                        CGISweden.refund.refundtypeVALUECODESMS();
+                        CGISweden.refund.refundtypeVALUECODESMS(formContext);
                     }
                     if (_refundoptionvalue == 285050011) {
-                        CGISweden.refund.refundtypeVALUECODEEMAIL();
+                        CGISweden.refund.refundtypeVALUECODEEMAIL(formContext);
                     }
                 }
                 else {
-                    CGISweden.refund.refundtypeNONE();
+                    CGISweden.refund.refundtypeNONE(formContext);
                 }
             }
         }
@@ -1332,67 +1320,67 @@ CGISweden.refund =
     },
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    setDefaultValues: function () {
+    setDefaultValues: function (formContext) {
         try {
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reimbursementformid", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reimbursementformid", false, formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_productid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_vat_code", false, formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_soc_sec_number", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_soc_sec_number", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_accountno", false, formContext);
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_foreign_payment", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_iban", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_swift", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false, formContext);
             //GISweden.formscriptfunctions.HideOrDisplayField("cgi_value_code", false);
 
             //Biocheck
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false, formContext);
 
             //Kortnummer
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
 
             //Vidarebefordran
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false, formContext);
 
             //Taxi
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false, formContext);
 
             //Milers�ttning
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false, formContext);
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false, formContext);
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amountwithtax", false);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reinvoicing", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reinvoicing", false, formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_invoicerecipient", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_invoicerecipient", false, formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_refundnumber", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_refundnumber", false, formContext);
 
             ////////// MOSCGI
             //Mobilnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", false, formContext);
 
             //Epost
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", false, formContext);
             ////////// END MOSCGI
 
-            CGISweden.refund.getContactAccount();
+            CGISweden.refund.getContactAccount(formContext);
 
         }
         catch (e) {
@@ -1400,60 +1388,60 @@ CGISweden.refund =
         }
     },
 
-    refundtypeNONE: function () {
+    refundtypeNONE: function (formContext) {
         try {
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reimbursementformid", false);
 
             //Biocheck
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false, formContext);
 
             //Kortnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
 
             //Vidarebefordran
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false, formContext);
 
             //Taxi
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false, formContext);
 
 
             //Milers�ttning
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false, formContext);
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false, formContext);
             //CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amountwithtax", "none");
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amountwithtax", false);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", false, formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reinvoicing", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reinvoicing", false, formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_invoicerecipient", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_invoicerecipient", false, formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
 
             ////////// MOSCGI
             //Mobilnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", false, formContext);
 
             //Epost
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", false, formContext);
             ////////// END MOSCGI
 
             // MaxP 2016-06-07
@@ -1471,96 +1459,96 @@ CGISweden.refund =
         }
     },
 
-    refundtypeQUANTITY: function (_cgi_FinancialTransaction) {
+    refundtypeQUANTITY: function (_cgi_FinancialTransaction, formContext) {
         try {
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_reimbursementformid", false);
             //Biocheck
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", true);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", true, formContext);
 
             //Kortnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
 
             //Vidarebefordran
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false, formContext);
 
             //Taxi
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false, formContext);
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amountwithtax", false);
 
             //Milers�ttning
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false, formContext);
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", true);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", true, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false, formContext);
             //CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amountwithtax", "none");
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amountwithtax", false);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.refundtypeQUANTITY\n\n" + e.Message);
         }
     },
 
-    refundtypeMILAGE: function () {
+    refundtypeMILAGE: function (formContext) {
         try {
             //Biocheck
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false, formContext);
 
             //Kortnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
 
             //Vidarebefordran
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false, formContext);
 
             //Taxi
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false, formContext);
 
             //Milers�ttning
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", true);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "required");
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", true);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", true, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "required", formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", true, formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required");
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", true);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required", formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", true, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false, formContext);
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amountwithtax", false);
             //CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amountwithtax", "none");
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "required");
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "required", formContext);
 
-            CGISweden.refund.setMilageCompensation();
+            CGISweden.refund.setMilageCompensation(formContext);
 
-            CGISweden.formscriptfunctions.SetState("cgi_milage_compensation", true);
-            CGISweden.formscriptfunctions.SetState("cgi_amount", false);
-            CGISweden.formscriptfunctions.SetState("cgi_calculated_amount", true);
+            CGISweden.formscriptfunctions.SetState("cgi_milage_compensation", true, formContext);
+            CGISweden.formscriptfunctions.SetState("cgi_amount", false, formContext);
+            CGISweden.formscriptfunctions.SetState("cgi_calculated_amount", true, formContext);
             //CGISweden.formscriptfunctions.SetSubmitModeAlways("cgi_amount"); Emma removed
-            CGISweden.formscriptfunctions.SetSubmitModeAlways("cgi_calculated_amount");
+            CGISweden.formscriptfunctions.SetSubmitModeAlways("cgi_calculated_amount", formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
 
 
         }
@@ -1569,175 +1557,175 @@ CGISweden.refund =
         }
     },
 
-    refundtypeTAXI: function () {
+    refundtypeTAXI: function (formContext) {
         try {
             //Biocheck
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false, formContext);
 
             //Kortnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
 
             //Vidarebefordran
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false, formContext);
 
             //Taxi
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false, formContext);
 
             //Milers�ttning
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false, formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none");
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none", formContext);
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false, formContext);
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amountwithtax", true);
             //CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amountwithtax", "required");
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "required");
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "required", formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.refundtypeTAXI\n\n" + e.Message);
         }
     },
 
-    refundtypeOTHER: function () {
+    refundtypeOTHER: function (formContext) {
         try {
             //Biocheck
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false, formContext);
 
             //Kortnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
 
             //Vidarebefordran
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false, formContext);
 
             //Taxi
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false, formContext);
 
             //Milers�ttning
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false, formContext);
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none");
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none", formContext);
 
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amountwithtax", true);
             //CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amountwithtax", "required");
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "required");
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "required", formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.refundtypeOTHER\n\n" + e.Message);
         }
     },
 
-    refundtypeFORWARD: function () {
+    refundtypeFORWARD: function (formContext) {
         try {
             //Biockeck
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false, formContext);
 
             //Kortnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
 
             //Vidarebefordran
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", true);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", true, formContext);
 
             //Taxi
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false, formContext);
 
             //Milers�ttning
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false, formContext);
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false, formContext);
             //CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amountwithtax", "none");
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amountwithtax", false);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.refundtypeFORWARD\n\n" + e.Message);
         }
     },
 
-    refundtypeMONEY: function () {
+    refundtypeMONEY: function (formContext) {
         try {
             //Biockeck
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false, formContext);
 
             //Kortnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
 
             //Vidarebefordran
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false, formContext);
 
             //Taxi
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false, formContext);
 
             //Milers�ttning
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false, formContext);
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none");
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none", formContext);
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amountwithtax", true);
             //CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amountwithtax", "required");
 
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.refundtypeMONEY\n\n" + e.Message);
@@ -1745,52 +1733,52 @@ CGISweden.refund =
     },
 
 
-    refundtypeTRAVEL: function () {
+    refundtypeTRAVEL: function (formContext) {
         try {
             //Biockeck
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_checknumber", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_checknumber", false, formContext);
 
             //Kortnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
 
             //Vidarebefordran
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false, formContext);
 
             //Taxi
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false, formContext);
 
             //Milers�ttning
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false, formContext);
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none");
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none", formContext);
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amountwithtax", true);
             //CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amountwithtax", "required");
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "required");
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "required", formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.refundtypeMONEY\n\n" + e.Message);
         }
     },
     ////////// MOSCGI
-    refundtypeCOUPONSMS: function () {
+    refundtypeCOUPONSMS: function (formContext) {
         try {
 
             //Biocheck
@@ -1798,49 +1786,49 @@ CGISweden.refund =
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_check_number", false);
 
             //Kortnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
 
             //Vidarebefordran
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false, formContext);
 
             //Taxi
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false, formContext);
 
             //Milers�ttning
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false, formContext);
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none");
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none", formContext);
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amountwithtax", false);
 
             //Mobilnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", true);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", true, formContext);
 
             //Epost
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", false, formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.refundtypeCOUPON\n\n" + e.Message);
         }
     },
 
-    refundtypeVALUECODESMS: function () {
+    refundtypeVALUECODESMS: function (formContext) {
         try {
 
             //Biocheck
@@ -1848,49 +1836,49 @@ CGISweden.refund =
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_check_number", false);
 
             //Kortnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
 
             //Vidarebefordran
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false, formContext);
 
             //Taxi
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false, formContext);
 
             //Milers�ttning
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false, formContext);
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none");
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none", formContext);
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amountwithtax", false);
 
             //Mobilnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", true);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", true, formContext);
 
             //Epost
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", false, formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.refundtypeVALUECODESMS\n\n" + e.Message);
         }
     },
 
-    refundtypeCOUPONEMAIL: function () {
+    refundtypeCOUPONEMAIL: function (formContext) {
         try {
 
             //Biocheck
@@ -1898,49 +1886,49 @@ CGISweden.refund =
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_check_number", false);
 
             //Kortnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
 
             //Vidarebefordran
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false, formContext);
 
             //Taxi
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false, formContext);
 
             //Milers�ttning
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false, formContext);
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none");
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none", formContext);
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amountwithtax", false);
 
             //Mobilnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", false, formContext);
 
             //Epost
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", true);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", true, formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.refundtypeCOUPONEMAIL\n\n" + e.Message);
         }
     },
 
-    refundtypeVALUECODEEMAIL: function () {
+    refundtypeVALUECODEEMAIL: function (formContext) {
         try {
 
             //Biocheck
@@ -1948,42 +1936,42 @@ CGISweden.refund =
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_check_number", false);
 
             //Kortnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
 
             //Vidarebefordran
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_transportcompanyid", false, formContext);
 
             //Taxi
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_taxi_company", false, formContext);
 
             //Milers�ttning
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_car_reg", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_car_reg", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_milage", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_last_valid", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_milage_compensation", false, formContext);
 
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false);
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false);
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none");
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_quantity", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_quantity", false, formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amount", true, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_amount", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_calculated_amount", false, formContext);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_calculated_amount", "none", formContext);
             //CGISweden.formscriptfunctions.HideOrDisplayField("cgi_amountwithtax", false);
 
             //Mobilnummer
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "none");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", false);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_mobilenumber", "none", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_mobilenumber", false, formContext);
 
             //Epost
-            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "required");
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", true);
+            CGISweden.formscriptfunctions.SetRequiredLevel("cgi_email", "required", formContext);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_email", true, formContext);
 
-            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true);
+            CGISweden.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.refundtypeVALUECODEEMAIL\n\n" + e.Message);
@@ -1995,19 +1983,17 @@ CGISweden.refund =
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set milage compensation
-    setMilageCompensation: function () {
+    setMilageCompensation: function (formContext) {
         try {
             var _currentdate = CGISweden.formscriptfunctions.GetDateTime();
-            CGISweden.odata.GetDefaultMilageContributionFromSetting(_currentdate, CGISweden.refund.setMilageContributionOnLoad_callback, CGISweden.refund.setMilageContributionOnLoad_complete);
+            CGISweden.odata.GetDefaultMilageContributionFromSetting(_currentdate, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.setMilageCompensation\n\n" + e.Message);
         }
     },
 
-    setMilageContributionOnLoad_complete: function () { },
-
-    setMilageContributionOnLoad_callback: function (result) {
+    setMilageContributionOnLoad_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Det finns ingen milersättning definierad!");
@@ -2015,7 +2001,7 @@ CGISweden.refund =
             else {
                 var _milage_contribution = result[0].cgi_milage_contribution.Value;
                 _milage_contribution_decimal = parseFloat(_milage_contribution);
-                CGISweden.formscriptfunctions.SetValue("cgi_milage_compensation", _milage_contribution_decimal);
+                CGISweden.formscriptfunctions.SetValue("cgi_milage_compensation", _milage_contribution_decimal, formContext);
             }
         }
         catch (e) {
@@ -2024,13 +2010,13 @@ CGISweden.refund =
     },
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set valid date for compensation
-    SetDateValidField: function () {
+    SetDateValidField: function (formContext) {
         try {
             var futureDate = CGISweden.refund.getFutureDateByAddingMonths(12);
-            CGISweden.formscriptfunctions.SetValue("cgi_last_valid", futureDate);
+            CGISweden.formscriptfunctions.SetValue("cgi_last_valid", futureDate, formContext);
             console.log(futureDate);
-            console.log(Xrm.Page.getAttribute("cgi_last_valid").getValue());
-            //Xrm.Page.data.entity.attributes.get("cgi_last_valid").setValue(futureDate);
+            console.log(formContext.getAttribute("cgi_last_valid").getValue());
+            //formContext.data.entity.attributes.get("cgi_last_valid").setValue(futureDate);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.SetDateValidField\n\n" + e.Message);
@@ -2067,20 +2053,18 @@ CGISweden.refund =
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set BIC and IBAN
-    SetBicIban: function () {
+    SetBicIban: function (formContext) {
         try {
-            var _caseid = CGISweden.formscriptfunctions.GetLookupid("cgi_caseid");
+            var _caseid = CGISweden.formscriptfunctions.GetLookupid("cgi_caseid", formContext);
             //alert("Ärendenr: " + _caseid);
-            CGISweden.odata.GetBicIban(_caseid, CGISweden.refund.setBicIban_callback, CGISweden.refund.setBicIban_complete);
+            CGISweden.odata.GetBicIban(_caseid, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.SetBicIban\n\n" + e.Message);
         }
     },
 
-    setBicIban_complete: function () { },
-
-    setBicIban_callback: function (result) {
+    setBicIban_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 //alert("Det finns inget bankkonto angivet på ärendet");
@@ -2089,8 +2073,8 @@ CGISweden.refund =
                 var _cgi_bic = result[0].cgi_bic;
                 var _cgi_iban = result[0].cgi_iban;
 
-                CGISweden.formscriptfunctions.SetValue("cgi_iban", _cgi_iban);
-                CGISweden.formscriptfunctions.SetValue("cgi_swift", _cgi_bic);
+                CGISweden.formscriptfunctions.SetValue("cgi_iban", _cgi_iban, formContext);
+                CGISweden.formscriptfunctions.SetValue("cgi_swift", _cgi_bic, formContext);
             }
         }
         catch (e) {
@@ -2100,19 +2084,17 @@ CGISweden.refund =
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set social security number
-    setSocSecNumber: function () {
+    setSocSecNumber: function (formContext) {
         try {
-            var _caseid = CGISweden.formscriptfunctions.GetLookupid("cgi_caseid");
-            CGISweden.odata.GetSocSecNumber(_caseid, CGISweden.refund.setSocSecOnLoad_callback, CGISweden.refund.setSocSecOnLoad_complete);
+            var _caseid = CGISweden.formscriptfunctions.GetLookupid("cgi_caseid", formContext);
+            CGISweden.odata.GetSocSecNumber(_caseid, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.SocSecNumber\n\n" + e.Message);
         }
     },
 
-    setSocSecOnLoad_complete: function () { },
-
-    setSocSecOnLoad_callback: function (result) {
+    setSocSecOnLoad_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 //alert("Det finns inget bankkonto angivet p� �rendet");
@@ -2123,9 +2105,9 @@ CGISweden.refund =
                 var _cgi_iscompleted = result[0].cgi_iscompleted;
 
                 if (_cgi_rgol_socialsecuritynumber != null && _cgi_iscompleted == false)
-                    CGISweden.formscriptfunctions.SetValue("cgi_soc_sec_number", _cgi_rgol_socialsecuritynumber);
+                    CGISweden.formscriptfunctions.SetValue("cgi_soc_sec_number", _cgi_rgol_socialsecuritynumber, formContext);
                 else
-                    CGISweden.formscriptfunctions.SetValue("cgi_soc_sec_number", _cgi_soc_sec_number);
+                    CGISweden.formscriptfunctions.SetValue("cgi_soc_sec_number", _cgi_soc_sec_number, formContext);
 
             }
         }
@@ -2136,19 +2118,17 @@ CGISweden.refund =
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Get email
-    setEmail: function () {
+    setEmail: function (formContext) {
         try {
-            var _caseid = CGISweden.formscriptfunctions.GetLookupid("cgi_caseid");
-            CGISweden.odata.GetEmailAddress(_caseid, CGISweden.refund.getGetEmailAddress_callback, CGISweden.refund.getEmailAddress_complete);
+            var _caseid = CGISweden.formscriptfunctions.GetLookupid("cgi_caseid", formContext);
+            CGISweden.odata.GetEmailAddress(_caseid, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.getEmail\n\n" + e.Message);
         }
     },
 
-    getEmailAddress_complete: function () { },
-
-    getGetEmailAddress_callback: function (result) {
+    getGetEmailAddress_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 //alert("Det finns ingen e-postadress angivet på ärendet");
@@ -2160,10 +2140,10 @@ CGISweden.refund =
                 var _cgi_iscompleted = result[0].cgi_iscompleted;
 
                 if (_cgi_delivery_email != null && _cgi_iscompleted == false) {
-                    CGISweden.formscriptfunctions.SetValue("cgi_email", _cgi_delivery_email);
+                    CGISweden.formscriptfunctions.SetValue("cgi_email", _cgi_delivery_email, formContext);
                 }
                 else {
-                    CGISweden.formscriptfunctions.SetValue("cgi_email", _cgi_customer_email);
+                    CGISweden.formscriptfunctions.SetValue("cgi_email", _cgi_customer_email, formContext);
                 }
             }
         }
@@ -2174,19 +2154,17 @@ CGISweden.refund =
     },
 
     //Set mobilenumber
-    setMobileNumber: function () {
+    setMobileNumber: function (formContext) {
         try {
-            var _caseid = CGISweden.formscriptfunctions.GetLookupid("cgi_caseid");
-            CGISweden.odata.GetMobileNumber(_caseid, CGISweden.refund.setMobileNumber_callback, CGISweden.refund.setMobileNumber_complete);
+            var _caseid = CGISweden.formscriptfunctions.GetLookupid("cgi_caseid", formContext);
+            CGISweden.odata.GetMobileNumber(_caseid, formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.getMobileNumber\n\n" + e.Message);
         }
     },
 
-    setMobileNumber_complete: function () { },
-
-    setMobileNumber_callback: function (result) {
+    setMobileNumber_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 //alert("Det finns inget mobilnummer angivet på ärendet");
@@ -2197,9 +2175,9 @@ CGISweden.refund =
                 var _cgi_iscompleted = result[0].cgi_iscompleted;
 
                 if (_cgi_rgol_telephonenumber != null && _cgi_iscompleted == false)
-                    CGISweden.formscriptfunctions.SetValue("cgi_mobilenumber", _cgi_rgol_telephonenumber);
+                    CGISweden.formscriptfunctions.SetValue("cgi_mobilenumber", _cgi_rgol_telephonenumber, formContext);
                 else
-                    CGISweden.formscriptfunctions.SetValue("cgi_mobilenumber", _cgi_customer_telephonenumber);
+                    CGISweden.formscriptfunctions.SetValue("cgi_mobilenumber", _cgi_customer_telephonenumber, formContext);
             }
         }
         catch (e) {
@@ -2209,55 +2187,55 @@ CGISweden.refund =
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set all values to 0 or null
-    setEmptyAllValues: function () {
+    setEmptyAllValues: function (formContext) {
         try {
             //S�tt belopp fältet till editerbart
-            CGISweden.formscriptfunctions.SetState("cgi_amount", "true");
-            CGISweden.formscriptfunctions.SetState("cgi_calculated_amount", "true");
+            CGISweden.formscriptfunctions.SetState("cgi_amount", "true", formContext);
+            CGISweden.formscriptfunctions.SetState("cgi_calculated_amount", "true", formContext);
 
             //Ers�ttningsformen
-            Xrm.Page.getAttribute("cgi_reimbursementformid").setValue(null);
+            formContext.getAttribute("cgi_reimbursementformid").setValue(null);
 
             //Konto uppgifter
-            Xrm.Page.getAttribute("cgi_accountno").setValue();
-            //Xrm.Page.getAttribute("cgi_foreign_payment").setValue();
-            Xrm.Page.getAttribute("cgi_iban").setValue();
-            Xrm.Page.getAttribute("cgi_swift").setValue();
+            formContext.getAttribute("cgi_accountno").setValue();
+            //formContext.getAttribute("cgi_foreign_payment").setValue();
+            formContext.getAttribute("cgi_iban").setValue();
+            formContext.getAttribute("cgi_swift").setValue();
 
             //Konteringssträngen
-            Xrm.Page.getAttribute("cgi_accountid").setValue(null);
-            Xrm.Page.getAttribute("cgi_responsibleid").setValue(null);
-            Xrm.Page.getAttribute("cgi_productid").setValue(null);
-            Xrm.Page.getAttribute("cgi_vat_code").setValue(null);
+            formContext.getAttribute("cgi_accountid").setValue(null);
+            formContext.getAttribute("cgi_responsibleid").setValue(null);
+            formContext.getAttribute("cgi_productid").setValue(null);
+            formContext.getAttribute("cgi_vat_code").setValue(null);
 
             //Biocheck
-            Xrm.Page.getAttribute("cgi_checknumber").setValue(null);
-            //CGISweden.formscriptfunctions.SetValue("cgi_check_number", "");
+            formContext.getAttribute("cgi_checknumber").setValue(null);
+            //CGISweden.formscriptfunctions.SetValue("cgi_check_number", "", formContext);
 
             ////Vidarebefordran
-            Xrm.Page.getAttribute("cgi_transportcompanyid").setValue(null);
+            formContext.getAttribute("cgi_transportcompanyid").setValue(null);
 
             ////Taxi
-            Xrm.Page.getAttribute("cgi_taxi_company").setValue();
+            formContext.getAttribute("cgi_taxi_company").setValue();
 
             ////Milers�tttning
-            Xrm.Page.getAttribute("cgi_car_reg").setValue();
-            CGISweden.formscriptfunctions.SetValue("cgi_milage", 0);
-            Xrm.Page.getAttribute("cgi_last_valid").setValue();
-            CGISweden.formscriptfunctions.SetValue("cgi_milage_compensation", 0);
+            formContext.getAttribute("cgi_car_reg").setValue();
+            CGISweden.formscriptfunctions.SetValue("cgi_milage", 0, formContext);
+            formContext.getAttribute("cgi_last_valid").setValue();
+            CGISweden.formscriptfunctions.SetValue("cgi_milage_compensation", 0, formContext);
 
             ////Kvantitet och belopp
-            Xrm.Page.getAttribute("cgi_quantity").setValue();
-            Xrm.Page.getAttribute("cgi_amount").setValue();
-            Xrm.Page.getAttribute("cgi_calculated_amount").setValue();
-            //Xrm.Page.getAttribute("cgi_amountwithtax").setValue();
+            formContext.getAttribute("cgi_quantity").setValue();
+            formContext.getAttribute("cgi_amount").setValue();
+            formContext.getAttribute("cgi_calculated_amount").setValue();
+            //formContext.getAttribute("cgi_amountwithtax").setValue();
 
             ////Vidarefakturering
-            Xrm.Page.getAttribute("cgi_reinvoicing").setValue(false);
-            Xrm.Page.getAttribute("cgi_invoicerecipient").setValue(null);
+            formContext.getAttribute("cgi_reinvoicing").setValue(false);
+            formContext.getAttribute("cgi_invoicerecipient").setValue(null);
 
             //Kommentarer
-            Xrm.Page.getAttribute("cgi_comments").setValue();
+            formContext.getAttribute("cgi_comments").setValue();
 
         }
         catch (e) {
@@ -2266,19 +2244,21 @@ CGISweden.refund =
     },
 
     // Milage compensation number of mile on_change
-    cgi_milage_on_change: function () {
-        CGISweden.refund.calculateMilageCompensation();
+    cgi_milage_on_change: function (executionContext) {
+        var formContext = executionContext.getFormContext();
+
+        CGISweden.refund.calculateMilageCompensation(formContext);
     },
 
     //Calculate milage compensation
-    calculateMilageCompensation: function () {
+    calculateMilageCompensation: function (formContext) {
         try {
-            var _cgi_milage = Xrm.Page.getAttribute("cgi_milage").getValue();
-            var _cgi_milage_compensation = Xrm.Page.getAttribute("cgi_milage_compensation").getValue();
+            var _cgi_milage = formContext.getAttribute("cgi_milage").getValue();
+            var _cgi_milage_compensation = formContext.getAttribute("cgi_milage_compensation").getValue();
             var _cgi_amount = Math.round(_cgi_milage * _cgi_milage_compensation);
 
-            Xrm.Page.getAttribute("cgi_amount").setValue(_cgi_amount);
-            Xrm.Page.getAttribute("cgi_calculated_amount").setValue(_cgi_amount);
+            formContext.getAttribute("cgi_amount").setValue(_cgi_amount);
+            formContext.getAttribute("cgi_calculated_amount").setValue(_cgi_amount);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.calculateCompensation\n\n" + e.Message);
@@ -2287,21 +2267,23 @@ CGISweden.refund =
     },
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    setLimitandAuth: function () {
+    
+    setLimitandAuth: function (executionContext) {
+        var formContext = executionContext.getFormContext();
+        var globalContext = Xrm.Utility.getGlobalContext();
+
         //Check security role
-        var currentUserRoles = Xrm.Page.context.getUserRoles();
+        var currentUserRoles = globalContext.userSettings.securityRoles();
         for (var i = 0; i < currentUserRoles.length; i++) {
             var userRoleId = currentUserRoles[i];
-            CGISweden.odata.GetSecRolesName(userRoleId, CGISweden.refund.CheckUserRoleOnchange_callback, CGISweden.refund.CheckUserRoleOnCange_complete);
+            CGISweden.odata.GetSecRolesNameRefund(userRoleId, formContext);
             //alert("Antal roller " + i);
         }
         //Check amount limit
         //CGISweden.refund.setAmountLimit();
     },
 
-    CheckUserRoleOnCange_complete: function () { },
-
-    CheckUserRoleOnchange_callback: function (result) {
+    CheckUserRoleOnchange_callback: function (result, formContext) {
         try {
             if (result == null || result[0] == null) {
                 alert("Ingen säkerhetsroll definierad!");
@@ -2312,7 +2294,7 @@ CGISweden.refund =
 
                 //Om användaren har rollen Attest ovan, så är användaren godkänd för att 
                 if (roleName == userRoleName) {
-                    Xrm.Page.getAttribute("cgi_auth_approved").setValue(true);
+                    formContext.getAttribute("cgi_auth_approved").setValue(true);
                 }
             }
         }
@@ -2321,9 +2303,11 @@ CGISweden.refund =
         }
     },
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    checkAuthorization: function () {
-        var _attestation_code = Xrm.Page.getAttribute("cgi_attestation").getValue();
-        var _auth_approved = Xrm.Page.getAttribute("cgi_auth_approved").getValue();
+
+   
+    checkAuthorization: function (executionContext) {
+        var _attestation_code = formContext.getAttribute("cgi_attestation").getValue();
+        var _auth_approved = formContext.getAttribute("cgi_auth_approved").getValue();
 
         //alert("Attestkod" + _attestation_code);
         //alert("Attest godkänd" + _auth_approved);
@@ -2332,11 +2316,11 @@ CGISweden.refund =
             //Om attest kod �r skilt fr�n Pendning (285050000) och �r skilt fr�n No Financial transaction (285050003) anv�ndaren inte har attestbeh�righet
             //, s� sp�rra samtliga f�lt f�r editering.
             if (_attestation_code != 285050000 && _attestation_code != 285050003 && _auth_approved == false) {
-                CGISweden.refund.setFieldsToReadOnly();
+                CGISweden.refund.setFieldsToReadOnly(formContext);
             }
             //Om anv�ndaren inte har attestbeh�righet, s� sp�rra f�ltet attestkod.
             if (_auth_approved == false) {
-                CGISweden.refund.setAttestationToReadOnly();
+                CGISweden.refund.setAttestationToReadOnly(formContext);
             }
         }
         catch (e) {
@@ -2344,68 +2328,68 @@ CGISweden.refund =
         }
     },
 
-    setAttestationToReadOnly: function () {
+    setAttestationToReadOnly: function (formContext) {
         try {
-            CGISweden.formscriptfunctions.SetState("cgi_attestation", "true");
+            CGISweden.formscriptfunctions.SetState("cgi_attestation", "true", formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.setAttestationToReadOnly\n\n" + e.Message);
         }
     },
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    setFieldsToReadOnly: function () {
+    setFieldsToReadOnly: function (formContext) {
         try {
 
             //Generella f�lt
-            CGISweden.formscriptfunctions.SetState("cgi_caseid", "true");
-            CGISweden.formscriptfunctions.SetState("ownerid", "true");
-            CGISweden.formscriptfunctions.SetState("cgi_reimbursementformid", "true");
+            CGISweden.formscriptfunctions.SetState("cgi_caseid", "true", formContext);
+            CGISweden.formscriptfunctions.SetState("ownerid", "true", formContext);
+            CGISweden.formscriptfunctions.SetState("cgi_reimbursementformid", "true", formContext);
 
 
             //Biocheck
-            CGISweden.formscriptfunctions.SetState("cgi_checknumber", "true");
+            CGISweden.formscriptfunctions.SetState("cgi_checknumber", "true", formContext);
 
 
             ////Konteringsstr�ngen
-            CGISweden.formscriptfunctions.SetState("cgi_accountid", "true");
-            CGISweden.formscriptfunctions.SetState("cgi_productid", "true");
+            CGISweden.formscriptfunctions.SetState("cgi_accountid", "true", formContext);
+            CGISweden.formscriptfunctions.SetState("cgi_productid", "true", formContext);
 
 
             //////Vidarebefordran
-            CGISweden.formscriptfunctions.SetState("cgi_transportcompanyid", "true");
+            CGISweden.formscriptfunctions.SetState("cgi_transportcompanyid", "true", formContext);
 
             //////Taxi
-            CGISweden.formscriptfunctions.SetState("cgi_taxi_company", "true");
+            CGISweden.formscriptfunctions.SetState("cgi_taxi_company", "true", formContext);
 
 
             //////Milers�tttning
-            CGISweden.formscriptfunctions.SetState("cgi_car_reg", "true");
-            CGISweden.formscriptfunctions.SetState("cgi_milage", "true");
-            CGISweden.formscriptfunctions.SetState("cgi_last_valid", "true");
-            CGISweden.formscriptfunctions.SetState("cgi_milage_compensation", "true");
+            CGISweden.formscriptfunctions.SetState("cgi_car_reg", "true", formContext);
+            CGISweden.formscriptfunctions.SetState("cgi_milage", "true", formContext);
+            CGISweden.formscriptfunctions.SetState("cgi_last_valid", "true", formContext);
+            CGISweden.formscriptfunctions.SetState("cgi_milage_compensation", "true", formContext);
 
             //////Kvantitet och belopp
-            CGISweden.formscriptfunctions.SetState("cgi_quantity", "true");
-            CGISweden.formscriptfunctions.SetState("cgi_amount", "true");
-            CGISweden.formscriptfunctions.SetState("cgi_calculated_amount", "true");
+            CGISweden.formscriptfunctions.SetState("cgi_quantity", "true", formContext);
+            CGISweden.formscriptfunctions.SetState("cgi_amount", "true", formContext);
+            CGISweden.formscriptfunctions.SetState("cgi_calculated_amount", "true", formContext);
             //CGISweden.formscriptfunctions.SetState("cgi_amountwithtax", "true");
 
 
             //////Vidarefakturering
-            CGISweden.formscriptfunctions.SetState("cgi_reinvoicing", "true");
-            CGISweden.formscriptfunctions.SetState("cgi_invoicerecipient", "true");
+            CGISweden.formscriptfunctions.SetState("cgi_reinvoicing", "true", formContext);
+            CGISweden.formscriptfunctions.SetState("cgi_invoicerecipient", "true", formContext);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.setFieldsToReadOnly\n\n" + e.Message);
         }
     },
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    setFieldToEditable: function () {
+    setFieldToEditable: function (formContext) {
         try {
             //CGISweden.formscriptfunctions.SetState("cgi_amount", "false");
-            var _field = Xrm.Page.ui.controls.get("cgi_amount");
+            var _field = formContext.ui.controls.get("cgi_amount");
             _field.setDisabled(false);
-            var _field = Xrm.Page.ui.controls.get("cgi_calculated_amount");
+            var _field = formContext.ui.controls.get("cgi_calculated_amount");
             _field.setDisabled(false);
         }
         catch (e) {
@@ -2414,10 +2398,12 @@ CGISweden.refund =
     },
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    format_phonenumber: function (context) {
+    format_phonenumber: function (executionContext) {
         try {
-            var phoneNumberStr = context.getEventSource();
-            var control = Xrm.Page.getControl(phoneNumberStr.getName());
+            var formContext = executionContext.getFormContext();
+
+            var phoneNumberStr = formContext.getEventSource();
+            var control = formContext.getControl(phoneNumberStr.getName());
 
             // Verify that the field is valid
             if (typeof (phoneNumberStr) != "undefined" && phoneNumberStr != null) {

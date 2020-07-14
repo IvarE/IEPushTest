@@ -18,17 +18,16 @@ TIMEOUT_COUNTER = 500;
 CGISweden.contact =
 {
 
-    onFormLoad: function () {
+    onFormLoad: function (executionContext) {
         try {
+            var formContext = executionContext.getFormContext();
 
-
-            switch (Xrm.Page.ui.getFormType()) {
+            switch (formContext.ui.getFormType()) {
                 case FORM_TYPE_CREATE:
                     break;
                 case FORM_TYPE_UPDATE:
-                    CGISweden.contact.checkIfUserHasSecRole();
-                    CGISweden.contact.timerfunction_eHandel();
-                    //CGISweden.contact.checkIfAdmForm();
+                    CGISweden.contact.checkIfUserHasSecRole(formContext);
+                    CGISweden.contact.timerfunction_eHandel(formContext);
                 case FORM_TYPE_READONLY:
                 case FORM_TYPE_DISABLED:
                     break;
@@ -45,24 +44,27 @@ CGISweden.contact =
         }
     },
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    onsave: function (context) {
+    onsave: function (executionContext) {
+        var formContext = executionContext.getFormContext();
 
-        var eventArgs = context.getEventArgs();
-        var _check_soc = CGISweden.contact.SocSecNoOnChange();
+        var eventArgs = formContext.getEventArgs();
+        var _check_soc = CGISweden.contact.SocSecNoOnChange(formContext);
 
         if (_check_soc == false) {
             eventArgs.preventDefault();
         }
 
-        //CGISweden.contact.checkIfAdmForm();
+        
     },
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    checkIfUserHasSecRole: function () {
+    checkIfUserHasSecRole: function (formContext) {
         try {
-            var currentUserRoles = Xrm.Page.context.getUserRoles();
+            var globalContext = Xrm.Utility.getGlobalContext();
+
+            var currentUserRoles = globalContext.userSettings.securityRoles();
             for (var i = 0; i < currentUserRoles.length; i++) {
                 var userRoleId = currentUserRoles[i];
-                CGISweden.odata.GetSecRolesName(userRoleId, CGISweden.contact.checkIfUserHasRole_callback, CGISweden.contact.checkIfUserHasRole_complete);
+                CGISweden.odata.GetSecRolesNameContact(userRoleId, formContext);
             }
         }
         catch (e) {
@@ -70,22 +72,7 @@ CGISweden.contact =
         }
     },
 
-    //checkIfAdmForm: function () {
-    //    var currForm = Xrm.Page.ui.formSelector.getCurrentItem();
-    //    var currFormId = currForm.getId()
-
-    //    if (currFormId == "aa39956c-0a06-4963-873a-2b3e574dbea5" || currFormId == "4b94250e-b88f-4439-9184-750d56a84fcf") { //"Tre Kolumner (Test)" or "Labbvy Admin"
-    //        Xrm.Page.getAttribute("ed_isadmform").setValue(true);
-    //    }
-    //    else {
-    //        Xrm.Page.getAttribute("ed_isadmform").setValue(false);
-    //    }
-    //},
-
-    checkIfUserHasRole_complete: function () {
-    },
-
-    checkIfUserHasRole_callback: function (result) {
+    checkIfUserHasRole_callback: function (result, formContext) {
         try {
             if (result == null) {
                 alert("Inga säkerhetsroller definierade!");
@@ -98,9 +85,9 @@ CGISweden.contact =
 
                 
                     try {
-                        var emailField = Xrm.Page.getAttribute("emailaddress1").getValue();
+                        var emailField = formContext.getAttribute("emailaddress1").getValue();
 
-                        var currForm = Xrm.Page.ui.formSelector.getCurrentItem();
+                        var currForm = formContext.ui.formSelector.getCurrentItem();
 
                         var currFormId = currForm.getId()
 
@@ -108,7 +95,7 @@ CGISweden.contact =
                             if (currFormId !== "4b94250e-b88f-4439-9184-750d56a84fcf") { //dont lock email field when using form "Tre Kolumner (Test)" or "Labbvy Admin"
                                 if (emailField && emailField.Length !== 0) {
                                     if (_roleName.indexOf("Handläggare") > 0) {
-                                        CGISweden.formscriptfunctions.SetState("emailaddress1", "true"); //The field should be editable until it has content
+                                        CGISweden.formscriptfunctions.SetState("emailaddress1", "true", formContext); //The field should be editable until it has content
                                     }
                                 }
                             }
@@ -131,12 +118,12 @@ CGISweden.contact =
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    SocSecNoOnChange: function () {
+    SocSecNoOnChange: function (formContext) {
         // Johan Andersson - Endeavor
         // Check Personnummer if swedish nationality
         var _return_save = true;
         var hasswedish = true;
-        var obj = Xrm.Page.getAttribute("ed_hasswedishsocialsecuritynumber");
+        var obj = formContext.getAttribute("ed_hasswedishsocialsecuritynumber");
         if(obj != null){
             if(obj.getValue() == false)
                 hasswedish = false;
@@ -144,7 +131,7 @@ CGISweden.contact =
 
         // Perform only if swedish (default to swedish if missing)
         if (hasswedish == true) {
-            var _soc = Xrm.Page.getAttribute("cgi_socialsecuritynumber");
+            var _soc = formContext.getAttribute("cgi_socialsecuritynumber");
             if (_soc != "" && _soc != null) {
                 _soc = _soc.getValue();
                 if (_soc == null)
@@ -164,7 +151,7 @@ CGISweden.contact =
                         }
                         else {
                             if (_soc.length == 13) {
-                                Xrm.Page.getAttribute("cgi_socialsecuritynumber").setValue(_soc_trim);
+                                formContext.getAttribute("cgi_socialsecuritynumber").setValue(_soc_trim);
                             }
                         }
                     }
@@ -221,17 +208,21 @@ CGISweden.contact =
         return (sum % 10) == 0;
     },
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    setContactLastname_Onload: function () {
-        CGISweden.formscriptfunctions.SetValue("lastname", "");
+
+    //Cant find this function TODO
+    setContactLastname_Onload: function (executionContext) {
+        var formContext = executionContext.getFormContext();
+
+        CGISweden.formscriptfunctions.SetValue("lastname", "", formContext);
     },
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    timerfunction_eHandel: function () {
+    timerfunction_eHandel: function (formContext) {
         try {
             var arg = 'WebResource_eHandelOrders';
-            var obj = Xrm.Page.getControl(arg).getObject();
-            var entid = Xrm.Page.data.entity.getId();
+            var obj = formContext.getControl(arg).getObject();
+            var entid = formContext.data.entity.getId();
 
             try {
                 obj.contentWindow.SetID(entid);
@@ -246,10 +237,12 @@ CGISweden.contact =
     },
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    format_phonenumber: function (context) {
+    format_phonenumber: function (executionContext) {
         try {
-            var phoneNumberStr = context.getEventSource();
-            var control = Xrm.Page.getControl(phoneNumberStr.getName());
+            var formContext = executionContext.getFormContext();
+
+            var phoneNumberStr = formContext.getEventSource();
+            var control = formContext.getControl(phoneNumberStr.getName());
 
             // Verify that the field is valid
             if (typeof (phoneNumberStr) != "undefined" && phoneNumberStr != null) {
@@ -279,9 +272,12 @@ CGISweden.contact =
     },
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    format_ZIPCode: function () {
+
+    format_ZIPCode: function (executionContext) {
         try {
-            var ZIPCodeNumberStr = Xrm.Page.getAttribute("address1_postalcode");
+            var formContext = executionContext.getFormContext();
+
+            var ZIPCodeNumberStr = formContext.getAttribute("address1_postalcode");
 
             // Verify that the field is valid
             if (typeof (ZIPCodeNumberStr) != "undefined" && ZIPCodeNumberStr != null) {
@@ -300,9 +296,12 @@ CGISweden.contact =
 
     },
 
-    save_format_ZIPCode: function () {
+
+    save_format_ZIPCode: function (executionContext) {
         try {
-            var ZIPCodeNumberStr = Xrm.Page.getAttribute("address1_postalcode");
+            var formContext = executionContext.getFormContext();
+
+            var ZIPCodeNumberStr = formContext.getAttribute("address1_postalcode");
 
             // Verify that the field is valid
             if (typeof (ZIPCodeNumberStr) != "undefined" && ZIPCodeNumberStr != null) {

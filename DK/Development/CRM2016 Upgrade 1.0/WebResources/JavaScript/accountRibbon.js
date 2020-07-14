@@ -20,7 +20,7 @@ CGISweden.accountRibbon =
             //            parameters["cgi_accountidtype"] = "account";
 
             // Open the window.
-            Xrm.Utility.openEntityForm("incident", null, parameters);
+            Xrm.Navigation.openForm("incident", null, parameters);
 
         }
         catch (e) {
