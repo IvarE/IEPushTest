@@ -7,32 +7,28 @@
 
     <script type="text/javascript">
 
+        var iframeURL = 'https://sttravelconfiguratorweb.azurewebsites.net';
+        var iframeID = 'frontOfficeiFrameId';
+
+        function loadIframe() {
+            //pre-authenticate
+            var req = new XMLHttpRequest();
+            req.open("POST", iframeURL, false, "ST.CRM_ExternalTest_1@regionskane.onmicrosoft.com", "SingaporeCrmTestuser#1"); //use POST to safely send combination
+            req.send(null); //here you can pass extra parameters through
+
+            //setiFrame's SRC attribute
+            var iFrameWin = document.getElementById(iframeID);
+            iFrameWin.src = iframeURL + "?extraParameters=true";
+        }
+
         // On Load
         function onLoad() {
             debugger;
-            var formContext = getFormContext();
             document.getElementById("frontOfficeiFrameId").src = "https://sttravelconfiguratorweb.azurewebsites.net/ticketdetails/12345";
-        }
+            document.getElementById("frontOfficeiFrameId").src = "https://sttravelconfiguratorweb.azurewebsites.net";
 
-        // Get Form Context
-        function getFormContext() {
-            for (i = 0; i < window.parent.frames.length; i++) {
-                var frame = window.parent.frames[i];
-                if (typeof frame.Endeavor !== "undefined" && typeof frame.Endeavor.Skanetrafiken !== "undefined" && typeof frame.Endeavor.Skanetrafiken.getOrders !== "undefined") {
-                    return frame;
-                }
-            }
-
-            for (i = 0; i < window.parent.parent.frames.length; i++) {
-                var frame = window.parent.parent.frames[i];
-                if (typeof frame.Endeavor !== "undefined" && typeof frame.Endeavor.Skanetrafiken !== "undefined" && typeof frame.Endeavor.Skanetrafiken.getOrders !== "undefined") {
-                    return frame;
-                }
-            }
-
-            alert("Front Office is unavailable. Please contact your systems administrator.")
-
-            return null;
+            //onload, call loadIframe() function
+            loadIframe();
         }
 
     </script>
