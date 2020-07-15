@@ -92,16 +92,7 @@ namespace Skanetrafiken.Crm
                 //Get information from settings
                 FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
                 settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
-                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
-                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
-                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
-                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
-                CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
-                    CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
-                    CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
-                    CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
-                    CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
-                    CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
+                CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
 
                 if (settings != null)
                 {
