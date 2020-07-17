@@ -248,7 +248,13 @@
     <Content Include="WebResource\script\Endeavor.Common.Data.js" />
     <Content Include="WebResource\script\Endeavor.Common.Page.js" />
     <Content Include="WebResource\script\Endeavor.Common.SaveAndCopyEntity.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.cgi_representative.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.cgi_travelcard.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.QueueItem.V9.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCodeApproval.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.KBArticle.V9.js" />
+    <Content Include="WebResource\script\formscriptfunctions.js" />
+    <Content Include="WebResource\script\OData_Querys.js" />
     <Content Include="WebResource\script\SDK.Rest.js" />
     <Content Include="WebResource\script\vsdoc\head.load.vsdoc.js" />
     <Content Include="WebResource\script\vsdoc\Sdk.Soap.vsdoc.js" />
