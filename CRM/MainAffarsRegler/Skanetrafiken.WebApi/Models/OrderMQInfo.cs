@@ -226,6 +226,7 @@ namespace Skanetrafiken.Crm.Models
                         clientMQ.users.Add(userMQ);
                     }
 
+                    orderMQ.client = clientMQ;
                     _log.Debug($"Customer/Client Name: {erCustomer.Name}");
                 }
             }

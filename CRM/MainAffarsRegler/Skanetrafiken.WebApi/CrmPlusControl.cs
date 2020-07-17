@@ -2187,7 +2187,6 @@ namespace Skanetrafiken.Crm.Controllers
                     orderMQInfo.error = null;
                     orderMQInfo.data = new List<OrderMQ>();
 
-                    
                     foreach (OrderEntity order in lOrders)
                     {
                         _log.Debug($"Looping orders. OrderId: {order.Id}");
