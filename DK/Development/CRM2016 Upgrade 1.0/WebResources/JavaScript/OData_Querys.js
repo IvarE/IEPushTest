@@ -5,89 +5,43 @@ CGISweden.odata =
 {
 
     // *** Start Queries used for entity Case
-    IsTravelInformationRequired: function (cgi_categorydetailId) {
-
-        try {
-            //This is done synchronously because it is part of a validation process
-            var serverUrl;
-            if (Xrm.Page.context.getClientUrl !== undefined) {
-                serverUrl = Xrm.Page.context.getClientUrl();
-            } else {
-                serverUrl = Xrm.Page.context.getServerUrl();
-            }
-            var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc";
-
-            var _options = "$select=cgi_requirestravelinfo&";
-            var _filter = "$filter=cgi_categorydetailId eq guid'" + cgi_categorydetailId + "'";
-            var _odata = _options + _filter;
-
-            var cgi_categorydetailQueryUrl = ODataPath + "/cgi_categorydetailSet?" + _odata;
-
-            var ODataRequest = new XMLHttpRequest();
-            ODataRequest.open("GET", cgi_categorydetailQueryUrl, false); // false = synchronous request
-            ODataRequest.setRequestHeader("Accept", "application/json");
-            ODataRequest.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            ODataRequest.send();
-
-            if (ODataRequest.status === 200) {
-                var parsedResults = JSON.parse(ODataRequest.responseText).d;
-                if (parsedResults != null && parsedResults.results != null && parsedResults.results.length > 0) {
-                    var cgi_categorydetail = parsedResults.results[0];
-                    if (cgi_categorydetail["cgi_requirestravelinfo"] == 1)
-                        return true;
-                    else
-                        return false;
-                }
-                else {
-                    return false;
-                }
-            }
-            else {
-                return false;
-            }
-        }
-        catch (e) {
-            alert("Fel i CGISweden.odata.IsTravelInformationRequired\n\n" + e.Message);
-        }
-    },
     GetTravelInfoForCase: function (caseid, formContext) {
         try {
-            var globalContext = Xrm.Utility.getGlobalContext();
             //Return the number of travelinformation posts registered on this case
             //This is done synchronously because it is part of a validation process
-            var serverUrl;
-            if (globalContext.getClientUrl !== undefined) {
-                serverUrl = globalContext.getClientUrl();
-            } else {
-                serverUrl = globalContext.getServerUrl();
-            }
-            var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc";
 
-            var _options = "$select=cgi_travelinformationId&";
-            var _filter = "$filter=cgi_Caseid/Id eq guid'" + caseid + "'";
-            var _odata = _options + _filter;
+            Xrm.WebApi.retrieveRecord("cgi_travelinformation", caseid, "?$select=cgi_travelinformationid")
+                .then(function (cgi_travelinformation) {
+                    if (cgi_travelinformation.result.length === 0) {
 
-            var cgi_travelinformationQueryUrl = ODataPath + "/cgi_travelinformationSet?" + _odata;
+                        var cgi_casdet_row1_cat3idLookup = formContext.getAttribute("cgi_casdet_row1_cat3id").getValue();
 
-            var ODataRequest = new XMLHttpRequest();
-            ODataRequest.open("GET", cgi_travelinformationQueryUrl, false); // false = synchronous request
-            ODataRequest.setRequestHeader("Accept", "application/json");
-            ODataRequest.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            ODataRequest.send();
+                        return Xrm.WebApi.retrieveRecord("cgi_categorydetail", cgi_casdet_row1_cat3idLookup[0].id, "?$select=cgi_requirestravelinfo")
+                    }
+                    else {
+                        return;
+                    }
+                })
+                .then(function (cgi_categorydetail) {
+                    var cgi_categorydetails = cgi_categorydetail.result[0];
 
-            if (ODataRequest.status === 200) {
-                var parsedResults = JSON.parse(ODataRequest.responseText).d;
-                if (parsedResults != null && parsedResults.results != null) {
-                    return parsedResults.results.length;
+                    if (cgi_categorydetails["cgi_requirestravelinfo"] == 1) {
 
-                }
-                else {
-                    return -2;
-                }
-            }
-            else {
-                return -1;
-            }
+                        //ge användaren en möljighet att avsluta ärendet ändå utan trafikinfo genom att klicka ok
+                        if (confirm("Ärenden i kategori " + cgi_casdet_row1_cat3idLookup[0].name + " förväntas innehålla trafikinformation, vilken saknas i detta ärende. Vill du verkligen avsluta ärendet utan trafikinformation? ") == true) {
+
+                            //ange explicit att ärendet ska sparas utan trafikinfo. Annars kommer en plugin förhindra att det avslutas utan trafikinformation
+                            formContext.getAttribute("cgi_notravelinfo").setValue(1);
+                        }
+                        else {
+                            //genom att avbryta exekveringen undviks att ärendet att avslutas
+                            return;
+                        }
+                    }
+                    else {
+                        return;
+                    }
+                });
         }
         catch (e) {
             alert("Fel i CGISweden.odata.GetTravelInfoForCase\n\n" + e.Message);

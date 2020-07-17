@@ -26,27 +26,7 @@ CGISweden.incident.Ribbon =
                 if (formContext.getAttribute("cgi_notravelinfo").getValue() != 1) {
 
                     //fortsätt med valideringen endast om trafikinfo saknas
-                    var noOfTI = CGISweden.odata.GetTravelInfoForCase(caseid, formContext);
-                    if (noOfTI === 0) {
-
-                        //fortsätt med valideringen endast ifall trafikinformation krävs för aktuell kategori
-                        var IsTravelInformationRequired = false;
-                        var cgi_casdet_row1_cat3idLookup = formContext.getAttribute("cgi_casdet_row1_cat3id").getValue();
-                        IsTravelInformationRequired = CGISweden.odata.IsTravelInformationRequired(cgi_casdet_row1_cat3idLookup[0].id);
-                        if (IsTravelInformationRequired) {
-
-                            //ge användaren en möljighet att avsluta ärendet ändå utan trafikinfo genom att klicka ok
-                            if (confirm("Ärenden i kategori " + cgi_casdet_row1_cat3idLookup[0].name + " förväntas innehålla trafikinformation, vilken saknas i detta ärende. Vill du verkligen avsluta ärendet utan trafikinformation? ") == true) {
-                                //ange explicit att ärendet ska sparas utan trafikinfo. Annars kommer en plugin förhindra att det avslutas utan trafikinformation
-                                formContext.getAttribute("cgi_notravelinfo").setValue(1);
-                            }
-                            else {
-                                //genom att avbryta exekveringen undviks att ärendet att avslutas
-                                return;
-                            }
-                        }
-
-                    }
+                     CGISweden.odata.GetTravelInfoForCase(caseid, formContext);
                 }
                 //END validera trafikinfo END
 
@@ -169,9 +149,12 @@ CGISweden.incident.Ribbon =
                 var hasRep = null;
                 var cgi_representativ = formContext.getAttribute("cgi_representativid").getValue();
 
-                hasRep = CGISweden.incident.Ribbon.hasRepresentativEmail(cgi_representativ, formContext); // sync request TODO
-                if (hasRep == false) {
-                    return;
+                if (cgi_representativ !== null) {
+                    hasRep = CGISweden.incident.Ribbon.hasRepresentativEmail(cgi_representativ, formContext);
+
+                    if (hasRep == false) {
+                        return;
+                    }
                 }
 
                 if (cgi_representativ == null)
@@ -193,92 +176,44 @@ CGISweden.incident.Ribbon =
         },
 
         hasContactEmail: function (formContext) {
+            try {
+                var contact = formContext.getAttribute("cgi_contactid").getValue();
+                if (contact == null)
+                    return;
 
-            var contact = formContext.getAttribute("cgi_contactid").getValue();
-            if (contact == null)
-                return;
+                var contactId = contact[0].id;
 
-            var serverUrl;
-
-            if (Xrm.Page.context.getClientUrl !== undefined) {
-                serverUrl = Xrm.Page.context.getClientUrl();
-            } else {
-                serverUrl = Xrm.Page.context.getServerUrl();
+                Xrm.WebApi.retrieveRecord("contact", contactId, "?$select=emailaddress1,emailaddress2,yomifullname")
+                    .then(function (result) {
+                        if (result.EMailAddress1 == null && result.EMailAddress2 == null) {
+                            formContext.ui.setFormNotification(result.YomiFullName + " har ingen e-post kopplad till sig.", "Info", "1");
+                            return false;
+                        }
+                        formContext.ui.clearFormNotification("1");
+                        return true;
+                    });
             }
-
-
-            var contactId = contact[0].id;
-
-            //Check if customer has an email
-            var OdataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc"
-            var _options = "$select=EMailAddress1,EMailAddress2,YomiFullName&";
-            var _filter = "$filter=ContactId eq guid'" + contactId + "'";
-            var _odata = _options + _filter;
-
-            var contactODataQuery = OdataPath + "/ContactSet?" + _odata;
-
-            var ODataRequest = new XMLHttpRequest();
-            ODataRequest.open("GET", contactODataQuery, false); // false = synchronous request
-            ODataRequest.setRequestHeader("Accept", "application/json");
-            ODataRequest.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            ODataRequest.send();
-
-            if (ODataRequest.status === 200) {
-                var parsedResults = JSON.parse(ODataRequest.responseText).d;
-                if (parsedResults != null && parsedResults.results != null && parsedResults.results.length > 0) {
-                    var userContactEmail = parsedResults.results[0];
-                    if (userContactEmail.EMailAddress1 == null && userContactEmail.EMailAddress2 == null) {
-                        Xrm.Page.ui.setFormNotification(userContactEmail.YomiFullName + " har ingen e-post kopplad till sig.", "Info", "1");
-                        return false;
-                    }
-                    Xrm.Page.ui.clearFormNotification("1");
-                    return true;
-                }
+            catch (e) {
+                alert("Ett fel inträffade i CGISweden.incidentRibbon.hasContactEmail\n\n" + e.Message);
             }
         },
 
         hasRepresentativEmail: function (cgi_representativ, formContext) {
-            var globalContext = Xrm.Utility.getGlobalContext();
+            try {
+                var cgi_representativId = cgi_representativ[0].id;
 
-
-            if (cgi_representativ == null)
-                return;
-
-            var serverUrl;
-
-            if (globalContext.getClientUrl !== undefined) {
-                serverUrl = globalContext.getClientUrl();
-            } else {
-                serverUrl = globalContext.getServerUrl();
+                Xrm.WebApi.retrieveRecord("cgi_representative", cgi_representativId, "?$select=cgi_name,emailaddress")
+                    .then(function (result) {
+                        if (result.EmailAddress == null) {
+                            formContext.ui.setFormNotification(userRepresentativ.cgi_name + " har ingen e-post kopplad till sig.", "Info", "1");
+                            return false;
+                        }
+                        formContext.ui.clearFormNotification("1");
+                        return true;
+                    });
             }
-
-            var cgi_representativId = cgi_representativ[0].id;
-
-            //Check if customer has an email
-            var OdataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc"
-            var _options = "$select=cgi_name,EmailAddress&";
-            var _filter = "$filter=cgi_representativeId eq guid'" + cgi_representativId + "'";
-            var _odata = _options + _filter;
-
-            var contactODataQuery = OdataPath + "/cgi_representativeSet?" + _odata;
-
-            var ODataRequest = new XMLHttpRequest();
-            ODataRequest.open("GET", contactODataQuery, false); // false = synchronous request
-            ODataRequest.setRequestHeader("Accept", "application/json");
-            ODataRequest.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            ODataRequest.send();
-
-            if (ODataRequest.status === 200) {
-                var parsedResults = JSON.parse(ODataRequest.responseText).d;
-                if (parsedResults != null && parsedResults.results != null && parsedResults.results.length > 0) {
-                    var userRepresentativ = parsedResults.results[0];
-                    if (userRepresentativ.EmailAddress == null) {
-                        Xrm.Page.ui.setFormNotification(userRepresentativ.cgi_name + " har ingen e-post kopplad till sig.", "Info", "1");
-                        return false;
-                    }
-                    Xrm.Page.ui.clearFormNotification("1");
-                    return true;
-                }
+            catch (e) {
+                alert("Fel i CGISweden.incidentRibbon.hasRepresentativEmail\n\n" + e.Message);
             }
         },
 
@@ -393,7 +328,7 @@ CGISweden.incident.Ribbon =
                 email = CGISweden.formscriptfunctions.GetValue("cgi_customer_email", formContext);
             }
             catch (e) {
-                alert("Fel i CGISweden.incidentRibbon.validateEmail:1\n\n" + e.Message);
+                alert("Fel i CGISweden.incident.Ribbon.validateEmail:1\n\n" + e.Message);
                 return false;
             }
 
@@ -406,39 +341,16 @@ CGISweden.incident.Ribbon =
 
             if (cgi_representativid != null && cgi_representativid != "") {
                 try {
-                    //This is done synchronously because it is part of a validation process
-                    var serverUrl;
-
-                    if (Xrm.Page.context.getClientUrl !== undefined) {
-                        serverUrl = Xrm.Page.context.getClientUrl();
-                    } else {
-                        serverUrl = Xrm.Page.context.getServerUrl();
-                    }
-                    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc";
-
-                    var _options = "$select=cgi_Email&";
-                    var _filter = "$filter=cgi_representativeId eq guid'" + cgi_representativid + "'";
-                    var _odata = _options + _filter;
-
-                    var cgi_categorydetailQueryUrl = ODataPath + "/cgi_representativeSet?" + _odata;
-
-                    var ODataRequest = new XMLHttpRequest();
-                    ODataRequest.open("GET", cgi_categorydetailQueryUrl, false); // false = synchronous request
-                    ODataRequest.setRequestHeader("Accept", "application/json");
-                    ODataRequest.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-                    ODataRequest.send();
-
-                    if (ODataRequest.status === 200) {
-                        var parsedResults = JSON.parse(ODataRequest.responseText).d;
-                        if (parsedResults != null && parsedResults.results != null && parsedResults.results.length > 0) {
-                            var cgi_representative = parsedResults.results[0];
+                    Xrm.WebApi.retrieveRecord("cgi_representativ", cgi_representativid, "?$select=cgi_email")
+                        .then(function (result) {
+                            var cgi_representative = result.results[0];
                             if (cgi_representative["cgi_Email"] == null || cgi_representative["cgi_Email"] == "")
                                 email2 = cgi_representative["cgi_Email"];
-                        }
-                    }
+
+                        });
                 }
                 catch (e) {
-                    alert("Fel i CGISweden.incidentRibbon.validateEmail:2\n\n" + e.Message);
+                    alert("Fel i CGISweden.incident.Ribbon.validateEmail:2\n\n" + e.Message);
                 }
             }
 
