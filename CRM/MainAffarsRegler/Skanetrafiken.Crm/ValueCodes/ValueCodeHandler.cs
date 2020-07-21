@@ -819,17 +819,17 @@ namespace Skanetrafiken.Crm.ValueCodes
             EntityReference refundId, EntityReference leadId, EntityReference contactId, EntityReference valueCodeApprovalId, int deliveryMethod, EntityReference travelCard)
         {
             OrganizationRequest request = new OrganizationRequest("ed_CreateValueCodeGeneric");
-            request["VoucherType"] = voucherType;
-            request["DeliveryType"] = deliveryMethod;
-            request["Amount"] = amount;
-            request["Mobile"] = mobile;
-            request["Email"] = email;
-            request["RefundId"] = refundId;
-            request["LeadId"] = leadId;
-            request["ContactId"] = contactId;
-            request["ValueCodeApprovalId"] = valueCodeApprovalId;
-            request["TravelCardId"] = travelCard;
-            request["PeriodPrice"] = periodPrice;
+            request["VoucherType"] = voucherType; // 2 = InlostReskassa
+            request["DeliveryType"] = deliveryMethod; // 2 = SMS
+            request["Amount"] = amount; // 200kr?
+            request["Mobile"] = mobile; // 0708707431
+            request["Email"] = email; // EMPTY
+            request["RefundId"] = refundId; // NULL
+            request["LeadId"] = leadId; // NULL
+            request["ContactId"] = contactId; // contact
+            request["ValueCodeApprovalId"] = valueCodeApprovalId; // NULL
+            request["TravelCardId"] = travelCard; // TravelCard
+            request["PeriodPrice"] = periodPrice; // 0
 
 
             OrganizationResponse response = (OrganizationResponse)localContext.OrganizationService.Execute(request);

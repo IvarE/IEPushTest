@@ -68,7 +68,9 @@ namespace Endeavor.Crm.UnitTest
 
                 refund.Id = XrmHelper.Create(localContext, refund);
 
-                
+
+                CreateValueCodeGeneric.ExecuteCodeActivity(localContext, null, new EntityReference("contact", new Guid("7c90184e-e752-ea11-80f5-005056b665ec")), null, 2,
+                    1, 0, "0735198846", "", null, 2, new EntityReference("cgi_travelcard", new Guid("91155c38-fec4-ea11-80fb-005056b665ec")));
 
                 //CreateValueCodeGeneric
 

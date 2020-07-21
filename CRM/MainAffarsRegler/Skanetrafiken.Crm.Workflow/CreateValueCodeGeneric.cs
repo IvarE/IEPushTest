@@ -122,17 +122,24 @@ namespace Skanetrafiken.Crm.Entities
                 localContext.Trace($"CreateValueCodeGeneric. ExecuteCodeActivity...");
                 EntityReference valueCodeResponse = ExecuteCodeActivity(localContext, valueCodeApprovalId, contact, lead, voucherType,
                     amount, periodPrice, mobile, email, refund, deliveryType, travelCardId);
-                localContext.Trace($"CreateValueCodeGeneric finished. ValueCodeId: {valueCodeResponse.Id}");
+
+                if (valueCodeResponse != null)
+                {
+                    localContext.Trace($"CreateValueCodeGeneric finished. ValueCodeId: {valueCodeResponse.Id}");
+                    localContext.Trace($"ValueCode is typeof: {valueCodeResponse.GetType()}");
+                    ValueCodeId.Set(activityContext, valueCodeResponse);
+                }
+                else
+                    localContext.Trace("No trace from response");
 
 
-                localContext.Trace($"ValueCode is typeof: {valueCodeResponse.GetType()}");
-                ValueCodeId.Set(activityContext, valueCodeResponse);
                 ResultCreateValueCodeGeneric.Set(activityContext, "OK");
 
                 localContext.TracingService.Trace($"<--- Exiting {nameof(CreateValueCodeGeneric)}.");
             }
             catch (Exception ex)
             {
+                throw new InvalidPluginExecutionException("Error: " + ex.Message);
                 EntityReference refund = RefundId.Get(activityContext);
 
                 HandleErrorValueCode(localContext, refund, ex.Message);
@@ -242,13 +249,21 @@ namespace Skanetrafiken.Crm.Entities
                 DateTime validTo_Date = CgiSettingEntity.GetSettingDate(localContext, CgiSettingEntity.Fields.ed_ValueCodeValidDate).Date;
 
                 DateTime validTo = DateTime.MinValue;
-                if (validTo_Months == 0 && validTo_Date >= DateTime.Now.Date)
-                    validTo = validTo_Date;
-                else if (validTo_Months > 0 && (validTo_Date == DateTime.MinValue || validTo_Date == DateTime.MaxValue))
-                    validTo = DateTime.Now.AddMonths(validTo_Months);
-                else
-                    validTo = DateTime.Now.AddYears(1);
 
+                if ((validTo_Months != null && validTo_Months > 0) || validTo_Date != null)
+                {
+                    validTo = DateTime.MinValue;
+                    if (validTo_Months == 0 && validTo_Date >= DateTime.Now.Date)
+                        validTo = validTo_Date;
+                    else if (validTo_Months > 0 && (validTo_Date == DateTime.MinValue || validTo_Date == DateTime.MaxValue))
+                        validTo = DateTime.Now.AddMonths(validTo_Months);
+                    else
+                        validTo = DateTime.Now.AddYears(1);
+                }
+                else
+                {
+                    validTo = DateTime.Now.AddYears(1);
+                }
 
                 // Send to emailaddress given manually
                 if (string.IsNullOrWhiteSpace(email) && deliveryType == (int)Schema.Generated.ed_valuecodedeliverytypeglobal.Email)
@@ -314,6 +329,7 @@ namespace Skanetrafiken.Crm.Entities
 
                 localContext.Trace($"(ExecuteCodeActivity) Returning ValueCodeRef");
                 EntityReference valueCodeRef = new EntityReference(ValueCodeEntity.EntityLogicalName, valueCodeId);
+                
 
                 localContext.Trace($"<--- Exiting {nameof(ExecuteCodeActivity)}.");
                 return valueCodeRef;
