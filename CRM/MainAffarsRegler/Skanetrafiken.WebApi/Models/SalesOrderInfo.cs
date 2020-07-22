@@ -1,11 +1,14 @@
 ﻿
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Endeavor.Crm;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Newtonsoft.Json;
 using Skanetrafiken.Crm.Entities;
 using Skanetrafiken.Crm.Models;
+using Skanetrafiken.Crm.Schema.Generated;
 using Generated = Skanetrafiken.Crm.Schema.Generated;
 
 namespace Skanetrafiken.Crm
@@ -17,6 +20,8 @@ namespace Skanetrafiken.Crm
         private string orderNoField;
 
         private string businessUnitField;
+
+        private string orderPurchaseType;
 
         private DateTime orderTimeField;
 
@@ -84,7 +89,20 @@ namespace Skanetrafiken.Crm
                 this.businessUnitField = value;
             }
         }
-        
+
+        public string OrderPurchaseType
+        {
+            get
+            {
+                return this.orderPurchaseType;
+            }
+            set
+            {
+                this.orderPurchaseType = value;
+            }
+        }
+
+
         public DateTime OrderTime
         {
             get
@@ -203,6 +221,30 @@ namespace Skanetrafiken.Crm
                 }
             }
 
+            if (salesOrderInfo.OrderPurchaseType != null && salesOrderInfo.OrderPurchaseType != string.Empty)
+            {
+                QueryExpression queryOrderPurchaseType = new QueryExpression(OrderPurchaseTypeEntity.EntityLogicalName);
+                queryOrderPurchaseType.NoLock = true;
+                queryOrderPurchaseType.ColumnSet.AddColumns(OrderPurchaseTypeEntity.Fields.ed_OrderPurchaseTypeId, OrderPurchaseTypeEntity.Fields.ed_name);
+                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.ed_name, ConditionOperator.Equal, salesOrderInfo.OrderPurchaseType);
+                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.statecode, ConditionOperator.Equal, (int)ed_OrderPurchaseTypeState.Active);
+
+                List<OrderPurchaseTypeEntity> lOrderPurchases = XrmRetrieveHelper.RetrieveMultiple<OrderPurchaseTypeEntity>(localContext, queryOrderPurchaseType);
+
+                if (lOrderPurchases.Count == 1)
+                {
+                    soe.ed_OrderPurchaseType = lOrderPurchases.FirstOrDefault().ToEntityReference();
+                }
+                else if (lOrderPurchases.Count == 0)
+                {
+                    OrderPurchaseTypeEntity orderPurchase = new OrderPurchaseTypeEntity();
+                    orderPurchase.ed_name = salesOrderInfo.OrderPurchaseType;
+
+                    Guid orderPurchaseId = XrmHelper.Create(localContext, orderPurchase);
+                    soe.ed_OrderPurchaseType = new EntityReference(OrderPurchaseTypeEntity.EntityLogicalName, orderPurchaseId);
+                }
+            }
+
             return soe;
         }
 
@@ -225,6 +267,30 @@ namespace Skanetrafiken.Crm
 
             if(!isPut)
                 soe.ed_OrderNo = salesOrderInfo.OrderNo;
+
+            if(salesOrderInfo.OrderPurchaseType != null && salesOrderInfo.OrderPurchaseType != string.Empty)
+            {
+                QueryExpression queryOrderPurchaseType = new QueryExpression(OrderPurchaseTypeEntity.EntityLogicalName);
+                queryOrderPurchaseType.NoLock = true;
+                queryOrderPurchaseType.ColumnSet.AddColumns(OrderPurchaseTypeEntity.Fields.ed_OrderPurchaseTypeId, OrderPurchaseTypeEntity.Fields.ed_name);
+                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.ed_name, ConditionOperator.Equal, salesOrderInfo.OrderPurchaseType);
+                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.statecode, ConditionOperator.Equal, (int)ed_OrderPurchaseTypeState.Active);
+
+                List<OrderPurchaseTypeEntity> lOrderPurchases = XrmRetrieveHelper.RetrieveMultiple<OrderPurchaseTypeEntity>(localContext, queryOrderPurchaseType);
+
+                if (lOrderPurchases.Count == 1)
+                {
+                    soe.ed_OrderPurchaseType = lOrderPurchases.FirstOrDefault().ToEntityReference();
+                }
+                else if (lOrderPurchases.Count == 0)
+                {
+                    OrderPurchaseTypeEntity orderPurchase = new OrderPurchaseTypeEntity();
+                    orderPurchase.ed_name = salesOrderInfo.OrderPurchaseType;
+
+                    Guid orderPurchaseId = XrmHelper.Create(localContext, orderPurchase);
+                    soe.ed_OrderPurchaseType = new EntityReference(OrderPurchaseTypeEntity.EntityLogicalName, orderPurchaseId);
+                }
+            }
 
             return soe;
         }
@@ -264,7 +330,6 @@ namespace Skanetrafiken.Crm
             return null;
         }
     }
-
 
     public class Productinfo
     {
@@ -552,7 +617,7 @@ namespace Skanetrafiken.Crm
             }
         }
 
-        internal static SalesOrderLineEntity GetSalesOrderLineEntityFromSalesOrderLineInfo(Plugin.LocalPluginContext localContext, SalesOrderLineInfo salesOrderLineInfo)
+        internal static SalesOrderLineEntity GetSalesOrderLineEntityFromSalesOrderLineInfo(Plugin.LocalPluginContext localContext, SalesOrderLineInfo salesOrderLineInfo, string orderPurchaseType)
         {
 
             SalesOrderLineEntity sole = new SalesOrderLineEntity();
@@ -567,11 +632,35 @@ namespace Skanetrafiken.Crm
             sole.ed_TicketOfferType = salesOrderLineInfo.ticketOfferTypeField;
             sole.ed_TicketOfferTypeName = salesOrderLineInfo.ticketOfferTypeNameField;
 
+            if (orderPurchaseType != null && orderPurchaseType != string.Empty)
+            {
+                QueryExpression queryOrderPurchaseType = new QueryExpression(OrderPurchaseTypeEntity.EntityLogicalName);
+                queryOrderPurchaseType.NoLock = true;
+                queryOrderPurchaseType.ColumnSet.AddColumns(OrderPurchaseTypeEntity.Fields.ed_OrderPurchaseTypeId, OrderPurchaseTypeEntity.Fields.ed_name);
+                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.ed_name, ConditionOperator.Equal, orderPurchaseType);
+                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.statecode, ConditionOperator.Equal, (int)ed_OrderPurchaseTypeState.Active);
+
+                List<OrderPurchaseTypeEntity> lOrderPurchases = XrmRetrieveHelper.RetrieveMultiple<OrderPurchaseTypeEntity>(localContext, queryOrderPurchaseType);
+
+                if (lOrderPurchases.Count == 1)
+                {
+                    sole.ed_OrderPurchaseType = lOrderPurchases.FirstOrDefault().ToEntityReference();
+                }
+                else if (lOrderPurchases.Count == 0)
+                {
+                    OrderPurchaseTypeEntity orderPurchase = new OrderPurchaseTypeEntity();
+                    orderPurchase.ed_name = orderPurchaseType;
+
+                    Guid orderPurchaseId = XrmHelper.Create(localContext, orderPurchase);
+                    sole.ed_OrderPurchaseType = new EntityReference(OrderPurchaseTypeEntity.EntityLogicalName, orderPurchaseId);
+                }
+            }
+
             return sole;
         }
 
         internal static SalesOrderLineEntity GetSalesOrderLineEntityFromKopOchSkicka(Plugin.LocalPluginContext localContext, SalesOrderLineInfo salesOrderLineInfo, 
-            EntityReference salesOrderId, EntityReference orderStatus, EntityReference skaKort)
+            EntityReference salesOrderId, EntityReference orderStatus, EntityReference skaKort, string orderPurchaseType)
         {
             SalesOrderLineEntity salesOrderLine = new SalesOrderLineEntity()
             {
@@ -582,7 +671,31 @@ namespace Skanetrafiken.Crm
                 ed_SKAkort = skaKort,
                 ed_Amount = salesOrderLineInfo.Amount
             };
-            
+
+            if (orderPurchaseType != null && orderPurchaseType != string.Empty)
+            {
+                QueryExpression queryOrderPurchaseType = new QueryExpression(OrderPurchaseTypeEntity.EntityLogicalName);
+                queryOrderPurchaseType.NoLock = true;
+                queryOrderPurchaseType.ColumnSet.AddColumns(OrderPurchaseTypeEntity.Fields.ed_OrderPurchaseTypeId, OrderPurchaseTypeEntity.Fields.ed_name);
+                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.ed_name, ConditionOperator.Equal, orderPurchaseType);
+                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.statecode, ConditionOperator.Equal, (int)ed_OrderPurchaseTypeState.Active);
+
+                List<OrderPurchaseTypeEntity> lOrderPurchases = XrmRetrieveHelper.RetrieveMultiple<OrderPurchaseTypeEntity>(localContext, queryOrderPurchaseType);
+
+                if (lOrderPurchases.Count == 1)
+                {
+                    salesOrderLine.ed_OrderPurchaseType = lOrderPurchases.FirstOrDefault().ToEntityReference();
+                }
+                else if (lOrderPurchases.Count == 0)
+                {
+                    OrderPurchaseTypeEntity orderPurchase = new OrderPurchaseTypeEntity();
+                    orderPurchase.ed_name = orderPurchaseType;
+
+                    Guid orderPurchaseId = XrmHelper.Create(localContext, orderPurchase);
+                    salesOrderLine.ed_OrderPurchaseType = new EntityReference(OrderPurchaseTypeEntity.EntityLogicalName, orderPurchaseId);
+                }
+            }
+
             return salesOrderLine;
         }
     }

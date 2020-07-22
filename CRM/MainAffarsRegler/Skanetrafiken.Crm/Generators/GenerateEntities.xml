@@ -69,6 +69,7 @@
     <entity>ed_valuecodetemplate</entity>
     <entity>ed_valuecodeapproval</entity>
     <entity>ed_valuecodetransaction</entity>
+    <entity>ed_orderpurchasetype</entity>
 
     <entity>ed_emailtemplateproxy</entity>
     <entity>ed_returnmessagewebapi</entity>

@@ -542,7 +542,8 @@ namespace Skanetrafiken.Crm.Controllers
                                 salesOrderLineInfo,
                                 newSalesOrder.ToEntityReference(),
                                 orderStatus.ToEntityReference(),
-                                (skaKortEnt != null && skaKortEnt.Id != null && skaKortEnt.Id != Guid.Empty) ? skaKortEnt.ToEntityReference() : null
+                                (skaKortEnt != null && skaKortEnt.Id != null && skaKortEnt.Id != Guid.Empty) ? skaKortEnt.ToEntityReference() : null,
+                                salesOrderInfo.OrderPurchaseType
                             );
 
 
@@ -710,7 +711,7 @@ namespace Skanetrafiken.Crm.Controllers
                                 }
 
                                 SalesOrderLineEntity updatedSalesOrderLine = SalesOrderLineInfo.GetSalesOrderLineEntityFromKopOchSkicka(localContext, salesOrderLineFromPUT,
-                                    salesOrder.ToEntityReference(), orderStatus.ToEntityReference(), skaKort.ToEntityReference());
+                                    salesOrder.ToEntityReference(), orderStatus.ToEntityReference(), skaKort.ToEntityReference(), salesOrderInfo.OrderPurchaseType);
 
 
 
@@ -784,7 +785,7 @@ namespace Skanetrafiken.Crm.Controllers
                     {
                         foreach (SalesOrderLineInfo salesOrderLineInfo in salesOrderInfo.SalesOrderLines)
                         {
-                            SalesOrderLineEntity newSalesOrderLine = SalesOrderLineInfo.GetSalesOrderLineEntityFromSalesOrderLineInfo(localContext, salesOrderLineInfo);
+                            SalesOrderLineEntity newSalesOrderLine = SalesOrderLineInfo.GetSalesOrderLineEntityFromSalesOrderLineInfo(localContext, salesOrderLineInfo, salesOrderInfo.OrderPurchaseType);
                             newSalesOrderLine.ed_SalesOrderId = newSalesOrder.ToEntityReference();
 
                             newSalesOrderLine.Id = XrmHelper.Create(localContext, newSalesOrderLine);
