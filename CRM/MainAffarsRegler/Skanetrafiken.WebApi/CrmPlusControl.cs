@@ -2251,10 +2251,12 @@ namespace Skanetrafiken.Crm.Controllers
 
                     QueryExpression queryOrder = new QueryExpression(OrderEntity.EntityLogicalName);
                     queryOrder.NoLock = true;
-                    queryOrder.ColumnSet.AddColumn(OrderEntity.Fields.SalesOrderId);
+                    queryOrder.ColumnSet.AddColumns(OrderEntity.Fields.SalesOrderId, OrderEntity.Fields.StateCode, OrderEntity.Fields.StatusCode);
                     queryOrder.Criteria.AddCondition(OrderEntity.Fields.OrderNumber, ConditionOperator.Equal, fileInfo.OrderId);
 
                     List<OrderEntity> lOrders = XrmRetrieveHelper.RetrieveMultiple<OrderEntity>(localContext, queryOrder);
+
+                    _log.Debug("Found " + lOrders.Count + " Orders with Order Number " + fileInfo.OrderId);
 
                     if (lOrders.Count == 0)
                     {
@@ -2274,12 +2276,42 @@ namespace Skanetrafiken.Crm.Controllers
                     {
                         OrderEntity order = lOrders.FirstOrDefault();
 
+                        SalesOrderState oldState = order.StateCode.Value;
+                        salesorder_statuscode oldStatus = order.StatusCode.Value;
+
+                        bool needsStateUpdate = false;
+                        if(oldState != SalesOrderState.Active || oldStatus != salesorder_statuscode.Pending || oldStatus != salesorder_statuscode.New)
+                        {
+                            _log.Debug("Order " + order.SalesOrderId + " needs to be open to perform the Update.");
+                            OrderEntity upOrder = new OrderEntity();
+                            upOrder.Id = (Guid)order.SalesOrderId;
+                            upOrder.StateCode = SalesOrderState.Active;
+                            upOrder.StatusCode = salesorder_statuscode.New;
+
+                            XrmHelper.Update(localContext, upOrder);
+                            needsStateUpdate = true;
+                            _log.Debug("Order " + order.SalesOrderId + " was opened sucessfully.");
+                        }
+
                         OrderEntity uOrder = new OrderEntity();
                         uOrder.Id = (Guid)order.SalesOrderId;
                         uOrder.ed_DeliveryReportName = fileInfo.FileName;
                         uOrder.ed_DeliveryReportStatus = ed_deliveryreportstatus.Creatednotuploaded;
 
                         XrmHelper.Update(localContext, uOrder);
+                        _log.Debug("Order " + order.SalesOrderId + " was updated with File Name " + fileInfo.FileName + " and Report Status 'Created Not Uploaded'");
+
+                        if (needsStateUpdate)
+                        {
+                            _log.Debug("Close Order with the previous State Code and Status Code");
+                            OrderEntity upOrder = new OrderEntity();
+                            upOrder.Id = (Guid)order.SalesOrderId;
+                            upOrder.StateCode = oldState;
+                            upOrder.StatusCode = oldStatus;
+
+                            XrmHelper.Update(localContext, upOrder);
+                            _log.Debug("Order " + order.SalesOrderId + " was closed sucessfully.");
+                        }
 
                         _log.Debug("Delivery Report Information successfully updated on Sekund.");
                         HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
