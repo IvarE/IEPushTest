@@ -298,9 +298,13 @@ namespace Skanetrafiken.Crm
             //    ae.Name = ai.cgi_organizational_number + " - Kostnadsställe";
 
             //ae.Name = $"Kostnadsställe - {ai.OrganizationName}"; //Gamla
-            ae.Name = $"{ai.OrganizationName} - KST"; //ändra namn
+            //ae.Name = $"{ai.OrganizationName} - KST"; //ändra namn
 
-            ae.ed_SubOrgNamn = ai.Suborgname; //Inget skickas från fasaden ännu
+            if(ai.Suborgname != null && ai.Suborgname != string.Empty)
+            {
+                ae.Name = ai.Suborgname;
+                ae.ed_SubOrgNamn = ai.Suborgname; //Inget skickas från fasaden ännu
+            }
 
             if (ai.InformationSource == (int)Schema.Generated.ed_informationsource.ForetagsPortal)
             {
@@ -437,6 +441,7 @@ namespace Skanetrafiken.Crm
             {
                 accountInfo.guidField = ae.Id.ToString();
             }
+
             accountInfo.PortalId = ae.AccountNumber;
             accountInfo.cgi_organizational_number = ae.cgi_organizational_number;
             accountInfo.ed_PaymentMethod = (int?)ae.ed_PaymentMethod;
