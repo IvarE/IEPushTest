@@ -353,9 +353,9 @@ namespace Skanetrafiken.Crm
                 isChanged = true;
             }
 
-            if (!string.IsNullOrEmpty(accountInfo.CostSite) && oldAccount.Name != accountInfo.CostSite)
+            if (!string.IsNullOrEmpty(accountInfo.Suborgname) && oldAccount.Name != accountInfo.Suborgname)
             {
-                newAccount.Name = accountInfo.CostSite;
+                newAccount.Name = accountInfo.Suborgname;
                 isChanged = true;
             }
 
