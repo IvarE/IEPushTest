@@ -33,6 +33,7 @@
     <entity>salesorder</entity>
     <entity>salesorderdetail</entity>
     <entity>transactioncurrency</entity>
+    <entity>kbarticle</entity>
 
 
     <entity>cgi_categorydetail</entity>
@@ -115,6 +116,8 @@
     <optionset>lead_leadsourcecode</optionset>
     <optionset>processstage_category</optionset>
     <optionset>phonecall_statuscode</optionset>
+    <optionset>kbarticle_statuscode</optionset>
+    <optionset>kbarticle_cgi_appoval</optionset>
 
 
     <optionset>cgi_refund_statuscode</optionset>

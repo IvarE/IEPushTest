@@ -6890,6 +6890,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 KbArticle_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("KbArticle_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.KbArticle KbArticle_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.KbArticle>("KbArticle_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.KbArticle>("KbArticle_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 Lead_Annotation
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
@@ -10485,6 +10502,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("Incident_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 KbArticle_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("KbArticle_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.KbArticle KbArticle_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.KbArticle>("KbArticle_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.KbArticle>("KbArticle_AsyncOperations", null, value);
 			}
 		}
 		
@@ -65449,6 +65483,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 kbarticle_incidents
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("kbarticleid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("kbarticle_incidents")]
+		public Skanetrafiken.Crm.Schema.Generated.KbArticle kbarticle_incidents
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.KbArticle>("kbarticle_incidents", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.KbArticle>("kbarticle_incidents", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 lk_incidentbase_createdby
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
@@ -66343,6 +66394,873 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int Title = 200;
 			
 			public const int TraversedPath = 1250;
+		}
+	}
+	
+	public enum KbArticleState
+	{
+		
+		Draft = 1,
+		
+		Unapproved = 2,
+		
+		Published = 3,
+	}
+	
+	public enum kbarticle_statuscode
+	{
+		
+		Draft = 1,
+		
+		Unapproved = 2,
+		
+		Published = 3,
+	}
+	
+	/// <summary>
+	/// Structured content that is part of the knowledge base.
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("kbarticle")]
+	public partial class KbArticle : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public KbArticle() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "kbarticle";
+		
+		public const int EntityTypeCode = 127;
+		
+		/// <summary>
+		/// Shows the article content and formatting, stored as XML.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("articlexml")]
+		public string ArticleXml
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("articlexml");
+			}
+			set
+			{
+				this.SetAttributeValue("articlexml", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cgi_appoval")]
+		public Microsoft.Xrm.Sdk.OptionSetValue cgi_Appoval
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("cgi_appoval");
+			}
+			set
+			{
+				this.SetAttributeValue("cgi_appoval", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cgi_devlogfield")]
+		public string cgi_devLogField
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("cgi_devlogfield");
+			}
+			set
+			{
+				this.SetAttributeValue("cgi_devlogfield", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cgi_externaltext")]
+		public string cgi_ExternalText
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("cgi_externaltext");
+			}
+			set
+			{
+				this.SetAttributeValue("cgi_externaltext", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cgi_externalwebindex")]
+		public string cgi_ExternalWebIndex
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("cgi_externalwebindex");
+			}
+			set
+			{
+				this.SetAttributeValue("cgi_externalwebindex", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cgi_intranetindex")]
+		public string cgi_IntranetIndex
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("cgi_intranetindex");
+			}
+			set
+			{
+				this.SetAttributeValue("cgi_intranetindex", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cgi_publishonweb")]
+		public System.Nullable<bool> cgi_PublishonWeb
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("cgi_publishonweb");
+			}
+			set
+			{
+				this.SetAttributeValue("cgi_publishonweb", value);
+			}
+		}
+		
+		/// <summary>
+		/// Comments regarding the knowledge base article.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("comments")]
+		public string Comments
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("comments");
+			}
+			set
+			{
+				this.SetAttributeValue("comments", value);
+			}
+		}
+		
+		/// <summary>
+		/// Description of the content of the knowledge base article.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("content")]
+		public string Content
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("content");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who created the knowledge base article.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the knowledge base article was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who created the article.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Type additional information that describes the knowledge base article.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("description")]
+		public string Description
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("description");
+			}
+			set
+			{
+				this.SetAttributeValue("description", value);
+			}
+		}
+		
+		/// <summary>
+		/// The default image for the entity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage")]
+		public byte[] EntityImage
+		{
+			get
+			{
+				return this.GetAttributeValue<byte[]>("entityimage");
+			}
+			set
+			{
+				this.SetAttributeValue("entityimage", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage_timestamp")]
+		public System.Nullable<long> EntityImage_Timestamp
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("entityimage_timestamp");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage_url")]
+		public string EntityImage_URL
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("entityimage_url");
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimageid")]
+		public System.Nullable<System.Guid> EntityImageId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("entityimageid");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the conversion rate of the record's currency. The exchange rate is used to convert all money fields in the record from the local currency to the system's default currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data import or data migration that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the article.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("kbarticleid")]
+		public System.Nullable<System.Guid> KbArticleId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("kbarticleid");
+			}
+			set
+			{
+				this.SetAttributeValue("kbarticleid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("kbarticleid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.KbArticleId = value;
+			}
+		}
+		
+		/// <summary>
+		/// Choose the template that you want to use as a base for creating the new article.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("kbarticletemplateid")]
+		public Microsoft.Xrm.Sdk.EntityReference KbArticleTemplateId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("kbarticletemplateid");
+			}
+			set
+			{
+				this.SetAttributeValue("kbarticletemplateid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Keywords to be used for searches in knowledge base articles.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("keywords")]
+		public string KeyWords
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("keywords");
+			}
+			set
+			{
+				this.SetAttributeValue("keywords", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select which language the article must be available in. This list is based on the list of language packs that are installed in your Microsoft Dynamics CRM environment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("languagecode")]
+		public System.Nullable<int> LanguageCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("languagecode");
+			}
+			set
+			{
+				this.SetAttributeValue("languagecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who last modified the knowledge base article.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the knowledge base article was last modified.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who last modified the kbarticle.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Knowledge base article number.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("number")]
+		public string Number
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("number");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the organization associated with the article.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("organizationid")]
+		public Microsoft.Xrm.Sdk.EntityReference OrganizationId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("organizationid");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_factowner")]
+		public Microsoft.Xrm.Sdk.EntityReference st_FactOwner
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("st_factowner");
+			}
+			set
+			{
+				this.SetAttributeValue("st_factowner", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows whether the knowledge base article is in draft, unapproved, or published status. Published articles are read-only and can't be edited unless they are unpublished.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.KbArticleState> StateCode
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.KbArticleState)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.KbArticleState), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("statecode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statecode", new Microsoft.Xrm.Sdk.OptionSetValue(((int)(value))));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Select the article's status.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.kbarticle_statuscode> StatusCode
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.kbarticle_statuscode)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.kbarticle_statuscode), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("statuscode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statuscode", new Microsoft.Xrm.Sdk.OptionSetValue((int)value));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Choose the subject of the article to assist with article searches. You can configure subjects under Business Management in the Settings area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("subjectid")]
+		public Microsoft.Xrm.Sdk.EntityReference SubjectId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("subjectid");
+			}
+			set
+			{
+				this.SetAttributeValue("subjectid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a subject or descriptive name for the article to assist with article searches.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("title")]
+		public string Title
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("title");
+			}
+			set
+			{
+				this.SetAttributeValue("title", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the local currency for the record to make sure budgets are reported in the correct currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public Microsoft.Xrm.Sdk.EntityReference TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Title of the knowledge base article.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N KbArticle_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("KbArticle_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> KbArticle_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("KbArticle_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("KbArticle_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N KbArticle_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("KbArticle_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> KbArticle_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("KbArticle_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("KbArticle_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N kbarticle_incidents
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("kbarticle_incidents")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Incident> kbarticle_incidents
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Incident>("kbarticle_incidents", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Incident>("kbarticle_incidents", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N kbarticle_QueueItems
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("kbarticle_QueueItems")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QueueItem> kbarticle_QueueItems
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QueueItem>("kbarticle_QueueItems", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QueueItem>("kbarticle_QueueItems", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_kbarticle_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_kbarticle_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_kbarticle_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_kbarticle_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_kbarticle_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_kbarticle_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_kbarticle_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_kbarticle_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_kbarticlebase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_kbarticlebase_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_kbarticlebase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_kbarticlebase_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_kbarticlebase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_kbarticlebase_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_kbarticlebase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_kbarticlebase_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 st_systemuser_kbarticle_FactOwner
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_factowner")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("st_systemuser_kbarticle_FactOwner")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser st_systemuser_kbarticle_FactOwner
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("st_systemuser_kbarticle_FactOwner", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("st_systemuser_kbarticle_FactOwner", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 TransactionCurrency_KbArticle
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_KbArticle")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_KbArticle
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_KbArticle", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_KbArticle", null, value);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string ArticleXml = "articlexml";
+			
+			public const string cgi_Appoval = "cgi_appoval";
+			
+			public const string cgi_devLogField = "cgi_devlogfield";
+			
+			public const string cgi_ExternalText = "cgi_externaltext";
+			
+			public const string cgi_ExternalWebIndex = "cgi_externalwebindex";
+			
+			public const string cgi_IntranetIndex = "cgi_intranetindex";
+			
+			public const string cgi_PublishonWeb = "cgi_publishonweb";
+			
+			public const string Comments = "comments";
+			
+			public const string Content = "content";
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string Description = "description";
+			
+			public const string EntityImage = "entityimage";
+			
+			public const string EntityImage_Timestamp = "entityimage_timestamp";
+			
+			public const string EntityImage_URL = "entityimage_url";
+			
+			public const string EntityImageId = "entityimageid";
+			
+			public const string ExchangeRate = "exchangerate";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string KbArticleId = "kbarticleid";
+			
+			public const string Id = "kbarticleid";
+			
+			public const string KbArticleTemplateId = "kbarticletemplateid";
+			
+			public const string KeyWords = "keywords";
+			
+			public const string LanguageCode = "languagecode";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string Number = "number";
+			
+			public const string OrganizationId = "organizationid";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string st_FactOwner = "st_factowner";
+			
+			public const string StateCode = "statecode";
+			
+			public const string StatusCode = "statuscode";
+			
+			public const string SubjectId = "subjectid";
+			
+			public const string Title = "title";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
+			
+			public const string VersionNumber = "versionnumber";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int ArticleXml = 1073741823;
+			
+			public const int cgi_devLogField = 4000;
+			
+			public const int cgi_ExternalText = 2000;
+			
+			public const int cgi_ExternalWebIndex = 100;
+			
+			public const int cgi_IntranetIndex = 100;
+			
+			public const int Comments = 100000;
+			
+			public const int Content = 1073741823;
+			
+			public const int Description = 2000;
+			
+			public const int EntityImage_URL = 200;
+			
+			public const int KeyWords = 100000;
+			
+			public const int Number = 100;
+			
+			public const int Title = 500;
 		}
 	}
 	
@@ -76938,6 +77856,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("Incident_QueueItem", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 kbarticle_QueueItems
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("kbarticle_QueueItems")]
+		public Skanetrafiken.Crm.Schema.Generated.KbArticle kbarticle_QueueItems
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.KbArticle>("kbarticle_QueueItems", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.KbArticle>("kbarticle_QueueItems", null, value);
 			}
 		}
 		
@@ -87813,6 +88748,70 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N lk_kbarticle_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_kbarticle_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.KbArticle> lk_kbarticle_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.KbArticle>("lk_kbarticle_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.KbArticle>("lk_kbarticle_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_kbarticle_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_kbarticle_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.KbArticle> lk_kbarticle_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.KbArticle>("lk_kbarticle_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.KbArticle>("lk_kbarticle_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_kbarticlebase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_kbarticlebase_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.KbArticle> lk_kbarticlebase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.KbArticle>("lk_kbarticlebase_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.KbArticle>("lk_kbarticlebase_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_kbarticlebase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_kbarticlebase_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.KbArticle> lk_kbarticlebase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.KbArticle>("lk_kbarticlebase_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.KbArticle>("lk_kbarticlebase_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N lk_lead_createdonbehalfby
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_lead_createdonbehalfby")]
@@ -88945,6 +89944,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Queue>("queue_primary_user", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N st_systemuser_kbarticle_FactOwner
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("st_systemuser_kbarticle_FactOwner")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.KbArticle> st_systemuser_kbarticle_FactOwner
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.KbArticle>("st_systemuser_kbarticle_FactOwner", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.KbArticle>("st_systemuser_kbarticle_FactOwner", null, value);
 			}
 		}
 		
@@ -93072,6 +94087,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N TransactionCurrency_KbArticle
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_KbArticle")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.KbArticle> TransactionCurrency_KbArticle
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.KbArticle>("TransactionCurrency_KbArticle", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.KbArticle>("TransactionCurrency_KbArticle", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N transactioncurrency_lead
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_lead")]
@@ -96680,6 +97711,17 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.Incident>();
+			}
+		}
+		
+		/// <summary>
+		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.KbArticle"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.KbArticle> KbArticleSet
+		{
+			get
+			{
+				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.KbArticle>();
 			}
 		}
 		
