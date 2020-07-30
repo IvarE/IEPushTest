@@ -63,7 +63,7 @@ namespace Skanetrafiken.Crm
 
                 try
                 {
-                    target.HandlePreKBArticleUpdateSync(localContext);
+                    //target.HandlePreKBArticleUpdateSync(localContext);
                 }
                 catch (Exception ex)
                 {
