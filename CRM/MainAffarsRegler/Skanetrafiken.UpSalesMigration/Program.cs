@@ -2866,9 +2866,8 @@ namespace Skanetrafiken.UpSalesMigration
 
                         Console.WriteLine("Sending Batch of Orders to Sekund...");
 
-                        Console.ReadLine();
-                        //SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        //LogCrmContextMultipleResponses(localContext, responses);
+                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        LogCrmContextMultipleResponses(localContext, responses);
 
                         Console.WriteLine("Batch Sent. Please check logs.");
 
@@ -2902,9 +2901,8 @@ namespace Skanetrafiken.UpSalesMigration
 
                         Console.WriteLine("Sending Batch of Orders to Sekund...");
 
-                        Console.ReadLine();
-                        //SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                        //LogCrmContextMultipleResponses(localContext, responses);
+                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                        LogCrmContextMultipleResponses(localContext, responses);
 
                         Console.WriteLine("Batch Sent. Please check logs.");
 
