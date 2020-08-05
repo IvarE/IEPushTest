@@ -417,16 +417,21 @@ namespace Skanetrafiken.Crm.Entities
 
         private static bool CheckParentAccountOrganizationNumber(Plugin.LocalPluginContext localContext, EntityReference parentAccount)
         {
-            localContext.Trace($"Entered CheckParentAccountOrganizationNumber. Parent Account Id: {parentAccount.Id}");
+            localContext.Trace($"Entered CheckParentAccountOrganizationNumber.");
             bool isAllowed = true;
             if (parentAccount != null)
             {
+                localContext.Trace($"Parent Account Id: {parentAccount.Id}");
                 AccountEntity eAccount = XrmRetrieveHelper.Retrieve<AccountEntity>(localContext, parentAccount.Id, new ColumnSet(AccountEntity.Fields.cgi_organizational_number));
 
                 if (eAccount != null && eAccount.cgi_organizational_number != null)
                     return false;
             }
-            localContext.Trace($"Leaving CheckParentAccountOrganizationNumber. Parent Account Id: {parentAccount.Id}");
+            else
+            {
+                localContext.Trace($" Parent Account Id is null");
+            }
+            localContext.Trace($"Leaving CheckParentAccountOrganizationNumber.");
             return isAllowed;
         }
 
