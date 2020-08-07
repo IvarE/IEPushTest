@@ -4,6 +4,15 @@
 //# sourceMappingURL=head.load.min.js.map
 */
 
+FORM_TYPE_CREATE = 1;
+FORM_TYPE_UPDATE = 2;
+FORM_TYPE_READONLY = 3;
+FORM_TYPE_DISABLED = 4;
+FORM_TYPE_QUICKCREATE = 5;
+FORM_TYPE_BULKEDIT = 6;
+
+TIMEOUT_COUNTER = 500;
+
 // Begin scoping
 if (typeof (Endeavor) == "undefined") {
     var Endeavor = {
@@ -629,15 +638,6 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
          * 
         */
 
-        FORM_TYPE_CREATE = 1;
-        FORM_TYPE_UPDATE = 2;
-        FORM_TYPE_READONLY = 3;
-        FORM_TYPE_DISABLED = 4;
-        FORM_TYPE_QUICKCREATE = 5;
-        FORM_TYPE_BULKEDIT = 6;
-
-        TIMEOUT_COUNTER = 500;
-
         onFormLoad: function (executionContext) {
             try {
                 var formContext = executionContext.getFormContext();
@@ -689,7 +689,6 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 else {
 
                     var _roleName = result[0].Name;
-
                     var emailField = formContext.getAttribute("emailaddress1").getValue();
 
                     if (emailField && emailField.Length !== 0) {
