@@ -830,8 +830,11 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 cell = journeyrow.insertCell();
                 cell.innerHTML = contractor;
 
+                var journeyNumber = getElementValue(directjourney, "JourneyNumber") + " ";
+                var directionOfLineDescription = getElementValue(directjourney, "DirectionOfLineDescription");
+
                 cell = journeyrow.insertCell();
-                cell.innerHTML = getElementValue(directjourney, "DirectionOfLineDescription");
+                cell.innerHTML = journeyNumber.concat(directionOfLineDescription);
 
             }
 
