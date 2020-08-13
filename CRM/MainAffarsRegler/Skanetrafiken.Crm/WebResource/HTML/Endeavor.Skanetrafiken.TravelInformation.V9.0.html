@@ -75,6 +75,10 @@
             datestring = datestring.replace("T", " ");
 
             timestamp.value = datestring;
+
+            if (hrs != 0) {
+                searchTravels();
+            }
         }
 
         function getFormContext() {
