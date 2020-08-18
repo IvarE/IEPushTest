@@ -676,10 +676,10 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
         populateContractorInformation: function (transporttype, city, line) {
 
-            if ((city == null || city == "") && line) {
-                alert("Denna typ av sökning är förnärvarande inte funktionell.")
-                return;
-            }
+            //if ((city == null || city == "") && line) {
+            //    alert("Denna typ av sökning är förnärvarande inte funktionell.")
+            //    return;
+            //}
 
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
 
@@ -705,8 +705,8 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             debugger;
             var organisation = Endeavor.Skanetrafiken.TravelInformation.getOrganisationFromLine(city, line);
             var contractor = organisation != "" ? organisation.getAttribute("Name") : "";
-            if (organisation == "" || organisation == null)
-                return;
+            //if (organisation == "" || organisation == null)
+            //    return;
 
             var contractorrow = travelinformationbody.insertRow();
             var cell = contractorrow.insertCell();
@@ -924,7 +924,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                             }
 
                             if (entity != null)
-                                Endeavor.Skanetrafiken.TravelInformation.setDisplayTextCitybus(entity);
+                                Endeavor.Skanetrafiken.TravelInformation.setDisplayTextTrain(entity);
 
                         }
                         else if (saveEntity.transporttype == "REGIONBUS") {
@@ -967,6 +967,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                     },
 
                                     cgi_travelinformation: travelinformation,
+                                    cgi_JourneyNumber: getElementValue(saveEntity.directjourney, "JourneyNumber"),
                                     cgi_Tour: getElementValue(saveEntity.directjourney, "JourneyNumber"),
                                     cgi_Transport: "Regionbuss",
                                     cgi_Line: getElementValue(saveEntity.directjourney, "LineDesignation"),
@@ -985,7 +986,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                             }
 
                             if (entity != null)
-                                Endeavor.Skanetrafiken.TravelInformation.setDisplayTextCitybus(entity);
+                                Endeavor.Skanetrafiken.TravelInformation.setDisplayTextRegionbus(entity);
 
                         }
                         else if (saveEntity.transporttype == "STRADBUS") {
@@ -1218,7 +1219,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 arrivalactual = arrivalactual.substring(0, 16).replace("T", " ");
             }
 
-            var line = "Tur: " + startplanned + " [" + startactual + "] " + entity.cgi_Start + " - " + arrivalplanned + " [" + arrivalactual + "] " + entity.cgi_Stop;
+            var line = "Tur: " + entity.cgi_JourneyNumber + " " + startplanned + " [" + startactual + "] " + entity.cgi_Start + " - " + arrivalplanned + " [" + arrivalactual + "] " + entity.cgi_Stop;
             var contractor = "Entreprenör: " + entity.cgi_Contractor;
 
             entity.cgi_DisplayText = tour + " " + line + " " + contractor;
@@ -1250,7 +1251,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 arrivalactual = arrivalactual.substring(0, 16).replace("T", " ");
             }
 
-            var line = "Tur: " + startplanned + " [" + startactual + "] " + entity.cgi_Start + " - " + arrivalplanned + " [" + arrivalactual + "] " + entity.cgi_Stop;
+            var line = "Tur: " + entity.cgi_JourneyNumber + " " + startplanned + " [" + startactual + "] " + entity.cgi_Start + " - " + arrivalplanned + " [" + arrivalactual + "] " + entity.cgi_Stop;
             var contractor = "Entreprenör: " + entity.cgi_Contractor;
 
             entity.cgi_DisplayText = trafik + " " + tour + " " + line + " " + contractor;
@@ -1282,7 +1283,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 arrivalactual = arrivalactual.substring(0, 16).replace("T", " ");
             }
 
-            var line = "Tur: " + startplanned + " [" + startactual + "] " + entity.cgi_Start + " - " + arrivalplanned + " [" + arrivalactual + "] " + entity.cgi_Stop;
+            var line = "Tur: " + entity.cgi_JourneyNumber + " " + startplanned + " [" + startactual + "] " + entity.cgi_Start + " - " + arrivalplanned + " [" + arrivalactual + "] " + entity.cgi_Stop;
             var contractor = "Entreprenör: " + entity.cgi_Contractor;
 
             entity.cgi_DisplayText = trafik + " " + city + " " + tour + " " + line + " " + contractor;
