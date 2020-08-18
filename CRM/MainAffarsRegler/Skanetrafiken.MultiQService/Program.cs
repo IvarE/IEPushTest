@@ -21,7 +21,6 @@ namespace Skanetrafiken.MultiQService
                 _log.Debug("Main Started");
 
                 string passwordArgument = null;
-                string passwordCreditsafeArgument = null;
 
                 string[] args = System.Environment.GetCommandLineArgs();
                 if (args != null)
@@ -30,11 +29,6 @@ namespace Skanetrafiken.MultiQService
                     if (passwordArgs.Count() > 0)
                     {
                         passwordArgument = passwordArgs.First();
-                    }
-                    var passwordCreditsafeArgs = args.Where(s => s.Contains("PasswordCreditsafe:"));
-                    if (passwordCreditsafeArgs.Count() > 0)
-                    {
-                        passwordCreditsafeArgument = passwordCreditsafeArgs.First();
                     }
                 }
 
