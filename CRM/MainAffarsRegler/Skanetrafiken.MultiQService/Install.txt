@@ -15,8 +15,8 @@ To use integrated authentication
 
 To use stored credentials
 * Set the UserName setting in the application config file
-* Run the service application with the /Password:XYZ /PasswordCreditsafe:ZYX parameters to store the passwords.
-  Example "C:\Program Files (x86)\MultiQService\MultiQService.exe" /Password:XYZ /PasswordCreditsafe:ZYX
+* Run the service application with the /Password:XYZ parameters to store the passwords.
+  Example "C:\Program Files (x86)\MultiQService\MultiQService.exe" /Password:XYZ
   You will receive an error message that you cannot start a service from the command line. The password will be stored anyway.
   Observe that you must create the passwords using the same account as the service will execute under. I.e. if the user ScheduleSvc
   is used as the service account then your need to login or runas this user when setting the password.
