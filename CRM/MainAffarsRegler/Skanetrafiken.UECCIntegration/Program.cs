@@ -60,15 +60,16 @@ namespace Skanetrafiken.UECCIntegration
                 if (input == "y")
                 {
                     domainUser = ConfigurationManager.AppSettings["domainUserPROD"];
-                    passWord = ConfigurationManager.AppSettings["passWordPROD"];
                     urlOrganization = ConfigurationManager.AppSettings["urlOrganizationPROD"];
                 }
                 else
                 {
                     domainUser = ConfigurationManager.AppSettings["domainUserTST"];
-                    passWord = ConfigurationManager.AppSettings["passWordTST"];
                     urlOrganization = ConfigurationManager.AppSettings["urlOrganizationTST"];
                 }
+
+                Console.WriteLine("Please introduce the password: ");
+                passWord = Console.ReadLine();
 
                 IOrganizationService _service = ConnectToMSCRM(domainUser, passWord, urlOrganization);
 
