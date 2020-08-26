@@ -4078,7 +4078,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                     List<ContactEntity> contacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactQuery);
 
-                    if (contacts == null || contacts.Count > 1)
+                    if (contacts == null || contacts.Count == 0 || contacts.Count > 1)
                     {
                         //HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.BadRequest);
                         HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.NotFound);
