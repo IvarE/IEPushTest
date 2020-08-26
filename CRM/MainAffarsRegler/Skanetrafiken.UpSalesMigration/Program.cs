@@ -3271,7 +3271,6 @@ namespace Skanetrafiken.UpSalesMigration
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"TEST Enviroment Selected.");
                 Console.WriteLine("TEST Enviroment Selected.");
                 domainUser = ConfigurationManager.AppSettings["domainUserTST"];
-                passWord = ConfigurationManager.AppSettings["passWordTST"];
                 urlOrganization = ConfigurationManager.AppSettings["urlOrganizationTST"];
 
                 relativeExcelPath = @"C:\Users\Pedro\OneDrive\Ambiente de Trabalho\Skanetrafiken\Upsales Migration\";
@@ -3281,7 +3280,6 @@ namespace Skanetrafiken.UpSalesMigration
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"UAT Enviroment Selected.");
                 Console.WriteLine("UAT Enviroment Selected.");
                 domainUser = ConfigurationManager.AppSettings["domainUserUAT"];
-                passWord = ConfigurationManager.AppSettings["passWordUAT"];
                 urlOrganization = ConfigurationManager.AppSettings["urlOrganizationUAT"];
 
                 relativeExcelPath = @"C:\Users\Pedro\OneDrive\Ambiente de Trabalho\Skanetrafiken\Upsales Migration\";
@@ -3291,7 +3289,6 @@ namespace Skanetrafiken.UpSalesMigration
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"PROD Enviroment Selected.");
                 Console.WriteLine("PROD Enviroment Selected.");
                 domainUser = ConfigurationManager.AppSettings["domainUserPROD"];
-                passWord = ConfigurationManager.AppSettings["passWordPROD"];
                 urlOrganization = ConfigurationManager.AppSettings["urlOrganizationPROD"];
             }
             else
@@ -3301,7 +3298,10 @@ namespace Skanetrafiken.UpSalesMigration
                 Console.ReadLine();
                 return;
             }
-            
+
+            Console.WriteLine("Please introduce the password: ");
+            passWord = Console.ReadLine();
+
             IOrganizationService _service = ConnectToMSCRM(domainUser, passWord, urlOrganization);
             if (_service == null)
             {
