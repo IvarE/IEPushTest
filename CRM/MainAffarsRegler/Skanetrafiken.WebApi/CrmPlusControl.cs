@@ -549,6 +549,50 @@ namespace Skanetrafiken.Crm.Controllers
 
                         newSalesOrderLine.Id = XrmHelper.Create(localContext, newSalesOrderLine);
 
+                        #region Payment Handling (371 / 1181 - 921 /  1187)
+
+                        //Expand and create Payment Entity (ed_SalesOrderLinePayment) -> connect to PaymentMethod (ed_PaymentMethod) -> 
+                        //if (salesOrderLineInfo.Payments != null && salesOrderLineInfo.Payments.Length > 0)
+                        //{
+                        //    foreach (var salesOrderPayment in salesOrderLineInfo.Payments)
+                        //    {
+                        //        PaymentMethodEntity paymentMethod = null;
+                        //        //find or create PaymentMethod (ed_PaymentMethod)
+                        //        if (salesOrderPayment.PaymentType != null)
+                        //        {
+                        //            FilterExpression paymentMethodFilter = new FilterExpression(LogicalOperator.And);
+                        //            paymentMethodFilter.AddCondition(PaymentMethodEntity.Fields.ed_PaymentType, ConditionOperator.Equal, salesOrderPayment.PaymentType);
+
+                        //            paymentMethod = XrmRetrieveHelper.RetrieveFirst<PaymentMethodEntity>(localContext, new ColumnSet(PaymentMethodEntity.Fields.ed_name, PaymentMethodEntity.Fields.ed_PaymentType), paymentMethodFilter);
+
+                        //            if (paymentMethod == null)
+                        //            {
+                        //                //Create a new PaymentMethod record if none was found
+                        //                PaymentMethodEntity newPaymentMethod = new PaymentMethodEntity();
+                        //                newPaymentMethod.ed_name = salesOrderPayment.PaymentTypeName;
+                        //                newPaymentMethod.ed_PaymentType = salesOrderPayment.PaymentType;
+                        //                Guid paymentMethodGuid = XrmHelper.Create(localContext, newPaymentMethod);
+
+                        //                paymentMethod = XrmRetrieveHelper.Retrieve<PaymentMethodEntity>(localContext, paymentMethodGuid, new ColumnSet(PaymentMethodEntity.Fields.ed_name, PaymentMethodEntity.Fields.ed_PaymentType));
+                        //            }
+                        //        }
+
+                        //        //create Payment Entity
+                        //        PaymentEntity payment = new PaymentEntity();
+                        //        payment.ed_name = $"{salesOrderPayment.PaidAmount} - {paymentMethod?.ed_name}";
+                        //        payment.ed_Amount = salesOrderPayment.PaidAmount;
+                        //        payment.ed_SalesOrderLine = newSalesOrderLine.ToEntityReference();
+                        //        if (paymentMethod != null)
+                        //        {
+                        //            payment.ed_TypeOfPayment = paymentMethod.ToEntityReference();
+                        //        }
+
+                        //        XrmHelper.Create(localContext, payment);
+                        //    }
+                        //}
+
+                        #endregion
+
                         #endregion
                     }
                     #endregion
@@ -790,6 +834,49 @@ namespace Skanetrafiken.Crm.Controllers
 
                             newSalesOrderLine.Id = XrmHelper.Create(localContext, newSalesOrderLine);
 
+                            #region Payment Handling (371 / 1181 - 921 /  1187)
+
+                            //Expand and create Payment Entity (ed_SalesOrderLinePayment) -> connect to PaymentMethod (ed_PaymentMethod) -> 
+                            //if (salesOrderLineInfo.Payments != null && salesOrderLineInfo.Payments.Length > 0)
+                            //{
+                            //    foreach (var salesOrderPayment in salesOrderLineInfo.Payments)
+                            //    {
+                            //        PaymentMethodEntity paymentMethod = null;
+                            //        //find or create PaymentMethod (ed_PaymentMethod)
+                            //        if (salesOrderPayment.PaymentType != null)
+                            //        {
+                            //            FilterExpression paymentMethodFilter = new FilterExpression(LogicalOperator.And);
+                            //            paymentMethodFilter.AddCondition(PaymentMethodEntity.Fields.ed_PaymentType, ConditionOperator.Equal, salesOrderPayment.PaymentType);
+
+                            //            paymentMethod = XrmRetrieveHelper.RetrieveFirst<PaymentMethodEntity>(localContext, new ColumnSet(PaymentMethodEntity.Fields.ed_name, PaymentMethodEntity.Fields.ed_PaymentType), paymentMethodFilter);
+
+                            //            if (paymentMethod == null)
+                            //            {
+                            //                //Create a new PaymentMethod record if none was found
+                            //                PaymentMethodEntity newPaymentMethod = new PaymentMethodEntity();
+                            //                newPaymentMethod.ed_name = salesOrderPayment.PaymentTypeName;
+                            //                newPaymentMethod.ed_PaymentType = salesOrderPayment.PaymentType;
+                            //                Guid paymentMethodGuid = XrmHelper.Create(localContext, newPaymentMethod);
+
+                            //                paymentMethod = XrmRetrieveHelper.Retrieve<PaymentMethodEntity>(localContext, paymentMethodGuid, new ColumnSet(PaymentMethodEntity.Fields.ed_name, PaymentMethodEntity.Fields.ed_PaymentType));
+                            //            }
+                            //        }
+
+                            //        //create Payment Entity
+                            //        PaymentEntity payment = new PaymentEntity();
+                            //        payment.ed_name = $"{salesOrderPayment.PaidAmount} - {paymentMethod?.ed_name}";
+                            //        payment.ed_Amount = salesOrderPayment.PaidAmount;
+                            //        payment.ed_SalesOrderLine = newSalesOrderLine.ToEntityReference();
+                            //        if (paymentMethod != null)
+                            //        {
+                            //            payment.ed_TypeOfPayment = paymentMethod.ToEntityReference();
+                            //        }
+
+                            //        XrmHelper.Create(localContext, payment);
+                            //    }
+                            //}
+
+                            #endregion
 
                             if (salesOrderLineInfo.SalesOrderLineTravellers != null)
                             {
@@ -3993,7 +4080,8 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (contacts == null || contacts.Count > 1)
                     {
-                        HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        //HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.NotFound);
                         rmNoContactFound.Content = new StringContent(string.Format(Resources.UnexpectedException, 
                             $"Found no matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}"));
                         return rmNoContactFound;

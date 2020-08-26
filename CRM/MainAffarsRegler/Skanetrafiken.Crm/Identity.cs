@@ -184,6 +184,7 @@ namespace Skanetrafiken.Crm
 
                 var certCollection = store.Certificates;
                 var currentCerts = certCollection.Find(X509FindType.FindByTimeValid, DateTime.Now, false);
+                //var currentCerts = certCollection.Find(X509FindType.FindBySubjectName, certName, false);
 
                 if (certName == null)
                     throw new Exception($"No Cert Name available to decode token with.");

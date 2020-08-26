@@ -464,6 +464,8 @@ namespace Skanetrafiken.Crm
 
         private string OrderLineNoField;
 
+        private PaymentInfo[] payments;
+
         private SalesOrderLineTravellerInfo[] salesOrderLineTravellers;
 
         /// <remarks/>
@@ -617,6 +619,18 @@ namespace Skanetrafiken.Crm
             }
         }
 
+        public PaymentInfo[] Payments
+        {
+            get
+            {
+                return this.payments;
+            }
+            set
+            {
+                this.payments = value;
+            }
+        }
+
         internal static SalesOrderLineEntity GetSalesOrderLineEntityFromSalesOrderLineInfo(Plugin.LocalPluginContext localContext, SalesOrderLineInfo salesOrderLineInfo, string orderPurchaseType)
         {
 
@@ -655,7 +669,7 @@ namespace Skanetrafiken.Crm
                     sole.ed_OrderPurchaseType = new EntityReference(OrderPurchaseTypeEntity.EntityLogicalName, orderPurchaseId);
                 }
             }
-
+            
             return sole;
         }
 
@@ -770,6 +784,93 @@ namespace Skanetrafiken.Crm
             solte.ed_TravellerTypeName = travellerInfo.TravellerTypeName;
 
             return solte;
+        }
+    }
+
+    public class PaymentInfo
+    {
+        private decimal paidAmount;
+
+        private int paymentType;
+
+        private string paymentTypeName;
+
+        private int travellerType;
+
+        private string travellerTypeName;
+
+        private string valueCodeNumber;
+
+        public decimal PaidAmount
+        {
+            get
+            {
+                return this.paidAmount;
+            }
+            set
+            {
+                this.paidAmount = value;
+            }
+        }
+
+        public int PaymentType
+        {
+            get
+            {
+                return this.paymentType;
+            }
+            set
+            {
+                this.paymentType = value;
+            }
+        }
+
+        public string PaymentTypeName
+        {
+            get
+            {
+                return this.paymentTypeName;
+            }
+            set
+            {
+                this.paymentTypeName = value;
+            }
+        }
+
+        public int TravellerType
+        {
+            get
+            {
+                return this.travellerType;
+            }
+            set
+            {
+                this.travellerType = value;
+            }
+        }
+
+        public string TravellerTypeName
+        {
+            get
+            {
+                return this.travellerTypeName;
+            }
+            set
+            {
+                this.travellerTypeName = value;
+            }
+        }
+
+        public string ValueCodeNumber
+        {
+            get
+            {
+                return this.valueCodeNumber;
+            }
+            set
+            {
+                this.valueCodeNumber = value;
+            }
         }
     }
 }

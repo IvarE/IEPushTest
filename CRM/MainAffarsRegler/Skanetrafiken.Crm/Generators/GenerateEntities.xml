@@ -59,6 +59,8 @@
     <entity>ed_mergerecords</entity>
     <entity>ed_notifymkl</entity>
     <entity>ed_orderstatus</entity>
+    <entity>ed_paymentmethod</entity>
+    <entity>ed_salesorderlinepayment</entity>
     <entity>ed_skakort</entity>
     <entity>ed_salesorder</entity>
     <entity>ed_salesorderline</entity>
