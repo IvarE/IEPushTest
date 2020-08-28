@@ -4099,7 +4099,8 @@ namespace Skanetrafiken.Crm.Controllers
 
                     // Return ContactId
                     HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.OK);
-                    rm.Content = new StringContent(contact.ContactId.ToString());
+                    //rm.Content = new StringContent(contact.ContactId.ToString());
+                    rm.Content = new StringContent(SerializeNoNull(contact.ContactId));
                     return rm;
                 }
             }
