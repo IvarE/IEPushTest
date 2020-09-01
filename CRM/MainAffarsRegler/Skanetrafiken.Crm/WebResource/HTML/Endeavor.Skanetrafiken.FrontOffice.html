@@ -3,41 +3,38 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title></title>
 
     <script type="text/javascript">
 
-        //var iframeURL = 'https://sttravelconfiguratorweb.azurewebsites.net';
-        //var iframeID = 'frontOfficeiFrameId';
+        function setSrcTst() {
+            document.getElementById("frontOfficeiFrameId").src = "https://sttravelconfiguratorweb.azurewebsites.net/ticketdetails/EBU5J9J";
+        }
 
-        //function loadIframe() {
-        //    //pre-authenticate
-        //    var req = new XMLHttpRequest();
-        //    req.open("POST", iframeURL, false, "ST.CRM_ExternalTest_1@regionskane.onmicrosoft.com", "SingaporeCrmTestuser#1"); //use POST to safely send combination
-        //    req.send(null); //here you can pass extra parameters through.*/8
-
-        //    //setiFrame's SRC attribute
-        //    var iFrameWin = document.getElementById(iframeID);
-        //    iFrameWin.src = iframeURL + "?extraParameters=true";
-        //}
-
-        // On Load
-        function onLoad() {
+        function onClickSearchTicket() {
             debugger;
-            //document.getElementById("frontOfficeiFrameId").src = "https://sttravelconfiguratorweb.azurewebsites.net/ticketdetails/12345";
-            //document.getElementById("frontOfficeiFrameId").src = "https://sttravelconfiguratorweb.azurewebsites.net";
 
-            document.getElementById("frontOfficeiFrameId").src = "https://sttravelconfiguratorwebacctest.azurewebsites.net/ticketdetails";
-            //token
-            //onload, call loadIframe() function
-            //loadIframe();
+            //setTimeout(() => setSrcTst(), 10000);
+
+            var ticketId = document.getElementById("ticketid").value;
+
+            if (ticketId == null || ticketId == undefined || ticketId == "") {
+                alert("The Ticket Id is null or empty. Please enter a value.");
+                return;
+            }
+
+            var openUrl = "https://sttravelconfiguratorweb.azurewebsites.net/ticketdetails/" + ticketId; //EBU5J9J
+            window.open(openUrl);
         }
 
     </script>
 
 </head>
-<body onload="window.onLoad();">
+<body>
 
-    <iframe style="width:100%;height:500px;" id="frontOfficeiFrameId" src=""></iframe>
+    <div>
+        <div><input type="text" id="ticketid" style="border:1px solid #c0c0c0;" /> <button onclick="onClickSearchTicket()">Search</button></div>
+    </div>
+
+    <!--<iframe style="width:100%;height:500px;" id="frontOfficeiFrameId" src=""></iframe>-->
 </body>
 </html>
