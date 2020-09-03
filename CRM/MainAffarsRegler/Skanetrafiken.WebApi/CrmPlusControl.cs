@@ -4078,13 +4078,20 @@ namespace Skanetrafiken.Crm.Controllers
 
                     List<ContactEntity> contacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactQuery);
 
-                    if (contacts == null || contacts.Count > 1)
+                    if (contacts == null || contacts.Count == 0 /*|| contacts.Count > 1*/)
                     {
                         //HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.BadRequest);
                         HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.NotFound);
-                        rmNoContactFound.Content = new StringContent(string.Format(Resources.UnexpectedException, 
+                        rmNoContactFound.Content = new StringContent(string.Format(Resources.UnexpectedException,
                             $"Found no matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}"));
                         return rmNoContactFound;
+                    }
+                    else if (contacts.Count > 1)
+                    {
+                        HttpResponseMessage multipleContactFound = new HttpResponseMessage(HttpStatusCode.Conflict);
+                        multipleContactFound.Content = new StringContent(string.Format(Resources.UnexpectedException,
+                            $"Found multiple matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}"));
+                        return multipleContactFound;
                     }
 
                     ContactEntity contact = contacts.First();
@@ -4099,7 +4106,8 @@ namespace Skanetrafiken.Crm.Controllers
 
                     // Return ContactId
                     HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.OK);
-                    rm.Content = new StringContent(contact.ContactId.ToString());
+                    //rm.Content = new StringContent(contact.ContactId.ToString());
+                    rm.Content = new StringContent(SerializeNoNull(contact.ContactId));
                     return rm;
                 }
             }

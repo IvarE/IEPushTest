@@ -300,10 +300,14 @@ namespace Skanetrafiken.Crm
             //ae.Name = $"Kostnadsställe - {ai.OrganizationName}"; //Gamla
             //ae.Name = $"{ai.OrganizationName} - KST"; //ändra namn
 
-            if(ai.Suborgname != null && ai.Suborgname != string.Empty)
+            if (ai.Suborgname != null && ai.Suborgname != string.Empty)
             {
                 ae.Name = ai.Suborgname;
                 ae.ed_SubOrgNamn = ai.Suborgname; //Inget skickas från fasaden ännu
+            }
+            else
+            {
+                ae.Name = $"{ai.OrganizationName} - KST"; //ändra namn
             }
 
             if (ai.InformationSource == (int)Schema.Generated.ed_informationsource.ForetagsPortal)
