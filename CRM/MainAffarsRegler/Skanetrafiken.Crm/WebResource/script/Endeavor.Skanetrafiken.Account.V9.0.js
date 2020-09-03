@@ -93,6 +93,9 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             else {
                 Endeavor.Skanetrafiken.Account.showInfoAccountPortal(formContext);
             }
+
+            //Hide/Show Õvrig Information
+            Endeavor.Skanetrafiken.Account.showOvrigInformation(formContext);
         },
 
         headLoad: function (successCallback) {
@@ -160,6 +163,14 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                     }
                 }
             }
+        },
+
+        onChangeTypeOfAccount: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+            //Hide/Show Õvrig Information
+            Endeavor.Skanetrafiken.Account.showOvrigInformation(formContext);
         },
 
         // ORGANISATION (TOP LEVEL) - Show/hide Block button
@@ -360,6 +371,29 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             }
         },
 
+        showOvrigInformation: function (formContext) {
+
+            var infotaimentCustomer = formContext.getAttribute("ed_infotainmentcustomer").getValue();
+            var customer = formContext.getAttribute("ed_customer").getValue();
+            var agent = formContext.getAttribute("ed_agent").getValue();
+            var samarbete = formContext.getAttribute("ed_collaborationcustomer").getValue();
+            var reseller = formContext.getAttribute("ed_reseller").getValue();
+            var school = formContext.getAttribute("ed_schoolcustomer").getValue();
+            var senior = formContext.getAttribute("ed_seniorcustomer").getValue();
+            var portal = formContext.getAttribute("ed_portalcustomer").getValue();
+
+            if (infotaimentCustomer && !customer && !agent && !samarbete && !reseller && !school && !senior && !portal) {
+
+                formContext.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_12").setVisible(false);
+                formContext.ui.tabs.get("tab_3").sections.get("tab_3_section_1").setVisible(false);
+
+            }
+            else {
+                formContext.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_12").setVisible(true);
+                formContext.ui.tabs.get("tab_3").sections.get("tab_3_section_1").setVisible(true);
+            }
+        },
+
         showInfoAccountPortal: function (formContext) {
 
             var parentAccount = formContext.getAttribute("parentaccountid").getValue();
@@ -384,9 +418,9 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 var optionSetValue = accountType.getValue();
 
                 // if Account Portal (Ny företagskund)
-                if (optionSetValue == 899310000) {
-                    formContext.ui.setFormNotification("OBS - Detta är en ny företagskund", "INFO", "1");
-                }
+                //if (optionSetValue == 899310000) {
+                //    formContext.ui.setFormNotification("OBS - Detta är en ny företagskund", "INFO", "1");
+                //}
             }
 
             var isLocked = formContext.getAttribute("ed_islockedportal");

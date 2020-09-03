@@ -3,17 +3,16 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
 
     <script type="text/javascript">
-
-        function setSrcTst() {
-            document.getElementById("frontOfficeiFrameId").src = "https://sttravelconfiguratorweb.azurewebsites.net/ticketdetails/EBU5J9J";
-        }
 
         function onClickSearchTicket() {
             debugger;
 
-            //setTimeout(() => setSrcTst(), 10000);
+            //var myGrid = gridContext.getGrid();
+            //var myGridRows = myGrid.GetRows();
+
 
             var ticketId = document.getElementById("ticketid").value;
 
@@ -26,10 +25,14 @@
             window.open(openUrl);
         }
 
+        function onLoad(parameters) {
+            debugger;
+        }
+
     </script>
 
 </head>
-<body>
+<body onload="onLoad()">
 
     <div>
         <div><input type="text" id="ticketid" style="border:1px solid #c0c0c0;" /> <button onclick="onClickSearchTicket()">Search</button></div>

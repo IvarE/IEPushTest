@@ -1072,6 +1072,12 @@ CGISweden.refund =
             else {
                 CGISweden.refund.refundtypeNONE();
             }
+            debugger;
+            var _refundtypename = CGISweden.formscriptfunctions.GetLookupName("cgi_refundtypeid");
+            if (_refundtypename == "Byte reskassa")
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", true);
+            else
+                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", true);
         }
         catch (e) {
             alert("Fel i CGISweden.refund.refundtypeid_OnChange\n\n" + e.Message);
