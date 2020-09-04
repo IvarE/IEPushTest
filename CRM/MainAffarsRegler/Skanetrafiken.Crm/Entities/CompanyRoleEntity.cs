@@ -256,7 +256,7 @@ namespace Skanetrafiken.Crm.Entities
             
             if (roles != null && roles.Count > 0)
             {
-                resp = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                resp = new HttpResponseMessage(HttpStatusCode.Conflict);
                 resp.Content = new StringContent($"Contact already have the role: {role.CompanyRole} on Account with Id: {role.PortalId}");
                 return null;
             }
