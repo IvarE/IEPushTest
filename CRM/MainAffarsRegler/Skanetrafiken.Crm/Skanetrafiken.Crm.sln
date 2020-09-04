@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.MultiQService
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.UECCIntegration", "..\Skanetrafiken.UECCIntegration\Skanetrafiken.UECCIntegration.csproj", "{E6795991-10A3-42CF-8483-7DE3D1A89E6F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.CloseOldCasesService", "..\Skanetrafiken.CloseOldCasesService\Skanetrafiken.CloseOldCasesService.csproj", "{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Acceptans|Any CPU = Acceptans|Any CPU
@@ -219,6 +221,18 @@ Global
 		{E6795991-10A3-42CF-8483-7DE3D1A89E6F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E6795991-10A3-42CF-8483-7DE3D1A89E6F}.Test|Any CPU.ActiveCfg = Release|Any CPU
 		{E6795991-10A3-42CF-8483-7DE3D1A89E6F}.Test|Any CPU.Build.0 = Release|Any CPU
+		{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}.Acceptans|Any CPU.ActiveCfg = Release|Any CPU
+		{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}.Acceptans|Any CPU.Build.0 = Release|Any CPU
+		{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}.Dev|Any CPU.ActiveCfg = Debug|Any CPU
+		{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}.Dev|Any CPU.Build.0 = Debug|Any CPU
+		{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}.Produktion|Any CPU.ActiveCfg = Release|Any CPU
+		{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}.Produktion|Any CPU.Build.0 = Release|Any CPU
+		{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}.Test|Any CPU.ActiveCfg = Release|Any CPU
+		{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}.Test|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
