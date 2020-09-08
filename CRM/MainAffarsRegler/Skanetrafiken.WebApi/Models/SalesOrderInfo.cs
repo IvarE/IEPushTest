@@ -13,6 +13,13 @@ using Generated = Skanetrafiken.Crm.Schema.Generated;
 
 namespace Skanetrafiken.Crm
 {
+    public enum enumPurchaseOrigin : ushort
+    {
+        Portal = 0,
+        Subscription = 1,
+        App = 2
+    }
+
     public class SalesOrderInfo
     {
         private int informationSourceField;
@@ -21,7 +28,7 @@ namespace Skanetrafiken.Crm
 
         private string businessUnitField;
 
-        private string orderPurchaseType;
+        private int? purchaseOrigin;
 
         private DateTime orderTimeField;
 
@@ -90,18 +97,17 @@ namespace Skanetrafiken.Crm
             }
         }
 
-        public string OrderPurchaseType
+        public int? PurchaseOrigin
         {
             get
             {
-                return this.orderPurchaseType;
+                return this.purchaseOrigin;
             }
             set
             {
-                this.orderPurchaseType = value;
+                this.purchaseOrigin = value;
             }
         }
-
 
         public DateTime OrderTime
         {
@@ -178,7 +184,6 @@ namespace Skanetrafiken.Crm
 
         internal static SalesOrderEntity GetSalesOrderEntityFromSalesOrderInfo(Plugin.LocalPluginContext localContext, SalesOrderInfo salesOrderInfo)
         {
-
             SalesOrderEntity soe = new SalesOrderEntity();
 
             soe.ed_Name = $"Order - {salesOrderInfo.OrderNo}";
@@ -221,27 +226,21 @@ namespace Skanetrafiken.Crm
                 }
             }
 
-            if (salesOrderInfo.OrderPurchaseType != null && salesOrderInfo.OrderPurchaseType != string.Empty)
+            if (salesOrderInfo.PurchaseOrigin != null)
             {
-                QueryExpression queryOrderPurchaseType = new QueryExpression(OrderPurchaseTypeEntity.EntityLogicalName);
-                queryOrderPurchaseType.NoLock = true;
-                queryOrderPurchaseType.ColumnSet.AddColumns(OrderPurchaseTypeEntity.Fields.ed_OrderPurchaseTypeId, OrderPurchaseTypeEntity.Fields.ed_name);
-                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.ed_name, ConditionOperator.Equal, salesOrderInfo.OrderPurchaseType);
-                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.statecode, ConditionOperator.Equal, (int)ed_OrderPurchaseTypeState.Active);
-
-                List<OrderPurchaseTypeEntity> lOrderPurchases = XrmRetrieveHelper.RetrieveMultiple<OrderPurchaseTypeEntity>(localContext, queryOrderPurchaseType);
-
-                if (lOrderPurchases.Count == 1)
+                switch (salesOrderInfo.PurchaseOrigin)
                 {
-                    soe.ed_OrderPurchaseType = lOrderPurchases.FirstOrDefault().ToEntityReference();
-                }
-                else if (lOrderPurchases.Count == 0)
-                {
-                    OrderPurchaseTypeEntity orderPurchase = new OrderPurchaseTypeEntity();
-                    orderPurchase.ed_name = salesOrderInfo.OrderPurchaseType;
-
-                    Guid orderPurchaseId = XrmHelper.Create(localContext, orderPurchase);
-                    soe.ed_OrderPurchaseType = new EntityReference(OrderPurchaseTypeEntity.EntityLogicalName, orderPurchaseId);
+                    case (int)enumPurchaseOrigin.Portal:
+                        soe.ed_PurchaseOrigin = ed_purchaseorigin.Portal;
+                        break;
+                    case (int)enumPurchaseOrigin.Subscription:
+                        soe.ed_PurchaseOrigin = ed_purchaseorigin.Subscription;
+                        break;
+                    case (int)enumPurchaseOrigin.App:
+                        soe.ed_PurchaseOrigin = ed_purchaseorigin.App;
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -250,7 +249,6 @@ namespace Skanetrafiken.Crm
 
         internal static SalesOrderEntity GetSalesOrderEntityFromKopAndSkicka(Plugin.LocalPluginContext localContext, SalesOrderInfo salesOrderInfo, bool isPut, bool? isFTG = null)
         {
-
             SalesOrderEntity soe = new SalesOrderEntity();
             soe.ed_Name = $"{salesOrderInfo.OrderNo}"; 
             soe.ed_OrderPlacedOn = salesOrderInfo.OrderTime;
@@ -268,27 +266,21 @@ namespace Skanetrafiken.Crm
             if(!isPut)
                 soe.ed_OrderNo = salesOrderInfo.OrderNo;
 
-            if(salesOrderInfo.OrderPurchaseType != null && salesOrderInfo.OrderPurchaseType != string.Empty)
+            if (salesOrderInfo.PurchaseOrigin != null)
             {
-                QueryExpression queryOrderPurchaseType = new QueryExpression(OrderPurchaseTypeEntity.EntityLogicalName);
-                queryOrderPurchaseType.NoLock = true;
-                queryOrderPurchaseType.ColumnSet.AddColumns(OrderPurchaseTypeEntity.Fields.ed_OrderPurchaseTypeId, OrderPurchaseTypeEntity.Fields.ed_name);
-                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.ed_name, ConditionOperator.Equal, salesOrderInfo.OrderPurchaseType);
-                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.statecode, ConditionOperator.Equal, (int)ed_OrderPurchaseTypeState.Active);
-
-                List<OrderPurchaseTypeEntity> lOrderPurchases = XrmRetrieveHelper.RetrieveMultiple<OrderPurchaseTypeEntity>(localContext, queryOrderPurchaseType);
-
-                if (lOrderPurchases.Count == 1)
+                switch (salesOrderInfo.PurchaseOrigin)
                 {
-                    soe.ed_OrderPurchaseType = lOrderPurchases.FirstOrDefault().ToEntityReference();
-                }
-                else if (lOrderPurchases.Count == 0)
-                {
-                    OrderPurchaseTypeEntity orderPurchase = new OrderPurchaseTypeEntity();
-                    orderPurchase.ed_name = salesOrderInfo.OrderPurchaseType;
-
-                    Guid orderPurchaseId = XrmHelper.Create(localContext, orderPurchase);
-                    soe.ed_OrderPurchaseType = new EntityReference(OrderPurchaseTypeEntity.EntityLogicalName, orderPurchaseId);
+                    case (int)enumPurchaseOrigin.Portal:
+                        soe.ed_PurchaseOrigin = ed_purchaseorigin.Portal;
+                        break;
+                    case (int)enumPurchaseOrigin.Subscription:
+                        soe.ed_PurchaseOrigin = ed_purchaseorigin.Subscription;
+                        break;
+                    case (int)enumPurchaseOrigin.App:
+                        soe.ed_PurchaseOrigin = ed_purchaseorigin.App;
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -450,6 +442,8 @@ namespace Skanetrafiken.Crm
 
         private string commentField;
 
+        private string descriptionField;
+
         private string journeyField;
 
         private string recipientField;
@@ -530,6 +524,19 @@ namespace Skanetrafiken.Crm
             set
             {
                 this.commentField = value;
+            }
+        }
+
+        /// <remarks/>
+        public string Description
+        {
+            get
+            {
+                return this.descriptionField;
+            }
+            set
+            {
+                this.descriptionField = value;
             }
         }
 
@@ -631,9 +638,8 @@ namespace Skanetrafiken.Crm
             }
         }
 
-        internal static SalesOrderLineEntity GetSalesOrderLineEntityFromSalesOrderLineInfo(Plugin.LocalPluginContext localContext, SalesOrderLineInfo salesOrderLineInfo, string orderPurchaseType)
+        internal static SalesOrderLineEntity GetSalesOrderLineEntityFromSalesOrderLineInfo(Plugin.LocalPluginContext localContext, SalesOrderLineInfo salesOrderLineInfo)
         {
-
             SalesOrderLineEntity sole = new SalesOrderLineEntity();
 
             sole.ed_name = $"Orderrad - {salesOrderLineInfo.PortalId}";
@@ -646,12 +652,12 @@ namespace Skanetrafiken.Crm
             sole.ed_TicketOfferType = salesOrderLineInfo.ticketOfferTypeField;
             sole.ed_TicketOfferTypeName = salesOrderLineInfo.ticketOfferTypeNameField;
 
-            if (orderPurchaseType != null && orderPurchaseType != string.Empty)
+            if (salesOrderLineInfo.Description != null && salesOrderLineInfo.Description != string.Empty)
             {
                 QueryExpression queryOrderPurchaseType = new QueryExpression(OrderPurchaseTypeEntity.EntityLogicalName);
                 queryOrderPurchaseType.NoLock = true;
                 queryOrderPurchaseType.ColumnSet.AddColumns(OrderPurchaseTypeEntity.Fields.ed_OrderPurchaseTypeId, OrderPurchaseTypeEntity.Fields.ed_name);
-                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.ed_name, ConditionOperator.Equal, orderPurchaseType);
+                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.ed_name, ConditionOperator.Equal, salesOrderLineInfo.Description);
                 queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.statecode, ConditionOperator.Equal, (int)ed_OrderPurchaseTypeState.Active);
 
                 List<OrderPurchaseTypeEntity> lOrderPurchases = XrmRetrieveHelper.RetrieveMultiple<OrderPurchaseTypeEntity>(localContext, queryOrderPurchaseType);
@@ -663,7 +669,7 @@ namespace Skanetrafiken.Crm
                 else if (lOrderPurchases.Count == 0)
                 {
                     OrderPurchaseTypeEntity orderPurchase = new OrderPurchaseTypeEntity();
-                    orderPurchase.ed_name = orderPurchaseType;
+                    orderPurchase.ed_name = salesOrderLineInfo.Description;
 
                     Guid orderPurchaseId = XrmHelper.Create(localContext, orderPurchase);
                     sole.ed_OrderPurchaseType = new EntityReference(OrderPurchaseTypeEntity.EntityLogicalName, orderPurchaseId);
@@ -674,7 +680,7 @@ namespace Skanetrafiken.Crm
         }
 
         internal static SalesOrderLineEntity GetSalesOrderLineEntityFromKopOchSkicka(Plugin.LocalPluginContext localContext, SalesOrderLineInfo salesOrderLineInfo, 
-            EntityReference salesOrderId, EntityReference orderStatus, EntityReference skaKort, string orderPurchaseType)
+            EntityReference salesOrderId, EntityReference orderStatus, EntityReference skaKort)
         {
             SalesOrderLineEntity salesOrderLine = new SalesOrderLineEntity()
             {
@@ -686,12 +692,12 @@ namespace Skanetrafiken.Crm
                 ed_Amount = salesOrderLineInfo.Amount
             };
 
-            if (orderPurchaseType != null && orderPurchaseType != string.Empty)
+            if (salesOrderLineInfo.Description != null && salesOrderLineInfo.Description != string.Empty)
             {
                 QueryExpression queryOrderPurchaseType = new QueryExpression(OrderPurchaseTypeEntity.EntityLogicalName);
                 queryOrderPurchaseType.NoLock = true;
                 queryOrderPurchaseType.ColumnSet.AddColumns(OrderPurchaseTypeEntity.Fields.ed_OrderPurchaseTypeId, OrderPurchaseTypeEntity.Fields.ed_name);
-                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.ed_name, ConditionOperator.Equal, orderPurchaseType);
+                queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.ed_name, ConditionOperator.Equal, salesOrderLineInfo.Description);
                 queryOrderPurchaseType.Criteria.AddCondition(OrderPurchaseTypeEntity.Fields.statecode, ConditionOperator.Equal, (int)ed_OrderPurchaseTypeState.Active);
 
                 List<OrderPurchaseTypeEntity> lOrderPurchases = XrmRetrieveHelper.RetrieveMultiple<OrderPurchaseTypeEntity>(localContext, queryOrderPurchaseType);
@@ -703,7 +709,7 @@ namespace Skanetrafiken.Crm
                 else if (lOrderPurchases.Count == 0)
                 {
                     OrderPurchaseTypeEntity orderPurchase = new OrderPurchaseTypeEntity();
-                    orderPurchase.ed_name = orderPurchaseType;
+                    orderPurchase.ed_name = salesOrderLineInfo.Description;
 
                     Guid orderPurchaseId = XrmHelper.Create(localContext, orderPurchase);
                     salesOrderLine.ed_OrderPurchaseType = new EntityReference(OrderPurchaseTypeEntity.EntityLogicalName, orderPurchaseId);

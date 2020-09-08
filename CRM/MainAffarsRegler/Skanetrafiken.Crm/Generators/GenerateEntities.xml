@@ -129,6 +129,7 @@
     <optionset>cgi_travelcard_ed_blockedstatus</optionset>
     <optionset>ed_creditsaferejectcodes</optionset>
     <optionset>ed_informationsource</optionset>
+    <optionset>ed_purchaseorigin</optionset>
 
 
 

@@ -78,6 +78,8 @@ namespace Skanetrafiken.Crm.Controllers
                     salesOrderInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
                 else if (salesOrderInfo.InformationSource == 3)
                     salesOrderInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.KopOchSkickaFTG;
+                else if (salesOrderInfo.InformationSource == 4)
+                    salesOrderInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.Tillagg;
                 else if (salesOrderInfo.InformationSource == null)
                     salesOrderInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
 
@@ -86,6 +88,9 @@ namespace Skanetrafiken.Crm.Controllers
                 switch (salesOrderInfo.InformationSource)
                 {
                     case (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal:
+                        rm = CrmPlusControl.CompanySalesOrderPost(threadId, salesOrderInfo);
+                        break;
+                    case (int)Schema.Generated.ed_informationsource.Tillagg:
                         rm = CrmPlusControl.CompanySalesOrderPost(threadId, salesOrderInfo);
                         break;
                     case (int)Schema.Generated.ed_informationsource.KopOchSkicka:
