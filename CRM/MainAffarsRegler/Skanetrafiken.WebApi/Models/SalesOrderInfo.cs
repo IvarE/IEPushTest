@@ -189,6 +189,7 @@ namespace Skanetrafiken.Crm
             soe.ed_Name = $"Order - {salesOrderInfo.OrderNo}";
             soe.ed_OrderNo = salesOrderInfo.OrderNo;
             soe.ed_OrderPlacedOn = salesOrderInfo.OrderTime;
+            soe.ed_informationsource = (ed_informationsource)salesOrderInfo.InformationSource;
 
             AccountEntity account = XrmRetrieveHelper.RetrieveFirst<AccountEntity>(localContext, new ColumnSet(false),
                                 new FilterExpression()
@@ -651,6 +652,7 @@ namespace Skanetrafiken.Crm
             sole.ed_TicketId = salesOrderLineInfo.ticketIdField;
             sole.ed_TicketOfferType = salesOrderLineInfo.ticketOfferTypeField;
             sole.ed_TicketOfferTypeName = salesOrderLineInfo.ticketOfferTypeNameField;
+            
 
             if (salesOrderLineInfo.Description != null && salesOrderLineInfo.Description != string.Empty)
             {
