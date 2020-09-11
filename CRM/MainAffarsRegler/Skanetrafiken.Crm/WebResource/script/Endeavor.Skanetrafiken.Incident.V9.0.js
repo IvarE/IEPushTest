@@ -1008,7 +1008,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
                     var _url = result[0].cgi_rgolurl;
                     var rgolId = formContext.getAttribute("cgi_rgolissueid").getValue();
-                    var rgolPath = "http://" + _url + "/web/index.html?data=issueId%3D" + rgolId + "%26environment%3D" + _url;
+                    var rgolPath = "https://" + _url + "/web/index.html?data=issueId%3D" + rgolId + "%26environment%3D" + _url;
 
 
                     if (formContext.ui.tabs.get("rgol_info_new").getDisplayState() == "expanded") {
@@ -1053,7 +1053,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
                     var rgolId = formContext.getAttribute("cgi_rgolissueid").getValue();
                     //var rgolPath = "http://" + _url + "/web/index.html?data=issueId%3D" + rgolId + "%26environment%3D" + _url;
-                    var rgolPath = "http://" + _url + "/Pages/IssueSimple.aspx?id=" + rgolId;
+                    var rgolPath = "https://" + _url + "/Pages/IssueSimple.aspx?id=" + rgolId;
 
 
                     if (formContext.ui.tabs.get("rgol_info_new").getDisplayState() == "expanded") {

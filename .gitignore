@@ -19,3 +19,6 @@ bin
 /CRM/MainAffarsRegler/Skanetrafiken.UECCIntegration/Endeavor.ErrorContacts.log
 /DK/Development/Release/CRM2016 Upgrade 1.0_2019.02.01.1/UpgradeLog.htm
 /DK/Development/CRM2016 Upgrade 1.0/UpgradeLog3.htm
+/CRM/MainAffarsRegler/Skanetrafiken.WebApi/Skanetrafiken.WebApi.csproj.vspscc
+*.tf1
+*.vspscc
