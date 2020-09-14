@@ -1703,7 +1703,11 @@ CGISweden.refund =
 
                 //Kortnummer
                 CGISweden.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "none");
-                CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
+
+                debugger;
+                var _refundtypename = CGISweden.formscriptfunctions.GetLookupName("cgi_refundtypeid");
+                if (_refundtypename != "Byte reskassa")
+                    CGISweden.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false);
 
                 //Vidarebefordran
                 CGISweden.formscriptfunctions.SetRequiredLevel("cgi_transportcompanyid", "none");
