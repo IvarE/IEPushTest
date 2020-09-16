@@ -10,16 +10,6 @@ if (typeof (Endeavor.Skanetrafiken) === "undefined") {
 
 if (typeof (Endeavor.Skanetrafiken.cgi_travelcard) === "undefined") {
 
-    /*
-     * 
-     * CGI Travelcard (From travelCardLibrary.js)
-     * 
-     */
-
-    // *******************************************************
-    // Entity: cgi_travelcard 
-    // *******************************************************
-
     FORM_TYPE_CREATE = 1;
     FORM_TYPE_UPDATE = 2;
     FORM_TYPE_READONLY = 3;
@@ -29,6 +19,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_travelcard) === "undefined") {
 
     Endeavor.Skanetrafiken.cgi_travelcard  = {
 
+        //Form Methods CGI Travelcard (from travelCardLibrary.js)
         onFormLoad: function (executionContext) {
             var formContext = executionContext.getFormContext();
 

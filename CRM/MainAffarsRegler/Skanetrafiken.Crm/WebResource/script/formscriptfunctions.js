@@ -306,5 +306,104 @@ Endeavor.formscriptfunctions = {
         var dateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second;
         return dateTime;
 
-    }
+    },
+
+    AlertCustomDialog: function (msgText) {
+
+        var message = { confirmButtonLabel: "Ok", text: msgText };
+        var alertOptions = { height: 150, width: 280 };
+
+        Xrm.Navigation.openAlertDialog(message, alertOptions).then(
+            function success(result) {
+                console.log("Alert dialog closed");
+            },
+            function (error) {
+                console.log(error.message);
+            }
+        );
+    },
+
+    ConfirmCustomDialog: function (msgText, sucesscallBack) {
+
+        var confirmStrings = { text: msgText, title: "Confirmation Dialog", "cancelButtonLabel": "Cancel", confirmButtonLabel: "Confirm" };
+        var confirmOptions = { height: 200, width: 500 };
+        Xrm.Navigation.openConfirmDialog(confirmStrings, confirmOptions).then(
+            function (success) {
+                if (success.confirmed) {
+
+                    console.log("Dialog closed using OK button.");
+                    sucesscallBack();
+                }
+                else
+                    console.log("Dialog closed using Cancel button or X.");
+            });
+    },
+
+    ErrorCustomDialog: function (details, message) {
+
+        Xrm.Navigation.openErrorDialog({ details: details, message: message }).then(
+            function (success) {
+                console.log(success);
+            },
+            function (error) {
+                console.log(error);
+            });
+    },
+
+    callAction: function (actionName, entityName, targetId, inputParameters, sucessCallback, errorCallback) {
+
+        var target = {};
+        target.entityType = entityName;
+        target.id = targetId;
+
+        var parameterTypes = {};
+        parameterTypes["entity"] = { "typeName": "mscrm." + entityName, "structuralProperty": 5 };
+
+        if (inputParameters != null)
+            for (var i = 0; i < inputParameters.length; i++) {
+                var parameter = inputParameters[i];
+
+                req[parameter.Field] = parameter.Value;
+                parameterTypes[parameter.Field] = { "typeName": parameter.TypeName, "structuralProperty": parameter.StructuralProperty };
+            }
+
+        var req = {};
+        req.entity = target;
+        req.getMetadata = function () {
+            return {
+                boundParameter: "entity",
+                parameterTypes: parameterTypes,
+                operationType: 0,
+                operationName: actionName
+            };
+        };
+
+        Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
+    },
+
+    callGlobalAction: function (actionName, inputParameters, sucessCallback, errorCallback) {
+
+        var req = {};
+
+        var parameterTypes = {};
+        if (inputParameters != null)
+            for (var i = 0; i < inputParameters.length; i++) {
+                var parameter = inputParameters[i];
+
+                req[parameter.Field] = parameter.Value;
+                parameterTypes[parameter.Field] = { "typeName": parameter.TypeName, "structuralProperty": parameter.StructuralProperty };
+            }
+
+        req.getMetadata = function () {
+
+            return {
+                boundParameter: null,
+                parameterTypes: parameterTypes,
+                operationType: 0,
+                operationName: actionName
+            };
+        };
+
+        Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
+    },
 }

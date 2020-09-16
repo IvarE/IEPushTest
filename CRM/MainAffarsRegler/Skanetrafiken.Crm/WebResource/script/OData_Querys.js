@@ -7,10 +7,12 @@ Endeavor.OData_Querys = {
 
     // *** Start Queries used for entity Case
     GetTravelInfoForCase: function (caseid, formContext) {
+
         try {
+
             //Return the number of travelinformation posts registered on this case
             //This is done synchronously because it is part of a validation process
-
+            //TODO - Pedro
             Xrm.WebApi.retrieveRecord("cgi_travelinformation", caseid, "?$select=cgi_travelinformationid")
                 .then(function (cgi_travelinformation) {
                     if (cgi_travelinformation.result.length === 0) {
@@ -51,7 +53,7 @@ Endeavor.OData_Querys = {
 
     GetDefaultCustomerFromSetting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_defaultcustomeroncase&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_defaultcustomeroncase&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.setCustomerOnLoad_callback(result, formContext);
                 },
@@ -68,7 +70,7 @@ Endeavor.OData_Querys = {
 
     GetDefaultCaseCategory3Setting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_category_detail3id&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_category_detail3id&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.casetypecode_onchange_callback(result, formContext);
                 },
@@ -86,7 +88,7 @@ Endeavor.OData_Querys = {
 
     Getcgi_refundtypeproductnotrequiredidSetting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_refundtypeproductnotrequiredid&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_refundtypeproductnotrequiredid&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.Getcgi_refundtypeproductnotrequiredidSetting_callback(result, formContext);
                 },
@@ -100,9 +102,10 @@ Endeavor.OData_Querys = {
             alert("Fel i Endeavor.OData_Querys.Getcgi_refundtypeproductnotrequiredidSetting\n\n" + e.Message);
         }
     },
+
     GetBOMBUrlFromSetting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_bomburl&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_bomburl&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.openBombApp_callback(result, formContext);
                 },
@@ -119,7 +122,7 @@ Endeavor.OData_Querys = {
 
     GetRGOLUrlFromSetting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_rgolurl&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_rgolurl&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.getRGOLapiurl_callback(result, formContext);
                 },
@@ -136,7 +139,7 @@ Endeavor.OData_Querys = {
 
     GetRGOLUrlFromSettingNew: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_rgolurl&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_rgolurl&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.getRGOLapiurl_callbackNew(result, formContext);
                 },
@@ -154,7 +157,7 @@ Endeavor.OData_Querys = {
     //Returns category guid for level 1 and level 2
     GetParentCategory: function (_categoryid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_parentid,cgi_parentid2&$filter=cgi_categorydetailid eq" + _categoryid).then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_categorydetail", "?$select=cgi_parentid,cgi_parentid2&$filter=cgi_categorydetailid eq" + _categoryid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.category2_onchange_callback(result, formContext);
                 },
@@ -172,7 +175,7 @@ Endeavor.OData_Querys = {
     //Returns category guid for level 1 and level 2
     GetParentCategory3: function (_categoryid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_parentid,cgi_parentid2&$filter=cgi_categorydetailid eq" + _categoryid).then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_categorydetail", "?$select=cgi_parentid,cgi_parentid2&$filter=cgi_categorydetailid eq" + _categoryid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.category3_onchange_callback(result, formContext);
                 },
@@ -190,7 +193,7 @@ Endeavor.OData_Querys = {
     //Get default queue from user
     GetDefaultQueue: function (userId, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("email", "?$select=queueid&$filter=systemuserid eq" + userId).then(
+            Xrm.WebApi.retrieveMultipleRecords("systemuser", "?$select=queueid&$filter=systemuserid eq" + userId).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Email.SetSenderEmail_callback(result, formContext);
                 },
@@ -208,7 +211,7 @@ Endeavor.OData_Querys = {
     //Get letter template
     GetLetterTemplate: function (_id, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_title,cgi_template_body&$filter=cgi_letter_templateid eq" + _id).then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_letter_template", "?$select=cgi_title,cgi_template_body&$filter=cgi_letter_templateid eq" + _id).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.letter_template_onchange_callback(result, formContext);
                 },
@@ -225,10 +228,9 @@ Endeavor.OData_Querys = {
     // *** End Queries used for entity Case
 
     // *** Start Queries used for entity account
-
     GetSecRolesNameAccount: function (userRoleId, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("account", "?$select=name&$filter=roleid eq" + userRoleId).then(
+            Xrm.WebApi.retrieveMultipleRecords("role", "?$select=name&$filter=roleid eq" + userRoleId).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Account.checkIfUserHasRole_callback(result, formContext);
                 },
@@ -242,16 +244,12 @@ Endeavor.OData_Querys = {
             alert("Fel i Endeavor.OData_Querys.GetSecRolesNameAccount\n\n" + e.Message);
         }
     },
-
     // *** End Queries used for entity account
 
     // *** Start Queries used for entity cgi_refund
-
-
-
     GetAmountLimitFromSetting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_amount_limit, cgi_amount_limit_warn&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_amount_limit,cgi_amount_limit_warn&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.ctrlAmountLimit_callback(result, formContext);
                 },
@@ -367,13 +365,10 @@ Endeavor.OData_Querys = {
                     alert("Fel i Endeavor.OData_Querys.GetEmailAddress\n\n" + e.Message);
                 }
             );
-
         }
         catch (e) {
             alert("Fel i Endeavor.OData_Querys.GetEmailAddress\n\n" + e.Message);
         }
-
-
     },
 
     //
@@ -414,7 +409,7 @@ Endeavor.OData_Querys = {
     //Get bic and iban from incident. MaxP 2016-04-20
     GetBicIban: function (caseid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_bic,cgi_iban,cgi_iscompleted&$filter=incidentid eq" + caseid).then(
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_bic,cgi_iban,cgi_iscompleted&$filter=incidentid eq" + caseid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.setBicIban_callback(result, formContext);
                 },
@@ -423,7 +418,6 @@ Endeavor.OData_Querys = {
                     alert("Fel i Endeavor.OData_Querys.GetBicIban\n\n" + e.Message);
                 }
             );
-
         }
         catch (e) {
             alert("Fel i Endeavor.OData_Querys.GetBicIban\n\n" + e.Message);
@@ -433,7 +427,7 @@ Endeavor.OData_Querys = {
     //Get social sec number from incident.
     GetSocSecNumber: function (caseid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_soc_sec_number,cgi_rgol_socialsecuritynumber,cgi_iscompleted&$filter=incidentid eq" + caseid).then(
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_soc_sec_number,cgi_rgol_socialsecuritynumber,cgi_iscompleted&$filter=incidentid eq" + caseid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.setSocSecOnLoad_callback(result, formContext);
                 },
@@ -446,14 +440,12 @@ Endeavor.OData_Querys = {
         catch (e) {
             alert("Fel i Endeavor.OData_Querys.GetGetSocSecNumber\n\n" + e.Message);
         }
-
-
     },
 
     //Get mobilenumber from incident.
     GetMobileNumber: function (caseid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_customer_telephonenumber,cgi_rgol_telephonenumber,cgi_iscompleted&$filter=incidentid eq" + caseid).then(
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_customer_telephonenumber,cgi_rgol_telephonenumber,cgi_iscompleted&$filter=incidentid eq" + caseid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.setMobileNumber_callback(result, formContext);
                 },
@@ -471,7 +463,7 @@ Endeavor.OData_Querys = {
     //Get cgi_contact and cgi_account from incident.
     GetContactAccount: function (caseid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_contactid,cgi_accountid&$filter=incidentid eq" + caseid).then(
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_contactid,cgi_accountid&$filter=incidentid eq" + caseid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.GetContactAccount_callback(result, formContext);
                 },
@@ -489,7 +481,7 @@ Endeavor.OData_Querys = {
     //Get RSID from user
     GetRSID: function (userId, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_rsid&$filter=systemuserid eq" + userId).then(
+            Xrm.WebApi.retrieveMultipleRecords("systemuser", "?$select=cgi_rsid&$filter=systemuserid eq" + userId).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.ctrlAttest_callback(result, formContext);
                 },
@@ -506,7 +498,7 @@ Endeavor.OData_Querys = {
 
     GetSecRolesNameRefund: function (userRoleId, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=name&$filter=roleid eq" + userRoleId).then(
+            Xrm.WebApi.retrieveMultipleRecords("role", "?$select=name&$filter=roleid eq" + userRoleId).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.CheckUserRoleOnchange_callback(result, formContext);
                 },
@@ -519,16 +511,14 @@ Endeavor.OData_Querys = {
         catch (e) {
             alert("Fel i Endeavor.OData_Querys.GetSecRolesName\n\n" + e.Message);
         }
-
     },
 
     // *** End Queries used for entity cgi_refund
 
     // *** Start Queries used for entity email
-
     GetDefaultUserFromSetting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("email", "?$select=cgi_userid&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_userid&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Email.SetSenderEmailNoReply_callback(result, formContext);
                 },
@@ -546,10 +536,9 @@ Endeavor.OData_Querys = {
     // *** End Queries used for entity email
 
     // *** Start Queries used for contact
-
     GetSecRolesNameContact: function (userRoleId, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("contact", "?$select=name&$filter=roleid eq" + userRoleId).then(
+            Xrm.WebApi.retrieveMultipleRecords("role", "?$select=name&$filter=roleid eq" + userRoleId).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Contact.checkIfUserHasRole_callback(result, formContext);
                 },
@@ -570,7 +559,7 @@ Endeavor.OData_Querys = {
 
     GetFilelinks: function (incidentId, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("email", "?$select=cgi_url&$filter=cgi_incidentid eq" + incidentId).then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_filelink", "?$select=cgi_url&$filter=cgi_incidentid eq" + incidentId).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Email.set_filelinks_onchange_callback(result, formContext);
                 },
@@ -591,7 +580,7 @@ Endeavor.OData_Querys = {
 
     GetSecRolesNameArticle: function (userRoleId, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("kbarticle", "?$select=name&$filter=roleid eq" + userRoleId).then(
+            Xrm.WebApi.retrieveMultipleRecords("role", "?$select=name&$filter=roleid eq" + userRoleId).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.KBArticle.checkIfUserHasMarketingRole_callback(result, formContext);
                 },
