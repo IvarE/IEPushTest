@@ -16,9 +16,8 @@
             document.getElementById('datefrom').value = datefrom.toISOString().substring(0, 10);
             document.getElementById('dateto').value = (new Date()).toISOString().substring(0, 10);
 
-            if (_formContext != null && _formContext.getAttribute("cgi_travelcardnumber") != null) {
+            if (_formContext != null && _formContext.getAttribute("cgi_travelcardnumber") != null)
                 document.getElementById('cardnr').value = _formContext.getAttribute("cgi_travelcardnumber").getValue();
-            }
 
             setDocument();
         }

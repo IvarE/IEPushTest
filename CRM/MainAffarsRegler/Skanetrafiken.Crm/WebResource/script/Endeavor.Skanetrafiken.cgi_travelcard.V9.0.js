@@ -43,12 +43,10 @@ if (typeof (Endeavor.Skanetrafiken.cgi_travelcard) === "undefined") {
                 var formContext = executionContext.getFormContext();
 
                 var _cardNumber = Endeavor.formscriptfunctions.GetValue("cgi_travelcardnumber", formContext);
-                if (_cardNumber != null) {
+                if (_cardNumber != null)
                     return _cardNumber;
-                }
-                else {
+                else
                     return null;
-                }
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Incident.setVisibilityOnLoad\n\n" + e.Message);

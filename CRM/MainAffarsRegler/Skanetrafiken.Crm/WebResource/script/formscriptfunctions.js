@@ -350,6 +350,37 @@ Endeavor.formscriptfunctions = {
             });
     },
 
+    OpenCustomForm: function (entityName, entityId) {
+
+        var entityFormOptions = {};
+        entityFormOptions["entityName"] = entityName;
+        entityFormOptions["entityId"] = entityId;
+
+        // Open the form.
+        Xrm.Navigation.openForm(entityFormOptions).then(
+            function (success) {
+                console.log(success);
+            },
+            function (error) {
+                console.log(error);
+                Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
+            });
+    },
+
+    LoadXrmExecutionContext: function (webResourceName, formContext) {
+
+        try {
+            var wrControl = formContext.getControl(webResourceName);
+            if (wrControl)
+                wrControl.getContentWindow().then(function (contentWindow) { contentWindow.setClientApiContext(Xrm, formContext); });
+            else
+                alert("Fel i Endeavor.formscriptfunctions.LoadXrmExecutionContext\n\n Web Resource " + webResourceName + " not found.");
+        }
+        catch (e) {
+            alert("Fel i Endeavor.formscriptfunctions.LoadXrmExecutionContext\n\n" + e.Message);
+        }
+    },
+
     callAction: function (actionName, entityName, targetId, inputParameters, sucessCallback, errorCallback) {
 
         var target = {};
@@ -405,5 +436,60 @@ Endeavor.formscriptfunctions = {
         };
 
         Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
+    },
+
+    fetchJSONResults: function (url, max_records) {
+        /// <summary>
+        /// Get records from server
+        /// </summary>
+        /// <param name="url">The Query to execute</param>
+        /// <param name="max_records">Nr of records to process. If null max 5000 will be retrieved.</param>
+        /// <returns type="">The Records.</returns>
+
+        var value = null;
+        var request = new XMLHttpRequest();
+        var nextUrl = null;
+        var totalRecords = new Array();
+        request.open("GET", url, false);
+        request.setRequestHeader("Accept", "application/json");
+        request.setRequestHeader("contentType", "application/json; charset=utf-8");
+        request.send();
+
+        try {
+            if (max_records == null)
+                max_records = 5000;
+
+            debugger;
+            var object = eval("[" + request.responseText + "]");
+            value = object[0].d.results;
+            nextUrl = object[0].d.__next;
+
+            // Add records to total records
+            for (var i = 0; i < value.length; i++) {
+
+                if (totalRecords.length >= max_records)
+                    return totalRecords;
+                totalRecords.push(value[i]);
+            }
+
+            // Is there more records to fetch?
+            if (nextUrl != null) {
+                var nextRecords = Endeavor.Common.Data.fetchJSONResults(nextUrl, max_records);
+                if (nextRecords != null && nextRecords.length > 0) {
+                    for (var i = 0; i < nextRecords.length; i++) {
+                        if (totalRecords.length >= max_records)
+                            return totalRecords;
+                        totalRecords.push(nextRecords[i]);
+                    }
+                }
+            }
+
+            return totalRecords;
+        }
+        catch (error) {
+            value = null;
+            alert("There was an error trying to access the CRM server. Please contact your administrator. URL:" + url);
+            return null;
+        }
     },
 }

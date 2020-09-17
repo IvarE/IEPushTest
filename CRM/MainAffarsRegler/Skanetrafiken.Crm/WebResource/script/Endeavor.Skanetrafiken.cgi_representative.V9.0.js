@@ -10,16 +10,6 @@ if (typeof (Endeavor.Skanetrafiken) === "undefined") {
 
 if (typeof (Endeavor.Skanetrafiken.cgi_representative) === "undefined") {
 
-    /*
-     * 
-     * CGI Representative (From representativLibrary.js)
-     * 
-     */
-
-    // *******************************************************
-    // Entity: cgi_representative
-    // *******************************************************
-
     FORM_TYPE_CREATE = 1;
     FORM_TYPE_UPDATE = 2;
     FORM_TYPE_READONLY = 3;
@@ -29,6 +19,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_representative) === "undefined") {
 
     Endeavor.Skanetrafiken.cgi_representative = {
 
+        //Form Methods CGI Representative (from representativLibrary.js)
         onFormLoad: function (executionContext) {
             var formContext = executionContext.getFormContext();
 
@@ -113,15 +104,11 @@ if (typeof (Endeavor.Skanetrafiken.cgi_representative) === "undefined") {
                             control.clearNotification();
                         }
                     }
-
                 }
-
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Account.format_phonenumber\n\n" + e.Message);
             }
-
         }
     }
-
 }

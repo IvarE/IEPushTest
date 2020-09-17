@@ -336,11 +336,15 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
                 Xrm.Page.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_12").setVisible(false);
                 Xrm.Page.ui.tabs.get("tab_3").sections.get("tab_3_section_1").setVisible(false);
+                Xrm.Page.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_9").setVisible(false);
+                Xrm.Page.ui.tabs.get("Cost Sites").setVisible(false);
 
             }
             else {
                 Xrm.Page.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_12").setVisible(true);
                 Xrm.Page.ui.tabs.get("tab_3").sections.get("tab_3_section_1").setVisible(true);
+                Xrm.Page.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_9").setVisible(true);
+                Xrm.Page.ui.tabs.get("Cost Sites").setVisible(true);
             }
         },
 

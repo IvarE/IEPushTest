@@ -267,11 +267,15 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
                 formContext.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_12").setVisible(false);
                 formContext.ui.tabs.get("tab_3").sections.get("tab_3_section_1").setVisible(false);
+                formContext.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_9").setVisible(false);
+                formContext.ui.tabs.get("Cost Sites").setVisible(false);
 
             }
             else {
                 formContext.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_12").setVisible(true);
                 formContext.ui.tabs.get("tab_3").sections.get("tab_3_section_1").setVisible(true);
+                formContext.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_9").setVisible(true);
+                formContext.ui.tabs.get("Cost Sites").setVisible(true);
             }
         },
 

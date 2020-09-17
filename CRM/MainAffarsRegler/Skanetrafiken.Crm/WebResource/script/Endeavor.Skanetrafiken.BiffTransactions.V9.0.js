@@ -30,47 +30,23 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
         cardnumber: null,
         missingcard: true,
         travelcardid: null,
-        executioncontext: null,
+        globalContext: null,
 
-        openCustomForm: function (entityName, entityId) {
+        onLoad: function (executionContext) {
 
-            var entityFormOptions = {};
-            entityFormOptions["entityName"] = entityName;
-            entityFormOptions["entityId"] = entityId;
+            var formContext = executionContext.getFormContext();
 
-            // Open the form.
-            Xrm.Navigation.openForm(entityFormOptions).then(
-                function (success) {
-                    console.log(success);
-                },
-                function (error) {
-                    console.log(error);
-                    Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog(error.message);
-                });
-        },
-
-        alertCustomDialog: function (msgText) {
-
-            var message = { confirmButtonLabel: "Ok", text: msgText };
-            var alertOptions = { height: 150, width: 280 };
-
-            Xrm.Navigation.openAlertDialog(message, alertOptions).then(
-                function success(result) {
-                    console.log("Alert dialog closed");
-                },
-                function (error) {
-                    console.log(error.message);
-                }
-            );
-        },
-
-        onLoad: function (context) {
-            // clear notifications? Xrm.Page.ui.clearFormNotification(Endeavor.Nibe.LoyaltyProgramRow._loadNotificationHolder);
             try {
-                Endeavor.Skanetrafiken.BiffTransactions.executioncontext = context;
+                Endeavor.Skanetrafiken.BiffTransactions.globalContext = Xrm.Utility.getGlobalContext();
                 Endeavor.Skanetrafiken.BiffTransactions.headLoad(Endeavor.Skanetrafiken.BiffTransactions.loadSuccessCallback);
             } catch (e) {
-                Xrm.Utility.alertDialog(e.message);
+                Endeavor.formscriptfunctions.AlertCustomDialog(e.message);
+            }
+
+            try {
+                Endeavor.formscriptfunctions.LoadXrmExecutionContext("WebResource_BiffTransactions", formContext);
+            } catch (e) {
+                Endeavor.formscriptfunctions.AlertCustomDialog(e.message);
             }
         },
 
@@ -80,14 +56,6 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
 
             var globalContext = Xrm.Utility.getGlobalContext();
 
-            if (typeof SDK == "undefined" || typeof SDK.REST == "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/edp_/script/SDK.Rest.js";
-                jsUrls.push(jsUrl);
-            }
-            if (typeof Endeavor == "undefined" || typeof Endeavor.Common == "undefined" || typeof Endeavor.Common.Data == "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/edp_/script/Endeavor.Common.Data.js";
-                jsUrls.push(jsUrl);
-            }
             if (typeof Sdk == "undefined" || typeof Sdk.ed_GetCardDetailsRequest == "undefined") {
                 jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.ed_GetCardDetails.min.js";
                 jsUrls.push(jsUrl);
@@ -120,15 +88,15 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
         },
 
         loadSuccessCallback: function () {
-            console.log("Everything loaded!"); // TODO ADD INITIAL LOADS
+            console.log("Everything loaded!");
         },
 
         setDocument: function (document) {
             Endeavor.Skanetrafiken.BiffTransactions.htmldocument = document;
 
-            if (Endeavor.Skanetrafiken.BiffTransactions.htmldocument.getElementById('cardnr').value) {
+            if (Endeavor.Skanetrafiken.BiffTransactions.htmldocument.getElementById('cardnr').value)
                 Endeavor.Skanetrafiken.BiffTransactions.getDetailsAndTransactions();
-            }
+            
         },
 
         // CALLED WHEN SEARCH BUTTON IS PRESSED
@@ -142,37 +110,34 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
                     Endeavor.Skanetrafiken.BiffTransactions.getDetails();
                 }
                 catch (e) {
-                    debugger;
-                    Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog("Error in TravelCard details: " + e.message);
+                    Endeavor.formscriptfunctions.AlertCustomDialog("Error in TravelCard details: " + e.message);
                 }
 
                 try {
                     Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable();
                 }
                 catch (e) {
-                    debugger;
-                    Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog("Error in saved transactions: " + e.message);
+                    Endeavor.formscriptfunctions.AlertCustomDialog("Error in saved transactions: " + e.message);
                 }
             }
-            else {
-                Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog("Inget angivet kortnummer");
-            }
+            else
+                Endeavor.formscriptfunctions.AlertCustomDialog("Inget angivet kortnummer");
         },
 
         // REQUESTS AND SETS ALL CARD DETAILS FROM BIZTALK AND CRM
         getDetails: function () {
 
-            var htmldocument = Endeavor.Skanetrafiken.BiffTransactions.htmldocument;
             var cardnumber = Endeavor.Skanetrafiken.BiffTransactions.cardnumber;
 
-            // BIFFTALK SOAP REQUEST   
+            // BIFFTALK SOAP REQUEST
             var carddetailsrequest = new Sdk.ed_GetCardDetailsRequest(cardnumber);
             var response = Sdk.Sync.execute(carddetailsrequest);
             var detailsresponsetext = response.getCardDetailsResponse();
 
-            // CRM ODATA REQUEST - TODO - Web.API
-            var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "cgi_travelcardSet?$select=cgi_travelcardnumber,cgi_travelcardId,cgi_TravelCardName,cgi_FailedAttemptsToChargeMoney,cgi_CreditCardMask,cgi_Contactid,cgi_AutoloadDisconnectionDate,cgi_AutoloadConnectionDate,cgi_AutoloadStatus,ed_BlockedCard,cgi_Accountid&$filter=cgi_travelcardnumber eq('" + cardnumber + "')";
-            var detailsresults = Endeavor.Common.Data.fetchJSONResults(url);
+            var url = Endeavor.Skanetrafiken.BiffTransactions.globalContext.getClientUrl() + "/api/data/v9.0/cgi_travelcards?" +
+                "$select=cgi_travelcardnumber,cgi_travelcardid,cgi_travelcardname,cgi_failedattemptstochargemoney,cgi_creditcardmask,_cgi_contactid_value,cgi_autoloaddisconnectiondate,"+
+                "cgi_autoloadconnectiondate,cgi_autoloadstatus,ed_blockedcard,_cgi_accountid_value&$filter=cgi_travelcardnumber eq '" + cardnumber + "'";
+            var detailsresults = Endeavor.formscriptfunctions.fetchJSONResults(url);
 
             // TRY SET DETAILS. WILL FAIL IF NO CONNECTION TO BIZTALK SERVER
             var parser = new DOMParser();
@@ -189,21 +154,15 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
             var detailsparsererror = detailsresponse.getElementsByTagName('parsererror');
             var detailserrormessage = detailsresponse.getElementsByTagName('ErrorMessage');
 
-            if (detailsparsererror && detailsparsererror.length > 0) {
-                debugger;
-                //Chrome erorr message
-                Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog("Get Card Details service is unavailable. Please contact your systems administrator.");
-            }
-            else if (detailserrormessage && detailserrormessage.length > 0 && detailserrormessage[0].innerHTML) {
-                debugger;
-                Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog(detailserrormessage[0].innerHTML);
-            }
+            if (detailsparsererror && detailsparsererror.length > 0)
+                Endeavor.formscriptfunctions.AlertCustomDialog("Get Card Details service is unavailable. Please contact your systems administrator.");
+            else if (detailserrormessage && detailserrormessage.length > 0 && detailserrormessage[0].innerHTML)
+                Endeavor.formscriptfunctions.AlertCustomDialog(detailserrormessage[0].innerHTML);
             else {
                 // CALL FUNCTION
                 Endeavor.Skanetrafiken.BiffTransactions.populateValues(detailsresponse, detailsresults);
 
                 // GET OUTSTANDING CHARGES (ENABLES / DISABLES RELOAD BUTTON)
-
                 if (cardnumber && !Endeavor.Skanetrafiken.BiffTransactions.missingcard) {
                     var outstandingchargesrequest = new Sdk.ed_GetOutstandingChargesRequest(cardnumber);
 
@@ -222,18 +181,12 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
                     var chargesparsererror = outstandingchargesresponse.getElementsByTagName('parsererror');
                     var chargeserrormessage = outstandingchargesresponse.getElementsByTagName('ErrorMessage');
 
-                    if (chargesparsererror && chargesparsererror.length > 0) {
-                        debugger;
-                        //Chrome error message
-                        Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog("Outstanding charges service unavailable. Please contact your systems administrator.");
-                    }
-                    else if (chargeserrormessage && chargeserrormessage.length > 0 && chargeserrormessage[0].innerHTML) {
-                        debugger;
-                        Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog(chargeserrormessage[0].innerHTML);
-                    }
-                    else {
+                    if (chargesparsererror && chargesparsererror.length > 0)
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Outstanding charges service unavailable. Please contact your systems administrator.");
+                    else if (chargeserrormessage && chargeserrormessage.length > 0 && chargeserrormessage[0].innerHTML) 
+                        Endeavor.formscriptfunctions.AlertCustomDialog(chargeserrormessage[0].innerHTML);
+                    else
                         Endeavor.Skanetrafiken.BiffTransactions.hasOutstandingCharges(outstandingchargesresponse);
-                    }
                 }
             }
         },
@@ -275,25 +228,22 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
                 return "";
             }
 
-            if (detailsresults.entities.length < 1) {
-                Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog("Kortet hittades inte");
-            }
+            if (detailsresults.entities.length < 1)
+                Endeavor.formscriptfunctions.AlertCustomDialog("Kortet hittades inte");
             else {
-                if (detailsresponse.getElementsByTagName("ns0:CardInformation") && detailsresponse.getElementsByTagName("ns0:CardInformation").length > 1) {
+                if (detailsresponse.getElementsByTagName("ns0:CardInformation") && detailsresponse.getElementsByTagName("ns0:CardInformation").length > 1)
                     throw new Error("Unexpected response length");
-                }
                 else {
 
                     if (detailsresponse.getElementsByTagName("ns0:CardInformation") && detailsresponse.getElementsByTagName("ns0:CardInformation").length < 1) {
                         Endeavor.Skanetrafiken.BiffTransactions.missingcard = true;
-                        Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog("Kortnumret saknas i BizTalk.");
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Kortnumret saknas i BizTalk.");
                     }
-                    else {
+                    else
                         Endeavor.Skanetrafiken.BiffTransactions.missingcard = false;
-                    }
 
                     // SET GLOBAL TRAVELCARDID
-                    Endeavor.Skanetrafiken.BiffTransactions.travelcardid = detailsresults.entities[0].cgi_travelcardId;
+                    Endeavor.Skanetrafiken.BiffTransactions.travelcardid = detailsresults.entities[0].cgi_travelcardid;
 
                     // POPULATE INFORMATION DISPLAY
                     var cardinformation = detailsresponse.getElementsByTagName("ns0:CardInformation")[0];
@@ -311,71 +261,62 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
                     }
 
                     // CHECK FOR ACCOUNT OR CONTACT
-                    if (detailsresults.entities[0].cgi_Contactid.Id) {
+                    if (detailsresults.entities[0]._cgi_contactid_value) {
 
-                        //TODO- WebAPI
-                        var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "ContactSet?$select=FirstName,LastName&$filter=ContactId%20eq(guid'" + detailsresults.entities[0].cgi_Contactid.Id + "')";
-                        var contactresults = Endeavor.Common.Data.fetchJSONResults(url);
+                        var url = Endeavor.Skanetrafiken.BiffTransactions.globalContext.getClientUrl() + "/api/data/v9.0/contacts?$select=firstname,lastname" +
+                            "&$filter=contactid eq " + detailsresults.entities[0]._cgi_contactid_value;
+                        var contactresults = Endeavor.formscriptfunctions.fetchJSONResults(url);
 
                         var link = htmldocument.createElement("a");
-
                         var name = "";
-                        if (contactresults.entities[0].FirstName) {
-                            name += contactresults.entities[0].FirstName;
-                        }
-                        if (contactresults.entities[0].LastName) {
-                            name += " " + contactresults.entities[0].LastName;
-                        }
+                        if (contactresults.entities[0].firstname)
+                            name += contactresults.entities[0].firstname;
+                        if (contactresults.entities[0].lastname)
+                            name += " " + contactresults.entities[0].lastname;
 
                         link.innerHTML = name;
                         link.style.cursor = "pointer";
                         link.onclick = function f() {
-                            Endeavor.Skanetrafiken.BiffTransactions.openCustomForm("contact", detailsresults.entities[0].cgi_Contactid.Id);
+                            Endeavor.formscriptfunctions.OpenCustomForm("contact", detailsresults.entities[0]._cgi_contactid_value);
                         };
                         htmldocument.getElementById('name').innerHTML = "";
                         htmldocument.getElementById('name').appendChild(link);
                     }
                     else {
 
-                        //TODO- WebAPI
-                        var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "AccountSet?$select=Name&$filter=AccountId eq(guid'" + detailsresults.entities[0].cgi_Accountid.Id + "')";
-                        var accountresults = Endeavor.Common.Data.fetchJSONResults(url);
+                        var url = Endeavor.Skanetrafiken.BiffTransactions.globalContext.getClientUrl() + "/api/data/v9.0/accounts?$select=name" +
+                            "&$filter=accountid eq " + detailsresults.entities[0]._cgi_accountid_value;
+                        var accountresults = Endeavor.formscriptfunctions.fetchJSONResults(url);
 
                         var link = htmldocument.createElement("a");
-                        link.innerHTML = accountresults.entities[0].Name;
+                        link.innerHTML = accountresults.entities[0].name;
                         link.style.cursor = "pointer";
                         link.onclick = function f() {
-                            Endeavor.Skanetrafiken.BiffTransactions.openCustomForm("account", detailsresults.entities[0].cgi_Accountid.Id);
+                            Endeavor.formscriptfunctions.OpenCustomForm("account", detailsresults.entities[0]._cgi_accountid_value);
                         };
                         htmldocument.getElementById('name').innerHTML = "";
                         htmldocument.getElementById('name').appendChild(link);
                     }
 
-                    htmldocument.getElementById('cardname').innerHTML = detailsresults.entities[0].cgi_TravelCardName;
+                    htmldocument.getElementById('cardname').innerHTML = detailsresults.entities[0].cgi_travelcardname;
 
-                    var autoloadstatus = detailsresults.entities[0].cgi_AutoloadStatus;
-                    if (autoloadstatus == 1) {
+                    var autoloadstatus = detailsresults.entities[0].cgi_autoloadstatus;
+                    if (autoloadstatus == 1)
                         htmldocument.getElementById('autoloadstatus').innerHTML = "Ja";
-                    }
-                    else {
+                    else
                         htmldocument.getElementById('autoloadstatus').innerHTML = "Nej";
-                    }
 
-                    if (detailsresults.entities[0].cgi_AutoloadConnectionDate && detailsresults.entities[0].cgi_AutoloadConnectionDate.length == 21 && detailsresults.entities[0].cgi_AutoloadConnectionDate.charAt(0) == "/") {
+                    if (detailsresults.entities[0].cgi_autoloadconnectiondate && detailsresults.entities[0].cgi_autoloadconnectiondate.length == 21 && detailsresults.entities[0].cgi_autoloadconnectiondate.charAt(0) == "/")
                         htmldocument.getElementById('autoloadstartdate').innerHTML = (new Date(parseInt(detailsresults.entities[0].cgi_AutoloadConnectionDate.substring(6, 19)))).toISOString().substring(0, 10);
-                    }
-                    else {
-                        if (detailsresults.entities[0].cgi_AutoloadConnectionDate) {
-                            htmldocument.getElementById('autoloadstartdate').innerHTML = detailsresults.entities[0].cgi_AutoloadConnectionDate;
-                        }
-                    }
+                    else
+                        if (detailsresults.entities[0].cgi_autoloadconnectiondate)
+                            htmldocument.getElementById('autoloadstartdate').innerHTML = detailsresults.entities[0].cgi_autoloadconnectiondate;
 
-                    if (detailsresults.entities[0].cgi_AutoloadDisconnectionDate) {
-                        htmldocument.getElementById('autoloadenddate').innerHTML = detailsresults.entities[0].cgi_AutoloadDisconnectionDate;
-                    }
+                    if (detailsresults.entities[0].cgi_autoloaddisconnectiondate)
+                        htmldocument.getElementById('autoloadenddate').innerHTML = detailsresults.entities[0].cgi_autoloaddisconnectiondate;
 
                     htmldocument.getElementById('creditcardnr').innerHTML = "";
-                    htmldocument.getElementById('failedattempts').innerHTML = detailsresults.entities[0].cgi_FailedAttemptsToChargeMoney;
+                    htmldocument.getElementById('failedattempts').innerHTML = detailsresults.entities[0].cgi_failedattemptstochargemoney;
 
                     htmldocument.getElementById('status').innerHTML = getJaNej(getElementValue(cardinformation, 'ns0:CardHotlisted'));
                     htmldocument.getElementById('reason').innerHTML = getElementValue(cardinformation, 'ns0:HotlistReason');
@@ -405,33 +346,14 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
 
                         try {
 
-                            //TODO- WebAPI
-                            var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "cgi_zonenameSet?$select=cgi_name&$filter=cgi_ZoneID eq('" + zonenumber + "')";
-                            var zoneresults = Endeavor.Common.Data.fetchJSONResults(url);
+                            var url = Endeavor.Skanetrafiken.BiffTransactions.globalContext.getClientUrl() + "/api/data/v9.0/cgi_zonenames?$select=cgi_name" +
+                                "&$filter=cgi_zoneid eq " + zonenumber;
+                            var zoneresults = Endeavor.formscriptfunctions.fetchJSONResults(url);
                             cell.innerHTML = zoneresults.entities[0].cgi_name;
                         }
                         catch (e) {
-                            Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog("Error when fetching Zone :" + e.message);
+                            Endeavor.formscriptfunctions.AlertCustomDialog("Error when fetching Zone :" + e.message);
                         }
-                    }
-
-                    for (var j = 0; j < routelists.length; j++) {
-                        var routenumber = getElementValue(routelists[j], 'ns0:Route');
-
-                        //var row = htmldocument.getElementById('zonetable').insertRow();
-                        //var cell = row.insertCell();
-                        //cell.innerHTML = zonenumber;
-                        //cell = row.insertCell();
-
-                        /*
-                        try {
-                            var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "cgi_zonenameSet?$select=cgi_name&$filter=cgi_ZoneID eq('" + zonenumber + "')";
-                            var zoneresults = Endeavor.Common.Data.fetchJSONResults(url);
-                            cell.innerHTML = zoneresults[0].cgi_name;
-                        }
-                        catch (e) {
-                            Xrm.Utility.alertDialog("Error when fetching Zone :" + e.message);
-                        }*/
                     }
                 }
             }
@@ -476,7 +398,6 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
 
                     //POPULATE TABLES
                     var parser = new DOMParser();
-
                     var transactionsresponse = null;
                     try {
                         transactionsresponse = parser.parseFromString(transactionsresponsetext, "text/xml");
@@ -489,23 +410,16 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
                     var parsererror = transactionsresponse.getElementsByTagName('parsererror');
                     var errormessage = transactionsresponse.getElementsByTagName('ErrorMessage');
 
-                    if (parsererror && parsererror.length > 0) {
-                        debugger;
-                        //Chrome error message
-                        Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog("TravelCard Transactions service is unavailable. Please contact your systems administrator.");
-                    }
-                    else if (errormessage && errormessage.length > 0 && errormessage[0].innerHTML) {
-                        debugger;
-                        Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog(errormessage[0].innerHTML);
-                    }
-                    else {
+                    if (parsererror && parsererror.length > 0)
+                        Endeavor.formscriptfunctions.AlertCustomDialog("TravelCard Transactions service is unavailable. Please contact your systems administrator.");
+                    else if (errormessage && errormessage.length > 0 && errormessage[0].innerHTML)
+                        Endeavor.formscriptfunctions.AlertCustomDialog(errormessage[0].innerHTML);
+                    else
                         Endeavor.Skanetrafiken.BiffTransactions.populateTransactionTable(transactionsresponse, formContext);
-                    }
                 }
             }
-            else {
-                Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog("Inget angivet kortnummer");
-            }
+            else 
+                Endeavor.formscriptfunctions.AlertCustomDialog("Inget angivet kortnummer");
         },
 
         populateTransactionTable: function (transactionsresponse, formContext) {
@@ -530,9 +444,8 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
 
             var transactionstable = document.getElementById('transactionsbody');
 
-            if (!transactionsresponse.getElementsByTagName("ns0:Transactions") || transactionsresponse.getElementsByTagName("ns0:Transactions").length == 0) {
+            if (!transactionsresponse.getElementsByTagName("ns0:Transactions") || transactionsresponse.getElementsByTagName("ns0:Transactions").length == 0)
                 transactionstable.innerHTML = "<tr  class=\"blankrow\"></tr>";
-            }
             else {
 
                 transactionstable.innerHTML = "";
@@ -567,15 +480,14 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
                         var save = document.createElement("a");
                         save.style = "font-weight: bold";
                         save.style.cursor = "pointer";
-                        save.onclick = Endeavor.Skanetrafiken.BiffTransactions.saveTransaction(travelcardid, cardsect, date, time, amount, deviceid, origzone, origzonename, rectype, route, txntype, caseid, travelcard);
+                        save.onclick = Endeavor.Skanetrafiken.BiffTransactions.saveTransaction(formtype, travelcardid, cardsect, date, time, amount, deviceid, origzone, origzonename, rectype, route, txntype, caseid, travelcard);
                         save.innerHTML = '+';
                         buttoncell.appendChild(save);
                         buttoncell.title = "Lägg till";
                         buttoncell.style = "text-align: center";
                     }
-                    else {
+                    else
                         buttoncell.innerHTML = " ";
-                    }
 
                     row.insertCell().innerHTML = date;
                     row.insertCell().innerHTML = time;
@@ -594,27 +506,22 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
             }
         },
 
-        populateSavedTransactionsTable: function (formContext) {
+        populateSavedTransactionsTable: function (entityName, entityId) {
 
             var document = Endeavor.Skanetrafiken.BiffTransactions.htmldocument;
 
-            // POPULATE SAVED TRANSACTIONS TABLE IF CASE???
-            var formtype = formContext.data.entity.getEntityName();
+            if (entityName.toUpperCase() == "INCIDENT") {
 
-            if (formtype.toUpperCase() == "INCIDENT") {
+                entityId = entityId.substring(1, entityId.length - 1);
 
-                var cgi_caseid = formContext.data.entity.getId();
-                cgi_caseid = cgi_caseid.substring(1, cgi_caseid.length - 1);
-
-                //TODO - WebAPI
-                var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "cgi_travelcardtransactionSet?$select=cgi_travelcardtransactionId,cgi_TravelCard,cgi_date,cgi_time,cgi_cardsect,cgi_rectype,cgi_txntype,cgi_Amount,cgi_origzone,cgi_route,cgi_deviceid&$filter=cgi_caseId/Id%20eq(guid'" + cgi_caseid + "')";
-                var savedtransactionsresults = Endeavor.Common.Data.fetchJSONResults(url);
+                var url = Endeavor.Skanetrafiken.BiffTransactions.globalContext.getClientUrl() + "/api/data/v9.0/cgi_travelcardtransactions?$select=cgi_travelcardtransactionid," +
+                    "cgi_travelcard,cgi_date,cgi_time,cgi_cardsect,cgi_rectype,cgi_txntype,cgi_amount,cgi_origzone,cgi_route,cgi_deviceid&$filter=cgi_caseid eq " + entityId;
+                var savedtransactionsresults = Endeavor.formscriptfunctions.fetchJSONResults(url);
 
                 var savedtransactionstable = document.getElementById('savedtransactionsbody');
 
-                if (!savedtransactionsresults) {
+                if (!savedtransactionsresults)
                     savedtransactionstable.innerHTML = "<tr  class=\"blankrow\"></tr>";
-                }
                 else {
                     savedtransactionstable.innerHTML = "";
                     for (var i = 0; i < savedtransactionsresults.entities.length; i++) {
@@ -623,7 +530,7 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
 
                         var cell = row.insertCell(); // EMPTY CELL FOR BUTTON-SPACE
                         cell = row.insertCell();
-                        cell.innerHTML = savedtransactionsresults.entities[i].cgi_TravelCard;
+                        cell.innerHTML = savedtransactionsresults.entities[i].cgi_travelcard;
                         cell = row.insertCell();
                         cell.innerHTML = savedtransactionsresults.entities[i].cgi_date;
                         cell = row.insertCell();
@@ -636,7 +543,7 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
                         cell.colSpan = "2";
                         cell.innerHTML = savedtransactionsresults.entities[i].cgi_txntype;
                         cell = row.insertCell();
-                        cell.innerHTML = savedtransactionsresults.entities[i].cgi_Amount;
+                        cell.innerHTML = savedtransactionsresults.entities[i].cgi_amount;
                         cell = row.insertCell();
                         cell.innerHTML = savedtransactionsresults.entities[i].cgi_origzone;
                         cell = row.insertCell();
@@ -649,7 +556,7 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
                         var del = document.createElement("a");
                         del.style = "font-weight: bold";
                         del.style.cursor = "pointer";
-                        del.onclick = Endeavor.Skanetrafiken.BiffTransactions.deleteTransaction(savedtransactionsresults.entities[i].cgi_travelcardtransactionId);
+                        del.onclick = Endeavor.Skanetrafiken.BiffTransactions.deleteTransaction(savedtransactionsresults.entities[i].cgi_travelcardtransactionid, entityName, entityId);
                         del.innerHTML = "x";
                         cell.appendChild(del);
                         cell.title = "Ta bort";
@@ -662,42 +569,31 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
 
         /* Function for converting Transaction number to names */
         convertTransactionType: function (type) {
-            var returnValue = "";
+            var _returnValue = "";
 
-            if (!type) {
+            if (!type)
                 return _returnValue;
-            }
 
-            if (type == "0") {
+            if (type == "0")
                 _returnValue = "Ordinarie";
-            }
-            else if (type == "1") {
+            else if (type == "1")
                 _returnValue = "Utställning";
-            }
-            else if (type == "2") {
+            else if (type == "2")
                 _returnValue = "Refund";
-            }
-            else if (type == "3") {
+            else if (type == "3")
                 _returnValue = "Hämtad laddning Reskassa";
-            }
-            else if (type == "4") {
+            else if (type == "4")
                 _returnValue = "Hämtad Autoladda Period";
-            }
-            else if (type == "+16") {
+            else if (type == "+16")
                 _returnValue = "Cancellation";
-            }
-            else if (type == "+32") {
+            else if (type == "+32")
                 _returnValue = "Card Write Error";
-            }
-            else if (type == "+64") {
+            else if (type == "+64")
                 _returnValue = "Walk Away";
-            }
-            else if (type == "+128") {
+            else if (type == "+128")
                 _returnValue = "Info";
-            }
-            else {
+            else
                 _returnValue = "Ordinarie";
-            }
 
             return _returnValue;
         },
@@ -705,44 +601,32 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
         /* Function for converting Rectype number to names */
         convertRecType: function (recordtype) {
 
-            var returnvalue = "";
+            var returnValue = "";
 
-            if (!recordtype) {
+            if (!recordtype)
                 return returnValue;
-            }
-            if (recordtype == "70") {
+            if (recordtype == "70")
                 returnValue = "Reskassa";
-            }
-            else if (recordtype == "71") {
+            else if (recordtype == "71")
                 returnValue = "Value Payment";
-            }
-            else if (recordtype == "72") {
+            else if (recordtype == "72")
                 returnValue = "Periodkort";
-            }
-            else if (recordtype == "74") {
+            else if (recordtype == "74")
                 returnValue = "Övergång";
-            }
-            else if (recordtype == "75") {
+            else if (recordtype == "75")
                 returnValue = "Övergång";
-            }
-            else if (recordtype == "78") {
+            else if (recordtype == "78")
                 returnValue = "Inspektion";
-            }
-            else if (recordtype == "79") {
+            else if (recordtype == "79")
                 returnValue = "Activating of Waiting Period";
-            }
-            else if (recordtype == "80") {
+            else if (recordtype == "80")
                 returnValue = "Laddning Reskassa";
-            }
-            else if (recordtype == "81") {
+            else if (recordtype == "81")
                 returnValue = "Laddning Periodkort";
-            }
-            else if (recordtype == "91") {
+            else if (recordtype == "91")
                 returnValue = "Use of Card on hotlist";
-            }
-            else {
+            else
                 returnValue = "Reskassa";
-            }
 
             return returnValue;
         },
@@ -751,81 +635,64 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
         convertCardSect: function (cardsect) {
             var returnValue = "";
 
-            if (!cardsect) {
+            if (!cardsect)
                 return returnValue;
-            }
-            if (cardsect == "0") {
+            if (cardsect == "0")
                 _returnValue = "Hela kortet";
-            }
-            else if (cardsect == "1") {
+            else if (cardsect == "1")
                 _returnValue = "Periodkort";
-            }
-            else if (cardsect == "2") {
+            else if (cardsect == "2")
                 _returnValue = "Reskassa";
-            }
-            else {
+            else
                 _returnValue = "Hela kortet";
-            }
 
             return _returnValue;
         },
 
-        saveTransaction: function (cgi_travelcardid, cgi_cardsect, cgi_date, cgi_time, cgi_amount, cgi_deviceid, cgi_origzone, cgi_origzonename, cgi_rectype, cgi_route, cgi_txntype, cgi_caseid, cgi_travelcard) {
+        saveTransaction: function (entityName, cgi_travelcardid, cgi_cardsect, cgi_date, cgi_time, cgi_amount, cgi_deviceid, cgi_origzone, cgi_origzonename, cgi_rectype, cgi_route, cgi_txntype, cgi_caseid, cgi_travelcard) {
             return function () {
-                var entity = {
+                var data = {
 
-                    cgi_caseId: {
-                        Id: cgi_caseid,
-                        LogicalName: "incident",
-                        Name: "CaseTest"
-                    },
-
-                    cgi_TravelCardid: {
-                        Id: cgi_travelcardid,
-                        LogicalName: "cgi_travelcard",
-                        Name: cgi_travelcard
-                    },
-
-                    // cgi_TravelCard,cgi_date,cgi_time,cgi_cardsect,cgi_rectype,cgi_txntype,cgi_Amount,cgi_origzone,cgi_route,cgi_deviceid
-
-                    cgi_cardsect: cgi_cardsect,
-                    cgi_Amount: cgi_amount,
-                    cgi_currency: "",
-                    cgi_date: cgi_date,
-                    cgi_time: cgi_time,
-                    cgi_deviceid: cgi_deviceid,
-                    cgi_origzone: cgi_origzone,
-                    cgi_OrigZoneName: cgi_origzonename,
-                    cgi_rectype: cgi_rectype,
-                    cgi_route: cgi_route,
-                    cgi_txntype: cgi_txntype,
-                    cgi_txnnum: "",
-                    cgi_travelcardtransaction: cgi_date + cgi_time + cgi_route,
-                    cgi_TravelCard: cgi_travelcard  // TODO CHECK IN SOLUTION
+                    "cgi_caseid@odata.bind": "/incidents(" + cgi_caseid + ")",
+                    "cgi_travelcardid@odata.bind": "/cgi_travelcards(" + cgi_travelcardid + ")",
+                    "cgi_cardsect": cgi_cardsect,
+                    "cgi_amount": cgi_amount,
+                    "cgi_currency": "",
+                    "cgi_date": cgi_date,
+                    "cgi_time": cgi_time,
+                    "cgi_deviceid": cgi_deviceid,
+                    "cgi_origzone": cgi_origzone,
+                    "cgi_OrigZoneName": cgi_origzonename,
+                    "cgi_rectype": cgi_rectype,
+                    "cgi_route": cgi_route,
+                    "cgi_txntype": cgi_txntype,
+                    "cgi_txnnum": "",
+                    "cgi_travelcardtransaction": cgi_date + cgi_time + cgi_route,
+                    "cgi_travelcard": cgi_travelcard  // TODO CHECK IN SOLUTION
                 };
 
-                /* Do the create*/ //TODO - WebAPI
-                SDK.REST.createRecord(entity, "cgi_travelcardtransaction", function (CompletedResponse) {
-
-                    Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable();
-
-                }, function (errorHandler) {
-                    Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog("Error function called, error:" + errorHandler);
-                });
+                Xrm.WebApi.createRecord("cgi_travelcardtransaction", data).then(
+                    function success(result) {
+                        Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable(entityName, cgi_caseid);
+                    },
+                    function (error) {
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Error function called, error:" + error.message);
+                    }
+                );
             };
         },
 
-        deleteTransaction: function (travelcardtransactionid) {
+        deleteTransaction: function (travelcardtransactionid, entityName, entityId) {
             return function () {
 
-                /* Do the delete*/ //TODO - WebAPI
-                SDK.REST.deleteRecord(travelcardtransactionid, "cgi_travelcardtransaction", function (CompletedResponse) {
-
-                    Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable();
-
-                }, function (errorHandler) {
-                    Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog("Error function called, error:" + errorHandler);
-                });
+                Xrm.WebApi.deleteRecord("cgi_travelcardtransaction", travelcardtransactionid).then(
+                    function success(result) {
+                        Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable(entityName, entityId);
+                    },
+                    function (error) {
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Error function called, error:" + error.message);
+                    }
+                );
             };
         },
 
@@ -834,24 +701,20 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
             var hasoutstandingcharges = 'false';
 
             if (outstandingchargesresponse.getElementsByTagName('HasExpiredCharge')[0] != null) {
-                if (outstandingchargesresponse.getElementsByTagName('HasExpiredCharge')[0].firstChild != null) {
+                if (outstandingchargesresponse.getElementsByTagName('HasExpiredCharge')[0].firstChild != null)
                     hasoutstandingcharges = outstandingchargesresponse.getElementsByTagName('HasExpiredCharge')[0].firstChild.nodeValue;
-                }
-                else {
+                else
                     hasoutstandingcharges = "false";
-                }
             }
-            else {
+            else
                 hasoutstandingcharges = "false";
-            }
 
             if (hasoutstandingcharges == "true") {
                 Endeavor.Skanetrafiken.BiffTransactions.htmldocument.getElementById('reloadbutton').disabled = false;
                 Endeavor.Skanetrafiken.BiffTransactions.htmldocument.getElementById('outstandingcharges').innerHTML = "Ja";
             }
-            else {
+            else 
                 Endeavor.Skanetrafiken.BiffTransactions.htmldocument.getElementById('outstandingcharges').innerHTML = "Nej";
-            }
         },
 
         reload: function () {
@@ -878,24 +741,17 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
                 var parsererror = rechargeresponse.getElementsByTagName('parsererror');
                 var errormessage = rechargeresponse.getElementsByTagName('ErrorMessage');
 
-                if (parsererror && parsererror.length > 0) {
-                    debugger;
-                    //Chrome error message
-                    Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog("Recharge Card service is unavailable. Please contact your systems administrator.");
-                }
-                else if (errormessage && errormessage.length > 0 && errormessage[0].innerHTML) {
-                    debugger;
-                    Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog(errormessage[0].innerHTML);
-                }
+                if (parsererror && parsererror.length > 0)
+                    Endeavor.formscriptfunctions.AlertCustomDialog("Recharge Card service is unavailable. Please contact your systems administrator.");
+                else if (errormessage && errormessage.length > 0 && errormessage[0].innerHTML)
+                    Endeavor.formscriptfunctions.AlertCustomDialog(errormessage[0].innerHTML);
                 else {
                     Endeavor.Skanetrafiken.BiffTransactions.htmldocument.getElementById('reloadbutton').disabled = false; // TODO
-
-                    Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog(rechargeresponse.getElementsByTagName('Message')[0].firstChild.nodeValue);
+                    Endeavor.formscriptfunctions.AlertCustomDialog(rechargeresponse.getElementsByTagName('Message')[0].firstChild.nodeValue);
                 }
             }
-            else {
-                Endeavor.Skanetrafiken.BiffTransactions.alertCustomDialog("Inget kortnummer hittat");
-            }
+            else
+                Endeavor.formscriptfunctions.AlertCustomDialog("Inget kortnummer hittat");
         }
     };
 }
