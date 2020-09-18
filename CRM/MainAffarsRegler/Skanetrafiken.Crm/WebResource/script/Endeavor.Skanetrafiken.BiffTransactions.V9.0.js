@@ -31,23 +31,25 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
         missingcard: true,
         travelcardid: null,
         globalContext: null,
+        formContext: null,
 
         onLoad: function (executionContext) {
-
-            var formContext = executionContext.getFormContext();
+            debugger;
 
             try {
+                Endeavor.Skanetrafiken.BiffTransactions.formContext = executionContext.getFormContext();
                 Endeavor.Skanetrafiken.BiffTransactions.globalContext = Xrm.Utility.getGlobalContext();
                 Endeavor.Skanetrafiken.BiffTransactions.headLoad(Endeavor.Skanetrafiken.BiffTransactions.loadSuccessCallback);
             } catch (e) {
                 Endeavor.formscriptfunctions.AlertCustomDialog(e.message);
             }
 
-            try {
-                Endeavor.formscriptfunctions.LoadXrmExecutionContext("WebResource_BiffTransactions", formContext);
-            } catch (e) {
-                Endeavor.formscriptfunctions.AlertCustomDialog(e.message);
-            }
+            //TODO when version9.1 comes out
+            //try {
+            //    Endeavor.formscriptfunctions.LoadXrmExecutionContext("WebResource_BiffTransactions", formContext);
+            //} catch (e) {
+            //    Endeavor.formscriptfunctions.AlertCustomDialog(e.message);
+            //}
         },
 
         headLoad: function (successCallback) {
@@ -114,7 +116,7 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
                 }
 
                 try {
-                    Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable();
+                    Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable(Endeavor.Skanetrafiken.BiffTransactions.formContext);
                 }
                 catch (e) {
                     Endeavor.formscriptfunctions.AlertCustomDialog("Error in saved transactions: " + e.message);
@@ -480,7 +482,7 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
                         var save = document.createElement("a");
                         save.style = "font-weight: bold";
                         save.style.cursor = "pointer";
-                        save.onclick = Endeavor.Skanetrafiken.BiffTransactions.saveTransaction(formtype, travelcardid, cardsect, date, time, amount, deviceid, origzone, origzonename, rectype, route, txntype, caseid, travelcard);
+                        save.onclick = Endeavor.Skanetrafiken.BiffTransactions.saveTransaction(travelcardid, cardsect, date, time, amount, deviceid, origzone, origzonename, rectype, route, txntype, caseid, travelcard);
                         save.innerHTML = '+';
                         buttoncell.appendChild(save);
                         buttoncell.title = "Lägg till";
@@ -506,9 +508,12 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
             }
         },
 
-        populateSavedTransactionsTable: function (entityName, entityId) {
+        populateSavedTransactionsTable: function (formContext) {
 
             var document = Endeavor.Skanetrafiken.BiffTransactions.htmldocument;
+
+            var entityName = formContext.data.entity.getEntityName();
+            var entityId = formContext.data.entity.getId();
 
             if (entityName.toUpperCase() == "INCIDENT") {
 
@@ -556,7 +561,7 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
                         var del = document.createElement("a");
                         del.style = "font-weight: bold";
                         del.style.cursor = "pointer";
-                        del.onclick = Endeavor.Skanetrafiken.BiffTransactions.deleteTransaction(savedtransactionsresults.entities[i].cgi_travelcardtransactionid, entityName, entityId);
+                        del.onclick = Endeavor.Skanetrafiken.BiffTransactions.deleteTransaction(savedtransactionsresults.entities[i].cgi_travelcardtransactionid);
                         del.innerHTML = "x";
                         cell.appendChild(del);
                         cell.title = "Ta bort";
@@ -649,7 +654,7 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
             return _returnValue;
         },
 
-        saveTransaction: function (entityName, cgi_travelcardid, cgi_cardsect, cgi_date, cgi_time, cgi_amount, cgi_deviceid, cgi_origzone, cgi_origzonename, cgi_rectype, cgi_route, cgi_txntype, cgi_caseid, cgi_travelcard) {
+        saveTransaction: function (cgi_travelcardid, cgi_cardsect, cgi_date, cgi_time, cgi_amount, cgi_deviceid, cgi_origzone, cgi_origzonename, cgi_rectype, cgi_route, cgi_txntype, cgi_caseid, cgi_travelcard) {
             return function () {
                 var data = {
 
@@ -673,7 +678,7 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
 
                 Xrm.WebApi.createRecord("cgi_travelcardtransaction", data).then(
                     function success(result) {
-                        Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable(entityName, cgi_caseid);
+                        Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable(Endeavor.Skanetrafiken.BiffTransactions.formContext);
                     },
                     function (error) {
                         Endeavor.formscriptfunctions.AlertCustomDialog("Error function called, error:" + error.message);
@@ -682,12 +687,12 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
             };
         },
 
-        deleteTransaction: function (travelcardtransactionid, entityName, entityId) {
+        deleteTransaction: function (travelcardtransactionid) {
             return function () {
 
                 Xrm.WebApi.deleteRecord("cgi_travelcardtransaction", travelcardtransactionid).then(
                     function success(result) {
-                        Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable(entityName, entityId);
+                        Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable(Endeavor.Skanetrafiken.BiffTransactions.formContext);
                     },
                     function (error) {
                         Endeavor.formscriptfunctions.AlertCustomDialog("Error function called, error:" + error.message);

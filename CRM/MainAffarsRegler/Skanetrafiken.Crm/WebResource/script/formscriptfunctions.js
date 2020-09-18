@@ -12,7 +12,7 @@ Endeavor.formscriptfunctions = {
             formContext.data.entity.attributes.get(name).addOnChange(functionname);
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.SetOnChangeFunction\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.SetOnChangeFunction\n\n" + e.message);
         }
     },
 
@@ -23,7 +23,7 @@ Endeavor.formscriptfunctions = {
             formContext.data.entity.save();
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.SaveEntity\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.SaveEntity\n\n" + e.message);
         }
     },
 
@@ -34,7 +34,7 @@ Endeavor.formscriptfunctions = {
             formContext.data.entity.save("saveandclose");
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.SaveAndCloseEntity\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.SaveAndCloseEntity\n\n" + e.message);
         }
     },
 
@@ -45,7 +45,7 @@ Endeavor.formscriptfunctions = {
             return formContext.data.entity.getId();
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.GetObjectID\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.GetObjectID\n\n" + e.message);
         }
     },
 
@@ -57,7 +57,7 @@ Endeavor.formscriptfunctions = {
             _returnvalue = formContext.ui.getFormType();
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.GetFormType\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.GetFormType\n\n" + e.message);
         }
         return _returnvalue;
     },
@@ -69,7 +69,7 @@ Endeavor.formscriptfunctions = {
             formContext.ui.tabs.get(name).setVisible(visible);
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.HideOrDisplayTab\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.HideOrDisplayTab\n\n" + e.message);
         }
     },
 
@@ -80,7 +80,7 @@ Endeavor.formscriptfunctions = {
             formContext.ui.tabs.get(name).setDisplayState(state);
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.SetDisplayState\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.SetDisplayState\n\n" + e.message);
         }
     },
 
@@ -91,7 +91,7 @@ Endeavor.formscriptfunctions = {
             formContext.ui.tabs.get(tabname).sections.get(sectionname).setVisible(visible)
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.HideOrDisplaySection\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.HideOrDisplaySection\n\n" + e.message);
         }
     },
 
@@ -102,7 +102,7 @@ Endeavor.formscriptfunctions = {
             formContext.getControl(name).setVisible(visible);
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.HideOrDisplayField\n\n" + e.Message + name);
+            alert("Fel i Endeavor.formscriptfunctions.HideOrDisplayField\n\n" + e.message + name);
         }
     },
 
@@ -113,7 +113,7 @@ Endeavor.formscriptfunctions = {
             formContext.data.entity.attributes.get(name).setValue(value);
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.SetValue\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.SetValue\n\n" + e.message);
         }
     },
 
@@ -125,7 +125,7 @@ Endeavor.formscriptfunctions = {
             _returnvalue = formContext.data.entity.attributes.get(name).getValue();
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.GetValue\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.GetValue\n\n" + e.message);
         }
         return _returnvalue;
     },
@@ -138,7 +138,7 @@ Endeavor.formscriptfunctions = {
             _field.setDisabled(state);
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.SetState\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.SetState\n\n" + e.message);
         }
     },
 
@@ -146,7 +146,7 @@ Endeavor.formscriptfunctions = {
         try {
             formContext.getAttribute(name).setSubmitMode("always");
         } catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.SetSubmitModeAlways\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.SetSubmitModeAlways\n\n" + e.message);
         }
     },
 
@@ -157,7 +157,7 @@ Endeavor.formscriptfunctions = {
         try {
             _returnvalue = formContext.getControl(name).getDisabled();
         } catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.GetState\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.GetState\n\n" + e.message);
         }
         return _returnvalue;
     },
@@ -171,7 +171,7 @@ Endeavor.formscriptfunctions = {
             formContext.getAttribute(name).setRequiredLevel(state);
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.SetRequiredLevel\n\n" + e.Message + name);
+            alert("Fel i Endeavor.formscriptfunctions.SetRequiredLevel\n\n" + e.message + name);
         }
     },
 
@@ -183,7 +183,7 @@ Endeavor.formscriptfunctions = {
             formContext.data.entity.attributes.get(name).setSubmitMode(state);
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.SetSubmitMode\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.SetSubmitMode\n\n" + e.message);
         }
     },
 
@@ -201,7 +201,7 @@ Endeavor.formscriptfunctions = {
             _attribute.setValue(_lookup);
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.SetLookup\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.SetLookup\n\n" + e.message);
         }
     },
 
@@ -218,7 +218,7 @@ Endeavor.formscriptfunctions = {
             return _id;
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.GetLookupid\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.GetLookupid\n\n" + e.message);
         }
         return _returnvalue;
     },
@@ -236,7 +236,7 @@ Endeavor.formscriptfunctions = {
             return _idName;
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.GetLookupName\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.GetLookupName\n\n" + e.message);
         }
         return _returnvalue;
     },
@@ -248,7 +248,7 @@ Endeavor.formscriptfunctions = {
             formContext.ui.controls.get(name).setFocus();
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.SetFocusOnField\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.SetFocusOnField\n\n" + e.message);
         }
     },
 
@@ -258,7 +258,7 @@ Endeavor.formscriptfunctions = {
         try {
             return formContext.getControl(arg).getDisabled();
         } catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.GetDisabledField\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.GetDisabledField\n\n" + e.message);
         }
     },
 
@@ -370,14 +370,31 @@ Endeavor.formscriptfunctions = {
     LoadXrmExecutionContext: function (webResourceName, formContext) {
 
         try {
+            debugger;
             var wrControl = formContext.getControl(webResourceName);
-            if (wrControl)
-                wrControl.getContentWindow().then(function (contentWindow) { contentWindow.setClientApiContext(Xrm, formContext); });
+            if (wrControl) {
+                wrControl.getContentWindow().then(contentWindow => {
+                    let numberOfCalls = 0;
+                    let interval = setInterval(() => {
+                        if (typeof contentWindow.setClientApiContext !== "undefined") {
+                            clearInterval(interval);
+                            contentWindow.setClientApiContext(Xrm, formContext);
+                        }
+                        else
+                            //stop interval after 1 minute
+                            if (++numberOfCalls > 600) {
+                                clearInterval(interval);
+                                throw new Error("Content Window failed to initialize.");
+                            }
+                    }, 100);
+                });
+            }
             else
                 alert("Fel i Endeavor.formscriptfunctions.LoadXrmExecutionContext\n\n Web Resource " + webResourceName + " not found.");
+                
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.LoadXrmExecutionContext\n\n" + e.Message);
+            alert("Fel i Endeavor.formscriptfunctions.LoadXrmExecutionContext\n\n" + e.message);
         }
     },
 
@@ -460,9 +477,9 @@ Endeavor.formscriptfunctions = {
                 max_records = 5000;
 
             debugger;
-            var object = eval("[" + request.responseText + "]");
-            value = object[0].d.results;
-            nextUrl = object[0].d.__next;
+            var object = JSON.parse(request.responseText);
+            value = object.value;
+            nextUrl = object["@odata.nextLink"];
 
             // Add records to total records
             for (var i = 0; i < value.length; i++) {

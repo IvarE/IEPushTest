@@ -1,23 +1,26 @@
 ﻿<html>
 <head>
     <link href="../css/Endeavor.Skanetrafiken.BiffTransactions.css" rel="stylesheet" type="text/css" />
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
 
     <script>
 
+        //TODO when version9.1 comes out
         function setClientApiContext(xrm, formContext) {
+            debugger;
             window._Xrm = xrm;
             window._formContext = formContext;
         }
 
         function onLoad(document) {
-
+            debugger;
             var datefrom = new Date();
             datefrom.setDate(datefrom.getDate() - 45);
             document.getElementById('datefrom').value = datefrom.toISOString().substring(0, 10);
             document.getElementById('dateto').value = (new Date()).toISOString().substring(0, 10);
 
-            if (_formContext != null && _formContext.getAttribute("cgi_travelcardnumber") != null)
-                document.getElementById('cardnr').value = _formContext.getAttribute("cgi_travelcardnumber").getValue();
+            if (Xrm.Page != null && Xrm.Page.getAttribute("cgi_travelcardnumber") != null)
+                document.getElementById('cardnr').value = Xrm.Page.getAttribute("cgi_travelcardnumber").getValue();
 
             setDocument();
         }
@@ -67,7 +70,7 @@
             var formContext = getFormContext();
             if (formContext) {
                 try {
-                    formContext.Endeavor.Skanetrafiken.BiffTransactions.transactionSearch(_formContext);
+                    formContext.Endeavor.Skanetrafiken.BiffTransactions.transactionSearch(Xrm.Page);
                 }
                 catch (e) {
                     alert(e.message)
