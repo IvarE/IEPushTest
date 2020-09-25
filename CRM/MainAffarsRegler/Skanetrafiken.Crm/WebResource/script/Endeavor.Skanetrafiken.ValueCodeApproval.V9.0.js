@@ -75,8 +75,8 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                 var formType = formContext.ui.getFormType();
 
                 var inputParameters = [];
-                var contactIdValue = { entityType: "ed_valuecodeapproval", id: Endeavor.cleanIdField(contact) };
-                var valCodeApprovIdValue = { entityType: "ed_valuecodeapproval", id: Endeavor.cleanIdField(valCodeApprovId) };
+                var contactIdValue = { entityType: "ed_valuecodeapproval", id: Endeavor.Skanetrafiken.ValueCodeApproval.cleanIdField(contact) };
+                var valCodeApprovIdValue = { entityType: "ed_valuecodeapproval", id: Endeavor.Skanetrafiken.ValueCodeApproval.cleanIdField(valCodeApprovId) };
                 var parameterClearonTemplateId = { "Field": "ClearonTemplateId", "Value": 239, "TypeName": Endeavor.formscriptfunctions.getParameterType("int"), "StructuralProperty": 1 };
                 var parameterAmount = { "Field": "Amount", "Value": amount, "TypeName": Endeavor.formscriptfunctions.getParameterType("float"), "StructuralProperty": 1 };
                 var parameterMobile = { "Field": "Mobile", "Value": mobile, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
@@ -107,7 +107,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                         debugger;
                         valueCodeId = Object.values(data)[0];
                         formContext.ui.setFormNotification("Värdekod skapad.", "INFO");
-                        valcodeId = Endeavor.cleanIdField(valCodeApprovId);
+                        valcodeId = Endeavor.Skanetrafiken.ValueCodeApproval.cleanIdField(valCodeApprovId);
 
                         var inputParameters = [];
                         var parameterValueCodeId = { "Field": "ValueCodeId", "Value": valueCodeId.id, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
