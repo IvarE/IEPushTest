@@ -29,18 +29,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
             var jsUrls = [];
             var jsUrl;
             var globalContext = Xrm.Utility.getGlobalContext();
-            if (typeof SDK === "undefined" || typeof SDK.REST === "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/SDK.Rest.js";
-                jsUrls.push(jsUrl);
-            }
-            if (typeof Sdk === "undefined" || typeof SDK.REST === "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.Soap.min.js";
-                jsUrls.push(jsUrl);
-            }
-            if (typeof Endeavor === "undefined" || typeof Endeavor.Common === "undefined" || typeof Endeavor.Common.Data === "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Endeavor.Common.Data.js";
-                jsUrls.push(jsUrl);
-            }
+            
             if (typeof Sdk === "undefined" || typeof Sdk.ed_BlockAccountPortalRequest === "undefined") {
                 jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.ed_BlockAccountPortal.min.js";
                 jsUrls.push(jsUrl);
