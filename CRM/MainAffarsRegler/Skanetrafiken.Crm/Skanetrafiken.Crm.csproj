@@ -255,6 +255,7 @@
     <Content Include="WebResource\script\Endeavor.Common.SaveAndCopyEntity.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.cgi_representative.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.cgi_travelcard.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Opportunity.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.QueueItem.V9.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCodeApproval.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.KBArticle.V9.js" />

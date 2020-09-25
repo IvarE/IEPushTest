@@ -254,16 +254,20 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
         showOvrigInformation: function (formContext) {
 
-            var infotaimentCustomer = formContext.getAttribute("ed_infotainmentcustomer").getValue();
-            var customer = formContext.getAttribute("ed_customer").getValue();
-            var agent = formContext.getAttribute("ed_agent").getValue();
-            var samarbete = formContext.getAttribute("ed_collaborationcustomer").getValue();
-            var reseller = formContext.getAttribute("ed_reseller").getValue();
-            var school = formContext.getAttribute("ed_schoolcustomer").getValue();
-            var senior = formContext.getAttribute("ed_seniorcustomer").getValue();
-            var portal = formContext.getAttribute("ed_portalcustomer").getValue();
+            var infotaimentCustomer = formContext.getAttribute("ed_infotainmentcustomer");
+            var customer = formContext.getAttribute("ed_customer");
+            var agent = formContext.getAttribute("ed_agent");
+            var samarbete = formContext.getAttribute("ed_collaborationcustomer");
+            var reseller = formContext.getAttribute("ed_reseller");
+            var school = formContext.getAttribute("ed_schoolcustomer");
+            var senior = formContext.getAttribute("ed_seniorcustomer");
+            var portal = formContext.getAttribute("ed_portalcustomer");
 
-            if (infotaimentCustomer && !customer && !agent && !samarbete && !reseller && !school && !senior && !portal) {
+            if (infotaimentCustomer == null || customer == null || agent == null || smarbete == null || reseller == null || school == null || senior == null || portal == null)
+                return;
+
+            if (infotaimentCustomer.getValue() && !customer.getValue() && !agent.getValue() && !samarbete.getValue() &&
+                !reseller.getValue() && !school.getValue() && !senior.getValue() && !portal.getValue()) {
 
                 formContext.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_12").setVisible(false);
                 formContext.ui.tabs.get("tab_3").sections.get("tab_3_section_1").setVisible(false);
