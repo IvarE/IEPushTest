@@ -132,13 +132,13 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                                             inputParameters,
                                             function () {
                                                 debugger;
-                                                Xrm.Page.data.refresh();
-                                                Xrm.Page.ui.setFormNotification("Värdekod skickad.", "INFO");
+                                                formContext.data.refresh();
+                                                formContext.ui.setFormNotification("Värdekod skickad.", "INFO");
                                             },
                                             function (e, t) {
                                                 debugger;
                                                 // Error
-                                                Xrm.Page.ui.setFormNotification("Någonting gick fel: " + e, "INFO");
+                                                formContext.ui.setFormNotification("Någonting gick fel: " + e, "INFO");
                                                 // Write the trace log to the dev console
                                                 if (window.console && console.error) {
                                                     console.error(e + "\n" + t);
