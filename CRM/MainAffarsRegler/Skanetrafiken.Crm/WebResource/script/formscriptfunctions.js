@@ -16,6 +16,25 @@ Endeavor.formscriptfunctions = {
         }
     },
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Function to return parameter types for an action
+
+    getParameterType: function (typeField) {
+        if (typeField == "string")
+            return "Edm.String";
+        else if (typeField == "int")
+            return "Edm.Int32"
+        else if (typeField == "decimal")
+            return "Edm.Decimal"
+        else if (typeField == "float")
+            return "Edm.Double"
+        else if (typeField == "bool")
+            return "Edm.Boolean"
+        else if (typeField == "datetime")
+            return "Edm.DateTimeOffset"
+        else if (typeField == "optionset")
+            return "Edm.Int32"
+    },
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Save entity
     SaveEntity: function (formContext) {
@@ -391,7 +410,7 @@ Endeavor.formscriptfunctions = {
             }
             else
                 alert("Fel i Endeavor.formscriptfunctions.LoadXrmExecutionContext\n\n Web Resource " + webResourceName + " not found.");
-                
+
         }
         catch (e) {
             alert("Fel i Endeavor.formscriptfunctions.LoadXrmExecutionContext\n\n" + e.message);

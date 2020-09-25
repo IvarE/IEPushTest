@@ -3,56 +3,32 @@
 /*
 //# sourceMappingURL=head.load.min.js.map
 */
-
 // Begin scoping
 if (typeof (Endeavor) === "undefined") {
     var Endeavor = {
     };
 }
-
 if (typeof (Endeavor.Skanetrafiken) === "undefined") {
     Endeavor.Skanetrafiken = {
     };
 }
-
 if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
     Endeavor.Skanetrafiken.ValueCodeApproval = {
-
         callGlobalAction: function (actionName, inputParameters, sucessCallback, errorCallback) {
-
-            var req = {};
-
-            var parameterTypes = {};
-            for (var i = 0; i < inputParameters.length; i++) {
-                var parameter = inputParameters[i];
-
-                req[parameter.Field] = parameter.Value;
-                parameterTypes[parameter.Field] = { "typeName": parameter.TypeName, "structuralProperty": parameter.StructuralProperty };
-            }
-
-            req.getMetadata = function () {
-
-                return {
-                    boundParameter: null,
-                    parameterTypes: parameterTypes,
-                    operationType: 0,
-                    operationName: actionName
-                };
-            };
-
-            Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
+            Endeavor.formscriptfunctions.callGlobalAction(actionName, inputParameters, sucessCallback, errorCallback);
         },
-
         onLoad: function () {
             debugger;
         },
-
+        cleanIdField = function (id) {
+            id = id.replace("{", "");
+            id = id.replace("}", "");
+            return id;
+        },
         headLoad: function (successCallback) {
             var jsUrls = [];
             var jsUrl;
-
             var globalContext = Xrm.Utility.getGlobalContext();
-
             if (typeof SDK === "undefined" || typeof SDK.REST === "undefined") {
                 jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/SDK.Rest.js";
                 jsUrls.push(jsUrl);
@@ -69,12 +45,10 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                 jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.ed_BlockAccountPortal.min.js";
                 jsUrls.push(jsUrl);
             }
-
             if (typeof head.load !== "function") {
                 console.error("head.load function is not defined.");
                 throw new Error("head.load function is not defined.");
             }
-
             if (jsUrls.length > 0) {
                 // Load required JavaScripts
                 head.load(jsUrls, successCallback);
@@ -83,13 +57,11 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                 successCallback();
             }
         },
-
         approveValueCode: function (formContext) {
             debugger;
             var valueCodeId;
             formContext.data.entity.save();
             formContext.ui.setFormNotification("Skapar och skickar värdekod. Vänligen vänta.", "INFO");
-
             try {
                 //var clearonTemplateId = Xrm.Page.getAttribute("ed_clearontemplateid").getValue();
                 var amount = formContext.getAttribute("ed_amount").getValue();
@@ -100,109 +72,66 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                 var travelCardNumber = formContext.getAttribute("ed_travelcardnumber").getValue();
                 var typeOfValueCode = formContext.getAttribute("ed_typeofvaluecode").getText();
                 var valCodeApprovId;
-
                 var formType = formContext.ui.getFormType();
+
+                var inputParameters = [];
+                var contactIdValue = { entityType: "ed_valuecodeapproval", id: Endeavor.cleanIdField(contact) };
+                var valCodeApprovIdValue = { entityType: "ed_valuecodeapproval", id: Endeavor.cleanIdField(valCodeApprovId) };
+                var parameterClearonTemplateId = { "Field": "ClearonTemplateId", "Value": 239, "TypeName": Endeavor.formscriptfunctions.getParameterType("int"), "StructuralProperty": 1 };
+                var parameterAmount = { "Field": "Amount", "Value": amount, "TypeName": Endeavor.formscriptfunctions.getParameterType("float"), "StructuralProperty": 1 };
+                var parameterMobile = { "Field": "Mobile", "Value": mobile, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
+                var parameterEmail = { "Field": "Email", "Value": email, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
+                var parameterContactId = { "Field": "ContactId", "Value": contactIdValue, "TypeName": Edm.contact, "StructuralProperty": 5 };
+                var parameterValidTo = { "Field": "ValidTo", "Value": validTo, "TypeName": Endeavor.formscriptfunctions.getParameterType("datetime"), "StructuralProperty": 1 };
+                var parameterTypeOfValueCode = { "Field": "ValidTo", "Value": validTo, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
+                var parameterValueCodeApprovalId = { "Field": "ValueCodeApprovalId", "Value": valCodeApprovIdValue, "TypeName": Edm.ed_valuecodeapproval, "StructuralProperty": 5 };
+
+                inputParameters.push(parameterClearonTemplateId);
+                inputParameters.push(parameterAmount);
+                inputParameters.push(parameterMobile);
+                inputParameters.push(parameterEmail);
+                inputParameters.push(parameterContactId);
+                inputParameters.push(parameterValidTo);
+                inputParameters.push(parameterTypeOfValueCode);
+                inputParameters.push(parameterValueCodeApprovalId);
                 //if (formType != 1) //Not Create
                 //    valCodeApprovId = Xrm.Page.data.entity.getId();
                 //else {
                 //    Xrm.Page.ui.setFormNotification("Skapar och skickar värdekod. Vänligen vänta.", "INFO");
                 //    return;
                 //}
-
                 // Create the ValueCode
-                Process.callAction("ed_CreateValueCodeGeneric",
-                    [
-                        {
-                            key: "ClearonTemplateId",
-                            type: Process.Type.Int,
-                            value: 239
-                        },
-                        {
-                            key: "Amount",
-                            type: Process.Type.Float,
-                            value: amount
-                        },
-                        {
-                            key: "Mobile",
-                            type: Process.Type.String,
-                            value: mobile
-                        },
-                        {
-                            key: "Email",
-                            type: Process.Type.String,
-                            value: email
-                        },
-                        {
-                            key: "ContactId",
-                            type: Process.Type.EntityReference,
-                            value: new Process.EntityReference("contact", contact)
-                        },
-                        {
-                            key: "ValidTo",
-                            type: Process.Type.DateTime,
-                            value: validTo
-                        },
-                        {
-                            key: "TypeOfValueCode",
-                            type: Process.Type.String,
-                            value: typeOfValueCode
-                        },
-                        {
-                            key: "ValueCodeApprovalId",
-                            type: Process.Type.EntityReference,
-                            value: new Process.EntityReference("ed_valuecodeapproval", valCodeApprovId)
-                        }
-                    ],
+                Endeavor.formscriptfunctions.callGlobalAction("ed_CreateValueCodeGeneric",
+                    inputParameters,
                     function (data) {
                         debugger;
-
                         valueCodeId = Object.values(data)[0];
                         formContext.ui.setFormNotification("Värdekod skapad.", "INFO");
+                        valcodeId = Endeavor.cleanIdField(valCodeApprovId);
+
+                        var inputParameters = [];
+                        var parameterValueCodeId = { "Field": "ValueCodeId", "Value": valueCodeId.id, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
+                        var parameterMobile = { "Field": "Mobile", "Value": mobile, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
+                        var parameterEmail = { "Field": "Email", "Value": email, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
+                        var parameterTravelCardNumber = { "Field": "TravelCardNumber", "Value": travelCardNumber, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
+
+                        inputParameters.push(parameterValueCodeId);
+                        inputParameters.push(parameterValueCodeApprovalid);
+                        inputParameters.push(parameterMobile);
+                        inputParameters.push(parameterEmail);
+                        inputParameters.push(parameterTravelCardNumber);
 
                         try {
-
-                            Process.callAction("ed_ApproveValueCode",
-                                [
-                                    {
-                                        key: "ValueCodeId",
-                                        type: Process.Type.String,
-                                        value: valueCodeId.id
-                                    },
-                                    {
-                                        key: "Target",
-                                        type: Process.Type.EntityReference,
-                                        value: new Process.EntityReference("ed_valuecodeapproval", valCodeApprovId)
-
-                                    },
-                                    {
-                                        key: "Mobile",
-                                        type: Process.Type.String,
-                                        value: mobile
-                                    },
-                                    {
-                                        key: "Email",
-                                        type: Process.Type.String,
-                                        value: email
-                                    },
-                                    {
-                                        key: "TravelCardNumber",
-                                        type: Process.Type.String,
-                                        value: travelCardNumber
-                                    }
-                                ],
+                            Endeavor.formscriptfunctions.callAction("ed_ApproveValueCode", "ed_valuecodeapproval", valCodeApprovId,
+                                inputParameters,
                                 function () {
-
                                     try {
                                         // Sending the created ValueCode
-                                        Process.callAction("ed_SendValueCode",
-                                            [{
-                                                key: "Target",
-                                                type: Process.Type.EntityReference,
-                                                value: new Process.EntityReference("ed_valuecode", valueCodeId.id)
-                                            }],
+                                        var inputParameters = [];
+                                        Endeavor.formscriptfunctions.callAction("ed_SendValueCode", ed_valuecode, valueCodeId.id,
+                                            inputParameters,
                                             function () {
                                                 debugger;
-
                                                 Xrm.Page.data.refresh();
                                                 Xrm.Page.ui.setFormNotification("Värdekod skickad.", "INFO");
                                             },
@@ -210,7 +139,6 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                                                 debugger;
                                                 // Error
                                                 Xrm.Page.ui.setFormNotification("Någonting gick fel: " + e, "INFO");
-
                                                 // Write the trace log to the dev console
                                                 if (window.console && console.error) {
                                                     console.error(e + "\n" + t);
@@ -219,7 +147,6 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                                     } catch (error) {
                                         var err = error;
                                     }
-
                                     formContext.data.refresh();
                                     formContext.ui.setFormNotification("Värdekod godkänd.", "INFO");
                                 },
@@ -227,13 +154,11 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                                     debugger;
                                     // Error
                                     formContext.ui.setFormNotification("Någonting gick fel: " + er, "INFO");
-
                                     // Write the trace log to the dev console
                                     if (window.console && console.error) {
                                         console.error(er + "\n" + tr);
                                     }
                                 });
-
                         } catch (err) {
                             var error = err;
                         }
@@ -242,27 +167,24 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                         debugger;
                         // Error
                         formContext.ui.setFormNotification("Någonting gick fel: " + e, "INFO");
-
                         // Write the trace log to the dev console
                         if (window.console && console.error) {
                             console.error(e + "\n" + t);
                         }
                     });
+
             }
             catch (ex) {
-
                 var error = ex;
                 // Error
             }
         },
-
         declineValueCode: function (formContext) {
             debugger;
-
             try {
-
-                var valCodeApprovId = Xrm.Page.data.entity.getId();
+                var valCodeApprovId = formContext.data.entity.getId();
                 // Sending the created ValueCode
+                /* OLD VERSION
                 Process.callAction("ed_DeclineValueCode",
                     [{
                         key: "Target",
@@ -271,7 +193,6 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                     }],
                     function () {
                         debugger;
-
                         formContext.data.refresh(true);
                         formContext.ui.setFormNotification("Värdekod nekad.", "INFO");
                     },
@@ -279,7 +200,23 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                         debugger;
                         // Error
                         formContext.ui.setFormNotification("Någonting gick fel: " + e, "INFO");
-
+                        // Write the trace log to the dev console
+                        if (window.console && console.error) {
+                            console.error(e + "\n" + t);
+                        }
+                    });
+                */
+                Endeavor.formscriptfunctions.callAction("ed_DeclineValueCode", "ed_valuecodeapproval", valCodeApprovId,
+                    [],
+                    function () {
+                        debugger;
+                        formContext.data.refresh(true);
+                        formContext.ui.setFormNotification("Värdekod nekad.", "INFO");
+                    },
+                    function (e, t) {
+                        debugger;
+                        // Error
+                        formContext.ui.setFormNotification("Någonting gick fel: " + e, "INFO");
                         // Write the trace log to the dev console
                         if (window.console && console.error) {
                             console.error(e + "\n" + t);
@@ -290,22 +227,17 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                 var err = error;
             }
         },
-
         showHideApproveButton: function (formContext) {
-
             var stat = formContext.getAttribute("statuscode").getValue();
             if (stat != 899310000)
                 return true;
             else return false;
         },
-
         showHideDeclineButton: function (formContext) {
-
             var stat = formContext.getAttribute("statuscode").getValue();
             if (stat != 899310001 && stat != 899310000)
                 return true;
             else return false;
         }
-
     };
 }
