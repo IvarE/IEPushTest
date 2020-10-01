@@ -268,9 +268,10 @@ Endeavor.OData_Querys = {
 
     GetRefundSetting: function (refundid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?select=cgi_refundoption,cgi_financialtransaction,cgi_refundtypeid,cgi_refundtypename,cgi_refundaccountid,cgi_refundresponsibleid,cgi_refundproductid,cgi_reinvoice&$filter=statecode eq 0 and cgi_refundtypeid eq " + refundid).then(
+            Xrm.WebApi.retrieveRecord("cgi_refundtype", refundid ,"?$select=cgi_refundoption,cgi_financialtransaction,cgi_refundtypeid,cgi_refundtypename,cgi_refundaccountid,cgi_refundresponsibleid,cgi_refundproductid,cgi_reinvoice,statecode").then(
                 function success(result) {
-                    Endeavor.Skanetrafiken.cgi_refund.refundtypeid_OnChange_callback(result, formContext);
+                    
+                        Endeavor.Skanetrafiken.cgi_refund.refundtypeid_OnChange_callback(result, formContext);
                 },
                 function (error) {
                     console.log(error.message);
@@ -286,9 +287,10 @@ Endeavor.OData_Querys = {
 
     GetRefundSettingOnLoad: function (refundid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?select=cgi_refundoption,cgi_financialtransaction,cgi_refundtypeid,cgi_refundtypename,cgi_refundaccountid,cgi_refundresponsibleid,cgi_refundproductid,cgi_reinvoice&$filter=statecode eq 0 and cgi_refundtypeid eq " + refundid).then(
+            Xrm.WebApi.retrieveRecord("cgi_refundtype", refundid, "?$select=cgi_refundoption,cgi_financialtransaction,cgi_refundtypeid,cgi_refundtypename,cgi_refundaccountid,cgi_refundresponsibleid,cgi_refundproductid,cgi_reinvoice,statecode").then(
                 function success(result) {
-                    Endeavor.Skanetrafiken.cgi_refund.refundtypeid_Onload_callback(result, formContext);
+
+                        Endeavor.Skanetrafiken.cgi_refund.refundtypeid_Onload_callback(result, formContext);
                 },
                 function (error) {
                     console.log(error.message);

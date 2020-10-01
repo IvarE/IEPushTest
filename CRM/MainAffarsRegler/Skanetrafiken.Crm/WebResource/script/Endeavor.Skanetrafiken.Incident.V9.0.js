@@ -220,7 +220,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 }
 
                 formContext.getAttribute("prioritycode").setValue(priority);
-                formContext.getAttribute("cgi_runpriorityworkflow").setValue(0);
+                formContext.getAttribute("cgi_runpriorityworkflow").setValue(false);
 
             } catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Incident.onChangeOrigin\n\n" + e.message);
