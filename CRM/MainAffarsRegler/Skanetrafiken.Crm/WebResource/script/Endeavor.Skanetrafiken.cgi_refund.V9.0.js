@@ -415,14 +415,14 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
         GetContactAccount_callback: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null) {
                     alert("Du kan inte spara beslut utan kopplling till ärende!");
                 }
                 else {
                     var _cgi_app_value = "0";
                     formContext.getAttribute("cgi_mandcust").setValue(_cgi_app_value);
-                    var _cgi_contact = result[0].cgi_contactid;
-                    var _cgi_account = result[0].cgi_accountid;
+                    var _cgi_contact = result["_cgi_contactid_value"];
+                    var _cgi_account = result["_cgi_accountid_value"];
 
                     if (_cgi_account == null && _cgi_contact == null) {
                         _cgi_app_value = "1";
@@ -452,11 +452,11 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
         ctrlAttest_callback: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null) {
                     alert("Användaren hittas inte!");
                 }
                 else {
-                    var _cgi_RSID = result[0].cgi_rsid;
+                    var _cgi_RSID = result["cgi_rsid"];
                     if (_cgi_RSID == null) {
                         formContext.getAttribute("cgi_auth_approved").setValue(false);
                     }
@@ -482,12 +482,12 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
         ctrlAmountLimit_callback: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Inställning hittas inte!");
                 }
                 else {
-                    var _cgi_amount_limit = result[0].cgi_amount_limit;
-                    var _cgi_amount_limit_warn = result[0].cgi_amount_limit_warn;
+                    var _cgi_amount_limit = result.entities[0].cgi_amount_limit;
+                    var _cgi_amount_limit_warn = result.entities[0].cgi_amount_limit_warn;
 
                     var __cgi_amount_limit = parseFloat(_cgi_amount_limit);
                     var __cgi_amount_limit_warn = parseFloat(_cgi_amount_limit_warn);
@@ -629,11 +629,11 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
         Getcgi_refundaccountNumber_callback: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Failed to retrieve RefundAccountNumber!");
                 }
                 else {
-                    _RefundAccountIdCache = result[0];
+                    _RefundAccountIdCache = result.entities[0];
 
                     Endeavor.Skanetrafiken.cgi_refund.SetProductFieldRequired(formContext);
                 }
@@ -664,14 +664,14 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
         Getcgi_refundtypeproductnotrequiredidSetting_callback: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Required setting is missing: cgi_refundtypeproductnotrequiredid!");
                 }
                 else {
-                    if (result[0].cgi_refundtypeproductnotrequiredid == null) {
+                    if (result.entities[0]["_cgi_refundtypeproductnotrequiredid_value"] == null) {
                         alert('Required setting is missing: cgi_refundtypeproductnotrequiredid!');
                     }
-                    _RefundTypeProductNotrequiredIdCache = result[0].cgi_refundtypeproductnotrequiredid;
+                    _RefundTypeProductNotrequiredIdCache = result.entities[0]["_cgi_refundtypeproductnotrequiredid_value"];
                     Endeavor.Skanetrafiken.cgi_refund.SetProductFieldRequired(formContext);
 
                 }
@@ -715,7 +715,8 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
             try {
                 var _caseid = Endeavor.formscriptfunctions.GetLookupid("cgi_caseid", formContext);
                 if (_caseid != null) {
-                    Endeavor.OData_Querys.GetCaseNumber(_caseid, formContext);
+                    var _caseid_clean = Endeavor.formscriptfunctions.cleanIdField(_caseid);
+                    Endeavor.OData_Querys.GetCaseNumber(_caseid_clean, formContext);
                 }
             }
             catch (e) {
@@ -725,28 +726,28 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
         getCaseNumber_callback: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Hittar inga ärendenummer!");
                 }
                 else {
-                    if (result[0].ticketnumber != null) {
-                        var _caseidvalue = result[0].ticketnumber;
+                    if (result.entities[0].ticketnumber != null) {
+                        var _caseidvalue = result.entities[0].ticketnumber;
                         Endeavor.formscriptfunctions.SetValue("cgi_refundnumber", _caseidvalue, formContext);
                     }
-                    _travelcardnumber = result[0].cgi_unregisterdtravelcard;
+                    _travelcardnumber = result.entities[0].cgi_unregisterdtravelcard;
                     //MaxP 2016-03-24 
-                    var _caseorigincode = result[0].caseorigincode;
-                    var _casetypecode = result[0].casetypecode;
-                    var _iscompleted = result[0].cgi_iscompleted;
-                    var _taxiclaimedamount = result[0].cgi_taxiclaimedamount;
-                    var _milagekilometers = result[0].cgi_milagekilometers;
-                    var _compensationclaimfromrgol = result[0].cgi_compensationclaimfromrgol;
+                    var _caseorigincode = result.entities[0].caseorigincode;
+                    var _casetypecode = result.entities[0].casetypecode;
+                    var _iscompleted = result.entities[0].cgi_iscompleted;
+                    var _taxiclaimedamount = result.entities[0].cgi_taxiclaimedamount;
+                    var _milagekilometers = result.entities[0].cgi_milagekilometers;
+                    var _compensationclaimfromrgol = result.entities[0].cgi_compensationclaimfromrgol;
 
                     if (_caseorigincode == 285050007 && _casetypecode == 285050003 && _iscompleted == false) {
 
-                        var _id = result[0]["_cgi_refundtypeid_value"];
-                        var _logicalname = result[0]["_cgi_refundtypeid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
-                        var _name = result[0]["_cgi_refundtypeid_value@OData.Community.Display.V1.FormattedValue"];
+                        var _id = result.entities[0]["_cgi_refundtypes_value"];
+                        var _logicalname = result.entities[0]["_cgi_refundtypeid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                        var _name = result.entities[0]["_cgi_refundtypeid_value@OData.Community.Display.V1.FormattedValue"];
                         Endeavor.formscriptfunctions.SetLookup("cgi_refundtypeid", _logicalname, _id, _name, formContext);
                         Endeavor.Skanetrafiken.cgi_refund.refund_Onload(formContext);
 
@@ -755,7 +756,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                             formContext.getAttribute("cgi_milage").setValue(_milagekilometers_decimal);
 
                             var _cgi_amount = parseFloat(Math.round(_milagekilometers_decimal * 18.50));
-                            var _rgolclaimedamount = result[0].cgi_compensationclaimfromrgol;
+                            var _rgolclaimedamount = result.entities[0].cgi_compensationclaimfromrgol;
                             var _rgolclaimedamountdecimal = parseFloat(_rgolclaimedamount);
                             var _cgi_amount_2 = _rgolclaimedamountdecimal;
 
@@ -771,12 +772,12 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                             formContext.getAttribute("cgi_amount").setValue(_rgolclaimedamountdecimal_1);
                         }
 
-                        var _id = result[0]["_cgi_reimbursementformid_value"];
-                        var _logicalname = result[0]["_cgi_reimbursementformid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
-                        var _name = result[0]["_cgi_reimbursementformid_value@OData.Community.Display.V1.FormattedValue"];
+                        var _id = result.entities[0]["_cgi_reimbursementformid_value"];
+                        var _logicalname = result.entities[0]["_cgi_reimbursementformid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                        var _name = result.entities[0]["_cgi_reimbursementformid_value@OData.Community.Display.V1.FormattedValue"];
                         Endeavor.formscriptfunctions.SetLookup("cgi_reimbursementformid", _logicalname, _id, _name, formContext);
 
-                        Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnChange(formContext);
+                        Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnChange(null,formContext);
                     }
                 }
             }
@@ -792,8 +793,10 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
             try {
 
                 var _refundtypeid = Endeavor.formscriptfunctions.GetLookupid("cgi_reimbursementformid", formContext);
+                
                 if (_refundtypeid != null) {
-                    Endeavor.OData_Querys.GetReimbursementFormOnLoad(_refundtypeid, formContext);
+                    var _refundtypeidclean = Endeavor.formscriptfunctions.cleanIdField(_refundtypeid);
+                    Endeavor.OData_Querys.GetReimbursementFormOnLoad(_refundtypeidclean, formContext);
                 }
                 else {
                     Endeavor.formscriptfunctions.HideOrDisplayField("cgi_accountid", false, formContext);
@@ -811,14 +814,14 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
             try {
 
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Hittar inga inställningar ()!");
                 }
                 else {
-                    _ReimbursementFormIdCache = result[0];
+                    _ReimbursementFormIdCache = result.entities[0];
                     //Use account
-                    if (result[0].cgi_useaccount != null) {
-                        var _useaccount = result[0].cgi_useaccount;
+                    if (result.entities[0].cgi_useaccount != null) {
+                        var _useaccount = result.entities[0].cgi_useaccount;
 
                         if (_useaccount == false) {
                             Endeavor.formscriptfunctions.SetRequiredLevel("cgi_accountid", "none", formContext);
@@ -839,8 +842,8 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     }
 
                     //Use responsible 
-                    if (result[0].cgi_useresponsible != null) {
-                        var _usereponsible = result[0].cgi_useresponsible;
+                    if (result.entities[0].cgi_useresponsible != null) {
+                        var _usereponsible = result.entities[0].cgi_useresponsible;
                         if (!_usereponsible) {
                             Endeavor.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "none", formContext);
                             Endeavor.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false, formContext);
@@ -859,7 +862,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     Endeavor.Skanetrafiken.cgi_refund.SetProductFieldRequired(formContext);
 
                     //Field Travelcard Number          
-                    var _loadcard = result[0].cgi_loadcard;
+                    var _loadcard = result.entities[0].cgi_loadcard;
 
                     if (_loadcard) {
                         Endeavor.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "required", formContext);
@@ -871,7 +874,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     }
 
                     //Social Security Number
-                    var _cgi_payment = result[0].cgi_payment;
+                    var _cgi_payment = result.entities[0].cgi_payment;
 
                     if (_cgi_payment) {
                         Endeavor.formscriptfunctions.SetRequiredLevel("cgi_soc_sec_number", "required", formContext);
@@ -883,7 +886,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     }
 
                     //IBAN and SWIFT and accountnumber
-                    var _cgi_payment_abroad = result[0].cgi_payment_abroad;
+                    var _cgi_payment_abroad = result.entities[0].cgi_payment_abroad;
 
                     if (_cgi_payment_abroad) {
                         Endeavor.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none", formContext);
@@ -903,7 +906,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     }
 
                     //Last valid
-                    var _cgi_last_valid = result[0].cgi_time_valid;
+                    var _cgi_last_valid = result.entities[0].cgi_time_valid;
 
                     if (_cgi_last_valid) {
                         Endeavor.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "required", formContext);
@@ -922,12 +925,17 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        reimbursementformid_OnChange: function (formContext) {
+        reimbursementformid_OnChange: function (executionContext,formContext) {
             try {
+                if (executionContext != null) {
+                    formContext = executionContext.getFormContext();
+                }
 
                 var _refundtypeid = Endeavor.formscriptfunctions.GetLookupid("cgi_reimbursementformid", formContext);
+
                 if (_refundtypeid != null) {
-                    Endeavor.OData_Querys.GetReimbursementForm(_refundtypeid, formContext);
+                    var _refundtypeidClean = Endeavor.formscriptfunctions.cleanIdField(_refundtypeid);
+                    Endeavor.OData_Querys.GetReimbursementForm(_refundtypeidClean, formContext);
                 }
                 else {
                     Endeavor.formscriptfunctions.HideOrDisplayField("cgi_accountid", false, formContext);
@@ -952,15 +960,15 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
         reimbursementformid_OnChange_callback: function (result, formContext) {
             try {
 
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Hittar inga inställningar ()!");
                 }
                 else {
-                    _ReimbursementFormIdCache = result[0];
+                    _ReimbursementFormIdCache = result.entities[0];
 
                     //Use attestation
-                    if (result[0].cgi_attestation != null) {
-                        var _useattestation = result[0].cgi_attestation;
+                    if (result.entities[0].cgi_attestation != null) {
+                        var _useattestation = result.entities[0].cgi_attestation;
 
                         if (_useattestation)
                             formContext.getAttribute("cgi_attest_req").setValue("1");
@@ -971,8 +979,8 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                         formContext.getAttribute("cgi_attest_req").setValue("0");
 
                     //Use account
-                    if (result[0].cgi_useaccount != null) {
-                        var _useaccount = result[0].cgi_useaccount;
+                    if (result.entities[0].cgi_useaccount != null) {
+                        var _useaccount = result.entities[0].cgi_useaccount;
 
                         if (!_useaccount) {
                             Endeavor.formscriptfunctions.SetRequiredLevel("cgi_accountid", "none", formContext);
@@ -996,8 +1004,8 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     }
 
                     //Use responsible 
-                    if (result[0].cgi_useresponsible != null) {
-                        var _usereponsible = result[0].cgi_useresponsible;
+                    if (result.entities[0].cgi_useresponsible != null) {
+                        var _usereponsible = result.entities[0].cgi_useresponsible;
                         if (!_usereponsible) {
                             Endeavor.formscriptfunctions.SetRequiredLevel("cgi_responsibleid", "none", formContext);
                             Endeavor.formscriptfunctions.HideOrDisplayField("cgi_responsibleid", false, formContext);
@@ -1021,7 +1029,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     Endeavor.Skanetrafiken.cgi_refund.SetEmailVisibilityAndRequirement(result, formContext);
 
                     //Field Travelcard Number          
-                    var _loadcard = result[0].cgi_loadcard;
+                    var _loadcard = result.entities[0].cgi_loadcard;
 
                     if (_loadcard ) {
                         Endeavor.formscriptfunctions.SetRequiredLevel("cgi_travelcard_number", "required", formContext);
@@ -1034,7 +1042,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     }
 
                     //Social Security Number with get social security number from incident
-                    var _cgi_payment = result[0].cgi_payment;
+                    var _cgi_payment = result.entities[0].cgi_payment;
 
                     if (_cgi_payment) {
                         Endeavor.formscriptfunctions.SetRequiredLevel("cgi_soc_sec_number", "required", formContext);
@@ -1052,7 +1060,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     }
 
                     //IBAN and SWIFT and accountnumber
-                    var _cgi_payment_abroad = result[0].cgi_payment_abroad;
+                    var _cgi_payment_abroad = result.entities[0].cgi_payment_abroad;
 
                     if (_cgi_payment_abroad) {
                         Endeavor.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none", formContext);
@@ -1079,7 +1087,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     }
 
                     //Last valid
-                    var _cgi_last_valid = result[0].cgi_time_valid;
+                    var _cgi_last_valid = result.entities[0].cgi_time_valid;
 
                     if (_cgi_last_valid) {
                         Endeavor.formscriptfunctions.SetRequiredLevel("cgi_last_valid", "required", formContext);
@@ -1097,7 +1105,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
             var _emailRequiredAndVisible = false;
             var _phoneRequired = false;
-            var _reimbursementName = result[0].cgi_reimbursementname;
+            var _reimbursementName = result.entities[0].cgi_reimbursementname;
 
             switch (_reimbursementName) {
                 case "Laddning reskassa":
@@ -1144,7 +1152,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     _emailRequiredAndVisible = false;
             }
 
-            var _sendtostralfors = result[0].cgi_sendtostralfors;
+            var _sendtostralfors = result.entities[0].cgi_sendtostralfors;
 
             if (_sendtostralfors)
                 _emailRequiredAndVisible = true;
@@ -2185,11 +2193,11 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
         setMilageContributionOnLoad_callback: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Det finns ingen milersättning definierad!");
                 }
                 else {
-                    var _milage_contribution = result[0].cgi_milage_contribution;
+                    var _milage_contribution = result.entities[0].cgi_milage_contribution;
                     _milage_contribution_decimal = parseFloat(_milage_contribution);
                     Endeavor.formscriptfunctions.SetValue("cgi_milage_compensation", _milage_contribution_decimal, formContext);
                 }
@@ -2246,7 +2254,13 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
         SetBicIban: function (formContext) {
             try {
                 var _caseid = Endeavor.formscriptfunctions.GetLookupid("cgi_caseid", formContext);
-                Endeavor.OData_Querys.GetBicIban(_caseid, formContext);
+                var _caseidClean = null;
+
+                if (_caseid != null)
+                {
+                    _caseidClean = Endeavor.formscriptfunctions.cleanIdField(_caseidClean);
+                }
+                Endeavor.OData_Querys.GetBicIban(_caseidClean, formContext);
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.cgi_refund.SetBicIban\n\n" + e.Message);
@@ -2255,12 +2269,12 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
         setBicIban_callback: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     //alert("Det finns inget bankkonto angivet på ärendet");
                 }
                 else {
-                    var _cgi_bic = result[0].cgi_bic;
-                    var _cgi_iban = result[0].cgi_iban;
+                    var _cgi_bic = result.entities[0].cgi_bic;
+                    var _cgi_iban = result.entities[0].cgi_iban;
 
                     Endeavor.formscriptfunctions.SetValue("cgi_iban", _cgi_iban, formContext);
                     Endeavor.formscriptfunctions.SetValue("cgi_swift", _cgi_bic, formContext);
@@ -2286,13 +2300,13 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
         setSocSecOnLoad_callback: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities[0] == null) {
                     //alert("Det finns inget bankkonto angivet p� �rendet");
                 }
                 else {
-                    var _cgi_soc_sec_number = result[0].cgi_soc_sec_number;
-                    var _cgi_rgol_socialsecuritynumber = result[0].cgi_rgol_socialsecuritynumber;
-                    var _cgi_iscompleted = result[0].cgi_iscompleted;
+                    var _cgi_soc_sec_number = result.entities[0].cgi_soc_sec_number;
+                    var _cgi_rgol_socialsecuritynumber = result.entities[0].cgi_rgol_socialsecuritynumber;
+                    var _cgi_iscompleted = result.entities[0].cgi_iscompleted;
 
                     if (_cgi_rgol_socialsecuritynumber != null && _cgi_iscompleted == false)
                         Endeavor.formscriptfunctions.SetValue("cgi_soc_sec_number", _cgi_rgol_socialsecuritynumber, formContext);
@@ -2311,7 +2325,10 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
         setEmail: function (formContext) {
             try {
                 var _caseid = Endeavor.formscriptfunctions.GetLookupid("cgi_caseid", formContext);
-                Endeavor.OData_Querys.GetEmailAddress(_caseid, formContext);
+
+                var _caseid_clean = Endeavor.formscriptfunctions.cleanIdField(_caseid);
+
+                Endeavor.OData_Querys.GetEmailAddress(_caseid_clean, formContext);
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.cgi_refund.getEmail\n\n" + e.Message);
@@ -2320,14 +2337,14 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
         getGetEmailAddress_callback: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     //alert("Det finns ingen e-postadress angivet på ärendet");
                 }
                 else {
                     //MaxP 2016-05-11 Om det är ett manuellt ärende från RGOL, så sätt epost = incident.cgi_rgol_delivery_email
-                    var _cgi_customer_email = result[0].cgi_customer_email;
-                    var _cgi_delivery_email = result[0].cgi_rgol_delivery_email;
-                    var _cgi_iscompleted = result[0].cgi_iscompleted;
+                    var _cgi_customer_email = result.entities[0].cgi_customer_email;
+                    var _cgi_delivery_email = result.entities[0].cgi_rgol_delivery_email;
+                    var _cgi_iscompleted = result.entities[0].cgi_iscompleted;
 
                     if (_cgi_delivery_email != null && _cgi_iscompleted == false)
                         Endeavor.formscriptfunctions.SetValue("cgi_email", _cgi_delivery_email, formContext);
@@ -2353,13 +2370,13 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
         setMobileNumber_callback: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     //alert("Det finns inget mobilnummer angivet på ärendet");
                 }
                 else {
-                    var _cgi_rgol_telephonenumber = result[0].cgi_rgol_telephonenumber;
-                    var _cgi_customer_telephonenumber = result[0].cgi_customer_telephonenumber;
-                    var _cgi_iscompleted = result[0].cgi_iscompleted;
+                    var _cgi_rgol_telephonenumber = result.entities[0].cgi_rgol_telephonenumber;
+                    var _cgi_customer_telephonenumber = result.entities[0].cgi_customer_telephonenumber;
+                    var _cgi_iscompleted = result.entities[0].cgi_iscompleted;
 
                     if (_cgi_rgol_telephonenumber != null && _cgi_iscompleted == false)
                         Endeavor.formscriptfunctions.SetValue("cgi_mobilenumber", _cgi_rgol_telephonenumber, formContext);
@@ -2469,12 +2486,12 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
             try {
 
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Ingen säkerhetsroll definierad!");
                 }
                 else {
                     var userRoleName = "Attest"
-                    var roleName = result[0].name;
+                    var roleName = result.entities[0].name;
 
                     //Om användaren har rollen Attest ovan, så är användaren godkänd för att 
                     if (roleName == userRoleName)

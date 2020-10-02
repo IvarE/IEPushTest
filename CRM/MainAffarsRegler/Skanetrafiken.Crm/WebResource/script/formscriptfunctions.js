@@ -15,7 +15,11 @@ Endeavor.formscriptfunctions = {
             alert("Fel i Endeavor.formscriptfunctions.SetOnChangeFunction\n\n" + e.message);
         }
     },
-
+    cleanIdField: function (id) {
+        id = id.replace("{", "");
+        id = id.replace("}", "");
+        return id;
+    },
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Function to return parameter types for an action
 

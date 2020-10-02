@@ -22,3 +22,4 @@ bin
 /CRM/MainAffarsRegler/Skanetrafiken.WebApi/Skanetrafiken.WebApi.csproj.vspscc
 *.tf1
 *.vspscc
+/DK/Development/Main/UpgradeLog2.htm

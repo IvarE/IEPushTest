@@ -53,7 +53,7 @@ Endeavor.OData_Querys = {
 
     GetDefaultCustomerFromSetting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_defaultcustomeroncase&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=_cgi_defaultcustomeroncase_value&$filter=statecode eq 0 and cgi_validfrom le " + nowdate + "Z and (cgi_validto ge " + nowdate + "Z or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.setCustomerOnLoad_callback(result, formContext);
                 },
@@ -70,7 +70,7 @@ Endeavor.OData_Querys = {
 
     GetDefaultCaseCategory3Setting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_category_detail3id&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=_cgi_category_detail3id_value&$filter=statecode eq 0 and cgi_validfrom le " + nowdate + "Z and (cgi_validto ge " + nowdate + "Z or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.casetypecode_onchange_callback(result, formContext);
                 },
@@ -88,7 +88,7 @@ Endeavor.OData_Querys = {
 
     Getcgi_refundtypeproductnotrequiredidSetting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_refundtypeproductnotrequiredid&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=_cgi_refundtypeproductnotrequiredid_value&$filter=statecode eq 0 and cgi_validfrom le " + nowdate + "Z and (cgi_validto ge " + nowdate + "Z or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.Getcgi_refundtypeproductnotrequiredidSetting_callback(result, formContext);
                 },
@@ -105,7 +105,7 @@ Endeavor.OData_Querys = {
 
     GetBOMBUrlFromSetting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_bomburl&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_bomburl&$filter=statecode eq 0 and cgi_validfrom le " + nowdate + "Z and (cgi_validto ge " + nowdate + "Z or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.openBombApp_callback(result, formContext);
                 },
@@ -122,7 +122,7 @@ Endeavor.OData_Querys = {
 
     GetRGOLUrlFromSetting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_rgolurl&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_rgolurl&$filter=statecode eq 0 and cgi_validfrom le " + nowdate + "Z and (cgi_validto ge " + nowdate + "Z or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.getRGOLapiurl_callback(result, formContext);
                 },
@@ -139,7 +139,7 @@ Endeavor.OData_Querys = {
 
     GetRGOLUrlFromSettingNew: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_rgolurl&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_rgolurl&$filter=statecode eq 0 and cgi_validfrom le " + nowdate + "Z and (cgi_validto ge " + nowdate + "Z or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.getRGOLapiurl_callbackNew(result, formContext);
                 },
@@ -157,7 +157,7 @@ Endeavor.OData_Querys = {
     //Returns category guid for level 1 and level 2
     GetParentCategory: function (_categoryid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_categorydetail", "?$select=cgi_parentid,cgi_parentid2&$filter=cgi_categorydetailid eq" + _categoryid).then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_categorydetail", "?$select=_cgi_parentid_value,_cgi_parentid2_value&$filter=cgi_categorydetailid eq" + _categoryid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.category2_onchange_callback(result, formContext);
                 },
@@ -175,7 +175,7 @@ Endeavor.OData_Querys = {
     //Returns category guid for level 1 and level 2
     GetParentCategory3: function (_categoryid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_categorydetail", "?$select=cgi_parentid,cgi_parentid2&$filter=cgi_categorydetailid eq" + _categoryid).then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_categorydetail", "?$select=_cgi_parentid_value,_cgi_parentid2_value&$filter=cgi_categorydetailid eq" + _categoryid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.category3_onchange_callback(result, formContext);
                 },
@@ -193,7 +193,7 @@ Endeavor.OData_Querys = {
     //Get default queue from user
     GetDefaultQueue: function (userId, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("systemuser", "?$select=queueid&$filter=systemuserid eq" + userId).then(
+            Xrm.WebApi.retrieveMultipleRecords("systemuser", "?$select=_queueid_value&$filter=systemuserid eq " + userId).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Email.SetSenderEmail_callback(result, formContext);
                 },
@@ -211,7 +211,7 @@ Endeavor.OData_Querys = {
     //Get letter template
     GetLetterTemplate: function (_id, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_letter_template", "?$select=cgi_title,cgi_template_body&$filter=cgi_letter_templateid eq" + _id).then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_letter_template", "?$select=cgi_title,cgi_template_body&$filter=cgi_letter_templateid eq " + _id).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.letter_template_onchange_callback(result, formContext);
                 },
@@ -249,7 +249,7 @@ Endeavor.OData_Querys = {
     // *** Start Queries used for entity cgi_refund
     GetAmountLimitFromSetting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_amount_limit,cgi_amount_limit_warn&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_amount_limit, cgi_amount_limit_warn&$filter=statecode eq 0 and cgi_validfrom le " + nowdate + "Z and(cgi_validto ge " + nowdate + "Z or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.ctrlAmountLimit_callback(result, formContext);
                 },
@@ -268,7 +268,7 @@ Endeavor.OData_Querys = {
 
     GetRefundSetting: function (refundid, formContext) {
         try {
-            Xrm.WebApi.retrieveRecord("cgi_refundtype", refundid ,"?$select=cgi_refundoption,cgi_financialtransaction,cgi_refundtypeid,cgi_refundtypename,cgi_refundaccountid,cgi_refundresponsibleid,cgi_refundproductid,cgi_reinvoice,statecode").then(
+            Xrm.WebApi.retrieveRecord("cgi_refundtype", refundid,"?$select=cgi_refundoption,cgi_financialtransaction,cgi_refundtypeid,cgi_refundtypename,_cgi_refundaccountid_value,_cgi_refundresponsibleid_value,_cgi_refundproductid_value,cgi_reinvoice,statecode").then(
                 function success(result) {
                     
                         Endeavor.Skanetrafiken.cgi_refund.refundtypeid_OnChange_callback(result, formContext);
@@ -287,7 +287,7 @@ Endeavor.OData_Querys = {
 
     GetRefundSettingOnLoad: function (refundid, formContext) {
         try {
-            Xrm.WebApi.retrieveRecord("cgi_refundtype", refundid, "?$select=cgi_refundoption,cgi_financialtransaction,cgi_refundtypeid,cgi_refundtypename,cgi_refundaccountid,cgi_refundresponsibleid,cgi_refundproductid,cgi_reinvoice,statecode").then(
+            Xrm.WebApi.retrieveRecord("cgi_refundtype", refundid, "?$select=cgi_financialtransaction,_cgi_refundaccountid_value,cgi_refundoption,_cgi_refundproductid_value,_cgi_refundresponsibleid_value,cgi_refundtypeid,cgi_refundtypename,cgi_reinvoice,statecode").then(
                 function success(result) {
 
                         Endeavor.Skanetrafiken.cgi_refund.refundtypeid_Onload_callback(result, formContext);
@@ -306,7 +306,7 @@ Endeavor.OData_Querys = {
 
     Getcgi_refundaccountNumber: function (cgi_refundaccountid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_account,cgi_refundaccountid&$filter=cgi_refundaccountid eq" + cgi_refundaccountid).then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_refundaccount", "?$select=cgi_account,cgi_refundaccountid&$filter=cgi_refundaccountid eq " + cgi_refundaccountid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.Getcgi_refundaccountNumber_callback(result, formContext);
                 },
@@ -323,7 +323,7 @@ Endeavor.OData_Querys = {
 
     GetDefaultMilageContributionFromSetting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_milage_contribution&$filter=statecode eq 0 and cgi_validfrom le datetime'" + nowdate + "' and (cgi_validto ge datetime'" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_milage_contribution&$filter=statecode eq 0 and cgi_validfrom le " + nowdate + "Z and (cgi_validto ge " + nowdate + "Z or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.setMilageContributionOnLoad_callback(result, formContext);
                 },
@@ -340,7 +340,7 @@ Endeavor.OData_Querys = {
     //MaxP 2016-04-20 ytterligare en kolumner som returneras i svaret. Ursprung, ärendetyp och flagga för manuella ärenden
     GetCaseNumber: function (caseid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=ticketnumber,cgi_unregisterdtravelcard,caseorigincode,casetypecode,cgi_iscompleted,cgi_milagekilometers,cgi_milagelicenseplatenumber,cgi_milagefrom,cgi_milageto,cgi_taxifrom,cgi_taxito,cgi_taxiclaimedamount,cgi_compensationclaimfromrgol,cgi_refundtypes,cgi_refundreimbursementform&$filter=incidentid eq" + caseid).then(
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=caseorigincode,casetypecode,cgi_compensationclaimfromrgol,cgi_iscompleted,cgi_milagefrom,cgi_milagekilometers,cgi_milagelicenseplatenumber,cgi_milageto,_cgi_refundreimbursementform_value,_cgi_refundtypes_value,cgi_taxiclaimedamount,cgi_taxifrom,cgi_taxito,cgi_unregisterdtravelcard,ticketnumber&$filter=incidentid eq " + caseid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.getCaseNumber_callback(result, formContext);
                 },
@@ -358,7 +358,7 @@ Endeavor.OData_Querys = {
     //MaxP 2016-05-11 Hämtar nytt fält (cgi_rgol_delivery_email) från ärende för att sätta leverans epostadress på beslut
     GetEmailAddress: function (caseid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_customer_email,cgi_emailaddress,cgi_rgol_delivery_email,cgi_iscompleted&$filter=incidentid eq" + caseid).then(
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_customer_email,cgi_emailaddress,cgi_iscompleted,cgi_rgol_delivery_email&$filter=incidentid eq " + caseid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.getGetEmailAddress_callback(result, formContext);
                 },
@@ -376,7 +376,7 @@ Endeavor.OData_Querys = {
     //
     GetReimbursementForm: function (reimbursementid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_reimbursementformid,cgi_reimbursementname,cgi_reinvoicing,cgi_useaccount,cgi_useresponsible,cgi_useproduct,cgi_loadcard,cgi_payment,cgi_payment_abroad,cgi_time_valid,cgi_attestation,cgi_giftcard,cgi_sendtostralfors,cgi_couponsms&$filter=statecode eq 0 and cgi_reimbursementformid eq" + reimbursementid).then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_reimbursementform", "?$select=cgi_attestation,cgi_couponsms,cgi_giftcard,cgi_loadcard,cgi_payment,cgi_payment_abroad,cgi_reimbursementformid,cgi_reimbursementname,cgi_reinvoicing,cgi_sendtostralfors,cgi_time_valid,cgi_useaccount,cgi_useproduct,cgi_useresponsible&$filter=statecode eq 0 and cgi_reimbursementformid eq " + reimbursementid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnChange_callback(result, formContext);
                 },
@@ -393,7 +393,7 @@ Endeavor.OData_Querys = {
 
     GetReimbursementFormOnLoad: function (reimbursementid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_refund", "?$select=cgi_reimbursementformid,cgi_reimbursementname,cgi_reinvoicing,cgi_useaccount,cgi_useresponsible,cgi_useproduct,cgi_loadcard,cgi_payment,cgi_payment_abroad,cgi_time_valid,cgi_attestation,cgi_giftcard,cgi_sendtostralfors,cgi_couponsms&$filter=statecode eq 0 and cgi_reimbursementformid eq" + reimbursementid).then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_reimbursementform", "?$select=cgi_attestation,cgi_couponsms,cgi_giftcard,cgi_loadcard,cgi_payment,cgi_payment_abroad,cgi_reimbursementformid,cgi_reimbursementname,cgi_reinvoicing,cgi_sendtostralfors,cgi_time_valid,cgi_useaccount,cgi_useproduct,cgi_useresponsible&$filter=statecode eq 0 and cgi_reimbursementformid eq " + reimbursementid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnLoad_callback(result, formContext);
                 },
@@ -411,7 +411,7 @@ Endeavor.OData_Querys = {
     //Get bic and iban from incident. MaxP 2016-04-20
     GetBicIban: function (caseid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_bic,cgi_iban,cgi_iscompleted&$filter=incidentid eq" + caseid).then(
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_bic,cgi_iban,cgi_iscompleted&$filter=incidentid eq " + caseid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.setBicIban_callback(result, formContext);
                 },
@@ -465,7 +465,7 @@ Endeavor.OData_Querys = {
     //Get cgi_contact and cgi_account from incident.
     GetContactAccount: function (caseid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_contactid,cgi_accountid&$filter=incidentid eq" + caseid).then(
+            Xrm.WebApi.retrieveRecord("incident", caseid , "?$select=_cgi_contactid_value,_cgi_accountid_value").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.GetContactAccount_callback(result, formContext);
                 },
@@ -483,7 +483,7 @@ Endeavor.OData_Querys = {
     //Get RSID from user
     GetRSID: function (userId, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("systemuser", "?$select=cgi_rsid&$filter=systemuserid eq" + userId).then(
+            Xrm.WebApi.retrieveRecord("systemuser", userId, "?$select=cgi_rsid").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.ctrlAttest_callback(result, formContext);
                 },
@@ -520,7 +520,7 @@ Endeavor.OData_Querys = {
     // *** Start Queries used for entity email
     GetDefaultUserFromSetting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_userid&$filter=statecode eq 0 and cgi_validfrom le '" + nowdate + "' and (cgi_validto ge '" + nowdate + "' or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_userid&$filter=statecode eq 0 and cgi_validfrom le " + nowdate + "Z and (cgi_validto ge '" + nowdate + "Z or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Email.SetSenderEmailNoReply_callback(result, formContext);
                 },
