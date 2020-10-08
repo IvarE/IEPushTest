@@ -422,6 +422,8 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
 
+            var timestamp = new Date(document.getElementById("timestamp").value);
+
             var fromlist = document.getElementById("fromlist");
             var tolist = document.getElementById("tolist");
 
@@ -512,6 +514,8 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
         setLine: function () {
 
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
+
+            var timestamp = new Date(document.getElementById("timestamp").value);
 
             var fromlist = document.getElementById("fromlist");
             var fromoptions = [];
