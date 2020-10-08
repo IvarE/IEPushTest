@@ -509,7 +509,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
         setCustomerOnLoad_callback: function (result, formContext) {
             try {
-                if (result == null || result.entities == null || result.entities[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 ||result.entities[0] == null) {
                     alert("Det finns ingen default kund definerad!");
                 }
                 else {
@@ -578,7 +578,11 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     var lookUpObjectValue = lookupObject.getValue();
                     if ((lookUpObjectValue != null)) {
                         var _categoryid = formContext.getAttribute(_fieldName).getValue()[0].id;
-                        Endeavor.OData_Querys.GetParentCategory(_categoryid, formContext);
+                        if (_categoryid != null)
+                        {
+                            var _categoryidClean = Endeavor.formscriptfunctions.cleanIdField(_categoryid);
+                            Endeavor.OData_Querys.GetParentCategory(_categoryidClean, formContext);
+                        }
                     }
                     else {
                         var _update_fieldname = "cgi_casdet_row" + _category2_onchange_rownr + "_cat2id";
@@ -595,7 +599,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
         category2_onchange_callback: function (result, formContext) {
             try {
-                if (result == null || result.entities == null || result.entities[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Hittar ingen kategori 2");
                 }
                 else {
@@ -656,7 +660,13 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                         }
 
                         var _categoryid = formContext.getAttribute(_fieldName).getValue()[0].id;
-                        Endeavor.OData_Querys.GetParentCategory3(_categoryid, formContext);
+
+                        if (_categoryid != null)
+                        {
+                            var _categoryidClean = Endeavor.formscriptfunctions.cleanIdField(_categoryid);
+                            Endeavor.OData_Querys.GetParentCategory3(_categoryidClean, formContext);
+                        }
+                        
                     }
                     else {
                         var _update_fieldname_cat1 = "cgi_casdet_row" + _category3_onchange_rownr + "_cat1id";
@@ -679,7 +689,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
         category3_onchange_callback: function (result, formContext) {
             try {
-                if (result == null || result.entities == null || result.entities[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Hittar ingen kategori 3");
                 }
                 else {
@@ -766,7 +776,12 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         //  Endeavor.OData_Querys.GetParentCategory2 - does not exist
         category3_onchange_get_cat1: function (_id) {
             try {
-                Endeavor.OData_Querys.GetParentCategory2(_id, Endeavor.Skanetrafiken.Incident.category3_sub_onchange_callback, Endeavor.Skanetrafiken.Incident.category3_sub_onchange_completed);
+                if (_id != null)
+                {
+                    var _idClean = Endeavor.formscriptfunctions.cleanIdField(_id);
+
+                    Endeavor.OData_Querys.GetParentCategory2(_idClean, Endeavor.Skanetrafiken.Incident.category3_sub_onchange_callback, Endeavor.Skanetrafiken.Incident.category3_sub_onchange_completed);
+                }
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Incident.category3_onchange_get_cat1\n\n" + e.message);
@@ -803,7 +818,8 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 var _id = Endeavor.formscriptfunctions.GetLookupid("cgi_letter_templateid", formContext);
 
                 if (_id != null) {
-                    Endeavor.OData_Querys.GetLetterTemplate(_id, formContext);
+                    var _idClean = Endeavor.formscriptfunctions.cleanIdField(_id);
+                    Endeavor.OData_Querys.GetLetterTemplate(_idClean, formContext);
                 }
                 else {
                     Endeavor.formscriptfunctions.SetValue("cgi_letter_title", "", formContext);
@@ -817,12 +833,12 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
         letter_template_onchange_callback: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Hittar inte brevmallen.");
                 }
                 else {
-                    var _title = result[0].cgi_title;
-                    var _letter_body = result[0].cgi_template_body;
+                    var _title = result.entities[0]["cgi_title"];
+                    var _letter_body = result.entities[0]["cgi_template_body"];
 
                     formContext.getAttribute("cgi_letter_title").setValue(_title);
                     formContext.getAttribute("cgi_letter_body").setValue(_letter_body);
@@ -866,12 +882,12 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
         getRGOLapiurl_callback: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Det finns ingen url definierad för RGOL!");
                 }
                 else {
 
-                    var _url = result[0].cgi_rgolurl;
+                    var _url = result.entities[0]["cgi_rgolurl"];
                     var rgolId = formContext.getAttribute("cgi_rgolissueid").getValue();
                     var rgolPath = "https://" + _url + "/web/index.html?data=issueId%3D" + rgolId + "%26environment%3D" + _url;
 
@@ -907,12 +923,12 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
         getRGOLapiurl_callbackNew: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Det finns ingen url definierad för RGOL!");
                 }
                 else {
 
-                    var _url = result[0].cgi_rgolurl;
+                    var _url = result.entities[0]["cgi_rgolurl"];
                     var splitUrl = _url.split("/");
                     _url = splitUrl[0];
 
@@ -941,13 +957,13 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
         casetypecode_onchange_callback: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Det finns ingen default kategori 3 definerad!");
                 }
                 else {
-                    var _id = result[0].cgi_category_detail3id.Id;
-                    var _logicalname = result[0].cgi_category_detail3id.LogicalName;
-                    var _name = result[0].cgi_category_detail3id.Name;
+                    var _id = result.entities[0]["_cgi_category_detail3id_value"];
+                    var _logicalname = result.entities[0]["_cgi_category_detail3id_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                    var _name = result.entities[0]["_cgi_category_detail3id_value@OData.Community.Display.V1.FormattedValue"];
                     Endeavor.formscriptfunctions.SetLookup("cgi_casdet_row1_cat3id", _logicalname, _id, _name, formContext);
                     Endeavor.Skanetrafiken.Incident.category3_onchange_nocontext("cgi_casdet_row1_cat3id", formContext);
                 }
@@ -970,9 +986,12 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 //START validera trafikinfo START
                 //fortsätt valideringen endast ifall användaren INTE explicit angivit att ingen trafikinformation ska registreras
                 if (formContext.getAttribute("cgi_notravelinfo").getValue() != 1) {
-
+                    if (caseid != null)
+                    {
+                        var caseidClean = Endeavor.formscriptfunctions.cleanIdField(caseid);
+                        Endeavor.OData_Querys.GetTravelInfoForCase(caseidClean, formContext);
+                    }
                     //fortsätt med valideringen endast om trafikinfo saknas
-                    Endeavor.OData_Querys.GetTravelInfoForCase(caseid, formContext);
                 }
                 //END validera trafikinfo END
 
@@ -1323,12 +1342,12 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
         openBombApp_callback: function (result, formContext) {
             try {
-                if (result == null || result[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Det finns ingen url definierad för BOMB!");
                 }
                 else {
                     var _features = "status=1,toolbar=1,location=1,menubar=1,directories=1,resizable=1,scrollbars=1";
-                    var _url = result[0].cgi_BOMBUrl;
+                    var _url = result.entities[0]["cgi_BOMBUrl"];
                     var _param = Endeavor.formscriptfunctions.GetValue("cgi_bombmobilenumber", formContext)
                     if (_param == null) {
                         alert("Inget mobilnummer är angivet!");

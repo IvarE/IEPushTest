@@ -157,7 +157,7 @@ Endeavor.OData_Querys = {
     //Returns category guid for level 1 and level 2
     GetParentCategory: function (_categoryid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_categorydetail", "?$select=_cgi_parentid_value,_cgi_parentid2_value&$filter=cgi_categorydetailid eq" + _categoryid).then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_categorydetail", "?$select=_cgi_parentid_value,_cgi_parentid2_value&$filter=cgi_categorydetailid eq " + _categoryid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.category2_onchange_callback(result, formContext);
                 },
@@ -175,7 +175,7 @@ Endeavor.OData_Querys = {
     //Returns category guid for level 1 and level 2
     GetParentCategory3: function (_categoryid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_categorydetail", "?$select=_cgi_parentid_value,_cgi_parentid2_value&$filter=cgi_categorydetailid eq" + _categoryid).then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_categorydetail", "?$select=_cgi_parentid_value,_cgi_parentid2_value&$filter=cgi_categorydetailid eq " + _categoryid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Incident.category3_onchange_callback(result, formContext);
                 },
@@ -429,7 +429,7 @@ Endeavor.OData_Querys = {
     //Get social sec number from incident.
     GetSocSecNumber: function (caseid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_soc_sec_number,cgi_rgol_socialsecuritynumber,cgi_iscompleted&$filter=incidentid eq" + caseid).then(
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_iscompleted,cgi_rgol_socialsecuritynumber,cgi_soc_sec_number&$filter=incidentid eq " + caseid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.setSocSecOnLoad_callback(result, formContext);
                 },
@@ -447,7 +447,7 @@ Endeavor.OData_Querys = {
     //Get mobilenumber from incident.
     GetMobileNumber: function (caseid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_customer_telephonenumber,cgi_rgol_telephonenumber,cgi_iscompleted&$filter=incidentid eq" + caseid).then(
+            Xrm.WebApi.retrieveMultipleRecords("incident", "?$select=cgi_customer_telephonenumber,cgi_rgol_telephonenumber,cgi_iscompleted&$filter=incidentid eq " + caseid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.setMobileNumber_callback(result, formContext);
                 },
@@ -465,7 +465,7 @@ Endeavor.OData_Querys = {
     //Get cgi_contact and cgi_account from incident.
     GetContactAccount: function (caseid, formContext) {
         try {
-            Xrm.WebApi.retrieveRecord("incident", caseid , "?$select=_cgi_contactid_value,_cgi_accountid_value").then(
+            Xrm.WebApi.retrieveRecord("incident", caseid, "?$select=_cgi_contactid_value,_cgi_accountid_value&$filter=incidentid eq " + caseid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.GetContactAccount_callback(result, formContext);
                 },
@@ -500,7 +500,7 @@ Endeavor.OData_Querys = {
 
     GetSecRolesNameRefund: function (userRoleId, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("role", "?$select=name&$filter=roleid eq" + userRoleId).then(
+            Xrm.WebApi.retrieveMultipleRecords("role", "?$select=name&$filter=roleid eq " + userRoleId).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.CheckUserRoleOnchange_callback(result, formContext);
                 },
@@ -520,7 +520,7 @@ Endeavor.OData_Querys = {
     // *** Start Queries used for entity email
     GetDefaultUserFromSetting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=cgi_userid&$filter=statecode eq 0 and cgi_validfrom le " + nowdate + "Z and (cgi_validto ge '" + nowdate + "Z or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=_cgi_userid_value&$filter=statecode eq 0 and cgi_validfrom le " + nowdate + "Z and (cgi_validto ge '" + nowdate + "Z or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Email.SetSenderEmailNoReply_callback(result, formContext);
                 },
@@ -540,7 +540,7 @@ Endeavor.OData_Querys = {
     // *** Start Queries used for contact
     GetSecRolesNameContact: function (userRoleId, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("role", "?$select=name&$filter=roleid eq" + userRoleId).then(
+            Xrm.WebApi.retrieveMultipleRecords("role", "?$select=name&$filter=roleid eq " + userRoleId).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Contact.checkIfUserHasRole_callback(result, formContext);
                 },
@@ -561,7 +561,7 @@ Endeavor.OData_Querys = {
 
     GetFilelinks: function (incidentId, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_filelink", "?$select=cgi_url&$filter=cgi_incidentid eq" + incidentId).then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_filelink", "?$select=cgi_url&$filter=_cgi_incidentid_value eq " + incidentId).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Email.set_filelinks_onchange_callback(result, formContext);
                 },
@@ -582,7 +582,7 @@ Endeavor.OData_Querys = {
 
     GetSecRolesNameArticle: function (userRoleId, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("role", "?$select=name&$filter=roleid eq" + userRoleId).then(
+            Xrm.WebApi.retrieveMultipleRecords("role", "?$select=name&$filter=roleid eq " + userRoleId).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.KBArticle.checkIfUserHasMarketingRole_callback(result, formContext);
                 },
