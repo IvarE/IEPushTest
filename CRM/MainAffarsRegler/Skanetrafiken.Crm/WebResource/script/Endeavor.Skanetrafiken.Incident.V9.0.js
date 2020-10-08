@@ -564,7 +564,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             try {
                 var formContext = executionContext.getFormContext();
 
-                var _attribute = formContext.getEventSource();
+                var _attribute = executionContext.getEventSource();
                 var _fieldName = _attribute.getName();
                 var _case_category = formContext.getControl(_fieldName);
 
@@ -625,7 +625,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             try {
                 var formContext = executionContext.getFormContext();
 
-                var _attribute = formContext.getEventSource();
+                var _attribute = executionContext.getEventSource();
                 var _fieldName = _attribute.getName();
                 Endeavor.Skanetrafiken.Incident.category3_onchange_nocontext(_fieldName, formContext);
             }

@@ -447,7 +447,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 var userIdClean = null;
                 if (userId != null)
                 {
-                    userIdClean = Endeavor.formscriptfunctions.cleanIdField(usedId);
+                    userIdClean = Endeavor.formscriptfunctions.cleanIdField(userId);
                 }
                 Endeavor.OData_Querys.GetRSID(userIdClean, formContext);
             }
@@ -530,9 +530,9 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                             if (_Currentcgi_accountid != null) {//Check that cgi_accountid is set
                                 //both cgi_refundtypeid and cgi_accountid is set. Then Check the following conditions
                                 if (_RefundTypeProductNotrequiredIdCache != null) { //ensure the setting is loaded
-                                    if ('{' + _RefundTypeProductNotrequiredIdCache.Id.toUpperCase() + '}' == _Currentcgi_refundtypeid) {//check if cgi_refundtypeid matches with setting
+                                    if ('{' + _RefundTypeProductNotrequiredIdCache.toUpperCase() + '}' == _Currentcgi_refundtypeid) {//check if cgi_refundtypeid matches with setting
                                         if (_RefundAccountIdCache != null) {//ensure refund account number is loaded for _Currentcgi_accountid
-                                            if (_Currentcgi_accountid == _RefundAccountId["cgi_refundaccountid"] || _Currentcgi_accountid == '{' + _RefundAccountIdCache["cgi_refundaccountid"].toUpperCase() + '}') {//ensure that the loaded refund account number matches _Currentcgi_accountid
+                                            if (_Currentcgi_accountid == _RefundAccountIdCache["cgi_refundaccountid"] || _Currentcgi_accountid == '{' + _RefundAccountIdCache["cgi_refundaccountid"].toUpperCase() + '}') {//ensure that the loaded refund account number matches _Currentcgi_accountid
                                                 if (_RefundAccountIdCache["cgi_account"].substring(0, 1) == "2")//check if cgi_account starts with 2
                                                     ProductRequired = false;
                                             }
@@ -753,8 +753,8 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     if (_caseorigincode == 285050007 && _casetypecode == 285050003 && _iscompleted == false) {
 
                         var _id = result.entities[0]["_cgi_refundtypes_value"];
-                        var _logicalname = result.entities[0]["_cgi_refundtypeid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
-                        var _name = result.entities[0]["_cgi_refundtypeid_value@OData.Community.Display.V1.FormattedValue"];
+                        var _logicalname = result.entities[0]["_cgi_refundtypes_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                        var _name = result.entities[0]["_cgi_refundtypes_value@OData.Community.Display.V1.FormattedValue"];
                         Endeavor.formscriptfunctions.SetLookup("cgi_refundtypeid", _logicalname, _id, _name, formContext);
                         Endeavor.Skanetrafiken.cgi_refund.refund_Onload(formContext);
 
@@ -779,9 +779,9 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                             formContext.getAttribute("cgi_amount").setValue(_rgolclaimedamountdecimal_1);
                         }
 
-                        var _id = result.entities[0]["_cgi_reimbursementformid_value"];
-                        var _logicalname = result.entities[0]["_cgi_reimbursementformid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
-                        var _name = result.entities[0]["_cgi_reimbursementformid_value@OData.Community.Display.V1.FormattedValue"];
+                        var _id = result.entities[0]["_cgi_refundreimbursementform_value"];
+                        var _logicalname = result.entities[0]["_cgi_refundreimbursementform_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                        var _name = result.entities[0]["_cgi_refundreimbursementform_value@OData.Community.Display.V1.FormattedValue"];
                         Endeavor.formscriptfunctions.SetLookup("cgi_reimbursementformid", _logicalname, _id, _name, formContext);
 
                         Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnChange(null,formContext);
@@ -1252,7 +1252,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
             try {
                 var _refundtypeid = Endeavor.formscriptfunctions.GetLookupid("cgi_refundtypeid", formContext);
                 if (_refundtypeid != null) {
-                    var refundidClean = Endeavor.formscriptfunctions.cleanIdField(refundidClean);
+                    var refundidClean = Endeavor.formscriptfunctions.cleanIdField(_refundtypeid);
                     Endeavor.OData_Querys.GetRefundSettingOnLoad(refundidClean, formContext);
                 }
                 else {
@@ -2268,7 +2268,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
                 if (_caseid != null)
                 {
-                    _caseidClean = Endeavor.formscriptfunctions.cleanIdField(_caseidClean);
+                    _caseidClean = Endeavor.formscriptfunctions.cleanIdField(_caseid);
                 }
                 Endeavor.OData_Querys.GetBicIban(_caseidClean, formContext);
             }
@@ -2603,8 +2603,9 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
             try {
 
                 var formContext = executionContext.getFormContext();
+                var formContext = executionContext.getFormContext();
 
-                var phoneNumberStr = formContext.getEventSource();
+                var phoneNumberStr = executionContext.getEventSource();
                 var control = formContext.getControl(phoneNumberStr.getName());
 
                 // Verify that the field is valid
