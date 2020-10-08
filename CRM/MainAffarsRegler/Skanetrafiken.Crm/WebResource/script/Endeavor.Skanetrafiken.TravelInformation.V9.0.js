@@ -438,21 +438,38 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                 var line = lines[i];
 
+                var name = line.getElementsByTagName("LineDesignation")[0].firstChild.nodeValue;
+                var id = line.getElementsByTagName("LineGid")[0].firstChild.nodeValue;
+
                 var isLineActive = true;
-                if (line.getElementsByTagName("StopExistsUptoDate")[0] && line.getElementsByTagName("StopExistsUptoDate")[0].firstChild.nodeValue) {
-                    var date = new Date(line.getElementsByTagName("StopExistsUptoDate")[0].firstChild.nodeValue);
+                if (line.getElementsByTagName("LineExistsUpToDate")[0]) {
+                    var LineExistsUptoDate = new Date(line.getElementsByTagName("LineExistsUpToDate")[0].firstChild.nodeValue);
+
+                    if (timestamp < LineExistsUptoDate) {
+                        for (var k = 0; k < options.length; k++) {
+                            if (id === options[k].value) {
+                                options.splice(k, 1);
+                                options.splice(k, 1);
+                            }
+                        }
+                        isLineActive = true;
+                    }
+                    else {
+                        isLineActive = false;
+                    }
 
                     //debugger;
                 }
 
                 if (isLineActive) {
-                    var name = line.getElementsByTagName("LineDesignation")[0].firstChild.nodeValue;
-                    var id = line.getElementsByTagName("LineGid")[0].firstChild.nodeValue;
 
                     var option = { name: name, value: id };
 
                     options.push(option);
                 }
+            }
+            if (options.length < 1 || options == undefined) {
+                Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog("Staden saknar aktiva linjer för angivet datum.");
             }
 
             fromlist.innerHTML = '<option value="" selected disabled hidden >Välj</option>';
@@ -513,16 +530,57 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 var stopareas = line.getElementsByTagName("StopAreas")[0].childNodes;
                 for (var i = 0; i < stopareas.length; i++) {
 
+
                     var stoparea = stopareas[i];
+                    var isFoundInfromoptions = true;
 
                     var name = stoparea.getElementsByTagName("StopAreaName")[0].firstChild.nodeValue;
                     var id = stoparea.getElementsByTagName("StopAreaGid")[0].firstChild.nodeValue;
 
-                    var fromoption = { name: name, value: id };
-                    fromoptions.push(fromoption);
+                    if (stoparea.getElementsByTagName("StopExistsUptoDate")[0] == undefined) {
 
-                    var tooption = { name: name, value: id };
-                    tooptions.push(tooption);
+                        //add first value to array
+                        if (fromoptions.length < 1 || fromoptions == undefined) {
+                            isFoundInfromoptions = false;
+                        }
+                        else { // check if stoparea is pushed already
+                            for (var j = 0; j < fromoptions.length; j++) {
+                                if (id === fromoptions[j].value) {
+                                    isFoundInfromoptions = true;
+                                }
+                                else {
+                                    isFoundInfromoptions = false;
+                                }
+                            }
+                        }
+
+                        if (!isFoundInfromoptions) {
+                            var fromoption = { name: name, value: id };
+                            fromoptions.push(fromoption);
+
+                            var tooption = { name: name, value: id };
+                            tooptions.push(tooption);
+                        }
+                    }
+                    else {
+                        //var stopExistsUptoDate = stoparea.getElementsByTagName("StopAreaName")[0].firstChild.nodeValue;
+                        var stopExistsUptoDate = new Date(stoparea.getElementsByTagName("StopExistsUptoDate")[0].firstChild.nodeValue);
+
+                        if (timestamp < stopExistsUptoDate) {
+                            for (var k = 0; k < fromoptions.length; k++) {
+                                if (id === fromoptions[k].value) {
+                                    fromoptions.splice(k, 1);
+                                    tooptions.splice(k, 1);
+                                }  
+                            }
+                            var fromoption = { name: name, value: id };
+                            fromoptions.push(fromoption);
+
+                            var tooption = { name: name, value: id };
+                            tooptions.push(tooption);
+                        }
+
+                    }
                 }
 
                 Endeavor.Skanetrafiken.TravelInformation.stopareas = fromoptions;
