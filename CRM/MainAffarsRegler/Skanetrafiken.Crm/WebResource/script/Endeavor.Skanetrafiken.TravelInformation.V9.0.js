@@ -1,14 +1,4 @@
-﻿/*! head.load - v1.0.3 */
-(function (n, t) { "use strict"; function w() { } function u(n, t) { if (n) { typeof n == "object" && (n = [].slice.call(n)); for (var i = 0, r = n.length; i < r; i++) t.call(n, n[i], i) } } function it(n, i) { var r = Object.prototype.toString.call(i).slice(8, -1); return i !== t && i !== null && r === n } function s(n) { return it("Function", n) } function a(n) { return it("Array", n) } function et(n) { var i = n.split("/"), t = i[i.length - 1], r = t.indexOf("?"); return r !== -1 ? t.substring(0, r) : t } function f(n) { (n = n || w, n._done) || (n(), n._done = 1) } function ot(n, t, r, u) { var f = typeof n == "object" ? n : { test: n, success: !t ? !1 : a(t) ? t : [t], failure: !r ? !1 : a(r) ? r : [r], callback: u || w }, e = !!f.test; return e && !!f.success ? (f.success.push(f.callback), i.load.apply(null, f.success)) : e || !f.failure ? u() : (f.failure.push(f.callback), i.load.apply(null, f.failure)), i } function v(n) { var t = {}, i, r; if (typeof n == "object") for (i in n) !n[i] || (t = { name: i, url: n[i] }); else t = { name: et(n), url: n }; return (r = c[t.name], r && r.url === t.url) ? r : (c[t.name] = t, t) } function y(n) { n = n || c; for (var t in n) if (n.hasOwnProperty(t) && n[t].state !== l) return !1; return !0 } function st(n) { n.state = ft; u(n.onpreload, function (n) { n.call() }) } function ht(n) { n.state === t && (n.state = nt, n.onpreload = [], rt({ url: n.url, type: "cache" }, function () { st(n) })) } function ct() { var n = arguments, t = n[n.length - 1], r = [].slice.call(n, 1), f = r[0]; return (s(t) || (t = null), a(n[0])) ? (n[0].push(t), i.load.apply(null, n[0]), i) : (f ? (u(r, function (n) { s(n) || !n || ht(v(n)) }), b(v(n[0]), s(f) ? f : function () { i.load.apply(null, r) })) : b(v(n[0])), i) } function lt() { var n = arguments, t = n[n.length - 1], r = {}; return (s(t) || (t = null), a(n[0])) ? (n[0].push(t), i.load.apply(null, n[0]), i) : (u(n, function (n) { n !== t && (n = v(n), r[n.name] = n) }), u(n, function (n) { n !== t && (n = v(n), b(n, function () { y(r) && f(t) })) }), i) } function b(n, t) { if (t = t || w, n.state === l) { t(); return } if (n.state === tt) { i.ready(n.name, t); return } if (n.state === nt) { n.onpreload.push(function () { b(n, t) }); return } n.state = tt; rt(n, function () { n.state = l; t(); u(h[n.name], function (n) { f(n) }); o && y() && u(h.ALL, function (n) { f(n) }) }) } function at(n) { n = n || ""; var t = n.split("?")[0].split("."); return t[t.length - 1].toLowerCase() } function rt(t, i) { function e(t) { t = t || n.event; u.onload = u.onreadystatechange = u.onerror = null; i() } function o(f) { f = f || n.event; (f.type === "load" || /loaded|complete/.test(u.readyState) && (!r.documentMode || r.documentMode < 9)) && (n.clearTimeout(t.errorTimeout), n.clearTimeout(t.cssTimeout), u.onload = u.onreadystatechange = u.onerror = null, i()) } function s() { if (t.state !== l && t.cssRetries <= 20) { for (var i = 0, f = r.styleSheets.length; i < f; i++) if (r.styleSheets[i].href === u.href) { o({ type: "load" }); return } t.cssRetries++; t.cssTimeout = n.setTimeout(s, 250) } } var u, h, f; i = i || w; h = at(t.url); h === "css" ? (u = r.createElement("link"), u.type = "text/" + (t.type || "css"), u.rel = "stylesheet", u.href = t.url, t.cssRetries = 0, t.cssTimeout = n.setTimeout(s, 500)) : (u = r.createElement("script"), u.type = "text/" + (t.type || "javascript"), u.src = t.url); u.onload = u.onreadystatechange = o; u.onerror = e; u.async = !1; u.defer = !1; t.errorTimeout = n.setTimeout(function () { e({ type: "timeout" }) }, 7e3); f = r.head || r.getElementsByTagName("head")[0]; f.insertBefore(u, f.lastChild) } function vt() { for (var t, u = r.getElementsByTagName("script"), n = 0, f = u.length; n < f; n++) if (t = u[n].getAttribute("data-headjs-load"), !!t) { i.load(t); return } } function yt(n, t) { var v, p, e; return n === r ? (o ? f(t) : d.push(t), i) : (s(n) && (t = n, n = "ALL"), a(n)) ? (v = {}, u(n, function (n) { v[n] = c[n]; i.ready(n, function () { y(v) && f(t) }) }), i) : typeof n != "string" || !s(t) ? i : (p = c[n], p && p.state === l || n === "ALL" && y() && o) ? (f(t), i) : (e = h[n], e ? e.push(t) : e = h[n] = [t], i) } function e() { if (!r.body) { n.clearTimeout(i.readyTimeout); i.readyTimeout = n.setTimeout(e, 50); return } o || (o = !0, vt(), u(d, function (n) { f(n) })) } function k() { r.addEventListener ? (r.removeEventListener("DOMContentLoaded", k, !1), e()) : r.readyState === "complete" && (r.detachEvent("onreadystatechange", k), e()) } var r = n.document, d = [], h = {}, c = {}, ut = "async" in r.createElement("script") || "MozAppearance" in r.documentElement.style || n.opera, o, g = n.head_conf && n.head_conf.head || "head", i = n[g] = n[g] || function () { i.ready.apply(null, arguments) }, nt = 1, ft = 2, tt = 3, l = 4, p; if (r.readyState === "complete") e(); else if (r.addEventListener) r.addEventListener("DOMContentLoaded", k, !1), n.addEventListener("load", e, !1); else { r.attachEvent("onreadystatechange", k); n.attachEvent("onload", e); p = !1; try { p = !n.frameElement && r.documentElement } catch (wt) { } p && p.doScroll && function pt() { if (!o) { try { p.doScroll("left") } catch (t) { n.clearTimeout(i.readyTimeout); i.readyTimeout = n.setTimeout(pt, 50); return } e() } }() } i.load = i.js = ut ? lt : ct; i.test = ot; i.ready = yt; i.ready(r, function () { y() && u(h.ALL, function (n) { f(n) }); i.feature && i.feature("domloaded", !0) }) })(window);
-/*
-//# sourceMappingURL=head.load.min.js.map
-*/
-
-/*
-Endeavor TravelInformation functions
-*/
-
-if (typeof (Endeavor) == "undefined") {
+﻿if (typeof (Endeavor) == "undefined") {
 
     var Endeavor = {
     };
@@ -36,79 +26,13 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
         saveInProgress: false,
         response: null,
 
-        alertCustomDialog: function (msgText) {
-
-            var message = { confirmButtonLabel: "Ok", text: msgText };
-            var alertOptions = { height: 150, width: 280 };
-
-            Xrm.Navigation.openAlertDialog(message, alertOptions).then(
-                function success(result) {
-                    console.log("Alert dialog closed");
-                },
-                function (error) {
-                    console.log(error.message);
-                }
-            );
-        },
-
         onLoad: function () {
-            // clear notifications? Xrm.Page.ui.clearFormNotification(Endeavor.Nibe.LoyaltyProgramRow._loadNotificationHolder);
             try {
-                Endeavor.Skanetrafiken.TravelInformation.headLoad(Endeavor.Skanetrafiken.TravelInformation.loadSuccessCallback);
+                Endeavor.Skanetrafiken.TravelInformation.getContractors();
+                Endeavor.Skanetrafiken.TravelInformation.getOrganisationalUnits();
             } catch (e) {
-                Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog(e.message);
+                Endeavor.formscriptfunctions.AlertCustomDialog(e.message);
             }
-        },
-
-        headLoad: function () {
-            var jsUrls = [];
-            var jsUrl;
-
-            var globalContext = Xrm.Utility.getGlobalContext();
-
-            if (typeof Sdk == "undefined" || typeof Sdk.ed_GetLineDetailsRequest == "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.ed_GetLineDetails.min.js";
-                jsUrls.push(jsUrl);
-            }
-
-            if (typeof Sdk == "undefined" || typeof Sdk.ed_GetContractorsRequest == "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.ed_GetContractors.min.js";
-                jsUrls.push(jsUrl);
-            }
-
-            if (typeof Sdk == "undefined" || typeof Sdk.ed_GetOrganisationalUnitsRequest == "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.ed_GetOrganisationalUnits.min.js";
-                jsUrls.push(jsUrl);
-            }
-
-            if (typeof Sdk == "undefined" || typeof Sdk.ed_GetDirectJourneysRequest == "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.ed_GetDirectJourneys.min.js";
-                jsUrls.push(jsUrl);
-            }
-
-            if (typeof Sdk == "undefined" || typeof Sdk.ed_GetDirectJourneysRequest == "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.ed_GetServiceJourney.min.js";
-                jsUrls.push(jsUrl);
-            }
-
-            if (typeof head.load != "function") {
-                console.error("head.load function is not defined.");
-                throw new Error("head.load function is not defined.");
-            }
-
-            if (jsUrls.length > 0) {
-                // Load required JavaScripts
-                head.load(jsUrls, Endeavor.Skanetrafiken.TravelInformation.loadSuccessCallback);
-            }
-            else {
-                Endeavor.Skanetrafiken.TravelInformation.loadSuccessCallback();
-            }
-        },
-
-        loadSuccessCallback: function () {
-            console.log("Everything loaded!");
-            Endeavor.Skanetrafiken.TravelInformation.getContractors();
-            Endeavor.Skanetrafiken.TravelInformation.getOrganisationalUnits();
         },
 
         setDocument: function (document) {
@@ -172,17 +96,12 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 var parsererror = responsedoc.getElementsByTagName('parsererror');
                 var errormessage = responsedoc.getElementsByTagName('ErrorMessage');
 
-                if (parsererror && parsererror.length > 0) {
-                    debugger;
-                    Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog("Get Direct Journeys service is unavailable. Please contact your systems administrator.");
-                }
-                else if (errormessage && errormessage.length) {
-                    debugger;
-                    Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog(errormessage);
-                }
-                else {
+                if (parsererror && parsererror.length > 0)
+                    Endeavor.formscriptfunctions.AlertCustomDialog("Get Direct Journeys service is unavailable. Please contact your systems administrator.");
+                else if (errormessage && errormessage.length)
+                    Endeavor.formscriptfunctions.AlertCustomDialog(errormessage);
+                else
                     Endeavor.Skanetrafiken.TravelInformation.populateTravelInformation(formContext, transport, city, responsedoc);
-                }
             }
             else if ((transport == "REGIONBUS" || transport == "STRADBUS") && line) {
                 // GetContractors called onLoad, i.e. no request made in method populateContractorInformation
@@ -200,11 +119,9 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                     var contractor = contractorsdoc.firstChild.childNodes[i];
 
-                    if (gid == contractor.getAttribute("Gid")) {
+                    if (gid == contractor.getAttribute("Gid"))
                         return Endeavor.Skanetrafiken.TravelInformation.getOrganisationFromId(contractor.getAttribute("IsOrganisationId"));
-                    }
                 }
-
             }
 
             return "";
@@ -227,9 +144,8 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                         var organisation = organisationsdoc.firstChild.childNodes[i];
 
-                        if (lineOpCode == organisation.getAttribute("Code")) {
+                        if (lineOpCode == organisation.getAttribute("Code"))
                             return organisation;
-                        }
                     }
                 }
             }
@@ -247,11 +163,9 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                     var organisation = organisationsdoc.firstChild.childNodes[i];
 
-                    if (id == organisation.getAttribute("Id")) {
+                    if (id == organisation.getAttribute("Id"))
                         return organisation.getAttribute("Name");
-                    }
                 }
-
             }
 
             return "";
@@ -291,14 +205,10 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             var parsererror = Endeavor.Skanetrafiken.TravelInformation.response.getElementsByTagName('parsererror');
             var errormessage = Endeavor.Skanetrafiken.TravelInformation.response.getElementsByTagName('ErrorMessage');
 
-            if (parsererror && parsererror.length > 0) {
-                debugger;
-                Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog("TravelInformationDB is unavailable. Please contact your systems administrator.");
-            }
-            else if (errormessage && errormessage.length > 0) {
-                debugger;
+            if (parsererror && parsererror.length > 0)
+                Endeavor.formscriptfunctions.AlertCustomDialog("TravelInformationDB is unavailable. Please contact your systems administrator.");
+            else if (errormessage && errormessage.length > 0)
                 Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog(errormessage[0]);
-            }
             else if (value == "TRAIN") {
                 citylist.style.visibility = "hidden";
                 linelist.style.visibility = "hidden";
@@ -326,10 +236,8 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
             var error = trainresponse.getElementsByTagName('ErrorMessage');
 
-            if (error.length > 0) {
-                debugger;
-                Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog(error[0]);
-            }
+            if (error.length > 0)
+                Endeavor.formscriptfunctions.AlertCustomDialog(error[0]);
             else {
 
                 var fromlist = document.getElementById('fromlist');
@@ -360,10 +268,8 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
             var error = regionbusresponse.getElementsByTagName('ErrorMessage');
 
-            if (error.length > 0) {
-                debugger;
-                Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog(error[0]);
-            }
+            if (error.length > 0)
+                Endeavor.formscriptfunctions.AlertCustomDialog(error[0]);
             else {
 
                 var linelist = document.getElementById('linelist');
@@ -392,10 +298,8 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
             var error = stradbusresponse.getElementsByTagName('ErrorMessage');
 
-            if (error.length > 0) {
-                debugger;
-                Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog(error[0]);
-            }
+            if (error.length > 0)
+                Endeavor.formscriptfunctions.AlertCustomDialog(error[0]);
             else {
 
                 var citylist = document.getElementById('citylist');
@@ -426,13 +330,12 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
             var fromlist = document.getElementById("fromlist");
             var tolist = document.getElementById("tolist");
-
             var linelist = document.getElementById("linelist");
+            var citylist = document.getElementById("citylist");
+
             var options = [];
 
-            var citylist = document.getElementById("citylist");
             var cityid = citylist.value; // WHAT IF CITY IS NOT SELECTED? POSSIBLE? NO?
-
             var city = Endeavor.Skanetrafiken.TravelInformation.getCity(cityid);
 
             var lines = city.getElementsByTagName("Lines")[0].childNodes;
@@ -456,23 +359,18 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                         }
                         isLineActive = true;
                     }
-                    else {
+                    else
                         isLineActive = false;
-                    }
-
-                    //debugger;
                 }
 
                 if (isLineActive) {
 
                     var option = { name: name, value: id };
-
                     options.push(option);
                 }
             }
-            if (options.length < 1 || options == undefined) {
-                Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog("Staden saknar aktiva linjer för angivet datum.");
-            }
+            if (options.length < 1 || options == undefined)
+                Endeavor.formscriptfunctions.AlertCustomDialog("Staden saknar aktiva linjer för angivet datum.");
 
             fromlist.innerHTML = '<option value="" selected disabled hidden >Välj</option>';
             tolist.innerHTML = '<option value="" selected disabled hidden >Välj</option>';
@@ -486,9 +384,8 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             if (cities) {
 
                 for (var i = 0; i < cities.length; i++) {
-                    if (cityGid == cities[i].value) {
+                    if (cityGid == cities[i].value)
                         return cities[i].name;
-                    }
                 }
             }
 
@@ -502,9 +399,8 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             if (stopareas) {
 
                 for (var i = 0; i < stopareas.length; i++) {
-                    if (areaGid == stopareas[i].value) {
+                    if (areaGid == stopareas[i].value)
                         return stopareas[i].name;
-                    }
                 }
             }
 
@@ -533,7 +429,6 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             if (line.getElementsByTagName("StopAreas")[0]) {
                 var stopareas = line.getElementsByTagName("StopAreas")[0].childNodes;
                 for (var i = 0; i < stopareas.length; i++) {
-
 
                     var stoparea = stopareas[i];
                     var isFoundInfromoptions = true;
@@ -575,7 +470,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                 if (id === fromoptions[k].value) {
                                     fromoptions.splice(k, 1);
                                     tooptions.splice(k, 1);
-                                }  
+                                }
                             }
                             var fromoption = { name: name, value: id };
                             fromoptions.push(fromoption);
@@ -583,7 +478,6 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                             var tooption = { name: name, value: id };
                             tooptions.push(tooption);
                         }
-
                     }
                 }
 
@@ -591,9 +485,8 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 Endeavor.Skanetrafiken.TravelInformation.populateSelectionList(fromlist, fromoptions, true);
                 Endeavor.Skanetrafiken.TravelInformation.populateSelectionList(tolist, tooptions, true);
             }
-            else {
-                Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog("Linjen saknar hållplatser.");
-            }
+            else
+                Endeavor.formscriptfunctions.AlertCustomDialog("Linjen saknar hållplatser.");
         },
 
         setFrom: function () {
@@ -604,7 +497,6 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             if (transporttype == "TRAIN") {
 
                 var fromid = document.getElementById("fromlist").value;
-
                 var tolist = document.getElementById("tolist");
                 var options = [];
 
@@ -620,9 +512,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                     var id = stoparea.getElementsByTagName("StopAreaGid")[0].firstChild.nodeValue;
 
                     var tooption = { name: name, value: id };
-
                     options.push(tooption);
-
                 }
 
                 Endeavor.Skanetrafiken.TravelInformation.populateSelectionList(tolist, options, true);
@@ -682,10 +572,10 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 var city = cities[i];
                 var id = city.getElementsByTagName("ZoneId")[0].firstChild.nodeValue;
 
-                if (id == cityid) {
+                if (id == cityid)
                     returncity = city;
-                }
             }
+
             return returncity;
         },
 
@@ -696,12 +586,10 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
             var city;
 
-            if (cityid) {   // OM CITYID EJ ANGIVET SÅ ANVÄNDS REGION ISTÄLLET...
+            if (cityid)   // OM CITYID EJ ANGIVET SÅ ANVÄNDS REGION ISTÄLLET...
                 city = Endeavor.Skanetrafiken.TravelInformation.getCity(cityid);
-            }
-            else {
+            else
                 city = response;
-            }
 
             var lines = city.getElementsByTagName("Lines")[0].childNodes;
             for (var i = 0; i < lines.length; i++) {
@@ -709,14 +597,15 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 var line = lines[i];
                 var id = line.getElementsByTagName("LineGid")[0].firstChild.nodeValue;
 
-                if (id == lineid) {
+                if (id == lineid)
                     returnline = line;
-                }
             }
+
             return returnline;
         },
 
         getStopArea: function (stopareaid) {
+
             var response = Endeavor.Skanetrafiken.TravelInformation.response;
             var returnarea = null;
 
@@ -726,10 +615,10 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 var stoparea = stopareas[i];
                 var id = stoparea.getElementsByTagName("StopAreaGid")[0].firstChild.nodeValue;
 
-                if (id == stopareaid) {
+                if (id == stopareaid)
                     returnarea = stoparea;
-                }
             }
+
             return returnarea;
         },
 
@@ -761,7 +650,6 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 }
             }
 
-            debugger;
             var organisation = Endeavor.Skanetrafiken.TravelInformation.getOrganisationFromLine(city, line);
             var contractor = organisation != "" ? organisation.getAttribute("Name") : "";
             if (organisation == "" || organisation == null)
@@ -778,7 +666,6 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 line: line,
                 contractorName: contractor
             };
-
 
             var savebutton = document.createElement("BUTTON");
             savebutton.style = "font-weight: bold; background-color: Transparent; width: 100%; height: 100%; cursor:pointer";
@@ -842,7 +729,6 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 }
             }
 
-            debugger;
             for (var i = 0; i < directjourneys.length; i++) {
 
                 var directjourney = directjourneys[i];
@@ -880,9 +766,8 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                 var contractorGid = getElementValue(directjourney, "ContractorGid");
                 var contractor = Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(contractorGid);
-                if (!contractor) {
+                if (!contractor)
                     contractor = "-";
-                }
 
                 cell = journeyrow.insertCell();
                 cell.innerHTML = contractor;
@@ -913,7 +798,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                         return "-";
                     }
                 }
-                
+
                 if (!Endeavor.Skanetrafiken.TravelInformation.saveInProgress) {
 
                     var document = Endeavor.Skanetrafiken.TravelInformation.document;
@@ -937,19 +822,14 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                     var parsererror = null;
                     var errormessage = null;
 
-                    if (parsererror && parsererror.length > 0) {
-                        debugger;
-                        Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog("Contractors service is unavailable. Please contact your systems administrator.");
-                    }
-                    else if (errormessage && errormessage.length) {
-                        debugger;
-                        Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog(errormessage);
-                    }
+                    if (parsererror && parsererror.length > 0)
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Contractors service is unavailable. Please contact your systems administrator.");
+                    else if (errormessage && errormessage.length)
+                        Endeavor.formscriptfunctions.AlertCustomDialog(errormessage);
                     else {
 
                         var entity = null;
 
-                        debugger;
                         if (saveEntity.transporttype == "TRAIN") {
 
                             var travelinformation = ((new Date()).toISOString().substring(0, 19)).replace("T", " ") + " => " + getElementValue(saveEntity.directjourney, "DirectionOfLineDescription");
@@ -1083,7 +963,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                         }
 
                         if (entity == null)
-                            Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog("Kunde inte skapa Reseinformation. Vänligen kontakta admin.");
+                            Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte skapa Reseinformation. Vänligen kontakta admin.");
 
                         /* Do the create*/
                         if (formContext.getAttribute("statecode") && formContext.getAttribute("statecode").getValue() == 0) {
@@ -1096,14 +976,13 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                 },
                                 function (error) {
                                     console.log(error.message);
-                                    Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog("An error occurred when saving Travel Information: " + errorHandler.message);
+                                    Endeavor.formscriptfunctions.AlertCustomDialog("An error occurred when saving Travel Information: " + errorHandler.message);
                                     Endeavor.Skanetrafiken.TravelInformation.saveInProgress = false;
                                 }
                             );
                         }
-                        else {
-                            Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog("Kan inte spara resa för avslutat ärende.");
-                        }
+                        else
+                            Endeavor.formscriptfunctions.AlertCustomDialog("Kan inte spara resa för avslutat ärende.");
                     }
                 }
             }
@@ -1121,11 +1000,10 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                             Endeavor.Skanetrafiken.TravelInformation.populateSavedTravelInformationTable(formContext);
                             Endeavor.Skanetrafiken.TravelInformation.saveInProgress = false;
-
                         },
                         function (errorHandler) {
                             console.log(error.message);
-                            Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog("An error occurred when deleting Travel Information: " + errorHandler.message);
+                            Endeavor.formscriptfunctions.AlertCustomDialog("An error occurred when deleting Travel Information: " + errorHandler.message);
                             Endeavor.Skanetrafiken.TravelInformation.saveInProgress = false;
                         }
                     );
@@ -1173,9 +1051,9 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                     },
                     function (error) {
                         console.log(error.message);
-                        Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog(error.message);
+                        Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
                     }
-                ); 
+                );
             }
         },
 
@@ -1191,17 +1069,12 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             var parsererror = responsedoc.getElementsByTagName('parsererror');
             var errormessage = responsedoc.getElementsByTagName('ErrorMessage');
 
-            if (parsererror && parsererror.length > 0) {
-                debugger;
-                Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog("Contractors service is unavailable. Please contact your systems administrator.");
-            }
-            else if (errormessage && errormessage.length) {
-                debugger;
-                Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog(errormessage);
-            }
-            else {
+            if (parsererror && parsererror.length > 0)
+                Endeavor.formscriptfunctions.AlertCustomDialog("Contractors service is unavailable. Please contact your systems administrator.");
+            else if (errormessage && errormessage.length)
+                Endeavor.formscriptfunctions.AlertCustomDialog(errormessage);
+            else
                 Endeavor.Skanetrafiken.TravelInformation.contractors = responsedoc;
-            }
         },
 
         getOrganisationalUnits: function () {
@@ -1216,40 +1089,33 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             var parsererror = responsedoc.getElementsByTagName('parsererror');
             var errormessage = responsedoc.getElementsByTagName('ErrorMessage');
 
-            if (parsererror && parsererror.length > 0) {
-                debugger;
-                Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog("Organisations service is unavailable. Please contact your systems administrator.");
-            }
-            else if (errormessage && errormessage.length) {
-                debugger;
-                Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog(errormessage);
-            }
-            else {
+            if (parsererror && parsererror.length > 0)
+                Endeavor.formscriptfunctions.AlertCustomDialog("Organisations service is unavailable. Please contact your systems administrator.");
+            else if (errormessage && errormessage.length)
+                Endeavor.formscriptfunctions.AlertCustomDialog(errormessage);
+            else
                 Endeavor.Skanetrafiken.TravelInformation.organisations = responsedoc;
-            }
         },
 
         setDisplayTextTrain: function (entity) {
 
-            debugger;
             var tour = "Linje: " + entity.cgi_journeynumber;
 
             var startplanned = entity.cgi_startplanned;
-            if (startplanned && startplanned.length > 16) {
+            if (startplanned && startplanned.length > 16)
                 startplanned = startplanned.substring(0, 16).replace("T", " ");
-            }
+
             var arrivalplanned = entity.cgi_arivalplanned;
-            if (arrivalplanned && arrivalplanned.length > 16) {
+            if (arrivalplanned && arrivalplanned.length > 16)
                 arrivalplanned = arrivalplanned.substring(0, 16).replace("T", " ");
-            }
+
             var startactual = entity.cgi_startactual;
-            if (startactual && startactual.length > 16) {
+            if (startactual && startactual.length > 16)
                 startactual = startactual.substring(0, 16).replace("T", " ");
-            }
+
             var arrivalactual = entity.cgi_arivalactual;
-            if (arrivalactual && arrivalactual.length > 16) {
+            if (arrivalactual && arrivalactual.length > 16)
                 arrivalactual = arrivalactual.substring(0, 16).replace("T", " ");
-            }
 
             var line = "Tur: " + startplanned + " [" + startactual + "] " + entity.cgi_start + " - " + arrivalplanned + " [" + arrivalactual + "] " + entity.cgi_stop;
             var contractor = "Entreprenör: " + entity.cgi_contractor;
@@ -1259,28 +1125,26 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
         setDisplayTextRegionbus: function (entity) {
 
-            debugger;
             var line = Endeavor.Skanetrafiken.TravelInformation.currentLine;
 
             var trafik = "Trafikslag: " + line.getElementsByTagName("LineName")[0].firstChild.nodeValue;
             var tour = "Linje: " + entity.cgi_transport + " [" + entity.cgi_journeynumber + "] (" + entity.cgi_directiontext + ")";
 
             var startplanned = entity.cgi_startplanned;
-            if (startplanned && startplanned.length > 16) {
+            if (startplanned && startplanned.length > 16)
                 startplanned = startplanned.substring(0, 16).replace("T", " ");
-            }
+
             var arrivalplanned = entity.cgi_arivalplanned;
-            if (arrivalplanned && arrivalplanned.length > 16) {
+            if (arrivalplanned && arrivalplanned.length > 16)
                 arrivalplanned = arrivalplanned.substring(0, 16).replace("T", " ");
-            }
+
             var startactual = entity.cgi_startactual;
-            if (startactual && startactual.length > 16) {
+            if (startactual && startactual.length > 16)
                 startactual = startactual.substring(0, 16).replace("T", " ");
-            }
+
             var arrivalactual = entity.cgi_arivalactual;
-            if (arrivalactual && arrivalactual.length > 16) {
+            if (arrivalactual && arrivalactual.length > 16)
                 arrivalactual = arrivalactual.substring(0, 16).replace("T", " ");
-            }
 
             var line = "Tur: " + startplanned + " [" + startactual + "] " + entity.cgi_start + " - " + arrivalplanned + " [" + arrivalactual + "] " + entity.cgi_stop;
             var contractor = "Entreprenör: " + entity.cgi_contractor;
@@ -1290,7 +1154,6 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
         setDisplayTextCitybus: function (entity) {
 
-            debugger;
             var line = Endeavor.Skanetrafiken.TravelInformation.currentLine;
 
             var trafik = "Trafikslag: " + line.getElementsByTagName("LineName")[0].firstChild.nodeValue;
@@ -1346,8 +1209,6 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                     timestamp_label.value = new Date();
                     return;
                 }
-
-                debugger;
 
                 var year = null;
                 var month = null;
@@ -1407,23 +1268,18 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                     }
                 }
 
-                else if (actionDatumVal != null && actionDatumVal != "") {
+                else if (actionDatumVal != null && actionDatumVal != "")
                     dateTime = actionDatumVal;
-                }
-
-                else if (arrivalVal != null && arrivalVal != "") {
+                else if (arrivalVal != null && arrivalVal != "")
                     dateTime = arrivalVal;
-                }
-
                 else
                     dateTime = new Date();
 
                 timestamp_label.value = dateTime;
 
             } catch (e) {
-                Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog("Exception caught in Endeavor.Skanetrafiken.TravelInformation.getCaseActionDate. Error: " + e.message);
+                Endeavor.formscriptfunctions.AlertCustomDialog("Exception caught in Endeavor.Skanetrafiken.TravelInformation.getCaseActionDate. Error: " + e.message);
             }
         },
-
     }
 }

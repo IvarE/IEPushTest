@@ -1,4 +1,11 @@
-﻿if (typeof (Endeavor) === "undefined") {
+﻿FORM_TYPE_CREATE = 1;
+FORM_TYPE_UPDATE = 2;
+FORM_TYPE_READONLY = 3;
+FORM_TYPE_DISABLED = 4;
+FORM_TYPE_QUICKCREATE = 5;
+FORM_TYPE_BULKEDIT = 6;
+
+if (typeof (Endeavor) === "undefined") {
     var Endeavor = {
     };
 }
@@ -10,29 +17,12 @@ if (typeof (Endeavor.Skanetrafiken) === "undefined") {
 
 if (typeof (Endeavor.Skanetrafiken.KBArticle) === "undefined") {
 
-    /*
-     * 
-     * CGI Article (From articleLibrary.js)
-     * 
-     */
-
-    // *******************************************************
-    // Entity: article
-    // *******************************************************
-
-    FORM_TYPE_CREATE = 1;
-    FORM_TYPE_UPDATE = 2;
-    FORM_TYPE_READONLY = 3;
-    FORM_TYPE_DISABLED = 4;
-    FORM_TYPE_QUICKCREATE = 5;
-    FORM_TYPE_BULKEDIT = 6;
-
+    //Form Methods CGI Article (from articleLibrary.js)
     Endeavor.Skanetrafiken.KBArticle = {
         onFormLoad: function (executionContext) {
             try {
                 var formContext = executionContext.getFormContext();
-
-                Endeavor.Skanetrafiken.KBArticle.setPublishAllowed(0);
+                Endeavor.Skanetrafiken.KBArticle.setPublishAllowed(0, formContext);
 
                 switch (formContext.ui.getFormType()) {
                     case FORM_TYPE_CREATE:
@@ -81,12 +71,12 @@ if (typeof (Endeavor.Skanetrafiken.KBArticle) === "undefined") {
                 }
                 else {
                     var _marketingRoleName = "Skånetrafiken Marketing Professional";
-                    var _roleName = result[0].Name;
+                    var _roleName = result[0].name;
 
                     //if has role eq _marketingRoleName, user can change field cgi_auth_approved
-                    if (_roleName == _marketingRoleName) {
+                    if (_roleName == _marketingRoleName)
                         Endeavor.Skanetrafiken.KBArticle.setPublishAllowed(1, formContext);
-                    }
+
                 }
             }
             catch (e) {
@@ -102,7 +92,6 @@ if (typeof (Endeavor.Skanetrafiken.KBArticle) === "undefined") {
                     _setstate = false;
 
                 Endeavor.formscriptfunctions.SetState("cgi_appoval", _setstate, formContext);
-
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.KBArticle.setPublishAllowed\n\n" + e.Message);
@@ -130,14 +119,5 @@ if (typeof (Endeavor.Skanetrafiken.KBArticle) === "undefined") {
             }
         }
     }
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
-
-// Functions calls
-//
-// Endeavor.Skanetrafiken.KBArticle.onFormLoad
-// Endeavor.Skanetrafiken.KBArticle.cgi_publishonweb_OnChange
-// 
-// 
-// 
-// 

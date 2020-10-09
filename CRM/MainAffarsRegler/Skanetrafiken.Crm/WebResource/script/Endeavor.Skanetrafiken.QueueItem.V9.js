@@ -10,22 +10,15 @@ if (typeof (Endeavor.Skanetrafiken) === "undefined") {
 
 if (typeof (Endeavor.Skanetrafiken.QueueItem) === "undefined") {
 
-    /*
-     * 
-     * CGI QueItem (From queueitemRibbon.js)
-     * 
-     */
-
+    //Form Methods CGI QueItem (from queueitemRibbon.js)
     CreateNewCase: function () {
         try {
 
             // Open the window.
             Xrm.Navigation.openForm("incident");
-
         }
         catch (e) {
             alert("Error in Endeavor.Skanetrafiken.QueueItem.CreateNewCase\n\n", e.Message);
         }
     }
-
 }
