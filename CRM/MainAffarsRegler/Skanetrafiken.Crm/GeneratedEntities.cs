@@ -2380,6 +2380,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_serviceresor")]
+		public System.Nullable<bool> ed_Serviceresor
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_serviceresor");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_serviceresor", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_stannualrevenue")]
 		public Microsoft.Xrm.Sdk.Money ed_stannualrevenue
 		{
@@ -4961,6 +4977,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_SchoolCustomer = "ed_schoolcustomer";
 			
 			public const string ed_SeniorCustomer = "ed_seniorcustomer";
+			
+			public const string ed_Serviceresor = "ed_serviceresor";
 			
 			public const string ed_stannualrevenue = "ed_stannualrevenue";
 			
@@ -28798,6 +28816,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_serviceresor")]
+		public System.Nullable<bool> ed_Serviceresor
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_serviceresor");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_serviceresor", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_socialsecuritynumber2")]
 		public string ed_SocialSecurityNumber2
 		{
@@ -32416,6 +32450,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_SchoolContact = "ed_schoolcontact";
 			
 			public const string ed_SeniorContact = "ed_seniorcontact";
+			
+			public const string ed_Serviceresor = "ed_serviceresor";
 			
 			public const string ed_SocialSecurityNumber2 = "ed_socialsecuritynumber2";
 			
@@ -54043,6 +54079,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_biljettid")]
+		public string ed_BiljettID
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_biljettid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_biljettid", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_campaign")]
 		public Microsoft.Xrm.Sdk.EntityReference ed_Campaign
 		{
@@ -55523,6 +55575,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_ArrivalDate = "ed_arrivaldate";
 			
+			public const string ed_BiljettID = "ed_biljettid";
+			
 			public const string ed_Campaign = "ed_campaign";
 			
 			public const string ed_CampaignNumber = "ed_campaignnumber";
@@ -55654,6 +55708,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public struct FieldLengths
 		{
+			
+			public const int ed_BiljettID = 100;
 			
 			public const int ed_CampaignNumber = 100;
 			

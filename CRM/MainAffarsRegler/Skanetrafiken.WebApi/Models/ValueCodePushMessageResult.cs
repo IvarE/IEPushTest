@@ -93,7 +93,7 @@ namespace Skanetrafiken.Crm.Models
         public DateTime? disabled { get; set; } //Redeemed
         public long? eanCode { get; set; } //EanCode
         public int? couponId { get; set; } //Skip
-
+        public string biljettId { get; set; }
         public string ticketId { get; set; }
 
         protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -152,8 +152,7 @@ namespace Skanetrafiken.Crm.Models
                         this.amount = roundedValue;
                     }
 
-                    
-
+                    valueCode.ed_BiljettID = this.biljettId;
 
                     if (featureToggling.ed_RemoveControlForTypeOfValueCodeEnabled == true)
                     {
@@ -163,7 +162,7 @@ namespace Skanetrafiken.Crm.Models
 
                             _log.Debug($"Could not find value code '{voucherCode}'");
                             _log.Debug($"Creating a new value code. Should be type 5.");
-                            
+
                             ValueCodeEntity newValueCode = new ValueCodeEntity()
                             {
                                 ed_Amount = new Money(amount),
@@ -171,7 +170,8 @@ namespace Skanetrafiken.Crm.Models
                                 ed_LastRedemptionDate = validToDate,
                                 ed_CodeId = voucherCode,
                                 ed_Ean = eanCode?.ToString(),
-                                ed_OriginalAmount = 1000
+                                ed_OriginalAmount = 1000,
+                                ed_BiljettID = this.biljettId
                             };
 
                             switch (this.voucherType)
@@ -233,7 +233,8 @@ namespace Skanetrafiken.Crm.Models
                                 {
                                     Id = valueCode.Id,
                                     ed_Amount = new Money(this.amount),
-                                    ed_RedemptionDate = redeemed
+                                    ed_RedemptionDate = redeemed,
+                                    ed_BiljettID = this.biljettId
                                 };
                                 
                                 UpdateValueCodeRecordAndDeactivate(localContext, updateValueCode);
@@ -257,6 +258,7 @@ namespace Skanetrafiken.Crm.Models
                                     {
                                         Id = valueCode.Id,
                                         ed_Amount = new Money(this.amount),
+                                        ed_BiljettID = this.biljettId
                                     };
 
                                     XrmHelper.Update(localContext.OrganizationService, updateValueCode);
@@ -268,6 +270,7 @@ namespace Skanetrafiken.Crm.Models
                                     {
                                         Id = valueCode.Id,
                                         ed_Amount = new Money(this.amount),
+                                        ed_BiljettID = this.biljettId
                                     };
 
                                     XrmHelper.Update(localContext.OrganizationService, updateValueCode);
@@ -300,7 +303,8 @@ namespace Skanetrafiken.Crm.Models
                                 ed_LastRedemptionDate = validToDate,
                                 ed_CodeId = voucherCode,
                                 ed_Ean = eanCode?.ToString(),
-                                ed_OriginalAmount = 1000
+                                ed_OriginalAmount = 1000,
+                                ed_BiljettID = this.biljettId
                             };
 
                             switch (voucherType)
@@ -351,6 +355,8 @@ namespace Skanetrafiken.Crm.Models
                         // Presentkort
                         else if ((int)valueCode.ed_ValueCodeTypeGlobal.Value == 2)
                         {
+                            valueCode.ed_BiljettID = this.biljettId;
+
                             if (this.amount <= 0)
                             {
                                 valueCode.ed_Amount = new Money(this.amount);
@@ -383,6 +389,8 @@ namespace Skanetrafiken.Crm.Models
                         // Övriga
                         else if ((int)valueCode.ed_ValueCodeTypeGlobal.Value != 2)
                         {
+                            valueCode.ed_BiljettID = this.biljettId;
+
                             if (this.amount > 0
                                 && (int)valueCode.ed_ValueCodeTypeGlobal.Value != 1
                                 && (int)valueCode.ed_ValueCodeTypeGlobal.Value != 3
@@ -397,8 +405,6 @@ namespace Skanetrafiken.Crm.Models
                                 valueCode.ed_RedemptionDate = redeemed;
                                 UpdateValueCodeRecordAndDeactivate(localContext, valueCode);
                             }
-
-                            
                         }
 
                         CreateValueCodeTransaction(threadId, localContext, valueCode);
