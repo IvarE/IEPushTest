@@ -1,10 +1,4 @@
-﻿/*! head.load - v1.0.3 */
-(function (n, t) { "use strict"; function w() { } function u(n, t) { if (n) { typeof n == "object" && (n = [].slice.call(n)); for (var i = 0, r = n.length; i < r; i++) t.call(n, n[i], i) } } function it(n, i) { var r = Object.prototype.toString.call(i).slice(8, -1); return i !== t && i !== null && r === n } function s(n) { return it("Function", n) } function a(n) { return it("Array", n) } function et(n) { var i = n.split("/"), t = i[i.length - 1], r = t.indexOf("?"); return r !== -1 ? t.substring(0, r) : t } function f(n) { (n = n || w, n._done) || (n(), n._done = 1) } function ot(n, t, r, u) { var f = typeof n == "object" ? n : { test: n, success: !t ? !1 : a(t) ? t : [t], failure: !r ? !1 : a(r) ? r : [r], callback: u || w }, e = !!f.test; return e && !!f.success ? (f.success.push(f.callback), i.load.apply(null, f.success)) : e || !f.failure ? u() : (f.failure.push(f.callback), i.load.apply(null, f.failure)), i } function v(n) { var t = {}, i, r; if (typeof n == "object") for (i in n) !n[i] || (t = { name: i, url: n[i] }); else t = { name: et(n), url: n }; return (r = c[t.name], r && r.url === t.url) ? r : (c[t.name] = t, t) } function y(n) { n = n || c; for (var t in n) if (n.hasOwnProperty(t) && n[t].state !== l) return !1; return !0 } function st(n) { n.state = ft; u(n.onpreload, function (n) { n.call() }) } function ht(n) { n.state === t && (n.state = nt, n.onpreload = [], rt({ url: n.url, type: "cache" }, function () { st(n) })) } function ct() { var n = arguments, t = n[n.length - 1], r = [].slice.call(n, 1), f = r[0]; return (s(t) || (t = null), a(n[0])) ? (n[0].push(t), i.load.apply(null, n[0]), i) : (f ? (u(r, function (n) { s(n) || !n || ht(v(n)) }), b(v(n[0]), s(f) ? f : function () { i.load.apply(null, r) })) : b(v(n[0])), i) } function lt() { var n = arguments, t = n[n.length - 1], r = {}; return (s(t) || (t = null), a(n[0])) ? (n[0].push(t), i.load.apply(null, n[0]), i) : (u(n, function (n) { n !== t && (n = v(n), r[n.name] = n) }), u(n, function (n) { n !== t && (n = v(n), b(n, function () { y(r) && f(t) })) }), i) } function b(n, t) { if (t = t || w, n.state === l) { t(); return } if (n.state === tt) { i.ready(n.name, t); return } if (n.state === nt) { n.onpreload.push(function () { b(n, t) }); return } n.state = tt; rt(n, function () { n.state = l; t(); u(h[n.name], function (n) { f(n) }); o && y() && u(h.ALL, function (n) { f(n) }) }) } function at(n) { n = n || ""; var t = n.split("?")[0].split("."); return t[t.length - 1].toLowerCase() } function rt(t, i) { function e(t) { t = t || n.event; u.onload = u.onreadystatechange = u.onerror = null; i() } function o(f) { f = f || n.event; (f.type === "load" || /loaded|complete/.test(u.readyState) && (!r.documentMode || r.documentMode < 9)) && (n.clearTimeout(t.errorTimeout), n.clearTimeout(t.cssTimeout), u.onload = u.onreadystatechange = u.onerror = null, i()) } function s() { if (t.state !== l && t.cssRetries <= 20) { for (var i = 0, f = r.styleSheets.length; i < f; i++) if (r.styleSheets[i].href === u.href) { o({ type: "load" }); return } t.cssRetries++; t.cssTimeout = n.setTimeout(s, 250) } } var u, h, f; i = i || w; h = at(t.url); h === "css" ? (u = r.createElement("link"), u.type = "text/" + (t.type || "css"), u.rel = "stylesheet", u.href = t.url, t.cssRetries = 0, t.cssTimeout = n.setTimeout(s, 500)) : (u = r.createElement("script"), u.type = "text/" + (t.type || "javascript"), u.src = t.url); u.onload = u.onreadystatechange = o; u.onerror = e; u.async = !1; u.defer = !1; t.errorTimeout = n.setTimeout(function () { e({ type: "timeout" }) }, 7e3); f = r.head || r.getElementsByTagName("head")[0]; f.insertBefore(u, f.lastChild) } function vt() { for (var t, u = r.getElementsByTagName("script"), n = 0, f = u.length; n < f; n++) if (t = u[n].getAttribute("data-headjs-load"), !!t) { i.load(t); return } } function yt(n, t) { var v, p, e; return n === r ? (o ? f(t) : d.push(t), i) : (s(n) && (t = n, n = "ALL"), a(n)) ? (v = {}, u(n, function (n) { v[n] = c[n]; i.ready(n, function () { y(v) && f(t) }) }), i) : typeof n != "string" || !s(t) ? i : (p = c[n], p && p.state === l || n === "ALL" && y() && o) ? (f(t), i) : (e = h[n], e ? e.push(t) : e = h[n] = [t], i) } function e() { if (!r.body) { n.clearTimeout(i.readyTimeout); i.readyTimeout = n.setTimeout(e, 50); return } o || (o = !0, vt(), u(d, function (n) { f(n) })) } function k() { r.addEventListener ? (r.removeEventListener("DOMContentLoaded", k, !1), e()) : r.readyState === "complete" && (r.detachEvent("onreadystatechange", k), e()) } var r = n.document, d = [], h = {}, c = {}, ut = "async" in r.createElement("script") || "MozAppearance" in r.documentElement.style || n.opera, o, g = n.head_conf && n.head_conf.head || "head", i = n[g] = n[g] || function () { i.ready.apply(null, arguments) }, nt = 1, ft = 2, tt = 3, l = 4, p; if (r.readyState === "complete") e(); else if (r.addEventListener) r.addEventListener("DOMContentLoaded", k, !1), n.addEventListener("load", e, !1); else { r.attachEvent("onreadystatechange", k); n.attachEvent("onload", e); p = !1; try { p = !n.frameElement && r.documentElement } catch (wt) { } p && p.doScroll && function pt() { if (!o) { try { p.doScroll("left") } catch (t) { n.clearTimeout(i.readyTimeout); i.readyTimeout = n.setTimeout(pt, 50); return } e() } }() } i.load = i.js = ut ? lt : ct; i.test = ot; i.ready = yt; i.ready(r, function () { y() && u(h.ALL, function (n) { f(n) }); i.feature && i.feature("domloaded", !0) }) })(window);
-/*
-//# sourceMappingURL=head.load.min.js.map
-*/
-
-FORM_TYPE_CREATE = 1;
+﻿FORM_TYPE_CREATE = 1;
 FORM_TYPE_UPDATE = 2;
 FORM_TYPE_READONLY = 3;
 FORM_TYPE_DISABLED = 4;
@@ -28,58 +22,6 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
     Endeavor.Skanetrafiken.Contact = {
 
         _ticketMovesErrorHolder: "ticketMovesErrorHolder",
-
-        alertCustomDialog: function (msgText) {
-
-            var message = { confirmButtonLabel: "Ok", text: msgText };
-            var alertOptions = { height: 150, width: 280 };
-
-            Xrm.Navigation.openAlertDialog(message, alertOptions).then(
-                function success(result) {
-                    console.log("Alert dialog closed");
-                },
-                function (error) {
-                    console.log(error.message);
-                }
-            );
-        },
-
-        headLoad: function (successCallback) {
-            var jsUrls = [];
-            var jsUrl;
-
-            var globalContext = Xrm.Utility.getGlobalContext();
-
-            if (typeof SDK == "undefined" || typeof SDK.REST == "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/SDK.Rest.js";
-                jsUrls.push(jsUrl);
-            }
-            if (typeof Sdk == "undefined" || typeof SDK.REST == "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.Soap.min.js";
-                jsUrls.push(jsUrl);
-            }
-            if (typeof Sdk == "undefined" || typeof Sdk.ed_GetTicketMoveDataFromMKLRequest == "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.ed_GetTicketMoveDataFromMKL.min.js";
-                jsUrls.push(jsUrl);
-            }
-            if (typeof Sdk == "undefined" || typeof Sdk.ed_BlockCustomerPortalRequest == "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.ed_BlockCustomerPortal.min.js";
-                jsUrls.push(jsUrl);
-            }
-
-            if (typeof head.load != "function") {
-                console.error("head.load function is not defined.");
-                throw new Error("head.load function is not defined.");
-            }
-
-            if (jsUrls.length > 0) {
-                // Load required JavaScripts
-                head.load(jsUrls, successCallback);
-            }
-            else {
-                successCallback();
-            }
-        },
 
         onLoad: function (executionContext) {
 
@@ -267,18 +209,23 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         showHideCompanyEngagementTab: function (formContext) {
             var contactId = formContext.data.entity.getId();
 
-            // CRM ODATA REQUEST - TODO WebAPI
-            var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "ed_CompanyRoleSet?$filter=ed_Contact/Id eq(guid'" + contactId + "')";
-            var detailsresults = Endeavor.Common.Data.fetchJSONResults(url);
+            Xrm.WebApi.retrieveMultipleRecords("ed_companyrole", "?$filter=ed_Contact eq " + contactId).then(
+                function success(results) {
 
-            if (detailsresults == null || detailsresults.entities.length == 0) {
-                // Hide Company Engagement tab
-                formContext.ui.tabs.get("Portal roles").setVisible(false);
-                formContext.ui.controls.get("ed_islockedportal").setVisible(false);
-            } else {
-                // Show Company Engagement tab
-                formContext.ui.tabs.get("Portal roles").setVisible(true);
-            }
+                    if (results == null || results.entities.length == 0) {
+                        // Hide Company Engagement tab
+                        formContext.ui.tabs.get("Portal roles").setVisible(false);
+                        formContext.ui.controls.get("ed_islockedportal").setVisible(false);
+                    } else {
+                        // Show Company Engagement tab
+                        formContext.ui.tabs.get("Portal roles").setVisible(true);
+                    }
+                },
+                function (error) {
+                    console.log(error.message);
+                    Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
+                }
+            );
         },
 
         onBlockContactShow: function (executionContext) {
@@ -320,14 +267,15 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
             var contactNumber = formContext.getAttribute(contactNumberControlTag);
             if (!(!contactNumber.getValue() || 0 === contactNumber.getValue().length)) {
-                if (!Endeavor.Skanetrafiken.Contact.checkSocSecNumber(formContext, contactNumber.getValue())) {
+                if (!Endeavor.Skanetrafiken.Contact.checkSocSecNumber(formContext, contactNumber.getValue()))
                     formContext.getControl(contactNumberControlTag).setNotification("Ogiltigt Persnonnummer<BR>(giltiga format: ååmmdd, ååååmmdd, ååååmmddxxxx, ååååmmdd-xxxx)");
-                } else {
+                else 
                     formContext.getControl(contactNumberControlTag).clearNotification();
-                }
-            } else {
-                formContext.getControl(contactNumberControlTag).clearNotification();
+                
             }
+            else
+                formContext.getControl(contactNumberControlTag).clearNotification();
+
         },
 
         onMarkForCreditsafeUpdate: function (executionContext) {
@@ -336,7 +284,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             var guid = formContext.data.entity.getId().replace("{", "").replace("}", "");
 
             if (!formContext.getAttribute("cgi_socialsecuritynumber")) {
-                Endeavor.Skanetrafiken.Contact.alertCustomDialog("Inget personnummer funnet på formuläret. Vänligen lägg till.");
+                Endeavor.formscriptfunctions.AlertCustomDialog("Inget personnummer funnet på formuläret. Vänligen lägg till.");
                 return;
             }
             var socSecNr = formContext.getAttribute("cgi_socialsecuritynumber").getValue();
@@ -361,10 +309,10 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             Xrm.WebApi.createRecord("ed_deltabatchqueue", deltabatchQueue).then(
                 function success(result) {
                     if (!result)
-                        Endeavor.Skanetrafiken.Contact.alertCustomDialog("Uppdatering kanske inte är schemalagd. Inget returvärde då köpost skapades");
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Uppdatering kanske inte är schemalagd. Inget returvärde då köpost skapades");
                 },
                 function (error) {
-                    Endeavor.Skanetrafiken.Contact.alertCustomDialog("Något gick fel när uppdatering skulle schemaläggas:\n\n" + error.message);
+                    Endeavor.formscriptfunctions.AlertCustomDialog("Något gick fel när uppdatering skulle schemaläggas:\n\n" + error.message);
                 }
             );
         },
@@ -378,7 +326,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 Endeavor.Skanetrafiken.Contact.headLoad(function () { Endeavor.Skanetrafiken.Contact.displayTicketMovesSuccessCallback(formContext); });
             } catch (e) {
                 if (!formContext.ui.setFormNotification(e.message, "ERROR", Endeavor.Skanetrafiken.Contact._ticketMovesErrorHolder))
-                    Endeavor.Skanetrafiken.Contact.alertCustomDialog(e.message);
+                    Endeavor.formscriptfunctions.AlertCustomDialog(e.message);
             }
         },
 
@@ -390,25 +338,25 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             if (mittKontoField && mittKontoField.getValue) {
                 if (!mittKontoField.getValue()) {
                     if (!formContext.ui.setFormNotification("Denna kund har inte 'Mitt Konto'", "WARNING", Endeavor.Skanetrafiken.Contact._ticketMovesErrorHolder))
-                        Endeavor.Skanetrafiken.Contact.alertCustomDialog(results);
+                        Endeavor.formscriptfunctions.AlertCustomDialog(results);
                     return;
                 }
             } else {
-                if (!Endeavor || !Endeavor.Common || !Endeavor.Common.Data) {
-                    if (!formContext.ui.setFormNotification("Vänligen lägg till javascript-filen Endeavor.Common.Data.js i detta formulär", "ERROR", Endeavor.Skanetrafiken.Contact._ticketMovesErrorHolder))
-                        Endeavor.Skanetrafiken.Contact.alertCustomDialog(results);
-                    return;
-                }
 
-                //TODO WebAPI
-                var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "ContactSet?$select=ed_MklId&$filter=ContactId eq (guid'" + formContext.data.entity.getId() + "')"
-                var result = Endeavor.Common.Data.fetchJSONResults(url);
+                Xrm.WebApi.retrieveMultipleRecords("contact", "?$select=ed_mklid&$filter=contactid eq " + guid).then(
+                    function success(results) {
 
-                if (!result || !result.entities.length > 0 || !result.entities[0] || !result.entities[0].ed_MklId) {
-                    if (!formContext.ui.setFormNotification("Denna kund har inte 'Mitt Konto'", "WARNING", Endeavor.Skanetrafiken.Contact._ticketMovesErrorHolder))
-                        Endeavor.Skanetrafiken.Contact.alertCustomDialog(results);
-                    return;
-                }
+                        if (!results || !results.entities.length > 0 || !results.entities[0] || !results.entities[0].ed_mklid) {
+                            if (!formContext.ui.setFormNotification("Denna kund har inte 'Mitt Konto'", "WARNING", Endeavor.Skanetrafiken.Contact._ticketMovesErrorHolder))
+                                Endeavor.formscriptfunctions.AlertCustomDialog(results);
+                            return;
+                        }
+                    },
+                    function (error) {
+                        console.log(error.message);
+                        Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
+                    }
+                );
             }
 
             if (formContext.getAttribute("firstname") && formContext.getAttribute("lastname"))
@@ -420,23 +368,25 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             else
                 var fullName = "Namn saknas";
 
-            // call MKL
-            var req = new Sdk.ed_GetTicketMoveDataFromMKLRequest(guid);
-            var mklInfoResult = Sdk.Sync.execute(req);
-            var results = mklInfoResult.getGetTicketMoveDataFromMKLResponse();
+            var inputParameters = [];
 
-            try {
-                var jsonObj = JSON.parse(results);
-            } catch (e) {
-                if (!formContext.ui.setFormNotification(results, "ERROR", Endeavor.Skanetrafiken.Contact._ticketMovesErrorHolder))
-                    Endeavor.Skanetrafiken.Contact.alertCustomDialog(results);
-                return;
-            }
-            var movesDone = jsonObj.user.accountMoved;
+            var parameterContactGuid = { "Field": "ContactGuid", "Value": guid, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
+            inputParameters.push(parameterContactGuid);
 
-            window.mklData = fullName + ";" + guid + ";" + movesDone;
-            var windowOptions = { height: 300, width: 600 };
-            Xrm.Navigation.openWebResource("Endeavor.Skanetrafiken.TicketMoveManager.html", windowOptions, (fullName + ";" + guid + ";" + movesDone));
+            Endeavor.formscriptfunctions.callGlobalAction("ed_GetTicketMoveDataFromMKL", inputParameters,
+                function (result) {
+
+                    var movesDone = result.user.accountMoved;
+
+                    window.mklData = fullName + ";" + guid + ";" + movesDone;
+                    var windowOptions = { height: 300, width: 600 };
+                    Xrm.Navigation.openWebResource("Endeavor.Skanetrafiken.TicketMoveManager.html", windowOptions, (fullName + ";" + guid + ";" + movesDone));
+
+                }, function (error) {
+                    if (!formContext.ui.setFormNotification(error.message, "ERROR", Endeavor.Skanetrafiken.Contact._ticketMovesErrorHolder))
+                        Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
+                    return;
+                });
         },
 
         checkSocSecNumber: function (formContext, nr) {
@@ -531,13 +481,12 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         },
 
         blockCustomerPortal: function (executionContext) {
-            //Xrm.Page.ui.clearFormNotification(Endeavor.Skanetrafiken.Contact._ticketMovesErrorHolder);
+
             try {
                 var formContext = executionContext.getFormContext();
-
-                Endeavor.Skanetrafiken.Contact.headLoad(function () { Endeavor.Skanetrafiken.Contact.blockCustomerPortalSuccessCallback(formContext) });
+                Endeavor.Skanetrafiken.Contact.blockCustomerPortalSuccessCallback(formContext);
             } catch (e) {
-                Endeavor.Skanetrafiken.Contact.alertCustomDialog(e.message);
+                Endeavor.formscriptfunctions.AlertCustomDialog(e.message);
             }
         },
 
@@ -546,40 +495,61 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             var blocked = "";
 
             //Använda ed_socialsecuritynumberblock
-            if (formContext.getAttribute("ed_socialsecuritynumberblock")) {
+            if (formContext.getAttribute("ed_socialsecuritynumberblock"))
                 SSN = formContext.getAttribute("ed_socialsecuritynumberblock").getValue();
-            }
 
-            if (formContext.getAttribute("ed_islockedportal")) {
+            if (formContext.getAttribute("ed_islockedportal"))
                 blocked = formContext.getAttribute("ed_islockedportal").getValue();
-            }
 
             if (SSN) {
                 if (blocked === true) {
                     try {
-                        var request = new Sdk.ed_BlockCustomerPortalRequest(SSN, false);
-                        var response = Sdk.Sync.execute(request);
-                        Endeavor.Skanetrafiken.Contact.alertCustomDialog("Kund avblockerad!");
+                        var inputParameters = [];
+
+                        var parameterSSN = { "Field": "SSN", "Value": SSN, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
+                        var parameterBlocked = { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 };
+                        inputParameters.push(parameterSSN);
+                        inputParameters.push(parameterBlocked);
+
+                        Endeavor.formscriptfunctions.callGlobalAction("ed_BlockCustomerPortal", inputParameters,
+                            function (result) {
+                                Endeavor.formscriptfunctions.AlertCustomDialog("Kund avblockerad!");
+                            },
+                            function (error) {
+                                console.log(error.message);
+                                Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
+                            });
                     }
                     catch (e) {
-                        Endeavor.Skanetrafiken.Contact.alertCustomDialog("Kunde inte avblockera kund. Var god försök igen senare.");
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte avblockera kund. Var god försök igen senare.");
                     }
                 }
                 else {
                     try {
-                        var request = new Sdk.ed_BlockCustomerPortalRequest(SSN, true);
-                        var response = Sdk.Sync.execute(request);
-                        Endeavor.Skanetrafiken.Contact.alertCustomDialog("Kund spärrad!");
+                        var inputParameters = [];
+
+                        var parameterSSN = { "Field": "SSN", "Value": SSN, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
+                        var parameterBlocked = { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 };
+                        inputParameters.push(parameterSSN);
+                        inputParameters.push(parameterBlocked);
+
+                        Endeavor.formscriptfunctions.callGlobalAction("ed_BlockCustomerPortal", inputParameters,
+                            function (result) { 
+                                Endeavor.Skanetrafiken.Contact.alertCustomDialog("Kund spärrad!");
+                            },
+                            function (error) {
+                                console.log(error.message);
+                                Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
+                            });                       
                     }
                     catch (e) {
-                        Endeavor.Skanetrafiken.Contact.alertCustomDialog("Kunde inte spärra kund. Var god försök igen senare.");
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte spärra kund. Var god försök igen senare.");
                     }
                 }
-
                 formContext.data.refresh();
             }
             else {
-                Endeavor.Skanetrafiken.Contact.alertCustomDialog("Kunden saknar personnummer.");
+                Endeavor.formscriptfunctions.AlertCustomDialog("Kunden saknar personnummer.");
             }
         },
 
@@ -587,7 +557,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             try {
                 formContext.getControl("firstname").setFocus();
             } catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Contact.setFocusQuickCreateContactFirstName\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Contact.setFocusQuickCreateContactFirstName\n\n" + e.message);
             }
         },
 
@@ -633,22 +603,24 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 "</entity>" +
                 "</fetch>";
             var modifiedFetchXml = fetchXml.replace("&", "&amp;");
-            var users = Endeavor.Skanetrafiken.Contact.ExecuteFetch(modifiedFetchXml, "systemusers");
+
+            var globalContext = Xrm.Utility.getGlobalContext();
+            var serverURL = globalContext.getClientUrl();
+
+            var users = Endeavor.Skanetrafiken.Contact.ExecuteFetchGetCount(modifiedFetchXml, "systemusers", serverURL);
             if (users > 0)
                 return true;
             else
                 return false;
         },
 
-        //01/06/2020 - Syncronos Calls are not supported using the TODO - Xrm.WebApi
-        ExecuteFetch: function (originalFetch, entityname) {
+        ExecuteFetchGetCount: function (originalFetch, entityname, serverURL) {
             var count = 0;
             var fetch = encodeURI(originalFetch);
 
-            var serverURL = Xrm.Page.context.getClientUrl();
             var Query = entityname + "?fetchXml=" + fetch;
             var req = new XMLHttpRequest();
-            req.open("GET", serverURL + "/api/data/v8.0/" + Query, false);
+            req.open("GET", serverURL + "/api/data/v9.0/" + Query, false);
             req.setRequestHeader("Accept", "application/json");
             req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
             req.setRequestHeader("OData-MaxVersion", "4.0");
@@ -673,12 +645,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         },
         // Senare fix
 
-        /*
-         * 
-         * CGI Contact (from contactLibrary.js)
-         * 
-         */
-
+        //Form Methods CGI Contact (from contactLibrary.js)
         onFormLoad: function (executionContext) {
             try {
                 var formContext = executionContext.getFormContext();
@@ -701,7 +668,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Contact.onFormLoad\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Contact.onFormLoad\n\n" + e.message);
             }
         },
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -714,8 +681,6 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             if (_check_soc == false) {
                 eventArgs.preventDefault();
             }
-
-
         },
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         checkIfUserHasSecRole: function (formContext) {
@@ -729,7 +694,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Contact.checkIfUserHasRole\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Contact.checkIfUserHasRole\n\n" + e.message);
             }
         },
 
@@ -742,42 +707,27 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     var _handlingOfficer = "Skånetrafiken Handläggare";
                     var _handlingOfficerPlus = "Skånetrafiken Handläggare plus";
 
-                    var _roleName = result[0].Name;
-
+                    var _roleName = result[0].name;
 
                     try {
                         var emailField = formContext.getAttribute("emailaddress1").getValue();
 
                         var currForm = formContext.ui.formSelector.getCurrentItem();
-
                         var currFormId = currForm.getId()
 
-                        if (currFormId !== "aa39956c-0a06-4963-873a-2b3e574dbea5") {
-                            if (currFormId !== "4b94250e-b88f-4439-9184-750d56a84fcf") { //dont lock email field when using form "Tre Kolumner (Test)" or "Labbvy Admin"
-                                if (emailField && emailField.Length !== 0) {
-                                    if (_roleName.indexOf("Handläggare") > 0) {
-                                        Endeavor.formscriptfunctions.SetState("emailaddress1", "true", formContext); //The field should be editable until it has content
-                                    }
-                                }
-                            }
-                        }
+                        if (currFormId !== "aa39956c-0a06-4963-873a-2b3e574dbea5" && currFormId !== "4b94250e-b88f-4439-9184-750d56a84fcf") //dont lock email field when using form "Tre Kolumner (Test)" or "Labbvy Admin"
+                            if (emailField && emailField.Length !== 0 && _roleName.indexOf("Handläggare") > 0)
+                                Endeavor.formscriptfunctions.SetState("emailaddress1", "true", formContext); //The field should be editable until it has content
                     }
                     catch (ex) {
-                        if (emailField === undefined) {
-
-                        } else {
-                            alert("Fel i Endeavor.Skanetrafiken.Account.checkIfUserHasRole_callback\n\n" + e.Message);
-                        }
+                        alert("Fel i Endeavor.Skanetrafiken.Account.checkIfUserHasRole_callback\n\n" + ex.message);
                     }
-
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.checkIfUserHasRole_callback\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Account.checkIfUserHasRole_callback\n\n" + e.message);
             }
         },
-
-
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         SocSecNoOnChange: function (formContext) {
             // Johan Andersson - Endeavor
@@ -785,10 +735,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             var _return_save = true;
             var hasswedish = true;
             var obj = formContext.getAttribute("ed_hasswedishsocialsecuritynumber");
-            if (obj != null) {
+            if (obj != null)
                 if (obj.getValue() == false)
                     hasswedish = false;
-            }
 
             // Perform only if swedish (default to swedish if missing)
             if (hasswedish == true) {
@@ -810,11 +759,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                                 alert("Personnummer har fel längd. Privatkunden kan inte sparas");
                                 _return_save = false;
                             }
-                            else {
-                                if (_soc.length == 13) {
+                            else
+                                if (_soc.length == 13)
                                     formContext.getAttribute("cgi_socialsecuritynumber").setValue(_soc_trim);
-                                }
-                            }
                         }
                     }
                 }
@@ -870,10 +817,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         },
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        //Cant find this function TODO
         setContactLastname_Onload: function (executionContext) {
             var formContext = executionContext.getFormContext();
-
             Endeavor.formscriptfunctions.SetValue("lastname", "", formContext);
         },
 
@@ -893,7 +838,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Contact.timerfunction_eHandel\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Contact.timerfunction_eHandel\n\n" + e.message);
             }
         },
 
@@ -915,21 +860,16 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         var newNumberStr = oldNumberStr.replace(/-/g, "");
                         newNumberStr = newNumberStr.replace(/ /g, "");
                         phoneNumberStr.setValue(newNumberStr);
-                        if (newNumberStr.indexOf("+") > -1) {
+                        if (newNumberStr.indexOf("+") > -1)
                             control.setNotification("Ange telefonnummer utan landsprefix.");
-                        }
-                        else {
+                        else
                             control.clearNotification();
-                        }
                     }
-
                 }
-
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.format_phonenumber\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Account.format_phonenumber\n\n" + e.message);
             }
-
         },
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -952,11 +892,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.format_ZIPCodeNumber\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Account.format_ZIPCodeNumber\n\n" + e.message);
             }
-
         },
-
 
         save_format_ZIPCode: function (executionContext) {
             try {
@@ -975,11 +913,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.format_ZIPCodeNumber\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Account.format_ZIPCodeNumber\n\n" + e.message);
             }
-
         }
-
-
     };
 }
