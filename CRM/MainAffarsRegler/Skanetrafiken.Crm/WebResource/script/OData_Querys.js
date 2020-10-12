@@ -10,9 +10,6 @@ Endeavor.OData_Querys = {
 
         try {
 
-            //Return the number of travelinformation posts registered on this case
-            //This is done synchronously because it is part of a validation process
-            //TODO - Pedro
             Xrm.WebApi.retrieveRecord("cgi_travelinformation", caseid, "?$select=cgi_travelinformationid")
                 .then(function (cgi_travelinformation) {
                     if (cgi_travelinformation.result.length === 0) {
@@ -47,7 +44,7 @@ Endeavor.OData_Querys = {
                 });
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetTravelInfoForCase\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetTravelInfoForCase\n\n" + e.message);
         }
     },
 
@@ -59,12 +56,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetDefaultCustomerFromSetting\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetDefaultCustomerFromSetting\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetDefaultCustomerFromSetting\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetDefaultCustomerFromSetting\n\n" + e.message);
         }
     },
 
@@ -76,14 +73,13 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetDefaultCaseCategory3Setting\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetDefaultCaseCategory3Setting\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetDefaultCaseCategory3Setting\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetDefaultCaseCategory3Setting\n\n" + e.message);
         }
-
     },
 
     Getcgi_refundtypeproductnotrequiredidSetting: function (nowdate, formContext) {
@@ -94,12 +90,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.Getcgi_refundtypeproductnotrequiredidSetting\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.Getcgi_refundtypeproductnotrequiredidSetting\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.Getcgi_refundtypeproductnotrequiredidSetting\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.Getcgi_refundtypeproductnotrequiredidSetting\n\n" + e.message);
         }
     },
 
@@ -111,12 +107,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetBOMBUrlFromSetting\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetBOMBUrlFromSetting\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetBOMBUrlFromSetting\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetBOMBUrlFromSetting\n\n" + e.message);
         }
     },
 
@@ -128,12 +124,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetRGOLUrlFromSetting\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetRGOLUrlFromSetting\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetRGOLUrlFromSetting\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetRGOLUrlFromSetting\n\n" + e.message);
         }
     },
 
@@ -145,12 +141,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetRGOLUrlFromSetting\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetRGOLUrlFromSetting\n\n" + error.Message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetRGOLUrlFromSetting\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetRGOLUrlFromSetting\n\n" + e.message);
         }
     },
 
@@ -163,12 +159,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetParentCategory\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetParentCategory\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetParentCategory\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetParentCategory\n\n" + e.message);
         }
     },
 
@@ -181,12 +177,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetParentCategory\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetParentCategory\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetParentCategory\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetParentCategory\n\n" + e.message);
         }
     },
 
@@ -199,12 +195,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetDefaultQueue\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetDefaultQueue\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetDefaultQueue\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetDefaultQueue\n\n" + e.message);
         }
     },
 
@@ -217,12 +213,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetLetterTemplate\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetLetterTemplate\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetLetterTemplate\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetLetterTemplate\n\n" + e.message);
         }
     },
     // *** End Queries used for entity Case
@@ -236,12 +232,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetSecRolesNameAccount\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetSecRolesNameAccount\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetSecRolesNameAccount\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetSecRolesNameAccount\n\n" + e.message);
         }
     },
     // *** End Queries used for entity account
@@ -255,33 +251,29 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetAmountLimitFromSetting\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetAmountLimitFromSetting\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetAmountLimitFromSetting\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetAmountLimitFromSetting\n\n" + e.message);
         }
-
-
     },
 
     GetRefundSetting: function (refundid, formContext) {
         try {
             Xrm.WebApi.retrieveRecord("cgi_refundtype", refundid,"?$select=cgi_refundoption,cgi_financialtransaction,cgi_refundtypeid,cgi_refundtypename,_cgi_refundaccountid_value,_cgi_refundresponsibleid_value,_cgi_refundproductid_value,cgi_reinvoice,statecode").then(
                 function success(result) {
-                    
                         Endeavor.Skanetrafiken.cgi_refund.refundtypeid_OnChange_callback(result, formContext);
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetRefundSetting\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetRefundSetting\n\n" + error.message);
                 }
             );
-
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetRefundSetting\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetRefundSetting\n\n" + e.message);
         }
     },
 
@@ -289,18 +281,16 @@ Endeavor.OData_Querys = {
         try {
             Xrm.WebApi.retrieveRecord("cgi_refundtype", refundid, "?$select=cgi_financialtransaction,_cgi_refundaccountid_value,cgi_refundoption,_cgi_refundproductid_value,_cgi_refundresponsibleid_value,cgi_refundtypeid,cgi_refundtypename,cgi_reinvoice,statecode").then(
                 function success(result) {
-
                         Endeavor.Skanetrafiken.cgi_refund.refundtypeid_Onload_callback(result, formContext);
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetRefundSettingOnLoad\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetRefundSettingOnLoad\n\n" + error.message);
                 }
             );
-
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetRefundSettingOnLoad\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetRefundSettingOnLoad\n\n" + e.message);
         }
     },
 
@@ -312,12 +302,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.Getcgi_refundaccountNumber\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.Getcgi_refundaccountNumber\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.Getcgi_refundaccountNumber\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.Getcgi_refundaccountNumber\n\n" + e.message);
         }
     },
 
@@ -329,12 +319,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetDefaultCustomerFromSetting\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetDefaultCustomerFromSetting\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetDefaultCustomerFromSetting\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetDefaultCustomerFromSetting\n\n" + e.message);
         }
     },
     //MaxP 2016-04-20 ytterligare en kolumner som returneras i svaret. Ursprung, ärendetyp och flagga för manuella ärenden
@@ -346,12 +336,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetCaseNumber\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetCaseNumber\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetCaseNumber\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetCaseNumber\n\n" + e.message);
         }
     },
     //MaxP 2016-05-09 Ytterligare kolulmn cgi_emailaddress för att sätta leverans epostadress på beslut
@@ -364,16 +354,15 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetEmailAddress\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetEmailAddress\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetEmailAddress\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetEmailAddress\n\n" + e.message);
         }
     },
 
-    //
     GetReimbursementForm: function (reimbursementid, formContext) {
         try {
             Xrm.WebApi.retrieveMultipleRecords("cgi_reimbursementform", "?$select=cgi_attestation,cgi_couponsms,cgi_giftcard,cgi_loadcard,cgi_payment,cgi_payment_abroad,cgi_reimbursementformid,cgi_reimbursementname,cgi_reinvoicing,cgi_sendtostralfors,cgi_time_valid,cgi_useaccount,cgi_useproduct,cgi_useresponsible&$filter=statecode eq 0 and cgi_reimbursementformid eq " + reimbursementid).then(
@@ -382,12 +371,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetReimbursementForm\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetReimbursementForm\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetReimbursementForm\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetReimbursementForm\n\n" + e.message);
         }
     },
 
@@ -399,12 +388,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetReimbursementFormOnLoad\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetReimbursementFormOnLoad\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetReimbursementFormOnLoad\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetReimbursementFormOnLoad\n\n" + e.message);
         }
     },
 
@@ -417,12 +406,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetBicIban\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetBicIban\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetBicIban\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetBicIban\n\n" + e.message);
         }
     },
 
@@ -435,12 +424,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetGetSocSecNumber\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetGetSocSecNumber\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetGetSocSecNumber\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetGetSocSecNumber\n\n" + e.message);
         }
     },
 
@@ -453,12 +442,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetMobileNumber\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetMobileNumber\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetMobileNumber\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetMobileNumber\n\n" + e.message);
         }
     },
 
@@ -471,12 +460,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetContactAccount\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetContactAccount\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetContactAccount\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetContactAccount\n\n" + e.message);
         }
     },
 
@@ -489,12 +478,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetRSIDe\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetRSIDe\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetRSIDe\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetRSIDe\n\n" + e.message);
         }
     },
 
@@ -506,12 +495,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetSecRolesName\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetSecRolesName\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetSecRolesName\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetSecRolesName\n\n" + e.message);
         }
     },
 
@@ -526,12 +515,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetDefaultCustomerFromSetting\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetDefaultCustomerFromSetting\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetDefaultCustomerFromSetting\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetDefaultCustomerFromSetting\n\n" + e.message);
         }
     },
 
@@ -546,19 +535,18 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetSecRolesNameContact\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetSecRolesNameContact\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetSecRolesNameContact\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetSecRolesNameContact\n\n" + e.message);
         }
     },
 
     // *** End Queries used for contact
 
     // *** Start Queries for entity filelinks
-
     GetFilelinks: function (incidentId, formContext) {
         try {
             Xrm.WebApi.retrieveMultipleRecords("cgi_filelink", "?$select=cgi_url&$filter=_cgi_incidentid_value eq " + incidentId).then(
@@ -567,12 +555,12 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetFilelinks\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetFilelinks\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetFilelinks\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetFilelinks\n\n" + e.message);
         }
     },
 
@@ -588,15 +576,14 @@ Endeavor.OData_Querys = {
                 },
                 function (error) {
                     console.log(error.message);
-                    alert("Fel i Endeavor.OData_Querys.GetSecRolesNameArticle\n\n" + e.Message);
+                    alert("Fel i Endeavor.OData_Querys.GetSecRolesNameArticle\n\n" + error.message);
                 }
             );
         }
         catch (e) {
-            alert("Fel i Endeavor.OData_Querys.GetSecRolesNameArticle\n\n" + e.Message);
+            alert("Fel i Endeavor.OData_Querys.GetSecRolesNameArticle\n\n" + e.message);
         }
 
     }
-
     // *** End Queries for entity article
 }

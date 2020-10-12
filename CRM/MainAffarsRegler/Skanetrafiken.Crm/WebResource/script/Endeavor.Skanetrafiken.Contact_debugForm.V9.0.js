@@ -17,11 +17,11 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             var formContext = executionContext.getFormContext();
             var formType = formContext.ui.getFormType();
 
-            if (formType == 1) { //Create
+            if (formType == 1) //Create
                 formContext.getAttribute("ed_informationsource").setValue(8);  // 8-AdmSkapaKund
-            } else if (formType == 2) { //Update
+            else if (formType == 2) //Update
                 formContext.getAttribute("ed_informationsource").setValue(12);  // Skall vara 12 men är bytt till 3-OinloggatKop 
-            } else {
+             else {
                 // TODO teo - Vad gör vi om formuläret sparas och det varken är Create eller Update?
             }
         },
@@ -33,14 +33,13 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
             var contactNumber = formContext.getAttribute(contactNumberControlTag);
             if (!(!contactNumber.getValue() || 0 === contactNumber.getValue().length)) {
-                if (!Endeavor.Skanetrafiken.Contact.checkSocSecNumber(formContext, contactNumber.getValue())) {
+                if (!Endeavor.Skanetrafiken.Contact.checkSocSecNumber(formContext, contactNumber.getValue()))
                     formContext.getControl(contactNumberControlTag).setNotification("Ogiltigt Persnonnummer\r\n(giltiga format: ååmmdd, ååååmmdd, ååååmmddxxxx, ååååmmdd-xxxx)");
-                } else {
+                else
                     formContext.getControl(contactNumberControlTag).clearNotification();
-                }
-            } else {
-                formContext.getControl(contactNumberControlTag).clearNotification();
             }
+            else
+                formContext.getControl(contactNumberControlTag).clearNotification();
         },
 
         checkSocSecNumber: function (formContext, nr) {
@@ -49,18 +48,18 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 if (sweSocSec != null) {
                     sweSocSec.setValue(true);
                     sweSocSec.setSubmitMode("always");
-                } else {
+                } else
                     alert("Fel i formulär, dolt fält saknas. Vänligen kontakta Administratör");
-                }
+                
                 return true;
             } else if (Endeavor.Skanetrafiken.Contact.checkNonSwedishSocSecNumber(nr)) {
                 var sweSocSec = formContext.getAttribute("ed_hasswedishsocialsecuritynumber");
                 if (sweSocSec != null) {
                     sweSocSec.setValue(false);
                     sweSocSec.setSubmitMode("always");
-                } else {
+                } else
                     alert("Fel i formulär, dolt fält saknas. Vänligen kontakta Administratör");
-                }
+
                 return true;
             }
             return false;

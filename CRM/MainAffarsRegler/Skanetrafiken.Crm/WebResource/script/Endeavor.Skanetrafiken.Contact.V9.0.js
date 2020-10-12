@@ -654,7 +654,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     case FORM_TYPE_CREATE:
                         break;
                     case FORM_TYPE_UPDATE:
-                        Endeavor.Skanetrafiken.Contact.checkIfUserHasSecRole(formContext);
+                        Endeavor.Skanetrafiken.Contact.checkIfUserHasSecRole(executionContext);
                         Endeavor.Skanetrafiken.Contact.timerfunction_eHandel(formContext);
                     case FORM_TYPE_READONLY:
                     case FORM_TYPE_DISABLED:
@@ -673,19 +673,19 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         },
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         onsave: function (executionContext) {
-            var formContext = executionContext.getFormContext();
-
+            
             var eventArgs = formContext.getEventArgs();
-            var _check_soc = Endeavor.Skanetrafiken.Contact.SocSecNoOnChange(formContext);
+            var _check_soc = Endeavor.Skanetrafiken.Contact.SocSecNoOnChange(executionContext);
 
             if (_check_soc == false) {
                 eventArgs.preventDefault();
             }
         },
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        checkIfUserHasSecRole: function (formContext) {
+        checkIfUserHasSecRole: function (executionContext) {
             try {
                 var globalContext = Xrm.Utility.getGlobalContext();
+                var formContext = executionContext.getFormContext();
 
                 var currentUserRoles = globalContext.userSettings.securityRoles();
                 for (var i = 0; i < currentUserRoles.length; i++) {
@@ -729,7 +729,10 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             }
         },
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        SocSecNoOnChange: function (formContext) {
+        SocSecNoOnChange: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
             // Johan Andersson - Endeavor
             // Check Personnummer if swedish nationality
             var _return_save = true;
