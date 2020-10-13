@@ -152,8 +152,6 @@ namespace Skanetrafiken.Crm.Models
                         this.amount = roundedValue;
                     }
 
-                    valueCode.ed_BiljettID = this.biljettId;
-
                     if (featureToggling.ed_RemoveControlForTypeOfValueCodeEnabled == true)
                     {
                         if (valueCode == null)
