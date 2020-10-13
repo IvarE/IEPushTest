@@ -177,6 +177,7 @@ namespace Skanetrafiken.Crm
             X509Certificate2 cert = null;
 
             var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+            //var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
 
             try
             {

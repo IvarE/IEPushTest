@@ -1085,71 +1085,73 @@ namespace Endeavor.Crm.UnitTest
 
                     Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
 
-                    //string apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_CreateValueCodeAPI);
-                    string apiUrl = string.Empty;
-                    //string apiToken = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_CreateValueCodeToken);
-                    string InputJSON = string.Empty;
+                    ValueCodeEntity.HandleCancelValueCode(localContext, "7eb1cbbb-d7b9-e911-80f0-005056b61fff"); //8555136240 Acc - 7eb1cbbb-d7b9-e911-80f0-005056b61fff VC
 
-                    //Convert string value to enum
-                    var tovcEnum = (Generated.ed_valuecodetype)Enum.Parse(typeof(Generated.ed_valuecodetype), "2");
+                    ////string apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_CreateValueCodeAPI);
+                    //string apiUrl = string.Empty;
+                    ////string apiToken = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_CreateValueCodeToken);
+                    //string InputJSON = string.Empty;
 
-                    //Fetch different api depending on TypeOfValueCode
-                    if (tovcEnum == Generated.ed_valuecodetype.Utansaldo)
-                        apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_CreateValueCodeCoupons);
-                    else
-                        apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_CreateValueCodeVoucher);
+                    ////Convert string value to enum
+                    //var tovcEnum = (Generated.ed_valuecodetype)Enum.Parse(typeof(Generated.ed_valuecodetype), "2");
 
-                    Uri url = new Uri(apiUrl);
-                    HttpWebRequest httpWebRequest = CreateRequest(url);
-                    httpWebRequest.Method = "POST";
-                    ApiHelper.CreateTokenForVoucherService(localContext, httpWebRequest);
+                    ////Fetch different api depending on TypeOfValueCode
+                    //if (tovcEnum == Generated.ed_valuecodetype.Utansaldo)
+                    //    apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_CreateValueCodeCoupons);
+                    //else
+                    //    apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_CreateValueCodeVoucher);
 
-                    // TODO - Which template
-                    //template = GetValueCodeTemplate(localContext, template, templateNumber);
-                    ValueCodeTemplateEntity template = new ValueCodeTemplateEntity();
-                    template.ed_TemplateId = 1;
+                    //Uri url = new Uri(apiUrl);
+                    //HttpWebRequest httpWebRequest = CreateRequest(url);
+                    //httpWebRequest.Method = "POST";
+                    //ApiHelper.CreateTokenForVoucherService(localContext, httpWebRequest);
 
-                    // Call to Voucher Service
-                    InputJSON = CreateInputJSONVoucherServiceGeneric(localContext, tovcEnum, 365, (int)template.ed_TemplateId, "mobile", (float)20, "api", "0735198846", "marcus.stenswed@endeavor.se",
-                        "", "", "", "", "", "", "", "", "", "", "");
+                    //// TODO - Which template
+                    ////template = GetValueCodeTemplate(localContext, template, templateNumber);
+                    //ValueCodeTemplateEntity template = new ValueCodeTemplateEntity();
+                    //template.ed_TemplateId = 1;
+
+                    //// Call to Voucher Service
+                    //InputJSON = CreateInputJSONVoucherServiceGeneric(localContext, tovcEnum, 365, (int)template.ed_TemplateId, "mobile", (float)20, "api", "0735198846", "marcus.stenswed@endeavor.se",
+                    //    "", "", "", "", "", "", "", "", "", "", "");
 
 
-                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-                    {
-                        streamWriter.Write(InputJSON);
-                        streamWriter.Flush();
-                        streamWriter.Close();
-                    }
+                    //using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    //{
+                    //    streamWriter.Write(InputJSON);
+                    //    streamWriter.Flush();
+                    //    streamWriter.Close();
+                    //}
 
-                    //var response = GetAPIResponse<ValueCodeVoucherServiceResponseMessage>(httpWebRequest);
+                    ////var response = GetAPIResponse<ValueCodeVoucherServiceResponseMessage>(httpWebRequest);
 
-                    //Guid valueCodeGuid = CreateValueCodeFromVoucherServiceResponseGeneric(localContext, response, template, contact, lead, type, email, phoneNumber, refund, valueCodeApproval);
+                    ////Guid valueCodeGuid = CreateValueCodeFromVoucherServiceResponseGeneric(localContext, response, template, contact, lead, type, email, phoneNumber, refund, valueCodeApproval);
 
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                    //ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-                    //Get response
-                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                    {
-                        //Read response
-                        var response = streamReader.ReadToEnd();
+                    ////Get response
+                    //var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    //using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    //{
+                    //    //Read response
+                    //    var response = streamReader.ReadToEnd();
 
-                        ValueCodeVoucherServiceResponseMessage deserializedVoucher = new ValueCodeVoucherServiceResponseMessage();
-                        MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(response));
-                        DataContractJsonSerializer ser = new DataContractJsonSerializer(deserializedVoucher.GetType());
-                        deserializedVoucher = ser.ReadObject(ms) as ValueCodeVoucherServiceResponseMessage;
-                        ms.Close();
+                    //    ValueCodeVoucherServiceResponseMessage deserializedVoucher = new ValueCodeVoucherServiceResponseMessage();
+                    //    MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(response));
+                    //    DataContractJsonSerializer ser = new DataContractJsonSerializer(deserializedVoucher.GetType());
+                    //    deserializedVoucher = ser.ReadObject(ms) as ValueCodeVoucherServiceResponseMessage;
+                    //    ms.Close();
 
-                        // Validate result, must have DataValid
-                        //ValueCodeVoucherServiceResponseMessage responseService = Newtonsoft.Json.JsonConvert.DeserializeObject<ValueCodeVoucherServiceResponseMessage>(response);
+                    //    // Validate result, must have DataValid
+                    //    //ValueCodeVoucherServiceResponseMessage responseService = Newtonsoft.Json.JsonConvert.DeserializeObject<ValueCodeVoucherServiceResponseMessage>(response);
 
-                        //Guid valueCodeGuid = CreateValueCodeFromVoucherServiceResponseGeneric(localContext, responseService, template, contact, lead, type, email, phoneNumber, refund, valueCodeApproval);
+                    //    //Guid valueCodeGuid = CreateValueCodeFromVoucherServiceResponseGeneric(localContext, responseService, template, contact, lead, type, email, phoneNumber, refund, valueCodeApproval);
 
-                        //localContext.TracingService.Trace("Done, returned httpCode: {0} Content: {1}", httpResponse.StatusCode, response);
+                    //    //localContext.TracingService.Trace("Done, returned httpCode: {0} Content: {1}", httpResponse.StatusCode, response);
 
-                        //Assert.AreEqual(HttpStatusCode.OK, httpResponse.StatusCode);
+                    //    //Assert.AreEqual(HttpStatusCode.OK, httpResponse.StatusCode);
 
-                    }
+                    //}
                 }
             }
             catch (Exception ex)
