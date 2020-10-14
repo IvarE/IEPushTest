@@ -1,5 +1,4 @@
-﻿
-// Begin scoping
+﻿// Begin scoping
 if (typeof (Endeavor) == "undefined") {
     var Endeavor = {
     };

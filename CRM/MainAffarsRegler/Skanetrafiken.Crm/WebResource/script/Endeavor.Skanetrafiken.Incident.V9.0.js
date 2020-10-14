@@ -93,15 +93,6 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     break;
             }
 
-            try {
-                //setTimeout(Endeavor.Skanetrafiken.Incident.timerfunction_BIFF(formContext), TIMEOUT_COUNTER);
-                //setTimeout(Endeavor.Skanetrafiken.Incident.timerfunction_Travel(formContext), TIMEOUT_COUNTER);
-                //setTimeout(Endeavor.Skanetrafiken.Incident.hideOrShowTypeOfContactFields, TIMEOUT_COUNTER);
-            }
-            catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Incident.onLoad\n\n" + e.message);
-            }
-
         },
 
         onSave: function (executionContext) {
@@ -972,7 +963,6 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 alert("Fel i Endeavor.Skanetrafiken.Incident.casetypecode_onchange_callback\n\n" + e.message);
             }
         },
-
 
         //Ribbon Methods CGI Incident (from incidentRibbon.js)
         resolveCase: function (caseid, primaryControl) {

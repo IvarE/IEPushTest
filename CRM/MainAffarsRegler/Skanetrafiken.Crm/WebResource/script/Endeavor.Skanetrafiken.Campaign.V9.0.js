@@ -15,7 +15,6 @@ if (typeof (Endeavor.Skanetrafiken.Campaign) == "undefined") {
         onLoad: function (executionContext) {
             debugger;
             var formContext = executionContext.getFormContext();
-
             Endeavor.Skanetrafiken.Campaign.lockFieldsBasedOnProcessStage(formContext);
         },
 
@@ -27,27 +26,7 @@ if (typeof (Endeavor.Skanetrafiken.Campaign) == "undefined") {
                 var stageId = stageAttr.getValue();
                 if (!stageId)
                     return;
-
-                //TODO - WebAPI
-                var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "ProcessStageSet?$select=StageCategory&$filter=ProcessStageId eq (guid'" + stageId + "')";
-                var resultSet = Endeavor.Common.Data.fetchJSONResults(url);
-
-                if (resultSet) {
-                    // If not in 'Propose'-state, lock all fields needed
-                    if (resultSet[0].StageCategory.Value != 2) {
-                        //var fieldsToLock = Endeavor.Skanetrafiken.Campaign.getFieldsToLock();
-                        //for (var i = 0; i < fieldsToLock.length; i++) {
-                        //    fieldsToLock[i].setDisabled(true);
-                        //}
-                    }
-                }
             }
-        },
-
-        getFieldsToLock: function () {
-            var fields = {
-                // no fields needing to be locked, Products and Leads blocked by plugin
-            };
         },
 
         //Used by the button in CRM- Account overview
@@ -83,66 +62,70 @@ if (typeof (Endeavor.Skanetrafiken.Campaign) == "undefined") {
             var DR = lastAnswerDate.substr(lastAnswerDate.length - 3, 3);
             lastAnswerDate = lastAnswerDate.substr(0, lastAnswerDate.length - 3);
 
-            //TODO - WebAPI
-            var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "LeadSet?$select=FirstName,LastName,Address1_Line1,Address1_Line2,Address1_Line3,Address1_PostalCode,Address1_City,LeadSourceCode,ed_NearestStop,ed_CampaignCode&$filter=(CampaignId/Id eq (guid'" + Xrm.Page.data.entity.getId() + "')) and (StateCode/Value eq 0)";
-            var leadsResultSet = Endeavor.Common.Data.fetchJSONResults(url, 1000000);
+            var columnSet = "firstname,lastname,address1_line1,address1_line2,address1_line3,address1_postalcode,address1_city,leadsourcecode,ed_neareststop,ed_campaigncode";
+            var idRecord = Xrm.Page.data.entity.getId().replace("{", "").replace("}", "");
 
-            if (!leadsResultSet || leadsResultSet.entities.length < 1) {
-                alert("No Leads found");
-                return;
-            }
+            Xrm.WebApi.retrieveMultipleRecords("lead", "?$select=" + columnSet + "&$filter=campaignid eq " + idRecord + " and statecode eq 0").then(
+                function success(results) {
 
-            var csv = "Tilltalsnamn;Efternamn;C/O-adress;Adress;Fortsättningsadress;Postnr;Ort;Adresskälla;Närmaste Hållplats;Kampanjkoder;Prova på - Från;Prova på - Till;Svara senast DR";
+                    if (!results || results.entities.length < 1) {
+                        alert("No Leads found");
+                        return;
+                    }
 
-            for (var i = 0; i < leadsResultSet.entities.length; i++) {
-                var tilltalsnamn = leadsResultSet.entities[i].FirstName;
-                var efternamn = leadsResultSet.entities[i].LastName;
-                var coAdress = leadsResultSet.entities[i].Address1_Line1;
-                var adress = leadsResultSet.entities[i].Address1_Line2;
+                    var csv = "Tilltalsnamn;Efternamn;C/O-adress;Adress;Fortsättningsadress;Postnr;Ort;Adresskälla;Närmaste Hållplats;Kampanjkoder;Prova på - Från;Prova på - Till;Svara senast DR";
 
-                var fortsättningsadress = leadsResultSet.entities[i].Address1_Line3;
-                var postnr = leadsResultSet.entities[i].Address1_PostalCode;
-                var ort = leadsResultSet.entities[i].Address1_City;
-                for (var j = 0; j < formContext.getAttribute("ed_leadsource").getOptions().length; j++) {
-                    if (formContext.getAttribute("ed_leadsource").getOptions()[j].value == leadsResultSet.entities[i].LeadSourceCode.Value)
-                        var adresskalla = formContext.getAttribute("ed_leadsource").getOptions()[j].text;
-                }
+                    for (var i = 0; i < results.entities.length; i++) {
+                        var tilltalsnamn = results.entities[i].firstname;
+                        var efternamn = results.entities[i].lastname;
+                        var coAdress = results.entities[i].address1_line1;
+                        var adress = results.entities[i].address1_line2;
 
-                var narmasteHallplats = leadsResultSet.entities[i].ed_NearestStop;
-                var kampanjkoder = leadsResultSet.entities[i].ed_CampaignCode;
-                var provaPaFran = tryOutPeriodFrom;
-                var provaPaTill = tryOutPeriodTo;
-                var svaraSenastDR = lastAnswerDate;
+                        var fortsättningsadress = results.entities[i].address1_line3;
+                        var postnr = results.entities[i].address1_postalcode;
+                        var ort = results.entities[i].address1_city;
+                        for (var j = 0; j < formContext.getAttribute("ed_leadsource").getOptions().length; j++) {
+                            if (formContext.getAttribute("ed_leadsource").getOptions()[j].value == results.entities[i].leadsourcecode)
+                                var adresskalla = formContext.getAttribute("ed_leadsource").getOptions()[j].text;
+                        }
 
-                var csvLine = "\n" + tilltalsnamn + ";" + efternamn + ";" + coAdress + ";" + adress + ";"
-                    + fortsättningsadress + ";" + postnr + ";" + ort + ";" + adresskalla + ";"
-                    + narmasteHallplats + ";" + kampanjkoder + ";" + provaPaFran + ";" + provaPaTill + ";" + svaraSenastDR;
+                        var narmasteHallplats = results.entities[i].ed_neareststop;
+                        var kampanjkoder = results.entities[i].ed_campaigncode;
+                        var provaPaFran = tryOutPeriodFrom;
+                        var provaPaTill = tryOutPeriodTo;
+                        var svaraSenastDR = lastAnswerDate;
 
-                csv += csvLine;
-            }
-            var remindStr = "";
-            if (DR == "DR2") {
-                remindStr = ".Reminder"
-            }
+                        var csvLine = "\n" + tilltalsnamn + ";" + efternamn + ";" + coAdress + ";" + adress + ";"
+                            + fortsättningsadress + ";" + postnr + ";" + ort + ";" + adresskalla + ";"
+                            + narmasteHallplats + ";" + kampanjkoder + ";" + provaPaFran + ";" + provaPaTill + ";" + svaraSenastDR;
 
-            debugger;
+                        csv += csvLine;
+                    }
+                    var remindStr = "";
+                    if (DR == "DR2")
+                        remindStr = ".Reminder"
 
-            Endeavor.Skanetrafiken.Campaign.downloadFile("Skanetrafiken." + formContext.getAttribute("name").getValue() + ".Leads" + remindStr + ".csv", csv);
+                    debugger;
+                    Endeavor.Skanetrafiken.Campaign.downloadFile("Skanetrafiken." + formContext.getAttribute("name").getValue() + ".Leads" + remindStr + ".csv", csv);
+                },
+                function (error) {
+                    console.log(error.message);
+                    Endeavor.formscriptfunctions.ErrorCustomDialog(error.message, "Retrieve Multiple Records Error");
+                });
         },
 
         compileTryoutFromString: function (formContext) {
 
-            //TODO - WebAPI
-            var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "CampaignSet?$select=processstage_campaigns/StageCategory&$expand=processstage_campaigns&$filter=CampaignId eq (guid'" + Xrm.Page.data.entity.getId() + "')";
+            var idRecord = Xrm.Page.data.entity.getId().replace("{", "").replace("}", "");
+
+            var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "campaigns?&$expand=processstages($select=stagecategory&$filter=primaryentitytypecode eq campaign)&$filter=campaignid eq " + idRecord;
             var campaignResultSet = Endeavor.Common.Data.fetchJSONResults(url);
 
-            if (!campaignResultSet || campaignResultSet.entities.length < 1 || !campaignResultSet.entities[0].processstage_campaigns || !campaignResultSet.entities[0].processstage_campaigns.StageCategory) {
-                alert("Something went wrong. Please try again")
-                return "";
-            }
+            var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "campaigns?$select=processstage_campaigns/StageCategory&$expand=processstage_campaigns&$filter=campaignid eq " + idRecord;
+            var campaignResultSet = Endeavor.Common.Data.fetchJSONResults(url);
 
             var tryOutFromVal;
-            if (campaignResultSet.entities[0].processstage_campaigns.StageCategory.Value == Endeavor.Skanetrafiken.OptionSet.processstage_category.Kvalificera) {
+            if (campaignResultSet.value[0].processstage_campaigns.StageCategory.Value == Endeavor.Skanetrafiken.OptionSet.processstage_category.Kvalificera) {
                 var tryOutFromAttr = formContext.getAttribute("ed_tryoutfromphase1");
                 if (!tryOutFromAttr) {
                     alert("Please add the 'Try out Period - From (Primary Sendout)'-field to the form and try again");
@@ -274,7 +257,6 @@ if (typeof (Endeavor.Skanetrafiken.Campaign) == "undefined") {
 
 
         // Code below copied from https://github.com/angular-ui/ui-grid/issues/2312
-
         /**
         * @ngdoc function
         * @name isIEBelow10

@@ -35,8 +35,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
             var idRecord = formContext.data.entity.getId();
             formContext.ui.setFormNotification("Skapar värdekod. Vänligen vänta.", "INFO");
 
-            Endeavor.formscriptfunctions.callAction("ed_CreateAndSendValueCodeFromRefund7be826f88b9fe811827600155d010b00", "cgi_refund", idRecord,
-
+            Endeavor.formscriptfunctions.callAction("ed_CreateAndSendValueCodeFromRefund7be826f88b9fe811827600155d010b00", "cgi_refund", idRecord, null,
                 function () {
                     // Success
                     formContext.data.refresh();
@@ -91,7 +90,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.Skanetrafiken.cgi_refund.convertResponseToPDF(arrReportSession);
             }
             catch (error) {
-                alert("Exception caught in printRefundVoucherReport.\r\n\r\n" + error);
+                alert("Exception caught in printRefundVoucherReport.\r\n\r\n" + error.message);
             }
         },
 
@@ -145,7 +144,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (error) {
-                alert("Exception caught in bulkPrintRefundVoucherReport.\r\n\r\n" + error);
+                alert("Exception caught in bulkPrintRefundVoucherReport.\r\n\r\n" + error.message);
             }
         },
 
@@ -410,7 +409,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.GetContactAccount\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.GetContactAccount\n\n" + e.message);
             }
         },
 
@@ -433,7 +432,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i GetContactAccount_callback\n\n" + e.Message);
+                alert("Fel i GetContactAccount_callback\n\n" + e.message);
             }
         },
 
@@ -448,11 +447,11 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 if (userId != null)
                 {
                     userIdClean = Endeavor.formscriptfunctions.cleanIdField(userId);
+                    Endeavor.OData_Querys.GetRSID(userIdClean, formContext);
                 }
-                Endeavor.OData_Querys.GetRSID(userIdClean, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.ctrlAttest\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.ctrlAttest\n\n" + e.message);
             }
         },
 
@@ -463,16 +462,14 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
                 else {
                     var _cgi_RSID = result["cgi_rsid"];
-                    if (_cgi_RSID == null) {
+                    if (_cgi_RSID == null)
                         formContext.getAttribute("cgi_auth_approved").setValue(false);
-                    }
-                    else {
+                    else
                         formContext.getAttribute("cgi_auth_approved").setValue(true);
-                    }
                 }
             }
             catch (e) {
-                alert("Fel i ctrlAttest_callback\n\n" + e.Message);
+                alert("Fel i ctrlAttest_callback\n\n" + e.message);
             }
         },
 
@@ -482,7 +479,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.OData_Querys.GetAmountLimitFromSetting(_currentdate, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.ctrlAmountLimit\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.ctrlAmountLimit\n\n" + e.message);
             }
         },
 
@@ -503,7 +500,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i ctrlAmountLimit_callback\n\n" + e.Message);
+                alert("Fel i ctrlAmountLimit_callback\n\n" + e.message);
             }
         },
 
@@ -630,7 +627,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.Getcgi_refundaccountNumber\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.Getcgi_refundaccountNumber\n\n" + e.message);
             }
         },
 
@@ -641,12 +638,11 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
                 else {
                     _RefundAccountIdCache = result.entities[0];
-
                     Endeavor.Skanetrafiken.cgi_refund.SetProductFieldRequired(formContext);
                 }
             }
             catch (e) {
-                alert("Fel i Getcgi_refundtypeproductnotrequiredidSetting_callback\n\n" + e.Message);
+                alert("Fel i Getcgi_refundtypeproductnotrequiredidSetting_callback\n\n" + e.message);
             }
         },
 
@@ -665,7 +661,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.OData_Querys.Getcgi_refundtypeproductnotrequiredidSetting(_currentdate, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.Getcgi_refundtypeproductnotrequiredidSetting\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.Getcgi_refundtypeproductnotrequiredidSetting\n\n" + e.message);
             }
         },
 
@@ -675,16 +671,15 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     alert("Required setting is missing: cgi_refundtypeproductnotrequiredid!");
                 }
                 else {
-                    if (result.entities[0]["_cgi_refundtypeproductnotrequiredid_value"] == null) {
+                    if (result.entities[0]["_cgi_refundtypeproductnotrequiredid_value"] == null)
                         alert('Required setting is missing: cgi_refundtypeproductnotrequiredid!');
-                    }
+                    
                     _RefundTypeProductNotrequiredIdCache = result.entities[0]["_cgi_refundtypeproductnotrequiredid_value"];
                     Endeavor.Skanetrafiken.cgi_refund.SetProductFieldRequired(formContext);
-
                 }
             }
             catch (e) {
-                alert("Fel i Getcgi_refundtypeproductnotrequiredidSetting_callback\n\n" + e.Message);
+                alert("Fel i Getcgi_refundtypeproductnotrequiredidSetting_callback\n\n" + e.message);
             }
         },
 
@@ -727,7 +722,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.getCaseNumber\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.getCaseNumber\n\n" + e.message);
             }
         },
 
@@ -784,12 +779,12 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                         var _name = result.entities[0]["_cgi_refundreimbursementform_value@OData.Community.Display.V1.FormattedValue"];
                         Endeavor.formscriptfunctions.SetLookup("cgi_reimbursementformid", _logicalname, _id, _name, formContext);
 
-                        Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnChange(null,formContext);
+                        Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnChange(null, formContext);
                     }
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.getCaseNumber_callback\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.getCaseNumber_callback\n\n" + e.message);
             }
         },
 
@@ -813,7 +808,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_Onload\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_Onload\n\n" + e.message);
             }
         },
 
@@ -926,17 +921,16 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnLoad_callback\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnLoad_callback\n\n" + e.message);
             }
         },
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        reimbursementformid_OnChange: function (executionContext,formContext) {
+        reimbursementformid_OnChange: function (executionContext, formContext) {
             try {
-                if (executionContext != null) {
+                if (executionContext != null)
                     formContext = executionContext.getFormContext();
-                }
 
                 var _refundtypeid = Endeavor.formscriptfunctions.GetLookupid("cgi_reimbursementformid", formContext);
 
@@ -960,7 +954,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnChange\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnChange\n\n" + e.message);
             }
         },
 
@@ -1104,7 +1098,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnChange_callback\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnChange_callback\n\n" + e.message);
             }
         },
 
@@ -1206,7 +1200,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", true, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.ShowTravelcardNumber\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.ShowTravelcardNumber\n\n" + e.message);
             }
         },
 
@@ -1219,7 +1213,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.HideOrDisplayField("cgi_reference", false, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.SetReinvoicingFALSE\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.SetReinvoicingFALSE\n\n" + e.message);
             }
         },
 
@@ -1232,7 +1226,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.HideOrDisplayField("cgi_reference", true, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.SetReinvoicingTRUE\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.SetReinvoicingTRUE\n\n" + e.message);
             }
         },
 
@@ -1244,7 +1238,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.SetState("cgi_calculated_amount", false, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.setFieldToEditable\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.setFieldToEditable\n\n" + e.message);
             }
         },
 
@@ -1255,12 +1249,11 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     var refundidClean = Endeavor.formscriptfunctions.cleanIdField(_refundtypeid);
                     Endeavor.OData_Querys.GetRefundSettingOnLoad(refundidClean, formContext);
                 }
-                else {
+                else 
                     Endeavor.Skanetrafiken.cgi_refund.refundtypeNONE(formContext);
-                }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeid_Onload\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeid_Onload\n\n" + e.message);
             }
         },
 
@@ -1358,7 +1351,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeid_Onload_callback\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeid_Onload_callback\n\n" + e.message);
             }
         },
 
@@ -1385,7 +1378,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     Endeavor.formscriptfunctions.HideOrDisplayField("cgi_travelcard_number", false, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeid_OnChange\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeid_OnChange\n\n" + e.message);
             }
         },
 
@@ -1553,7 +1546,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeid_OnChange_callback\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeid_OnChange_callback\n\n" + e.message);
             }
         },
 
@@ -1620,7 +1613,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.Skanetrafiken.cgi_refund.getContactAccount(formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.setDefaultValues\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.setDefaultValues\n\n" + e.message);
             }
         },
 
@@ -1676,7 +1669,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 ////////// END MOSCGI
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeNONE\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeNONE\n\n" + e.message);
             }
         },
 
@@ -1720,7 +1713,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeQUANTITY\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeQUANTITY\n\n" + e.message);
             }
         },
 
@@ -1772,7 +1765,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeMILAGE\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeMILAGE\n\n" + e.message);
             }
         },
 
@@ -1816,7 +1809,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeTAXI\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeTAXI\n\n" + e.message);
             }
         },
 
@@ -1859,7 +1852,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeOTHER\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeOTHER\n\n" + e.message);
             }
         },
 
@@ -1902,7 +1895,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeFORWARD\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeFORWARD\n\n" + e.message);
             }
         },
 
@@ -1947,7 +1940,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeMONEY\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeMONEY\n\n" + e.message);
             }
         },
 
@@ -1990,7 +1983,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeMONEY\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeMONEY\n\n" + e.message);
             }
         },
 
@@ -2039,7 +2032,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeCOUPON\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeCOUPON\n\n" + e.message);
             }
         },
 
@@ -2087,7 +2080,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeVALUECODESMS\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeVALUECODESMS\n\n" + e.message);
             }
         },
 
@@ -2135,7 +2128,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeCOUPONEMAIL\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeCOUPONEMAIL\n\n" + e.message);
             }
         },
 
@@ -2183,7 +2176,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeVALUECODEEMAIL\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeVALUECODEEMAIL\n\n" + e.message);
             }
         },
         ////////// END MOSCGI
@@ -2197,7 +2190,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.OData_Querys.GetDefaultMilageContributionFromSetting(_currentdate, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.setMilageCompensation\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.setMilageCompensation\n\n" + e.message);
             }
         },
 
@@ -2213,7 +2206,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.setMilageCompensation_callback\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.setMilageCompensation_callback\n\n" + e.message);
             }
         },
 
@@ -2226,7 +2219,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.SetValue("cgi_last_valid", futureDate, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.SetDateValidField\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.SetDateValidField\n\n" + e.message);
             }
         },
 
@@ -2269,11 +2262,11 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 if (_caseid != null)
                 {
                     _caseidClean = Endeavor.formscriptfunctions.cleanIdField(_caseid);
+                    Endeavor.OData_Querys.GetBicIban(_caseidClean, formContext);
                 }
-                Endeavor.OData_Querys.GetBicIban(_caseidClean, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.SetBicIban\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.SetBicIban\n\n" + e.message);
             }
         },
 
@@ -2291,7 +2284,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i SetBicIbanOnLoad_callback\n\n" + e.Message);
+                alert("Fel i SetBicIbanOnLoad_callback\n\n" + e.message);
             }
         },
 
@@ -2304,12 +2297,11 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 var caseidClean = null;
                 if (_caseid != null) {
                     caseidClean = Endeavor.formscriptfunctions.cleanIdField(_caseid);
+                    Endeavor.OData_Querys.GetSocSecNumber(caseidClean, formContext);
                 }
-
-                Endeavor.OData_Querys.GetSocSecNumber(caseidClean, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.SocSecNumber\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.SocSecNumber\n\n" + e.message);
             }
         },
 
@@ -2330,7 +2322,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i setSocSecOnLoad_callback\n\n" + e.Message);
+                alert("Fel i setSocSecOnLoad_callback\n\n" + e.message);
             }
         },
 
@@ -2340,13 +2332,12 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
         setEmail: function (formContext) {
             try {
                 var _caseid = Endeavor.formscriptfunctions.GetLookupid("cgi_caseid", formContext);
-
                 var _caseid_clean = Endeavor.formscriptfunctions.cleanIdField(_caseid);
 
                 Endeavor.OData_Querys.GetEmailAddress(_caseid_clean, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.getEmail\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.getEmail\n\n" + e.message);
             }
         },
 
@@ -2368,7 +2359,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i getEmail_callback\n\n" + e.Message);
+                alert("Fel i getEmail_callback\n\n" + e.message);
             }
         },
 
@@ -2380,11 +2371,11 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
                 if (_caseid != null) {
                     caseidClean = Endeavor.formscriptfunctions.cleanIdField(_caseid);
+                    Endeavor.OData_Querys.GetMobileNumber(caseidClean, formContext);
                 }
-                Endeavor.OData_Querys.GetMobileNumber(caseidClean, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.getMobileNumber\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.getMobileNumber\n\n" + e.message);
             }
         },
 
@@ -2405,7 +2396,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i getMobileNumber_callback\n\n" + e.Message);
+                alert("Fel i getMobileNumber_callback\n\n" + e.message);
             }
         },
 
@@ -2462,7 +2453,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 formContext.getAttribute("cgi_comments").setValue();
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.setEmptyAllValues\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.setEmptyAllValues\n\n" + e.message);
             }
         },
 
@@ -2483,7 +2474,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 formContext.getAttribute("cgi_calculated_amount").setValue(_cgi_amount);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.calculateCompensation\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.calculateCompensation\n\n" + e.message);
             }
 
         },
@@ -2503,8 +2494,8 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 if (userRoleId != null)
                 {
                     userRoleIdClean = Endeavor.formscriptfunctions.cleanIdField(userRoleId);
+                    Endeavor.OData_Querys.GetSecRolesNameRefund(userRoleIdClean, formContext);
                 }
-                Endeavor.OData_Querys.GetSecRolesNameRefund(userRoleIdClean, formContext);
             }
         },
 
@@ -2525,7 +2516,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.CheckUserRoleOnchange_callback\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.CheckUserRoleOnchange_callback\n\n" + e.message);
             }
         },
 
@@ -2549,7 +2540,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     Endeavor.formscriptfunctions.SetState("cgi_attestation", true, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.checkAuthorization\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.checkAuthorization\n\n" + e.message);
             }
         },
 
@@ -2593,7 +2584,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 Endeavor.formscriptfunctions.SetState("cgi_invoicerecipient", true, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.setFieldsToReadOnly\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.setFieldsToReadOnly\n\n" + e.message);
             }
         },
         
@@ -2623,7 +2614,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.format_phonenumber\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Account.format_phonenumber\n\n" + e.message);
             }
         }
     };

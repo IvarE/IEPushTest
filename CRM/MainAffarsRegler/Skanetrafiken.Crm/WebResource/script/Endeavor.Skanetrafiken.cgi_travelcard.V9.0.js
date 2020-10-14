@@ -49,7 +49,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_travelcard) === "undefined") {
                     return null;
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Incident.setVisibilityOnLoad\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Incident.setVisibilityOnLoad\n\n" + e.message);
             }
         }
     }

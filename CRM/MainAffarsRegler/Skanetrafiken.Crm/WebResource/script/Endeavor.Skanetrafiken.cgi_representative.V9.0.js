@@ -46,7 +46,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_representative) === "undefined") {
                 Endeavor.formscriptfunctions.SetValue("cgi_name", _name, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Incident.firstName_OnChange\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Incident.firstName_OnChange\n\n" + e.message);
             }
         },
 
@@ -57,7 +57,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_representative) === "undefined") {
                 var _name = Endeavor.Skanetrafiken.cgi_representative.getFirstAndLastName(formContext);
                 Endeavor.formscriptfunctions.SetValue("cgi_name", _name, formContext);
             } catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Incident.lastName_OnChange\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Incident.lastName_OnChange\n\n" + e.message);
             }
         },
 
@@ -74,7 +74,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_representative) === "undefined") {
                     _name = _name + " " + _lastName;
 
             } catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Incident.getFirstAndLastName\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Incident.getFirstAndLastName\n\n" + e.message);
             }
             return _name;
         },
@@ -107,7 +107,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_representative) === "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.format_phonenumber\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Account.format_phonenumber\n\n" + e.message);
             }
         }
     }

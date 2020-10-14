@@ -42,10 +42,9 @@ if (typeof (Endeavor.Skanetrafiken.KBArticle) === "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.KBArticle.onFormLoad\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.KBArticle.onFormLoad\n\n" + e.message);
             }
         },
-
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -60,7 +59,7 @@ if (typeof (Endeavor.Skanetrafiken.KBArticle) === "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.KBArticle.checkIfUserHasMarketingRole\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.KBArticle.checkIfUserHasMarketingRole\n\n" + e.message);
             }
         },
 
@@ -80,7 +79,7 @@ if (typeof (Endeavor.Skanetrafiken.KBArticle) === "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.KBArticle.checkIfUserHasMarketingRole_callback\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.KBArticle.checkIfUserHasMarketingRole_callback\n\n" + e.message);
             }
         },
 
@@ -94,7 +93,7 @@ if (typeof (Endeavor.Skanetrafiken.KBArticle) === "undefined") {
                 Endeavor.formscriptfunctions.SetState("cgi_appoval", _setstate, formContext);
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.KBArticle.setPublishAllowed\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.KBArticle.setPublishAllowed\n\n" + e.message);
             }
         },
 
@@ -115,7 +114,7 @@ if (typeof (Endeavor.Skanetrafiken.KBArticle) === "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.KBArticle.cgi_publishonweb_OnChange\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.KBArticle.cgi_publishonweb_OnChange\n\n" + e.message);
             }
         }
     }
