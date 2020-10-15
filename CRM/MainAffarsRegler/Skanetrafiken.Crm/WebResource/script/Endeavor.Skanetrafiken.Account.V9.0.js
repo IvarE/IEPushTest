@@ -224,7 +224,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             var senior = formContext.getAttribute("ed_seniorcustomer");
             var portal = formContext.getAttribute("ed_portalcustomer");
 
-            if (infotaimentCustomer == null || customer == null || agent == null || smarbete == null || reseller == null || school == null || senior == null || portal == null)
+            if (infotaimentCustomer == null || customer == null || agent == null || samarbete == null || reseller == null || school == null || senior == null || portal == null)
                 return;
 
             if (infotaimentCustomer.getValue() && !customer.getValue() && !agent.getValue() && !samarbete.getValue() &&

@@ -34,7 +34,6 @@ if (typeof (Endeavor.Skanetrafiken.Campaign) == "undefined") {
 
             var idRecord = formContext.data.entity.getId();
 
-            //TODO - Actions
             Process.callWorkflow("1A68FEA1-7C7E-E611-8103-00155D0A6B01",
                 idRecord,
                 function () {
@@ -47,15 +46,18 @@ if (typeof (Endeavor.Skanetrafiken.Campaign) == "undefined") {
 
         onExportLeads: function (formContext) {
             debugger;
-            var tryOutPeriodFrom = Endeavor.Skanetrafiken.Campaign.compileTryoutFromString(formContext);
+            var globalContext = Xrm.Utility.getGlobalContext();
+            var clientUrl = globalContext.getClientUrl();
+
+            var tryOutPeriodFrom = Endeavor.Skanetrafiken.Campaign.compileTryoutFromString(formContext, clientUrl);
             if (tryOutPeriodFrom == "")
                 return;
 
-            var tryOutPeriodTo = Endeavor.Skanetrafiken.Campaign.compileTryoutToString(formContext);
+            var tryOutPeriodTo = Endeavor.Skanetrafiken.Campaign.compileTryoutToString(formContext, clientUrl);
             if (tryOutPeriodTo == "")
                 return;
 
-            var lastAnswerDate = Endeavor.Skanetrafiken.Campaign.compileLastAnswerDate(formContext);
+            var lastAnswerDate = Endeavor.Skanetrafiken.Campaign.compileLastAnswerDate(formContext, clientUrl);
             if (lastAnswerDate == "")
                 return;
 
@@ -63,7 +65,7 @@ if (typeof (Endeavor.Skanetrafiken.Campaign) == "undefined") {
             lastAnswerDate = lastAnswerDate.substr(0, lastAnswerDate.length - 3);
 
             var columnSet = "firstname,lastname,address1_line1,address1_line2,address1_line3,address1_postalcode,address1_city,leadsourcecode,ed_neareststop,ed_campaigncode";
-            var idRecord = Xrm.Page.data.entity.getId().replace("{", "").replace("}", "");
+            var idRecord = formContext.data.entity.getId().replace("{", "").replace("}", "");
 
             Xrm.WebApi.retrieveMultipleRecords("lead", "?$select=" + columnSet + "&$filter=campaignid eq " + idRecord + " and statecode eq 0").then(
                 function success(results) {
@@ -114,18 +116,27 @@ if (typeof (Endeavor.Skanetrafiken.Campaign) == "undefined") {
                 });
         },
 
-        compileTryoutFromString: function (formContext) {
+        compileTryoutFromString: function (formContext, clientUrl) {
 
-            var idRecord = Xrm.Page.data.entity.getId().replace("{", "").replace("}", "");
+            var idRecord = formContext.data.entity.getId();
 
-            var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "campaigns?&$expand=processstages($select=stagecategory&$filter=primaryentitytypecode eq campaign)&$filter=campaignid eq " + idRecord;
-            var campaignResultSet = Endeavor.Common.Data.fetchJSONResults(url);
+            var fetchxml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true'>"+
+                    "<entity name='campaign'>"+
+                        "<attribute name='campaignid' />"+
+                        "<filter type='and'>"+
+                            "<condition attribute='campaignid' operator='eq' value='" + idRecord + "' />" +
+                        "</filter>" +
+                        "<link-entity name='processstage' from='processstageid' to='stageid' alias='aa'>" +
+                            "<attribute name='stagecategory' />" +
+                        "</link-entity>" +
+                    "</entity>" +
+                "</fetch>";
 
-            var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "campaigns?$select=processstage_campaigns/StageCategory&$expand=processstage_campaigns&$filter=campaignid eq " + idRecord;
-            var campaignResultSet = Endeavor.Common.Data.fetchJSONResults(url);
+            var url = clientUrl + "/api/data/v9.0/campaigns?fetchXml=" + encodeURIComponent(fetchxml);
+            var campaignResultSet = Endeavor.formscriptfunctions.fetchJSONResults(url);
 
             var tryOutFromVal;
-            if (campaignResultSet.value[0].processstage_campaigns.StageCategory.Value == Endeavor.Skanetrafiken.OptionSet.processstage_category.Kvalificera) {
+            if (campaignResultSet[0]["aa_x002e_stagecategory"] == Endeavor.Skanetrafiken.OptionSet.processstage_category.Kvalificera) {
                 var tryOutFromAttr = formContext.getAttribute("ed_tryoutfromphase1");
                 if (!tryOutFromAttr) {
                     alert("Please add the 'Try out Period - From (Primary Sendout)'-field to the form and try again");
@@ -138,7 +149,7 @@ if (typeof (Endeavor.Skanetrafiken.Campaign) == "undefined") {
                     return "";
                 }
             }
-            else if (campaignResultSet.entities[0].processstage_campaigns.StageCategory.Value == Endeavor.Skanetrafiken.OptionSet.processstage_category.Tafram) {
+            else if (campaignResultSet[0]["aa_x002e_stagecategory"] == Endeavor.Skanetrafiken.OptionSet.processstage_category.Tafram) {
                 var tryOutFromAttr = formContext.getAttribute("ed_tryoutfromphase2");
                 if (!tryOutFromAttr) {
                     alert("Please add the 'Try out Period - From (Reminder Sendout)'-field to the form and try again");
@@ -160,19 +171,32 @@ if (typeof (Endeavor.Skanetrafiken.Campaign) == "undefined") {
             return tryOutFromStr;
         },
 
-        compileTryoutToString: function (formContext) {
+        compileTryoutToString: function (formContext, clientUrl) {
 
-            //TODO - WebAPI
-            var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "CampaignSet?$select=processstage_campaigns/StageCategory&$expand=processstage_campaigns&$filter=CampaignId eq (guid'" + Xrm.Page.data.entity.getId() + "')";
-            var campaignResultSet = Endeavor.Common.Data.fetchJSONResults(url);
+            var idRecord = formContext.data.entity.getId();
 
-            if (!campaignResultSet || campaignResultSet.entities.length < 1 || !campaignResultSet.entities[0].processstage_campaigns || !campaignResultSet.entities[0].processstage_campaigns.StageCategory) {
+            var fetchxml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true'>" +
+                    "<entity name='campaign'>" +
+                        "<attribute name='campaignid' />" +
+                        "<filter type='and'>" +
+                            "<condition attribute='campaignid' operator='eq' value='" + idRecord + "' />" +
+                        "</filter>" +
+                        "<link-entity name='processstage' from='processstageid' to='stageid' alias='aa'>" +
+                            "<attribute name='stagecategory' />" +
+                        "</link-entity>" +
+                    "</entity>" +
+                "</fetch>";
+
+            var url = clientUrl + "/api/data/v9.0/campaigns?fetchXml=" + encodeURIComponent(fetchxml);
+            var campaignResultSet = Endeavor.formscriptfunctions.fetchJSONResults(url);
+
+            if (!campaignResultSet || campaignResultSet.length < 1 || !campaignResultSet[0]["aa_x002e_stagecategory"]) {
                 alert("Something went wrong. Please try again");
                 return "";
             }
 
             var tryOutToVal;
-            if (campaignResultSet.entities[0].processstage_campaigns.StageCategory.Value == Endeavor.Skanetrafiken.OptionSet.processstage_category.Kvalificera) {
+            if (campaignResultSet[0]["aa_x002e_stagecategory"] == Endeavor.Skanetrafiken.OptionSet.processstage_category.Kvalificera) {
                 var tryOutToAttr = formContext.getAttribute("ed_tryouttophase1");
                 if (!tryOutToAttr) {
                     alert("Please add the 'Try out Period - To (Primary Sendout)'-field to the form and try again");
@@ -185,7 +209,7 @@ if (typeof (Endeavor.Skanetrafiken.Campaign) == "undefined") {
                     return "";
                 }
             }
-            else if (campaignResultSet.entities[0].processstage_campaigns.StageCategory.Value == Endeavor.Skanetrafiken.OptionSet.processstage_category.Tafram) {
+            else if (campaignResultSet[0]["aa_x002e_stagecategory"] == Endeavor.Skanetrafiken.OptionSet.processstage_category.Tafram) {
                 var tryOutToAttr = formContext.getAttribute("ed_tryouttophase2");
                 if (!tryOutToAttr) {
                     alert("Please add the 'Try out Period - To (Reminder Sendout)'-field to the form and try again");
@@ -207,20 +231,33 @@ if (typeof (Endeavor.Skanetrafiken.Campaign) == "undefined") {
             return tryOutToStr;
         },
 
-        compileLastAnswerDate: function (formContext) {
+        compileLastAnswerDate: function (formContext, clientUrl) {
 
-            //TODO - WebAPI
-            var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "CampaignSet?$select=processstage_campaigns/StageCategory&$expand=processstage_campaigns&$filter=CampaignId eq (guid'" + Xrm.Page.data.entity.getId() + "')";
-            var campaignResultSet = Endeavor.Common.Data.fetchJSONResults(url);
+            var idRecord = formContext.data.entity.getId();
 
-            if (!campaignResultSet || campaignResultSet.entities.length < 1 || !campaignResultSet.entities[0].processstage_campaigns || !campaignResultSet.entities[0].processstage_campaigns.StageCategory) {
+            var fetchxml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true'>" +
+                    "<entity name='campaign'>" +
+                        "<attribute name='campaignid' />" +
+                        "<filter type='and'>" +
+                            "<condition attribute='campaignid' operator='eq' value='" + idRecord + "' />" +
+                        "</filter>" +
+                        "<link-entity name='processstage' from='processstageid' to='stageid' alias='aa'>" +
+                            "<attribute name='stagecategory' />" +
+                        "</link-entity>" +
+                    "</entity>" +
+                "</fetch>";
+
+            var url = clientUrl + "/api/data/v9.0/campaigns?fetchXml=" + encodeURIComponent(fetchxml);
+            var campaignResultSet = Endeavor.formscriptfunctions.fetchJSONResults(url);
+
+            if (!campaignResultSet || campaignResultSet.length < 1 || !campaignResultSet[0]["aa_x002e_stagecategory"]) {
                 alert("Something went wrong. Please try again")
                 return "";
             }
 
             var lastRespVal;
             var DR;
-            if (campaignResultSet.entities[0].processstage_campaigns.StageCategory.Value == Endeavor.Skanetrafiken.OptionSet.processstage_category.Kvalificera) {
+            if (campaignResultSet[0]["aa_x002e_stagecategory"] == Endeavor.Skanetrafiken.OptionSet.processstage_category.Kvalificera) {
                 DR = "DR1";
                 var lastResponseAttr = formContext.getAttribute("ed_validtophase1");
                 if (!lastResponseAttr || lastResponseAttr == "") {
@@ -233,7 +270,7 @@ if (typeof (Endeavor.Skanetrafiken.Campaign) == "undefined") {
                     return "";
                 }
             }
-            else if (campaignResultSet.entities[0].processstage_campaigns.StageCategory.Value == Endeavor.Skanetrafiken.OptionSet.processstage_category.Tafram) {
+            else if (campaignResultSet[0]["aa_x002e_stagecategory"] == Endeavor.Skanetrafiken.OptionSet.processstage_category.Tafram) {
                 DR = "DR2";
                 var lastResponseAttr = formContext.getAttribute("ed_validtophase2");
                 if (!lastResponseAttr || lastResponseAttr == "") {
@@ -343,6 +380,5 @@ if (typeof (Endeavor.Skanetrafiken.Campaign) == "undefined") {
 
             }, 100);
         },
-
     }
 }
