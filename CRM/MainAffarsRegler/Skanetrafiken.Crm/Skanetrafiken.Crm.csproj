@@ -262,9 +262,6 @@
     <Content Include="WebResource\script\formscriptfunctions.js" />
     <Content Include="WebResource\script\OData_Querys.js" />
     <Content Include="WebResource\script\SDK.Rest.js" />
-    <Content Include="WebResource\script\vsdoc\head.load.vsdoc.js" />
-    <Content Include="WebResource\script\vsdoc\Sdk.Soap.vsdoc.js" />
-    <Content Include="WebResource\script\vsdoc\XrmPage-vsdoc.js" />
     <None Include="ColumnBlockSchemas\NotificationInfoBlock.xsd">
       <SubType>Designer</SubType>
     </None>

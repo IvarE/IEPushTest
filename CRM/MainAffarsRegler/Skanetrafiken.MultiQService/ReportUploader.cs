@@ -89,11 +89,11 @@ namespace Skanetrafiken.MultiQService
 
                 foreach (OrderEntity order in lOrders)
                 {
-                    if(order.ed_DeliveryReportName != null)
+                    if (order.ed_DeliveryReportName != null)
                     {
                         List<MultiQFile> lFiles = pdfFiles.Where(x => x.fileName == order.ed_DeliveryReportName).ToList();
 
-                        if(lFiles.Count == 1)
+                        if (lFiles.Count == 1)
                         {
                             MultiQFile file = lFiles.FirstOrDefault();
                             string base64File = DownloadFile(file.filePath);
@@ -121,11 +121,13 @@ namespace Skanetrafiken.MultiQService
                             else
                                 _log.Error($"The Base64 for the file: " + file.fileName + " is null.");
                         }
-                        else if(lFiles.Count == 0)
+                        else if (lFiles.Count == 0)
                             _log.Info($"There is no file named: " + order.ed_DeliveryReportName + " on the Shared Folder: " + Properties.Settings.Default.MultiQStoreFiles + ".");
-                        else if(lFiles.Count > 1)
+                        else if (lFiles.Count > 1)
                             _log.Info($"There is more than one file named: " + order.ed_DeliveryReportName + " on the Shared Folder: " + Properties.Settings.Default.MultiQStoreFiles + ".");
                     }
+                    else
+                        _log.Error($"The File Name of the Order " + order.SalesOrderId + " was null.");
                 }
 
                 _log.Info($"ReportUploader Done");
