@@ -14,6 +14,7 @@ using Microsoft.Xrm.Sdk;
 using System.Linq;
 using Endeavor.Crm.UnitTest;
 using Endeavor.Crm;
+using Skanetrafiken.MultiQService;
 
 namespace Skanetrafiken.MultiQService.UnitTest
 {
@@ -59,18 +60,13 @@ namespace Skanetrafiken.MultiQService.UnitTest
                 stopwatch.Start();
                 #endregion
 
-                Skanetrafiken.MultiQService.ReportUploader reportUploader = new Skanetrafiken.MultiQService.ReportUploader();
+                ReportUploader reportUploader = new ReportUploader();
                 reportUploader.ExecuteJob();
 
                 #region Test Cleanup
                 localContext.TracingService.Trace("Stop Sequences, ElapsedMilliseconds: {0}.", stopwatch.ElapsedMilliseconds);
             }
             #endregion
-        }
-
-        [Test, Category("Debug")]
-        public void TestMethod1()
-        {
         }
     }
 }

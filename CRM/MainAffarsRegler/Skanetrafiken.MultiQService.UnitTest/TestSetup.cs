@@ -17,7 +17,6 @@ using Microsoft.Xrm.Sdk.Discovery;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using NUnit.Framework;
-using Properties = Skanetrafiken.MultiQService.UnitTest.Properties;
 
 namespace Endeavor.Crm.UnitTest
 {
