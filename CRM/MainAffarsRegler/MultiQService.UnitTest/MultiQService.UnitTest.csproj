@@ -145,7 +145,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MultiQService\MultiQService.csproj">
+    <ProjectReference Include="..\MultiQService\MultiQService.csproj">
       <Project>{E3237FA9-2C96-42A7-A438-8F6EA2C8F705}</Project>
       <Name>MultiQService</Name>
     </ProjectReference>
