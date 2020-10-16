@@ -1,5 +1,4 @@
-﻿using Common.Logging;
-using Endeavor.Crm;
+﻿using Endeavor.Crm;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Query;
@@ -15,6 +14,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
 
 namespace Endeavor.Crm.MultiQService
 {
