@@ -28,12 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            // 
-            // OrdersService
-            // 
             components = new System.ComponentModel.Container();
-            this.ServiceName = "MultiQService";
-
         }
 
         #endregion

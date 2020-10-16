@@ -9,7 +9,6 @@ namespace Endeavor.Crm.MultiQService.Model
     public class MultiQFile
     {
         public string fileName { get; set; }
-
         public string filePath { get; set; }
     }
 }

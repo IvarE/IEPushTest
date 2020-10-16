@@ -66,7 +66,7 @@ namespace Endeavor.Crm.MultiQService
             {
                 localContext = GenerateLocalContext();
 
-                if(localContext == null)
+                if (localContext == null)
                 {
                     _log.Error($"Connection to CRM was not possible.\n LocalContext is null.\n\n");
                     return;
@@ -247,7 +247,7 @@ namespace Endeavor.Crm.MultiQService
         {
             try
             {
-                Uri serverUri = new Uri("ftp://" + ipAddress +  path + ":" + port +  "/" + fileName);
+                Uri serverUri = new Uri("ftp://" + ipAddress + path + ":" + port + "/" + fileName);
                 if (serverUri.Scheme != Uri.UriSchemeFtp)
                 {
                     _log.Error($"The URI Scheme is not FTP");

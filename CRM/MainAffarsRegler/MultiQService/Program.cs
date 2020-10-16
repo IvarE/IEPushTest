@@ -1,5 +1,4 @@
-using Endeavor.Crm;
-using log4net;
+using Common.Logging;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -22,14 +21,12 @@ namespace Endeavor.Crm.MultiQService
 
                 string passwordArgument = null;
 
-                string[] args = System.Environment.GetCommandLineArgs();
+                string[] args = Environment.GetCommandLineArgs();
                 if (args != null)
                 {
                     var passwordArgs = args.Where(s => s.Contains("Password:"));
                     if (passwordArgs.Count() > 0)
-                    {
                         passwordArgument = passwordArgs.First();
-                    }
                 }
 
                 if (!string.IsNullOrEmpty(passwordArgument))
@@ -40,19 +37,19 @@ namespace Endeavor.Crm.MultiQService
                     CrmConnection.SaveCredentials(OrdersService.CredentialFilePath, password, OrdersService.Entropy);
                 }
 
-#if DEBUG
-                //Workaround to make it possible to debug a service.
-                OrdersService service = new OrdersService();
-                service.Execute();
-                System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
-#else
-                ServiceBase[] ServicesToRun;
-                ServicesToRun = new ServiceBase[] 
-			    { 
-				    new OrdersService() 
-			    };
-                ServiceBase.Run(ServicesToRun);
-#endif
+                #if DEBUG
+                    //Workaround to make it possible to debug a service.
+                    OrdersService service = new OrdersService();
+                    service.Execute();
+                    System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
+                #else
+                    ServiceBase[] ServicesToRun;
+                    ServicesToRun = new ServiceBase[]
+                    {
+                        new OrdersService()
+                    };
+                    ServiceBase.Run(ServicesToRun);
+                #endif
             }
             catch (Exception ex)
             {

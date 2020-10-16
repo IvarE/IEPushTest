@@ -1,22 +1,9 @@
-﻿
-using System;
-using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NUnit.Framework;
+﻿using System;
+using Endeavor.Crm.MultiQService;
 using Microsoft.Crm.Sdk.Samples;
-using System.Collections.Generic;
-using Skanetrafiken.Crm.Entities;
-using Microsoft.Xrm.Sdk.Query;
-using Generated = Skanetrafiken.Crm.Schema.Generated;
-using System.Text.RegularExpressions;
-using System.Globalization;
-using Microsoft.Xrm.Sdk;
-using System.Linq;
-using Endeavor.Crm.UnitTest;
-using Endeavor.Crm;
-using Skanetrafiken.MultiQService;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Skanetrafiken.MultiQService.UnitTest
+namespace Endeavor.Crm.UnitTest
 {
     [TestClass]
     public class MultiQServiceFixture : PluginFixtureBase

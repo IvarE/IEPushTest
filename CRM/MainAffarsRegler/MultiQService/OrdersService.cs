@@ -118,9 +118,10 @@ namespace Endeavor.Crm.MultiQService
         protected override void OnStart(string[] args)
         {
             _log.Info(this.ServiceName);
+
             #if !DEBUG
-                //Execute is called from Main in debug.
-                Execute();
+            //Execute is called from Main in debug.
+            Execute();
             #endif
         }
 
