@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ServiceProcess;
+using System.Data;
+using System.Globalization;
+using System.IO;
 using System.Diagnostics;
 using System.Linq;
+using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
-using log4net;
+using Common.Logging;
 using Quartz;
-using Endeavor.Crm;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk.Query;
-using System.Globalization;
-using Skanetrafiken.Crm.Entities;
 using Quartz.Impl;
+using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
+using Skanetrafiken.Crm.Entities;
+
 
 namespace Endeavor.Crm.MultiQService
 {

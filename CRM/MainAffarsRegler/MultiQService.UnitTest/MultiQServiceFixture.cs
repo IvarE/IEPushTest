@@ -49,7 +49,7 @@ namespace Endeavor.Crm.UnitTest
                 #endregion
 
                 ReportUploader reportUploader = new ReportUploader();
-                reportUploader.DownloadFile("");
+                reportUploader.ExecuteJob();
 
                 #region Test Cleanup
                 localContext.TracingService.Trace("Stop Sequences, ElapsedMilliseconds: {0}.", stopwatch.ElapsedMilliseconds);

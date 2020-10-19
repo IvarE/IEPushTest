@@ -1,4 +1,3 @@
-using Common.Logging;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,6 +5,9 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using Common.Logging;
+using System.Xml.Linq;
 
 namespace Endeavor.Crm.MultiQService
 {
