@@ -72,6 +72,8 @@ namespace Endeavor.Crm.MultiQService
                     return;
                 }
 
+                string multiQLocation = Properties.Settings.Default.MultiQStoreFiles;
+                string multiQLocationArchive = Properties.Settings.Default.MultiQArchive;
                 string pdfMimeType = @"application/pdf";
                 string pdfFilter = "*.pdf";
 
@@ -84,8 +86,15 @@ namespace Endeavor.Crm.MultiQService
                 List<OrderEntity> lOrders = XrmRetrieveHelper.RetrieveMultiple<OrderEntity>(localContext, queryOrders);
                 _log.Info($"Found " + lOrders.Count + " that have a Delivery Report Name and have a Status of 'Created and Not Uploaded'.");
 
-                List<MultiQFile> pdfFiles = GetFileList(Properties.Settings.Default.MultiQStoreFiles, pdfFilter);
-                _log.Info($"Found " + pdfFiles.Count + " PDF files in the location: " + Properties.Settings.Default.MultiQStoreFiles);
+                List<MultiQFile> pdfFiles = GetFileList(multiQLocation, pdfFilter);
+
+                if(pdfFiles == null)
+                {
+                    _log.Error($"There is no PDF Files in this location: " + multiQLocation);
+                    return;
+                }
+
+                _log.Info($"Found " + pdfFiles.Count + " PDF files in the location: " + multiQLocation);
 
                 foreach (OrderEntity order in lOrders)
                 {
@@ -112,7 +121,7 @@ namespace Endeavor.Crm.MultiQService
                                 Guid idNote = XrmHelper.Create(localContext, note);
                                 _log.Info($"Note: " + idNote + " with Attachment was created on Related Order: " + order.SalesOrderId);
 
-                                bool isMoved = MoveFile(file.filePath, Properties.Settings.Default.MultiQArchive + file.fileName);
+                                bool isMoved = MoveFile(file.filePath, multiQLocationArchive + file.fileName);
                                 if (isMoved)
                                     _log.Info($"The file " + file + " was moved to History.");
                                 else
@@ -122,9 +131,9 @@ namespace Endeavor.Crm.MultiQService
                                 _log.Error($"The Base64 for the file: " + file.fileName + " is null.");
                         }
                         else if (lFiles.Count == 0)
-                            _log.Info($"There is no file named: " + order.ed_DeliveryReportName + " on the Shared Folder: " + Properties.Settings.Default.MultiQStoreFiles + ".");
+                            _log.Info($"There is no file named: " + order.ed_DeliveryReportName + " on the Shared Folder: " + multiQLocation + ".");
                         else if (lFiles.Count > 1)
-                            _log.Info($"There is more than one file named: " + order.ed_DeliveryReportName + " on the Shared Folder: " + Properties.Settings.Default.MultiQStoreFiles + ".");
+                            _log.Info($"There is more than one file named: " + order.ed_DeliveryReportName + " on the Shared Folder: " + multiQLocation + ".");
                     }
                     else
                         _log.Error($"The File Name of the Order " + order.SalesOrderId + " was null.");

@@ -2367,7 +2367,7 @@ namespace Skanetrafiken.Crm.Controllers
                         salesorder_statuscode oldStatus = order.StatusCode.Value;
 
                         bool needsStateUpdate = false;
-                        if(oldState != SalesOrderState.Active || oldStatus != salesorder_statuscode.Pending || oldStatus != salesorder_statuscode.New)
+                        if(oldState != SalesOrderState.Active || (oldStatus != salesorder_statuscode.Pending && oldStatus != salesorder_statuscode.New))
                         {
                             _log.Debug("Order " + order.SalesOrderId + " needs to be open to perform the Update.");
                             OrderEntity upOrder = new OrderEntity();
