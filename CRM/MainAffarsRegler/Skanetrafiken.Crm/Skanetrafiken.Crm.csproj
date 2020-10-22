@@ -259,6 +259,11 @@
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.QueueItem.V9.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCodeApproval.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.KBArticle.V9.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.Account.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.CreditsafeAccount.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.CreditsafeConfiguration.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.SearchCreditsafe.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.CreditSafe.SolutionConfigurationPage.js" />
     <Content Include="WebResource\script\formscriptfunctions.js" />
     <Content Include="WebResource\script\OData_Querys.js" />
     <Content Include="WebResource\script\SDK.Rest.js" />
