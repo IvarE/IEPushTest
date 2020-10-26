@@ -25,71 +25,8 @@ if (typeof (Endeavor.Skanetrafiken.getOrders) == "undefined") {
 
         document: null,
 
-        alertCustomDialog: function (msgText) {
-
-            var message = { confirmButtonLabel: "Ok", text: msgText };
-            var alertOptions = { height: 150, width: 280 };
-
-            Xrm.Navigation.openAlertDialog(message, alertOptions).then(
-                function success(result) {
-                    console.log("Alert dialog closed");
-                },
-                function (error) {
-                    console.log(error.message);
-                }
-            );
-        },
-
         onLoad: function () {
             // clear notifications? Xrm.Page.ui.clearFormNotification(Endeavor.Nibe.LoyaltyProgramRow._loadNotificationHolder);
-            try {
-                Endeavor.Skanetrafiken.getOrders.headLoad(Endeavor.Skanetrafiken.getOrders.loadSuccessCallback);
-            } catch (e) {
-                Endeavor.Skanetrafiken.getOrders.alertCustomDialog(e.message);
-            }
-        },
-
-        headLoad: function (successCallback) {
-            var jsUrls = [];
-            var jsUrl;
-
-            var globalContext = Xrm.Utility.getGlobalContext();
-
-            if (typeof SDK == "undefined" || typeof SDK.REST == "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/edp_/script/SDK.Rest.js";
-                jsUrls.push(jsUrl);
-            }
-            if (typeof Endeavor == "undefined" || typeof Endeavor.Common == "undefined" || typeof Endeavor.Common.Data == "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/edp_/script/Endeavor.Common.Data.js";
-                jsUrls.push(jsUrl);
-            }
-
-            if (typeof Sdk == "undefined" || typeof Sdk.ed_GetOrdersRequest == "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.ed_GetOrders.min.js";
-                jsUrls.push(jsUrl);
-            }
-
-            if (typeof Sdk == "undefined" || typeof Sdk.ed_CreateCreditOrderRequest == "undefined") {
-                jsUrl = globalContext.getClientUrl() + "/WebResources/ed_/script/Sdk.ed_CreateCreditOrder.min.js";
-                jsUrls.push(jsUrl);
-            }
-
-            if (typeof head.load != "function") {
-                console.error("head.load function is not defined.");
-                throw new Error("head.load function is not defined.");
-            }
-
-            if (jsUrls.length > 0) {
-                // Load required JavaScripts
-                head.load(jsUrls, successCallback);
-            }
-            else {
-                successCallback();
-            }
-        },
-
-        loadSuccessCallback: function () {
-            console.log("Everything loaded!");
         },
 
         setDocument: function (formContext, document) {
@@ -143,16 +80,12 @@ if (typeof (Endeavor.Skanetrafiken.getOrders) == "undefined") {
             var EmailAddress = "";
             if (emailattribute1 && emailattribute1.getValue()) {
                 EmailAddress = emailattribute1.getValue();
-                if (emailattribute2 && emailattribute2.getValue()) {
-                    if (emailattribute2.getValue() != emailattribute1.getValue()) {
-                        Endeavor.Skanetrafiken.getOrders.alertCustomDialog("Multiple email addresses. Default email used");
-                    }
-                    // TODO DISPLAY MORE THAN ONE EMAIL WARNING
-                }
+                if (emailattribute2 && emailattribute2.getValue())
+                    if (emailattribute2.getValue() != emailattribute1.getValue())
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Multiple email addresses. Default email used");
             } // If email1 is empty, fallback on email2
-            else if (emailattribute2 && emailattribute2.getValue()) {
+            else if (emailattribute2 && emailattribute2.getValue())
                 EmailAddress = emailattribute2.getValue();
-            }
 
             //IF EMAIL EXISTS, CALL ORDERSREQUEST
             if (EmailAddress) {
@@ -162,33 +95,24 @@ if (typeof (Endeavor.Skanetrafiken.getOrders) == "undefined") {
                     EndDate = "";
                 }
 
-                // TODO EXCEPTION IF REQUEST FAILS
-                var request = new Sdk.ed_GetOrdersRequest(EmailAddress, CardNumber, OrderNumber, StartDate, EndDate);
-                var response = Sdk.Sync.execute(request);
+                var inputParameters = [{ "Field": "EmailAddress", "Value": EmailAddress, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "CardNumber", "Value": CardNumber, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "OrderNumber", "Value": OrderNumber, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "StartDate", "Value": StartDate, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "EndDate", "Value": EndDate, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 }];
 
-                var ordersresponsetext = response.getGetOrdersResponse();
-
-                // PARSE RESPONSE
-                var parser = new DOMParser();
-                var ordersresponse = parser.parseFromString(ordersresponsetext, "text/xml");
-
-                // POPULATE ORDER TABLES
-                var parsererror = ordersresponse.getElementsByTagName('parsererror');
-                var errormessage = ordersresponse.getElementsByTagName('ErrorMessage');
-
-                if (parsererror && parsererror.length > 0) {
-                    Endeavor.Skanetrafiken.getOrders.alertCustomDialog("Get Orders service is unavailable. Please contact your systems administrator.");
-                }
-                else if (errormessage && errormessage.length > 0 && errormessage[0].innerHTML) {
-                    Endeavor.Skanetrafiken.getOrders.alertCustomDialog(errormessage[0].innerHTML);
-                }
-                else {
-                    Endeavor.Skanetrafiken.getOrders.populateTables(formContext, ordersresponse);
-                }
+                Endeavor.formscriptfunctions.callGlobalAction("ed_GetOrders", inputParameters,
+                    function (ordersresponse) {
+                        Endeavor.Skanetrafiken.getOrders.populateTables(formContext, ordersresponse);
+                    },
+                    function (error) {
+                        var errorMessage = "Get Orders service is unavailable. Please contact your systems administrator. Details: " + error.message;
+                        console.log(errorMessage);
+                        Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
+                    });
             }
-            else {
-                Endeavor.Skanetrafiken.getOrders.alertCustomDialog("Ange e-post för att söka");
-            }
+            else 
+                Endeavor.formscriptfunctions.AlertCustomDialog("Ange e-post för att söka");
         },
 
         /* TAKES INPUT FROM FIELDS AND DISPLAYS SEARCH RESULTS IN ORDERTABLE AND CREDITORDERTABLE */
@@ -536,87 +460,79 @@ if (typeof (Endeavor.Skanetrafiken.getOrders) == "undefined") {
                     var reason = row.cells.namedItem("reason").firstChild.value; // max characters?
                     var quantity = creditQuantity;
 
-                    var request = new Sdk.ed_CreateCreditOrderRequest(ordernr, productnumber, credit, reason, quantity);
-                    var response = Sdk.Sync.execute(request);
-                    var ordersresponsetext = response.getCreditOrderResponse();
+                    var inputParameters = [{ "Field": "OrderNumber", "Value": ordernr, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                        { "Field": "ProductNumber", "Value": productnumber, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                        { "Field": "Credit", "Value": credit, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                        { "Field": "Reason", "Value": reason, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                        { "Field": "Quantity", "Value": quantity, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 }];
 
-                    var parser = new DOMParser();
-                    var ordersresponse = parser.parseFromString(ordersresponsetext, "text/xml");
+                    Endeavor.formscriptfunctions.callGlobalAction("ed_CreateCreditOrder", inputParameters,
+                        function (ordersresponse) {
 
-                    var parsererror = ordersresponse.getElementsByTagName('parsererror');
-                    var errormessage = ordersresponse.getElementsByTagName('ErrorMessage');
-
-                    if (parsererror && parsererror.length > 0) {
-                        Endeavor.Skanetrafiken.getOrders.alertCustomDialog("Credit Order service is unavailable. Please contact your systems administrator.");
-                    }
-                    else if (errormessage && errormessage.length > 0 && errormessage[0].innerHTML) {
-                        Endeavor.Skanetrafiken.getOrders.alertCustomDialog(errormessage[0].innerHTML);
-                    }
-                    else {
-                        if (ordersresponse.getElementsByTagName('Success') && ordersresponse.getElementsByTagName('Success')[0] && ordersresponse.getElementsByTagName('Success')[0].firstChild && ordersresponse.getElementsByTagName('Success')[0].firstChild.nodeValue == 'false') {
-                            if (ordersresponse.getElementsByTagName('ErrorMessage') && ordersresponse.getElementsByTagName('ErrorMessage')[0] && ordersresponse.getElementsByTagName('ErrorMessage')[0].firstChild) {
-                                Endeavor.Skanetrafiken.getOrders.alertCustomDialog(ordersresponse.getElementsByTagName('ErrorMessage')[0].firstChild.nodeValue);
-                            }
-                            if (ordersresponse.getElementsByTagName('Message') && ordersresponse.getElementsByTagName('Message')[0] && ordersresponse.getElementsByTagName('Message')[0].firstChild) {
-                                Endeavor.Skanetrafiken.getOrders.alertCustomDialog(ordersresponse.getElementsByTagName('Message')[0].firstChild.nodeValue);
-                            }
-                        }
-
-                        if (ordersresponse.getElementsByTagName('Success') && ordersresponse.getElementsByTagName('Success')[0] && ordersresponse.getElementsByTagName('Success')[0].firstChild && ordersresponse.getElementsByTagName('Success')[0].firstChild.nodeValue == 'true') {
-
-                            var globalContext = Xrm.Utility.getGlobalContext();
-                            var userName = globalContext.userSettings.userName;
-
-                            var entity =
-                            {
-                                "cgi_ordernumber": ordernr,
-                                "cgi_sum": credit,
-                                "cgi_productnumber": productnumber,
-                                "cgi_reason": reason,
-                                "cgi_createdby": userName,
-                                "cgi_date": ordersresponse.getElementsByTagName('Date')[0].firstChild.nodeValue.substring(0, 10),
-                                "cgi_name": ordernr,
-                                "cgi_time": ordersresponse.getElementsByTagName('Date')[0].firstChild.nodeValue.substring(11, 16),
-                                "cgi_referencenumber": ordersresponse.getElementsByTagName('ReferenceNumber')[0].firstChild.nodeValue,
-                                "cgi_success": ordersresponse.getElementsByTagName('Success')[0].firstChild.nodeValue
+                            if (ordersresponse.getElementsByTagName('Success') && ordersresponse.getElementsByTagName('Success')[0] && ordersresponse.getElementsByTagName('Success')[0].firstChild && ordersresponse.getElementsByTagName('Success')[0].firstChild.nodeValue == 'false') {
+                                if (ordersresponse.getElementsByTagName('ErrorMessage') && ordersresponse.getElementsByTagName('ErrorMessage')[0] && ordersresponse.getElementsByTagName('ErrorMessage')[0].firstChild)
+                                    Endeavor.formscriptfunctions.AlertCustomDialog(ordersresponse.getElementsByTagName('ErrorMessage')[0].firstChild.nodeValue);
+                                
+                                if (ordersresponse.getElementsByTagName('Message') && ordersresponse.getElementsByTagName('Message')[0] && ordersresponse.getElementsByTagName('Message')[0].firstChild)
+                                    Endeavor.formscriptfunctions.AlertCustomDialog(ordersresponse.getElementsByTagName('Message')[0].firstChild.nodeValue);
                             }
 
-                            if (ordersresponse.getElementsByTagName('Message')[0].firstChild && ordersresponse.getElementsByTagName('Message')[0].firstChild.nodeValue) {
-                                entity["cgi_message"] = ordersresponse.getElementsByTagName('Message')[0].firstChild.nodeValue;
-                            }
+                            if (ordersresponse.getElementsByTagName('Success') && ordersresponse.getElementsByTagName('Success')[0] && ordersresponse.getElementsByTagName('Success')[0].firstChild && ordersresponse.getElementsByTagName('Success')[0].firstChild.nodeValue == 'true') {
 
-                            var entityId = formContext.data.entity.getId();
-                            var entityName = formContext.data.entity.getEntityName();
+                                var globalContext = Xrm.Utility.getGlobalContext();
+                                var userName = globalContext.userSettings.userName;
 
-                            if (entityId) {
-                                entityId = entityId.substring(1, entityId.length - 1);
-
-                                if (entityName == "contact") {
-                                    entity["cgi_contactid@odata.bind"] = "/" + entityName + "s(" + entityId + ")";
+                                var entity =
+                                {
+                                    "cgi_ordernumber": ordernr,
+                                    "cgi_sum": credit,
+                                    "cgi_productnumber": productnumber,
+                                    "cgi_reason": reason,
+                                    "cgi_createdby": userName,
+                                    "cgi_date": ordersresponse.getElementsByTagName('Date')[0].firstChild.nodeValue.substring(0, 10),
+                                    "cgi_name": ordernr,
+                                    "cgi_time": ordersresponse.getElementsByTagName('Date')[0].firstChild.nodeValue.substring(11, 16),
+                                    "cgi_referencenumber": ordersresponse.getElementsByTagName('ReferenceNumber')[0].firstChild.nodeValue,
+                                    "cgi_success": ordersresponse.getElementsByTagName('Success')[0].firstChild.nodeValue
                                 }
-                                else if (entityName == "account") {
-                                    entity["cgi_accountid@odata.bind"] = "/" + entityName + "s(" + entityId + ")";;
+
+                                if (ordersresponse.getElementsByTagName('Message')[0].firstChild && ordersresponse.getElementsByTagName('Message')[0].firstChild.nodeValue)
+                                    entity["cgi_message"] = ordersresponse.getElementsByTagName('Message')[0].firstChild.nodeValue;
+
+                                var entityId = formContext.data.entity.getId();
+                                var entityName = formContext.data.entity.getEntityName();
+
+                                if (entityId) {
+                                    entityId = entityId.substring(1, entityId.length - 1);
+
+                                    if (entityName == "contact")
+                                        entity["cgi_contactid@odata.bind"] = "/" + entityName + "s(" + entityId + ")";
+                                    else if (entityName == "account")
+                                        entity["cgi_accountid@odata.bind"] = "/" + entityName + "s(" + entityId + ")";;
                                 }
+
+                                row.cells.namedItem("credit").firstChild.value = "";
+                                row.cells.namedItem("reason").firstChild.value = "";
+
+                                Xrm.WebApi.createRecord("cgi_creditorderrow", entity).then(
+                                    function success(CompletedResponse) {
+                                    },
+                                    function (errorHandler) {
+                                        Endeavor.formscriptfunctions.AlertCustomDialog("An error occurred when saving Credit Order Row: " + errorHandler.message);
+                                    }
+                                );
+
+                                Endeavor.Skanetrafiken.getOrders.getCreditOrders(formContext);
                             }
-
-                            row.cells.namedItem("credit").firstChild.value = "";
-                            row.cells.namedItem("reason").firstChild.value = "";
-
-                            Xrm.WebApi.createRecord("cgi_creditorderrow", entity).then(
-                                function success(CompletedResponse) {
-
-                                },
-                                function (errorHandler) {
-                                    Endeavor.Skanetrafiken.Contact.alertCustomDialog("An error occurred when saving Credit Order Row: " + errorHandler.message);
-                                }
-                            );
-
-                            Endeavor.Skanetrafiken.getOrders.getCreditOrders(formContext);
-                        }
-                    }
+                        },
+                        function (error) {
+                            var errorMessage = "Credit Order service is unavailable. Please contact your systems administrator. Details: " + error.message;
+                            console.log(errorMessage);
+                            Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
+                        });
                 }
                 catch (err) {
-                    Endeavor.Skanetrafiken.getOrders.alertCustomDialog(err.message);
+                    Endeavor.formscriptfunctions.AlertCustomDialog(err.message);
                 }
             };
         },
@@ -639,12 +555,12 @@ if (typeof (Endeavor.Skanetrafiken.getOrders) == "undefined") {
                         },
                         function (error) {
                             console.log(error.message);
-                            Endeavor.Skanetrafiken.getOrders.alertCustomDialog(error.message);
+                            Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
                         }
                     );
                 }
                 catch (err) {
-                    Endeavor.Skanetrafiken.getOrders.alertCustomDialog("Error in credit orders: " + err.message);
+                    Endeavor.formscriptfunctions.AlertCustomDialog("Error in credit orders: " + err.message);
                 }
             }
         },

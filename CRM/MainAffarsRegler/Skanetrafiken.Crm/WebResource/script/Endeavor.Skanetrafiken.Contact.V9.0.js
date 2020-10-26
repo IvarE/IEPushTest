@@ -502,55 +502,34 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 blocked = formContext.getAttribute("ed_islockedportal").getValue();
 
             if (SSN) {
-                if (blocked === true) {
-                    try {
-                        var inputParameters = [];
 
-                        var parameterSSN = { "Field": "SSN", "Value": SSN, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-                        var parameterBlocked = { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 };
-                        inputParameters.push(parameterSSN);
-                        inputParameters.push(parameterBlocked);
+                var inputParameters = [];
 
-                        Endeavor.formscriptfunctions.callGlobalAction("ed_BlockCustomerPortal", inputParameters,
-                            function (result) {
-                                Endeavor.formscriptfunctions.AlertCustomDialog("Kund avblockerad!");
-                            },
-                            function (error) {
-                                console.log(error.message);
-                                Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
-                            });
-                    }
-                    catch (e) {
-                        Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte avblockera kund. Var god försök igen senare.");
-                    }
-                }
-                else {
-                    try {
-                        var inputParameters = [];
+                var parameterSSN = { "Field": "SSN", "Value": SSN, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
+                var parameterBlocked = { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 };
+                inputParameters.push(parameterSSN);
+                inputParameters.push(parameterBlocked);
 
-                        var parameterSSN = { "Field": "SSN", "Value": SSN, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-                        var parameterBlocked = { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 };
-                        inputParameters.push(parameterSSN);
-                        inputParameters.push(parameterBlocked);
+                Endeavor.formscriptfunctions.callGlobalAction("ed_BlockCustomerPortal", inputParameters,
+                    function (result) {
+                        if (blocked)
+                            Endeavor.formscriptfunctions.AlertCustomDialog("Kund avblockerad!");
+                        else
+                            Endeavor.formscriptfunctions.AlertCustomDialog("Kund spärrad!");
 
-                        Endeavor.formscriptfunctions.callGlobalAction("ed_BlockCustomerPortal", inputParameters,
-                            function (result) { 
-                                Endeavor.Skanetrafiken.Contact.alertCustomDialog("Kund spärrad!");
-                            },
-                            function (error) {
-                                console.log(error.message);
-                                Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
-                            });                       
-                    }
-                    catch (e) {
-                        Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte spärra kund. Var god försök igen senare.");
-                    }
-                }
-                formContext.data.refresh();
+                        formContext.data.refresh();
+                    },
+                    function (error) {
+                        if (blocked)
+                            Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte avblockera kund. Var god försök igen senare.");
+                        else
+                            Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte spärra kund. Var god försök igen senare.");
+
+                        formContext.data.refresh();
+                    });
             }
-            else {
+            else
                 Endeavor.formscriptfunctions.AlertCustomDialog("Kunden saknar personnummer.");
-            }
         },
 
         setFocusQuickCreateContactFirstName: function (formContext) {
