@@ -68,45 +68,32 @@ if (typeof (Endeavor.Skanetrafiken.CompanyRole) == "undefined") {
                         if (formContext.getAttribute("ed_islockedportal"))
                             blocked = formContext.getAttribute("ed_islockedportal").getValue();
 
-                        var inputParameters = [];
+                        var inputParameters = [{ "Field": "SSN", "Value": SSN, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                            { "Field": "PortalID", "Value": PortalID, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                            { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 }];
 
-                        var parameterSSN = { "Field": "SSN", "Value": SSN, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-                        var parameterPortalID = { "Field": "PortalID", "Value": PortalID, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-                        var parameterBlocked = { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 };
-                        inputParameters.push(parameterSSN);
-                        inputParameters.push(parameterPortalID);
-                        inputParameters.push(parameterBlocked);
+                        try {
 
-                        if (blocked === true) {
-                            try {
+                            Endeavor.formscriptfunctions.callGlobalAction("ed_BlockCompanyRolePortal", inputParameters,
+                                function (result) {
+                                    if (blocked)
+                                        Endeavor.formscriptfunctions.AlertCustomDialog("Företagsroll avblockerad!");
+                                    else
+                                        Endeavor.formscriptfunctions.AlertCustomDialog("Företagsroll spärrad.");
+                                },
+                                function (error) {
+                                    if (blocked)
+                                        Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte avblockera företagsroll. Var god försök igen senare.");
+                                    else
+                                        Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte spärra företagsroll. Var god försök igen senare.");
 
-                                Endeavor.formscriptfunctions.callGlobalAction("ed_BlockCompanyRolePortal", inputParameters,
-                                    function (result) {
-                                        Endeavor.formscriptfunctions.AlertCustomDialog("företagsroll avblockerad!");
-                                    },
-                                    function (error) {
-                                        console.log(error.message);
-                                        Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
-                                    });
-                            }
-                            catch (e) {
-                                Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte avblockera företagsroll. Var god försök igen senare.");
-                            }
+                                    console.log(error.message);
+                                    Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
+                                });
                         }
-                        else {
-                            try {
-                                Endeavor.formscriptfunctions.callGlobalAction("ed_BlockCompanyRolePortal", inputParameters,
-                                    function (result) {
-                                        Endeavor.formscriptfunctions.AlertCustomDialog("företagsroll spärrad.");
-                                    },
-                                    function (error) {
-                                        console.log(error.message);
-                                        Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
-                                    });
-                            }
-                            catch (e) {
-                                Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte spärra företagsroll. Var god försök igen senare.");
-                            }
+                        catch (e) {
+                            console.log(e.message);
+                            Endeavor.formscriptfunctions.AlertCustomDialog(e.message);
                         }
                     },
                     function (error) {

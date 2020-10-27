@@ -359,19 +359,17 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 );
             }
 
+            var fullName = "";
             if (formContext.getAttribute("firstname") && formContext.getAttribute("lastname"))
-                var fullName = formContext.getAttribute("firstname").getValue() + " " + formContext.getAttribute("lastname").getValue();
+                fullName = formContext.getAttribute("firstname").getValue() + " " + formContext.getAttribute("lastname").getValue();
             else if (formContext.getAttribute("lastname"))
-                var fullName = formContext.getAttribute("lastname").getValue();
+                fullName = formContext.getAttribute("lastname").getValue();
             else if (formContext.getAttribute("firstname"))
-                var fullName = formContext.getAttribute("firstname").getValue();
+                fullName = formContext.getAttribute("firstname").getValue();
             else
-                var fullName = "Namn saknas";
+                fullName = "Namn saknas";
 
-            var inputParameters = [];
-
-            var parameterContactGuid = { "Field": "ContactGuid", "Value": guid, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-            inputParameters.push(parameterContactGuid);
+            var inputParameters = [{ "Field": "ContactGuid", "Value": guid, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 }];
 
             Endeavor.formscriptfunctions.callGlobalAction("ed_GetTicketMoveDataFromMKL", inputParameters,
                 function (result) {
@@ -503,12 +501,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
             if (SSN) {
 
-                var inputParameters = [];
-
-                var parameterSSN = { "Field": "SSN", "Value": SSN, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-                var parameterBlocked = { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 };
-                inputParameters.push(parameterSSN);
-                inputParameters.push(parameterBlocked);
+                var inputParameters = [{ "Field": "SSN", "Value": SSN, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 }];
 
                 Endeavor.formscriptfunctions.callGlobalAction("ed_BlockCustomerPortal", inputParameters,
                     function (result) {
@@ -583,44 +577,11 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 "</fetch>";
             var modifiedFetchXml = fetchXml.replace("&", "&amp;");
 
-            var globalContext = Xrm.Utility.getGlobalContext();
-            var serverURL = globalContext.getClientUrl();
-
-            var users = Endeavor.Skanetrafiken.Contact.ExecuteFetchGetCount(modifiedFetchXml, "systemusers", serverURL);
+            var users = Endeavor.formscriptfunctions.executeFetchGetCount(modifiedFetchXml, "systemusers");
             if (users > 0)
                 return true;
             else
                 return false;
-        },
-
-        ExecuteFetchGetCount: function (originalFetch, entityname, serverURL) {
-            var count = 0;
-            var fetch = encodeURI(originalFetch);
-
-            var Query = entityname + "?fetchXml=" + fetch;
-            var req = new XMLHttpRequest();
-            req.open("GET", serverURL + "/api/data/v9.0/" + Query, false);
-            req.setRequestHeader("Accept", "application/json");
-            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            req.setRequestHeader("OData-MaxVersion", "4.0");
-            req.setRequestHeader("OData-Version", "4.0");
-            req.onreadystatechange = function () {
-                if (this.readyState == 4 /* complete */) {
-                    req.onreadystatechange = null;
-                    if (this.status == 200) {
-                        var data = JSON.parse(this.response);
-                        if (data != null) {
-                            count = data.value.length;
-                        }
-                    }
-                    else {
-                        var error = JSON.parse(this.response).error;
-                        alert(error.message);
-                    }
-                }
-            };
-            req.send();
-            return count;
         },
         // Senare fix
 

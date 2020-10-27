@@ -9,9 +9,7 @@ if (typeof (Endeavor.Skanetrafiken) === "undefined") {
 }
 if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
     Endeavor.Skanetrafiken.ValueCodeApproval = {
-        callGlobalAction: function (actionName, inputParameters, sucessCallback, errorCallback) {
-            Endeavor.formscriptfunctions.callGlobalAction(actionName, inputParameters, sucessCallback, errorCallback);
-        },
+
         onLoad: function () {
             debugger;
         },
@@ -37,32 +35,18 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                 var valCodeApprovId;
                 var formType = formContext.ui.getFormType();
 
-                var inputParameters = [];
                 var contactIdValue = { entityType: "ed_valuecodeapproval", id: Endeavor.Skanetrafiken.ValueCodeApproval.cleanIdField(contact) };
                 var valCodeApprovIdValue = { entityType: "ed_valuecodeapproval", id: Endeavor.Skanetrafiken.ValueCodeApproval.cleanIdField(valCodeApprovId) };
-                var parameterClearonTemplateId = { "Field": "ClearonTemplateId", "Value": 239, "TypeName": Endeavor.formscriptfunctions.getParameterType("int"), "StructuralProperty": 1 };
-                var parameterAmount = { "Field": "Amount", "Value": amount, "TypeName": Endeavor.formscriptfunctions.getParameterType("float"), "StructuralProperty": 1 };
-                var parameterMobile = { "Field": "Mobile", "Value": mobile, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-                var parameterEmail = { "Field": "Email", "Value": email, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-                var parameterContactId = { "Field": "ContactId", "Value": contactIdValue, "TypeName": Edm.contact, "StructuralProperty": 5 };
-                var parameterValidTo = { "Field": "ValidTo", "Value": validTo, "TypeName": Endeavor.formscriptfunctions.getParameterType("datetime"), "StructuralProperty": 1 };
-                var parameterTypeOfValueCode = { "Field": "ValidTo", "Value": validTo, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-                var parameterValueCodeApprovalId = { "Field": "ValueCodeApprovalId", "Value": valCodeApprovIdValue, "TypeName": Edm.ed_valuecodeapproval, "StructuralProperty": 5 };
 
-                inputParameters.push(parameterClearonTemplateId);
-                inputParameters.push(parameterAmount);
-                inputParameters.push(parameterMobile);
-                inputParameters.push(parameterEmail);
-                inputParameters.push(parameterContactId);
-                inputParameters.push(parameterValidTo);
-                inputParameters.push(parameterTypeOfValueCode);
-                inputParameters.push(parameterValueCodeApprovalId);
-                //if (formType != 1) //Not Create
-                //    valCodeApprovId = Xrm.Page.data.entity.getId();
-                //else {
-                //    Xrm.Page.ui.setFormNotification("Skapar och skickar värdekod. Vänligen vänta.", "INFO");
-                //    return;
-                //}
+                var inputParameters = [{ "Field": "ClearonTemplateId", "Value": 239, "TypeName": Endeavor.formscriptfunctions.getParameterType("int"), "StructuralProperty": 1 },
+                    { "Field": "Amount", "Value": amount, "TypeName": Endeavor.formscriptfunctions.getParameterType("float"), "StructuralProperty": 1 },
+                    { "Field": "Mobile", "Value": mobile, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                    { "Field": "Email", "Value": email, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                    { "Field": "ContactId", "Value": contactIdValue, "TypeName": Edm.contact, "StructuralProperty": 5 },
+                    { "Field": "ValidTo", "Value": validTo, "TypeName": Endeavor.formscriptfunctions.getParameterType("datetime"), "StructuralProperty": 1 },
+                    { "Field": "ValidTo", "Value": validTo, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                    { "Field": "ValueCodeApprovalId", "Value": valCodeApprovIdValue, "TypeName": Edm.ed_valuecodeapproval, "StructuralProperty": 5 }];
+
                 // Create the ValueCode
                 Endeavor.formscriptfunctions.callGlobalAction("ed_CreateValueCodeGeneric",
                     inputParameters,
@@ -72,17 +56,10 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                         formContext.ui.setFormNotification("Värdekod skapad.", "INFO");
                         valcodeId = Endeavor.Skanetrafiken.ValueCodeApproval.cleanIdField(valCodeApprovId);
 
-                        var inputParameters = [];
-                        var parameterValueCodeId = { "Field": "ValueCodeId", "Value": valueCodeId.id, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-                        var parameterMobile = { "Field": "Mobile", "Value": mobile, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-                        var parameterEmail = { "Field": "Email", "Value": email, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-                        var parameterTravelCardNumber = { "Field": "TravelCardNumber", "Value": travelCardNumber, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-
-                        inputParameters.push(parameterValueCodeId);
-                        inputParameters.push(parameterValueCodeApprovalid);
-                        inputParameters.push(parameterMobile);
-                        inputParameters.push(parameterEmail);
-                        inputParameters.push(parameterTravelCardNumber);
+                        var inputParameters = [{ "Field": "ValueCodeId", "Value": valueCodeId.id, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                            { "Field": "Mobile", "Value": mobile, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                            { "Field": "Email", "Value": email, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                            { "Field": "TravelCardNumber", "Value": travelCardNumber, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 }];
 
                         try {
                             Endeavor.formscriptfunctions.callAction("ed_ApproveValueCode", "ed_valuecodeapproval", valCodeApprovId,
@@ -90,9 +67,8 @@ if (typeof (Endeavor.Skanetrafiken.ValueCodeApproval) === "undefined") {
                                 function () {
                                     try {
                                         // Sending the created ValueCode
-                                        var inputParameters = [];
                                         Endeavor.formscriptfunctions.callAction("ed_SendValueCode", ed_valuecode, valueCodeId.id,
-                                            inputParameters,
+                                            null,
                                             function () {
                                                 debugger;
                                                 formContext.data.refresh();

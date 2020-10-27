@@ -127,54 +127,6 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                 })
         },
 
-        callAction: function (actionName, entityName, targetId, sucessCallback, errorCallback) {
-
-            var target = {};
-            target.entityType = entityName;
-            target.id = targetId;
-
-            var parameterTypes = {};
-            parameterTypes["entity"] = { "typeName": "mscrm." + entityName, "structuralProperty": 5 };
-
-            var req = {};
-            req.entity = target;
-            req.getMetadata = function () {
-                return {
-                    boundParameter: "entity",
-                    parameterTypes: parameterTypes,
-                    operationType: 0,
-                    operationName: actionName
-                };
-            };
-
-            Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
-        },
-
-        callGlobalAction: function (actionName, inputParameters, sucessCallback, errorCallback) {
-
-            var req = {};
-
-            var parameterTypes = {};
-            for (var i = 0; i < inputParameters.length; i++) {
-                var parameter = inputParameters[i];
-
-                req[parameter.Field] = parameter.Value;
-                parameterTypes[parameter.Field] = { "typeName": parameter.TypeName, "structuralProperty": parameter.StructuralProperty };
-            }
-
-            req.getMetadata = function () {
-
-                return {
-                    boundParameter: null,
-                    parameterTypes: parameterTypes,
-                    operationType: 0,
-                    operationName: actionName
-                };
-            };
-
-            Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
-        },
-
         updateValueCodeToCanceled: function (RECORD_ID) {
 
             debugger;

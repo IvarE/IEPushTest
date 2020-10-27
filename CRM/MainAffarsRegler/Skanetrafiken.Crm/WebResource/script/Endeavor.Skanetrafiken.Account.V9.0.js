@@ -417,44 +417,11 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 "</entity>" +
                 "</fetch>";
             var modifiedFetchXml = fetchXml.replace("&", "&amp;");
-            var users = Endeavor.Skanetrafiken.Account.executeFetch(modifiedFetchXml, "systemusers");
+            var users = Endeavor.formscriptfunctions.executeFetchGetCount(modifiedFetchXml, "systemusers");
             if (users > 0)
                 return false;
             else
                 return true;
-        },
-
-        executeFetch: function (originalFetch, entityname) {
-            var count = 0;
-            var fetch = encodeURI(originalFetch);
-            var query = entityname + "?fetchXml=" + fetch;
-
-            var globalContext = Xrm.Utility.getGlobalContext();
-            var serverURL = globalContext.getClientUrl();
-
-            var req = new XMLHttpRequest();
-            req.open("GET", serverURL + "/api/data/v9.0/" + query, false);
-            req.setRequestHeader("Accept", "application/json");
-            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            req.setRequestHeader("OData-MaxVersion", "4.0");
-            req.setRequestHeader("OData-Version", "4.0");
-            req.onreadystatechange = function () {
-                if (this.readyState == 4 /* complete */) {
-                    req.onreadystatechange = null;
-                    if (this.status == 200) {
-                        var data = JSON.parse(this.response);
-                        if (data != null) {
-                            count = data.value.length;
-                        }
-                    }
-                    else {
-                        var error = JSON.parse(this.response).error;
-                        alert(error.message);
-                    }
-                }
-            };
-            req.send();
-            return count;
         },
 
         //Form Methods CGI Account (from accountLibrary.js)

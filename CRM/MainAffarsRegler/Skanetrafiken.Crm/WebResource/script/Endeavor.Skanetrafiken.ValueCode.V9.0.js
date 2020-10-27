@@ -37,12 +37,8 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
 
             formContext.ui.setFormNotification("Skapar värdekoder. Vänligen vänta.", "INFO");
 
-            var inputParameters = [];
-            var parameterAmount = { "Field": "Amount", "Value": amountInValueCodesFloat, "TypeName": "Edm.Decimal", "StructuralProperty": 1 };
-            var parameterCount = { "Field": "Count", "Value": numberOfValueCodesInt, "TypeName": "Edm.Int32", "StructuralProperty": 1 };
-
-            inputParameters.push(parameterAmount);
-            inputParameters.push(parameterCount);
+            var inputParameters = [{ "Field": "Amount", "Value": amountInValueCodesFloat, "TypeName": "Edm.Decimal", "StructuralProperty": 1 },
+                                { "Field": "Count", "Value": numberOfValueCodesInt, "TypeName": "Edm.Int32", "StructuralProperty": 1 }];
 
             Endeavor.formscriptfunctions.callGlobalAction("ed_CreateMultipleValueCodes", inputParameters,
                 function () {
@@ -65,7 +61,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
 
             var valueCodeId = formContext.data.entity.getId().replace("{", "").replace("}", "");
 
-            Endeavor.formscriptfunctions.callAction("ed_SendValueCode", "ed_valuecode", , null,
+            Endeavor.formscriptfunctions.callAction("ed_SendValueCode", "ed_valuecode", valueCodeId, null,
                 function () {
                     formContext.data.refresh();
                     formContext.ui.setFormNotification("Värdekod skickad.", "INFO");
