@@ -39,8 +39,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.UECCIntegrati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.CloseOldCasesService", "..\Skanetrafiken.CloseOldCasesService\Skanetrafiken.CloseOldCasesService.csproj", "{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiQService", "..\MultiQService\MultiQService.csproj", "{E3237FA9-2C96-42A7-A438-8F6EA2C8F705}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiQService.UnitTest", "..\MultiQService.UnitTest\MultiQService.UnitTest.csproj", "{AC6516DF-1E7B-4C36-AF35-6F24A760C784}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkaneMultiQService", "..\SkaneMultiQService\SkaneMultiQService.csproj", "{6390310F-CD92-446C-A209-E059FF725314}"
@@ -211,18 +209,6 @@ Global
 		{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}.Test|Any CPU.ActiveCfg = Release|Any CPU
 		{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}.Test|Any CPU.Build.0 = Release|Any CPU
-		{E3237FA9-2C96-42A7-A438-8F6EA2C8F705}.Acceptans|Any CPU.ActiveCfg = Test|Any CPU
-		{E3237FA9-2C96-42A7-A438-8F6EA2C8F705}.Acceptans|Any CPU.Build.0 = Test|Any CPU
-		{E3237FA9-2C96-42A7-A438-8F6EA2C8F705}.Debug|Any CPU.ActiveCfg = Test|Any CPU
-		{E3237FA9-2C96-42A7-A438-8F6EA2C8F705}.Debug|Any CPU.Build.0 = Test|Any CPU
-		{E3237FA9-2C96-42A7-A438-8F6EA2C8F705}.Dev|Any CPU.ActiveCfg = Test|Any CPU
-		{E3237FA9-2C96-42A7-A438-8F6EA2C8F705}.Dev|Any CPU.Build.0 = Test|Any CPU
-		{E3237FA9-2C96-42A7-A438-8F6EA2C8F705}.Produktion|Any CPU.ActiveCfg = Test|Any CPU
-		{E3237FA9-2C96-42A7-A438-8F6EA2C8F705}.Produktion|Any CPU.Build.0 = Test|Any CPU
-		{E3237FA9-2C96-42A7-A438-8F6EA2C8F705}.Release|Any CPU.ActiveCfg = Test|Any CPU
-		{E3237FA9-2C96-42A7-A438-8F6EA2C8F705}.Release|Any CPU.Build.0 = Test|Any CPU
-		{E3237FA9-2C96-42A7-A438-8F6EA2C8F705}.Test|Any CPU.ActiveCfg = Test|Any CPU
-		{E3237FA9-2C96-42A7-A438-8F6EA2C8F705}.Test|Any CPU.Build.0 = Test|Any CPU
 		{AC6516DF-1E7B-4C36-AF35-6F24A760C784}.Acceptans|Any CPU.ActiveCfg = Release|Any CPU
 		{AC6516DF-1E7B-4C36-AF35-6F24A760C784}.Acceptans|Any CPU.Build.0 = Release|Any CPU
 		{AC6516DF-1E7B-4C36-AF35-6F24A760C784}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
