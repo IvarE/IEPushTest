@@ -39,7 +39,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.UECCIntegrati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.CloseOldCasesService", "..\Skanetrafiken.CloseOldCasesService\Skanetrafiken.CloseOldCasesService.csproj", "{A27C64D5-3C8C-4E7F-9411-2362E7ED41FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiQService.UnitTest", "..\MultiQService.UnitTest\MultiQService.UnitTest.csproj", "{AC6516DF-1E7B-4C36-AF35-6F24A760C784}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkaneMultiQService.UnitTest", "..\MultiQService.UnitTest\SkaneMultiQService.UnitTest.csproj", "{AC6516DF-1E7B-4C36-AF35-6F24A760C784}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkaneMultiQService", "..\SkaneMultiQService\SkaneMultiQService.csproj", "{6390310F-CD92-446C-A209-E059FF725314}"
 EndProject
