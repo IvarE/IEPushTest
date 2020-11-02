@@ -673,9 +673,10 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 else {
                     if (result.entities[0]["_cgi_refundtypeproductnotrequiredid_value"] == null)
                         alert('Required setting is missing: cgi_refundtypeproductnotrequiredid!');
-                    
-                    _RefundTypeProductNotrequiredIdCache = result.entities[0]["_cgi_refundtypeproductnotrequiredid_value"];
-                    Endeavor.Skanetrafiken.cgi_refund.SetProductFieldRequired(formContext);
+                    else {
+                        _RefundTypeProductNotrequiredIdCache = result.entities[0]["_cgi_refundtypeproductnotrequiredid_value"];
+                        Endeavor.Skanetrafiken.cgi_refund.SetProductFieldRequired(formContext);
+                    }
                 }
             }
             catch (e) {
@@ -2486,7 +2487,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
             var globalContext = Xrm.Utility.getGlobalContext();
 
             //Check security role
-            var currentUserRoles = globalContext.userSettings.securityRoles();
+            var currentUserRoles = globalContext.userSettings.securityRoles;
             for (var i = 0; i < currentUserRoles.length; i++) {
                 var userRoleId = currentUserRoles[i];
                 var userRoleIdClean = null;

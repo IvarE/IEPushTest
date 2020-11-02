@@ -226,7 +226,7 @@ Endeavor.OData_Querys = {
     // *** Start Queries used for entity account
     GetSecRolesNameAccount: function (userRoleId, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("role", "?$select=name&$filter=roleid eq" + userRoleId).then(
+            Xrm.WebApi.retrieveMultipleRecords("role", "?$select=name&$filter=roleid eq " + userRoleId).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Account.checkIfUserHasRole_callback(result, formContext);
                 },

@@ -455,7 +455,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             try {
                 var globalContext = Xrm.Utility.getGlobalContext();
 
-                var currentUserRoles = globalContext.userSettings.securityRoles();
+                var currentUserRoles = globalContext.userSettings.securityRoles;
                 for (var i = 0; i < currentUserRoles.length; i++) {
                     var userRoleId = currentUserRoles[i];
                     Endeavor.OData_Querys.GetSecRolesNameAccount(userRoleId, formContext);
@@ -472,7 +472,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                     alert("Inga säkerhetsroller definierade!");
                 }
                 else {
-                    var _roleName = result[0].name;
+                    var _roleName = result.entities[0].name;
                     var emailField = formContext.getAttribute("emailaddress1").getValue();
 
                     if (emailField && emailField.Length !== 0 && _roleName.indexOf("Handläggare") > 0)

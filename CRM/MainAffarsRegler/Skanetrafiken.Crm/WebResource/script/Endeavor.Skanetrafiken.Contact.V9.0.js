@@ -627,7 +627,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 var globalContext = Xrm.Utility.getGlobalContext();
                 var formContext = executionContext.getFormContext();
 
-                var currentUserRoles = globalContext.userSettings.securityRoles();
+                var currentUserRoles = globalContext.userSettings.securityRoles;
                 for (var i = 0; i < currentUserRoles.length; i++) {
                     var userRoleId = currentUserRoles[i];
                     Endeavor.OData_Querys.GetSecRolesNameContact(userRoleId, formContext);
@@ -647,7 +647,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     var _handlingOfficer = "Skånetrafiken Handläggare";
                     var _handlingOfficerPlus = "Skånetrafiken Handläggare plus";
 
-                    var _roleName = result[0].name;
+                    var _roleName = result.entities[0].name;
 
                     try {
                         var emailField = formContext.getAttribute("emailaddress1").getValue();
@@ -660,12 +660,12 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                                 Endeavor.formscriptfunctions.SetState("emailaddress1", "true", formContext); //The field should be editable until it has content
                     }
                     catch (ex) {
-                        alert("Fel i Endeavor.Skanetrafiken.Account.checkIfUserHasRole_callback\n\n" + ex.message);
+                        alert("Fel i Endeavor.Skanetrafiken.Contact.checkIfUserHasRole_callback\n\n" + ex.message);
                     }
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.checkIfUserHasRole_callback\n\n" + e.message);
+                alert("Fel i Endeavor.Skanetrafiken.Contact.checkIfUserHasRole_callback\n\n" + e.message);
             }
         },
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -811,7 +811,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.format_phonenumber\n\n" + e.message);
+                alert("Fel i Endeavor.Skanetrafiken.Contact.format_phonenumber\n\n" + e.message);
             }
         },
 
@@ -835,7 +835,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.format_ZIPCodeNumber\n\n" + e.message);
+                alert("Fel i Endeavor.Skanetrafiken.Contact.format_ZIPCodeNumber\n\n" + e.message);
             }
         },
 
@@ -856,7 +856,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.format_ZIPCodeNumber\n\n" + e.message);
+                alert("Fel i Endeavor.Skanetrafiken.Contact.format_ZIPCodeNumber\n\n" + e.message);
             }
         }
     };
