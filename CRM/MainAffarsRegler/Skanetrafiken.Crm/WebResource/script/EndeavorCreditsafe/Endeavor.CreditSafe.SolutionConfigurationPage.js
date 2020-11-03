@@ -54,41 +54,35 @@ if (typeof (Endeavor.CreditSafe.SolutionConfigurationPage) == "undefined") {
 
         onLoad: function () {
             try {
+
                 document.getElementById('configFileInput').addEventListener('change', function (e) { Endeavor.CreditSafe.SolutionConfigurationPage.continueImportComfiguration(e); });
 
                 Endeavor.CreditSafe.SolutionConfigurationPage.clearNotifications();
 
-                var fetchxml = Endeavor.CreditSafe.SolutionConfigurationPage.LicenseFetchXml();
-
-                CrmFetchKit.Fetch(fetchxml)
-                    .fail(function (xhr, status, errorThrown) {
-
-                        // get the error-message
-                        var msg = $(xhr.responseXML).find('Message').text();
-
-                        alert('Error occured while getting license: ' + msg);
-                    })
-                    .done(function (results) {
-
-                        if (results.length === 0) {
+                Endeavor.CreditSafe.SolutionConfigurationPage.fetchLicense().then(
+                    function (results) {
+                        if (results.entities.length === 0) {
                             // No License found. Do nothing
                             return;
                         }
 
-                        if (results.length > 1) {
+                        if (results.entities.length > 1) {
                             // More than one License found. Something is wrong. Display Warning.
                             alert('Multiple licenses matching ' + Endeavor.CreditSafe.SolutionConfigurationPage.LicenseName + ' found. The first one will be used.')
                         }
 
                         // Fill fields (not Control Number)
                         //var licenseId = results[0].getValue('edp_endeavorlicenseid');
-                        var licenseNo = results[0].getValue('edp_licensenumber');
-                        var licenseXml = results[0].getValue('edp_licensexml');
+                        var licenseNo = results.entities[0].edp_licensenumber;
+                        var licenseXml = results.entities[0].edp_licensexml;
 
                         $("#licenseNo").val(licenseNo);
                         $("#licenseXml").val(licenseXml);
-
-                    });
+                    },
+                    function (error) {
+                        alert('Error occured while getting license: ' + error.message);
+                    }
+                );
 
                 Endeavor.CreditSafe.SolutionConfigurationPage.displayCredentialFields();
             }
@@ -124,35 +118,61 @@ if (typeof (Endeavor.CreditSafe.SolutionConfigurationPage) == "undefined") {
         },
 
         onSweCredentialFieldChange: function () {
+            var id = $("#757550000configId").val();
             var newData = {
-                edp_UserName: $("#sweCredUsernameTextField").val(),
-                edp_Password: $("#sweCredPasswordTextField").val()
+                "edp_username": $("#sweCredUsernameTextField").val(),
+                "edp_password": $("#sweCredPasswordTextField").val()
             }
-            SDK.REST.updateRecord(
-                $("#757550000configId").val(),
-                newData,
-                'edp_CreditsafeConfiguration',
-                function (config) { },
-                function (e) {
-                    alert("Something went wrong when updating configuration credentials for Creditsafe Sweden:\n" + e.toString());
+
+
+            //Kevin Rudnick 2019-07-15
+            //this needs to be done, bug when using webapi calls from a new html window
+            //https://stackoverflow.com/questions/51416490/using-xrm-webapi-method-in-web-resource-opened-in-a-new-window
+            var entNames = {};
+            entNames["edp_CreditsafeConfiguration"] = "edp_CreditsafeConfigurations";
+            window.top.ENTITY_SET_NAMES = JSON.stringify(entNames);
+            var primaryKeys = {};
+            primaryKeys["edp_CreditsafeConfiguration"] = "edp_CreditsafeConfigurationId";
+            window.top.ENTITY_PRIMARY_KEYS = JSON.stringify(primaryKeys);
+
+            Xrm.WebApi.updateRecord("edp_creditsafeconfigurations", id, newData).then(
+                function (success) {
+                    //do nothing
+                    console.log("successfully updates credential record");
+                },
+                function (error) {
+                    alert("Something went wrong when updating configuration credentials for Creditsafe Sweden:\n" + error.message);
                 }
-            )
+            );
+
         },
 
         onGGSCredentialFieldChange: function () {
+            var id = $("#757550001configId").val();
             var newData = {
-                edp_UserName: $("#ggsCredUsernameTextField").val(),
-                edp_Password: $("#ggsCredPasswordTextField").val()
+                "edp_username": $("#ggsCredUsernameTextField").val(),
+                "edp_password": $("#ggsCredPasswordTextField").val()
             }
-            SDK.REST.updateRecord(
-                $("#757550001configId").val(),
-                newData,
-                'edp_CreditsafeConfiguration',
-                function (config) { },
-                function (e) {
-                    alert("Something went wrong when updating configuration credentials for Creditsafe GGS:\n" + e.toString());
+
+            //Kevin Rudnick 2019-07-15
+            //this needs to be done, bug when using webapi calls from a new html window
+            //https://stackoverflow.com/questions/51416490/using-xrm-webapi-method-in-web-resource-opened-in-a-new-window
+            var entNames = {};
+            entNames["edp_CreditsafeConfiguration"] = "edp_CreditsafeConfigurations";
+            window.top.ENTITY_SET_NAMES = JSON.stringify(entNames);
+            var primaryKeys = {};
+            primaryKeys["edp_CreditsafeConfiguration"] = "edp_CreditsafeConfigurationId";
+            window.top.ENTITY_PRIMARY_KEYS = JSON.stringify(primaryKeys);
+
+            Xrm.WebApi.updateRecord("edp_creditsafeconfigurations", id, newData).then(
+                function (success) {
+                    //do nothing
+                    console.log("successfully updates credential record");
+                },
+                function (error) {
+                    alert("Something went wrong when updating configuration credentials for Creditsafe ggs:\n" + error.message);
                 }
-            )
+            );
         },
 
         onImportDefaultConfiguration: function () {
@@ -210,10 +230,33 @@ if (typeof (Endeavor.CreditSafe.SolutionConfigurationPage) == "undefined") {
 
         ImportConfigurationFromJsonString: function (jsonString) {
             try {
-                var sdkObject = new Sdk.edp_ImportCreditsafeConfigurationRequest(jsonString);
-                Sdk.Sync.execute(sdkObject);
-                Endeavor.CreditSafe.SolutionConfigurationPage.displayCredentialFields();
-                alert("Configuration imported.");
+
+                var request = {
+                    ImportConfiguration: jsonString,
+                    getMetadata: function () {
+                        return {
+                            boundParameter: null,
+                            operationType: 0,
+                            operationName: "edp_ImportCreditsafeConfiguration",
+                            parameterTypes: {
+                                "ImportConfiguration": {
+                                    "typeName": "Edm.String",
+                                    "structuralProperty": 1
+                                }
+                            }
+                        }
+                    }
+                };
+                Xrm.WebApi.online.execute(request).then(
+                    function (result) {
+                        Endeavor.CreditSafe.SolutionConfigurationPage.displayCredentialFields();
+                        alert("Configuration imported.");
+                    },
+                    function (error) {
+                        alert("Exception caught in ImportConfigurationFromJsonString.\r\n\r\n" + error);
+                    }
+                );
+
             } catch (error) {
                 alert("Exception caught in ImportConfigurationFromJsonString.\r\n\r\n" + error);
             }
@@ -221,72 +264,122 @@ if (typeof (Endeavor.CreditSafe.SolutionConfigurationPage) == "undefined") {
 
         onExportConfiguration: function () {
             try {
-                var sdkObject = new Sdk.edp_ExportCreditsafeConfigurationRequest();
-                var response = Sdk.Sync.execute(sdkObject);
-
-                if (response == null) {
-                    throw new DOMException();
-                }
-                else {
-                    var jsonString = response.getExportConfiguration();
-
-                    var xmlString = "<configuration>" + jsonString +
-                        "</configuration>";
-                    var parser = new DOMParser();
-                    var xmlDoc = parser.parseFromString(xmlString, "text/xml");
-                    //alert("xmldoc toString =\n" + xmlDoc.toString);
-                    var xmlText = new XMLSerializer().serializeToString(xmlDoc);
-
-                    var ieVersion = Endeavor.CreditSafe.SolutionConfigurationPage.detectIE();
-                    // false == 0
-                    if (ieVersion < 1) {
-                        var pom = document.createElement('a');
-                        //console.log(response);
-                        //alert("response =\n" + response + "\n\nJsonString =\n" + jsonString);
-                        pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(xmlText));
-                        pom.setAttribute('download', 'config.xml');
-                        if (document.createEvent) {
-                            var event = document.createEvent('MouseEvents');
-                            event.initEvent('click', true, true);
-                            pom.dispatchEvent(event);
-                        }
-                        else {
-                            pom.click();
-                        }
-                    } else { // If the user is running Internet Explorer or Egde.
-                        var blobObject = new Blob([xmlText], { type: 'text/xml' });
-                        var retVal = navigator.msSaveBlob(blobObject, 'config.xml');
-                        if (!retVal) {
-                            alert("download failed");
+                var request = {
+                    getMetadata: function () {
+                        return {
+                            boundParameter: null,
+                            operationType: 0,
+                            operationName: "edp_ExportCreditsafeConfiguration",
                         }
                     }
-                }
+                };
+                Xrm.WebApi.online.execute(request).then(
+                    function (response) {
+                        if (response.ok) {
+                            response.json().then(
+                                function (result) {
+                                    var jsonString = result.ExportConfiguration;
+
+                                    var xmlString = "<configuration>" + jsonString +
+                                        "</configuration>";
+                                    var parser = new DOMParser();
+                                    var xmlDoc = parser.parseFromString(xmlString, "text/xml");
+                                    //alert("xmldoc toString =\n" + xmlDoc.toString);
+                                    var xmlText = new XMLSerializer().serializeToString(xmlDoc);
+
+                                    var ieVersion = Endeavor.CreditSafe.SolutionConfigurationPage.detectIE();
+                                    // false == 0
+                                    if (ieVersion < 1) {
+                                        var pom = document.createElement('a');
+                                        //console.log(response);
+                                        //alert("response =\n" + response + "\n\nJsonString =\n" + jsonString);
+                                        pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(xmlText));
+                                        pom.setAttribute('download', 'config.xml');
+                                        if (document.createEvent) {
+                                            var event = document.createEvent('MouseEvents');
+                                            event.initEvent('click', true, true);
+                                            pom.dispatchEvent(event);
+                                        }
+                                        else {
+                                            pom.click();
+                                        }
+                                    } else { // If the user is running Internet Explorer or Egde.
+                                        var blobObject = new Blob([xmlText], { type: 'text/xml' });
+                                        var retVal = navigator.msSaveBlob(blobObject, 'config.xml');
+                                        if (!retVal) {
+                                            alert("download failed");
+                                        }
+                                    }
+                                },
+                                function (error) {
+                                    throw new DOMException();
+                                }
+                            );
+                        }
+                        alert("Configuration exported.");
+                    },
+                    function (error) {
+                        alert("Exception caught in ExportCreditsafeConfiguration.\r\n\r\n" + error);
+                    }
+                );
+
             } catch (e) {
                 alert("Exception caught in onExportConfiguration.\r\n\r\n" + e);
             }
         },
 
         onValidateLicense: function () {
-            var sdkObject = new Sdk.edp_GetLicenseInformationRequest();
-            //var sdkIbject = new Sdk.edp_ExportCreditsafeConfigurationRequest();
-            var response = Sdk.Sync.execute(sdkObject);
 
-            if (response == null) {
-                throw new DOMException();
-            }
-            else {
-
-                var licenseInformation = response.getLicenseInformation();
-                alert(licenseInformation);
-
-
-                alert('d' + jsonString);
-                $("#button").on("click", function () {
-                    $("#dialog").dialog("open");
-                });
-            }
+            var request = {
+                getMetadata: function () {
+                    return {
+                        boundParameter: null,
+                        operationType: 0,
+                        operationName: "edp_GetLicenseInformation",
+                    }
+                }
+            };
+            Xrm.WebApi.online.execute(request).then(
+                function (response) {
+                    if (response.ok) {
+                        response.json().then(
+                            function (result) {
+                                var licenseInformation = result.LicenseInformation;
+                                alert(licenseInformation);
+                                $("#button").on("click", function () {
+                                    $("#dialog").dialog("open");
+                                });
+                            },
+                            function (error) {
+                                alert("Error when fetching license: " + error.message);
+                            }
+                        );
+                    }
+                }
+            );
         },
 
+        fetchLicense: function () {
+            try {
+                var fetchxml = Endeavor.CreditSafe.SolutionConfigurationPage.LicenseFetchXml();
+                fetchxml = "?fetchXml=" + encodeURIComponent(fetchxml);
+
+                //Kevin Rudnick 2019-07-15
+                //this needs to be done, bug when using webapi calls from a new html window
+                //https://stackoverflow.com/questions/51416490/using-xrm-webapi-method-in-web-resource-opened-in-a-new-window
+                var entNames = {};
+                entNames["edp_EndeavorLicense"] = "edp_EndeavorLicenses";
+                window.top.ENTITY_SET_NAMES = JSON.stringify(entNames);
+                var primaryKeys = {};
+                primaryKeys["edp_EndeavorLicense"] = "edp_EndeavorLicenseId";
+                window.top.ENTITY_PRIMARY_KEYS = JSON.stringify(primaryKeys);
+
+                return Xrm.WebApi.retrieveMultipleRecords("edp_endeavorlicenses", fetchxml); //returns the promise
+
+            } catch (e) {
+                alert("error when fetching license: " + e.toString());
+            }
+        },
 
         onApplyLicense: function () {
             /// <summary>
@@ -310,62 +403,67 @@ if (typeof (Endeavor.CreditSafe.SolutionConfigurationPage) == "undefined") {
                     $("#licenseXmlNotification").text("The license Xml must be entered.");
                     return;
                 }
-
                 // Create/Update entity.
-                var fetchxml = Endeavor.CreditSafe.SolutionConfigurationPage.LicenseFetchXml();
 
-                CrmFetchKit.Fetch(fetchxml)
-                    .fail(function (xhr, status, errorThrown) {
+                //Kevin Rudnick 2019-07-15
+                //this needs to be done, bug when using webapi calls from a new html window
+                //https://stackoverflow.com/questions/51416490/using-xrm-webapi-method-in-web-resource-opened-in-a-new-window
+                var entNames = {};
+                entNames["edp_EndeavorLicense"] = "edp_EndeavorLicenses";
+                window.top.ENTITY_SET_NAMES = JSON.stringify(entNames);
+                var primaryKeys = {};
+                primaryKeys["edp_EndeavorLicense"] = "edp_EndeavorLicenseId";
+                window.top.ENTITY_PRIMARY_KEYS = JSON.stringify(primaryKeys);
 
-                        // get the error-message
-                        var msg = $(xhr.responseXML).find('Message').text();
-
-                        alert('Error occured while getting license: ' + msg);
-                    })
-                    .done(function (results) {
-
-                        if (results.length === 0) {
+                Endeavor.CreditSafe.SolutionConfigurationPage.fetchLicense().then(
+                    function (results) {
+                        if (results.entities.length === 0) {
                             // No License found. Create New Item
-                            var license = {};
-                            license.edp_Name = Endeavor.CreditSafe.SolutionConfigurationPage.LicenseName;
-                            license.edp_LicenseNumber = $("#licenseNo").val();
-                            license.edp_ControlNumber = parseInt($("#controlNo").val().replace(/\s/g, ""));
-                            license.edp_LicenseXml = $("#licenseXml").val();
+                            var license = {
+                                "edp_name": Endeavor.CreditSafe.SolutionConfigurationPage.LicenseName,
+                                "edp_licensenumber": $("#licenseNo").val(),
+                                "edp_controlnumber": parseInt($("#controlNo").val().replace(/\s/g, "")),
+                                "edp_licensexml": $("#licenseXml").val()
+                            };
 
-                            SDK.REST.createRecord(
-                                license,
-                                "edp_EndeavorLicense",
-                                function (license) {
-                                    $("#licenseNotification").val("License saved.")
 
-                                }, function (licenseError) {
-                                    alert("CreateRecord (license) generated an error: " + licenseError);
-                                });
+                            Xrm.WebApi.createRecord("edp_endeavorlicenses", license).then(
+                                function (success) {
+                                    $("#licenseNotification").text("License saved.");
+                                    console.log("Successfully created a license entity");
+                                },
+                                function (error) {
+                                    alert("CreateRecord (license) generated an error: " + error.message);
+                                }
+                            );
                             return;
                         }
 
-                        if (results.length > 1) {
+                        if (results.entities.length > 1) {
                             // More than one License found. Something is wrong. Display Warning.
-                            alert('Multiple licences matching ' + Endeavor.CreditSafe.SolutionConfigurationPage.LicenseName + ' found. The first one will be used.')
+                            alert('Multiple licenses matching ' + Endeavor.CreditSafe.SolutionConfigurationPage.LicenseName + ' found. The first one will be used.')
                         }
 
-                        var licenseId = results[0].getValue('edp_endeavorlicenseid');
-                        var license = {};
-                        license.edp_LicenseNumber = $("#licenseNo").val();
-                        license.edp_ControlNumber = parseInt($("#controlNo").val().replace(/\s/g, ""));
-                        license.edp_LicenseXml = $("#licenseXml").val();
+                        var licenseId = results.entities[0].edp_endeavorlicenseid;
+                        var license = {
+                            "edp_licensenumber": $("#licenseNo").val(),
+                            "edp_controlnumber": parseInt($("#controlNo").val().replace(/\s/g, "")),
+                            "edp_licensexml": $("#licenseXml").val()
+                        };
 
-                        SDK.REST.updateRecord(
-                            licenseId,
-                            license,
-                            "edp_EndeavorLicense",
-                            function (license) {
+                        Xrm.WebApi.updateRecord("edp_endeavorlicenses", licenseId, license).then(
+                            function (success) {
                                 $("#licenseNotification").text("License saved.")
-
-                            }, function (licenseError) {
-                                alert("UpdateRecord (license) generated an error: " + licenseError);
-                            });
-                    });
+                            },
+                            function (error) {
+                                alert("Error when updating the license: " + error.message);
+                            }
+                        );
+                    },
+                    function (error) {
+                        alert('Error occured while getting license: ' + error.message);
+                    }
+                );
             }
             catch (error) {
                 alert("Exception caught in fx:onLoad.\r\n\r\n" + error);
@@ -399,42 +497,46 @@ if (typeof (Endeavor.CreditSafe.SolutionConfigurationPage) == "undefined") {
                 if (confirm(message)) {
 
                     // Delete entity.
-                    var fetchxml = Endeavor.CreditSafe.SolutionConfigurationPage.LicenseFetchXml();
-
-                    CrmFetchKit.Fetch(fetchxml)
-                        .fail(function (xhr, status, errorThrown) {
-
-                            // get the error-message
-                            var msg = $(xhr.responseXML).find('Message').text();
-
-                            alert('Error occured while getting license: ' + msg);
-                        })
-                        .done(function (results) {
-
-                            if (results.length === 0) {
+                    Endeavor.CreditSafe.SolutionConfigurationPage.fetchLicense().then(
+                        function (results) {
+                            if (results.entities.length === 0) {
                                 // No License found. Do nothing
                                 return;
                             }
 
-                            if (results.length > 1) {
+                            if (results.entities.length > 1) {
                                 // More than one License found. Something is wrong. Display Warning.
                                 alert('Multiple licences matching ' + Endeavor.CreditSafe.SolutionConfigurationPage.LicenseName + ' found. The first one will be deleted.')
                             }
 
-                            var licenseId = results[0].getValue('edp_endeavorlicenseid');
+                            var licenseId = results.entities[0].edp_endeavorlicenseid;
 
-                            SDK.REST.deleteRecord(
-                                licenseId,
-                                "edp_EndeavorLicense",
-                                function (license) {
+                            //Kevin Rudnick 2019-07-15
+                            //this needs to be done, bug when using webapi calls from a new html window
+                            //https://stackoverflow.com/questions/51416490/using-xrm-webapi-method-in-web-resource-opened-in-a-new-window
+                            var entNames = {};
+                            entNames["edp_EndeavorLicense"] = "edp_EndeavorLicenses";
+                            window.top.ENTITY_SET_NAMES = JSON.stringify(entNames);
+                            var primaryKeys = {};
+                            primaryKeys["edp_EndeavorLicense"] = "edp_EndeavorLicenseId";
+                            window.top.ENTITY_PRIMARY_KEYS = JSON.stringify(primaryKeys);
+
+                            Xrm.WebApi.deleteRecord("edp_endeavorlicenses", licenseId).then(
+                                function (success) {
                                     $("#licenseNotification").text("License deleted.")
                                     $("#licenseNo").val("");
                                     $("#controlNo").val("");
                                     $("#licenseXml").val("");
-                                }, function (licenseError) {
-                                    alert("DeleteRecord (license) generated an error: " + licenseError);
-                                });
-                        });
+                                },
+                                function (error) {
+                                    alert("DeleteRecord (license) generated an error: " + error.message);
+                                }
+                            );
+                        },
+                        function (error) {
+                            alert('Error occured while getting license: ' + error.message);
+                        }
+                    );
                 }
             }
             catch (error) {
@@ -445,36 +547,39 @@ if (typeof (Endeavor.CreditSafe.SolutionConfigurationPage) == "undefined") {
         initiateGrid: function () {
 
             Endeavor.CreditSafe.SolutionConfigurationPage.headLoad(Endeavor.CreditSafe.SolutionConfigurationPage.loadSuccessCallback);
-            table = this.getDataFromDB();
-            Endeavor.CreditSafe.SolutionConfigurationPage.createGrid(table);
+
         },
 
         headLoad: function (successCallback) {
             var jsUrls = [];
             var jsUrl;
+            var jQueryNeedsToReload = false;
+            var glbContext = Xrm.Utility.getGlobalContext();
 
-            if (typeof SDK == "undefined" || typeof SDK.REST == "undefined") {
-                jsUrl = Xrm.Page.context.getClientUrl() + "/WebResources/edp_/script/SDK.Rest.js";
-                jsUrls.push(jsUrl);
-            }
             if (typeof Endeavor == "undefined" || typeof Endeavor.Common == "undefined" || typeof Endeavor.Common.Data == "undefined") {
-                jsUrl = Xrm.Page.context.getClientUrl() + "/WebResources/edp_/script/Endeavor.Common.Data.js";
+                jsUrl = glbContext.getClientUtl() + "/WebResources/edp_/script/Endeavor.Common.Data.js";
                 jsUrls.push(jsUrl);
             }
-            if (typeof jQuery == 'undefined') {
-                jsUrl = Xrm.Page.context.getClientUrl() + "/WebResources/edp_/script/jquery.1.11.1.min.js";
+            if (typeof jQuery == 'undefined' || (jQuery.fn && jQuery.fn.jquery && jQuery.fn.jquery != '1.11.1')) {
+                jsUrl = glbContext.getClientUrl() + "/WebResources/edp_/script/jquery.1.11.1.min.js";
                 jsUrls.push(jsUrl);
+                jQueryNeedsToReload = true;
             }
 
             try {
                 $("#tabs").tabs();
             } catch (e) {
-                jsUrl = Xrm.Page.context.getClientUrl() + "/WebResources/edp_/script/jquery.ui.1.12.1.min.js";
+                jsUrl = glbContext.getClientUrl() + "/WebResources/edp_/script/jquery.ui.1.12.1.min.js";
                 jsUrls.push(jsUrl);
             }
 
-            if (typeof typeof jqGridUtils == 'undefined') {
-                jsUrl = Xrm.Page.context.getClientUrl() + "/WebResources/edp_/script/jquery.jqGrid.min.js";
+            if (typeof typeof jqGridUtils == 'undefined' || jQueryNeedsToReload) {
+                jsUrl = glbContext.getClientUrl() + "/WebResources/edp_/script/jquery.jqGrid.min.js";
+                jsUrls.push(jsUrl);
+            }
+
+            if (jQueryNeedsToReload) {
+                jsUrl = glbContext.getClientUrl() + "/WebResources/edp_/script/grid.locale.en.js";
                 jsUrls.push(jsUrl);
             }
 
@@ -494,6 +599,8 @@ if (typeof (Endeavor.CreditSafe.SolutionConfigurationPage) == "undefined") {
 
         loadSuccessCallback: function () {
             console.log("Everything loaded!");
+            table = Endeavor.CreditSafe.SolutionConfigurationPage.getDataFromDB();
+            Endeavor.CreditSafe.SolutionConfigurationPage.createGrid(table);
             $("#tabs").tabs();
         },
 
@@ -613,13 +720,13 @@ if (typeof (Endeavor.CreditSafe.SolutionConfigurationPage) == "undefined") {
                     //rowheight: 12,
                     colNames: ['Name', 'User', 'Admin', 'Username', 'Password', 'SystemUserId', 'MyUnitAdminId', 'MyUnitBasicId', 'MyUserAdminId', 'MyUserBasicId', 'OldUsername', 'OldPassword', 'UserConfig'],
                     colModel: [
-                        { name: 'FullName', index: 'FullName', sorttype: 'string', width: 300, editable: false, },
+                        { name: 'FullName', index: 'FullName', sorttype: 'string', width: 300, editable: false },
                         { name: 'isBasic', index: 'isBasic', editable: true, edittype: 'checkbox', editoptions: { value: 'True:False' }, width: 50, formatter: "checkbox", formatoptions: { disabled: false }, align: 'center', classes: 'check' },
                         { name: 'isAdmin', index: 'isAdmin', editable: true, edittype: 'checkbox', editoptions: { value: 'True:False' }, width: 50, formatter: "checkbox", formatoptions: { disabled: false }, align: 'center', classes: 'check' },
                         { name: 'Username', editable: true, edittype: 'text', formatoptions: { disabled: false }, width: 150, align: 'left', sortable: false },
                         { name: 'Password', editable: true, edittype: 'text', formatoptions: { disabled: false }, width: 150, align: 'left', sortable: false },
                         /* hidden internal columns */
-                        { name: 'SystemUserId', width: 10, sortable: false, hidden: true },
+                        { name: 'SystemUserId', width: 10, sortable: false, hidden: true, key: true },
                         { name: 'MyUnitAdminId', width: 10, sortable: false, hidden: true },
                         { name: 'MyUnitBasicId', width: 10, sortable: false, hidden: true },
                         { name: 'MyUserAdminId', width: 10, sortable: false, hidden: true },
@@ -636,7 +743,7 @@ if (typeof (Endeavor.CreditSafe.SolutionConfigurationPage) == "undefined") {
                     pgtext: '{0} of {1}',       // disable pager text like 'Page 0 of 10'
                     pginput: true,
                     viewrecords: false,
-                    cellEdit: false,
+                    cellEdit: true,
                     cellsubmit: 'clientArray',
                     sortname: 'FullName',
                     height: '65%',
@@ -654,16 +761,36 @@ if (typeof (Endeavor.CreditSafe.SolutionConfigurationPage) == "undefined") {
                             $(('input[type="checkbox"]'), rows[i].cells[iColb]).click(function (e) {
                                 var id = $(e.target).closest('tr')[0].id,
                                     isChecked = $(e.target).is(':checked');
-                                var rowId = parseInt(id) + $('#jqGrid').jqGrid('getGridParam', 'rowNum') * ($('#jqGrid').jqGrid('getGridParam', 'page') - 1);
-                                Endeavor.CreditSafe.SolutionConfigurationPage.setData(rowId - 1, 'isBasic', isChecked);
+
+                                var systemUserId = Endeavor.CreditSafe.SolutionConfigurationPage.getSystemUserId($(e.target).closest('tr')[0].innerHTML);
+                                var gridArray = $('#jqGrid').jqGrid('getGridParam', 'data');
+                                var rowId = -1;
+                                for (x = 0; x < gridArray.length; x++) {
+                                    if (gridArray[x].SystemUserId == systemUserId) {
+                                        rowId = x;
+                                        break;
+                                    }
+                                }
+                                if (rowId != -1) {
+                                    Endeavor.CreditSafe.SolutionConfigurationPage.setData(rowId, 'isBasic', isChecked);
+                                }
                             });
                             $(('input[type="checkbox"]'), rows[i].cells[iCola]).click(function (e) {
                                 var id = $(e.target).closest('tr')[0].id,
                                     isChecked = $(e.target).is(':checked');
-                                var cellUpdate = new Object();
-                                cellUpdate['isAdmin'] = isChecked;
-                                var rowId = parseInt(id) + $('#jqGrid').jqGrid('getGridParam', 'rowNum') * ($('#jqGrid').jqGrid('getGridParam', 'page') - 1);
-                                Endeavor.CreditSafe.SolutionConfigurationPage.setData(rowId - 1, 'isAdmin', isChecked);
+
+                                var systemUserId = Endeavor.CreditSafe.SolutionConfigurationPage.getSystemUserId($(e.target).closest('tr')[0].innerHTML);
+                                var gridArray = $('#jqGrid').jqGrid('getGridParam', 'data');
+                                var rowId = -1;
+                                for (x = 0; x < gridArray.length; x++) {
+                                    if (gridArray[x].SystemUserId == systemUserId) {
+                                        rowId = x;
+                                        break;
+                                    }
+                                }
+                                if (rowId != -1) {
+                                    Endeavor.CreditSafe.SolutionConfigurationPage.setData(rowId, 'isAdmin', isChecked);
+                                }
                             });
                         }
                     },
@@ -681,7 +808,7 @@ if (typeof (Endeavor.CreditSafe.SolutionConfigurationPage) == "undefined") {
                     });
 
             } catch (e) {
-                alert("Error cought in CreateGrid!: \n\n" + e.toString());
+                alert("Error caught in CreateGrid!: \n\n" + e.toString());
             }
         },
 
@@ -732,6 +859,13 @@ if (typeof (Endeavor.CreditSafe.SolutionConfigurationPage) == "undefined") {
             return myData;
         },
 
+        getSystemUserId: function (htmlString) {
+            var stringToFind = "jqGrid_SystemUserId\">";
+            var guidLength = 36;
+            var startIndex = htmlString.indexOf(stringToFind) + stringToFind.length;
+            return htmlString.substring(startIndex, startIndex + guidLength);
+        },
+
         onApplyUserPrivileges: function () {
             var grid = $('#jqGrid');
             var Data = grid.jqGrid('getGridParam', 'data');
@@ -775,43 +909,51 @@ if (typeof (Endeavor.CreditSafe.SolutionConfigurationPage) == "undefined") {
 
         removePrivilege: function (row, unitRoleId) {
             var userId = row.SystemUserId;
-            try {
-                var roleEntRef = Sdk.EntityReference('role', unitRoleId);
-                var collection = Sdk.Collection(Sdk.EntityReference, new Array(roleEntRef));
-                Sdk.Sync.disassociate(
-                    'systemuser',
-                    userId,
-                    'systemuserroles_association',
-                    collection
-                );
-            } catch (e) {
-                alert("Error in removePrivilege: \n" + e.toString());
-            }
+            var serverURL = Xrm.Utility.getGlobalContext().getClientUrl();
+            var req = new XMLHttpRequest();
+            req.open("DELETE", serverURL + "/api/data/v9.0/systemusers(" + userId + ")/systemuserroles_association/$ref?$id=" + serverURL + "/api/data/v9.0/roles(" + unitRoleId + ")", true);
+            req.setRequestHeader("Accept", "application/json");
+            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            req.setRequestHeader("OData-MaxVersion", "4.0");
+            req.setRequestHeader("OData-Version", "4.0");
+            req.onreadystatechange = function () {
+                if (this.readyState == 4 /* complete */) {
+                    req.onreadystatechange = null;
+                    if (this.status == 204) {
+                        console.log('Record Disassociated');
+                    } else {
+                        var error = JSON.parse(this.response).error;
+                        alert(error.message);
+                    }
+                }
+            };
+            req.send();
         },
 
         addPrivilege: function (row, unitRoleId) {
             var userId = row.SystemUserId;
-            try {
-                var roleEntRef = Sdk.EntityReference('role', unitRoleId);
-                var collection = Sdk.Collection(Sdk.EntityReference, new Array(roleEntRef));
-                Sdk.Sync.associate(
-                    'systemuser',
-                    userId,
-                    'systemuserroles_association',
-                    collection
-                );
-                var iMUrl = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "SystemUserRolesSet?$select=SystemUserRoleId&$filter=(RoleId eq (guid'" + unitRoleId + "')) and (SystemUserId eq (guid'" + userId + "'))";
-                var resultSet = Endeavor.Common.Data.fetchJSONResults(iMUrl);
-                var res = resultSet[0];
-                iMUrl = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "RoleSet?$filter=RoleId eq (guid'" + unitRoleId + "')";
-                var resultSet = Endeavor.Common.Data.fetchJSONResults(iMUrl);
-                if (resultSet[0].Name == 'Creditsafe Admin User')
-                    row.MyUserAdminId = res.SystemUserRoleId;
-                else
-                    row.MyUserBasicId = res.SystemUserRoleId;
-            } catch (e) {
-                alert("Error in addPrivilege: \n" + e.toString());
-            }
+            var serverURL = Xrm.Utility.getGlobalContext().getClientUrl();
+            var associate = {
+                "@odata.id": serverURL + "/api/data/v9.0/roles(" + unitRoleId + ")"
+            };
+            var req = new XMLHttpRequest();
+            req.open("POST", serverURL + "/api/data/v9.0/systemusers(" + userId + ")/systemuserroles_association/$ref", true);
+            req.setRequestHeader("Accept", "application/json");
+            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            req.setRequestHeader("OData-MaxVersion", "4.0");
+            req.setRequestHeader("OData-Version", "4.0");
+            req.onreadystatechange = function () {
+                if (this.readyState == 4 /* complete */) {
+                    req.onreadystatechange = null;
+                    if (this.status == 204) {
+                        console.log('Record Associated');
+                    } else {
+                        var error = JSON.parse(this.response).error;
+                        alert(error.message);
+                    }
+                }
+            };
+            req.send(JSON.stringify(associate));
         },
 
         errorHandler: function (error) {
@@ -821,64 +963,109 @@ if (typeof (Endeavor.CreditSafe.SolutionConfigurationPage) == "undefined") {
         updateUsernamePassword: function (row) {
             try {
                 if (row.UserConfig == null) {
-                    row.UserConfig = {
-                        edp_SystemUserId: {
-                            Id: row.SystemUserId,
-                            LogicalName: 'systemuser',
-                            Name: row.FullName
-                        },
-                        OwnerId: {
-                            Id: row.SystemUserId,
-                            LogicalName: 'systemuser',
-                            Name: row.FullName
-                        },
-                        edp_CreditsafeConfigurationId: {
-                            Id: this.sweConfig.edp_CreditsafeConfigurationId,
-                            LogicalName: 'edp_creditsafeconfiguration',
-                            Name: this.sweConfig.edp_Name
-                        },
-                        edp_Name: row.FullName,
-                        edp_Username: row.Username,
-                        edp_Password: row.Password
+                    var creditSafeConfigSweId = this.sweConfig.edp_CreditsafeConfigurationId;
+                    var creditSafeConfigSweName = this.sweConfig.edp_Name;
+                    var data = {
+                        "ownerid@odata.bind": "/systemusers(" + row.SystemUserId + ")",
+                        "edp_SystemUserId@odata.bind": "/systemusers(" + row.SystemUserId + ")",
+                        "edp_CreditsafeConfigurationId@odata.bind": "/edp_creditsafeconfigurations(" + creditSafeConfigSweId + ")",
+                        "edp_name": row.FullName,
+                        "edp_username": row.Username,
+                        "edp_password": row.Password
+                    };
 
-                    }
-                    SDK.REST.createRecord(
-                        row.UserConfig,
-                        'edp_CreditsafeUserConfiguration',
-                        function (config) { },
-                        function (e) {
-                            alert("Something went wrong when creating config:\n" + e.toString());
+                    //Kevin Rudnick 2019-07-15
+                    //this needs to be done, bug when using webapi calls from a new html window
+                    //https://stackoverflow.com/questions/51416490/using-xrm-webapi-method-in-web-resource-opened-in-a-new-window
+                    var entNames = {};
+                    entNames["edp_CreditsafeUserConfiguration"] = "edp_CreditsafeUserConfigurations";
+                    window.top.ENTITY_SET_NAMES = JSON.stringify(entNames);
+                    var primaryKeys = {};
+                    primaryKeys["edp_CreditsafeUserConfiguration"] = "edp_CreditsafeUserConfigurationId";
+                    window.top.ENTITY_PRIMARY_KEYS = JSON.stringify(primaryKeys);
+
+                    Xrm.WebApi.createRecord("edp_creditsafeuserconfigurations", data).then(
+                        function (response) {
+                            if (response) {
+                                row.UserConfig = {
+                                    edp_SystemUserId: {
+                                        Id: row.SystemUserId,
+                                        LogicalName: 'systemuser',
+                                        Name: row.FullName
+                                    },
+                                    OwnerId: {
+                                        Id: row.SystemUserId,
+                                        LogicalName: 'systemuser',
+                                        Name: row.FullName
+                                    },
+                                    edp_CreditsafeConfigurationId: {
+                                        Id: creditSafeConfigSweId,
+                                        LogicalName: 'edp_creditsafeconfiguration',
+                                        Name: creditSafeConfigSweName
+                                    },
+                                    edp_Name: row.FullName,
+                                    edp_Username: row.Username,
+                                    edp_Password: row.Password,
+                                    edp_CreditsafeUserConfigurationId: response.id
+                                }
+                            }
+                        },
+                        function (error) {
+                            alert("Something went wrong when creating config:\n" + error.message);
                         }
-                    )
+                    );
                 } else {
                     if (row.Username == null) {
                         if (row.OldUsername == null) { throw Error("Config without username exists.") }
-                        SDK.REST.deleteRecord(
-                            row.UserConfig.edp_CreditsafeUserConfigurationId,
-                            'edp_CreditsafeUserConfiguration',
-                            function () { },
-                            function (e) {
-                                alert("Failed when trying to delete record:" + e.toString());
+
+                        //Kevin Rudnick 2019-07-15
+                        //this needs to be done, bug when using webapi calls from a new html window
+                        //https://stackoverflow.com/questions/51416490/using-xrm-webapi-method-in-web-resource-opened-in-a-new-window
+                        var entNames = {};
+                        entNames["edp_CreditsafeUserConfiguration"] = "edp_CreditsafeUserConfigurations";
+                        window.top.ENTITY_SET_NAMES = JSON.stringify(entNames);
+                        var primaryKeys = {};
+                        primaryKeys["edp_CreditsafeUserConfiguration"] = "edp_CreditsafeUserConfigurationId";
+                        window.top.ENTITY_PRIMARY_KEYS = JSON.stringify(primaryKeys);
+
+                        Xrm.WebApi.deleteRecord("edp_creditsafeuserconfigurations", row.UserConfig.edp_CreditsafeUserConfigurationId).then(
+                            function (response) {
+                                row.UserConfig = null;
+                            },
+                            function (error) {
+                                alert("Failed when trying to delete record:" + error.message);
                             }
-                        )
+                        );
+
                     } else {
                         if (row.Password == null)
                             throw Error("No password for user: " + row.FullName);
                         if (row.UserConfig == null)
                             throw Error("No UserConfig for user: " + row.FullName);
+
                         var newData = {
-                            edp_Username: row.Username,
-                            edp_Password: row.Password
+                            "edp_username": row.Username,
+                            "edp_password": row.Password
                         }
-                        SDK.REST.updateRecord(
-                            row.UserConfig.edp_CreditsafeUserConfigurationId,
-                            newData,
-                            'edp_CreditsafeUserConfiguration',
-                            function (config) { },
-                            function (e) {
-                                alert("Something went wrong when updating config:\n" + e.toString());
+
+                        //Kevin Rudnick 2019-07-15
+                        //this needs to be done, bug when using webapi calls from a new html window
+                        //https://stackoverflow.com/questions/51416490/using-xrm-webapi-method-in-web-resource-opened-in-a-new-window
+                        var entNames = {};
+                        entNames["edp_CreditsafeUserConfiguration"] = "edp_CreditsafeUserConfigurations";
+                        window.top.ENTITY_SET_NAMES = JSON.stringify(entNames);
+                        var primaryKeys = {};
+                        primaryKeys["edp_CreditsafeUserConfiguration"] = "edp_CreditsafeUserConfigurationId";
+                        window.top.ENTITY_PRIMARY_KEYS = JSON.stringify(primaryKeys);
+
+                        Xrm.WebApi.updateRecord("edp_creditsafeuserconfigurations", row.UserConfig.edp_CreditsafeUserConfigurationId, newData).then(
+                            function (response) {
+                                console.log("updated record");
+                            },
+                            function (error) {
+                                alert("Something went wrong when updating config:\n" + error.message);
                             }
-                        )
+                        );
                     }
                 }
             } catch (e) {

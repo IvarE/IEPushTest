@@ -4,9 +4,7 @@
 /// <reference path="Endeavor.Common.Page.js" />
 /// <reference path="Endeavor.Common.Data.js" />
 /// <reference path="vsdoc/XrmPage-vsdoc.js" />
-/// <reference path="vsdoc/Sdk.Soap.vsdoc.js" />
-/// <reference path="vsdoc/Sdk.edp_GetCredentials.vsdoc.js" />
-/// <reference path="SDK.Rest.js" />
+
 if (typeof (Endeavor) == "undefined") {
     var Endeavor = {
     };
@@ -20,26 +18,63 @@ if (typeof (Endeavor.Creditsafe) == "undefined") {
 if (typeof (Endeavor.Creditsafe.CreditsafeConfiguration) == "undefined") {
     Endeavor.Creditsafe.CreditsafeConfiguration = {
 
+        onLoad: function (executionContext) {
+            var formContext = executionContext.getFormContext();
+            var searchEngineAttribute = formContext.getAttribute("edp_searchengine");
+            if (searchEngineAttribute != null) {
+                var searchEngineValue = searchEngineAttribute.getValue();
+                if (searchEngineValue == "757550000") { //Sweden Company Search
+                    Endeavor.Creditsafe.CreditsafeConfiguration.showHideFields(formContext, true);
+                    return;
+                }
+            }
+            Endeavor.Creditsafe.CreditsafeConfiguration.showHideFields(formContext, false);
+        },
+
+        showHideFields: function (formContext, visibleFlag) {
+            try {
+                var testEndPointControl = formContext.getControl("edp_endpoint");
+                if (testEndPointControl != null) {
+                    testEndPointControl.setVisible(visibleFlag);
+                }
+            } catch (error) {
+                //do nothing
+            }
+        },
+
         testCreditsafeConnection: function () {
 
-            var request = new Sdk.edp_GetCredentialsRequest();
-            var response = Sdk.Sync.execute(request);
+            var request = {
+                getMetadata: function () {
+                    return {
+                        boundParameter: null,
+                        operationType: 0,
+                        operationName: "edp_GetCredentials"
+                    };
+                }
+            };
 
-            if (response === null) {
-                window.alert("response was null");
-                throw new Error("The request did not return anything.");
-            } else {
+            Xrm.WebApi.online.execute(request).then(
+                function (result) {
+                    if (result.ok) {
+                        result.json().then(
+                            function (response) {
+                                var jsonString = response.configcredentials;
+                                var data = jsonString.split(';');
 
-                var jsonString = response.getConfigcredentials();
-                var data = jsonString.split(';');
-
-                var username = data[1];
-                var password = data[2];
-
-                var url = "https://login.creditsafe.com/?P1=" + username + "&P2=" + password;
-                window.open(url);
-
-            }
+                                var username = data[1];
+                                var password = data[2];
+                                var url = "https://login.creditsafe.com/?P1=" + username + "&P2=" + password;
+                                window.open(url);
+                            }
+                        );
+                    } else {
+                        throw new Error("The request failed. Please try again.");
+                    }
+                }, function (error) {
+                    throw new Error("An error occurred. " + error);
+                }
+            );
         }
 
     }
