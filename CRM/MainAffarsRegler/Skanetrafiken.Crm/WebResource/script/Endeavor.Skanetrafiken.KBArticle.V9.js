@@ -52,7 +52,7 @@ if (typeof (Endeavor.Skanetrafiken.KBArticle) === "undefined") {
             try {
                 var globalContext = Xrm.Utility.getGlobalContext();
 
-                var currentUserRoles = globalContext.userSettings.securityRoles();
+                var currentUserRoles = globalContext.userSettings.securityRoles;
                 for (var i = 0; i < currentUserRoles.length; i++) {
                     var _roleId = currentUserRoles[i];
                     Endeavor.OData_Querys.GetSecRolesNameArticle(_roleId, formContext);
@@ -70,7 +70,7 @@ if (typeof (Endeavor.Skanetrafiken.KBArticle) === "undefined") {
                 }
                 else {
                     var _marketingRoleName = "Skånetrafiken Marketing Professional";
-                    var _roleName = result[0].name;
+                    var _roleName = result.entities[0].name;
 
                     //if has role eq _marketingRoleName, user can change field cgi_auth_approved
                     if (_roleName == _marketingRoleName)

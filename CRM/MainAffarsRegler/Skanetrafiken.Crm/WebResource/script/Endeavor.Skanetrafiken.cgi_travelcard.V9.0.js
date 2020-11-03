@@ -1,4 +1,11 @@
-﻿if (typeof (Endeavor) === "undefined") {
+﻿FORM_TYPE_CREATE = 1;
+FORM_TYPE_UPDATE = 2;
+FORM_TYPE_READONLY = 3;
+FORM_TYPE_DISABLED = 4;
+FORM_TYPE_QUICKCREATE = 5;
+FORM_TYPE_BULKEDIT = 6;
+
+if (typeof (Endeavor) === "undefined") {
     var Endeavor = {
     };
 }
@@ -9,13 +16,6 @@ if (typeof (Endeavor.Skanetrafiken) === "undefined") {
 }
 
 if (typeof (Endeavor.Skanetrafiken.cgi_travelcard) === "undefined") {
-
-    FORM_TYPE_CREATE = 1;
-    FORM_TYPE_UPDATE = 2;
-    FORM_TYPE_READONLY = 3;
-    FORM_TYPE_DISABLED = 4;
-    FORM_TYPE_QUICKCREATE = 5;
-    FORM_TYPE_BULKEDIT = 6;
 
     Endeavor.Skanetrafiken.cgi_travelcard  = {
 

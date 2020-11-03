@@ -78,30 +78,21 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 // var response = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><ns0:GetDirectJourneysBetweenStopsResponse xmlns:ns0="http://www.skanetrafiken.com/DK/INTSTDK001/GetDirectJourneysBetweenStopsResponse/20141023"><DirectJourneysBetweenStops><DatedVehicleJourneyId>1120502564352389</DatedVehicleJourneyId><ServiceJourneyGid>9015012060800050</ServiceJourneyGid><OperatingDayDate>2016-02-09T00:00:00+01:00</OperatingDayDate><ContractorGid>9013012002200000</ContractorGid><LineDesignation>8</LineDesignation><JourneyNumber>50</JourneyNumber><DirectionOfLineDescription>Lundsbäck</DirectionOfLineDescription><PrimaryDestinationName>Lundsbäck</PrimaryDestinationName><SecondaryDestinationName>Knutpunkten</SecondaryDestinationName><DepartureId>1120000154959048</DepartureId><DepartureStopPointGid>9025012008306402</DepartureStopPointGid><DepartureType>2</DepartureType><DepartureSequenceNumber>3</DepartureSequenceNumber><PlannedDepartureDateTime>2016-02-09T10:35:15+01:00</PlannedDepartureDateTime><ArrivalId>1120000154959049</ArrivalId><ArrivalStopPointGid>9025012008328101</ArrivalStopPointGid><ArrivalType>2</ArrivalType><ArrivalSequenceNumber>4</ArrivalSequenceNumber><PlannedArrivalDateTime>2016-02-09T10:35:58+01:00</PlannedArrivalDateTime><ExpectedToBeMonitored>0</ExpectedToBeMonitored><TargetDepartureStopPointGid>9025012008306402</TargetDepartureStopPointGid><TargetDepartureDateTime>2016-02-09T10:35:15+01:00</TargetDepartureDateTime><ArrivalStopPointGid1>9025012008328101</ArrivalStopPointGid1></DirectJourneysBetweenStops><DirectJourneysBetweenStops><DatedVehicleJourneyId>1120502564352474</DatedVehicleJourneyId><ServiceJourneyGid>9015012060800054</ServiceJourneyGid><OperatingDayDate>2016-02-09T00:00:00+01:00</OperatingDayDate><ContractorGid>9013012002200000</ContractorGid><LineDesignation>8</LineDesignation><JourneyNumber>54</JourneyNumber><DirectionOfLineDescription>Lundsbäck</DirectionOfLineDescription><PrimaryDestinationName>Lundsbäck</PrimaryDestinationName><SecondaryDestinationName>Knutpunkten</SecondaryDestinationName><DepartureId>1120000154959098</DepartureId><DepartureStopPointGid>9025012008306402</DepartureStopPointGid><DepartureType>2</DepartureType><DepartureSequenceNumber>3</DepartureSequenceNumber><PlannedDepartureDateTime>2016-02-09T11:05:15+01:00</PlannedDepartureDateTime><ArrivalId>1120000154959099</ArrivalId><ArrivalStopPointGid>9025012008328101</ArrivalStopPointGid><ArrivalType>2</ArrivalType><ArrivalSequenceNumber>4</ArrivalSequenceNumber><PlannedArrivalDateTime>2016-02-09T11:05:58+01:00</PlannedArrivalDateTime><ExpectedToBeMonitored>0</ExpectedToBeMonitored><TargetDepartureStopPointGid>9025012008306402</TargetDepartureStopPointGid><TargetDepartureDateTime>2016-02-09T11:05:15+01:00</TargetDepartureDateTime><ArrivalStopPointGid1>9025012008328101</ArrivalStopPointGid1></DirectJourneysBetweenStops><DirectJourneysBetweenStops><DatedVehicleJourneyId>1120502564352559</DatedVehicleJourneyId><ServiceJourneyGid>9015012060800058</ServiceJourneyGid><OperatingDayDate>2016-02-09T00:00:00+01:00</OperatingDayDate><ContractorGid>9013012002200000</ContractorGid><LineDesignation>8</LineDesignation><JourneyNumber>58</JourneyNumber><DirectionOfLineDescription>Lundsbäck</DirectionOfLineDescription><PrimaryDestinationName>Lundsbäck</PrimaryDestinationName><SecondaryDestinationName>Knutpunkten</SecondaryDestinationName><DepartureId>1120000154959148</DepartureId><DepartureStopPointGid>9025012008306402</DepartureStopPointGid><DepartureType>2</DepartureType><DepartureSequenceNumber>3</DepartureSequenceNumber><PlannedDepartureDateTime>2016-02-09T11:35:15+01:00</PlannedDepartureDateTime><ArrivalId>1120000154959149</ArrivalId><ArrivalStopPointGid>9025012008328101</ArrivalStopPointGid><ArrivalType>2</ArrivalType><ArrivalSequenceNumber>4</ArrivalSequenceNumber><PlannedArrivalDateTime>2016-02-09T11:35:58+01:00</PlannedArrivalDateTime><ExpectedToBeMonitored>0</ExpectedToBeMonitored><TargetDepartureStopPointGid>9025012008306402</TargetDepartureStopPointGid><TargetDepartureDateTime>2016-02-09T11:35:15+01:00</TargetDepartureDateTime><ArrivalStopPointGid1>9025012008328101</ArrivalStopPointGid1></DirectJourneysBetweenStops><DirectJourneysBetweenStops><DatedVehicleJourneyId>1120502564352644</DatedVehicleJourneyId><ServiceJourneyGid>9015012060800062</ServiceJourneyGid><OperatingDayDate>2016-02-09T00:00:00+01:00</OperatingDayDate><ContractorGid>9013012002200000</ContractorGid><LineDesignation>8</LineDesignation><JourneyNumber>62</JourneyNumber><DirectionOfLineDescription>Lundsbäck</DirectionOfLineDescription><PrimaryDestinationName>Lundsbäck</PrimaryDestinationName><SecondaryDestinationName>Knutpunkten</SecondaryDestinationName><DepartureId>1120000154959198</DepartureId><DepartureStopPointGid>9025012008306402</DepartureStopPointGid><DepartureType>2</DepartureType><DepartureSequenceNumber>3</DepartureSequenceNumber><PlannedDepartureDateTime>2016-02-09T12:05:15+01:00</PlannedDepartureDateTime><ArrivalId>1120000154959199</ArrivalId><ArrivalStopPointGid>9025012008328101</ArrivalStopPointGid><ArrivalType>2</ArrivalType><ArrivalSequenceNumber>4</ArrivalSequenceNumber><PlannedArrivalDateTime>2016-02-09T12:05:58+01:00</PlannedArrivalDateTime><ExpectedToBeMonitored>0</ExpectedToBeMonitored><TargetDepartureStopPointGid>9025012008306402</TargetDepartureStopPointGid><TargetDepartureDateTime>2016-02-09T12:05:15+01:00</TargetDepartureDateTime><ArrivalStopPointGid1>9025012008328101</ArrivalStopPointGid1></DirectJourneysBetweenStops></ns0:GetDirectJourneysBetweenStopsResponse></s:Body></s:Envelope>';
 
                 // (transportType, fromStopAreaGid, toStopAreaGid, tripDateTime, forLineGids);
+                var inputParameters = [{ "Field": "TransportType", "Value": transport, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "FromStopAreaGid", "Value": fromarea, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "ToStopAreaGid", "Value": toarea, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "TripDateTime", "Value": time, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "ForLineGids", "Value": line, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 }];
 
-                var request = new Sdk.ed_GetDirectJourneysRequest(transport, fromarea, toarea, time, line);
-                var response = Sdk.Sync.execute(request);
-
-                var responsetext = response.getDirectJourneysResponse();
-                var parser = new DOMParser();
-
-                var responsedoc = null;
-                try {
-                    responsedoc = parser.parseFromString(responsetext, "text/xml");
-                }
-                catch (e) {
-                    throw new Error("Get Direct Journeys service is unavailable. Please contact your systems administrator.");
-                }
-
-                var parsererror = responsedoc.getElementsByTagName('parsererror');
-                var errormessage = responsedoc.getElementsByTagName('ErrorMessage');
-
-                if (parsererror && parsererror.length > 0)
-                    Endeavor.formscriptfunctions.AlertCustomDialog("Get Direct Journeys service is unavailable. Please contact your systems administrator.");
-                else if (errormessage && errormessage.length)
-                    Endeavor.formscriptfunctions.AlertCustomDialog(errormessage);
-                else
-                    Endeavor.Skanetrafiken.TravelInformation.populateTravelInformation(formContext, transport, city, responsedoc);
+                Endeavor.formscriptfunctions.callGlobalAction("ed_GetDirectJourneys", inputParameters,
+                    function (responsedoc) {
+                        Endeavor.Skanetrafiken.TravelInformation.populateTravelInformation(formContext, transport, city, responsedoc);
+                    },
+                    function (error) {
+                        var errorMessage = "Get Direct Journeys service is unavailable. Please contact your systems administrator. Details: " + error.message;
+                        console.log(errorMessage);
+                        Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
+                    });
             }
             else if ((transport == "REGIONBUS" || transport == "STRADBUS") && line) {
                 // GetContractors called onLoad, i.e. no request made in method populateContractorInformation
@@ -187,46 +178,36 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
             var value = transportlist.value;
 
-            var request = new Sdk.ed_GetLineDetailsRequest(value);
-            var response = Sdk.Sync.execute(request);
+            var inputParameters = [{ "Field": "LineType", "Value": value, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 }];
 
-            var responsetext = response.getGetLineDetailsResponse();
-            var parser = new DOMParser();
+            Endeavor.formscriptfunctions.callGlobalAction("ed_GetLineDetails", inputParameters,
+                function (responsedoc) {
+                    Endeavor.Skanetrafiken.TravelInformation.response = responsedoc;
 
-            try {
-                responsedoc = parser.parseFromString(responsetext, "text/xml");
-            }
-            catch (e) {
-                throw new Error("TravelInformationDB is unavailable. Please contact your systems administrator.");
-            }
+                    if (value == "TRAIN") {
+                        citylist.style.visibility = "hidden";
+                        linelist.style.visibility = "hidden";
 
-            Endeavor.Skanetrafiken.TravelInformation.response = parser.parseFromString(responsetext, "text/xml");
+                        Endeavor.Skanetrafiken.TravelInformation.dropDownTrain();
+                    }
+                    else if (value == "REGIONBUS") {
+                        citylist.style.visibility = "hidden";
+                        linelist.style.visibility = "visible";
 
-            var parsererror = Endeavor.Skanetrafiken.TravelInformation.response.getElementsByTagName('parsererror');
-            var errormessage = Endeavor.Skanetrafiken.TravelInformation.response.getElementsByTagName('ErrorMessage');
+                        Endeavor.Skanetrafiken.TravelInformation.dropDownRegionbus();
+                    }
+                    else if (value == "STRADBUS") {
+                        citylist.style.visibility = "visible";
+                        linelist.style.visibility = "visible";
 
-            if (parsererror && parsererror.length > 0)
-                Endeavor.formscriptfunctions.AlertCustomDialog("TravelInformationDB is unavailable. Please contact your systems administrator.");
-            else if (errormessage && errormessage.length > 0)
-                Endeavor.Skanetrafiken.TravelInformation.alertCustomDialog(errormessage[0]);
-            else if (value == "TRAIN") {
-                citylist.style.visibility = "hidden";
-                linelist.style.visibility = "hidden";
-
-                Endeavor.Skanetrafiken.TravelInformation.dropDownTrain();
-            }
-            else if (value == "REGIONBUS") {
-                citylist.style.visibility = "hidden";
-                linelist.style.visibility = "visible";
-
-                Endeavor.Skanetrafiken.TravelInformation.dropDownRegionbus();
-            }
-            else if (value == "STRADBUS") {
-                citylist.style.visibility = "visible";
-                linelist.style.visibility = "visible";
-
-                Endeavor.Skanetrafiken.TravelInformation.dropDownStradbus();
-            }
+                        Endeavor.Skanetrafiken.TravelInformation.dropDownStradbus();
+                    }
+                },
+                function (error) {
+                    var errorMessage = "TravelInformationDB is unavailable. Please contact your systems administrator. Details: " + error.message;
+                    console.log(errorMessage);
+                    Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
+                });
         },
 
         dropDownTrain: function () {
@@ -253,7 +234,6 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                     var option = { name: name, value: id };
                     options.push(option);
-
                 }
 
                 Endeavor.Skanetrafiken.TravelInformation.stopareas = options;
@@ -284,7 +264,6 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                     var option = { name: name, value: id };
                     options.push(option);
-
                 }
 
                 Endeavor.Skanetrafiken.TravelInformation.populateSelectionList(linelist, options, false);
@@ -314,7 +293,6 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                     var option = { name: name, value: id };
                     options.push(option);
-
                 }
 
                 Endeavor.Skanetrafiken.TravelInformation.cities = options;
@@ -803,43 +781,68 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                     var document = Endeavor.Skanetrafiken.TravelInformation.document;
 
-                    /*
-                    var atOperatingDate = getElementValue(directjourney, "PlannedDepartureDateTime");
-                    var forServiceJourney = getElementValue(directjourney, "ServiceJourneyGid");
-                    var atStopGid = getElementValue(directjourney, "DepartureStopPointGid");
+                    var entity = null;
 
-                    var request = new Sdk.ed_GetServiceJourneyRequest(atOperatingDate, forServiceJourney, atStopGid);
-                    var response = Sdk.Sync.execute(request);
+                    if (saveEntity.transporttype == "TRAIN") {
 
-                    var responsetext = response.getGetServiceJourneyResponse();
-                    var parser = new DOMParser();
-                    var responsedoc = parser.parseFromString(responsetext, "text/xml");
+                        var travelinformation = ((new Date()).toISOString().substring(0, 19)).replace("T", " ") + " => " + getElementValue(saveEntity.directjourney, "DirectionOfLineDescription");
 
-                    var parsererror = responsedoc.getElementsByTagName('parsererror');
-                    var errormessage = responsedoc.getElementsByTagName('ErrorMessage');
-                    */
+                        entity = {
+                            "cgi_caseid@odata.bind": "/incidents(" + formContext.data.entity.getId().substring(1, 37) + ")",
+                            "cgi_travelinformation": travelinformation,
+                            "cgi_journeynumber": getElementValue(saveEntity.directjourney, "JourneyNumber"),
+                            "cgi_transport": getElementValue(saveEntity.directjourney, "LineDesignation"),
+                            "cgi_tour": getElementValue(saveEntity.directjourney, "LineDesignation"),
+                            "cgi_linedesignation": getElementValue(saveEntity.directjourney, "PrimaryDestinationName"),
+                            "cgi_startplanned": getElementValue(saveEntity.directjourney, "PlannedDepartureDateTime"),
+                            "cgi_startactual": getElementValue(saveEntity.directjourney, "ActualDepartureTime"),
+                            "cgi_arivalplanned": getElementValue(saveEntity.directjourney, "PlannedArrivalDateTime"),
+                            "cgi_arivalactual": getElementValue(saveEntity.directjourney, 'ActualArrivalTime'),
+                            "cgi_directiontext": getElementValue(saveEntity.directjourney, "DirectionOfLineDescription"),
+                            "cgi_start": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("fromlist").value),
+                            "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
+                            "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
+                            "cgi_deviationmessage": getElementValue(saveEntity.directjourney, "Details"),
+                            "cgi_displaytext": ""
+                        }
 
-                    var parsererror = null;
-                    var errormessage = null;
+                        if (entity != null)
+                            Endeavor.Skanetrafiken.TravelInformation.setDisplayTextCitybus(entity);
 
-                    if (parsererror && parsererror.length > 0)
-                        Endeavor.formscriptfunctions.AlertCustomDialog("Contractors service is unavailable. Please contact your systems administrator.");
-                    else if (errormessage && errormessage.length)
-                        Endeavor.formscriptfunctions.AlertCustomDialog(errormessage);
-                    else {
+                    }
+                    else if (saveEntity.transporttype == "REGIONBUS") {
 
-                        var entity = null;
+                        var travelinformation = ((new Date()).toISOString().substring(0, 19)).replace("T", " ") + " => " + getElementValue(saveEntity.directjourney, "DirectionOfLineDescription");
 
-                        if (saveEntity.transporttype == "TRAIN") {
-
-                            var travelinformation = ((new Date()).toISOString().substring(0, 19)).replace("T", " ") + " => " + getElementValue(saveEntity.directjourney, "DirectionOfLineDescription");
+                        if (saveEntity.directjourney == null) {
 
                             entity = {
                                 "cgi_caseid@odata.bind": "/incidents(" + formContext.data.entity.getId().substring(1, 37) + ")",
                                 "cgi_travelinformation": travelinformation,
-                                "cgi_journeynumber": getElementValue(saveEntity.directjourney, "JourneyNumber"),
-                                "cgi_transport": getElementValue(saveEntity.directjourney, "LineDesignation"),
-                                "cgi_tour": getElementValue(saveEntity.directjourney, "LineDesignation"),
+                                "cgi_journeynumber": "",
+                                "cgi_transport": "Regionbuss",
+                                "cgi_city": "",
+                                "cgi_line": getElementValue(Endeavor.Skanetrafiken.TravelInformation.getLine(saveEntity.city, saveEntity.line), "LineNumber"),
+                                "cgi_tour": "",
+                                "cgi_linedesignation": "",
+                                "cgi_startplanned": new Date(1999),
+                                "cgi_startactual": "",
+                                "cgi_arivalplanned": new Date(1999),
+                                "cgi_arivalactual": "",
+                                "cgi_directiontext": "",
+                                "cgi_start": "",
+                                "cgi_stop": "",
+                                "cgi_contractor": saveEntity.contractorName, // NUMERICAL
+                                "cgi_deviationmessage": "",
+                                "cgi_displaytext": ""
+                            }
+                        } else {
+                            entity = {
+                                "cgi_caseid@odata.bind": "/incidents(" + formContext.data.entity.getId().substring(1, 37) + ")",
+                                "cgi_travelinformation": travelinformation,
+                                "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
+                                "cgi_transport": "Regionbuss",
+                                "cgi_line": getElementValue(saveEntity.directjourney, "LineDesignation"),
                                 "cgi_linedesignation": getElementValue(saveEntity.directjourney, "PrimaryDestinationName"),
                                 "cgi_startplanned": getElementValue(saveEntity.directjourney, "PlannedDepartureDateTime"),
                                 "cgi_startactual": getElementValue(saveEntity.directjourney, "ActualDepartureTime"),
@@ -852,138 +855,87 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                 "cgi_deviationmessage": getElementValue(saveEntity.directjourney, "Details"),
                                 "cgi_displaytext": ""
                             }
-
-                            if (entity != null)
-                                Endeavor.Skanetrafiken.TravelInformation.setDisplayTextCitybus(entity);
-
-                        }
-                        else if (saveEntity.transporttype == "REGIONBUS") {
-
-                            var travelinformation = ((new Date()).toISOString().substring(0, 19)).replace("T", " ") + " => " + getElementValue(saveEntity.directjourney, "DirectionOfLineDescription");
-
-                            if (saveEntity.directjourney == null) {
-
-                                entity = {
-                                    "cgi_caseid@odata.bind": "/incidents(" + formContext.data.entity.getId().substring(1, 37) + ")",
-                                    "cgi_travelinformation": travelinformation,
-                                    "cgi_journeynumber": "",
-                                    "cgi_transport": "Regionbuss",
-                                    "cgi_city": "",
-                                    "cgi_line": getElementValue(Endeavor.Skanetrafiken.TravelInformation.getLine(saveEntity.city, saveEntity.line), "LineNumber"),
-                                    "cgi_tour": "",
-                                    "cgi_linedesignation": "",
-                                    "cgi_startplanned": new Date(1999),
-                                    "cgi_startactual": "",
-                                    "cgi_arivalplanned": new Date(1999),
-                                    "cgi_arivalactual": "",
-                                    "cgi_directiontext": "",
-                                    "cgi_start": "",
-                                    "cgi_stop": "",
-                                    "cgi_contractor": saveEntity.contractorName, // NUMERICAL
-                                    "cgi_deviationmessage": "",
-                                    "cgi_displaytext": ""
-                                }
-                            } else {
-                                entity = {
-                                    "cgi_caseid@odata.bind": "/incidents(" + formContext.data.entity.getId().substring(1, 37) + ")",
-                                    "cgi_travelinformation": travelinformation,
-                                    "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
-                                    "cgi_transport": "Regionbuss",
-                                    "cgi_line": getElementValue(saveEntity.directjourney, "LineDesignation"),
-                                    "cgi_linedesignation": getElementValue(saveEntity.directjourney, "PrimaryDestinationName"),
-                                    "cgi_startplanned": getElementValue(saveEntity.directjourney, "PlannedDepartureDateTime"),
-                                    "cgi_startactual": getElementValue(saveEntity.directjourney, "ActualDepartureTime"),
-                                    "cgi_arivalplanned": getElementValue(saveEntity.directjourney, "PlannedArrivalDateTime"),
-                                    "cgi_arivalactual": getElementValue(saveEntity.directjourney, 'ActualArrivalTime'),
-                                    "cgi_directiontext": getElementValue(saveEntity.directjourney, "DirectionOfLineDescription"),
-                                    "cgi_start": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("fromlist").value),
-                                    "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
-                                    "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
-                                    "cgi_deviationmessage": getElementValue(saveEntity.directjourney, "Details"),
-                                    "cgi_displaytext": ""
-                                }
-                            }
-
-                            if (entity != null)
-                                Endeavor.Skanetrafiken.TravelInformation.setDisplayTextCitybus(entity);
-
-                        }
-                        else if (saveEntity.transporttype == "STRADBUS") {
-
-                            var travelinformation = ((new Date()).toISOString().substring(0, 19)).replace("T", " ") + " => " + getElementValue(saveEntity.directjourney, "DirectionOfLineDescription");
-
-                            if (saveEntity.directjourney == null) {
-
-                                entity = {
-                                    "cgi_caseid@odata.bind": "/incidents(" + formContext.data.entity.getId().substring(1, 37) + ")",
-                                    "cgi_travelinformation": travelinformation,
-                                    "cgi_journeynumber": "",
-                                    "cgi_transport": "Stadsbuss",
-                                    "cgi_city": Endeavor.Skanetrafiken.TravelInformation.getCityFromGid(saveEntity.city),
-                                    "cgi_line": getElementValue(Endeavor.Skanetrafiken.TravelInformation.getLine(saveEntity.city, saveEntity.line), "LineNumber"),
-                                    "cgi_tour": "",
-                                    "cgi_linedesignation": "",
-                                    "cgi_startplanned": new Date(1999),
-                                    "cgi_startactual": "",
-                                    "cgi_arivalplanned": new Date(1999),
-                                    "cgi_arivalactual": "",
-                                    "cgi_directiontext": "",
-                                    "cgi_start": "",
-                                    "cgi_stop": "",
-                                    "cgi_contractor": saveEntity.contractorName, // NUMERICAL
-                                    "cgi_deviationmessage": "",
-                                    "cgi_displaytext": ""
-                                }
-
-                            } else {
-                                entity = {
-                                    "cgi_caseid@odata.bind": "/incidents(" + formContext.data.entity.getId().substring(1, 37) + ")",
-                                    "cgi_travelinformation": travelinformation,
-                                    "cgi_journeynumber": getElementValue(saveEntity.directjourney, "JourneyNumber"),
-                                    "cgi_transport": "Stadsbuss",
-                                    "cgi_city": Endeavor.Skanetrafiken.TravelInformation.getCityFromGid(saveEntity.city),
-                                    "cgi_line": getElementValue(saveEntity.directjourney, "LineDesignation"),
-                                    "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
-                                    "cgi_linedesignation": getElementValue(saveEntity.directjourney, "PrimaryDestinationName"),
-                                    "cgi_startplanned": getElementValue(saveEntity.directjourney, "PlannedDepartureDateTime"),
-                                    "cgi_startactual": getElementValue(saveEntity.directjourney, 'ActualDepartureTime'),
-                                    "cgi_arivalplanned": getElementValue(saveEntity.directjourney, "PlannedArrivalDateTime"),
-                                    "cgi_arivalactual": getElementValue(saveEntity.directjourney, 'ActualArrivalTime'),
-                                    "cgi_directiontext": getElementValue(saveEntity.directjourney, "DirectionOfLineDescription"),
-                                    "cgi_start": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("fromlist").value),
-                                    "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
-                                    "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
-                                    "cgi_deviationmessage": getElementValue(saveEntity.directjourney, "Details"),
-                                    "cgi_displaytext": ""
-                                }
-                            }
-
-                            if (entity != null)
-                                Endeavor.Skanetrafiken.TravelInformation.setDisplayTextCitybus(entity);
                         }
 
-                        if (entity == null)
-                            Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte skapa Reseinformation. Vänligen kontakta admin.");
+                        if (entity != null)
+                            Endeavor.Skanetrafiken.TravelInformation.setDisplayTextCitybus(entity);
 
-                        /* Do the create*/
-                        if (formContext.getAttribute("statecode") && formContext.getAttribute("statecode").getValue() == 0) {
-                            Endeavor.Skanetrafiken.TravelInformation.saveInProgress = true;
-
-                            Xrm.WebApi.createRecord("cgi_travelinformation", entity).then(
-                                function success(CompletedResponse) {
-                                    Endeavor.Skanetrafiken.TravelInformation.populateSavedTravelInformationTable(formContext);
-                                    Endeavor.Skanetrafiken.TravelInformation.saveInProgress = false;
-                                },
-                                function (error) {
-                                    console.log(error.message);
-                                    Endeavor.formscriptfunctions.AlertCustomDialog("An error occurred when saving Travel Information: " + errorHandler.message);
-                                    Endeavor.Skanetrafiken.TravelInformation.saveInProgress = false;
-                                }
-                            );
-                        }
-                        else
-                            Endeavor.formscriptfunctions.AlertCustomDialog("Kan inte spara resa för avslutat ärende.");
                     }
+                    else if (saveEntity.transporttype == "STRADBUS") {
+
+                        var travelinformation = ((new Date()).toISOString().substring(0, 19)).replace("T", " ") + " => " + getElementValue(saveEntity.directjourney, "DirectionOfLineDescription");
+
+                        if (saveEntity.directjourney == null) {
+
+                            entity = {
+                                "cgi_caseid@odata.bind": "/incidents(" + formContext.data.entity.getId().substring(1, 37) + ")",
+                                "cgi_travelinformation": travelinformation,
+                                "cgi_journeynumber": "",
+                                "cgi_transport": "Stadsbuss",
+                                "cgi_city": Endeavor.Skanetrafiken.TravelInformation.getCityFromGid(saveEntity.city),
+                                "cgi_line": getElementValue(Endeavor.Skanetrafiken.TravelInformation.getLine(saveEntity.city, saveEntity.line), "LineNumber"),
+                                "cgi_tour": "",
+                                "cgi_linedesignation": "",
+                                "cgi_startplanned": new Date(1999),
+                                "cgi_startactual": "",
+                                "cgi_arivalplanned": new Date(1999),
+                                "cgi_arivalactual": "",
+                                "cgi_directiontext": "",
+                                "cgi_start": "",
+                                "cgi_stop": "",
+                                "cgi_contractor": saveEntity.contractorName, // NUMERICAL
+                                "cgi_deviationmessage": "",
+                                "cgi_displaytext": ""
+                            }
+
+                        } else {
+                            entity = {
+                                "cgi_caseid@odata.bind": "/incidents(" + formContext.data.entity.getId().substring(1, 37) + ")",
+                                "cgi_travelinformation": travelinformation,
+                                "cgi_journeynumber": getElementValue(saveEntity.directjourney, "JourneyNumber"),
+                                "cgi_transport": "Stadsbuss",
+                                "cgi_city": Endeavor.Skanetrafiken.TravelInformation.getCityFromGid(saveEntity.city),
+                                "cgi_line": getElementValue(saveEntity.directjourney, "LineDesignation"),
+                                "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
+                                "cgi_linedesignation": getElementValue(saveEntity.directjourney, "PrimaryDestinationName"),
+                                "cgi_startplanned": getElementValue(saveEntity.directjourney, "PlannedDepartureDateTime"),
+                                "cgi_startactual": getElementValue(saveEntity.directjourney, 'ActualDepartureTime'),
+                                "cgi_arivalplanned": getElementValue(saveEntity.directjourney, "PlannedArrivalDateTime"),
+                                "cgi_arivalactual": getElementValue(saveEntity.directjourney, 'ActualArrivalTime'),
+                                "cgi_directiontext": getElementValue(saveEntity.directjourney, "DirectionOfLineDescription"),
+                                "cgi_start": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("fromlist").value),
+                                "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
+                                "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
+                                "cgi_deviationmessage": getElementValue(saveEntity.directjourney, "Details"),
+                                "cgi_displaytext": ""
+                            }
+                        }
+
+                        if (entity != null)
+                            Endeavor.Skanetrafiken.TravelInformation.setDisplayTextCitybus(entity);
+                    }
+
+                    if (entity == null)
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte skapa Reseinformation. Vänligen kontakta admin.");
+
+                    /* Do the create*/
+                    if (formContext.getAttribute("statecode") && formContext.getAttribute("statecode").getValue() == 0) {
+                        Endeavor.Skanetrafiken.TravelInformation.saveInProgress = true;
+
+                        Xrm.WebApi.createRecord("cgi_travelinformation", entity).then(
+                            function success(CompletedResponse) {
+                                Endeavor.Skanetrafiken.TravelInformation.populateSavedTravelInformationTable(formContext);
+                                Endeavor.Skanetrafiken.TravelInformation.saveInProgress = false;
+                            },
+                            function (error) {
+                                console.log(error.message);
+                                Endeavor.formscriptfunctions.AlertCustomDialog("An error occurred when saving Travel Information: " + errorHandler.message);
+                                Endeavor.Skanetrafiken.TravelInformation.saveInProgress = false;
+                            }
+                        );
+                    }
+                    else
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Kan inte spara resa för avslutat ärende.");
                 }
             }
         },
@@ -1059,42 +1011,28 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
         getContractors: function () {
 
-            var request = new Sdk.ed_GetContractorsRequest();
-            var response = Sdk.Sync.execute(request);
-
-            var responsetext = "<Contractors>" + response.getGetContractorsResponse() + "</Contractors>";
-            var parser = new DOMParser();
-            var responsedoc = parser.parseFromString(responsetext, "text/xml");
-
-            var parsererror = responsedoc.getElementsByTagName('parsererror');
-            var errormessage = responsedoc.getElementsByTagName('ErrorMessage');
-
-            if (parsererror && parsererror.length > 0)
-                Endeavor.formscriptfunctions.AlertCustomDialog("Contractors service is unavailable. Please contact your systems administrator.");
-            else if (errormessage && errormessage.length)
-                Endeavor.formscriptfunctions.AlertCustomDialog(errormessage);
-            else
-                Endeavor.Skanetrafiken.TravelInformation.contractors = responsedoc;
+            Endeavor.formscriptfunctions.callGlobalAction("ed_GetContractors", null,
+                function (responsedoc) {
+                    Endeavor.Skanetrafiken.TravelInformation.contractors = responsedoc;
+                },
+                function (error) {
+                    var errorMessage = "Contractors service is unavailable. Please contact your systems administrator. Details: " + error.message;
+                    console.log(errorMessage);
+                    Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
+                });
         },
 
         getOrganisationalUnits: function () {
 
-            var request = new Sdk.ed_GetOrganisationalUnitsRequest();
-            var response = Sdk.Sync.execute(request);
-
-            var responsetext = "<Organisations>" + response.getGetOrganisationalUnitsResponse() + "</Organisations>";
-            var parser = new DOMParser();
-            var responsedoc = parser.parseFromString(responsetext, "text/xml");
-
-            var parsererror = responsedoc.getElementsByTagName('parsererror');
-            var errormessage = responsedoc.getElementsByTagName('ErrorMessage');
-
-            if (parsererror && parsererror.length > 0)
-                Endeavor.formscriptfunctions.AlertCustomDialog("Organisations service is unavailable. Please contact your systems administrator.");
-            else if (errormessage && errormessage.length)
-                Endeavor.formscriptfunctions.AlertCustomDialog(errormessage);
-            else
-                Endeavor.Skanetrafiken.TravelInformation.organisations = responsedoc;
+            Endeavor.formscriptfunctions.callGlobalAction("ed_GetOrganisationalUnits", null,
+                function (responsedoc) {
+                    Endeavor.Skanetrafiken.TravelInformation.organisations = responsedoc;
+                },
+                function (error) {
+                    var errorMessage = "Organisations service is unavailable. Please contact your systems administrator. Details: " + error.message;
+                    console.log(errorMessage);
+                    Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
+                });
         },
 
         setDisplayTextTrain: function (entity) {

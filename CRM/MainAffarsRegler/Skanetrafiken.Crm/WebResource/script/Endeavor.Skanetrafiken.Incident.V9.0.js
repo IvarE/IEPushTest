@@ -113,9 +113,10 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
         },
 
-        onLoadHideShowTypeOfContactFields: function () {
+        onLoadHideShowTypeOfContactFields: function (executionContext) {
             try {
-                setTimeout(Endeavor.Skanetrafiken.Incident.hideOrShowTypeOfContactFields, TIMEOUT_COUNTER);
+                var formContext = executionContext.getFormContext();
+                setTimeout(function () { Endeavor.Skanetrafiken.Incident.hideOrShowTypeOfContactFields(formContext); }, TIMEOUT_COUNTER);
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Incident.onLoadHideShowTypeOfContactFields\n\n" + e.message);
@@ -331,10 +332,10 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                                     return;
 
                                 } else
-                                    setTimeout(Endeavor.Skanetrafiken.Incident.hideOrShowTypeOfContactFields, 300);
+                                    setTimeout(function () { Endeavor.Skanetrafiken.Incident.hideOrShowTypeOfContactFields(formContext); }, 300);
                             
                             } else
-                                setTimeout(Endeavor.Skanetrafiken.Incident.hideOrShowTypeOfContactFields, 300);
+                                setTimeout(function () { Endeavor.Skanetrafiken.Incident.hideOrShowTypeOfContactFields(formContext); }, 300);
                         },
                         function (error) {
                             console.log("Could not fetch values. Contact Admin. Message " + error.message);
@@ -356,7 +357,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     obj.contentWindow.SetID(entid);
                 }
                 catch (e) {
-                    setTimeout(Endeavor.Skanetrafiken.Incident.timerfunction_BIFF(formContext), TIMEOUT_COUNTER);
+                    setTimeout(function () { Endeavor.Skanetrafiken.Incident.timerfunction_BIFF(formContext); }, TIMEOUT_COUNTER);
                 }
             }
             catch (e) {
@@ -374,7 +375,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     obj.contentWindow.SetID(entid);
                 }
                 catch (e) {
-                    setTimeout(Endeavor.Skanetrafiken.Incident.timerfunction_Travel(formContext), TIMEOUT_COUNTER);
+                    setTimeout(function () { Endeavor.Skanetrafiken.Incident.timerfunction_Travel(formContext); }, TIMEOUT_COUNTER);
                 }
             }
             catch (e) {
@@ -856,10 +857,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     }
                 }
             }
-
-
         },
-
 
         getRGOLapiurl: function (formContext) {
             try {
@@ -928,11 +926,8 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     var rgolPath = "https://" + _url + "/Pages/IssueSimple.aspx?id=" + rgolId;
 
 
-                    if (formContext.ui.tabs.get("rgol_info_new").getDisplayState() == "expanded") {
+                    if (formContext.ui.tabs.get("rgol_info_new").getDisplayState() == "expanded")
                         formContext.ui.controls.get("IFRAME_RGOLinfo_new").setSrc(rgolPath);
-
-                    }
-
                 }
             }
             catch (e) {

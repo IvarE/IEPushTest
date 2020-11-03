@@ -1,0 +1,146 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
+    <title>Hantera Biljett-Flyttar</title>
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+    <script type="text/javascript">
+        document.onreadystatechange = function () {
+            debugger;
+            if (document.readyState == "complete") {
+                Endeavor.Skanetrafiken.TicketMoveManager.getDataParam();
+            }
+        }
+
+        // Begin scoping
+        if (typeof (Endeavor) == "undefined") {
+            var Endeavor = {
+            };
+        }
+
+        if (typeof (Endeavor.Skanetrafiken) == "undefined") {
+            Endeavor.Skanetrafiken = {
+            };
+        }
+
+        if (typeof (Endeavor.Skanetrafiken.TicketMoveManager) == "undefined") {
+            Endeavor.Skanetrafiken.TicketMoveManager = {
+
+                getDataParam: function () {
+                    debugger;
+
+                    //Get the any query string parameters and load them
+                    //into the vals array
+
+                    var vals = new Array();
+                    if (location.search != "") {
+                        vals = location.search.substr(1).split("&");
+                        for (var i in vals) {
+                            vals[i] = vals[i].replace(/\+/g, " ").split("=");
+                        }
+                        //look for the parameter named 'data'
+                        var found = false;
+                        for (var i in vals) {
+                            if (vals[i][0].toLowerCase() == "data") {
+                                var dataSplit = decodeURI(vals[i][1]).split("%3b");
+
+                                document.getElementById("contactName").innerText = dataSplit[0];
+                                document.getElementById("contactGuid").innerText = dataSplit[1];
+
+                                if (dataSplit[2] == "2")
+                                    document.getElementById("maxMovesText").innerText = "Inga flyttar kvar";
+                                else {
+                                    document.getElementById("maxMovesText").innerText = "Biljettflytt OK!";
+                                    document.getElementById("applyButton").disabled = true;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                },
+
+                allowExtraMoveForContact: function () {
+                    debugger;
+                    try {
+                        // call MKL
+                        var inputParameters = [
+                            { "Field": "ContactGuid", "Value": document.getElementById("contactGuid").innerText, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 }
+                        ];
+
+                        Endeavor.formscriptfunctions.callGlobalAction("ed_AllowOneMoreTicketMove", inputParameters,
+                            function (results) {
+
+                                debugger;
+                                if (results != "Kund har nu ett extra byte.") {
+                                    document.getElementById("errorMessageSpace").innerText = ("Oväntat fel: " + results);
+                                }
+                                else {
+                                    document.getElementById("maxMovesText").innerText = "Biljettflytt OK!";
+                                    document.getElementById("applyButton").disabled = true;
+                                }
+                            },
+                            function (error) {
+                                document.getElementById("errorMessageSpace").innerText = ("Oväntat fel: " + error.message);
+                                console.log("Oväntat fel: " + error.message);
+                            });
+                    }
+                    catch (error) {
+                        document.getElementById("errorMessageSpace").innerText = ("Oväntat fel: " + error.message);
+                    }
+                },
+            };
+        }
+    </script>
+    <style>
+        .managerParent {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            float: left;
+            width: 100%;
+        }
+
+        .managerChild {
+            float: left;
+        }
+
+        .crm-button {
+            font-family: arial, sans-serif;
+        }
+
+        span {
+            font: normal 16px/normal segoe ui;
+        }
+
+        div {
+            font: normal 14px/normal segoe ui;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <br />
+        <span>
+            Hantera biljettflyttar för:
+        </span>
+        <br />
+        <div id="contactName" class="contact-name">
+            Missing Name
+        </div>
+        <br />
+    </header>
+    <div class="managerParent">
+        <div id="maxMovesText" class="managerChild" />
+    </div>
+    <br />
+    <br />
+    <div class="managerParent">
+        <button class="crm-button" id="applyButton" onclick="Endeavor.Skanetrafiken.TicketMoveManager.allowExtraMoveForContact()">Tillåt extra</button>
+        <button class="crm-button" id="cancelButton" onclick="window.close()">Stäng</button>
+    </div>
+    <div class="managerParent">
+        <div id="errorMessageSpace" class="managerChild" />
+    </div>
+    <div id="rawInData" style="display: none;"></div>
+    <div id="contactGuid" style="display: none;"></div>
+</body>
+</html>

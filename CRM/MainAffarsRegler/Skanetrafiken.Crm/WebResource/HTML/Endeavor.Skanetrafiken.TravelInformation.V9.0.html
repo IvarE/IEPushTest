@@ -6,11 +6,6 @@
 
     <script type="text/javascript">
 
-        function setClientApiContext(xrm, formContext) {
-            window._Xrm = xrm;
-            window._formContext = formContext;
-        }
-
         function onLoad() {
 
             getDate();
@@ -19,7 +14,7 @@
 
             setDocument();
 
-            populateSavedTravelInformationTable(_formContext);
+            populateSavedTravelInformationTable(Xrm.Page);
         }
 
         function setDocument() {
@@ -44,10 +39,8 @@
                 formContext.Endeavor.Skanetrafiken.TravelInformation.getCaseEventDate(_formContext, timestamp_label);
             }
 
-
             //var datestring = (new Date()).toISOString().substring(0, 16);
             //datestring = datestring.replace("T", " ");
-
             //document.getElementById('timestamp').value = datestring;
         }
 
@@ -155,7 +148,7 @@
             var formContext = getFormContext();
             if (formContext) {
                 try {
-                    formContext.Endeavor.Skanetrafiken.TravelInformation.search(_formContext);
+                    formContext.Endeavor.Skanetrafiken.TravelInformation.search(Xrm.Page);
                 }
                 catch (e) {
                     alert(e.message)

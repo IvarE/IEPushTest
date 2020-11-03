@@ -5,11 +5,6 @@
 
     <script type="text/javascript">
 
-        function setClientApiContext(xrm, formContext) {
-            window._Xrm = xrm;
-            window._formContext = formContext;
-        }
-
         function onLoad() {
 
             var formContext = getFormContext();
@@ -47,7 +42,7 @@
         function callOrderSearch() {
             var formContext = getFormContext();
             if (formContext) {
-                formContext.Endeavor.Skanetrafiken.getOrders.orderSearch(_formContext);
+                formContext.Endeavor.Skanetrafiken.getOrders.orderSearch(Xrm.Page, document);
             }
         }
 

@@ -359,19 +359,17 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 );
             }
 
+            var fullName = "";
             if (formContext.getAttribute("firstname") && formContext.getAttribute("lastname"))
-                var fullName = formContext.getAttribute("firstname").getValue() + " " + formContext.getAttribute("lastname").getValue();
+                fullName = formContext.getAttribute("firstname").getValue() + " " + formContext.getAttribute("lastname").getValue();
             else if (formContext.getAttribute("lastname"))
-                var fullName = formContext.getAttribute("lastname").getValue();
+                fullName = formContext.getAttribute("lastname").getValue();
             else if (formContext.getAttribute("firstname"))
-                var fullName = formContext.getAttribute("firstname").getValue();
+                fullName = formContext.getAttribute("firstname").getValue();
             else
-                var fullName = "Namn saknas";
+                fullName = "Namn saknas";
 
-            var inputParameters = [];
-
-            var parameterContactGuid = { "Field": "ContactGuid", "Value": guid, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-            inputParameters.push(parameterContactGuid);
+            var inputParameters = [{ "Field": "ContactGuid", "Value": guid, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 }];
 
             Endeavor.formscriptfunctions.callGlobalAction("ed_GetTicketMoveDataFromMKL", inputParameters,
                 function (result) {
@@ -502,55 +500,30 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 blocked = formContext.getAttribute("ed_islockedportal").getValue();
 
             if (SSN) {
-                if (blocked === true) {
-                    try {
-                        var inputParameters = [];
 
-                        var parameterSSN = { "Field": "SSN", "Value": SSN, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-                        var parameterBlocked = { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 };
-                        inputParameters.push(parameterSSN);
-                        inputParameters.push(parameterBlocked);
+                var inputParameters = [{ "Field": "SSN", "Value": SSN, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 }];
 
-                        Endeavor.formscriptfunctions.callGlobalAction("ed_BlockCustomerPortal", inputParameters,
-                            function (result) {
-                                Endeavor.formscriptfunctions.AlertCustomDialog("Kund avblockerad!");
-                            },
-                            function (error) {
-                                console.log(error.message);
-                                Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
-                            });
-                    }
-                    catch (e) {
-                        Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte avblockera kund. Var god försök igen senare.");
-                    }
-                }
-                else {
-                    try {
-                        var inputParameters = [];
+                Endeavor.formscriptfunctions.callGlobalAction("ed_BlockCustomerPortal", inputParameters,
+                    function (result) {
+                        if (blocked)
+                            Endeavor.formscriptfunctions.AlertCustomDialog("Kund avblockerad!");
+                        else
+                            Endeavor.formscriptfunctions.AlertCustomDialog("Kund spärrad!");
 
-                        var parameterSSN = { "Field": "SSN", "Value": SSN, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 };
-                        var parameterBlocked = { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 };
-                        inputParameters.push(parameterSSN);
-                        inputParameters.push(parameterBlocked);
+                        formContext.data.refresh();
+                    },
+                    function (error) {
+                        if (blocked)
+                            Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte avblockera kund. Var god försök igen senare.");
+                        else
+                            Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte spärra kund. Var god försök igen senare.");
 
-                        Endeavor.formscriptfunctions.callGlobalAction("ed_BlockCustomerPortal", inputParameters,
-                            function (result) { 
-                                Endeavor.Skanetrafiken.Contact.alertCustomDialog("Kund spärrad!");
-                            },
-                            function (error) {
-                                console.log(error.message);
-                                Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
-                            });                       
-                    }
-                    catch (e) {
-                        Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte spärra kund. Var god försök igen senare.");
-                    }
-                }
-                formContext.data.refresh();
+                        formContext.data.refresh();
+                    });
             }
-            else {
+            else
                 Endeavor.formscriptfunctions.AlertCustomDialog("Kunden saknar personnummer.");
-            }
         },
 
         setFocusQuickCreateContactFirstName: function (formContext) {
@@ -604,44 +577,11 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 "</fetch>";
             var modifiedFetchXml = fetchXml.replace("&", "&amp;");
 
-            var globalContext = Xrm.Utility.getGlobalContext();
-            var serverURL = globalContext.getClientUrl();
-
-            var users = Endeavor.Skanetrafiken.Contact.ExecuteFetchGetCount(modifiedFetchXml, "systemusers", serverURL);
+            var users = Endeavor.formscriptfunctions.executeFetchGetCount(modifiedFetchXml, "systemusers");
             if (users > 0)
                 return true;
             else
                 return false;
-        },
-
-        ExecuteFetchGetCount: function (originalFetch, entityname, serverURL) {
-            var count = 0;
-            var fetch = encodeURI(originalFetch);
-
-            var Query = entityname + "?fetchXml=" + fetch;
-            var req = new XMLHttpRequest();
-            req.open("GET", serverURL + "/api/data/v9.0/" + Query, false);
-            req.setRequestHeader("Accept", "application/json");
-            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            req.setRequestHeader("OData-MaxVersion", "4.0");
-            req.setRequestHeader("OData-Version", "4.0");
-            req.onreadystatechange = function () {
-                if (this.readyState == 4 /* complete */) {
-                    req.onreadystatechange = null;
-                    if (this.status == 200) {
-                        var data = JSON.parse(this.response);
-                        if (data != null) {
-                            count = data.value.length;
-                        }
-                    }
-                    else {
-                        var error = JSON.parse(this.response).error;
-                        alert(error.message);
-                    }
-                }
-            };
-            req.send();
-            return count;
         },
         // Senare fix
 
@@ -687,7 +627,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 var globalContext = Xrm.Utility.getGlobalContext();
                 var formContext = executionContext.getFormContext();
 
-                var currentUserRoles = globalContext.userSettings.securityRoles();
+                var currentUserRoles = globalContext.userSettings.securityRoles;
                 for (var i = 0; i < currentUserRoles.length; i++) {
                     var userRoleId = currentUserRoles[i];
                     Endeavor.OData_Querys.GetSecRolesNameContact(userRoleId, formContext);
@@ -707,7 +647,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     var _handlingOfficer = "Skånetrafiken Handläggare";
                     var _handlingOfficerPlus = "Skånetrafiken Handläggare plus";
 
-                    var _roleName = result[0].name;
+                    var _roleName = result.entities[0].name;
 
                     try {
                         var emailField = formContext.getAttribute("emailaddress1").getValue();
@@ -720,12 +660,12 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                                 Endeavor.formscriptfunctions.SetState("emailaddress1", "true", formContext); //The field should be editable until it has content
                     }
                     catch (ex) {
-                        alert("Fel i Endeavor.Skanetrafiken.Account.checkIfUserHasRole_callback\n\n" + ex.message);
+                        alert("Fel i Endeavor.Skanetrafiken.Contact.checkIfUserHasRole_callback\n\n" + ex.message);
                     }
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.checkIfUserHasRole_callback\n\n" + e.message);
+                alert("Fel i Endeavor.Skanetrafiken.Contact.checkIfUserHasRole_callback\n\n" + e.message);
             }
         },
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -871,7 +811,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.format_phonenumber\n\n" + e.message);
+                alert("Fel i Endeavor.Skanetrafiken.Contact.format_phonenumber\n\n" + e.message);
             }
         },
 
@@ -895,7 +835,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.format_ZIPCodeNumber\n\n" + e.message);
+                alert("Fel i Endeavor.Skanetrafiken.Contact.format_ZIPCodeNumber\n\n" + e.message);
             }
         },
 
@@ -916,7 +856,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.format_ZIPCodeNumber\n\n" + e.message);
+                alert("Fel i Endeavor.Skanetrafiken.Contact.format_ZIPCodeNumber\n\n" + e.message);
             }
         }
     };

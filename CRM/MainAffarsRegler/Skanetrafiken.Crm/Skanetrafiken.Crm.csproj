@@ -250,22 +250,27 @@
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.FrontOffice.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.getOrders.V9.0.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MargeAccounts.V9.0.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MergeRecordsStarter.V9.0.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.SearchTravelCards.V9.0.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.TicketMoveManager.V9.0.html" />
     <Content Include="WebResource\script\Endeavor.Common.Data.js" />
     <Content Include="WebResource\script\Endeavor.Common.Page.js" />
     <Content Include="WebResource\script\Endeavor.Common.SaveAndCopyEntity.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.cgi_representative.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.cgi_travelcard.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.ed_mergerecords.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Opportunity.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.QueueItem.V9.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCodeApproval.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.KBArticle.V9.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCodeTransaction.V9.0.js" />
     <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.Account.js" />
     <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.CreditsafeAccount.js" />
     <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.CreditsafeConfiguration.js" />
     <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.SearchCreditsafe.js" />
     <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.CreditSafe.SolutionConfigurationPage.js" />
-    <Content Include="WebResource\script\formscriptfunctions.js" />
-    <Content Include="WebResource\script\OData_Querys.js" />
+    <Content Include="WebResource\script\Endeavor.Library.formscriptfunctions.js" />
+    <Content Include="WebResource\script\Endeavor.Library.OData_Querys.js" />
     <Content Include="WebResource\script\SDK.Rest.js" />
     <None Include="ColumnBlockSchemas\NotificationInfoBlock.xsd">
       <SubType>Designer</SubType>
@@ -414,7 +419,7 @@
     <Content Include="WebResource\script\ed_biffintegrationlog_16.ico" />
     <Content Include="WebResource\script\ed_Cejn.Resources.1033.js" />
     <Content Include="WebResource\script\ed_Cejn.Resources.1053.js" />
-    <Content Include="WebResource\script\ed_mergerecords.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.ed_mergerecords.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Account.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.BiffTransactions.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Campaign.V9.0.js" />
@@ -498,7 +503,7 @@
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.getOrders.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.TicketMoveManager.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.TravelInformation.html" />
-    <Content Include="WebResource\HTML\MergeRecordsStarter.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MergeRecordsStarter.html" />
     <Content Include="WebResource\image\ed_biffintegrationlog_32.ico" />
     <Content Include="WebResource\image\ed_deltabatcherrorlogrow_16.png" />
     <Content Include="WebResource\image\ed_deltabatcherrorlogrow_32.png" />

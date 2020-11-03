@@ -317,26 +317,24 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
             if (formContext.getAttribute("parentaccountid").getValue()) {
 
-                if (blocked === true) {
-                    try {
-                        var request = new Sdk.ed_BlockAccountPortalRequest(portalID, parentID, organizationNumber, false);
-                        var response = Sdk.Sync.execute(request);
-                        Endeavor.formscriptfunctions.AlertCustomDialog("Företag avblockerat!");
-                    }
-                    catch (e) {
-                        Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte avblockera företag. Var god försök igen senare.");
-                    }
-                }
-                else {
-                    try {
-                        var request = new Sdk.ed_BlockAccountPortalRequest(portalID, parentID, organizationNumber, true);
-                        var response = Sdk.Sync.execute(request);
-                        Endeavor.formscriptfunctions.AlertCustomDialog("Företag spärrat!");
-                    }
-                    catch (e) {
-                        Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte spärra företag. Var god försök igen senare.");
-                    }
-                }
+                var inputParameters = [{ "Field": "PortalID", "Value": portalID, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "ParentID", "Value": parentID, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "OrganizationNumber", "Value": organizationNumber, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 }];
+
+                Endeavor.formscriptfunctions.callGlobalAction("ed_BlockAccountPortal", inputParameters,
+                    function (result) {
+                        if (blocked)
+                            Endeavor.formscriptfunctions.AlertCustomDialog("Företag avblockerat!");
+                        else
+                            Endeavor.formscriptfunctions.AlertCustomDialog("Företag spärrat!");
+                    },
+                    function (error) {
+                        if (blocked)
+                            Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte avblockera företag. Var god försök igen senare.");
+                        else
+                            Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte spärra företag. Var god försök igen senare.");
+                    });
             }
             else {
                 var ID = formContext.data.entity.getId();
@@ -345,40 +343,39 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 Xrm.WebApi.retrieveMultipleRecords("account", "?$select=accountnumber&$filter=parentaccountid eq " + ID).then(
                     function success(results) {
 
-                        var success = "";
-                        var failed = "";
-
                         for (var i = 0; i < results.entities.length; i++) {
 
                             var account = results.entities[i];
                             if (account.AccountNumber) {
 
                                 try {
-                                    var request = new Sdk.ed_BlockAccountPortalRequest(account.AccountNumber, parentID, organizationNumber, !blocked);
-                                    var response = Sdk.Sync.execute(request);
-                                    success = success + ", " + account.AccountNumber;
+
+                                    var inputParameters = [{ "Field": "PortalID", "Value": account.AccountNumber, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "ParentID", "Value": parentID, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "OrganizationNumber", "Value": organizationNumber, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                    { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 }];
+
+                                    Endeavor.formscriptfunctions.callGlobalAction("ed_BlockAccountPortal", inputParameters,
+                                        function (result) {
+
+                                            if (blocked)
+                                                Endeavor.formscriptfunctions.AlertCustomDialog("Företag avblockerat.");
+                                            else
+                                                Endeavor.formscriptfunctions.AlertCustomDialog("Företag spärrat.");
+                                        },
+                                        function (error) {
+                                            if (blocked)
+                                                Endeavor.formscriptfunctions.AlertCustomDialog("Avblockering av kostnadsställe(n) misslyckades" + account.AccountNumber);
+                                            else
+                                                Endeavor.formscriptfunctions.AlertCustomDialog("Spärr av kostnadsställe(n) misslyckades" + account.AccountNumber);
+                                        });
                                 }
                                 catch (e) {
-                                    failed = failed + ", " + account.AccountNumber;
+                                    console.log(e.message);
+                                    Endeavor.formscriptfunctions.ErrorCustomDialog(e.message, "Retrieve Multiple Records Error");
                                 }
                             }
-                            else
-                                failed = failed + ", (PortalID saknas)";
                         }
-
-                        if (blocked === true) {
-                            if (!failed)
-                                Endeavor.formscriptfunctions.AlertCustomDialog("Företag avblockerat.");
-                            else
-                                Endeavor.formscriptfunctions.AlertCustomDialog("Avblockering av kostnadsställe(n) misslyckades" + failed);
-                        }
-                        else {
-                            if (!failed)
-                                Endeavor.formscriptfunctions.AlertCustomDialog("Företag spärrat.");
-                            else
-                                Endeavor.formscriptfunctions.AlertCustomDialog("Spärr av kostnadsställe(n) misslyckades" + failed);
-                        }
-
                     },
                     function (error) {
                         console.log(error.message);
@@ -420,46 +417,12 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 "</entity>" +
                 "</fetch>";
             var modifiedFetchXml = fetchXml.replace("&", "&amp;");
-            var users = Endeavor.Skanetrafiken.Account.executeFetch(modifiedFetchXml, "systemusers");
+            var users = Endeavor.formscriptfunctions.executeFetchGetCount(modifiedFetchXml, "systemusers");
             if (users > 0)
                 return false;
             else
                 return true;
         },
-
-        executeFetch: function (originalFetch, entityname) {
-            var count = 0;
-            var fetch = encodeURI(originalFetch);
-            var query = entityname + "?fetchXml=" + fetch;
-
-            var globalContext = Xrm.Utility.getGlobalContext();
-            var serverURL = globalContext.getClientUrl();
-
-            var req = new XMLHttpRequest();
-            req.open("GET", serverURL + "/api/data/v9.0/" + query, false);
-            req.setRequestHeader("Accept", "application/json");
-            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            req.setRequestHeader("OData-MaxVersion", "4.0");
-            req.setRequestHeader("OData-Version", "4.0");
-            req.onreadystatechange = function () {
-                if (this.readyState == 4 /* complete */) {
-                    req.onreadystatechange = null;
-                    if (this.status == 200) {
-                        var data = JSON.parse(this.response);
-                        if (data != null) {
-                            count = data.value.length;
-                        }
-                    }
-                    else {
-                        var error = JSON.parse(this.response).error;
-                        alert(error.message);
-                    }
-                }
-            };
-            req.send();
-            return count;
-        },
-
 
         //Form Methods CGI Account (from accountLibrary.js)
         onFormLoad: function (executionContext) {
@@ -484,7 +447,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.onFormLoad\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Account.onFormLoad\n\n" + e.message);
             }
         },
 
@@ -492,14 +455,14 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             try {
                 var globalContext = Xrm.Utility.getGlobalContext();
 
-                var currentUserRoles = globalContext.userSettings.securityRoles();
+                var currentUserRoles = globalContext.userSettings.securityRoles;
                 for (var i = 0; i < currentUserRoles.length; i++) {
                     var userRoleId = currentUserRoles[i];
                     Endeavor.OData_Querys.GetSecRolesNameAccount(userRoleId, formContext);
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.checkIfUserHasRole\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Account.checkIfUserHasRole\n\n" + e.message);
             }
         },
 
@@ -509,7 +472,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                     alert("Inga säkerhetsroller definierade!");
                 }
                 else {
-                    var _roleName = result[0].Name;
+                    var _roleName = result.entities[0].name;
                     var emailField = formContext.getAttribute("emailaddress1").getValue();
 
                     if (emailField && emailField.Length !== 0 && _roleName.indexOf("Handläggare") > 0)
@@ -517,7 +480,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.checkIfUserHasRole_callback\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Account.checkIfUserHasRole_callback\n\n" + e.message);
             }
         },
 
@@ -535,7 +498,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.timerfunction_eHandel\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Account.timerfunction_eHandel\n\n" + e.message);
             }
         },
 
@@ -564,7 +527,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.format_phonenumber\n\n" + e.Message);
+                alert("Fel i Endeavor.Skanetrafiken.Account.format_phonenumber\n\n" + e.message);
             }
         },
 
@@ -590,7 +553,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                     });
             }
             catch (e) {
-                alert("Error in Endeavor.Skanetrafiken.Account.CreateNewCase\n\n", e.Message);
+                alert("Error in Endeavor.Skanetrafiken.Account.CreateNewCase\n\n", e.message);
             }
         },
 
