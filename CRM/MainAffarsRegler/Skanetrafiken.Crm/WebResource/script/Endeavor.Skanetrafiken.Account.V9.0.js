@@ -486,16 +486,17 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
         timerfunction_eHandel: function (formContext) {
             try {
-                var arg = 'WebResource_eHandelOrders';
-                var obj = formContext.getControl(arg).getObject();
-                var entid = formContext.data.entity.getId();
+                /*TODO - this is commented out, until the Silverlight page is coded as an HTML if needed - 03/11/2020*/
+                //var arg = 'WebResource_eHandelOrders';
+                //var obj = formContext.getControl(arg).getObject();
+                //var entid = formContext.data.entity.getId();
 
-                try {
-                    obj.contentWindow.SetID(entid);
-                }
-                catch (e) {
-                    setTimeout(function () { Endeavor.Skanetrafiken.Account.timerfunction_eHandel(formContext); }, TIMEOUT_COUNTER);
-                }
+                //try {
+                //    obj.contentWindow.SetID(entid);
+                //}
+                //catch (e) {
+                //    setTimeout(function () { Endeavor.Skanetrafiken.Account.timerfunction_eHandel(formContext); }, TIMEOUT_COUNTER);
+                //}
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Account.timerfunction_eHandel\n\n" + e.message);

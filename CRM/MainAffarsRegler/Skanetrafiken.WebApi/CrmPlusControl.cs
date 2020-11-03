@@ -2370,12 +2370,15 @@ namespace Skanetrafiken.Crm.Controllers
                         if(oldState != SalesOrderState.Active || (oldStatus != salesorder_statuscode.Pending && oldStatus != salesorder_statuscode.New))
                         {
                             _log.Debug("Order " + order.SalesOrderId + " needs to be open to perform the Update.");
-                            OrderEntity upOrder = new OrderEntity();
-                            upOrder.Id = (Guid)order.SalesOrderId;
-                            upOrder.StateCode = SalesOrderState.Active;
-                            upOrder.StatusCode = salesorder_statuscode.New;
 
-                            XrmHelper.Update(localContext, upOrder);
+                            SetStateRequest stateRequest = new SetStateRequest();
+                            stateRequest.State = new OptionSetValue((int)SalesOrderState.Active);
+                            stateRequest.Status = new OptionSetValue((int)salesorder_statuscode.New);
+
+                            stateRequest.EntityMoniker = new EntityReference(OrderEntity.EntityLogicalName, (Guid)order.SalesOrderId);
+
+                            SetStateResponse stateSetResponse = (SetStateResponse)localContext.OrganizationService.Execute(stateRequest);
+
                             needsStateUpdate = true;
                             _log.Debug("Order " + order.SalesOrderId + " was opened sucessfully.");
                         }
@@ -2391,12 +2394,17 @@ namespace Skanetrafiken.Crm.Controllers
                         if (needsStateUpdate)
                         {
                             _log.Debug("Close Order with the previous State Code and Status Code");
-                            OrderEntity upOrder = new OrderEntity();
-                            upOrder.Id = (Guid)order.SalesOrderId;
-                            upOrder.StateCode = oldState;
-                            upOrder.StatusCode = oldStatus;
+                            int newStatus = (int)salesorder_statuscode.Complete;
 
-                            XrmHelper.Update(localContext, upOrder);
+                            Entity orderClose = new Entity("orderclose");
+                            orderClose["salesorderid"] = new EntityReference(SalesOrder.EntityLogicalName, (Guid)order.SalesOrderId);
+                            FulfillSalesOrderRequest request = new FulfillSalesOrderRequest
+                            {
+                                OrderClose = orderClose,
+                                Status = new OptionSetValue(newStatus)
+                            };
+
+                            localContext.OrganizationService.Execute(request);
                             _log.Debug("Order " + order.SalesOrderId + " was closed sucessfully.");
                         }
 
