@@ -18,25 +18,27 @@ if (typeof (Endeavor.Skanetrafiken.getOrders) == "undefined") {
     Endeavor.Skanetrafiken.getOrders = {
 
         document: null,
+        formContext: null,
 
-        onLoad: function () {
+        onLoad: function (executionContext) {
             // clear notifications? Xrm.Page.ui.clearFormNotification(Endeavor.Nibe.LoyaltyProgramRow._loadNotificationHolder);
+            Endeavor.Skanetrafiken.getOrders.formContext = executionContext.getFormContext();
         },
 
-        setDocument: function (formContext, document) {
+        setDocument: function (document) {
             Endeavor.Skanetrafiken.getOrders.document = document;
-            Endeavor.Skanetrafiken.getOrders.getCreditOrders(formContext);
+            Endeavor.Skanetrafiken.getOrders.getCreditOrders();
         },
 
         /* Initiate order search from clicking search button */
-        orderSearch: function (formContext, document) {
+        orderSearch: function (document) {
 
-            Endeavor.Skanetrafiken.getOrders.callOrderSearch(formContext);
-            Endeavor.Skanetrafiken.getOrders.getCreditOrders(formContext);
+            Endeavor.Skanetrafiken.getOrders.callOrderSearch();
+            Endeavor.Skanetrafiken.getOrders.getCreditOrders();
         },
 
         /* After head.load call this function to begin search and make request */
-        callOrderSearch: function (formContext) {
+        callOrderSearch: function () {
 
             var document = Endeavor.Skanetrafiken.getOrders.document;
             document.getElementById("searchButton").disable = true; // ADD ASYNC STUFF ?
@@ -69,8 +71,8 @@ if (typeof (Endeavor.Skanetrafiken.getOrders) == "undefined") {
             var EndDate = document.getElementById('endDate').value;
 
             //CHECK IF EMAIL EXISTS
-            var emailattribute1 = formContext.getAttribute("emailaddress1");
-            var emailattribute2 = formContext.getAttribute("emailaddress2");
+            var emailattribute1 = Endeavor.Skanetrafiken.getOrders.formContext.getAttribute("emailaddress1");
+            var emailattribute2 = Endeavor.Skanetrafiken.getOrders.formContext.getAttribute("emailaddress2");
             var EmailAddress = "";
             if (emailattribute1 && emailattribute1.getValue()) {
                 EmailAddress = emailattribute1.getValue();
@@ -97,7 +99,7 @@ if (typeof (Endeavor.Skanetrafiken.getOrders) == "undefined") {
 
                 Endeavor.formscriptfunctions.callGlobalAction("ed_GetOrders", inputParameters,
                     function (ordersresponse) {
-                        Endeavor.Skanetrafiken.getOrders.populateTables(formContext, ordersresponse);
+                        Endeavor.Skanetrafiken.getOrders.populateTables(ordersresponse);
                     },
                     function (error) {
                         var errorMessage = "Get Orders service is unavailable. Please contact your systems administrator. Details: " + error.message;
@@ -110,7 +112,7 @@ if (typeof (Endeavor.Skanetrafiken.getOrders) == "undefined") {
         },
 
         /* TAKES INPUT FROM FIELDS AND DISPLAYS SEARCH RESULTS IN ORDERTABLE AND CREDITORDERTABLE */
-        populateTables: function (formContext, ordersresponse) {
+        populateTables: function (ordersresponse) {
 
             var document = Endeavor.Skanetrafiken.getOrders.document;
 
@@ -256,7 +258,7 @@ if (typeof (Endeavor.Skanetrafiken.getOrders) == "undefined") {
                     var productNumber = getElementValue(orderdetails, "Name");
                     var creditQuantity = getElementValue(orderdetails, "Quantity");
 
-                    creditbutton.onclick = Endeavor.Skanetrafiken.getOrders.creditRequestFunction(formContext, orderNumber, productNumber, creditQuantity, detailsrow);
+                    creditbutton.onclick = Endeavor.Skanetrafiken.getOrders.creditRequestFunction(orderNumber, productNumber, creditQuantity, detailsrow);
                     cell.appendChild(creditbutton);
                 }
 
@@ -443,7 +445,7 @@ if (typeof (Endeavor.Skanetrafiken.getOrders) == "undefined") {
         /* CREDIT ORDER FUNCTIONS */
 
         /* SEND SOAP REQUEST FOR ADDING CREDITS */
-        creditRequestFunction: function (formContext, orderNumber, productNumber, creditQuantity, row) {
+        creditRequestFunction: function (orderNumber, productNumber, creditQuantity, row) {
 
             return function () {
 
@@ -493,8 +495,8 @@ if (typeof (Endeavor.Skanetrafiken.getOrders) == "undefined") {
                                 if (ordersresponse.getElementsByTagName('Message')[0].firstChild && ordersresponse.getElementsByTagName('Message')[0].firstChild.nodeValue)
                                     entity["cgi_message"] = ordersresponse.getElementsByTagName('Message')[0].firstChild.nodeValue;
 
-                                var entityId = formContext.data.entity.getId();
-                                var entityName = formContext.data.entity.getEntityName();
+                                var entityId = Endeavor.Skanetrafiken.getOrders.formContext.data.entity.getId();
+                                var entityName = Endeavor.Skanetrafiken.getOrders.formContext.data.entity.getEntityName();
 
                                 if (entityId) {
                                     entityId = entityId.substring(1, entityId.length - 1);
@@ -516,7 +518,7 @@ if (typeof (Endeavor.Skanetrafiken.getOrders) == "undefined") {
                                     }
                                 );
 
-                                Endeavor.Skanetrafiken.getOrders.getCreditOrders(formContext);
+                                Endeavor.Skanetrafiken.getOrders.getCreditOrders();
                             }
                         },
                         function (error) {
@@ -532,10 +534,10 @@ if (typeof (Endeavor.Skanetrafiken.getOrders) == "undefined") {
         },
 
         /* SEARCH FOR AND FETCH CREDIT ORDERS IN DYNAMICS */
-        getCreditOrders: function (formContext) {
+        getCreditOrders: function () {
 
-            var entityId = formContext.data.entity.getId();
-            var entityName = formContext.data.entity.getEntityName();
+            var entityId = Endeavor.Skanetrafiken.getOrders.formContext.data.entity.getId();
+            var entityName = Endeavor.Skanetrafiken.getOrders.formContext.data.entity.getEntityName();
 
             if (entityId) {
                 entityId = entityId.substring(1, entityId.length - 1);

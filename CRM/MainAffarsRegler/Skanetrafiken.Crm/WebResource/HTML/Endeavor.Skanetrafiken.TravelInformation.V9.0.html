@@ -14,7 +14,7 @@
 
             setDocument();
 
-            populateSavedTravelInformationTable(Xrm.Page);
+            populateSavedTravelInformationTable();
         }
 
         function setDocument() {
@@ -24,10 +24,10 @@
             }
         }
 
-        function populateSavedTravelInformationTable(_formContext) {
+        function populateSavedTravelInformationTable() {
             var formContext = getFormContext();
             if (formContext) {
-                formContext.Endeavor.Skanetrafiken.TravelInformation.populateSavedTravelInformationTable(_formContext);
+                formContext.Endeavor.Skanetrafiken.TravelInformation.populateSavedTravelInformationTable();
             }
         }
 
@@ -36,7 +36,7 @@
             var formContext = getFormContext();
             if (formContext) {
                 var timestamp_label = document.getElementById('timestamp');
-                formContext.Endeavor.Skanetrafiken.TravelInformation.getCaseEventDate(_formContext, timestamp_label);
+                formContext.Endeavor.Skanetrafiken.TravelInformation.getCaseEventDate(timestamp_label);
             }
 
             //var datestring = (new Date()).toISOString().substring(0, 16);
@@ -148,7 +148,7 @@
             var formContext = getFormContext();
             if (formContext) {
                 try {
-                    formContext.Endeavor.Skanetrafiken.TravelInformation.search(Xrm.Page);
+                    formContext.Endeavor.Skanetrafiken.TravelInformation.search();
                 }
                 catch (e) {
                     alert(e.message)

@@ -52,7 +52,7 @@ namespace Endeavor.Crm.MultiQService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Import\\MultiQ\\Old\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Import\\MultiQ\\History")]
         public string MultiQArchive {
             get {
                 return ((string)(this["MultiQArchive"]));

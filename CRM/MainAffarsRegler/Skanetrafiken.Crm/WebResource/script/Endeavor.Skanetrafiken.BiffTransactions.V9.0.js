@@ -39,7 +39,6 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
 
             if (Endeavor.Skanetrafiken.BiffTransactions.htmldocument.getElementById('cardnr').value)
                 Endeavor.Skanetrafiken.BiffTransactions.getDetailsAndTransactions();
-            
         },
 
         // CALLED WHEN SEARCH BUTTON IS PRESSED
@@ -57,7 +56,7 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
                 }
 
                 try {
-                    Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable(Endeavor.Skanetrafiken.BiffTransactions.formContext);
+                    Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable();
                 }
                 catch (e) {
                     Endeavor.formscriptfunctions.AlertCustomDialog("Error in saved transactions: " + e.message);
@@ -273,7 +272,7 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
             }
         },
 
-        transactionSearch: function (formContext) {
+        transactionSearch: function () {
 
             if (Endeavor.Skanetrafiken.BiffTransactions.cardnumber) {
 
@@ -311,7 +310,7 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
 
                     Endeavor.formscriptfunctions.callGlobalAction("ed_GetCardTransactions", inputParameters,
                         function (result) {
-                            Endeavor.Skanetrafiken.BiffTransactions.populateTransactionTable(result, formContext);
+                            Endeavor.Skanetrafiken.BiffTransactions.populateTransactionTable(result);
                         },
                         function (error) {
                             var errorMessage = "TravelCard Transactions service is unavailable. Please contact your systems administrator. Details: " + error.message;
@@ -324,7 +323,7 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
                 Endeavor.formscriptfunctions.AlertCustomDialog("Inget angivet kortnummer");
         },
 
-        populateTransactionTable: function (transactionsresponse, formContext) {
+        populateTransactionTable: function (transactionsresponse) {
 
             var document = Endeavor.Skanetrafiken.BiffTransactions.htmldocument;
 
@@ -374,10 +373,10 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
                     var row = transactionstable.insertRow();
                     var buttoncell = row.insertCell();
 
-                    var formtype = formContext.data.entity.getEntityName();
+                    var formtype = Endeavor.Skanetrafiken.BiffTransactions.formContext.data.entity.getEntityName();
 
                     if (formtype.toUpperCase() == "INCIDENT") {
-                        var caseid = formContext.data.entity.getId();
+                        var caseid = Endeavor.Skanetrafiken.BiffTransactions.formContext.data.entity.getId();
 
                         var save = document.createElement("a");
                         save.style = "font-weight: bold";
@@ -408,12 +407,12 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
             }
         },
 
-        populateSavedTransactionsTable: function (formContext) {
+        populateSavedTransactionsTable: function () {
 
             var document = Endeavor.Skanetrafiken.BiffTransactions.htmldocument;
 
-            var entityName = formContext.data.entity.getEntityName();
-            var entityId = formContext.data.entity.getId();
+            var entityName = Endeavor.Skanetrafiken.BiffTransactions.formContext.data.entity.getEntityName();
+            var entityId = Endeavor.Skanetrafiken.BiffTransactions.formContext.data.entity.getId();
 
             if (entityName.toUpperCase() == "INCIDENT") {
 
@@ -578,7 +577,7 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
 
                 Xrm.WebApi.createRecord("cgi_travelcardtransaction", data).then(
                     function success(result) {
-                        Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable(Endeavor.Skanetrafiken.BiffTransactions.formContext);
+                        Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable();
                     },
                     function (error) {
                         Endeavor.formscriptfunctions.AlertCustomDialog("Error function called, error:" + error.message);
@@ -591,7 +590,7 @@ if (typeof (Endeavor.Skanetrafiken.BiffTransactions) == "undefined") {
 
                 Xrm.WebApi.deleteRecord("cgi_travelcardtransaction", travelcardtransactionid).then(
                     function success(result) {
-                        Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable(Endeavor.Skanetrafiken.BiffTransactions.formContext);
+                        Endeavor.Skanetrafiken.BiffTransactions.populateSavedTransactionsTable();
                     },
                     function (error) {
                         Endeavor.formscriptfunctions.AlertCustomDialog("Error function called, error:" + error.message);

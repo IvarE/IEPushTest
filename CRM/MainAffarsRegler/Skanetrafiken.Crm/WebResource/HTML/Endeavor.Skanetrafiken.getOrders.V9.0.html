@@ -15,7 +15,6 @@
             var startdate = new Date();
             startdate.setDate(startdate.getDate() - 45);
             document.getElementById('startDate').value = startdate.toISOString().substring(0, 10);
-
             document.getElementById('endDate').value = (new Date()).toISOString().substring(0, 10);
         }
 
@@ -42,7 +41,7 @@
         function callOrderSearch() {
             var formContext = getFormContext();
             if (formContext) {
-                formContext.Endeavor.Skanetrafiken.getOrders.orderSearch(Xrm.Page, document);
+                formContext.Endeavor.Skanetrafiken.getOrders.orderSearch(document);
             }
         }
 

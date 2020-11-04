@@ -12,7 +12,7 @@
       <Value Profile="(Default)">D:\Import\MultiQ</Value>
     </Setting>
     <Setting Name="MultiQArchive" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">D:\Import\MultiQ\Old\</Value>
+      <Value Profile="(Default)">D:\Import\MultiQ\History</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -10,6 +10,7 @@ using System.IO;
 using System.Net;
 using System.Linq;
 using System.Collections.Generic;
+using Microsoft.Crm.Sdk.Messages;
 
 namespace Endeavor.Crm.MultiQService
 {
@@ -74,7 +75,7 @@ namespace Endeavor.Crm.MultiQService
 
                 QueryExpression queryOrders = new QueryExpression(OrderEntity.EntityLogicalName);
                 queryOrders.NoLock = true;
-                queryOrders.ColumnSet.AddColumns(OrderEntity.Fields.SalesOrderId, OrderEntity.Fields.ed_DeliveryReportName);
+                queryOrders.ColumnSet.AddColumns(OrderEntity.Fields.SalesOrderId, OrderEntity.Fields.ed_DeliveryReportName, OrderEntity.Fields.StateCode, OrderEntity.Fields.StatusCode);
                 queryOrders.Criteria.AddCondition(OrderEntity.Fields.ed_DeliveryReportStatus, ConditionOperator.Equal, (int)ed_deliveryreportstatus.Creatednotuploaded);
                 queryOrders.Criteria.AddCondition(OrderEntity.Fields.ed_DeliveryReportName, ConditionOperator.NotNull);
 
@@ -116,6 +117,8 @@ namespace Endeavor.Crm.MultiQService
                                 Guid idNote = XrmHelper.Create(localContext, note);
                                 _log.Info($"Note: " + idNote + " with Attachment was created on Related Order: " + order.SalesOrderId);
 
+                                UpdateOrderStatus(localContext, (Guid)order.SalesOrderId, order.StateCode, order.StatusCode);
+
                                 bool isMoved = MoveFile(file.filePath, multiQLocationArchive + file.fileName);
                                 if (isMoved)
                                     _log.Info($"The file " + file + " was moved to History.");
@@ -139,6 +142,57 @@ namespace Endeavor.Crm.MultiQService
             catch (Exception e)
             {
                 _log.Error($"Exception caught in ReportUploader.ExecuteJob():\n{e.Message}\n\n");
+            }
+        }
+
+        public void UpdateOrderStatus(Plugin.LocalPluginContext localContext, Guid orderId, SalesOrderState? oldState, salesorder_statuscode? oldStatus)
+        {
+            bool needsStateUpdate = false;
+
+            if(oldState == null || oldStatus == null)
+            {
+                _log.Error("State Code or Status Code is null. The Order was not updated with 'Created Uploaded' status.");
+                return;
+            }
+
+            if (oldState != SalesOrderState.Active || (oldStatus != salesorder_statuscode.Pending && oldStatus != salesorder_statuscode.New))
+            {
+                _log.Debug("Order " + orderId + " needs to be open to perform the Update.");
+
+                SetStateRequest stateRequest = new SetStateRequest();
+                stateRequest.State = new OptionSetValue((int)SalesOrderState.Active);
+                stateRequest.Status = new OptionSetValue((int)salesorder_statuscode.New);
+
+                stateRequest.EntityMoniker = new EntityReference(OrderEntity.EntityLogicalName, orderId);
+
+                SetStateResponse stateSetResponse = (SetStateResponse)localContext.OrganizationService.Execute(stateRequest);
+
+                needsStateUpdate = true;
+                _log.Debug("Order " + orderId + " was opened sucessfully.");
+            }
+
+            OrderEntity uOrder = new OrderEntity();
+            uOrder.Id = orderId;
+            uOrder.ed_DeliveryReportStatus = ed_deliveryreportstatus.Createduploaded;
+
+            XrmHelper.Update(localContext, uOrder);
+            _log.Debug("Order " + orderId + " was updated with Report Status 'Created Uploaded'");
+
+            if (needsStateUpdate)
+            {
+                _log.Debug("Close Order with the previous State Code and Status Code");
+                int newStatus = (int)salesorder_statuscode.Complete;
+
+                Entity orderClose = new Entity("orderclose");
+                orderClose["salesorderid"] = new EntityReference(SalesOrder.EntityLogicalName, orderId);
+                FulfillSalesOrderRequest request = new FulfillSalesOrderRequest
+                {
+                    OrderClose = orderClose,
+                    Status = new OptionSetValue(newStatus)
+                };
+
+                localContext.OrganizationService.Execute(request);
+                _log.Debug("Order " + orderId + " was closed sucessfully.");
             }
         }
 
