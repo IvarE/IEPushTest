@@ -1221,7 +1221,10 @@ namespace Skanetrafiken.Crm.ValueCodes
                     valueCode.ed_TypeOption = type;
 
                 if (response.voucherId != null)
+                {
                     valueCode.ed_name = response.voucherId.ToString();
+                    valueCode.ed_ValueCodeVoucherId = response.voucherId.ToString();
+                }
 
                 if (template != null)
                     valueCode.ed_ValueCodeTemplate = template.ToEntityReference();

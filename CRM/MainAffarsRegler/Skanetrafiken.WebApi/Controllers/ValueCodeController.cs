@@ -201,7 +201,7 @@ namespace Skanetrafiken.Crm.Controllers
                 ValueCodeEvent valueCodeMsg = jsonMessage;// JsonConvert.DeserializeObject<ValueCodeEvent>(jsonMessage);
                 _log.Debug($"Input log: Amount: '{jsonMessage?.amount}', Created: {jsonMessage?.created}, Tag: {jsonMessage?.tag}, ValidFromDate: {jsonMessage?.validFromDate}, " +
                     $"ValidToDate: {jsonMessage?.validToDate}, VoucherCode: {jsonMessage?.voucherCode}, VoucherId: {jsonMessage?.voucherId}, VoucherType: {jsonMessage?.voucherType}, " +
-                    $"RemainingAmount: {jsonMessage?.remainingAmount}, Disabled: {jsonMessage?.disabled}, EanCode: {jsonMessage?.eanCode}, CouponId: {jsonMessage?.couponId}");
+                    $"RemainingAmount: {jsonMessage?.remainingAmount}, Disabled: {jsonMessage?.disabled}, EanCode: {jsonMessage?.eanCode}, CouponId: {jsonMessage?.couponId}, Status: {jsonMessage?.status}");
 
                 if (string.IsNullOrWhiteSpace(jsonMessage.voucherCode))
                     return response = Request.CreateResponse(HttpStatusCode.BadRequest, "VoucherCode cannot be empty.");
@@ -1002,6 +1002,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                 _log.Debug($"Fetching maximum value setting.");
                 //Fetch setting for maximum value
+                //var maxAmount = CgiSettingEntity.GetSettingDecimal(localContext, CgiSettingEntity.Fields.ed_MaxAmountWebsiteValueCode);
                 var maxAmount = CgiSettingEntity.GetSettingDecimal(localContext, CgiSettingEntity.Fields.ed_MaxAmountForGiftCard);
                 if (maxAmount < 0M)
                 {

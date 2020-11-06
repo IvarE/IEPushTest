@@ -127,67 +127,20 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                 })
         },
 
-        callAction: function (actionName, entityName, targetId, sucessCallback, errorCallback) {
-
-            var target = {};
-            target.entityType = entityName;
-            target.id = targetId;
-
-            var parameterTypes = {};
-            parameterTypes["entity"] = { "typeName": "mscrm." + entityName, "structuralProperty": 5 };
-
-            var req = {};
-            req.entity = target;
-            req.getMetadata = function () {
-                return {
-                    boundParameter: "entity",
-                    parameterTypes: parameterTypes,
-                    operationType: 0,
-                    operationName: actionName
-                };
-            };
-
-            Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
-        },
-
-        callGlobalAction: function (actionName, inputParameters, sucessCallback, errorCallback) {
-
-            var req = {};
-
-            var parameterTypes = {};
-            for (var i = 0; i < inputParameters.length; i++) {
-                var parameter = inputParameters[i];
-
-                req[parameter.Field] = parameter.Value;
-                parameterTypes[parameter.Field] = { "typeName": parameter.TypeName, "structuralProperty": parameter.StructuralProperty };
-            }
-
-            req.getMetadata = function () {
-
-                return {
-                    boundParameter: null,
-                    parameterTypes: parameterTypes,
-                    operationType: 0,
-                    operationName: actionName
-                };
-            };
-
-            Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
-        },
-
-        updateValueCodeToCanceled: function (RECORD_ID) {
+        updateValueCodeToCanceled: function (RECORD_ID, fromForm) {
 
             debugger;
             var systemUserId = Xrm.Page.context.getUserId().replace('{', '').replace('}', '');
 
             if (systemUserId != null && systemUserId != "undefined")
             {
+                debugger;
+
+                var systemUserProp = "/systemusers(" + systemUserId + ")";
                 var today = new Date();
                 var stateCodeInactive = 1;
                 var statusReasonMakulerad = 899310004;
-
-                var systemUserProp = "/systemusers(" + systemUserId + ")";
-                debugger;
+                
                 var data = {
 
                     "ed_CanceledBy@odata.bind": systemUserProp,
@@ -211,17 +164,21 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
 
 
                         debugger;
-                        
-                        Xrm.Page.ui.clearFormNotification("UpdateNotification");
-                        Xrm.Page.ui.clearFormNotification("värdekodInfo");
-                        //Update ValueCode as inactive - Makulerad - Makulerad av (Current user)
+                        if (fromForm == true) {
+                            Xrm.Page.ui.clearFormNotification("UpdateNotification");
+                            Xrm.Page.ui.clearFormNotification("värdekodInfo");
+                            //Update ValueCode as inactive - Makulerad - Makulerad av (Current user)
 
-                        Xrm.Page.ui.setFormNotification("Värdekod makulerad.", "UpdateNotification");
+                            Xrm.Page.ui.setFormNotification("Värdekod makulerad.", "UpdateNotification");
 
-                        setTimeout(function () {
-                            // Call the Open Entity Form method and pass through the current entity name and ID to force CRM to reload the record
-                            Xrm.Utility.openEntityForm(Xrm.Page.data.entity.getEntityName(), Xrm.Page.data.entity.getId());
-                        }, 3000);
+                            setTimeout(function () {
+                                // Call the Open Entity Form method and pass through the current entity name and ID to force CRM to reload the record
+                                Xrm.Utility.openEntityForm(Xrm.Page.data.entity.getEntityName(), Xrm.Page.data.entity.getId());
+                            }, 3000);
+                        }
+                        else {
+
+                        }
 
                     } else {
                         debugger;
@@ -235,9 +192,86 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
         },
 
         cancelValueCode: function () {
-
+            var fromForm = true;
             debugger;
-            //Kontrollera attt värdekoden är av typen "Inlösen Reskassa"
+
+            console.log("Cancel Button Clicked!");
+
+            //var confirmation = confirm("Är du säker på att du vill makulera värdekoden?");
+
+            //if (confirmation == true) {
+
+            //    debugger;
+            //    console.log("Cancel Button Confirmed!");
+            //    //Might not work on View List page
+            //    Xrm.Page.ui.setFormNotification("Makulerar Värdekod(er). Detta kan ta några sekunder...", "värdekodInfo");
+
+            //    //Call new API Action
+            //    var valueCodeId = Xrm.Page.data.entity.getId().replace('{', '').replace('}', '');
+
+            //    Process.callAction("ed_CancelValueCode",
+            //        [{
+            //            key: "ValueCodeId",
+            //            type: Process.Type.String,
+            //            value: valueCodeId
+            //        }],
+            //        function (result) {
+            //            debugger;
+
+            //            Xrm.Page.ui.clearFormNotification("värdekodInfo");
+            //            Xrm.Page.ui.clearFormNotification("UpdateNotification");
+
+            //            if (result != null && result != "undefined") {
+
+            //                console.log("Result: " + result.Result);
+            //            }
+
+            //            //Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeId, fromForm);
+
+            //            debugger;
+
+            //            //Handle result from VoucherService
+            //            if (result.Result.startsWith("200")) {
+
+            //                //alert("Execution returned 200");
+            //                Xrm.Page.ui.clearFormNotification("värdekodInfo");
+            //                Xrm.Page.ui.clearFormNotification("UpdateNotification");
+            //                //Update ValueCode as inactive - Makulerad - Makulerad av (Current user)
+
+            //                Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeId, fromForm);
+
+            //                Xrm.Page.data.refresh();
+            //                Xrm.Page.ui.setFormNotification("Värdekod makulerad.", "UpdateNotification");
+
+            //            }
+            //            else {
+            //                Xrm.Page.ui.clearFormNotification("värdekodInfo");
+            //                Xrm.Page.ui.clearFormNotification("UpdateNotification");
+            //                console.log("Execution returned: " + result.Result);
+            //                alert("Execution returned: " + result.Result);
+                            
+            //                Xrm.Page.ui.setFormNotification("Värdekod kunde ej makuleras.", "UpdateNotification");
+            //            }
+            //        },
+            //        function (e, t) {
+            //            // Error
+            //            debugger
+            //            Xrm.Page.ui.clearFormNotification("värdekodInfo");
+            //            Xrm.Page.ui.clearFormNotification("UpdateNotification");
+            //            Xrm.Page.ui.setFormNotification("Någonting gick fel: " + e, "UpdateNotification");
+            //            //alert("Någonting gick fel: " + e);
+            //            // Write the trace log to the dev console
+            //            if (window.console && console.error) {
+            //                console.error(e + "\n" + t);
+            //            }
+            //        })
+            //}
+            //else {
+            //    console.log("Canceled execution!");
+            //}
+
+            //Not used now - Might get used later
+            //Kontrollera att värdekoden är av typen "Inlösen Reskassa"
             var valueCodeTypeAtr = Xrm.Page.getAttribute("ed_valuecodetypeglobal");
             var valueCodeType = 0;
             if (valueCodeTypeAtr != null && valueCodeTypeAtr != "undefined")
@@ -245,13 +279,23 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                 valueCodeType = valueCodeTypeAtr.getValue();
             }
 
-            if (valueCodeType == null || valueCodeType == "undefined") {
-                console.log("Cancel Button Clicked: Found no ValueCode Type on form!");
-                alert("Värdekoden kan inte Makuleras: Hittade inte Värdekodstyp på värdekoden. Typen måste vara 'Inlösen Reskassa'!");
+            var vcCodeAtr = Xrm.Page.getAttribute("ed_valuecodevoucherid");
+            var vcCodeValue = "";
+            if (vcCodeAtr != null && vcCodeAtr != "undefined") {
+                vcCodeValue = vcCodeAtr.getValue();
             }
-            else if (valueCodeType != 2) {
-                console.log("Cancel Button Clicked: Värdekoden måste vara av typen 'Inlösen Reskassa'!");
-                alert("Värdekoden kan inte Makuleras: Värdekoden måste vara av typen 'Inlösen Reskassa'!");
+
+            if (valueCodeType == null || valueCodeType == "undefined" || valueCodeType == 0) {
+                console.log("Cancel Button Clicked: Found no ValueCode Type on form!");
+                alert("Värdekoden kan inte Makuleras: Hittade inte Värdekodstyp på värdekoden.");
+            }
+            else if (valueCodeType != 2 && valueCodeType != 5) {
+                console.log("Cancel Button Clicked: Värdekoden måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
+                alert("Värdekoden kan inte Makuleras: Värdekoden måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
+            }
+            else if (vcCodeValue == null || vcCodeValue == "undefined" || vcCodeValue == 0) {
+                console.log("Cancel Button Clicked: Found no ValueCode Code-ID on form!");
+                alert("Värdekoden kan inte Makuleras: Hittade inte en kod för VärdeCoden.");
             }
             else {
 
@@ -267,8 +311,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                     Xrm.Page.ui.setFormNotification("Makulerar Värdekod(er). Detta kan ta några sekunder...", "värdekodInfo");
 
                     //Call new API Action
-                    var valueCodeId = Xrm.Page.data.entity.getId().replace('{', '').replace('}', '');
-                    var valueCodeEntityName = Xrm.Page.data.entity.getEntityName();
+                    var valueCodeId = vcCodeValue;
 
                     Process.callAction("ed_CancelValueCode",
                         [{
@@ -276,45 +319,47 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                             type: Process.Type.String,
                             value: valueCodeId
                         }],
-                        function (status, result) {
+                        function (result) {
                             debugger;
 
                             Xrm.Page.ui.clearFormNotification("värdekodInfo");
                             Xrm.Page.ui.clearFormNotification("UpdateNotification");
 
                             if (result != null && result != "undefined") {
-                                console.log("Status: " + status);
+
                                 console.log("Result: " + result.Result);
                             }
 
-                            Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeId);
+                            //Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeId, fromForm);
 
-                            if (status == 204) {
-                                debugger;
+                            debugger;
 
-                                alert("Status returned 204");
+                            //Handle result from VoucherService
+                            if (result.Result.startsWith("200")) {
+
+                                //alert("Execution returned 200");
                                 Xrm.Page.ui.clearFormNotification("värdekodInfo");
                                 Xrm.Page.ui.clearFormNotification("UpdateNotification");
                                 //Update ValueCode as inactive - Makulerad - Makulerad av (Current user)
 
-                                //Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeId);
+                                Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeId, fromForm);
 
                                 Xrm.Page.data.refresh();
                                 Xrm.Page.ui.setFormNotification("Värdekod makulerad.", "UpdateNotification");
-                                
+
                             }
-                            else
-                            {
+                            else {
                                 Xrm.Page.ui.clearFormNotification("värdekodInfo");
                                 Xrm.Page.ui.clearFormNotification("UpdateNotification");
-                                console.log("Result: Null/undefined");
-                                //alert("Result  was null!");
-                            }
+                                console.log("Execution returned: " + result.Result);
+                                alert("Execution returned: " + result.Result);
 
-                            
+                                Xrm.Page.ui.setFormNotification("Värdekod kunde ej makuleras.", "UpdateNotification");
+                            }
                         },
                         function (e, t) {
                             // Error
+                            debugger;
                             Xrm.Page.ui.clearFormNotification("värdekodInfo");
                             Xrm.Page.ui.clearFormNotification("UpdateNotification");
                             Xrm.Page.ui.setFormNotification("Någonting gick fel: " + e, "UpdateNotification");
@@ -335,6 +380,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
             debugger;
             console.log("Cancel Multiple Button Clicked!");
             //alert("Cancel Button Clicked!");
+            var fromForm = false;
 
             if (valueCodeArg != null && valueCodeArg != "undefined" && valueCodeArg.length > 0) {
                 debugger;
@@ -346,38 +392,427 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
 
                     //Create Vlaue Code String
                     var valueCodeIds = "";
+
+                    ////Cancel All Value Codes - New 28/10/20
+                    //if (valueCodeArg.length == 1) {
+
+                    //    valueCodeIds = valueCodeArg[0].Id.replace('{', '').replace('}', '');
+                    //}
+                    //else {
+                    //    for (var i = 0; i < valueCodeArg.length; i++) {
+
+                    //        valueCodeIds += valueCodeArg[i].Id.replace('{', '').replace('}', '') + ";";
+                    //    }
+                    //}
+
+                    //if (valueCodeIds != "") {
+                    //    console.log("ValueCode(s): " + valueCodeIds);
+                    //    //alert("Value codes Gatherd");
+
+                    //    //Cancel ValueCode
+                    //    Process.callAction("ed_CancelValueCode",
+                    //        [{
+                    //            key: "ValueCodeId",
+                    //            type: Process.Type.String,
+                    //            value: valueCodeIds
+                    //        }],
+                    //        function (result) {
+                    //            //Success
+
+                    //            if (result != null && result != "undefined") {
+
+                    //                console.log("Result: " + result.Result);
+                    //            }
+
+                    //            //For Test
+                    //            //Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeIds, fromForm);
+
+                    //            debugger;
+                    //            if (result.Result.startsWith("200")) {
+                    //                //alert("Status returned 204");
+
+                    //                //OBS! Lösning för att hantera makulering som inte gick igenom i C# - Returnera alla Id:en som inte kunde makuleras. Skapa ett objekt av det. Skicka med det i uppdateringen för exkludering.
+
+                    //                //Update ValueCode as Inactive - Makulerad - Makulerad av (Current user)
+                    //                //Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeId, fromForm);
+
+                    //                alert("Värdekod(erna) makulerad(e).");
+
+                    //            } else {
+                    //                //alert("Execution returned: " + result.Result);
+                    //                console.log("Execution returned: " + result.Result);
+                    //            }
+
+                    //        },
+                    //        function (e, t) {
+                    //            // Error
+                    //            alert("Någonting gick fel: " + e);
+                    //            // Write the trace log to the dev console
+                    //            if (window.console && console.error) {
+                    //                console.error(e + "\n" + t);
+                    //            }
+                    //        })
+                    //}
+                    //else {
+                    //    alert("Kunde inte hitta någon värdekod att makulera.");
+                    //}
+
                     if (valueCodeArg.length == 1) {
+                        debugger;
                         valueCodeIds = valueCodeArg[0].Id.replace('{', '').replace('}', '');
-                        //Get current valuecode and check that it is of type "Inlösen reskassa"
 
+                        console.log("ValueCode(s): " + valueCodeIds);
+                        ////alert("Valid Value Code");
+
+                        //if (valueCodeIds != "")
+                        //{
+                        //    Process.callAction("ed_CancelValueCode",
+                        //        [{
+                        //            key: "ValueCodeId",
+                        //            type: Process.Type.String,
+                        //            value: valueCodeIds
+                        //        }],
+                        //        function (result) {
+
+                        //            //Success
+                        //            if (result != null && result != "undefined") {
+
+                        //                console.log("Result: " + result.Result);
+                        //            }
+
+                        //            //Update function call For Test
+                        //            //Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeIds, fromForm);
+
+                        //            debugger;
+                        //            if (result.Result.startsWith("200")) {
+                        //                debugger;
+
+                        //                //alert("Status returned 204");
+                        //                //Update ValueCode to Inactive - Makulerad - Makulerad av (Current user)
+                        //                //Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeId, fromForm);
+
+                        //                alert("Värdekod(erna) makulerad(e).");
+
+                        //            } else {
+                        //                //alert("Execution returned: " + result.Result);
+                        //                console.log("Execution returned: " + result.Result);
+                        //            }
+
+                        //        },
+                        //        function (e, t) {
+                        //            // Error
+                        //            alert("Någonting gick fel: " + e);
+                        //            // Write the trace log to the dev console
+                        //            if (window.console && console.error) {
+                        //                console.error(e + "\n" + t);
+                        //            }
+                        //        })
+                        //}
+                        
+                        //Get current valuecode and check that it is of type "Inlösen reskassa" or "Presentkort"
+                        var validValueCode = false;
+                        var fetchXml =
+                            "<fetch mapping='logical'>" +
+                            "<entity name='ed_valuecode'>" +
+                            "<attribute name='ed_valuecodetypeglobal' />" +
+                            "<attribute name='ed_valuecodeid' />" +
+                            "<filter type='and'>" +
+                            "<condition attribute='ed_valuecodeid' operator='eq' value='" + valueCodeIds + "' />" +
+                            "<condition attribute='statecode' operator='eq' value='0' />" +
+                            "<filter type='or'>" +
+                            "<condition attribute='ed_valuecodetypeglobal' operator='eq' value='2' />" +
+                            "<condition attribute='ed_valuecodetypeglobal' operator='eq' value='5' />" +
+                            "</filter>" +
+                            "</filter>" +
+                            "</entity>" +
+                            "</fetch>";
+
+                        var modifiedFetchXml = fetchXml.replace("&", "&amp;");
+
+                        var fetch = encodeURI(modifiedFetchXml);
+
+                        var serverURL = Xrm.Page.context.getClientUrl();
+                        var Query = "ed_valuecodes?fetchXml=" + fetch;
+                        var req = new XMLHttpRequest();
+                        req.open("GET", serverURL + "/api/data/v8.0/" + Query, false);
+                        req.setRequestHeader("Accept", "application/json");
+                        req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+                        req.setRequestHeader("OData-MaxVersion", "4.0");
+                        req.setRequestHeader("OData-Version", "4.0");
+                        req.onreadystatechange = function () {
+                            if (this.readyState == 4 /* complete */) {
+                                req.onreadystatechange = null;
+                                if (this.status == 200) {
+                                    var data = JSON.parse(this.response);
+                                    if (data != null) {
+                                        debugger;
+
+                                        var count = data.value.length;
+                                        if (count > 0)
+                                        {
+                                            validValueCode = true;
+                                        }
+                                    }
+                                }
+                                else {
+                                    var error = JSON.parse(this.response).error;
+                                    alert(error.message);
+                                }
+                            }
+                        };
+                        req.send();
+
+                        //Only Cancel ValueCode if 'validValueCode == true' and valueCodeIds contains a valid Guid String
+                        if (validValueCode == true && valueCodeIds != "") {
+
+                            console.log("ValueCode(s): " + valueCodeIds);
+                            //alert("Valid Value Code");
+                            valueCodeIds += ";";
+                            console.log("Chaned ValueCode(s): " + valueCodeIds);
+
+                            Process.callAction("ed_CancelValueCode",
+                                [{
+                                    key: "ValueCodeId",
+                                    type: Process.Type.String,
+                                    value: valueCodeIds
+                                }],
+                                function (result) {
+
+                                    //Success
+                                    if (result != null && result != "undefined") {
+
+                                        console.log("Result: " + result.Result);
+                                    }
+
+                                    debugger;
+                                    if (result.Result.startsWith("200")) {
+                                        debugger;
+
+                                        //alert("Status returned 204");
+                                        //Update ValueCode to Inactive - Makulerad - Makulerad av (Current user)
+                                        //Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeId, fromForm);
+
+                                        //alert("Värdekod(erna) makulerad(e).");
+                                        var confirmation = confirm("Värdekod(erna) makulerad(e).");
+                                        if (confirmation)
+                                        {
+                                            console.log("Execution Done!");
+                                        }
+
+                                    } else {
+                                        console.log("Execution returned: " + result.Result);
+                                        alert("Execution returned: " + result.Result);
+                                    }
+
+                                },
+                                function (e, t) {
+                                    // Error
+                                    alert("Någonting gick fel: " + e);
+                                    // Write the trace log to the dev console
+                                    if (window.console && console.error) {
+                                        console.error(e + "\n" + t);
+                                    }
+                                })
+                        }
+                        else {
+                            alert("Värdekoden kan inte Makuleras: Värdekoden måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
+                        }
+                        
                     }
-                    else {
-                        for (var i = 0; i < valueCodeArg.length; i++) {
-                            valueCodeIds += valueCodeArg[i].Id.replace('{', '').replace('}', '') + ";";
-                            //Get current valuecode and check that it is of type "Inlösen reskassa"
+                    else if (valueCodeArg.length > 1) {
 
+                        var nrOfValueCodes = valueCodeArg.length;
+
+                        var invalideValidValueCodeCount = 0;
+                        var validValueCodeCount = 0;
+
+                        for (var i = 0; i < nrOfValueCodes; i++) {
+                            debugger;
+                            var validValueCode = false;
+
+                            //Get current valuecode and check that it is of type "Inlösen reskassa"
+                            var checkValueCode = valueCodeArg[i].Id.replace('{', '').replace('}', '');
+
+                            //Get value code
+                            var fetchXml =
+                                "<fetch mapping='logical'>" +
+                                    "<entity name='ed_valuecode'>" +
+                                    "<attribute name='ed_valuecodetypeglobal' />" +
+                                    "<attribute name='ed_valuecodeid' />" +
+                                    "<filter type='and'>" +
+                                        "<condition attribute='ed_valuecodeid' operator='eq' value='" + checkValueCode + "' />" +
+                                        "<condition attribute='statecode' operator='eq' value='0' />" +
+                                        "<filter type='or'>" +
+                                            "<condition attribute='ed_valuecodetypeglobal' operator='eq' value='2' />" +
+                                            "<condition attribute='ed_valuecodetypeglobal' operator='eq' value='5' />" +
+                                        "</filter>" +
+                                    "</filter>" +
+                                    "</entity>" +
+                                "</fetch>";
+
+                            var modifiedFetchXml = fetchXml.replace("&", "&amp;");
+
+                            var fetch = encodeURI(modifiedFetchXml);
+
+                            var serverURL = Xrm.Page.context.getClientUrl();
+                            var Query = "ed_valuecodes?fetchXml=" + fetch;
+                            var req = new XMLHttpRequest();
+                            req.open("GET", serverURL + "/api/data/v8.0/" + Query, false);
+                            req.setRequestHeader("Accept", "application/json");
+                            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+                            req.setRequestHeader("OData-MaxVersion", "4.0");
+                            req.setRequestHeader("OData-Version", "4.0");
+                            req.onreadystatechange = function () {
+                                if (this.readyState == 4 /* complete */) {
+                                    req.onreadystatechange = null;
+                                    if (this.status == 200) {
+                                        // --- 200
+                                        var data = JSON.parse(this.response);
+                                        if (data != null) {
+                                            debugger;
+
+                                            var count = data.value.length;
+                                            if (count > 0) {
+                                                //Marks current valuecode id as valid
+                                                validValueCode = true;
+                                            }
+                                            else {
+                                                //Adds current valuecode id to the count if invalid valuecodes
+                                                invalideValidValueCodeCount++;
+                                            }
+                                        }
+                                        // --- 200
+                                    }
+                                    else {
+                                        var error = JSON.parse(this.response).error;
+                                        alert(error.message);
+                                    }
+                                }
+                            };
+                            req.send();
+
+                            //Populate string with valid Value Code Id:s
+                            if (validValueCode == true && i == 0) {
+                                valueCodeIds += checkValueCode + ";";
+                            }
+                            else if (validValueCode == true && i > 0)
+                            {
+                                valueCodeIds += checkValueCode + ";";
+                            }
+                        }
+
+                        debugger;
+                        if (valueCodeIds != "") {
+
+                            if (invalideValidValueCodeCount > 0) {
+                                validValueCodeCount = nrOfValueCodes - invalideValidValueCodeCount;
+                                var cancelConfirmation = confirm(invalideValidValueCodeCount + " värdekod(er) av " + nrOfValueCodes + " kan inte makuleras då Värdekodstypen inte är av typ 'Inlösen Reskassa' eller 'Presentkort'. Vill du fortsätta makulera resterande " + validValueCodeCount + " värdekod(er)?");
+
+                                if (cancelConfirmation == true) {
+                                    console.log("ValueCode(s): " + valueCodeIds);
+                                    //alert("ValueCodes Gatherd");
+
+                                    //Cancel ValueCode
+                                    Process.callAction("ed_CancelValueCode",
+                                        [{
+                                            key: "ValueCodeId",
+                                            type: Process.Type.String,
+                                            value: valueCodeIds
+                                        }],
+                                        function (result) {
+                                            //Success
+
+                                            if (result != null && result != "undefined") {
+
+                                                console.log("Result: " + result.Result);
+                                            }
+
+                                            debugger;
+                                            if (result.Result.startsWith("200")) {
+                                                //alert("Status returned 204");
+
+                                                //Update ValueCode as Inactive - Makulerad - Makulerad av (Current user)
+                                                //Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeId, fromForm);
+
+                                                //alert("Värdekod(erna) makulerad(e).");
+                                                var confirmation = confirm("Värdekod(erna) makulerad(e).");
+                                                if (confirmation) {
+                                                    console.log("Execution Done!");
+                                                }
+
+                                            } else {
+                                                console.log("Execution returned: " + result.Result);
+                                                alert("Execution returned: " + result.Result);
+                                            }
+                                        },
+                                        function (e, t) {
+                                            // Error
+                                            alert("Någonting gick fel: " + e);
+                                            // Write the trace log to the dev console
+                                            if (window.console && console.error) {
+                                                console.error(e + "\n" + t);
+                                            }
+                                        })
+                                }
+                                else {
+                                    alert("Inga Värdekoder Makulerades.");
+                                }
+                            }
+                            else {
+                                console.log("ValueCode(s): " + valueCodeIds);
+                                //alert("Value codes Gatherd");
+
+                                //Cancel ValueCode
+                                Process.callAction("ed_CancelValueCode",
+                                    [{
+                                        key: "ValueCodeId",
+                                        type: Process.Type.String,
+                                        value: valueCodeIds
+                                    }],
+                                    function (result) {
+                                        //Success
+
+                                        if (result != null && result != "undefined") {
+
+                                            console.log("Result: " + result.Result);
+                                        }
+
+                                        debugger;
+                                        if (result.Result.startsWith("200")) {
+                                            //alert("Status returned 204");
+
+                                            //Update ValueCode as Inactive - Makulerad - Makulerad av (Current user)
+                                            //Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeId, fromForm);;
+
+                                            //alert("Värdekod(erna) makulerad(e).");
+                                            var confirmation = confirm("Värdekod(erna) makulerad(e).");
+                                            if (confirmation) {
+                                                console.log("Execution Done!");
+                                            }
+
+                                        } else {
+                                            console.log("Execution returned: " + result.Result);
+                                            alert("Execution returned: " + result.Result);
+                                        }
+
+                                    },
+                                    function (e, t) {
+                                        // Error
+                                        alert("Någonting gick fel: " + e);
+                                        // Write the trace log to the dev console
+                                        if (window.console && console.error) {
+                                            console.error(e + "\n" + t);
+                                        }
+                                    })
+                            }
+                        } else {
+
+                            alert("Värdekod(erna) kan inte Makuleras: Värdekode(erna) måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
                         }
                     }
-
-                    //If string contains ; make sure to create an array with value codes
-                    Process.callAction("ed_CancelValueCode",
-                        [{
-                            key: "ValueCodeId",
-                            type: Process.Type.String,
-                            value: valueCodeIds
-                        }],
-                        function () {
-                            //Success
-                            alert("Värdekod(erna) makulerad(e).");
-                        },
-                        function (e, t) {
-                            // Error
-                            alert("Någonting gick fel: " + e);
-                            // Write the trace log to the dev console
-                            if (window.console && console.error) {
-                                console.error(e + "\n" + t);
-                            }
-                        })
+                    else {
+                        alert("Inga värdekoder kunde hittas för Makulering!");
+                    }
                 }
                 else {
                     console.log("Canceled execution!");
@@ -535,51 +970,7 @@ Process._callActionBase = function (requestXml, successCallback, errorCallback, 
                     }
 
                     // Make sure the callback accepts exactly 1 argument - use dynamic function if you want more
-                    successCallback(200, outputParams);
-                }
-            }
-            else if (req.status == 204) {
-                if (successCallback) {
-                    // Yucky but don't want to risk there being multiple 'Results' nodes or something
-                    var resultsNode = req.responseXML.childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[1]; // <a:Results>
-
-                    // Action completed successfully - get output params
-                    var responseParams = Process._getChildNodes(resultsNode, "a:KeyValuePairOfstringanyType");
-
-                    var outputParams = {};
-                    for (i = 0; i < responseParams.length; i++) {
-                        var attrNameNode = Process._getChildNode(responseParams[i], "b:key");
-                        var attrValueNode = Process._getChildNode(responseParams[i], "b:value");
-
-                        var attributeName = Process._getNodeTextValue(attrNameNode);
-                        var attributeValue = Process._getValue(attrValueNode);
-
-                        // v1.0 - Deprecated method using key/value pair and standard array
-                        //outputParams.push({ key: attributeName, value: attributeValue.value });
-
-                        // v2.0 - Allows accessing output params directly: outputParams["Target"].attributes["new_fieldname"];
-                        outputParams[attributeName] = attributeValue.value;
-
-                        /*
-                        RETURN TYPES:
-                            DateTime = Users local time (JavaScript date)
-                            bool = true or false (JavaScript boolean)
-                            OptionSet, int, decimal, float, etc = 1 (JavaScript number)
-                            guid = string
-                            EntityReference = { id: "guid", name: "name", entityType: "account" }
-                            Entity = { logicalName: "account", id: "guid", attributes: {}, formattedValues: {} }
-                            EntityCollection = [{ logicalName: "account", id: "guid", attributes: {}, formattedValues: {} }]
-    
-                        Attributes for entity accessed like: entity.attributes["new_fieldname"].value
-                        For entityreference: entity.attributes["new_fieldname"].value.id
-                        Make sure attributes["new_fieldname"] is not null before using .value
-                        Or use the extension method entity.get("new_fieldname") to get the .value
-                        Also use entity.formattedValues["new_fieldname"] to get the string value of optionsetvalues, bools, moneys, etc
-                        */
-                    }
-
-                    // Make sure the callback accepts exactly 1 argument - use dynamic function if you want more
-                    successCallback(204, outputParams);
+                    successCallback(outputParams);
                 }
             }
             else {

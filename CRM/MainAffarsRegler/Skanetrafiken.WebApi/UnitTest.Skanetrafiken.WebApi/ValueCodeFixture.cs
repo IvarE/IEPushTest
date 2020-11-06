@@ -1085,7 +1085,9 @@ namespace Endeavor.Crm.UnitTest
 
                     Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
 
-                    ValueCodeEntity.HandleCancelValueCode(localContext, "7eb1cbbb-d7b9-e911-80f0-005056b61fff"); //8555136240 Acc - 7eb1cbbb-d7b9-e911-80f0-005056b61fff VC
+                    ValueCodeEntity.HandleCancelValueCode(localContext, "5D6FB5DC-2511-4CC9-B76C-D2DD648270A3", null);
+
+                    //9F6BE044-DD50-4743-81BB-CA12633A8BC4
 
                     ////string apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_CreateValueCodeAPI);
                     //string apiUrl = string.Empty;

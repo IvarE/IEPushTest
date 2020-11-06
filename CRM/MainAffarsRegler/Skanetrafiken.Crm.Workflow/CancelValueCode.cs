@@ -42,13 +42,14 @@ namespace Skanetrafiken.Crm
                 Plugin.LocalPluginContext localContext = GetLocalContext(activityContext);
 
                 localContext.Trace($"CanceleValueCode started.");
-
+                IWorkflowContext wfContext = activityContext.GetExtension<IWorkflowContext>();
+                var executingUser = (Guid?)wfContext.UserId;
 
                 //GET VALUE(S)
                 localContext.Trace($"CanceleValueCode. Get ValueCode ID");
-                string valueCodeGuid = ValueCodeId.Get(activityContext);
+                string valueCodeId = ValueCodeId.Get(activityContext);
 
-                string cancelValueCodeResponse = ExecuteCodeActivity(localContext, valueCodeGuid);
+                string cancelValueCodeResponse = ExecuteCodeActivity(localContext, valueCodeId, executingUser);
 
                 CancelValueCodeResponse.Set(activityContext, cancelValueCodeResponse);
             }
@@ -58,11 +59,11 @@ namespace Skanetrafiken.Crm
             }
         }
 
-        public static string ExecuteCodeActivity(Plugin.LocalPluginContext localContext, string valueCodeGuid)
+        public static string ExecuteCodeActivity(Plugin.LocalPluginContext localContext, string valueCodeId, Guid? userGuid)
         {
             localContext.Trace($"(ExecuteCodeActivity) started.");
 
-            return ValueCodeEntity.HandleCancelValueCode(localContext, valueCodeGuid);
+            return ValueCodeEntity.HandleCancelValueCode(localContext, valueCodeId, userGuid);
         }
     }
 }

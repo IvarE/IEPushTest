@@ -427,15 +427,15 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
-        public static string HandleCancelValueCode(Plugin.LocalPluginContext localContext, string valueCodeGuid)
+        public static string HandleCancelValueCode(Plugin.LocalPluginContext localContext, string valueCodeId, Guid? userGuid)
         {
-            if (!string.IsNullOrWhiteSpace(valueCodeGuid))
+            if (!string.IsNullOrWhiteSpace(valueCodeId))
             {
                 string[] valueCodeArray = { };
 
-                if (valueCodeGuid.Contains(";") == true) 
+                if (valueCodeId.Contains(";") == true) 
                 {
-                    valueCodeArray = valueCodeGuid.Split(';').Select(sValue => sValue.Trim()).ToArray();
+                    valueCodeArray = valueCodeId.Split(';').Select(sValue => sValue.Trim()).ToArray();
                 }
 
                //Get settings entity
@@ -443,59 +443,158 @@ namespace Skanetrafiken.Crm.Entities
                 settingFilter.AddCondition(CgiSettingEntity.Fields.ed_CancelValueCodeAPIEndpoint, ConditionOperator.NotNull);
                 CgiSettingEntity cgiSetting = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_CancelValueCodeAPIEndpoint), settingFilter);
 
-                if (cgiSetting != null && !string.IsNullOrWhiteSpace(cgiSetting.ed_CancelValueCodeAPIEndpoint)) 
+                if (cgiSetting != null && !string.IsNullOrWhiteSpace(cgiSetting.ed_CancelValueCodeAPIEndpoint))
                 {
+                    string successValueCodes = "";
+                    string errorValueCodes = "";
+
+                    int nrCanceled = 0;
+                    int nrFailed = 0;
+
+                    string responseCodes = "";
+                    string returnString = "";
 
                     if (valueCodeArray != null && valueCodeArray.Length > 0)
                     {
                         for (var i = 0; i < valueCodeArray.Length; i++)
                         {
-                            //Trigger call to VoucherService
-                            var httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}/{1}", cgiSetting.ed_CancelValueCodeAPIEndpoint, valueCodeArray[i]));
-                            httpWebRequest.ContentType = "application/json";
-                            httpWebRequest.Method = "GET";
-                            httpWebRequest.Headers.Add("channel", "crm");
-                            ApiHelper.CreateTokenForVoucherService(localContext, httpWebRequest);
-
-                            try
+                            if (!string.IsNullOrWhiteSpace(valueCodeArray[i]))
                             {
+                                //Get Value Code
+                                ValueCodeEntity valueCode = null;
 
-                                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                                valueCode = XrmRetrieveHelper.Retrieve<ValueCodeEntity>(localContext, new Guid(valueCodeArray[i]), new ColumnSet(
+                                            ValueCodeEntity.Fields.Id,
+                                            ValueCodeEntity.Fields.ed_CodeId,
+                                            ValueCodeEntity.Fields.ed_ValueCodeVoucherId,
+                                            ValueCodeEntity.Fields.ed_CanceledBy,
+                                            ValueCodeEntity.Fields.ed_CanceledOn,
+                                            ValueCodeEntity.Fields.statecode,
+                                            ValueCodeEntity.Fields.statuscode));
+
+                                if (valueCode != null && !string.IsNullOrWhiteSpace(valueCode.ed_CodeId)) 
                                 {
-                                    var result = streamReader.ReadToEnd();
-                                    //returnMessage += " streamReader-OK,";
-                                    return result;
+                                    //Trigger call to VoucherService
+                                    var httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}/{1}", cgiSetting.ed_CancelValueCodeAPIEndpoint, valueCode.ed_ValueCodeVoucherId));
+                                    httpWebRequest.ContentType = "application/json";
+                                    //httpWebRequest.Method = "GET";
+                                    httpWebRequest.Method = "DELETE";
+                                    httpWebRequest.Headers.Add("channel", "crm");
+                                    ApiHelper.CreateTokenForVoucherService(localContext, httpWebRequest);
+
+                                    try
+                                    {
+
+                                        var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                                        //using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                                        //{
+                                        //    var result = streamReader.ReadToEnd();
+                                        //    //returnMessage += " streamReader-OK,";
+
+                                        //    //If result is ok -> Update value code to inactive and so on
+
+                                        //    return result;
+                                        //}
+
+                                        responseCodes += httpResponse.StatusCode.ToString() + ";";
+
+                                        //if (httpResponse != null && httpResponse.StatusCode == HttpStatusCode.OK)
+                                        if (httpResponse != null && httpResponse.StatusCode == HttpStatusCode.NoContent)
+                                        {
+                                            //var test = localContext.
+                                            ValueCodeEntity updateValueCode = new ValueCodeEntity();
+                                            updateValueCode.Id = valueCode.Id;
+                                            updateValueCode.ed_CanceledOn = (DateTime?)DateTime.Now;
+
+                                            if (userGuid != null)
+                                            {
+                                                updateValueCode.ed_CanceledBy = new EntityReference(SystemUserEntity.EntityLogicalName, (Guid)userGuid);
+                                            }
+
+                                            XrmHelper.Update(localContext, updateValueCode);
+
+                                            SetStateRequest setStateRequest = new SetStateRequest()
+                                            {
+                                                EntityMoniker = new EntityReference
+                                                {
+
+                                                    Id = new Guid(valueCodeArray[i]),
+
+                                                    LogicalName = ValueCodeEntity.EntityLogicalName,
+
+                                                },
+
+                                                State = new OptionSetValue(1),
+                                                Status = new OptionSetValue(899310004)
+                                            };
+
+                                            localContext.OrganizationService.Execute(setStateRequest);
+
+                                            nrCanceled++;
+                                            successValueCodes += valueCodeArray[i] + ";";
+                                            //return "200";
+                                            //Update record
+                                        }
+                                        else
+                                        {
+                                            nrFailed++;
+                                            errorValueCodes += "RE-" + valueCodeArray[i] + "-RE= " + responseCodes + " - Expected 204;";
+                                            //return "400";
+                                        }
+                                    }
+                                    catch (WebException we)
+                                    {
+                                        //string resultFromService = "";
+
+                                        //HttpWebResponse response = (HttpWebResponse)we.Response;
+
+                                        //using (var streamReader = new StreamReader(response.GetResponseStream()))
+                                        //{
+                                        //    resultFromService = streamReader.ReadToEnd();
+                                        //    //localContext.TracingService.Trace($"got http error: {response.StatusCode} Content: {resultFromService}");
+                                        //}
+                                        //throw new WebException($"Error when trying to create Value Code. Ex:{we.Message}, message:{resultFromService}");
+
+                                        nrFailed++;
+                                        errorValueCodes += "WE-" + valueCodeArray[i] + "-WE;";
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        //throw new Exception("Failed to Execute: " + e.Message);
+                                        nrFailed++;
+                                        errorValueCodes += "EX-" + valueCodeArray[i] + "(Exception: " + e.Message + ")-EX;";
+                                    }
                                 }
-                            }
-                            catch (WebException we)
-                            {
-                                string resultFromService = "";
-
-                                HttpWebResponse response = (HttpWebResponse)we.Response;
-
-                                using (var streamReader = new StreamReader(response.GetResponseStream()))
+                                else
                                 {
-                                    resultFromService = streamReader.ReadToEnd();
-                                    localContext.TracingService.Trace($"got http error: {response.StatusCode} Content: {resultFromService}");
+                                    nrFailed++;
+                                    errorValueCodes += "UP-" + valueCodeArray[i] + "-UP;";
                                 }
-                                throw new WebException($"Error when trying to create Value Code. Ex:{we.Message}, message:{resultFromService}");
-                            }
-                            catch (Exception e)
-                            {
-                                throw new Exception("Failed to Execute: " + e.Message);
                             }
                         }
+
+                        if (successValueCodes != "" && nrCanceled > 0)
+                        {
+                            returnString = $"200 = Canceled {nrCanceled} Ids. Failed: {nrFailed} ->{errorValueCodes}";
+                        }
+                        else
+                        {
+                            returnString = $"400 = Failed to cancel Ids. ResponseCodes: {responseCodes} Failed: {nrFailed} ->{errorValueCodes}";
+                        }
+
+                        return returnString;
+
                     }
-                    else 
+                    else
                     {
                         //    ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
                         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                         //Trigger call to VoucherService
-                        var httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}/{1}", cgiSetting.ed_CancelValueCodeAPIEndpoint, valueCodeGuid));
+                        var httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}/{1}", cgiSetting.ed_CancelValueCodeAPIEndpoint, valueCodeId));
                         httpWebRequest.ContentType = "application/json";
-                        httpWebRequest.Method = "GET";
+                        //httpWebRequest.Method = "GET";
+                        httpWebRequest.Method = "DELETE";
                         httpWebRequest.Headers.Add("channel", "crm");
                         //string clientCertName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_ClientCertName);
                         //httpWebRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCertName));
@@ -503,13 +602,27 @@ namespace Skanetrafiken.Crm.Entities
 
                         try
                         {
+                            var result = "";
+
 
                             var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
                             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                             {
-                                var result = streamReader.ReadToEnd();
+                                /* var */
+                                result = streamReader.ReadToEnd();
                                 //returnMessage += " streamReader-OK,";
-                                return result;
+                                //return result;
+                            }
+                            var responseCode = httpResponse.StatusCode.ToString() + ";";
+
+                            //if (httpResponse != null && httpResponse.StatusCode == HttpStatusCode.OK)
+                            if (httpResponse != null && httpResponse.StatusCode == HttpStatusCode.NoContent)
+                            {
+                                return "200 - ValueCode Canceled!";
+                            }
+                            else
+                            {
+                                return $"400 - ResponseError: {responseCode} - Method {httpWebRequest.Method}";
                             }
                         }
                         catch (WebException we)
@@ -523,22 +636,27 @@ namespace Skanetrafiken.Crm.Entities
                                 resultFromService = streamReader.ReadToEnd();
                                 localContext.TracingService.Trace($"got http error: {response.StatusCode} Content: {resultFromService}");
                             }
-                            throw new WebException($"Error when trying to create Value Code. Ex:{we.Message}, message:{resultFromService}");
+
+                            throw new WebException($"400 - Error when trying to create Value Code. Ex:{we.Message}, message:{resultFromService}");
                         }
                         catch (Exception e)
                         {
-                            throw new Exception("Failed to Execute: " + e.Message);
+                            throw new Exception("400 - Failed to Execute: " + e.Message);
                         }
                     }
                 }
-
-                //return returnMessage;
-                return "Success!";
+                else {
+                    //return returnMessage;
+                    var missingSettingsError = "400 - Did not find URI for Valuecode Cancel!";
+                    return missingSettingsError;
+                }
             }
             else {
                 //Throw error handling
                 //return "Error!";
-                throw new InvalidPluginExecutionException("Did not find any ValueCode!");
+                //throw new InvalidPluginExecutionException("Did not find any ValueCode!");
+                var returnError = "400 - Did not find any ValueCodes to cancel!";
+                return returnError;
             }
         }
 
