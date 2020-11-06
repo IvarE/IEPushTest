@@ -5,15 +5,12 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
-using Common.Logging;
-using System.Xml.Linq;
 
 namespace Endeavor.Crm.MultiQService
 {
     static class Program
     {
-        static ILog _log = LogManager.GetLogger(typeof(Program));
+        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         static void Main()
         {
@@ -36,22 +33,22 @@ namespace Endeavor.Crm.MultiQService
                     _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
                     string password = passwordArgument.Substring(passwordArgument.IndexOf(":") + 1);
 
-                    CrmConnection.SaveCredentials(OrdersService.CredentialFilePath, password, OrdersService.Entropy);
+                    CrmConnection.SaveCredentials(OrderService.CredentialFilePath, password, OrderService.Entropy);
                 }
 
-                #if DEBUG
-                    //Workaround to make it possible to debug a service.
-                    OrdersService service = new OrdersService();
-                    service.Execute();
-                    System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
-                #else
-                    ServiceBase[] ServicesToRun;
-                    ServicesToRun = new ServiceBase[]
-                    {
-                        new OrdersService()
-                    };
-                    ServiceBase.Run(ServicesToRun);
-                #endif
+#if DEBUG
+                //Workaround to make it possible to debug a service.
+                OrderService service = new OrderService();
+                service.Execute();
+                System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
+#else
+                ServiceBase[] ServicesToRun;
+                ServicesToRun = new ServiceBase[]
+                {
+                    new OrderService()
+                };
+                ServiceBase.Run(ServicesToRun);
+#endif
             }
             catch (Exception ex)
             {

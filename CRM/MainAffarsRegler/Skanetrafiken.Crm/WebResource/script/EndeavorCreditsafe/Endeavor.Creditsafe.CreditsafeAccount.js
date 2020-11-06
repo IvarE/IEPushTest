@@ -19,15 +19,51 @@ if (typeof (Endeavor.Creditsafe) == "undefined") {
 if (typeof (Endeavor.Creditsafe.CreditsafeAccount) == "undefined") {
     Endeavor.Creditsafe.CreditsafeAccount = {
 
-        CreditsafeCompanySearchDefaultLogin: function () {
+        CreditsafeCompanySearchDefaultLogin: function (formContext) {
             try {
                 /// <summary>
                 /// Open creditsafe homepage logged in with the default username and password.
                 /// </summary>
-                var iMUrl = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "edp_CreditsafeConfigurationSet?$select=edp_UserName,edp_Password,edp_SearchEngine";
+
+                var request = {
+                    getMetadata: function () {
+                        return {
+                            boundParameter: null,
+                            operationType: 0,
+                            operationName: "edp_GetCredentials"
+                        };
+                    }
+                };
+
+                var orgObject = formContext.getAttribute("edp_orgno");
+                if (orgObject != null) {
+                    var orgNumber = orgObject.getValue();
+                    Xrm.WebApi.online.execute(request).then(
+                        function (result) {
+                            if (result.ok) {
+                                result.json().then(
+                                    function (response) {
+                                        var jsonString = response.configcredentials;
+                                        var data = jsonString.split(';');
+                                        var username = data[1];
+                                        var password = data[2];
+                                        var url = "https://login.creditsafe.com/?P1=" + username + "&P2=" + password + "&P3=" + orgNumber;
+                                        window.open(url);
+                                    }
+                                );
+                            } else {
+                                throw new Error("The request failed. Please try again.");
+                            }
+                        }, function (error) {
+                            throw new Error("An error occurred. " + error);
+                        }
+                    );
+                }
+
+                /*var iMUrl = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "edp_CreditsafeConfigurationSet?$select=edp_UserName,edp_Password,edp_SearchEngine";
                 var resultSet = Endeavor.Common.Data.fetchJSONResults(iMUrl);
                 if (resultSet != null) {
-                    var orgObject = Xrm.Page.getAttribute("edp_orgno");
+                    var orgObject = formContext.getAttribute("edp_orgno");
                     if (orgObject != null) {
                         var orgNumber = orgObject.getValue();
                         var username = resultSet[0].edp_UserName;
@@ -37,9 +73,9 @@ if (typeof (Endeavor.Creditsafe.CreditsafeAccount) == "undefined") {
                             // Is sweden?
                             if (resultSet[i].edp_SearchEngine.Value == 757550000) {
                                 if (orgNumber != null) {
-                                    url = "https://login.creditsafe.com/?P1=" + username + "&P2=" + password + "&P3=" + orgNumber;
+                                    url = "https://www.creditsafe.se/CSSEWebsite/WebPages/Login.aspx?P1=" + username + "&P2=" + password + "&P3=" + orgNumber;
                                 } else {
-                                    url = "https://login.creditsafe.com/?P1=" + username + "&P2=" + password;
+                                    url = "https://www.creditsafe.se/CSSEWebsite/WebPages/Login.aspx?P1=" + username + "&P2=" + password;
                                 }
 
                                 return url;
@@ -51,97 +87,204 @@ if (typeof (Endeavor.Creditsafe.CreditsafeAccount) == "undefined") {
                             throw Error("Could not find Creditsafe login credentials for current user, you need to login manually from the opened login page.");
                         }
                     }
-                }
+                }*/
 
             } catch (error) {
                 throw error;
             }
         },
 
-        CreditsafeCompanySearch: function () {
+        CreditsafeCompanySearch: function (primaryControl) {
             try {
+                //window.open("https://login.creditsafe.com/");
+                //The url base url below doesn't seem to work anymore. For now use https://login.creditsafe.com/
                 debugger;
+                var formContext = primaryControl;
                 var url;
                 var orgNumber = "";
-                var orgObject = Xrm.Page.getAttribute("edp_orgno");
+                var orgObject = formContext.getAttribute("edp_orgno");
                 if (orgObject != null)
                     orgNumber = orgObject.getValue();
-                var userId = Xrm.Page.context.getUserId();
-                if (userId != null) {
+
+                var userId = Xrm.Utility.getGlobalContext().userSettings.userId;
+                if (userId) {
                     var iMUrl = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "edp_CreditsafeUserConfigurationSet?$select=*&$filter=edp_SystemUserId/Id eq (guid'" + userId.slice(1, (userId.length - 1)) + "')";
                     var resultSet = Endeavor.Common.Data.fetchJSONResults(iMUrl);
                     if (resultSet && resultSet.length > 0)
                         if (resultSet[0] != null) {
                             var result = resultSet[0];
+                            var password = result.edp_Password === null ? "empty" : result.edp_Password;
                             if (result.edp_Username != null) {
                                 //url = "https://www.creditsafe.se/CSSEWebsite/WebPages/Login.aspx?P1=" + result.edp_Username + "&P2=&P3=" + orgNumber;
-                                url = "https://login.creditsafe.com/?P1=" + result.edp_Username + "&P2=&P3=" + orgNumber;
+                                url = "https://login.creditsafe.com/?P1=" + result.edp_Username + "&P2=" + password + "&P3=" + orgNumber;
                             }
                         }
                 } else {
-                    url = Endeavor.Creditsafe.CreditsafeAccount.CreditsafeCompanySearchDefaultLogin();
+                    Endeavor.Creditsafe.CreditsafeAccount.CreditsafeCompanySearchDefaultLogin(formContext);
                 }
-                if (url == "" || url == null || url == undefined) {
+                if (!url) {
                     throw Error("Could not find Creditsafe login credentials for current user, you need to login manually from the opened login page.");
                 } else {
                     window.open(url);
                 }
             } catch (e) {
-                Xrm.Utility.alertDialog("Exception caught in CreditsafeCompanySearch() :\n\n" + e.toString());
                 window.open("https://login.creditsafe.com/");
+                Xrm.Navigation.openAlertDialog({ text: "Exception caught in CreditsafeCompanySearch() :\n\n" + e.toString() });
             }
         },
 
-        updateInfoFromCreditsafe: function () {
+        updateInfoFromCreditsafe: function (primaryControl) {
             /// <summary>
             /// Updates or Connects an existing CRM account to creditsafe
             /// </summary>
             try {
+
+                debugger;
+
+                var formContext = primaryControl;
                 // Record exists in CRM
-                if (Xrm.Page.ui.getFormType() == 2) {
+                if (formContext.ui.getFormType() == 2) {
 
                     // Load resources
                     Endeavor.Creditsafe.CreditsafeAccount.getUserJavaScriptResourcesForAccount();
 
-                    var Id = Xrm.Page.data.entity.getId();
+                    var Id = formContext.data.entity.getId();
 
-                    var updateResult = Endeavor.Creditsafe.CreditsafeAccount.updateUsingAccountId(Id);
+                    //var updateResult = Endeavor.Creditsafe.CreditsafeAccount.updateUsingAccountId(Id);
+                    Endeavor.Creditsafe.CreditsafeAccount.updateUsingAccountId(formContext, Id);
 
-                    if (updateResult != undefined && updateResult != null && updateResult != "") {
-                        if (updateResult != 'Account Not Connected') {
-                            Xrm.Utility.alertDialog(updateResult);
-                        }
-                        //Refresh record/form
-                        Xrm.Page.data.refresh();
-
-                        //Xrm.Page.ui.setFormNotification(Endeavor.Creditsafe.Resources.AccountUpdatedRefresh + " (F5)", "INFORMATION");
-                    }
-                    else {
-                        Xrm.Page.ui.setFormNotification("No results at all. Something went wrong when communicating with the server", "ERROR");
-                    }
                 }
             } catch (error) {
-                Xrm.Utility.alertDialog(error + "\n\nException caught in updateInfoFromCreditsafe()");
+                Xrm.Navigation.openAlertDialog({ text: error + "\n\nException caught in updateInfoFromCreditsafe()" });
             }
         },
 
-        updateUsingAccountId: function (Id) {
-            /// <summary>
-            /// Try/Catch must be handled by caller
-            /// </summary>
-            /// <param name="Id"></param>
-            var aUrl = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "AccountSet?$select=Name,edp_CreditSafeId,edp_OrgNo,edp_Address1_CountryId,edp_CreditsafeReasonCode,edp_LegalClassification&$filter=AccountId eq (guid'" + Id + "')";
+        unescapeXml: function (str) {
+            str = str.replace(/&lt;/g, '<');
+            str = str.replace(/&gt;/g, '>');
+            str = str.replace(/&amp;/g, '&');
+            str = str.replace(/&apos;/g, '\'');
+            str = str.replace(/&quot;/g, '"');
+            return str;
+        },
+
+        escapeXml: function (unsafe) {
+            return unsafe.replace(/[<>&'"]/g, function (c) {
+                switch (c) {
+                    case '<': return '&lt;';
+                    case '>': return '&gt;';
+                    case '&': return '&amp;';
+                    case '\'': return '&apos;';
+                    case '"': return '&quot;';
+                }
+            });
+        },
+
+        updateMultiAccounts: function (accountRefs, selectedControl) { //SelectedControlSelectedItemReferences, SelectedControl
+            debugger;
+            Endeavor.Creditsafe.CreditsafeAccount.getUserJavaScriptResourcesForAccount();
+            Xrm.Utility.showProgressIndicator(Endeavor.Creditsafe.Resources.AccountsUpdateProgress);
+            var promises = [];
+            var notUpdated = 0;
+            var updated = 0;
+            for (var i = 0; i < accountRefs.length; i++) {
+                var id = accountRefs[i].Id;
+                var info = Endeavor.Creditsafe.CreditsafeAccount.getAccountInfo(id);
+                if (info && info.CreditsafeId) {
+                    promise = Endeavor.Creditsafe.SearchCreditsafe.forceUpdateCRM(info.jsonArray, true, null, "nothing");
+                    promises.push(promise);
+                } else {
+                    notUpdated++;
+                }
+            }
+
+            //this uses blue bird promises, which works for native promises
+            //and bluebird promises that are returened from xrm.webapi in 
+            //internet explorer
+            Promise.all(promises).then(
+                function () {
+                    debugger;
+                    Xrm.Utility.closeProgressIndicator();
+                    var message = "Results: \n";
+                    for (var i = 0; i < arguments[0].length; i++) {
+                        if (arguments[0][i] != null) {
+                            if (arguments[0][i].indexOf("successfully") == -1) {
+                                notUpdated++;
+                            } else {
+                                updated++;
+                            }
+                        } else {
+                            notUpdated++;
+                        }
+                    }
+                    message += updated + " " + Endeavor.Creditsafe.Resources.AccountsUpdateSucc + "\n";
+                    message += notUpdated + " " + Endeavor.Creditsafe.Resources.AccountsUpdateFail;
+                    var alertStrings = { confirmButtonLabel: "Ok", text: message };
+                    var alertOptions = { height: 240, width: 360 };
+                    Xrm.Navigation.openAlertDialog(alertStrings, alertOptions).then(
+                        function () {
+                            selectedControl.refresh();
+                        },
+                        function () {
+                            console.log('error in account multi-update.');
+                        }
+                    );
+                },
+                function () {
+                    Xrm.Utility.closeProgressIndicator();
+                    var msg = arguments.length > 0 ? arguments[0].message : "Error message not found";
+                    alert("Error in updateMultiAccounts :" + error.message)
+                }
+            );
+        },
+
+        updateUsingAccountId: function (formContext, Id) {
+            var info = Endeavor.Creditsafe.CreditsafeAccount.getAccountInfo(Id);
+            var jsonArray;
+            var edp_CreditSafeId;
+            var countryCode;
+            var edp_OrgNo;
+            var Name;
+            if (info) {
+                Name = Endeavor.Creditsafe.CreditsafeAccount.unescapeXml(info.Name);
+                edp_CreditSafeId = info.CreditsafeId;
+                jsonArray = info.jsonArray;
+                countryCode = info.CountryCode;
+                edp_OrgNo = info.OrgNo;
+            } else {
+                return null;
+            }
+            // Mapped?
+            if (!edp_CreditSafeId || countryCode == "" || (countryCode == "SE" && !edp_OrgNo)) {
+                // Ask and open search dialog.
+                var msg = String.format(Endeavor.Creditsafe.Resources.MapAccountQuestion, Name);   // "Account " + Name + " is not mapped in Creditsafe. Do mapping now?"
+                if (confirm(msg)) {
+                    Endeavor.Creditsafe.SearchCreditsafe.openSearchWindow(Name, Id, countryCode, edp_OrgNo);
+                    return "Account Not Connected";
+                }
+            } else {
+                return Endeavor.Creditsafe.SearchCreditsafe.updateCRM(formContext, jsonArray, null, true, null, 0);
+            }
+        },
+
+        getAccountInfo: function (Id) {
+            var aUrl = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "AccountSet?$select=Name,edp_CreditSafeId,edp_OrgNo,Address1_City,Address1_Line1,Address1_PostalCode,edp_Address1_CountryId,edp_CreditsafeReasonCode,edp_LegalClassification&$filter=AccountId eq (guid'" + Id + "')";
             var aResultSet = Endeavor.Common.Data.fetchJSONResults(aUrl);
 
             if (aResultSet != null && aResultSet.length > 0) {
 
                 var Name = aResultSet[0].Name;
+                var nameStr = Endeavor.Creditsafe.CreditsafeAccount.escapeXml(Name);
                 var edp_CreditSafeId = aResultSet[0].edp_CreditSafeId;
                 var edp_OrgNo = aResultSet[0].edp_OrgNo;
                 var edp_Address1_CountryId = aResultSet[0].edp_Address1_CountryId;
+                var address1_line1 = aResultSet[0].Address1_Line1;
+                var address1_city = aResultSet[0].Address1_City;
+                var address1_postalcode = aResultSet[0].Address1_PostalCode;
                 var edp_CreditsafeReasonCode = aResultSet[0].edp_CreditsafeReasonCode;
                 var countryCode = "";
                 var edp_LegalClassification = aResultSet[0].edp_LegalClassification;
+
 
                 if (edp_Address1_CountryId != null && edp_Address1_CountryId.Id != null) {
                     // Get country code
@@ -151,53 +294,35 @@ if (typeof (Endeavor.Creditsafe.CreditsafeAccount) == "undefined") {
                     if (cResultSet != null && cResultSet.length > 0)
                         countryCode = cResultSet[0].edp_CountryCode;
                 }
-
-                // Mapped?
-                if (edp_CreditSafeId == null || countryCode == "") {
-                    // Ask and open search dialog.
-                    var msg = String.format(Endeavor.Creditsafe.Resources.MapAccountQuestion, Name);   // "Account " + Name + " is not mapped in Creditsafe. Do mapping now?"
-                    if (confirm(msg)) {
-                        Endeavor.Creditsafe.SearchCreditsafe.openSearchWindow(Name, Id, countryCode, edp_OrgNo);
-                        return "Account Not Connected";
-                    }
-                }
-                else {
-                    // Update information from Creditsafe without GUI
-                    var jsonArray = [];
-                    // Create json manually, imitate frontend
-                    var item = {
-                        "edp_OrganisationNumber": edp_OrgNo,
-                        "Name": Name,
-                        "Street1": "",
-                        "Address1_City": "",
-                        "Address1_PostalCode": "",
-                        "edp_CountryName": {
-                            "Id": edp_Address1_CountryId.Id,
-                            "LogicalName": edp_Address1_CountryId.LogicalName,
-                            "Name": edp_Address1_CountryId.Name
-                        },
-                        "edp_Address1_CountryCode": countryCode,
-                        "Address1_Lattitude": "",
-                        "Address1_Longitude": "",
-                        "Status": "",
-                        "CRMId": Id,
-                        "ReportType": "",
-                        "ggsId": edp_CreditSafeId,
-                        "EntityName": "account",
-                        "ReasonCode": edp_CreditsafeReasonCode,
-                        "CompanyType": edp_LegalClassification
-                    };
-                    jsonArray.push(item);
-                    // Update silently
-                    return Endeavor.Creditsafe.SearchCreditsafe.updateCRM(jsonArray, null, true);
-                }
+                // Update information from Creditsafe without GUI
+                var jsonArray = [];
+                // Create json manually, imitate frontend
+                var item = {
+                    "edp_OrganisationNumber": edp_OrgNo,
+                    "Name": nameStr,
+                    "Street1": address1_line1,
+                    "Address1_City": address1_city,
+                    "Address1_PostalCode": address1_postalcode,
+                    "edp_CountryName": {
+                        "Id": edp_Address1_CountryId.Id,
+                        "LogicalName": edp_Address1_CountryId.LogicalName,
+                        "Name": edp_Address1_CountryId.Name
+                    },
+                    "edp_Address1_CountryCode": countryCode,
+                    "Address1_Lattitude": "",
+                    "Address1_Longitude": "",
+                    "Status": "",
+                    "CRMId": Id,
+                    "ReportType": "",
+                    "ggsId": edp_CreditSafeId,
+                    "EntityName": "account",
+                    "ReasonCode": edp_CreditsafeReasonCode,
+                    "CompanyType": edp_LegalClassification
+                };
+                jsonArray.push(item);
+                return { jsonArray: jsonArray, CreditsafeId: edp_CreditSafeId, CountryCode: countryCode, OrgNo: edp_OrgNo, Name: nameStr }
             }
-            else {
-                return "No Account found in Database with Guid: " + Id + ". Please refresh and try again. (F5)";
-            }
-
         },
-
 
         updateMonitoredCompanies: function (seletedItems) {
             try {
@@ -214,7 +339,7 @@ if (typeof (Endeavor.Creditsafe.CreditsafeAccount) == "undefined") {
 
                 var arrayLength = seletedItems.length;
                 if (arrayLength <= 0) {
-                    Xrm.Utility.alertDialog(Endeavor.Creditsafe.Resources.SelectedRowsErrorMsg);
+                    Xrm.Navigation.openAlertDialog({ text: Endeavor.Creditsafe.Resources.SelectedRowsErrorMsg });
                     return;
                 }
                 else {
@@ -227,7 +352,7 @@ if (typeof (Endeavor.Creditsafe.CreditsafeAccount) == "undefined") {
 
                 var _return = window.confirm(Endeavor.Creditsafe.Resources.StartUpdatedMonitoredCompanies);     // 'Start update of monitored Creditsafe companies?'
                 if (_return) {
-                    var url = Xrm.Page.context.getClientUrl();
+                    var url = Xrm.Utility.getGlobalContext().getClientUrl();
 
                     var workflowId = 'BCAECB3B-E7CB-4565-8F0B-A88E666C4774';    // Run portfolio update
                     var OrgServicePath = "/XRMServices/2011/Organization.svc/web";
@@ -264,7 +389,7 @@ if (typeof (Endeavor.Creditsafe.CreditsafeAccount) == "undefined") {
                     req.send(request);
                 }
             } catch (error) {
-                Xrm.Utility.alertDialog(error + "\n\nException caught in updateMonitoredCompanies()");
+                Xrm.Navigation.openAlertDialog({ text: error + "\n\nException caught in updateMonitoredCompanies()" });
             }
         },
 
@@ -277,8 +402,7 @@ if (typeof (Endeavor.Creditsafe.CreditsafeAccount) == "undefined") {
                 if (req.status == 200) {
                     // Load resources if not already loaded
                     Endeavor.Creditsafe.CreditsafeAccount.getUserJavaScriptResourcesForAccount();
-
-                    Xrm.Utility.alertDialog(Endeavor.Creditsafe.Resources.MonitoringUpdateStarted);       // Update of monitored companies started. Please see status in System Jobs (workflow)
+                    Xrm.Navigation.openAlertDialog({ text: Endeavor.Creditsafe.Resources.MonitoringUpdateStarted });       // Update of monitored companies started. Please see status in System Jobs (workflow)
                 }
             }
         },
@@ -296,119 +420,290 @@ if (typeof (Endeavor.Creditsafe.CreditsafeAccount) == "undefined") {
                         var Name = resultSet[i].Name;
                         var AsyncOperationId = resultSet[i].AsyncOperationId;
 
-                        // Delete record
-                        SDK.REST.deleteRecord(
-                            AsyncOperationId,
-                            "AsyncOperation",
-                            function (successCallback) {
-                            }, function (errorCallback) {
-                                Xrm.Utility.alertDialog("deleteRecord generated an error: " + errorCallback);
-                            });
+                        Xrm.WebApi.online.deleteRecord("AsyncOperation", AsyncOperationId).then(
+                            function (result) {
+                                console.log("deleted a workflow succssfully");
+                            },
+                            function (error) {
+                                Xrm.Navigation.openAlertDialog({ text: "deleteRecord generated an error: " + errorCallback });
+                            }
+                        );
                     }
                 }
             } catch (error) {
-                Xrm.Utility.alertDialog(error + "\n\nException caught in deleteWaitingWorkflows()");
+                Xrm.Navigation.openAlertDialog({ text: error + "\n\nException caught in deleteWaitingWorkflows()" });
             }
 
         },
 
+        oDataDateToDate: function (oDataDate) {
+            if (oDataDate == null || oDataDate == "") { return null; };
 
-        confirmUpdateCreditRating: function () {
-            var lastCreditReport = Xrm.Page.getAttribute("edp_lastcreditreport");
+            var dt = oDataDate.replace("/Date(", "").replace(")/", "");
 
-            if (lastCreditReport === "--" || lastCreditReport === null || lastCreditReport.getValue() === null)
-                lastCreditReport = "Never.";
-            else
-                lastCreditReport = lastCreditReport.getValue().toDateString();
+            var dateValue = new Date(parseInt(dt, 10));
 
-            Xrm.Utility.confirmDialog(
-                "Do you want to initiate a Credit Report? \n \n Last Credit Report issued: " + lastCreditReport,
-                function () {
-                    Endeavor.Creditsafe.CreditsafeAccount.updateCreditRating();
-                });
+            return dateValue;
         },
 
-        updateCreditRating: function () {
+        confirmUpdateCreditRating: function (primaryControl) {
+            var formContext = primaryControl;
+
+            Endeavor.Creditsafe.CreditsafeAccount.getUserJavaScriptResourcesForAccount();
+
+            var lastCreditReport = formContext.getAttribute("edp_lastcreditreport");
+
+            if (lastCreditReport === "--" || lastCreditReport === null || lastCreditReport.getValue() === null) {
+                //the field may not be available on this form, look up real value from database
+                var Id = formContext.data.entity.getId();
+                if (Id != null) {
+                    var aUrl = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "AccountSet?$select=edp_lastcreditreport&$filter=AccountId eq (guid'" + Id + "')";
+                    var aResultSet = Endeavor.Common.Data.fetchJSONResults(aUrl);
+                    if (aResultSet != null && aResultSet.length > 0) {
+
+                        if (aResultSet[0].edp_lastcreditreport != null) {
+                            lastCreditReport = Endeavor.Creditsafe.CreditsafeAccount.oDataDateToDate(aResultSet[0].edp_lastcreditreport).toISOString();
+                        }
+                    }
+                }
+
+                if (lastCreditReport === null || (lastCreditReport.getValue && lastCreditReport.getValue() === null)) {
+
+                    lastCreditReport = Endeavor.Creditsafe.Resources.Never ? Endeavor.Creditsafe.Resources.Never : 'Never';
+                }
+            }
+            else {
+                lastCreditReport = lastCreditReport.getValue().toISOString();
+            }
+
+            lastCreditReport = lastCreditReport.substring(0, 10);
+
+            var confirmationText = Endeavor.Creditsafe.Resources.ConfirmAccountCreditRating ? Endeavor.Creditsafe.Resources.ConfirmAccountCreditRating : 'Do you want to initiate a Credit Rating Request?\n\nLast Credit Rating:';
+            var confirmationTitle = Endeavor.Creditsafe.Resources.CreditRatingTitle ? Endeavor.Creditsafe.Resources.CreditRatingTitle : 'Update Credit Rating';
+
+            var confirmStrings = { text: confirmationText + ' ' + lastCreditReport, title: confirmationTitle };
+            var confirmOptions = { height: 200, width: 450 };
+            Xrm.Navigation.openConfirmDialog(confirmStrings, confirmOptions).then(
+                function (result) {
+                    if (result.confirmed) {
+                        Endeavor.Creditsafe.CreditsafeAccount.updateCreditRating(formContext);
+                    }
+                }
+            );
+        },
+
+        isCompanyStakeHolder: function (orgNumber, username, password) {
+            var request = {
+                orgNo: orgNumber,
+                username: username,
+                password: password,
+                getMetadata: function () {
+                    return {
+                        boundParameter: null,
+                        operationType: 0,
+                        operationName: "edp_IsCompanyStakeholder",
+                        parameterTypes: {
+                            "orgNo": {
+                                "typeName": "Edm.String",
+                                "structuralProperty": 1
+                            },
+                            "username": {
+                                "typeName": "Edm.String",
+                                "structuralProperty": 1
+                            },
+                            "password": {
+                                "typeName": "Edm.String",
+                                "structuralProperty": 1
+                            }
+                        }
+                    }
+                }
+            };
+            return Xrm.WebApi.online.execute(request).then(
+                function (result) {
+                    if (result.ok) {
+                        return result.json();
+                    }
+                },
+                function (error) {
+                    alert("Error in IsCompanyStakeHolder: " + error.message);
+                })
+                .then(function (response) {
+                    return response && response.stakeholderCompany ? response.stakeholderCompany : false;
+                },
+                    function (error) {
+                        alert("Error in IsCompanyStakeHolder: " + error.message);
+                    }
+                );
+        },
+
+        fetchConfigCredentials: function () {
+            var request = {
+                getMetadata: function () {
+                    return {
+                        boundParameter: null,
+                        operationType: 0,
+                        operationName: "edp_GetCredentials"
+                    };
+                }
+            };
+            return Xrm.WebApi.online.execute(request).then(
+                function (result) {
+                    if (result.ok) {
+                        return result.json();
+                    }
+                },
+                function (error) {
+                    alert("Error in " + error.message);
+                })
+
+                .then(function (res) {
+                    return res.configcredentials;
+
+                },
+                    function (error) {
+                        alert("Error in " + error.message);
+                    });
+        },
+
+        fetchAndUpdateCasCompany: function (formContext, orgNumber, userName, passWord, tmplte) {
+            var request = {
+                template: tmplte,
+                orgNo: orgNumber,
+                username: userName,
+                password: passWord,
+                getMetadata: function () {
+                    return {
+                        boundParameter: null,
+                        parameterTypes: {
+                            "template": {
+                                "typeName": "Edm.String",
+                                "structuralProperty": 1 // Primitive Type
+                            },
+                            "orgNo": {
+                                "typeName": "Edm.String",
+                                "structuralProperty": 1 // Primitive Type
+                            },
+                            "username": {
+                                "typeName": "Edm.String",
+                                "structuralProperty": 1 // Primitive Type
+                            },
+                            "password": {
+                                "typeName": "Edm.String",
+                                "structuralProperty": 1 // Primitive Type
+                            }
+                        },
+                        operationType: 0,
+                        operationName: "edp_CasCompany"
+                    };
+                }
+            };
+
+            Xrm.WebApi.online.execute(request).then(
+                function (response) {
+                    if (response.ok) {
+                        response.json().then(
+                            function (result) {
+                                var casResult = result && result.casCompanyRes ? result.casCompanyRes : null;
+                                if (casResult != null && casResult != '') {
+                                    Endeavor.Creditsafe.CreditsafeAccount.updateFromResponse(formContext, casResult);
+                                } else {
+                                    console.log("error in cascompany: casresult is null or empty");
+                                }
+                            });
+                    }
+
+
+                },
+                function (error) {
+                    console.log("Error in casCompany: " + error.message);
+                }
+            );
+
+        },
+
+        updateCreditRating: function (formContext) {
             try {
                 var orgNumber = "";
 
-                if (Xrm.Page.getAttribute("edp_orgno") != null)
-                    orgNumber = Xrm.Page.getAttribute("edp_orgno").getValue();
+                if (formContext.getAttribute("edp_orgno") != null)
+                    orgNumber = formContext.getAttribute("edp_orgno").getValue();
                 else
-                    Xrm.Utility.alertDialog("The organization number is missing.");
-
+                    Xrm.Navigation.openAlertDialog({ text: "The organization number is missing." });
 
                 if (orgNumber != null && orgNumber != "") {
 
-                    var request = new Sdk.edp_GetCredentialsRequest();
-                    var response = Sdk.Sync.execute(request);
+                    Endeavor.Creditsafe.CreditsafeAccount.fetchConfigCredentials().then(
+                        function (credentials) {
+                            if (credentials === null || credentials.configcredentials === null) {
+                                Xrm.Navigation.openAlertDialog({ text: "Was not able to retrieve credentials." });
+                                throw new Error("The request did not return anything.");
+                            } else {
+                                //split credentials into samller parts
+                                var data = credentials.split(';');
+                                var userName = data[1];
+                                var password = data[2];
 
-                    if (response === null) {
-                        Xrm.Utility.alertDialog("Was not able to retrieve credentials.");
-                        throw new Error("The request did not return anything.");
-                    } else {
+                                //fetch creditsafe configs
+                                var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "edp_CreditsafeConfigurationSet?$select=edp_CreditWorthinessTemplate&$filter=edp_SearchEngine/Value eq 757550000";
+                                var resultSet = Endeavor.Common.Data.fetchJSONResults(url);
 
-                        var jsonString = response.getConfigcredentials();
-                        var data = jsonString.split(';');
+                                if (resultSet[0] != null) {
+                                    var result = resultSet[0];
+                                    if (userName != null && userName != "" && password != null && password != "" && result.edp_CreditWorthinessTemplate != null && result.edp_CreditWorthinessTemplate != "") {
 
-                        var userName = data[1];
-                        var password = data[2];
+                                        Endeavor.Creditsafe.CreditsafeAccount.isCompanyStakeHolder(orgNumber, userName, password).then(
+                                            function (isStakeholderCompany) {
 
-                        var url = Endeavor.Common.Data.getOrganizationServiceEndpoint() + "edp_CreditsafeConfigurationSet?$select=edp_CreditWorthinessTemplate&$filter=edp_SearchEngine/Value eq 757550000";
-                        var resultSet = Endeavor.Common.Data.fetchJSONResults(url);
-
-                        if (resultSet[0] != null) {
-                            var result = resultSet[0];
-
-                            if (userName != null && userName != "" && password != null && password != "" && result.edp_CreditWorthinessTemplate != null && result.edp_CreditWorthinessTemplate != "") {
-                                var abReq = new Sdk.edp_IsCompanyStakeholderRequest(orgNumber, userName, password);
-                                var abResp = Sdk.Sync.execute(abReq);
-
-                                var isStakeholderCompany = abResp.getStakeholderCompany();
-
-                                if (!isStakeholderCompany == true) {
-                                    Xrm.Utility.alertDialog("This operation is only allowed for AB");
-                                    // TODO: teo - Update the Form if needed with the information that this isn't a AB
-                                    return;
+                                                if (isStakeholderCompany) {
+                                                    Endeavor.Creditsafe.CreditsafeAccount.fetchAndUpdateCasCompany(formContext, orgNumber, userName, password, result.edp_CreditWorthinessTemplate);
+                                                } else {
+                                                    Xrm.Navigation.openAlertDialog({ text: "This operation is only allowed for AB" });
+                                                    // TODO: teo - Update the Form if needed with the information that this isn't a AB
+                                                    return;
+                                                }
+                                            }
+                                        );
+                                    } else if (userName == null || userName == "")
+                                        Xrm.Navigation.openAlertDialog({ text: "Systemparameter is missing information in the 'Username'-field." });
+                                    else if (password == null || password == "")
+                                        Xrm.Navigation.openAlertDialog({ text: "Systemparameter is missing information in the 'Password'-field." });
+                                    else if (result.edp_CreditWorthinessTemplate == null || result.edp_CreditWorthinessTemplate == "")
+                                        Xrm.Navigation.openAlertDialog({ text: "Systemparameter is missing information in the 'Credit Worthiness Template'-field." });
+                                } else {
+                                    Xrm.Navigation.openAlertDialog({ text: "SystemParameter is missing. Please configure." });
                                 }
+                            }
 
-                                var request = new Sdk.edp_CasCompanyRequest(orgNumber, userName, password, result.edp_CreditWorthinessTemplate);
-                                var response = Sdk.Sync.execute(request);
-
-                                if (response === null)
-                                    throw new Error("The request update Credit Rating did not return anything.");
-
-                                var casResult = response.getCasCompanyRes();
-
-                                if (casResult != null && casResult != '')
-                                    Endeavor.Creditsafe.CreditsafeAccount.updateFromResponse(casResult);
-                            } else if (userName == null || userName == "")
-                                Xrm.Utility.alertDialog("Systemparameter is missing information in the 'Username'-field.");
-                            else if (password == null || password == "")
-                                Xrm.Utility.alertDialog("Systemparameter is missing information in the 'Password'-field.");
-                            else if (result.edp_CreditWorthinessTemplate == null || result.edp_CreditWorthinessTemplate == "")
-                                Xrm.Utility.alertDialog("Systemparameter is missing information in the 'Credit Worthiness Template'-field.");
                         }
-                        else
-                            Xrm.Utility.alertDialog("SystemParameter is missing. Please configure.");
-                    }
-
+                    );
+                } else {
+                    Xrm.Navigation.openAlertDialog({ text: "The organization number is missing." });
                 }
-                else
-                    Xrm.Utility.alertDialog("The organization number is missing.");
-            }
-            catch (e) {
-                Xrm.Utility.alertDialog(e.message);
+            } catch (e) {
+                Xrm.Navigation.openAlertDialog({ text: e.message });
             }
         },
 
-        updateFromResponse: function (response) {
+        updateAccountRecord: function (id, data) {
+
+            return Xrm.WebApi.online.updateRecord("account", id, data).then(
+                function (response) {
+                    console.log("successfully updated the account record");
+                },
+                function (error) {
+                    throw new Error(error.message);
+                }
+            );
+        },
+
+        updateFromResponse: function (formContext, casResponse) {
             try {
                 var creditTrating = null;
-                var accountid = Xrm.Page.data.entity.getId();
-                var entityName = Xrm.Page.data.entity.getEntityName();
+                var accountid = formContext.data.entity.getId();
+                var entityName = formContext.data.entity.getEntityName();
 
-                switch (response) {
+                switch (casResponse) {
                     case "1":
                         creditTrating = 757550000;
                         break;
@@ -419,51 +714,46 @@ if (typeof (Endeavor.Creditsafe.CreditsafeAccount) == "undefined") {
                         creditTrating = 757550002;
                         break;
                     default:
-                        Xrm.Utility.alertDialog("Unrecognised responsecode.");
+                        Xrm.Navigation.openAlertDialog({ text: "Unrecognised responsecode." });
                         break;
                 }
 
                 // Update Account with creditrating and lastcreditreport(date)
                 if (creditTrating != null) {
                     var currentDateTime = new Date();
+
                     var accEntity = {
-                        edp_lastcreditreport: currentDateTime,
-                        edp_creditrating: { Value: creditTrating }
+                        "edp_lastcreditreport": currentDateTime,
+                        "edp_creditrating": creditTrating
                     };
-                    SDK.REST.updateRecord(accountid, accEntity, "Account", function (data) {
-                        // Reload form
-                        //Xrm.Page.data.refresh();
-                        //Xrm.Utility.openEntityForm(entityName, accountid);
-                    },
+                    debugger;
+                    Endeavor.Creditsafe.CreditsafeAccount.updateAccountRecord(accountid, accEntity).then(
+                        function () {
+                            switch (casResponse) {
+                                case "1":
+                                    formContext.ui.setFormNotification("Credit rating is 'Approved'. Please refresh page (F5).", "INFORMATION");
+                                    break;
+                                case "2":
+                                    formContext.ui.setFormNotification("Credit rating is 'Not Approved'. Please refresh page (F5).", "ERROR");
+                                    break;
+                                case "4":
+                                    formContext.ui.setFormNotification("Credit rating is 'Manual Assessment needed'. Please refresh page (F5).", "WARNING");
+                            }
+                        },
                         function (error) {
-                            Xrm.Utility.alertDialog(error);
-                        });
-                }
-                else {
-                    Xrm.Utility.alertDialog("Credit worthiness according to credit template not retrieved correctly.");
+                            Xrm.Navigation.openAlertDialog({ text: "Something went wrong when updating the account record" });
+                        }
+                    );
+
+                } else {
+                    Xrm.Navigation.openAlertDialog({ text: "Credit worthiness according to credit template not retrieved correctly." });
                     return;
                 }
-
-                var message = null;
-                switch (response) {
-                    case "1":
-                        Xrm.Page.ui.setFormNotification("Credit rating is 'Approved'. Please refresh page (F5).", "INFORMATION");
-                        break;
-                    case "2":
-                        Xrm.Page.ui.setFormNotification("Credit rating is 'Not Approved'. Please refresh page (F5).", "ERROR");
-                        break;
-                    case "4":
-                        Xrm.Page.ui.setFormNotification("Credit rating is 'Manual Assessment needed'. Please refresh page (F5).", "WARNING");
-                }
-
-                // Set notification depending on creditrating (Approved / Not Approved / Assess)
-                if (message != null)
-                    Xrm.Utility.alertDialog(message);
-            }
-            catch (exc) {
-                Xrm.Utility.alertDialog(exc);
+            } catch (exc) {
+                Xrm.Navigation.openAlertDialog({ text: exc });
             }
         },
+
         getUserJavaScriptResourcesForAccount: function () {
 
             if (typeof jQuery.cachedScript === 'undefined') {
@@ -482,8 +772,8 @@ if (typeof (Endeavor.Creditsafe.CreditsafeAccount) == "undefined") {
                     return jQuery.ajax(options);
                 };
             }
-
-            var resourceFile = Xrm.Page.context.getClientUrl() + "/WebResources/edp_/script/Endeavor.Creditsafe.Resources.1033.js";
+            var globalContext = Xrm.Utility.getGlobalContext();
+            var resourceFile = globalContext.getClientUrl() + "/WebResources/edp_/script/Endeavor.Creditsafe.Resources.1033.js";
 
             // Always load English
             $.cachedScript(resourceFile).done(function (script, textStatus) {
@@ -492,13 +782,13 @@ if (typeof (Endeavor.Creditsafe.CreditsafeAccount) == "undefined") {
                 alert("Resources failed to load resources from \"" + resourceFile + "\". Exception: " + exception);
             });
 
-            var lcid = Xrm.Page.context.getUserLcid();
+            var lcid = globalContext.userSettings.languageId;
             switch (lcid) {
                 case 1053:  // Swedish
-                    resourceFile = Xrm.Page.context.getClientUrl() + "/WebResources/edp_/script/Endeavor.Creditsafe.Resources.1053.js";
+                    resourceFile = globalContext.getClientUrl() + "/WebResources/edp_/script/Endeavor.Creditsafe.Resources.1053.js";
                     break;
                 case 1031:  // German
-                    resourceFile = Xrm.Page.context.getClientUrl() + "/WebResources/edp_/script/Endeavor.Creditsafe.Resources.1031.js";
+                    resourceFile = globalContext.getClientUrl() + "/WebResources/edp_/script/Endeavor.Creditsafe.Resources.1031.js";
                     break;
                 default:
                     // Keep english 1033.

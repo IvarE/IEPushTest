@@ -13,6 +13,8 @@ var parameterCountryCode;
 var parameterAccountName;
 var parameterOrgNo;
 var compabilityMode = null;
+var tmpFormContext = null;
+var GlobalRelationTypes = [];
 
 // format function :-)
 if (!String.format) {
@@ -50,7 +52,24 @@ function getURLParameter(name) {
     // Remove Data=
     var parameters = location.search.substring(6);
     var decodeStr = "?" + decodeURIComponent(parameters);
+    decodeStr = decodeURIComponent(decodeStr);
 
+    if (name === 'AccountName') {
+
+        //Special handling of AccountName, since it may contain ampersand (&), causing regexp below to cut string too early:
+        try {
+            var accountName = decodeStr.substring(
+                decodeStr.lastIndexOf("&OrgNo"),
+                decodeStr.lastIndexOf("&AccountName")
+            );
+            accountName = accountName.replace('&AccountName=', '');
+            if (accountName.length > 0) {
+                return accountName;
+            }
+        } catch (ex) {
+            console.log('AccountName parsing error in getUrlParameter: ' + ex);
+        }
+    }
     return (new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(decodeStr) || [, ""])[1] || null;
 }
 
@@ -72,7 +91,7 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
             var language = 1033;
             try {
                 //Get user language from CRM
-                language = Xrm.Page.context.getUserLcid();
+                language = Xrm.Utility.getGlobalContext().userSettings.languageId;
 
                 // Set english if no support for language.
                 if (language != 1031 &&
@@ -85,7 +104,9 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
             }
 
             //Load relevant language file
-            var filename = "../script/Endeavor.Creditsafe.Resources." + language + ".js";
+
+
+            var filename = Xrm.Utility.getGlobalContext().getClientUrl() + "/WebResources/edp_/script/Endeavor.Creditsafe.Resources." + language + ".js";
             var fileref = document.createElement('script')
             fileref.setAttribute("type", "text/javascript");
             fileref.setAttribute("src", filename);
@@ -94,6 +115,46 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
 
             //Need to wait for language file to be loaded before continuing
             window.setTimeout(localisation, 200);
+        },
+
+        onWindowResize: function () {
+            var newWidth = window.innerWidth;
+            newWidth = newWidth - (0.1 * newWidth);
+            var newHeight = window.innerHeight;
+            newHeight = newHeight - (0.4 * newHeight);
+            $('#jqGrid').jqGrid("setGridWidth", newWidth, true);
+            $('#jqGrid').jqGrid("setGridHeight", newHeight, true);
+            //console.log("Window is resized!");
+        },
+
+        hideOrShowRelationTypes: function () {
+            var entNames = {};
+            entNames["edp_SystemParameter"] = "edp_SystemParameters";
+            window.ENTITY_SET_NAMES = JSON.stringify(entNames);
+            var primaryKeys = {};
+            primaryKeys["edp_SystemParameter"] = "edp_SystemParameterId";
+            window.ENTITY_PRIMARY_KEYS = JSON.stringify(primaryKeys);
+
+            var sysparamEntityNameString = "edp_systemparameters";
+
+            if (Xrm.Internal.isUci()) {
+                sysparamEntityNameString = "edp_systemparameter";
+            }
+
+            Xrm.WebApi.retrieveMultipleRecords(sysparamEntityNameString, "?$select=edp_showrelationtype&$filter=edp_showrelationtype ne null").then(
+                function (result) {
+                    if (result && result.entities.length > 0 && result.entities[0].edp_showrelationtype) {
+                        $("#relation-type-label").text(Endeavor.Creditsafe.Resources.RelationType);
+                    } else {
+                        $("#relation-type-label").hide();
+                        $("#relation-type").hide();
+                    }
+                },
+                function (e) {
+                    $("#relation-type-label").hide();
+                    $("#relation-type").hide();
+                }
+            );
         },
 
         initialLocalisation: function () {
@@ -105,6 +166,8 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
                     window.setTimeout("Endeavor.Creditsafe.SearchCreditsafe.initialLocalisation", 200);
                     return;
                 }
+
+                window.addEventListener("resize", Endeavor.Creditsafe.SearchCreditsafe.onWindowResize);
 
                 // Get params from URL
                 parameterCRMId = getURLParameter('CRMId');
@@ -141,10 +204,13 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
                         $('#button-create-crm').append(Endeavor.Creditsafe.Resources.AccountButton);
                     }
 
+                    Endeavor.Creditsafe.SearchCreditsafe.hideOrShowRelationTypes();
+
+
                     // Add localization
                     // ***************
                     $('#Label-de-reason-code').text(Endeavor.Creditsafe.Resources.DE_ReasonCode);
-                    // Build reasoncode 
+                    // Build reasoncode
                     $("#de-reason-code").append('<option value="' + 0 + '">' + '--</option>');
                     $("#de-reason-code").append('<option value="' + 1 + '">' + Endeavor.Creditsafe.Resources.Credit_Decisioning + '</option>');
                     $("#de-reason-code").append('<option value="' + 2 + '">' + Endeavor.Creditsafe.Resources.Credit_Assessment_Future_business + '</option>');
@@ -163,25 +229,41 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
                         pgtext: Endeavor.Creditsafe.Resources.GridPgText,
                         recordtext: Endeavor.Creditsafe.Resources.GridRecordText
                     });
-
                     //hide pager
                     $("#jqGridPager").hide();
-
                     //Getting countries from the CRM
                     try {
                         $("#countries").empty();
-                        var options = "$select=edp_Name,edp_CountryCode";
-                        SDK.REST.retrieveMultipleRecords("edp_Country"
-                            , options
-                            , Endeavor.Creditsafe.SearchCreditsafe.addCountriesToList
-                            , function (error) { alert(error.message); }
-                            , Endeavor.Creditsafe.SearchCreditsafe.search);
+                        console.log("BEFORE MULTI RETRIEVE");
+
+                        var entNames = {};
+                        entNames["edp_Country"] = "edp_Countries";
+                        window.ENTITY_SET_NAMES = JSON.stringify(entNames);
+                        var primaryKeys = {};
+                        primaryKeys["edp_Country"] = "edp_CountryId";
+                        window.ENTITY_PRIMARY_KEYS = JSON.stringify(primaryKeys);
+
+                        var countryEntityNameString = "edp_countries";
+
+                        if (Xrm.Internal.isUci()) {
+                            countryEntityNameString = "edp_country";
+                        }
+
+                        Xrm.WebApi.retrieveMultipleRecords(countryEntityNameString, "?$select=edp_name,edp_countrycode&$orderby=edp_name").then(
+                            function (result) {
+                                if (result.entities) {
+                                    Endeavor.Creditsafe.SearchCreditsafe.addCountriesToList(result.entities);
+                                }
+                                Endeavor.Creditsafe.SearchCreditsafe.search();
+                                Endeavor.Creditsafe.SearchCreditsafe.getCompabilityMode();
+                            },
+                            function (error) {
+                                alert(error.message);
+                            }
+                        );
                     } catch (error) {
                         alert(error + "\n\Error caught in initialLocalisation while fetching countries");
                     }
-
-                    // Get compatibility mode from config entity
-                    Endeavor.Creditsafe.SearchCreditsafe.getCompabilityMode();
                 }
             } catch (error) {
                 alert(error + "\n\Error caught in fx:initialLocalisation");
@@ -206,21 +288,49 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
 
         },
 
+        populateCountriesList: function (retrievedCountries, defaultCountryCode) {
+            for (var i = 0; i < retrievedCountries.length; i++) {
+                var selectedOption = "";
+                if (defaultCountryCode == retrievedCountries[i].edp_countrycode) {
+                    selectedOption = " selected=" + '"' + "selected" + '"';
+                }
+                $("#countries").append('<option value="' + retrievedCountries[i].edp_countrycode + '"' + selectedOption + '>' + retrievedCountries[i].edp_name + ' - ' + retrievedCountries[i].edp_countrycode + '</option>');
+            }
+        },
 
         //Adds countries to the input list in the search view. Value of countries is set to country code in order to work for all localisations
         addCountriesToList: function (retrievedCountries) {
 
-            // Get last used country from cookie
-            var lastUsedCountry = getCookie("lastCountryCode");
+            debugger;
 
-            for (var i = 0; i < retrievedCountries.length; i++) {
-                var selectedOption = "";
-                if (lastUsedCountry == retrievedCountries[i].edp_CountryCode) {
-                    selectedOption = " selected=" + '"' + "selected" + '"';
-                }
-                $("#countries").append('<option value="' + retrievedCountries[i].edp_CountryCode + '"' + selectedOption + '>' + retrievedCountries[i].edp_Name + ' - ' + retrievedCountries[i].edp_CountryCode + '</option>');
+            // Get last used country from cookie
+            //var lastUsedCountry = getCookie("lastCountryCode");
+            var lastUsedCountry = Endeavor.Common.Data.readCookie("lastCountryCode");
+            var sysparamEntityNameString = "edp_systemparameters";
+
+            if (Xrm.Internal.isUci()) {
+                sysparamEntityNameString = "edp_systemparameter";
             }
 
+            if (lastUsedCountry == null || lastUsedCountry == 'undefined' || lastUsedCountry == '') {
+
+                Xrm.WebApi.retrieveMultipleRecords(sysparamEntityNameString, "?$select=edp_DefaultSearchCountryId&$expand=edp_DefaultSearchCountryId($select=edp_countrycode)").then(
+                    function (result) {
+                        if (result.entities && result.entities[0].edp_DefaultSearchCountryId != null && result.entities[0].edp_DefaultSearchCountryId.edp_countrycode != null) {
+                            var defaultCountryCode = result.entities[0].edp_DefaultSearchCountryId.edp_countrycode;
+                            Endeavor.Creditsafe.SearchCreditsafe.populateCountriesList(retrievedCountries, defaultCountryCode);
+                        }
+                        Endeavor.Creditsafe.SearchCreditsafe.populateCountriesList(retrievedCountries, null);
+                    },
+                    function (error) {
+                        console.log("Error occurred when fetching systen parameter edp_defaultsearchcountryid.");
+                        Endeavor.Creditsafe.SearchCreditsafe.populateCountriesList(retrievedCountries, null);
+                    }
+                );
+
+            } else {
+                Endeavor.Creditsafe.SearchCreditsafe.populateCountriesList(retrievedCountries, lastUsedCountry);
+            }
         },
 
 
@@ -228,9 +338,10 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
         search: function () {
             $("#resultGrid").hide();
             $("#searchView").show();
+            $("#resultLink").unbind('click');
             $("#resultLink").click(Endeavor.Creditsafe.SearchCreditsafe.showResultView);
 
-
+            $("#search").unbind('click');
             $("#search").click(function () {
 
                 var checkNumber = 0;
@@ -267,7 +378,9 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
                 }
 
                 inputSearchCriteria.country = $("#countries").val();
-                setCookie("lastCountryCode", inputSearchCriteria.country, 365);         // Save value in cookie...
+
+                //setCookie("lastCountryCode", inputSearchCriteria.country, 365); // Save value in cookie...
+                Endeavor.Common.Data.createCookie("lastCountryCode", inputSearchCriteria.country, 365); // Save value in cookie...
 
                 if (checkNumber < 5) {
                     //Loading wait cursor
@@ -278,7 +391,7 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
                         'Endeavor.Creditsafe.SearchCreditsafe.searchInCreditsafe(inputSearchCriteria, Endeavor.Creditsafe.SearchCreditsafe.createGrid)', 20);
 
                 } else {
-                    alert(Endeavor.Creditsafe.Resources.SearchErrorMsg)
+                    alert(Endeavor.Creditsafe.Resources.SearchErrorMsg);
                     return;
                 }
             })
@@ -319,48 +432,66 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
             /// </summary>
             try {
 
-                // Fetch Compabilitymode if empty
-                if (compabilityMode == null)
-                    Endeavor.Creditsafe.SearchCreditsafe.getCompabilityMode();
-
-                // CRM 2011?
-                if (compabilityMode.Value == 2011) {
-                    // Trigger Transaction via plugintrigger
-                    var pluginTrigger = {};
-                    pluginTrigger.edp_Name = "Search Creditsafe";
-                    pluginTrigger.edp_PluginCommandJSON = encodeURIComponent(inputCompany.name + ";" + inputCompany.organisationNo + ";" + inputCompany.address1_line1 + ";" + inputCompany.address1_city + ";" + inputCompany.address1_postalcode + ";" + inputCompany.country);
-                    SDK.REST.createRecord(
-                        pluginTrigger,
-                        "edp_PluginTrigger",
-                        function (pluginTrigger) {
-                            var response = pluginTrigger.edp_Message;
-
-                            if (response == "undefined" || response === null) {
-                                throw new Error("The request did not return anything.");
-                            }
-                            createGrid(response);
-
-                        }, function (pluginTriggerError) {
-                            $("#resultGrid").waitMe('hide');
-                            alert("CreateRecord (plugin trigger) generated an error: " + pluginTriggerError);
-                        });
-                }
-                // CRM 2013 and up ?
-                else {
-                    var request = new Sdk.edp_SearchCompanyRequest(inputCompany.organisationNo
-                        , encodeURIComponent(inputCompany.name)
-                        , encodeURIComponent(inputCompany.address1_line1)
-                        , encodeURIComponent(inputCompany.address1_city)
-                        , encodeURIComponent(inputCompany.address1_postalcode)
-                        , inputCompany.country);
-                    var response = Sdk.Sync.execute(request);
-
-                    if (response === null) {
-                        throw new Error("The request did not return anything.");
+                var request = {
+                    OrganisationNo: inputCompany.organisationNo,
+                    Name: inputCompany.name,
+                    Street1: inputCompany.address1_line1,
+                    City: inputCompany.address1_city,
+                    PostalCode: inputCompany.address1_postalcode,
+                    Country: inputCompany.country,
+                    getMetadata: function () {
+                        return {
+                            boundParameter: null,
+                            parameterTypes: {
+                                "OrganisationNo": {
+                                    "typeName": "Edm.String",
+                                    "structuralProperty": 1
+                                },
+                                "Name": {
+                                    "typeName": "Edm.String",
+                                    "structuralProperty": 1
+                                },
+                                "Street1": {
+                                    "typeName": "Edm.String",
+                                    "structuralProperty": 1
+                                },
+                                "City": {
+                                    "typeName": "Edm.String",
+                                    "structuralProperty": 1
+                                },
+                                "PostalCode": {
+                                    "typeName": "Edm.String",
+                                    "structuralProperty": 1
+                                },
+                                "Country": {
+                                    "typeName": "Edm.String",
+                                    "structuralProperty": 1
+                                }
+                            },
+                            operationType: 0,
+                            operationName: "edp_SearchCompany"
+                        };
                     }
-                    var jsonString = response.getOutAccounts();
-                    createGrid(jsonString);
-                }
+                };
+
+                Xrm.WebApi.online.execute(request).then(
+                    function (result) {
+                        if (result.ok) {
+                            result.json().then(
+                                function (response) {
+                                    var jsonString = response.OutAccounts;
+                                    createGrid(jsonString);
+                                }
+                            );
+                        } else {
+                            alert("Something went wrong. Please try again."); // will this ever happen?
+                            location.reload();
+                        }
+                    },
+                    function (error) {
+                        alert(error.message);
+                        location.reload();
+                    });
             }
             catch (error) {
                 alert("Creditsafe configuration could not be found. Please make sure a valid configuration is available");
@@ -368,9 +499,61 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
             }
         },
 
+        fetchRelationTypesFromRows: function (jsonArray) {
+            try {
+                var resultArray = [];
+                var accountsCrmId = [];
+                for (var i = 0; i < jsonArray.length; i++) {
+                    var json = jsonArray[i];
+                    if (json && json.CRMId && json.CRMId !== "00000000-0000-0000-0000-000000000000") {
+                        var id = "%27" + json.CRMId.toUpperCase() + "%27";
+                        accountsCrmId.push(id);
+                    } else {
+                        var obj = {
+                            "_edp_relationtypeid_value": "00000000-0000-0000-0000-000000000000",
+                            "accountid": "00000000-0000-0000-0000-000000000000"
+                        }
+                        resultArray.push(obj);
+                    }
+                }
+                //%2775DEDB81-83CD-E911-A975-000D3A389769%27,%27BA73F57B-DBC3-E911-A96C-000D3A389D2C%27
+                var properyValues = "";
+                for (var i = 0; i < accountsCrmId.length - 1; i++) {
+                    properyValues += accountsCrmId[i] + ",";
+                }
+                properyValues += accountsCrmId[accountsCrmId.length - 1]; //last item, no comma seperator
+
+                var entityNameString = "accounts";
+
+                if (Xrm.Internal.isUci()) {
+                    entityNameString = "account";
+                }
+
+                var query = "?$select=accountid,_edp_relationtypeid_value&$filter=Microsoft.Dynamics.CRM.In(PropertyName=%27accountid%27,PropertyValues=[" + properyValues + "])";
+                return Xrm.WebApi.retrieveMultipleRecords(entityNameString, query, 50).then(
+                    function (r) {
+                        if (r && r.entities && r.entities.length > 0) {
+                            for (var i = 0; i < r.entities.length; i++) {
+                                resultArray.push(r.entities[i]);
+                            }
+                            return resultArray;
+                        } else {
+                            return "";
+                        }
+                    },
+                    function (error) {
+                        console.log(error.message);
+                        return "";
+                    }
+                );
+            } catch (error) {
+                console.log("Error in fetchRelationType: " + error)
+            }
+        },
+
         createGrid: function (responseAsJson) {
             //Stop loading splash
-            $("#searchView").waitMe('hide');
+            Endeavor.Creditsafe.SearchCreditsafe.turnOffWaitMe();
 
             var selectedCountry = $("#countries").val();
 
@@ -383,16 +566,22 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
             $("#breadcrumbResult").empty();
             $('#breadcrumbResult').append("<a id='resultLink' href='#'>" + Endeavor.Creditsafe.Resources.ResultLink + "</a>");
 
+            //Empty relation type drop down control:
+            $("#relation-type").empty();
+
             Endeavor.Creditsafe.SearchCreditsafe.showResultView();
 
             if (selectedCountry == 'DE') {
-                $("#localized-footer").show();
+                $("#Label-de-reason-code").show();
+                $("#de-reason-code").show();
             }
             else {
-                $("#localized-footer").hide();
+                $("#Label-de-reason-code").hide();
+                $("#de-reason-code").hide();
             }
 
             //check for old grid and reload it
+            $("#jqGrid").jqGrid('clearGridData');
             $("#jqGrid").jqGrid('setGridParam', { datatype: "jsonstring", datastr: responseAsJson }).trigger("reloadGrid");
 
             $("#jqGrid").jqGrid({
@@ -400,6 +589,8 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
                 datastr: responseAsJson,
                 colModel: [
                     //Resultset (hidden) -- Used to create json for return set
+                    { label: 'RelationType', name: "edp_RelationType", width: 70, hidden: true }, //not present in account fetched from creditsafe, used to store lookup o nrow select
+                    { label: 'RelationTypeName', name: "edp_RelationTypeName", width: 70, hidden: true },
                     { label: 'edp_OrganisationNumber', name: 'edp_OrganisationNumber', width: 90, hidden: true },
                     { label: 'Name', name: 'Name', width: 150, hidden: true },
                     { label: 'Street1', name: 'Street1', width: 110, hidden: true },
@@ -444,6 +635,7 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
                     total: function (obj) { return 1; },
                     records: function (obj) { return obj.length; }
                 },
+
                 onSelectRow: function (rowid, status, e) {
                     //if company exist in crm
                     if (($('#jqGrid').jqGrid('getCell', rowid, 'CRMId')) != '00000000-0000-0000-0000-000000000000') {
@@ -463,11 +655,24 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
                                 $(this).css("background-color", "#D7EBF9");
                             });
                         }
+
                     }
+                    Endeavor.Creditsafe.SearchCreditsafe.onRowsSelect();
                 },
+
                 gridComplete: function () {
                     Endeavor.Creditsafe.SearchCreditsafe.changeGridCheckbox();
                     Endeavor.Creditsafe.SearchCreditsafe.colorCodeRows();
+                    Endeavor.Creditsafe.SearchCreditsafe.fetchAllRelationTypes().then(
+                        function (r) {
+                            Endeavor.Creditsafe.SearchCreditsafe.addAllOtherRelationTypes();
+                            console.log("GlobalRelationTypes.length: " + GlobalRelationTypes.length);
+                        },
+                        function (error) {
+                            $("#relation-type").empty();
+                            $("#relation-type").append("<option value=empty> -- </option>");
+                        }
+                    );
                 }
             });
 
@@ -484,14 +689,22 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
             var new_element = old_element.cloneNode(true);
             old_element.parentNode.replaceChild(new_element, old_element);
 
-            //Add event listeners to the buttons 
+            var old_element = document.getElementById("button-create-crm");
+            var new_element = old_element.cloneNode(true);
+            old_element.parentNode.replaceChild(new_element, old_element);
+
+            //Add event listeners to the buttons
             document.getElementById("button-create-crm").addEventListener("click", function () {
-                Endeavor.Creditsafe.SearchCreditsafe.getSelectedRows("Account")
+                //Endeavor.Creditsafe.SearchCreditsafe.getSelectedRows("Account")
+                Endeavor.Creditsafe.SearchCreditsafe.confirmRelationTypeChanges("Account");
             });
             document.getElementById("button-lead-crm").addEventListener("click", function () {
                 Endeavor.Creditsafe.SearchCreditsafe.getSelectedRows("Lead")
             });
             document.getElementById("searchLink").addEventListener("click", Endeavor.Creditsafe.SearchCreditsafe.search);
+            //document.getElementById("button-contact-crm").addEventListener("click", function () {
+            //    Endeavor.Creditsafe.SearchCreditsafe.getSelectedRows("Lead")
+            //});
         },
 
         showResultView: function () {
@@ -536,6 +749,175 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
             }
         },
 
+        confirmRelationTypeChanges: function (entityName) {
+            var selectedRelationType = $("#relation-type").val();
+            var selectedRelationName = $("#relation-type option:selected").text();
+            var selectedIDs = $("#jqGrid").getGridParam("selarrrow");
+            var message = Endeavor.Creditsafe.Resources.ChangeRelationType + ":\n"; //"You are about to change the following relation types:\n";
+            var confirmFlag = false;
+
+            for (var i = 0; i < selectedIDs.length; i++) {
+                var rowRelationId = $("#jqGrid").jqGrid('getCell', selectedIDs[i], 'edp_RelationType');
+                var rowCRMId = $("#jqGrid").jqGrid('getCell', selectedIDs[i], 'CRMId');
+                var bothEmpty = !(rowRelationId === "" && selectedRelationType === "empty");
+                var notEqual = rowRelationId !== selectedRelationType;
+                var freshCompany = rowCRMId === "" || rowCRMId === "00000000-0000-0000-0000-000000000000";
+
+                if (notEqual && bothEmpty && !freshCompany) {
+                    confirmFlag = true;
+                    var rowRelationName = $("#jqGrid").jqGrid('getCell', selectedIDs[i], 'edp_RelationTypeName');
+                    var rowCompanyName = $("#jqGrid").jqGrid('getCell', selectedIDs[i], 'Name');
+
+                    rowRelationName = rowRelationName === "" ? "N/A" : rowRelationName;
+                    rowCompanyName = rowCompanyName === "" ? "N/A" : rowCompanyName;
+                    selectedRelationName = selectedRelationName === " -- " ? "N/A" : selectedRelationName;
+                    message += rowCompanyName + ": " + rowRelationName + " --> " + selectedRelationName + "\n";
+                }
+            }
+            message += Endeavor.Creditsafe.Resources.SureProceed;//"Do you want to proceed?";
+
+            var confirmStrings = {
+                text: message, title: Endeavor.Creditsafe.Resources.DetectedRelationTypeChanges,//"Detected RelationType Change",
+                confirmButtonLabel: Endeavor.Creditsafe.Resources.Confirm, cancelButtonLabel: Endeavor.Creditsafe.Resources.Cancel
+            };
+            var confirmOptions = { height: 250, width: 500 };
+
+            if (confirmFlag) {
+                Xrm.Navigation.openConfirmDialog(confirmStrings, confirmOptions).then(
+                    function (r) {
+                        if (r.confirmed) {
+                            Endeavor.Creditsafe.SearchCreditsafe.getSelectedRows(entityName);
+                        }
+
+                    },
+                    function (error) {
+                        console.log("error: " + error.message);
+                    }
+                );
+            } else {
+                Endeavor.Creditsafe.SearchCreditsafe.getSelectedRows(entityName);
+            }
+
+        },
+
+        handleRelationTypeValues: function (result) {
+            var setToEmpty = false;
+
+            if (result && result.length > 1) {
+                var compareID = result[0]._edp_relationtypeid_value;
+                for (var i = 1; i < result.length; i++) {
+                    if (result[i]._edp_relationtypeid_value !== compareID || result[i]._edp_relationtypeid_value === "00000000-0000-0000-0000-000000000000") {
+                        setToEmpty = true;
+                        break;
+                    }
+                }
+            }
+
+            if (result && result.length > 0 && !setToEmpty) {
+                $("#relation-type").empty();
+                var relationTypeName = " -- ";
+                var relationId = "empty";
+                if (result[0]._edp_relationtypeid_value) {
+                    relationId = result[0]._edp_relationtypeid_value;
+                }
+                if (result[0]["_edp_relationtypeid_value@OData.Community.Display.V1.FormattedValue"]) {
+                    relationTypeName = result[0]["_edp_relationtypeid_value@OData.Community.Display.V1.FormattedValue"];
+                }
+                $("#relation-type").append('<option value="' + relationId + '">' + relationTypeName + '</option>');
+                Endeavor.Creditsafe.SearchCreditsafe.addAllOtherRelationTypes();
+            } else {
+                $("#relation-type").empty();
+                $("#relation-type").append("<option value=empty> -- </option>");
+                Endeavor.Creditsafe.SearchCreditsafe.addAllOtherRelationTypes();
+            }
+        },
+
+        saveRelationTypesToGrid: function (jsonArray, result) {
+            var selectedIDs = $("#jqGrid").getGridParam("selarrrow");
+
+            for (var j = 0; j < jsonArray.length; j++) {
+                for (var i = 0; i < result.length; i++) {
+                    if (result[i].accountid === jsonArray[j].CRMId) {
+
+                        if (result[i]._edp_relationtypeid_value) {
+                            $("#jqGrid").jqGrid('setRowData', jsonArray[j].rowId, { edp_RelationType: result[i]._edp_relationtypeid_value });
+                        }
+
+                        if (result[i]["_edp_relationtypeid_value@OData.Community.Display.V1.FormattedValue"])
+                            $("#jqGrid").jqGrid('setRowData', jsonArray[j].rowId, { edp_RelationTypeName: result[i]["_edp_relationtypeid_value@OData.Community.Display.V1.FormattedValue"] });
+                    }
+                }
+            }
+        },
+
+        onRowsSelect: function () {
+            var jsonArray = [];
+            var selectedIDs = $("#jqGrid").getGridParam("selarrrow");
+            for (var i = 0; i < selectedIDs.length; i++) {
+                var rowCRMID = $("#jqGrid").jqGrid('getCell', selectedIDs[i], 'CRMId');
+                var item = {
+                    "rowId": selectedIDs[i],
+                    "CRMId": rowCRMID
+                };
+                jsonArray.push(item);
+            }
+
+            if (jsonArray && jsonArray.length > 0) {
+                Endeavor.Creditsafe.SearchCreditsafe.fetchRelationTypesFromRows(jsonArray).then(
+                    function (result) {
+                        Endeavor.Creditsafe.SearchCreditsafe.saveRelationTypesToGrid(jsonArray, result);
+                        Endeavor.Creditsafe.SearchCreditsafe.handleRelationTypeValues(result);
+                    },
+                    function (error) {
+                        console.log(error);
+                        Endeavor.Creditsafe.SearchCreditsafe.handleRelationTypeValues(null);
+
+                        //error just set to relationtype to "--" and print message
+                    }
+                );
+            } else {
+                Endeavor.Creditsafe.SearchCreditsafe.handleRelationTypeValues(null);
+            }
+
+
+        },
+
+        fetchAllRelationTypes: function () {
+            var entityNameString = "edp_relationtypes";
+
+            if (Xrm.Internal.isUci()) {
+                entityNameString = "edp_relationtype";
+            }
+
+            var query = "?$select=edp_relationtypeid, edp_name";
+            return Xrm.WebApi.retrieveMultipleRecords(entityNameString, query, 50).then(
+                function (r) {
+                    if (r && r.entities && r.entities.length > 0) {
+                        GlobalRelationTypes = r.entities;
+                        return "success";
+                    }
+                },
+                function (error) {
+                    console.log(error.message);
+                    return "error";
+                }
+            );
+        },
+
+        addAllOtherRelationTypes: function () {
+            if (!($("#relation-type option[value=empty").length > 0)) {
+                $("#relation-type").append("<option value=empty> -- </option>");
+            }
+
+            if (GlobalRelationTypes && GlobalRelationTypes.length > 0) {
+                for (var i = 0; i < GlobalRelationTypes.length; i++) {
+                    if (!($("#relation-type option[value=" + GlobalRelationTypes[i].edp_relationtypeid + "]").length > 0)) {
+                        $("#relation-type").append('<option value="' + GlobalRelationTypes[i].edp_relationtypeid + '">' + GlobalRelationTypes[i].edp_name + '</option>');
+                    }
+                }
+            }
+        },
+
         //Gets all selected rows and creates a json structure with all the values to be sent to the backend.
         //Requires entity name, as a string,"Account" or "Lead" to be passed in
         getSelectedRows: function (entityName) {
@@ -558,7 +940,6 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
                 alert(Endeavor.Creditsafe.Resources.SelectedRowsErrorMsg);
             else {
                 var selectedIDs = grid.getGridParam("selarrrow");
-
                 //Create a json-like array with all the values to be passed to the backend
                 for (var i = 0; i < selectedIDs.length; i++) {
 
@@ -584,7 +965,7 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
                             getCreditInfo = "YES";
                         }
                     }
-
+                    // Gets info from selected row cells. jqGrid('method', rowId, columnName);
                     var item = {
                         "edp_OrganisationNumber": grid.jqGrid('getCell', selectedIDs[i], 'edp_OrganisationNumber'),
                         "Name": encodeURIComponent(name),
@@ -612,68 +993,407 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
                 }
                 selectedRowsJson = [];
                 selectedRowsJson = jsonArray;
+
                 selectedRowsCount = selectedIDs.length
                 Endeavor.Creditsafe.SearchCreditsafe.run_Waitme("#resultGrid", Endeavor.Creditsafe.Resources.ProcessingWaitCursorLabel);
                 // Must call async for wait cursor to work
-                setTimeout('Endeavor.Creditsafe.SearchCreditsafe.updateCRM(selectedRowsJson, selectedRowsCount, null, "' + entityName + '")', 20);
+                tmpFormContext = parent.Xrm.Page; //becouse this is called from html form
+                setTimeout('Endeavor.Creditsafe.SearchCreditsafe.updateCRM(tmpFormContext, selectedRowsJson, selectedRowsCount, null, "' + entityName + '", 0)', 20);
             }
         },
 
-        updateCRM: function (json, noOfRecords, noGUI, entityName) {
+        isEntityFormContext: function (location) {
+            if (location != null) {
+                if (location.hash != null && location.hash.indexOf('pagetype=entityrecord') > -1) {
+                    return true;
+                }
+
+                if (location.search != null && location.search.indexOf('pagetype=entityrecord') > -1) {
+                    return true;
+                }
+            }
+            return false;
+        },
+
+        closeWindowAndRefreshPage: function (refreshParentFlag) {
+            window.top.close();
             try {
-                // Fetch Compabilitymode if empty
-                if (compabilityMode == null)
-                    Endeavor.Creditsafe.SearchCreditsafe.getCompabilityMode();
-
-                // CRM 2011?
-                if (compabilityMode.Value == 2011) {
-                    // Trigger Transaction via plugintrigger
-                    var pluginTrigger = {};
-                    pluginTrigger.edp_Name = "Creditsafe:Update CRM";
-                    pluginTrigger.edp_PluginCommandJSON = JSON.stringify(json);
-                    SDK.REST.createRecord(
-                        pluginTrigger,
-                        "edp_PluginTrigger",
-                        function (pluginTrigger) {
-                            if (noGUI == null) {
-                                $("#resultGrid").waitMe('hide');
-                                alert(String.format(Endeavor.Creditsafe.Resources.SuccessCreateUpdateMessage, noOfRecords));
-                                window.close();
+                if (window != null && window.parent != null && window.parent.opener != null) {
+                    if (refreshParentFlag) {
+                        if (Endeavor.Creditsafe.SearchCreditsafe.isEntityFormContext(window.parent.opener.location)) {
+                            //only do refresh:
+                            window.parent.opener.Xrm.Page.data.refresh();
+                        } else {
+                            //trigger click on ribbon button 'Refresh'
+                            var refreshCompleted = false;
+                            var buttonElements = window.parent.opener.document.getElementsByTagName('button');
+                            for (var i = 0, len = buttonElements.length; i < len && !refreshCompleted; i++) {
+                                if (buttonElements[i] != null && buttonElements[i].dataset != null && buttonElements[i].dataset.id != null &&
+                                    (
+                                        buttonElements[i].dataset.id.toLowerCase() === 'account|norelationship|homepagegrid|mscrm.homepagegrid.account.refreshmodernbutton'
+                                        || buttonElements[i].dataset.id.toLowerCase() === 'lead|norelationship|homepagegrid|mscrm.homepagegrid.lead.refreshmodernbutton'
+                                    )
+                                ) {
+                                    refreshCompleted = true;
+                                    buttonElements[i].click();
+                                }
                             }
-                        }, function (pluginTriggerError) {
-                            if (noGUI == null) {
-                                $("#resultGrid").waitMe('hide');
-                            }
-                            alert("updateCRM-CreateRecord (plugin trigger) generated an error: " + pluginTriggerError);
-                        });
-
-                } else {
-                    var sdkObject = new Sdk.edp_HandleCompanyDataRequest(JSON.stringify(json));
-                    var response = Sdk.Sync.execute(sdkObject);
-                    if (noGUI == null) {
-                        $("#resultGrid").waitMe('hide');
-                        Xrm.Utility.alertDialog(response.getOutMessage() + "\n\rNumber of " + entityName + "s processed: " + noOfRecords);
-                        window.close();
-                        try {
-                            if (window != null && window.parent != null && window.parent.opener != null) {
+                            if (!refreshCompleted) {
+                                //reload list, since this is not entity record page type, but a list view:
                                 window.parent.opener.location.reload();
                             }
                         }
-                        catch (error) {
-                            //do nothing
+                        window.top.close();
+                    } else {
+                        //Refresh record/form
+                        window.parent.opener.Xrm.Page.data.refresh();
+                        window.top.close();
+                    }
+                }
+            } catch (error) {
+                //do nothing
+            }
+        },
+
+        exitSearchWindow: function (message, doNotRefreshParentFlag) {
+            var alertStrings = { confirmButtonLabel: "Ok", text: message }; // + "\n\rNumber of " + entityName + "s processed: " + noOfRecords
+            var alertOptions = { height: 240, width: 360 };
+            Xrm.Navigation.openAlertDialog(alertStrings, alertOptions).then(
+                function success(result) {
+                    Endeavor.Creditsafe.SearchCreditsafe.closeWindowAndRefreshPage(!doNotRefreshParentFlag);
+                },
+                function (error) {
+                    Endeavor.Creditsafe.SearchCreditsafe.closeWindowAndRefreshPage(!doNotRefreshParentFlag);
+                }
+            );
+        },
+
+        handleDuplicateDetection: function (duplicateIds, action, entityName, doNotRefreshParentFlag, json, returnMode) {
+            var message = action === "create" ? Endeavor.Creditsafe.Resources.DuplicateSearchCreate + "\n\n"
+                : Endeavor.Creditsafe.Resources.DuplicateSearchUpdate + "\n\n";
+
+            var splitedMessage = duplicateIds.split(",");
+            if (splitedMessage.length > 0) {
+                for (var i = 0; i < splitedMessage.length; i++) {
+                    message += decodeURIComponent(splitedMessage[i]) + "\n";
+                }
+            }
+
+            var confirmStrings = {
+                text: message, title: "Duplicate Found",
+                confirmButtonLabel: "Confirm", cancelButtonLabel: "Cancel"
+            };
+            var confirmOptions = { height: 250, width: 400 };
+
+            return Xrm.Navigation.openConfirmDialog(confirmStrings, confirmOptions).then(
+                function (result) {
+                    if (result.confirmed) {
+                        if (returnMode == "closeHtml") {
+                            Endeavor.Creditsafe.SearchCreditsafe.run_Waitme("#resultGrid", Endeavor.Creditsafe.Resources.SearchWaitCursorLabel);
+                        }
+                        return Endeavor.Creditsafe.SearchCreditsafe.forceUpdateCRM(json, doNotRefreshParentFlag, entityName, returnMode);
+                    }
+                }
+            );
+        },
+
+        updateEntityRelationType: function (entityId, entityName) {
+
+            if ($("#relation-type").val() === "empty") {
+                var entityPluralName = "";
+                if (entityName.toLowerCase() == "account") {
+                    entityPluralName = "accounts";
+                } else if (entityName.toLowerCase() == "lead") {
+                    entityPluralName = "leads";
+                }
+                var req = new XMLHttpRequest();
+                req.open("DELETE", Xrm.Utility.getGlobalContext().getClientUrl() + "/api/data/v9.0/" + entityPluralName + "(" + entityId + ")/edp_RelationTypeId/$ref");
+                req.setRequestHeader("Accept", "application/json");
+                req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+                req.setRequestHeader("OData-MaxVersion", "4.0");
+                req.setRequestHeader("OData-Version", "4.0");
+                req.onreadystatechange = function () {
+                    if (this.readyState === 4) {
+                        req.onreadystatechange = null;
+                        if (this.status === 204 || this.status === 1223) {
+                            //Success - No Return Data - Do Something
                         }
                     }
-                    return response.getOutMessage();
+                };
+                req.send();
+            } else {
+                if (!Xrm.Internal.isUci()) {
+                    entityName = entityName.toLowerCase() + "s";
+                } else {
+                    entityName = entityName.toLowerCase();
                 }
-                return true;
+                var data = { "edp_RelationTypeId@odata.bind": "/edp_relationtypes(" + $("#relation-type").val() + ")" };
+                Xrm.WebApi.updateRecord(entityName, entityId, data).then(
+                    function (result) {
+                    },
+                    function (error) {
+                        console.log("error in updaterecord: " + error.message);
+                    });
+            }
+
+
+        },
+
+        handleResultInGuiMode: function (response, noOfRecords, entityName, oldJson) {
+            try {
+                var json = JSON.parse(response);
+
+                var doNotRefreshParentFlag = false;
+                Endeavor.Creditsafe.SearchCreditsafe.turnOffWaitMe();
+                var outMessage = "";
+                if (json.entityId) { //successful if an id is present
+                    doNotRefreshParentFlag = true;
+                    outMessage = json.action === "create" ? Endeavor.Creditsafe.Resources.CreateMessage : Endeavor.Creditsafe.Resources.UpdateMessage;
+
+                    if (json.message != null && json.message.indexOf('Please') > 0 && json.message.indexOf('restricted') > 0 && json.message.indexOf('report') > 0) {
+                        outMessage += '\n\n' + Endeavor.Creditsafe.Resources.NoReportMessage;
+                    }
+
+                } else {
+                    if (json.message != null) {
+                        outMessage = decodeURIComponent(json.message);
+                    }
+                }
+
+                if (json.hasDuplicates) {
+                    doNotRefreshParentFlag = false;
+                    Endeavor.Creditsafe.SearchCreditsafe.handleDuplicateDetection(json.duplicateIds, json.action, entityName, doNotRefreshParentFlag, oldJson, "closeHtml");
+                    return "duplicate";
+                } else {
+                    if (json.entityId) {
+                        Endeavor.Creditsafe.SearchCreditsafe.updateEntityRelationType(json.entityId, entityName);
+                    }
+                    return outMessage;
+                }
+            } catch (e) {
+                console.log(e.toString());
+                Endeavor.Creditsafe.SearchCreditsafe.turnOffWaitMe();
+            }
+
+        },
+
+        handleResultInNonGuiMode: function (formContext, response, entityName, oldJson) {
+            var json = JSON.parse(response);
+
+            var outMessage = "";
+            if (json.hasDuplicates) {
+                Endeavor.Creditsafe.SearchCreditsafe.handleDuplicateDetection(json.duplicateIds, json.action, entityName, true, oldJson, "alertbox").then(
+                    function (r) {
+                        Endeavor.Creditsafe.SearchCreditsafe.reloadForm(formContext);
+                    });
+            } else if (json.entityId) {
+                outMessage = json.action === "create" ? Endeavor.Creditsafe.Resources.CreateMessage : Endeavor.Creditsafe.Resources.UpdateMessage;
+
+                if (json.message != null && json.message.indexOf('Please') > 0 && json.message.indexOf('restricted') > 0 && json.message.indexOf('report') > 0) {
+                    outMessage += '\n\n' + Endeavor.Creditsafe.Resources.NoReportMessage;
+                }
+
+                var alertStrings = { confirmButtonLabel: "Ok", text: outMessage };
+                var alertOptions = { height: 240, width: 360 };
+                Xrm.Navigation.openAlertDialog(alertStrings, alertOptions).then(
+                    function success(result) {
+                        Endeavor.Creditsafe.SearchCreditsafe.reloadForm(formContext);
+                    },
+                    function (error) {
+                        Endeavor.Creditsafe.SearchCreditsafe.reloadForm(formContext);
+                    });
+            } else {
+                outMessage = "No results at all. Something went wrong when communicating with the server.";
+                if (json.message != null) {
+                    outMessage = decodeURIComponent(json.message);
+                }
+                formContext.ui.setFormNotification(outMessage, "ERROR");
+            }
+        },
+
+        reloadForm: function (formContext) {
+            //Work item 155 (DevOps) - previously we used another method for the classical interface, but at this point we assume UCI.
+            //Thus, formContext.data.refresh() will be enough.
+            formContext.data.refresh();
+        },
+
+        forceUpdateCRM: function (json, doNotRefreshParentFlag, entityName, returnMode) {
+            var request = {
+                IgnoreDuplicateRules: 1, //1 == true, othernum == false
+                InAccounts: JSON.stringify(json),
+                getMetadata: function () { //maybe this here?
+                    return {
+                        boundParameter: null,
+                        parameterTypes: {
+                            "IgnoreDuplicateRules": {
+                                "typeName": "Edm.Int32",
+                                "structuralProperty": 1
+                            },
+                            "InAccounts": {
+                                "typeName": "Edm.String",
+                                "structuralProperty": 1 // Primitive Type
+                            }
+                        },
+                        operationType: 0,
+                        operationName: "edp_HandleCompanyData"
+                    };
+                }
+            };
+
+            return Xrm.WebApi.online.execute(request).then(
+                function (result) {
+                    if (result.ok) {
+                        return result.json().then(
+                            function (response) {
+                                if (response && response.OutMessage) {
+                                    var jsonList = response.OutMessage.split('|');
+                                    var message = "";
+                                    for (var i = 0; i < jsonList.length; i++) {
+                                        try {
+                                            var json = JSON.parse(jsonList[i]);
+                                            if (json.entityId) {
+                                                message += json.action === "create" ? Endeavor.Creditsafe.Resources.CreateMessage : Endeavor.Creditsafe.Resources.UpdateMessage + "\n";
+                                            } else {
+                                                message += decodeURIComponent(json.message);
+                                            }
+                                            if (returnMode != "nothing" && $("#relation-type") && $("#relation-type").val()) {
+                                                Endeavor.Creditsafe.SearchCreditsafe.updateEntityRelationType(json.entityId, entityName);
+                                            }
+                                        } catch (e) {
+                                            message += " Error when trying to create/update account";
+                                        }
+
+                                    }
+                                    if (returnMode == "closeHtml") {
+                                        return Endeavor.Creditsafe.SearchCreditsafe.exitSearchWindow(message, doNotRefreshParentFlag);
+                                    } else if (returnMode == "alertbox") {
+                                        var alertStrings = { confirmButtonLabel: "Ok", text: message };
+                                        var alertOptions = { height: 240, width: 360 };
+                                        return Xrm.Navigation.openAlertDialog(alertStrings, alertOptions).then(
+                                            function () { }
+                                        );
+                                    } else {
+                                        return message;
+                                    }
+
+                                }
+                            }
+                        );
+                    }
+                },
+                function (error) {
+                    if (returnMode != "nothing") {
+                        alert("Error when trying to force duplicate: " + error.message);
+                    }
+                });
+        },
+
+        updateCRM: function (formContext, json, noOfRecords, noGUI, entityName, ignoreDuplicateRules) {
+            try {
+
+                var doNotRefreshParentFlag = false;
+
+                var request = {
+                    IgnoreDuplicateRules: ignoreDuplicateRules, //1 == true, othernum == false
+                    InAccounts: JSON.stringify(json),
+                    getMetadata: function () { //maybe this here?
+                        return {
+                            boundParameter: null,
+                            parameterTypes: {
+                                "IgnoreDuplicateRules": {
+                                    "typeName": "Edm.Int32",
+                                    "structuralProperty": 1
+                                },
+                                "InAccounts": {
+                                    "typeName": "Edm.String",
+                                    "structuralProperty": 1 // Primitive Type
+                                }
+                            },
+                            operationType: 0,
+                            operationName: "edp_HandleCompanyData"
+                        };
+                    }
+                };
+
+                Xrm.WebApi.online.execute(request).then(
+                    function (result) {
+                        if (result.ok) {
+                            result.json().then(
+                                function (response) {
+                                    Endeavor.Creditsafe.SearchCreditsafe.handleCreditsafeResponse(formContext, response, entityName, json, noOfRecords, noGUI);
+                                },
+                                function (error) {
+                                    Endeavor.Creditsafe.SearchCreditsafe.turnOffWaitMe();
+                                    alert("Error: " + error);
+                                }
+                            );
+                        }
+                    },
+                    function (error) {
+                        var errorMessage = ".";
+                        if (error != null && error.message != null) {
+                            errorMessage = ":\n\n" + error.message;
+                        }
+                        errorMessage = "An error occurred when updating CRM" + errorMessage;
+
+                        var alertStrings = { confirmButtonLabel: "Ok", text: errorMessage };
+                        var alertOptions = { height: 240, width: 360 };
+                        Xrm.Navigation.openAlertDialog(alertStrings, alertOptions).then(
+                            function () {
+                                try {
+                                    window.top.close();
+                                    if (window != null && window.parent != null && window.parent.opener != null) {
+                                        //window.parent.opener.location.reload();
+                                        window.parent.opener.Xrm.Page.data.refresh();
+                                    }
+                                    Endeavor.Creditsafe.SearchCreditsafe.turnOffWaitMe();
+                                } catch (error) {
+                                    //do nothing
+                                }
+                            }
+                        );
+                    });
 
             } catch (error) {
-                if (noGUI == null) {
-                    $("#resultGrid").waitMe('hide');
+                if (!noGUI) {
+                    Endeavor.Creditsafe.SearchCreditsafe.turnOffWaitMe();
                 }
                 alert(error + "\n\nException caught in updateCRM.");
                 return false;
             }
+        },
+
+        handleCreditsafeResponse: function (formContext, response, entityName, json, noOfRecords, noGUI) {
+            try {
+                if (response && response.OutMessage) {
+                    var jsonList = response.OutMessage.split('|');
+                    var guiMessage = "";
+
+                    for (var i = 0; i < jsonList.length; i++) {
+                        if (noGUI) {
+                            Endeavor.Creditsafe.SearchCreditsafe.handleResultInNonGuiMode(formContext, jsonList[i], entityName, json);
+                        } else {
+                            guiMessage += Endeavor.Creditsafe.SearchCreditsafe.handleResultInGuiMode(jsonList[i], noOfRecords, entityName, json) + "\n";
+                        }
+                    }
+
+                    if (!noGUI && jsonList && jsonList.length > 0 && !(guiMessage.indexOf("duplicate") > -1)) {
+                        if (jsonList[0].entityId) {
+                            Endeavor.Creditsafe.SearchCreditsafe.exitSearchWindow(guiMessage, true);
+                        } else {
+                            Endeavor.Creditsafe.SearchCreditsafe.exitSearchWindow(guiMessage, false);
+                        }
+                    } else if (guiMessage !== "" && !(guiMessage.indexOf("duplicate") > -1)) {
+                        Endeavor.Creditsafe.SearchCreditsafe.turnOffWaitMe();
+                        Endeavor.Creditsafe.SearchCreditsafe.exitSearchWindow(guiMessage, false);
+                    }
+                }
+            } catch (e) {
+                Endeavor.Creditsafe.SearchCreditsafe.turnOffWaitMe();
+                alert("Error in handleCreditsafeResponse: " + e);
+            }
+
+
         },
 
         //Removes the default value of the input field when focused
@@ -692,6 +1412,30 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
             }
         },
 
+        isUsingInternetExplorer11: function () {
+            try {
+                var isIE11 = /Trident.*rv[ :]*11\./.test(navigator.userAgent);
+                return isIE11;
+            } catch (ex) {
+                //do nothing
+            }
+
+            return false;
+        },
+
+        turnOffWaitMe: function () {
+            try {
+                $("#resultGrid").waitMe('hide');
+            } catch (e) {
+                console.log(e);
+            }
+            try {
+                $("#searchView").waitMe('hide');
+            } catch (e) {
+                console.log(e);
+            }
+        },
+
         //Used by the button in CRM- Account overview
         openSearchWindow: function (AccountName, CRMId, countryCodeISO, orgNo) {
             var encodedParams = "";
@@ -703,10 +1447,19 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
                 encodedParams = encodeURIComponent(params);
                 //encodedParams = "?Data=" + encodeURIComponent(params);
             }
+            if (Endeavor.Creditsafe.SearchCreditsafe.isUsingInternetExplorer11() && !Xrm.Internal.isUci()) {
+                var globalContext = Xrm.Utility.getGlobalContext();
+                var url = globalContext.getClientUrl() + "/WebResources/edp_/html/CreditsafeSearchView.html?Data=" + encodedParams;
+                window.open(url, "SearchWindow", "width=1200, height=470");
+            } else {
+                var windowOptions = {
+                    height: 470,
+                    width: 1200,
+                    openInNewWindow: true
+                };
+                Xrm.Navigation.openWebResource("edp_/html/CreditsafeSearchView.html", windowOptions, encodedParams);
+            }
 
-            //var url = "WebResources/edp_/html/CreditsafeSearchView.html" + encodedParams;
-            Xrm.Utility.openWebResource("edp_/html/CreditsafeSearchView.html", encodedParams, 1200, 450);
-            //window.open(url, "SearchWindow", "width=1200, height=450");
         },
 
     }

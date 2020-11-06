@@ -417,44 +417,11 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 "</entity>" +
                 "</fetch>";
             var modifiedFetchXml = fetchXml.replace("&", "&amp;");
-            var users = Endeavor.Skanetrafiken.Account.executeFetch(modifiedFetchXml, "systemusers");
+            var users = Endeavor.formscriptfunctions.executeFetchGetCount(modifiedFetchXml, "systemusers");
             if (users > 0)
                 return false;
             else
                 return true;
-        },
-
-        executeFetch: function (originalFetch, entityname) {
-            var count = 0;
-            var fetch = encodeURI(originalFetch);
-            var query = entityname + "?fetchXml=" + fetch;
-
-            var globalContext = Xrm.Utility.getGlobalContext();
-            var serverURL = globalContext.getClientUrl();
-
-            var req = new XMLHttpRequest();
-            req.open("GET", serverURL + "/api/data/v9.0/" + query, false);
-            req.setRequestHeader("Accept", "application/json");
-            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            req.setRequestHeader("OData-MaxVersion", "4.0");
-            req.setRequestHeader("OData-Version", "4.0");
-            req.onreadystatechange = function () {
-                if (this.readyState == 4 /* complete */) {
-                    req.onreadystatechange = null;
-                    if (this.status == 200) {
-                        var data = JSON.parse(this.response);
-                        if (data != null) {
-                            count = data.value.length;
-                        }
-                    }
-                    else {
-                        var error = JSON.parse(this.response).error;
-                        alert(error.message);
-                    }
-                }
-            };
-            req.send();
-            return count;
         },
 
         //Form Methods CGI Account (from accountLibrary.js)
@@ -488,7 +455,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             try {
                 var globalContext = Xrm.Utility.getGlobalContext();
 
-                var currentUserRoles = globalContext.userSettings.securityRoles();
+                var currentUserRoles = globalContext.userSettings.securityRoles;
                 for (var i = 0; i < currentUserRoles.length; i++) {
                     var userRoleId = currentUserRoles[i];
                     Endeavor.OData_Querys.GetSecRolesNameAccount(userRoleId, formContext);
@@ -505,7 +472,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                     alert("Inga säkerhetsroller definierade!");
                 }
                 else {
-                    var _roleName = result[0].name;
+                    var _roleName = result.entities[0].name;
                     var emailField = formContext.getAttribute("emailaddress1").getValue();
 
                     if (emailField && emailField.Length !== 0 && _roleName.indexOf("Handläggare") > 0)
@@ -519,16 +486,17 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
         timerfunction_eHandel: function (formContext) {
             try {
-                var arg = 'WebResource_eHandelOrders';
-                var obj = formContext.getControl(arg).getObject();
-                var entid = formContext.data.entity.getId();
+                /*TODO - this is commented out, until the Silverlight page is coded as an HTML if needed - 03/11/2020*/
+                //var arg = 'WebResource_eHandelOrders';
+                //var obj = formContext.getControl(arg).getObject();
+                //var entid = formContext.data.entity.getId();
 
-                try {
-                    obj.contentWindow.SetID(entid);
-                }
-                catch (e) {
-                    setTimeout(function () { Endeavor.Skanetrafiken.Account.timerfunction_eHandel(formContext); }, TIMEOUT_COUNTER);
-                }
+                //try {
+                //    obj.contentWindow.SetID(entid);
+                //}
+                //catch (e) {
+                //    setTimeout(function () { Endeavor.Skanetrafiken.Account.timerfunction_eHandel(formContext); }, TIMEOUT_COUNTER);
+                //}
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Account.timerfunction_eHandel\n\n" + e.message);

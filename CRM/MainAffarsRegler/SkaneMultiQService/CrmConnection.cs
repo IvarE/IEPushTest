@@ -14,7 +14,7 @@ namespace Endeavor.Crm
     public class CrmConnection
     {
         private static string ExternalPasswordPlaceHolder = "[Encrypted]";
-
+        
         /// <summary>
         /// Verifies if a connection string is valid for Microsoft Dynamics CRM.
         /// </summary>

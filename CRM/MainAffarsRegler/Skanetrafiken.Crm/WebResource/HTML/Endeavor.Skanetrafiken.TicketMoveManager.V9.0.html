@@ -4,9 +4,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
     <title>Hantera Biljett-Flyttar</title>
     <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
-    <script src="../script/Sdk.Soap.min.js"></script>
-    <script src="../script/SDK.Rest.js"></script>
-    <script src="../script/Sdk.ed_AllowOneMoreTicketMove.min.js"></script>
     <script type="text/javascript">
         document.onreadystatechange = function () {
             debugger;
@@ -72,6 +69,8 @@
 
                         Endeavor.formscriptfunctions.callGlobalAction("ed_AllowOneMoreTicketMove", inputParameters,
                             function (results) {
+
+                                debugger;
                                 if (results != "Kund har nu ett extra byte.") {
                                     document.getElementById("errorMessageSpace").innerText = ("Oväntat fel: " + results);
                                 }

@@ -6,11 +6,6 @@
 
     <script type="text/javascript">
 
-        function setClientApiContext(xrm, formContext) {
-            window._Xrm = xrm;
-            window._formContext = formContext;
-        }
-
         function onLoad() {
 
             getDate();
@@ -19,7 +14,7 @@
 
             setDocument();
 
-            populateSavedTravelInformationTable(_formContext);
+            populateSavedTravelInformationTable();
         }
 
         function setDocument() {
@@ -29,10 +24,10 @@
             }
         }
 
-        function populateSavedTravelInformationTable(_formContext) {
+        function populateSavedTravelInformationTable() {
             var formContext = getFormContext();
             if (formContext) {
-                formContext.Endeavor.Skanetrafiken.TravelInformation.populateSavedTravelInformationTable(_formContext);
+                formContext.Endeavor.Skanetrafiken.TravelInformation.populateSavedTravelInformationTable();
             }
         }
 
@@ -41,13 +36,11 @@
             var formContext = getFormContext();
             if (formContext) {
                 var timestamp_label = document.getElementById('timestamp');
-                formContext.Endeavor.Skanetrafiken.TravelInformation.getCaseEventDate(_formContext, timestamp_label);
+                formContext.Endeavor.Skanetrafiken.TravelInformation.getCaseEventDate(timestamp_label);
             }
-
 
             //var datestring = (new Date()).toISOString().substring(0, 16);
             //datestring = datestring.replace("T", " ");
-
             //document.getElementById('timestamp').value = datestring;
         }
 
@@ -155,7 +148,7 @@
             var formContext = getFormContext();
             if (formContext) {
                 try {
-                    formContext.Endeavor.Skanetrafiken.TravelInformation.search(_formContext);
+                    formContext.Endeavor.Skanetrafiken.TravelInformation.search();
                 }
                 catch (e) {
                     alert(e.message)

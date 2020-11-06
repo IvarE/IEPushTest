@@ -1,6 +1,6 @@
 ﻿namespace Endeavor.Crm.MultiQService
 {
-    partial class OrdersService
+    partial class OrderService
     {
         /// <summary>
         /// Required designer variable.

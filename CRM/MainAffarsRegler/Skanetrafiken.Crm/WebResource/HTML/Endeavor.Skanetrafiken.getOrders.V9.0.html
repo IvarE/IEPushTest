@@ -5,11 +5,6 @@
 
     <script type="text/javascript">
 
-        function setClientApiContext(xrm, formContext) {
-            window._Xrm = xrm;
-            window._formContext = formContext;
-        }
-
         function onLoad() {
 
             var formContext = getFormContext();
@@ -20,7 +15,6 @@
             var startdate = new Date();
             startdate.setDate(startdate.getDate() - 45);
             document.getElementById('startDate').value = startdate.toISOString().substring(0, 10);
-
             document.getElementById('endDate').value = (new Date()).toISOString().substring(0, 10);
         }
 
@@ -47,7 +41,7 @@
         function callOrderSearch() {
             var formContext = getFormContext();
             if (formContext) {
-                formContext.Endeavor.Skanetrafiken.getOrders.orderSearch(_formContext);
+                formContext.Endeavor.Skanetrafiken.getOrders.orderSearch(document);
             }
         }
 

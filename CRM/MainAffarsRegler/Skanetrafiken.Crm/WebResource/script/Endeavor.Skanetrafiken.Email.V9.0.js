@@ -148,15 +148,15 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
             try {
                 if (result == null)
                     alert("Det finns inga bifogade filer kopplade till ärendet");
-                else if (result.length == 0)
+                else if (result.entities.length == 0)
                     alert("Det finns inga bifogade filer kopplade till ärendet");
                 else {
                     var _cgi_Url1 = "";
-                    for (var i = 0; i < result.length; i++) {
+                    for (var i = 0; i < result.entities.length; i++) {
                         if (i == 0)
-                            _cgi_Url1 = formContext.getAttribute("description").getValue() + '<br />' + result[i].cgi_url;
+                            _cgi_Url1 = formContext.getAttribute("description").getValue() + '<br />' + result.entities[i].cgi_url;
                         else
-                            _cgi_Url1 += '<br />' + result[i].cgi_url;
+                            _cgi_Url1 += '<br />' + result.entities[i].cgi_url;
                     }
                     formContext.getAttribute("description").setValue(_cgi_Url1);
                 }

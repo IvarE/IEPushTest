@@ -1,32 +1,29 @@
-﻿using System;
+﻿using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Xrm.Tooling.Connector;
+using Quartz;
+using Quartz.Impl;
+using Skanetrafiken.Crm.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Globalization;
-using System.IO;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
-using Common.Logging;
-using Quartz;
-using Quartz.Impl;
-using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-using Microsoft.Xrm.Tooling.Connector;
-using Skanetrafiken.Crm.Entities;
-
 
 namespace Endeavor.Crm.MultiQService
 {
-    public partial class OrdersService : ServiceBase
+    public partial class OrderService : ServiceBase
     {
-        private static ILog _log = LogManager.GetLogger(typeof(OrdersService));
-        // INFO: (hest) The entropy should be unique for each application. DON'T COPY THIS VALUE INTO A NEW PROJECT!!!!
-        internal static byte[] Entropy = System.Text.Encoding.Unicode.GetBytes("OrdersService");
+        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IScheduler _quartzScheduler;
+
+        // INFO: (hest) The entropy should be unique for each application. DON'T COPY THIS VALUE INTO A NEW PROJECT!!!!
+        internal static byte[] Entropy = System.Text.Encoding.Unicode.GetBytes("OrderService");
 
         internal static string CredentialFilePath
         {
@@ -74,8 +71,10 @@ namespace Endeavor.Crm.MultiQService
 
         private void TestCrmConnection()
         {
+            _log.InfoFormat(CultureInfo.InvariantCulture, "Test Connection");
             // Connect to the CRM web service using a connection string.
             CrmServiceClient conn = new CrmServiceClient(CrmConnection.GetCrmConnectionString(CredentialFilePath, Entropy));
+            _log.InfoFormat(CultureInfo.InvariantCulture, "Connection done");
 
             // Cast the proxy client to the IOrganizationService interface.
             IOrganizationService serviceProxy = (IOrganizationService)conn.OrganizationWebProxyClient != null ? (IOrganizationService)conn.OrganizationWebProxyClient : (IOrganizationService)conn.OrganizationServiceProxy;
@@ -89,8 +88,7 @@ namespace Endeavor.Crm.MultiQService
                 SystemUserEntity systemUser = XrmRetrieveHelper.Retrieve<SystemUserEntity>(
                     localContext,
                     userId,
-                    new ColumnSet(
-                        SystemUserEntity.Fields.FullName));
+                    new ColumnSet(SystemUserEntity.Fields.FullName));
 
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"The logged on user is \"{systemUser.FullName}\" with id \"{userId.ToString()}\".");
             }
@@ -122,8 +120,8 @@ namespace Endeavor.Crm.MultiQService
             _log.Info(this.ServiceName);
 
             #if !DEBUG
-            //Execute is called from Main in debug.
-            Execute();
+                //Execute is called from Main in debug.
+                Execute();
             #endif
         }
 
@@ -138,12 +136,12 @@ namespace Endeavor.Crm.MultiQService
             }
         }
 
-        public OrdersService()
+        public OrderService()
         {
             InitializeComponent();
         }
 
-        public OrdersService(IContainer container)
+        public OrderService(IContainer container)
         {
             container.Add(this);
 

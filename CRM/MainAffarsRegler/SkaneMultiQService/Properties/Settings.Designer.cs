@@ -34,7 +34,7 @@ namespace Endeavor.Crm.MultiQService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0 0/1 * 1/1 * ? *")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0 5 1/1 * ? *")]
         public string FileUploadScheduleCronExpression {
             get {
                 return ((string)(this["FileUploadScheduleCronExpression"]));
@@ -52,7 +52,7 @@ namespace Endeavor.Crm.MultiQService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Import\\MultiQ\\Old\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Import\\MultiQ\\History")]
         public string MultiQArchive {
             get {
                 return ((string)(this["MultiQArchive"]));

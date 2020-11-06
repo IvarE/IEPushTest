@@ -22,12 +22,14 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
         currentLine: null,
         currentCity: "",
 
+        formContext: null,
         document: null,
         saveInProgress: false,
         response: null,
 
-        onLoad: function () {
+        onLoad: function (executionContext) {
             try {
+                Endeavor.Skanetrafiken.TravelInformation.formContext = executionContext.getFormContext();
                 Endeavor.Skanetrafiken.TravelInformation.getContractors();
                 Endeavor.Skanetrafiken.TravelInformation.getOrganisationalUnits();
             } catch (e) {
@@ -39,7 +41,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             Endeavor.Skanetrafiken.TravelInformation.document = document;
         },
 
-        search: function (formContext) {
+        search: function () {
 
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
 
@@ -86,7 +88,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                 Endeavor.formscriptfunctions.callGlobalAction("ed_GetDirectJourneys", inputParameters,
                     function (responsedoc) {
-                        Endeavor.Skanetrafiken.TravelInformation.populateTravelInformation(formContext, transport, city, responsedoc);
+                        Endeavor.Skanetrafiken.TravelInformation.populateTravelInformation(transport, city, responsedoc);
                     },
                     function (error) {
                         var errorMessage = "Get Direct Journeys service is unavailable. Please contact your systems administrator. Details: " + error.message;
@@ -647,7 +649,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
             var savebutton = document.createElement("BUTTON");
             savebutton.style = "font-weight: bold; background-color: Transparent; width: 100%; height: 100%; cursor:pointer";
-            savebutton.onclick = Endeavor.Skanetrafiken.TravelInformation.saveFunction(formContext, saveEntity);
+            savebutton.onclick = Endeavor.Skanetrafiken.TravelInformation.saveFunction(saveEntity);
             savebutton.innerHTML = '+';
             cell.appendChild(savebutton);
 
@@ -659,7 +661,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             cell.innerHTML = contractor;
         },
 
-        populateTravelInformation: function (formContext, transporttype, city, response) {
+        populateTravelInformation: function (transporttype, city, response) {
 
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
             directjourneys = response.getElementsByTagName("DirectJourneysBetweenStops");
@@ -726,7 +728,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 //draw save button
                 var savebutton = document.createElement("BUTTON");
                 savebutton.style = "font-weight: bold; background-color: Transparent; width: 100%; height: 100%; cursor:pointer";
-                savebutton.onclick = Endeavor.Skanetrafiken.TravelInformation.saveFunction(formContext, saveEntity); //(transporttype, city, directjourney);
+                savebutton.onclick = Endeavor.Skanetrafiken.TravelInformation.saveFunction(saveEntity); //(transporttype, city, directjourney);
                 savebutton.innerHTML = '+';
                 cell.appendChild(savebutton);
 
@@ -758,7 +760,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             }
         },
 
-        saveFunction: function (formContext, saveEntity) {
+        saveFunction: function (saveEntity) {
             return function () {
 
                 // LOCAL FUNCTION
@@ -783,12 +785,14 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                     var entity = null;
 
+                    var incidentId = Endeavor.Skanetrafiken.TravelInformation.formContext.data.entity.getId().substring(1, 37);
+
                     if (saveEntity.transporttype == "TRAIN") {
 
                         var travelinformation = ((new Date()).toISOString().substring(0, 19)).replace("T", " ") + " => " + getElementValue(saveEntity.directjourney, "DirectionOfLineDescription");
 
                         entity = {
-                            "cgi_caseid@odata.bind": "/incidents(" + formContext.data.entity.getId().substring(1, 37) + ")",
+                            "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
                             "cgi_travelinformation": travelinformation,
                             "cgi_journeynumber": getElementValue(saveEntity.directjourney, "JourneyNumber"),
                             "cgi_transport": getElementValue(saveEntity.directjourney, "LineDesignation"),
@@ -817,7 +821,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                         if (saveEntity.directjourney == null) {
 
                             entity = {
-                                "cgi_caseid@odata.bind": "/incidents(" + formContext.data.entity.getId().substring(1, 37) + ")",
+                                "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
                                 "cgi_travelinformation": travelinformation,
                                 "cgi_journeynumber": "",
                                 "cgi_transport": "Regionbuss",
@@ -838,7 +842,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                             }
                         } else {
                             entity = {
-                                "cgi_caseid@odata.bind": "/incidents(" + formContext.data.entity.getId().substring(1, 37) + ")",
+                                "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
                                 "cgi_travelinformation": travelinformation,
                                 "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
                                 "cgi_transport": "Regionbuss",
@@ -868,7 +872,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                         if (saveEntity.directjourney == null) {
 
                             entity = {
-                                "cgi_caseid@odata.bind": "/incidents(" + formContext.data.entity.getId().substring(1, 37) + ")",
+                                "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
                                 "cgi_travelinformation": travelinformation,
                                 "cgi_journeynumber": "",
                                 "cgi_transport": "Stadsbuss",
@@ -890,7 +894,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                         } else {
                             entity = {
-                                "cgi_caseid@odata.bind": "/incidents(" + formContext.data.entity.getId().substring(1, 37) + ")",
+                                "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
                                 "cgi_travelinformation": travelinformation,
                                 "cgi_journeynumber": getElementValue(saveEntity.directjourney, "JourneyNumber"),
                                 "cgi_transport": "Stadsbuss",
@@ -919,12 +923,12 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                         Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte skapa Reseinformation. Vänligen kontakta admin.");
 
                     /* Do the create*/
-                    if (formContext.getAttribute("statecode") && formContext.getAttribute("statecode").getValue() == 0) {
+                    if (Endeavor.Skanetrafiken.TravelInformation.formContext.getAttribute("statecode") && Endeavor.Skanetrafiken.TravelInformation.formContext.getAttribute("statecode").getValue() == 0) {
                         Endeavor.Skanetrafiken.TravelInformation.saveInProgress = true;
 
                         Xrm.WebApi.createRecord("cgi_travelinformation", entity).then(
                             function success(CompletedResponse) {
-                                Endeavor.Skanetrafiken.TravelInformation.populateSavedTravelInformationTable(formContext);
+                                Endeavor.Skanetrafiken.TravelInformation.populateSavedTravelInformationTable();
                                 Endeavor.Skanetrafiken.TravelInformation.saveInProgress = false;
                             },
                             function (error) {
@@ -940,7 +944,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             }
         },
 
-        deleteTravelInformation: function (formContext, travelinformationid) {
+        deleteTravelInformation: function (travelinformationid) {
             return function () {
 
                 if (!Endeavor.Skanetrafiken.TravelInformation.saveInProgress) {
@@ -950,7 +954,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                     Xrm.WebApi.deleteRecord("cgi_travelinformation", travelinformationid).then(
                         function success(CompletedResponse) {
 
-                            Endeavor.Skanetrafiken.TravelInformation.populateSavedTravelInformationTable(formContext);
+                            Endeavor.Skanetrafiken.TravelInformation.populateSavedTravelInformationTable();
                             Endeavor.Skanetrafiken.TravelInformation.saveInProgress = false;
                         },
                         function (errorHandler) {
@@ -963,14 +967,15 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             }
         },
 
-        populateSavedTravelInformationTable: function (formContext) {
+        populateSavedTravelInformationTable: function () {
 
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
 
-            var formtype = formContext.data.entity.getEntityName();
-            if (formtype.toUpperCase() == "INCIDENT" && formContext.ui.getFormType() && formContext.ui.getFormType() != 1) {
+            var entityName = Endeavor.Skanetrafiken.TravelInformation.formContext.data.entity.getEntityName();
+            var formType = Endeavor.Skanetrafiken.TravelInformation.formContext.ui.getFormType();
+            if (entityName.toUpperCase() == "INCIDENT" && formType && formType != 1) {
 
-                var cgi_caseid = formContext.data.entity.getId();
+                var cgi_caseid = Endeavor.Skanetrafiken.TravelInformation.formContext.data.entity.getId();
                 cgi_caseid = cgi_caseid.substring(1, cgi_caseid.length - 1);
 
                 var travelinformationtable = document.getElementById("savedtravelsbody");
@@ -978,7 +983,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                 var columnSet = "cgi_travelinformationid,cgi_displaytext,cgi_deviationmessage";
 
-                Xrm.WebApi.retrieveMultipleRecords("cgi_travelinformation", "?$select=" + columnSet + "&$filter=cgi_caseid eq " + cgi_caseid).then(
+                Xrm.WebApi.retrieveMultipleRecords("cgi_travelinformation", "?$select=" + columnSet + "&$filter=_cgi_caseid_value eq " + cgi_caseid).then(
                     function success(savedtravelsresults) {
 
                         if (savedtravelsresults && savedtravelsresults.entities) {
@@ -989,7 +994,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                 var cell = row.insertCell();
                                 var del = document.createElement("BUTTON");
                                 del.style = "font-weight: bold; background-color: Transparent; width: 100%; height: 100%; cursor:pointer";
-                                cell.onclick = Endeavor.Skanetrafiken.TravelInformation.deleteTravelInformation(formContext, savedtravelsresults.entities[i].cgi_travelinformationid);
+                                cell.onclick = Endeavor.Skanetrafiken.TravelInformation.deleteTravelInformation(savedtravelsresults.entities[i].cgi_travelinformationid);
                                 del.innerHTML = "-";
                                 cell.appendChild(del);
                                 cell.style = "text-align: center";
@@ -1121,20 +1126,20 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             entity.cgi_displaytext = trafik + " " + city + " " + tour + " " + line + " " + contractor;
         },
 
-        getCaseEventDate: function (formContext, timestamp_label) {
+        getCaseEventDate: function (timestamp_label) {
             try {
 
-                var formType = formContext.ui.getFormType();
+                var formType = Endeavor.Skanetrafiken.TravelInformation.formContext.ui.getFormType();
                 if (formType == 1)
                     return;
 
-                var handelseDatumAttr = formContext.getAttribute("cgi_handelsedatum");
+                var handelseDatumAttr = Endeavor.Skanetrafiken.TravelInformation.formContext.getAttribute("cgi_handelsedatum");
                 var handelseDatumVal = null;
 
-                var actionDatumAttr = formContext.getAttribute("cgi_actiondate");
+                var actionDatumAttr = Endeavor.Skanetrafiken.TravelInformation.formContext.getAttribute("cgi_actiondate");
                 var actionDatumVal = null;
 
-                var arrivalAttr = formContext.getAttribute("cgi_arrival_date");
+                var arrivalAttr = Endeavor.Skanetrafiken.TravelInformation.formContext.getAttribute("cgi_arrival_date");
                 var arrivalVal = null;
 
                 if (handelseDatumAttr)

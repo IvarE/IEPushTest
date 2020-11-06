@@ -42,41 +42,31 @@
             if (!isInputEmpty(oldAccInput, newAccInput))
                 return;
 
-			var data = {
-                "oldAccountNumber": oldAccInput.value.replace(/ /g, ''),
-                "newAccountNumber_KST": newAccInput.value.replace(/ /g, '')
-			};
-
             showHideElements(mergeButton, oldAccInput, newAccInput);
 
-            var organizationUrl = Xrm.Page.context.getClientUrl();
-            var req = new XMLHttpRequest();
-            req.open("POST", organizationUrl + "/api/data/v8.1/" + "ed_MergeAccountsPortalen", false);
-            req.setRequestHeader("Accept", "application/json");
-            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            req.setRequestHeader("OData-MaxVersion", "4.0");
-            req.setRequestHeader("OData-Version", "4.0");
-            req.onreadystatechange = function () {
-                if (this.readyState == 4) {
-                    req.onreadystatechange = null;
-                    if (this.status == 200 || this.status == 204) {
-                        var res = JSON.parse(this.response);
-                        var migrationStatusLabel = document.getElementById('statusText');
-                        if (res.MergeResponse == null || res.MergeResponse != "") {
-                            migrationStatusLabel.innerHTML = "Något fel inträffade. Vänligen kontakta administratör. \n\nFel: " + res.MergeResponse;
-                        } else {
-                            migrationStatusLabel.style.color = "green";
-                            migrationStatusLabel.innerHTML = "OK!";
-                        }
-                    } else {
-						var error = JSON.parse(this.response);
-						alert("Error in Action: "+error.message);
+            var inputParameters = [{ "Field": "oldAccountNumber", "Value": oldAccInput.value.replace(/ /g, ''), "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                { "Field": "MaxTransactions", "Value": newAccInput.value.replace(/ /g, ''), "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 }];
+
+            Endeavor.formscriptfunctions.callGlobalAction("ed_MergeAccountsPortalen", inputParameters,
+                function (result) {
+
+                    var migrationStatusLabel = document.getElementById('statusText');
+                    if (result.MergeResponse == null || result.MergeResponse != "")
+                        migrationStatusLabel.innerHTML = "Något fel inträffade. Vänligen kontakta administratör. \n\nFel: " + result.MergeResponse;
+                    else {
+                        migrationStatusLabel.style.color = "green";
+                        migrationStatusLabel.innerHTML = "OK!";
                     }
 
                     showHideElements(mergeButton, oldAccInput, newAccInput);
-                }
-            };
-            req.send(JSON.stringify(data));
+                },
+                function (error) {
+                    var errorMessage = "Error in  Merge Action: " + error.message;
+                    console.log(errorMessage);
+                    Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
+
+                    showHideElements(mergeButton, oldAccInput, newAccInput);
+                });
         }
 
         function showHideElements(btn, oldAccInput, newAccInput) {

@@ -1,12 +1,11 @@
 ﻿using System.Linq;
 using Microsoft.Xrm.Sdk;
-using Common.Logging;
 
 namespace Endeavor.Crm.MultiQService
 {
     internal class TracingService : ITracingService
     {
-        private static ILog _log = LogManager.GetLogger(typeof(TracingService));
+        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public void Trace(string format, params object[] args)
         {
