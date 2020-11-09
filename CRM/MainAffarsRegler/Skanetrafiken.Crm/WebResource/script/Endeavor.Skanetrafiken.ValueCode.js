@@ -127,7 +127,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                 })
         },
 
-        updateValueCodeToCanceled: function (RECORD_ID, fromForm) {
+        updateValueCodeToCanceled: function (RECORD_ID, fromForm, cancelValueCode) {
 
             debugger;
             var systemUserId = Xrm.Page.context.getUserId().replace('{', '').replace('}', '');
@@ -138,15 +138,28 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
 
                 var systemUserProp = "/systemusers(" + systemUserId + ")";
                 var today = new Date();
-                var stateCodeInactive = 1;
-                var statusReasonMakulerad = 899310004;
+                //var stateCodeInactive = 1;
+                //var statusReasonMakulerad = 899310004;
                 
                 var data = {
 
-                    "ed_CanceledBy@odata.bind": systemUserProp,
-                    "ed_canceledon": today,
-                    "statecode": stateCodeInactive,
-                    "statuscode": statusReasonMakulerad
+                    //"ed_CanceledBy@odata.bind": systemUserProp,
+                    //"ed_canceledon": today,
+                    //"statecode": stateCodeInactive,
+                    //"statuscode": statusReasonMakulerad
+                }
+
+                if (cancelValueCode == true) {
+                    data = {
+                        "ed_CanceledBy@odata.bind": systemUserProp,
+                        "ed_canceledon": today,
+                    }
+                }
+                else {
+                    data = {
+                        "ed_CanceledBy@odata.bind": null,
+                        "ed_canceledon": null,
+                    }
                 }
 
                 var serverURL = Xrm.Page.context.getClientUrl();
@@ -165,16 +178,16 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
 
                         debugger;
                         if (fromForm == true) {
-                            Xrm.Page.ui.clearFormNotification("UpdateNotification");
-                            Xrm.Page.ui.clearFormNotification("värdekodInfo");
-                            //Update ValueCode as inactive - Makulerad - Makulerad av (Current user)
+                            //Xrm.Page.ui.clearFormNotification("UpdateNotification");
+                            //Xrm.Page.ui.clearFormNotification("värdekodInfo");
+                            ////Update ValueCode as inactive - Makulerad - Makulerad av (Current user)
 
-                            Xrm.Page.ui.setFormNotification("Värdekod makulerad.", "UpdateNotification");
-
-                            setTimeout(function () {
-                                // Call the Open Entity Form method and pass through the current entity name and ID to force CRM to reload the record
-                                Xrm.Utility.openEntityForm(Xrm.Page.data.entity.getEntityName(), Xrm.Page.data.entity.getId());
-                            }, 3000);
+                            //Xrm.Page.ui.setFormNotification("Värdekod makulerad.", "UpdateNotification");
+                            return true;
+                            //setTimeout(function () {
+                            //    // Call the Open Entity Form method and pass through the current entity name and ID to force CRM to reload the record
+                            //    Xrm.Utility.openEntityForm(Xrm.Page.data.entity.getEntityName(), Xrm.Page.data.entity.getId());
+                            //}, 3000);
                         }
                         else {
 
@@ -186,6 +199,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                         Xrm.Page.ui.clearFormNotification("värdekodInfo");
                         Xrm.Page.ui.clearFormNotification("UpdateNotification");
                         Xrm.Page.ui.setFormNotification("Någonting gick fel: " + e, "UpdateNotification");
+                        return false;
                     }
                 }
             }
@@ -310,65 +324,105 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                     //Might not work on View List page
                     Xrm.Page.ui.setFormNotification("Makulerar Värdekod(er). Detta kan ta några sekunder...", "värdekodInfo");
 
+                    //Update record with User and Current Date
+                    var valueCodeCRMId = Xrm.Page.data.entity.getId().replace('{', '').replace('}', '');
+                    var updateRecord = Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeCRMId, fromForm, true);
+
                     //Call new API Action
                     var valueCodeId = vcCodeValue;
 
-                    Process.callAction("ed_CancelValueCode",
-                        [{
-                            key: "ValueCodeId",
-                            type: Process.Type.String,
-                            value: valueCodeId
-                        }],
-                        function (result) {
-                            debugger;
+                    if (updateRecord == true)
+                    {
+                        Process.callAction("ed_CancelValueCode",
+                            [{
+                                key: "ValueCodeId",
+                                type: Process.Type.String,
+                                value: valueCodeId
+                            }],
+                            function (result) {
+                                debugger;
 
-                            Xrm.Page.ui.clearFormNotification("värdekodInfo");
-                            Xrm.Page.ui.clearFormNotification("UpdateNotification");
-
-                            if (result != null && result != "undefined") {
-
-                                console.log("Result: " + result.Result);
-                            }
-
-                            //Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeId, fromForm);
-
-                            debugger;
-
-                            //Handle result from VoucherService
-                            if (result.Result.startsWith("200")) {
-
-                                //alert("Execution returned 200");
                                 Xrm.Page.ui.clearFormNotification("värdekodInfo");
                                 Xrm.Page.ui.clearFormNotification("UpdateNotification");
-                                //Update ValueCode as inactive - Makulerad - Makulerad av (Current user)
 
-                                Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeId, fromForm);
+                                if (result != null && result != "undefined") {
 
-                                Xrm.Page.data.refresh();
-                                Xrm.Page.ui.setFormNotification("Värdekod makulerad.", "UpdateNotification");
+                                    console.log("Result: " + result.Result);
+                                }
 
-                            }
-                            else {
+                                //Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeId, fromForm);
+
+                                debugger;
+
+                                //Handle result from VoucherService
+                                if (result.Result.startsWith("200")) {
+
+                                    //alert("Execution returned 200");
+                                    Xrm.Page.ui.clearFormNotification("värdekodInfo");
+                                    Xrm.Page.ui.clearFormNotification("UpdateNotification");
+                                    //Update ValueCode as inactive - Makulerad - Makulerad av (Current user)
+                                    //var valueCodeCRMId = Xrm.Page.data.entity.getId().replace('{', '').replace('}', '');
+                                    //Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeCRMId, fromForm);
+
+                                    var confirmationMakulerad = confirm("Värdekod makulerad.");
+
+                                    if (confirmationMakulerad) {
+                                        Xrm.Utility.openEntityForm(Xrm.Page.data.entity.getEntityName(), Xrm.Page.data.entity.getId());
+                                        Xrm.Page.ui.setFormNotification("Värdekod makulerad.", "UpdateNotification");
+                                    }
+                                    else {
+                                        Xrm.Utility.openEntityForm(Xrm.Page.data.entity.getEntityName(), Xrm.Page.data.entity.getId());
+                                        Xrm.Page.ui.setFormNotification("Värdekod makulerad.", "UpdateNotification");
+                                    }
+                                }
+                                else {
+                                    Xrm.Page.ui.clearFormNotification("värdekodInfo");
+                                    Xrm.Page.ui.clearFormNotification("UpdateNotification");
+                                    console.log("Execution returned: " + result.Result);
+                                    //alert("Execution returned: " + result.Result);
+
+                                    //Xrm.Page.ui.setFormNotification("Värdekod kunde ej makuleras.", "UpdateNotification");
+
+                                    Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeCRMId, fromForm, false);
+
+                                    var confirmationMakulerad = confirm("Värdekod kunde ej makuleras. Execution returned: " + result.Result);
+
+                                    if (confirmationMakulerad) {
+                                        Xrm.Utility.openEntityForm(Xrm.Page.data.entity.getEntityName(), Xrm.Page.data.entity.getId());
+                                        Xrm.Page.ui.setFormNotification("Värdekod kunde ej makuleras.", "UpdateNotification");
+                                    }
+                                    else {
+                                        Xrm.Utility.openEntityForm(Xrm.Page.data.entity.getEntityName(), Xrm.Page.data.entity.getId());
+                                        Xrm.Page.ui.setFormNotification("Värdekod kunde ej makuleras.", "UpdateNotification");
+                                    }
+                                }
+                            },
+                            function (e, t) {
+                                // Error
+                                debugger;
                                 Xrm.Page.ui.clearFormNotification("värdekodInfo");
                                 Xrm.Page.ui.clearFormNotification("UpdateNotification");
-                                console.log("Execution returned: " + result.Result);
-                                alert("Execution returned: " + result.Result);
+                                Xrm.Page.ui.setFormNotification("Någonting gick fel: " + e, "UpdateNotification");
 
-                                Xrm.Page.ui.setFormNotification("Värdekod kunde ej makuleras.", "UpdateNotification");
-                            }
-                        },
-                        function (e, t) {
-                            // Error
-                            debugger;
-                            Xrm.Page.ui.clearFormNotification("värdekodInfo");
-                            Xrm.Page.ui.clearFormNotification("UpdateNotification");
-                            Xrm.Page.ui.setFormNotification("Någonting gick fel: " + e, "UpdateNotification");
-                            //alert("Någonting gick fel: " + e);
-                            // Write the trace log to the dev console
-                            if (window.console && console.error) {
-                                console.error(e + "\n" + t);
-                            }
-                        })
+                                Endeavor.Skanetrafiken.ValueCode.updateValueCodeToCanceled(valueCodeCRMId, fromForm, false);
+
+                                var confirmationMakulerad = confirm("Värdekod kunde ej makuleras. Execution returned: " + result.Result);
+
+                                if (confirmationMakulerad) {
+                                    Xrm.Utility.openEntityForm(Xrm.Page.data.entity.getEntityName(), Xrm.Page.data.entity.getId());
+                                    Xrm.Page.ui.setFormNotification("Värdekod kunde ej makuleras.", "UpdateNotification");
+                                }
+                                else {
+                                    Xrm.Utility.openEntityForm(Xrm.Page.data.entity.getEntityName(), Xrm.Page.data.entity.getId());
+                                    Xrm.Page.ui.setFormNotification("Värdekod kunde ej makuleras.", "UpdateNotification");
+                                }
+                                //alert("Någonting gick fel: " + e);
+                                // Write the trace log to the dev console
+                                if (window.console && console.error) {
+                                    console.error(e + "\n" + t);
+                                }
+                            })
+                    }
                 }
                 else {
                     console.log("Canceled execution!");

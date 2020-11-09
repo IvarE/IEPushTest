@@ -472,8 +472,22 @@ namespace Skanetrafiken.Crm.Entities
                                             ValueCodeEntity.Fields.statecode,
                                             ValueCodeEntity.Fields.statuscode));
 
-                                if (valueCode != null && !string.IsNullOrWhiteSpace(valueCode.ed_CodeId)) 
+                                
+
+                                if (valueCode != null && !string.IsNullOrWhiteSpace(valueCode.ed_ValueCodeVoucherId)) 
                                 {
+                                    //Update canceled on / Canceled By
+                                    ValueCodeEntity updateValueCode = new ValueCodeEntity();
+                                    updateValueCode.Id = valueCode.Id;
+                                    updateValueCode.ed_CanceledOn = (DateTime?)DateTime.Now;
+
+                                    if (userGuid != null)
+                                    {
+                                        updateValueCode.ed_CanceledBy = new EntityReference(SystemUserEntity.EntityLogicalName, (Guid)userGuid);
+                                    }
+
+                                    XrmHelper.Update(localContext, updateValueCode);
+
                                     //Trigger call to VoucherService
                                     var httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}/{1}", cgiSetting.ed_CancelValueCodeAPIEndpoint, valueCode.ed_ValueCodeVoucherId));
                                     httpWebRequest.ContentType = "application/json";
@@ -502,33 +516,32 @@ namespace Skanetrafiken.Crm.Entities
                                         if (httpResponse != null && httpResponse.StatusCode == HttpStatusCode.NoContent)
                                         {
                                             //var test = localContext.
-                                            ValueCodeEntity updateValueCode = new ValueCodeEntity();
-                                            updateValueCode.Id = valueCode.Id;
-                                            updateValueCode.ed_CanceledOn = (DateTime?)DateTime.Now;
+                                            //ValueCodeEntity updateValueCode = new ValueCodeEntity();
+                                            //updateValueCode.Id = valueCode.Id;
+                                            //updateValueCode.ed_CanceledOn = (DateTime?)DateTime.Now;
 
-                                            if (userGuid != null)
-                                            {
-                                                updateValueCode.ed_CanceledBy = new EntityReference(SystemUserEntity.EntityLogicalName, (Guid)userGuid);
-                                            }
+                                            //if (userGuid != null)
+                                            //{
+                                            //    updateValueCode.ed_CanceledBy = new EntityReference(SystemUserEntity.EntityLogicalName, (Guid)userGuid);
+                                            //}
 
-                                            XrmHelper.Update(localContext, updateValueCode);
+                                            //XrmHelper.Update(localContext, updateValueCode);
 
-                                            SetStateRequest setStateRequest = new SetStateRequest()
-                                            {
-                                                EntityMoniker = new EntityReference
-                                                {
+                                            //SetStateRequest setStateRequest = new SetStateRequest()
+                                            //{
+                                            //    EntityMoniker = new EntityReference
+                                            //    {
 
-                                                    Id = new Guid(valueCodeArray[i]),
+                                            //        Id = new Guid(valueCodeArray[i]),
+                                            //        LogicalName = ValueCodeEntity.EntityLogicalName,
 
-                                                    LogicalName = ValueCodeEntity.EntityLogicalName,
+                                            //    },
 
-                                                },
+                                            //    State = new OptionSetValue(1),
+                                            //    Status = new OptionSetValue(899310004)
+                                            //};
 
-                                                State = new OptionSetValue(1),
-                                                Status = new OptionSetValue(899310004)
-                                            };
-
-                                            localContext.OrganizationService.Execute(setStateRequest);
+                                            //localContext.OrganizationService.Execute(setStateRequest);
 
                                             nrCanceled++;
                                             successValueCodes += valueCodeArray[i] + ";";
@@ -537,6 +550,14 @@ namespace Skanetrafiken.Crm.Entities
                                         }
                                         else
                                         {
+                                            //Return to previous status
+                                            ValueCodeEntity updateValueCodeBack = new ValueCodeEntity();
+                                            updateValueCodeBack.Id = valueCode.Id;
+                                            updateValueCodeBack.ed_CanceledOn = null;
+                                            updateValueCodeBack.ed_CanceledBy = null;
+
+                                            XrmHelper.Update(localContext, updateValueCodeBack);
+
                                             nrFailed++;
                                             errorValueCodes += "RE-" + valueCodeArray[i] + "-RE= " + responseCodes + " - Expected 204;";
                                             //return "400";

@@ -246,14 +246,24 @@ namespace Skanetrafiken.Crm.Models
                             //Handle updates where ValueCode has been canceled by Voucher Service (status 4 = Canceled) 29/10-20
                             if (this.status == 4)
                             {
-                                var updateValueCode = new ValueCodeEntity()
+                                //Check if valuecode already has been cancled (this makes us dependent on the field being empty when when opened)
+                                _log.Debug($"Th={threadId} VoucherService sent Status = 4. Check that ValueCode is Active before attempt to Cancel.");
+                                if (/*valueCode.ed_CanceledBy == null && */valueCode.statecode == (int)Generated.ed_ValueCodeState.Active)
                                 {
-                                    Id = valueCode.Id,
-                                    ed_Amount = new Money(this.amount),
-                                    ed_RedemptionDate = redeemed
-                                };
+                                    _log.Debug($"Th={threadId} ValueCode is Active -> Cancel.");
+                                    var updateValueCode = new ValueCodeEntity()
+                                    {
+                                        Id = valueCode.Id,
+                                        ed_Amount = new Money(this.amount),
+                                        ed_RedemptionDate = redeemed,
+                                        ed_CanceledOn = (DateTime?)DateTime.UtcNow
+                                    };
 
-                                UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
+                                    UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
+                                }
+                                else {
+                                    _log.Debug($"Th={threadId} ValueCode is Inactive -> Do not cancel.");
+                                }
                             }
                             else if (this.amount <= 0)
                             {

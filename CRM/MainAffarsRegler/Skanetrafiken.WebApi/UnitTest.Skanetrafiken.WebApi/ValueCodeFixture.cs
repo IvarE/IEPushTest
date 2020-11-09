@@ -1085,7 +1085,7 @@ namespace Endeavor.Crm.UnitTest
 
                     Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
 
-                    ValueCodeEntity.HandleCancelValueCode(localContext, "5D6FB5DC-2511-4CC9-B76C-D2DD648270A3", null);
+                    ValueCodeEntity.HandleCancelValueCode(localContext, "CA5F49C4-7F79-4DF4-882F-A6C642AA60C5", null);
 
                     //9F6BE044-DD50-4743-81BB-CA12633A8BC4
 
