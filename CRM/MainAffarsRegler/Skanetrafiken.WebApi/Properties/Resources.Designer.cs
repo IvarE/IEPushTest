@@ -719,7 +719,7 @@ namespace Skanetrafiken.Crm.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Multiple connection strings ({1}) found in the configuration file..
+        ///   Looks up a localized string similar to Multiple connection strings ({0}) found in the configuration file..
         /// </summary>
         internal static string MultipleConnectionString {
             get {
