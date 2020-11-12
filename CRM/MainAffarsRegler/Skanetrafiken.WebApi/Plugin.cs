@@ -25,8 +25,10 @@ namespace Endeavor.Crm
         public class SdkMessageName
         {
             public const string Assign = "Assign";
+            public const string Associate = "Associate";
             public const string Create = "Create";
             public const string Delete = "Delete";
+            public const string Disassociate = "Disassociate";
             public const string GrantAccess = "GrantAccess";
             public const string ModifyAccess = "ModifyAccess";
             public const string Retrieve = "Retrieve";
@@ -41,6 +43,8 @@ namespace Endeavor.Crm
 
         public class LocalPluginContext
         {
+            private IExecutionContext _ExecutionContext;
+
             public Guid executeAsUserId
             {
                 get;
@@ -66,6 +70,21 @@ namespace Endeavor.Crm
                 get;
 
                 private set;
+            }
+
+            public IExecutionContext ExecutionContext
+            {
+                get
+                {
+                    if (_ExecutionContext != null)
+                        return _ExecutionContext;
+                    return PluginExecutionContext;
+                }
+
+                private set
+                {
+                    _ExecutionContext = value;
+                }
             }
 
             public ITracingService TracingService
@@ -94,7 +113,21 @@ namespace Endeavor.Crm
 
                 // Use the factory to generate the Organization Service.
                 this.OrganizationService = service;
+            }
 
+            /// <summary>
+            /// This constructor can be used for unit testing and workflow.
+            /// </summary>
+            public LocalPluginContext(IServiceProvider serviceProvider, IOrganizationService service, IExecutionContext context, ITracingService tracingService)
+            {
+                // Obtain the execution context service from the service provider.
+                this.ExecutionContext = context;
+
+                // Obtain the tracing service from the service provider.
+                this.TracingService = tracingService;
+
+                // Use the factory to generate the Organization Service.
+                this.OrganizationService = service;
             }
 
             public LocalPluginContext(IServiceProvider serviceProvider)
@@ -173,9 +206,9 @@ namespace Endeavor.Crm
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Plugin"/> class.
+        /// Initializes a new instance of the Plugin class.
         /// </summary>
-        /// <param name="childClassName">The <see cref=" cred="Type"/> of the derived class.</param>
+        /// <param name="childClassName">The Type of the derived class.</param>
         public Plugin(Type childClassName)
         {
             this.ChildClassName = childClassName.ToString();
