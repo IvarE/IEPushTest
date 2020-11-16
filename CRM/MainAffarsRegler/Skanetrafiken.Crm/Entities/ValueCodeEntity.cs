@@ -576,12 +576,27 @@ namespace Skanetrafiken.Crm.Entities
                                         //}
                                         //throw new WebException($"Error when trying to create Value Code. Ex:{we.Message}, message:{resultFromService}");
 
+                                        ValueCodeEntity updateValueCodeBack = new ValueCodeEntity();
+                                        updateValueCodeBack.Id = valueCode.Id;
+                                        updateValueCodeBack.ed_CanceledOn = null;
+                                        updateValueCodeBack.ed_CanceledBy = null;
+
+                                        XrmHelper.Update(localContext, updateValueCodeBack);
+
                                         nrFailed++;
                                         errorValueCodes += "WE-" + valueCodeArray[i] + "-WE;";
                                     }
                                     catch (Exception e)
                                     {
                                         //throw new Exception("Failed to Execute: " + e.Message);
+
+                                        ValueCodeEntity updateValueCodeBack = new ValueCodeEntity();
+                                        updateValueCodeBack.Id = valueCode.Id;
+                                        updateValueCodeBack.ed_CanceledOn = null;
+                                        updateValueCodeBack.ed_CanceledBy = null;
+
+                                        XrmHelper.Update(localContext, updateValueCodeBack);
+
                                         nrFailed++;
                                         errorValueCodes += "EX-" + valueCodeArray[i] + "(Exception: " + e.Message + ")-EX;";
                                     }

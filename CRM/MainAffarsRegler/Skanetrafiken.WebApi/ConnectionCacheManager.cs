@@ -29,32 +29,40 @@ namespace Skanetrafiken.Crm
             }
 
             HttpContext httpContext = HttpContext.Current;
-            CrmServiceClient _conn = null;
-            if (httpContext != null)
-            {
-                _conn = httpContext.Cache.Get(cacheName) as CrmServiceClient;
-            }
-            if (_conn == null)
-            {
-                if (print)
-                    _log.Debug("Creating new connection from CRM (no cache found)");
-                string connectionString = CrmConnection.GetCrmConnectionString(CredentialFilePath);
-                if (print)
-                    _log.DebugFormat("connectionString = {0}", connectionString);
-                //  Connect to the CRM web service using a connection string.
-                _conn = new CrmServiceClient(connectionString);
-                
-                if (print)
-                    _log.DebugFormat("Connection state: _conn.IsReady = {0}", _conn.IsReady);
-                if (_conn.IsReady)
-                {
-                    httpContext.Cache.Insert(cacheName, _conn, null, DateTime.Now.AddMinutes(5), Cache.NoSlidingExpiration);
-                }
-                else
-                {
 
-                }
-            }
+            //Special implementation for V.9 Connection Issues
+            string testConnectionString = @"Url=https://sekundtstv9.skanetrafiken.se/V9CRMTEST" + ";" + "Domain=D1" + ";" + @"Username=D1\CRMAdmin" + ";" + "Password=uSEme2!nstal1" + ";" + "authtype=AD";
+            //string testConnectionString = @"Url=https://v9sekunduat.skanetrafiken.se/V9CRMUAT" + ";" + "Domain=D1" + ";" + @"Username=D1\CRMAdmin" + ";" + "Password=uSEme2!nstal1" + ";" + "authtype=AD";
+            //string testConnectionString = @"Url=https://v9sekund.skanetrafiken.se/V9CRM" + ";" + "Domain=D1" + ";" + @"Username=D1\CRMAdmin" + ";" + "Password=uSEme2!nstal1" + ";" + "authtype=AD";
+            CrmServiceClient _conn = new CrmServiceClient(testConnectionString);
+
+            //When Commented -> Using Special implementation for V.9 Connection Issues
+            //CrmServiceClient _conn = null;
+            //if (httpContext != null)
+            //{
+            //    _conn = httpContext.Cache.Get(cacheName) as CrmServiceClient;
+            //}
+            //if (_conn == null)
+            //{
+            //    if (print)
+            //        _log.Debug("Creating new connection from CRM (no cache found)");
+            //    string connectionString = CrmConnection.GetCrmConnectionString(CredentialFilePath);
+            //    if (print)
+            //        _log.DebugFormat("connectionString = {0}", connectionString);
+            //    //  Connect to the CRM web service using a connection string.
+            //    _conn = new CrmServiceClient(connectionString);
+
+            //    if (print)
+            //        _log.DebugFormat("Connection state: _conn.IsReady = {0}", _conn.IsReady);
+            //    if (_conn.IsReady)
+            //    {
+            //        httpContext.Cache.Insert(cacheName, _conn, null, DateTime.Now.AddMinutes(5), Cache.NoSlidingExpiration);
+            //    }
+            //    else
+            //    {
+
+            //    }
+            //}
             return _conn;
         }
 
