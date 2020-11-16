@@ -14,11 +14,11 @@ namespace Endeavor.Crm
     public class CrmConnection
     {
         private static string ExternalPasswordPlaceHolder = "[Encrypted]";
-        
+
         /// <summary>
         /// Verifies if a connection string is valid for Microsoft Dynamics CRM.
         /// </summary>
-        private static bool ValidConnectionString(string connectionString)
+        internal static bool ValidConnectionString(string connectionString)
         {
             // At a minimum, a connection string must contain one of these arguments.
             if (connectionString.Contains("Url=") ||
@@ -57,7 +57,7 @@ namespace Endeavor.Crm
             }
             else if (filteredConnectionStrings.Count > 1)
             {
-                throw new Exception(string.Format(CultureInfo.InvariantCulture, "Multiple connection strings ({1}) found in the configuration file.", filteredConnectionStrings.Count));
+                throw new Exception(string.Format(CultureInfo.InvariantCulture, "Multiple connection strings ({0}) found in the configuration file.", filteredConnectionStrings.Count));
             }
 
             string connectionString = filteredConnectionStrings[0].Value;
@@ -111,7 +111,7 @@ namespace Endeavor.Crm
         {
             if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException("The credentials file \"{0}\" cannot be found. Use the /Password: parameter to create the credential file.", filePath);
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "The credentials file \"{0}\" cannot be found. Use the /Password: parameter to create the credential file.", filePath));
             }
             XDocument doc = XDocument.Load(filePath);
             return ToInsecureString(DecryptString(doc.Root.Element("Password").Value, entropy));

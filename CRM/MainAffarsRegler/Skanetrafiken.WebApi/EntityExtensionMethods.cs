@@ -22,11 +22,13 @@ namespace Endeavor.Crm.Extensions
     public static class EntityExtension
     {
         public const string AliasedSeparator = ".";
-        
+
         /// <summary>
         /// Combine Entity Attributes. The entities must have the same logical names.
         /// If the same attribute exists the the passed entity attribute value overrides this attribute value.
         /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="source"></param>
         public static void CombineAttributes(this Entity entity, Entity source)
         {
             if (entity.LogicalName != source.LogicalName)
@@ -41,6 +43,9 @@ namespace Endeavor.Crm.Extensions
         /// <summary>
         /// Check if an attribute is modified in this (target) entity compared with preImage entity
         /// </summary>
+        /// <param name="target"></param>
+        /// <param name="preImage"></param>
+        /// <param name="attributeName"></param>
         public static bool IsAttributeModified(this Entity target, Entity preImage, string attributeName)
         {
             List<string> specificAttributesList = new List<string>();
@@ -53,6 +58,10 @@ namespace Endeavor.Crm.Extensions
         /// <summary>
         /// Check if any supplied attribute is modified in this (target) entity compared with preImage entity
         /// </summary>
+        /// <param name="target"></param>
+        /// <param name="preImage"></param>
+        /// <param name="specificAttributes"></param>
+        /// <returns></returns>
         public static bool IsAnyAttributeModified(this Entity target, Entity preImage, params string[] specificAttributes)
         {
             AttributeCollection modifiedAttributes = target.GetModifiedAttributes(preImage, specificAttributes);
@@ -160,9 +169,19 @@ namespace Endeavor.Crm.Extensions
                         {
                             DateTime t = (DateTime)targetAttribute.Value;
                             DateTime p = (DateTime)preImage[targetAttribute.Key];
-                            if (!t.Equals(p))
+                            if (t.Kind == p.Kind)
                             {
-                                attributeIsChanged = true;
+                                if (!t.Equals(p))
+                                {
+                                    attributeIsChanged = true;
+                                }
+                            }
+                            else
+                            {
+                                if (!t.ToUniversalTime().Equals(p.ToUniversalTime()))
+                                {
+                                    attributeIsChanged = true;
+                                }
                             }
                         }
                         else if (targetAttribute.Value is Decimal)
@@ -308,8 +327,9 @@ namespace Endeavor.Crm.Extensions
         /// <summary>
         /// Throw exception if property is missing.
         /// </summary>
-        /// <param name="propertyName">Name of Property</param>
+        /// <param name="entity"></param>
         /// <param name="tracingService">null to avoid tracing entity</param>
+        /// <param name="propertyName">Name of Property</param>
         public static void ThrowMissingProperty(this Entity entity, ITracingService tracingService, string propertyName)
         {
             if (!entity.Contains(propertyName))
@@ -324,8 +344,9 @@ namespace Endeavor.Crm.Extensions
         /// <summary>
         /// Throw exception if any of the properties are missing. The exception message will list all properties that are missing.
         /// </summary>
-        /// <param name="propertyName">Name of Property</param>
+        /// <param name="entity"></param>
         /// <param name="tracingService">null to avoid tracing entity</param>
+        /// <param name="propertyNames">Name of Property</param>
         public static void ThrowMissingProperties(this Entity entity, ITracingService tracingService, params string[] propertyNames)
         {
             StringBuilder builder = new StringBuilder();
@@ -369,7 +390,8 @@ namespace Endeavor.Crm.Extensions
         /// Returns the Aliased Value for a column specified in a Linked entity
         /// </summary>
         /// <typeparam name="T">The type of the aliased attribute form the linked entity</typeparam>
-        /// <param name="entityName">Entity Logical Name
+        /// <param name="entity"></param>
+        /// <param name="entityName">Entity Logical Name</param>
         /// <param name="attributeName">The aliased attribute from the linked entity.</param>
         /// <returns></returns>
         public static T GetAliasedValue<T>(this Entity entity, string entityName, string attributeName)
@@ -381,7 +403,8 @@ namespace Endeavor.Crm.Extensions
         /// Returns the Aliased Value for a column specified in a Linked entity
         /// </summary>
         /// <typeparam name="T">The type of the aliased attribute form the linked entity</typeparam>
-        /// <param name="entityName">Entity Logical Name
+        /// <param name="entity"></param>
+        /// <param name="entityName">Entity Logical Name</param>
         /// <param name="attributeName">The aliased attribute from the linked entity.</param>
         /// <returns></returns>
         public static T GetAliasedValueOrDefault<T>(this Entity entity, string entityName, string attributeName)
@@ -393,6 +416,7 @@ namespace Endeavor.Crm.Extensions
         /// Returns the Aliased Value for a column specified in a Linked entity
         /// </summary>
         /// <typeparam name="T">The type of the aliased attribute form the linked entity</typeparam>
+        /// <param name="entity"></param>
         /// <param name="attributeName">The aliased attribute from the linked entity.  Can be preappeneded with the
         /// linked entities logical name and a period. ie "Contact.LastName"</param>
         /// <returns></returns>
@@ -441,7 +465,7 @@ namespace Endeavor.Crm.Extensions
             }
             return aliasedEntityName;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -453,12 +477,12 @@ namespace Endeavor.Crm.Extensions
                 aliased.AttributeLogicalName == attributeName);
 
 
-            /// I believe there is a bug in CRM 2011 when dealing with aggregate values of a linked entity in FetchXML.
-            /// Even though it is marked with an alias, the AliasedValue in the Attribute collection will use the 
-            /// actual CRM name, rather than the aliased one, even though the AttributeCollection's key will correctly
-            /// use the aliased name.  So if the aliased Attribute Logical Name doesn't match the assumed attribute name
-            /// value, check to see if the entity contains an AliasedValue with that key whose attribute logical name 
-            /// doesn't match the key (the assumed bug), and mark it as being the aliased attribute
+            // I believe there is a bug in CRM 2011 when dealing with aggregate values of a linked entity in FetchXML.
+            // Even though it is marked with an alias, the AliasedValue in the Attribute collection will use the 
+            // actual CRM name, rather than the aliased one, even though the AttributeCollection's key will correctly
+            // use the aliased name.  So if the aliased Attribute Logical Name doesn't match the assumed attribute name
+            // value, check to see if the entity contains an AliasedValue with that key whose attribute logical name 
+            // doesn't match the key (the assumed bug), and mark it as being the aliased attribute
             if (!value && aliased != null && entity.Contains(attributeName))
             {
                 var aliasedByKey = entity[attributeName] as AliasedValue;
@@ -470,7 +494,7 @@ namespace Endeavor.Crm.Extensions
             }
             return value;
         }
-        
+
         /// <summary>
         /// Returns the Aliased Value for a column specified in a Linked entity, returning the default value for 
         /// the type if it wasn't found
@@ -497,6 +521,7 @@ namespace Endeavor.Crm.Extensions
         /// <summary>
         /// Check if the Aliased Value for a column specified in a Linked entity exists.
         /// </summary>
+        /// <param name="entity"></param>
         /// <param name="attributeName">The aliased attribute from the linked entity.  Can be preappeneded with the
         /// linked entities logical name and a period. ie "Contact.LastName"</param>
         /// <returns></returns>
@@ -510,7 +535,7 @@ namespace Endeavor.Crm.Extensions
         /// <summary>
         /// Returns the Aliased Value for a column specified in a Linked entity
         /// </summary>
-        /// <typeparam name="T">The type of the aliased attribute form the linked entity</typeparam>
+        /// <param name="entity"></param>
         /// <param name="entityName">Entity Logical Name</param>
         /// <param name="attributeName">The aliased attribute from the linked entity.</param>
         /// <returns></returns>
@@ -534,7 +559,7 @@ namespace Endeavor.Crm.Extensions
         public static void FillAliasedAttributes(this Entity entity, Entity target, string alias)
         {
             string aliasDot = alias + AliasedSeparator;
-            
+
             var aliasedAccountAttributesQuery =
                     from KeyValuePair<string, object> p in entity.Attributes
                     where p.Key.StartsWith(aliasDot)
@@ -546,5 +571,22 @@ namespace Endeavor.Crm.Extensions
                 target[attribute.Key.Replace(aliasDot, string.Empty)] = ((AliasedValue)attribute.Value).Value;
             }
         }
+
+        /// <summary>
+        /// Returns an Entity filled with all Aliased attributes for that Entitiy from the Source.
+        /// </summary>
+        /// <typeparam name="T">The Entity type to return</typeparam>
+        /// <param name="source">The Entity to get Aliased attributes from</param>
+        /// <returns>A new instance of the Entity T filled with all Aliased Values from the Source Entity</returns>
+        public static T GetAliasedEntity<T>(this Entity source) where T : Entity
+        {
+            T target = Activator.CreateInstance<T>();
+
+            if (source != null)
+                source.FillAliasedAttributes(target);
+
+            return target;
+        }
+
     }
 }

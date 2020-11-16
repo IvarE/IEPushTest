@@ -236,7 +236,7 @@
     <value>Fält som saknas:&lt;BR&gt;</value>
   </data>
   <data name="MultipleConnectionString" xml:space="preserve">
-    <value>Multiple connection strings ({1}) found in the configuration file.</value>
+    <value>Multiple connection strings ({0}) found in the configuration file.</value>
   </data>
   <data name="NewEmailMissing" xml:space="preserve">
     <value>Fältet 'NewEmail' måste vara ifyllt</value>

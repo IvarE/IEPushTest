@@ -1196,7 +1196,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                     //Ex 1901051424
                     else if (handelseDatumVal.length == 10) {
-                        year = handelseDatumVal.substring(0, 2);
+                        year = "20" + handelseDatumVal.substring(0, 2);
                         month = handelseDatumVal.substring(2, 4);
                         day = handelseDatumVal.substring(4, 6);
                         hour = handelseDatumVal.substring(6, 8);
