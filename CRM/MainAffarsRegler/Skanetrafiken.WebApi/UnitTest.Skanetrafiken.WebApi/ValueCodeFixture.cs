@@ -2230,18 +2230,23 @@ namespace Endeavor.Crm.UnitTest
 
                 Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
 
-                var contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext,
-                    new EntityReference(ContactEntity.EntityLogicalName, Guid.Parse("7FDA72A0-8689-E811-80EF-005056B61FFF")), new ColumnSet(true));
+                //var contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext,
+                //    new EntityReference(ContactEntity.EntityLogicalName, Guid.Parse("7FDA72A0-8689-E811-80EF-005056B61FFF")), new ColumnSet(true));
 
                 //ValueCodeHandler.CreateValueCodeGeneric(localContext, 2, DateTime.Now.AddDays(2), 20, Generated.ed_valuecode_ed_typeoption.Mobile, null,
                 //3, contact, "0700158181", null, null, null, null);
 
-                var travelCard = XrmRetrieveHelper.Retrieve<TravelCardEntity>(localContext,
-                    new EntityReference(TravelCardEntity.EntityLogicalName, Guid.Parse("4a6827e3-aa7b-e911-80f0-005056b61fff")),
-                    new ColumnSet());
+                //var travelCard = XrmRetrieveHelper.Retrieve<TravelCardEntity>(localContext,
+                //    new EntityReference(TravelCardEntity.EntityLogicalName, Guid.Parse("4a6827e3-aa7b-e911-80f0-005056b61fff")),
+                //    new ColumnSet());
 
-                ValueCodeHandler.CreateValueCodeGeneric(localContext, 2, DateTime.Now.AddDays(2), 10, 550, Generated.ed_valuecode_ed_typeoption.Mobile, null,
-                    3, contact, "0700158181", null, null, null, null, travelCard/*, 0, "", new DateTime(), new DateTime()*/);
+                //ValueCodeHandler.CreateValueCodeGeneric(localContext, 2, DateTime.Now.AddDays(2), 10, 550, Generated.ed_valuecode_ed_typeoption.Mobile, null,
+                //    3, contact, "0700158181", null, null, null, null, travelCard/*, 0, "", new DateTime(), new DateTime()*/);
+
+                var contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext,
+                    new EntityReference(ContactEntity.EntityLogicalName, Guid.Parse("db1900e6-5ba9-e911-80f8-005056b64d75")), new ColumnSet(true));
+
+                ValueCodeHandler.CreateValueCodeGeneric(localContext, 2, DateTime.Now.AddDays(2), 1, 0, Generated.ed_valuecode_ed_typeoption.Mobile, null, 2, contact, "0724671922", null, null, null, null, null);
 
             }
         }
