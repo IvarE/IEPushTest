@@ -303,7 +303,7 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
 
                 if (_infomail == false && _tocustomer != 1) {
                     if (_form_type == 1 || (_form_type == 2 && _emailstatus == 1 && _directioncode == true)) {
-                        var userId = globalContext.userSettings.userId().replace("{", "").replace("{", "");
+                        var userId = globalContext.userSettings.userId.replace("{", "").replace("}", "");
                         Endeavor.OData_Querys.GetDefaultQueue(userId, formContext);
                     }
                 }
@@ -368,7 +368,7 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
 
             var _askcustomer = formContext.data.entity.attributes.get('cgi_ask_customer').getValue();
             if (_askcustomer == true) {
-                var userId = globalContext.userSettings.userId();
+                var userId = globalContext.userSettings.userId.replace("{", "").replace("}", "");;
                 Endeavor.OData_Querys.GetDefaultQueue(userId, formContext);
             }
             else {

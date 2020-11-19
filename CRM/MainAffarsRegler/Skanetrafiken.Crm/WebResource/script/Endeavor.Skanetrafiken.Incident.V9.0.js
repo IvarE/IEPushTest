@@ -1011,9 +1011,8 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             }
         },
 
-        sendAttentionEmail: function (primaryControl) {
+        sendAttentionEmail: function (formContext) {
             try {
-                var formContext = primaryControl;
                 var globalContext = Xrm.Utility.getGlobalContext();
 
                 if (Endeavor.Skanetrafiken.Incident.chechIfAnyFieldIsDirty(formContext) == true) {
@@ -1029,7 +1028,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 var url = "/main.aspx?etn=email&pagetype=entityrecord";
                 var features = "location=no,menubar=no,status=no,toolbar=no,resizable=1";
 
-                url = globalContext.userSettings.prependOrgName(url);
+                url = globalContext.prependOrgName(url);
                 url = url + "&extraqs=" + encodeURIComponent(parameters);
                 url = url + "&histKey=" + Math.floor(Math.random() * 10000) + "&newWindow=true"
                 window.open(url, "_blank", features, false);
@@ -1040,9 +1039,8 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             }
         },
 
-        sendRemitteceEmail: function (primaryControl) {
+        sendRemitteceEmail: function (formContext) {
             try {
-                var formContext = primaryControl;
                 var globalContext = Xrm.Utility.getGlobalContext();
 
                 if (Endeavor.Skanetrafiken.Incident.chechIfAnyFieldIsDirty(formContext) == true) {
@@ -1057,7 +1055,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 var url = "/main.aspx?etn=email&pagetype=entityrecord";
                 var features = "location=no,menubar=no,status=no,toolbar=no,resizable=1";
 
-                url = globalContext.userSettings.prependOrgName(url);
+                url = globalContext.prependOrgName(url);
                 url = url + "&extraqs=" + encodeURIComponent(parameters);
                 url = url + "&histKey=" + Math.floor(Math.random() * 10000) + "&newWindow=true"
                 window.open(url, "_blank", features, false);
@@ -1068,9 +1066,8 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             }
         },
 
-        sendCustomermail: function (primaryControl) {
+        sendCustomerEmail: function (formContext) {
             try {
-                var formContext = primaryControl;
                 var globalContext = Xrm.Utility.getGlobalContext();
 
                 if (Endeavor.Skanetrafiken.Incident.chechIfAnyFieldIsDirty(formContext) == true) {
@@ -1116,7 +1113,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 var url = "/main.aspx?etn=email&pagetype=entityrecord";
                 var features = "location=no,menubar=no,status=no,toolbar=no,resizable=1";
 
-                url = globalContext.userSettings.prependOrgName(url);
+                url = globalContext.prependOrgName(url);
                 url = url + "&extraqs=" + encodeURIComponent(argValues);
                 url = url + "&histKey=" + Math.floor(Math.random() * 10000) + "&newWindow=true"
                 window.open(url, "_blank", features, false);
@@ -1136,8 +1133,8 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
                 Xrm.WebApi.retrieveRecord("contact", contactId, "?$select=emailaddress1,emailaddress2,yomifullname")
                     .then(function (result) {
-                        if (result.EMailAddress1 == null && result.EMailAddress2 == null) {
-                            formContext.ui.setFormNotification(result.YomiFullName + " har ingen e-post kopplad till sig.", "Info", "1");
+                        if (result.emailaddress1 == null && result.emailaddress2 == null) {
+                            formContext.ui.setFormNotification(result.yomifullname + " har ingen e-post kopplad till sig.", "Info", "1");
                             return false;
                         }
                         formContext.ui.clearFormNotification("1");
@@ -1156,8 +1153,8 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
                 Xrm.WebApi.retrieveRecord("cgi_representative", cgi_representativId, "?$select=cgi_name,emailaddress")
                     .then(function (result) {
-                        if (result.EmailAddress == null) {
-                            formContext.ui.setFormNotification(userRepresentativ.cgi_name + " har ingen e-post kopplad till sig.", "Info", "1");
+                        if (result.emailaddress == null) {
+                            formContext.ui.setFormNotification(result.cgi_name + " har ingen e-post kopplad till sig.", "Info", "1");
                             return false;
                         }
                         formContext.ui.clearFormNotification("1");

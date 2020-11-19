@@ -228,9 +228,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             );
         },
 
-        onBlockContactShow: function (executionContext) {
-
-            var formContext = executionContext.getFormContext();
+        onBlockContactShow: function (formContext) {
 
             var lockedPortal = formContext.getAttribute("ed_islockedportal").getValue();
             var showButton = false;
@@ -244,9 +242,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             }
         },
 
-        onUnblockContactShow: function (executionContext) {
-
-            var formContext = executionContext.getFormContext();
+        onUnblockContactShow: function (formContext) {
 
             var lockedPortal = formContext.getAttribute("ed_islockedportal").getValue();
             var showButton = false;
@@ -278,9 +274,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
         },
 
-        onMarkForCreditsafeUpdate: function (executionContext) {
+        onMarkForCreditsafeUpdate: function (formContext) {
 
-            var formContext = executionContext.getFormContext();
             var guid = formContext.data.entity.getId().replace("{", "").replace("}", "");
 
             if (!formContext.getAttribute("cgi_socialsecuritynumber")) {
@@ -317,13 +312,11 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             );
         },
 
-        onDisplayTicketMoves: function (executionContext) {
-
-            var formContext = executionContext.getFormContext();
+        onDisplayTicketMoves: function (formContext) {
 
             formContext.ui.clearFormNotification(Endeavor.Skanetrafiken.Contact._ticketMovesErrorHolder);
             try {
-                Endeavor.Skanetrafiken.Contact.headLoad(function () { Endeavor.Skanetrafiken.Contact.displayTicketMovesSuccessCallback(formContext); });
+                Endeavor.Skanetrafiken.Contact.displayTicketMovesSuccessCallback(formContext);
             } catch (e) {
                 if (!formContext.ui.setFormNotification(e.message, "ERROR", Endeavor.Skanetrafiken.Contact._ticketMovesErrorHolder))
                     Endeavor.formscriptfunctions.AlertCustomDialog(e.message);
@@ -374,7 +367,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             Endeavor.formscriptfunctions.callGlobalAction("ed_GetTicketMoveDataFromMKL", inputParameters,
                 function (result) {
 
-                    var movesDone = result.user.accountMoved;
+                    var object = JSON.parse(result.responseText)
+                    var movesDone = object.user.accountMoved;
 
                     window.mklData = fullName + ";" + guid + ";" + movesDone;
                     var windowOptions = { height: 300, width: 600 };
@@ -478,10 +472,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             return true;
         },
 
-        blockCustomerPortal: function (executionContext) {
+        blockCustomerPortal: function (formContext) {
 
             try {
-                var formContext = executionContext.getFormContext();
                 Endeavor.Skanetrafiken.Contact.blockCustomerPortalSuccessCallback(formContext);
             } catch (e) {
                 Endeavor.formscriptfunctions.AlertCustomDialog(e.message);
