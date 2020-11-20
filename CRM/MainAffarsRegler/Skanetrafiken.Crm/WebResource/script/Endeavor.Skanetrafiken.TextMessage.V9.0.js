@@ -12,9 +12,8 @@ if (typeof (Endeavor.Skanetrafiken) == "undefined") {
 if (typeof (Endeavor.Skanetrafiken.TextMessage) == "undefined") {
     Endeavor.Skanetrafiken.TextMessage = {
 
-        SaveAndSend: function (executionContext) {
+        SaveAndSend: function (formContext) {
             debugger;
-            var formContext = executionContext.getFormContext();
             formContext.data.save().then(function () { Endeavor.Skanetrafiken.TextMessage.SendSMS(formContext); }, function (error) { Endeavor.Skanetrafiken.TextMessage.ErrorOnSave(formContext, error); });
         },
 

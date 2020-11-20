@@ -19,10 +19,8 @@ if (typeof (Endeavor.Skanetrafiken) == "undefined") {
 if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
     Endeavor.Skanetrafiken.Email = {
 
-        saveAndSendEmail: function (executionContext) {
+        saveAndSendEmail: function (formContext) {
             debugger;
-            var formContext = executionContext.getFormContext();
-
             formContext.data.save().then(function () { Endeavor.Skanetrafiken.Email.SendEmail(formContext); }, function () { Endeavor.Skanetrafiken.Email.ErrorOnSave(formContext); });
         },
 

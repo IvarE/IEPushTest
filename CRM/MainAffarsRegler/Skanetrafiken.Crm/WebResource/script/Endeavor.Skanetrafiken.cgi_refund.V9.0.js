@@ -29,9 +29,8 @@ if (typeof (Endeavor.Skanetrafiken) == "undefined") {
 if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
     Endeavor.Skanetrafiken.cgi_refund = {
 
-        createAndSendValueCode: function (executionContext) {
+        createAndSendValueCode: function (formContext) {
 
-            var formContext = executionContext.getFormContext();
             var idRecord = formContext.data.entity.getId();
             formContext.ui.setFormNotification("Skapar värdekod. Vänligen vänta.", "INFO");
 
