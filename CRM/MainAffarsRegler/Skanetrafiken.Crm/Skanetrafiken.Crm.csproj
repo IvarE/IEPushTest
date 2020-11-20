@@ -267,6 +267,9 @@
     <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.Account.js" />
     <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.CreditsafeAccount.js" />
     <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.CreditsafeConfiguration.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.Resources.1031.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.Resources.1033.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.Resources.1053.js" />
     <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.SearchCreditsafe.js" />
     <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.CreditSafe.SolutionConfigurationPage.js" />
     <Content Include="WebResource\script\Endeavor.Library.formscriptfunctions.js" />
