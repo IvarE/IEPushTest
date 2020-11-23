@@ -188,11 +188,12 @@ namespace CGIXrmCreateCaseService.Case
                 obj.HttpClient.DefaultRequestHeaders.Add("X-CRMPlusToken", token);
 
                 // Do debug-tracing. Johan Endeavor
-                if (DateTime.Now < new DateTime(2017, 04, 18))
-                {
-                    _log.Debug(string.Format("Accuired token:{0}", token));
-                    //LogMessage(_logLocation, string.Format("Accuired token:{0}", token));
-                }
+                //if (DateTime.Now < new DateTime(2017, 04, 18))
+                //{
+                //    _log.Debug(string.Format("Accuired token:{0}", token));
+                //    //LogMessage(_logLocation, string.Format("Accuired token:{0}", token));
+                //}
+                _log.Debug(string.Format("Accuired token:{0}", token));
 
                 // Skapa kundobjekt
                 string jsonResult = obj.Contacts.Post(customer);
@@ -210,6 +211,11 @@ namespace CGIXrmCreateCaseService.Case
 
                 _log.Error(string.Format("Exception catched in GetOrCreateContactRGOLCase:{0}. Country:{1}", msg, request.CustomerAddress1Country));
                 //LogMessage(_logLocation, string.Format("Exception catched in GetOrCreateContactRGOLCase:{0}. Country:{1}", msg, request.CustomerAddress1Country));
+                if (ex.Message != null)
+                {
+                    _log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
+                    //LogMessage(@"C:\Temp\createcase.log", string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
+                }
                 throw new Exception(string.Format("Kan inte skapa kund i SeKund. Orsak:{0}", msg), ex.InnerException);
             }
             // Catch any serialization exeptions
@@ -217,6 +223,11 @@ namespace CGIXrmCreateCaseService.Case
             {
                 _log.Error(string.Format("Kunde inte omvandla resultat från CRMPlus till ett objekt. Detaljerat fel:{0}, inner:{1}", ex.Message, ex.InnerException));
                 //LogMessage(_logLocation, string.Format("Kunde inte omvandla resultat från CRMPlus till ett objekt. Detaljerat fel:{0}, inner:{1}", ex.Message, ex.InnerException));
+                if (ex.Message != null)
+                {
+                    _log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
+                    //LogMessage(@"C:\Temp\createcase.log", string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
+                }
                 throw new Exception(string.Format("Kunde inte omvandla resultat från CRMPlus till ett objekt. Detaljerat fel:{0}", ex.Message), ex.InnerException);
             }
         }
@@ -272,11 +283,12 @@ namespace CGIXrmCreateCaseService.Case
                 obj.HttpClient.DefaultRequestHeaders.Add("X-CRMPlusToken", token);
 
                 // Do debug-tracing. Johan Endeavor
-                if (DateTime.Now < new DateTime(2017, 03, 02))
-                {
-                    _log.Debug(string.Format($"Accuired token:{token}, accessing URL:{settings.ed_CRMPlusService}"));
-                    //LogMessage(_logLocation, string.Format($"Accuired token:{token}, accessing URL:{settings.ed_CRMPlusService}"));
-                }
+                //if (DateTime.Now < new DateTime(2017, 03, 02))
+                //{
+                //    _log.Debug(string.Format($"Accuired token:{token}, accessing URL:{settings.ed_CRMPlusService}"));
+                //    //LogMessage(_logLocation, string.Format($"Accuired token:{token}, accessing URL:{settings.ed_CRMPlusService}"));
+                //}
+                _log.Debug(string.Format($"Accuired token:{token}, accessing URL:{settings.ed_CRMPlusService}"));
 
                 string jsonResult = obj.Contacts.Post(customer);
 
@@ -294,6 +306,11 @@ namespace CGIXrmCreateCaseService.Case
                 string msg = ex.Response.Content.ContentToString();
                 string fullMessage = string.Format("Kan inte skapa kund i SeKund. Orsak:{0}", msg);
                 _log.Error(fullMessage);
+                if (ex.Message != null)
+                {
+                    _log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
+                    //LogMessage(@"C:\Temp\createcase.log", string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
+                }
                 //LogMessage(_logLocation, fullMessage);
                 throw new Exception(fullMessage, ex.InnerException);
             }
@@ -302,6 +319,11 @@ namespace CGIXrmCreateCaseService.Case
             {
                 string fullMessage = string.Format("Kunde inte omvandla resultat från CRMPlus till ett objekt. Detaljerat fel:{0}", ex.Message);
                 _log.Error(fullMessage);
+                if (ex.Message != null)
+                {
+                    _log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
+                    //LogMessage(@"C:\Temp\createcase.log", string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
+                }
                 //LogMessage(_logLocation, fullMessage);
                 throw new Exception(fullMessage, ex.InnerException);
             }
@@ -2140,7 +2162,7 @@ namespace CGIXrmCreateCaseService.Case
         private void CreateLogFile(CreateCaseRequest request)
         {
             if (request == null) return;
-            var sw = new StreamWriter("C:\\Temp\\createcase.log", true);
+            var sw = new StreamWriter("E:\\Logs\\CRM\\CGIXrmCreateCaseService\\RequestCreateCase_Log\\CreateLogFile_Log.txt", true);
             sw.WriteLine("======================================================================================================================");
             sw.WriteLine(DateTime.Now.ToString(CultureInfo.InvariantCulture));
 
@@ -2808,8 +2830,8 @@ namespace CGIXrmCreateCaseService.Case
 
             // Do debug-tracing. Johan Endeavor
 
-            _log.Debug(string.Format("============================================"));
-            _log.Debug(string.Format("Start RequestCreateAutoRgCase"));
+            //_log.Debug(string.Format("============================================"));
+            _log.Debug(string.Format("Entered RequestCreateAutoRgCase"));
 
 
             var response = new AutoRgCaseResponse()
@@ -2887,10 +2909,16 @@ namespace CGIXrmCreateCaseService.Case
             catch (FaultException faultex)
             {
                 // Do debug-tracing. Johan Endeavor
-                if (DateTime.Now < new DateTime(2017, 11, 11))
+                //if (DateTime.Now < new DateTime(2017, 11, 11))
+                //{
+                //    _log.Debug(string.Format("Fel vid skapande av contact: " + faultex.Message));
+                //    //LogMessage(_logLocation, string.Format("Fel vid skapande av contact: " + faultex.Message));
+                //}
+                _log.Debug(string.Format("Fel vid skapande av contact: " + faultex.Message));
+                if (faultex.Message != null)
                 {
-                    _log.Debug(string.Format("Fel vid skapande av contact: " + faultex.Message));
-                    //LogMessage(_logLocation, string.Format("Fel vid skapande av contact: " + faultex.Message));
+                    _log.Error(string.Format("Exception {0}, inner:{1}", faultex.Message, faultex.InnerException.Message));
+                    //LogMessage(@"C:\Temp\createcase.log", string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
                 }
 
                 response.CaseId = Guid.Empty;
@@ -2898,6 +2926,11 @@ namespace CGIXrmCreateCaseService.Case
             }
             catch (Exception ex)
             {
+                if (ex.Message != null)
+                {
+                    _log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
+                    //LogMessage(@"C:\Temp\createcase.log", string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
+                }
                 response.CaseId = Guid.Empty;
                 response.ErrorMessage = ex.Message;
             }
