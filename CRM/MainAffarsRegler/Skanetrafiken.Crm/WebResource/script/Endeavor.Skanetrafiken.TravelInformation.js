@@ -979,7 +979,9 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                 cgi_Stop: Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
                                 cgi_Contractor: Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
                                 cgi_Deviationmessage: getElementValue(saveEntity.directjourney, "Details"),
-                                cgi_DisplayText: ""
+                                cgi_DisplayText: "",
+                                cgi_startactualdatetime: getElementValue(saveEntity.directjourney, "ActualDepartureTime"), //ObservedDepartureDateTime
+                                cgi_arrivalactualdatetime: getElementValue(saveEntity.directjourney, 'ActualArrivalTime') //ObservedArrivalDateTime
                             }
 
                             if (entity != null)
@@ -1015,7 +1017,9 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                     cgi_Stop: "",
                                     cgi_Contractor: saveEntity.contractorName, // NUMERICAL
                                     cgi_Deviationmessage: "",
-                                    cgi_DisplayText: ""
+                                    cgi_DisplayText: "",
+                                    cgi_startactualdatetime: new Date(1999),
+                                    cgi_arrivalactualdatetime: new Date(1999)
                                 }
                             } else {
                                 entity = {
@@ -1040,7 +1044,9 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                     cgi_Stop: Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
                                     cgi_Contractor: Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
                                     cgi_Deviationmessage: getElementValue(saveEntity.directjourney, "Details"),
-                                    cgi_DisplayText: ""
+                                    cgi_DisplayText: "",
+                                    cgi_startactualdatetime: getElementValue(saveEntity.directjourney, "ActualDepartureTime"), //ObservedDepartureDateTime
+                                    cgi_arrivalactualdatetime: getElementValue(saveEntity.directjourney, 'ActualArrivalTime') //ObservedArrivalDateTime
                                 }
                             }
 
@@ -1079,7 +1085,9 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                     cgi_Stop: "",
                                     cgi_Contractor: saveEntity.contractorName, // NUMERICAL
                                     cgi_Deviationmessage: "",
-                                    cgi_DisplayText: ""
+                                    cgi_DisplayText: "",
+                                    cgi_startactualdatetime: new Date(1999),
+                                    cgi_arrivalactualdatetime: new Date(1999)
                                 }
 
                             } else {
@@ -1106,7 +1114,9 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                     cgi_Stop: Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
                                     cgi_Contractor: Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
                                     cgi_Deviationmessage: getElementValue(saveEntity.directjourney, "Details"),
-                                    cgi_DisplayText: ""
+                                    cgi_DisplayText: "",
+                                    cgi_startactualdatetime: getElementValue(saveEntity.directjourney, "ActualDepartureTime"), //ObservedDepartureDateTime
+                                    cgi_arrivalactualdatetime: getElementValue(saveEntity.directjourney, 'ActualArrivalTime') //ObservedArrivalDateTime
 
                                 }
                             }
