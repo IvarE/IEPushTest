@@ -35,6 +35,53 @@ if (typeof (Endeavor.Skanetrafiken) == "undefined") {
 if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
     Endeavor.Skanetrafiken.Incident = {
 
+        //Ribbon Methods Endeavor Incident V9Dynamics
+        openBrevmall: function (formContext) {
+
+            var globalContext = Xrm.Utility.getGlobalContext();
+            var urlOptions = { height: 600, width: 400 };
+
+            var entityId = encodeURIComponent(formContext.data.entity.getId());
+
+            if (entityId == null || entityId == "") {
+                Endeavor.formscriptfunctions.AlertCustomDialog("The entityId is null or empty.");
+                return;
+            }
+
+            var reportName = encodeURIComponent("Letter_template.rdl");
+            var reportGuid = encodeURIComponent("{23B0468E-27B1-E411-80D6-0050569010AD}");
+            var entityType = encodeURIComponent("112");
+            var serverUrl = globalContext.getClientUrl();
+
+            var reportUrl = serverUrl + "/crmreports/viewer/viewer.aspx?action=run&context=records&helpID=" +
+                reportName + "&id=" + reportGuid + "&records=" + entityId + "&recordstype=" + entityType;
+
+            Xrm.Navigation.openUrl(reportUrl, urlOptions);
+        },
+
+        openVardebevis: function (formContext) {
+
+            var globalContext = Xrm.Utility.getGlobalContext();
+            var urlOptions = { height: 600, width: 400 };
+
+            var entityId = encodeURIComponent(formContext.data.entity.getId());
+
+            if (entityId == null || entityId == "") {
+                Endeavor.formscriptfunctions.AlertCustomDialog("The entityId is null or empty.");
+                return;
+            }
+
+            var reportName = encodeURIComponent("RefundPrint2.rdl");
+            var reportGuid = encodeURIComponent("{5774E9C8-D2D6-E411-80DA-0050569010AD}");
+            var entityType = encodeURIComponent("112");
+            var serverUrl = globalContext.getClientUrl();
+
+            var reportUrl = serverUrl + "/crmreports/viewer/viewer.aspx?action=run&context=records&helpID=" +
+                reportName + "&id=" + reportGuid + "&records=" + entityId + "&recordstype=" + entityType;
+                
+            Xrm.Navigation.openUrl(reportUrl, urlOptions);
+        },
+
         onLoad: function (executionContext) {
             debugger;
             var formContext = executionContext.getFormContext();
