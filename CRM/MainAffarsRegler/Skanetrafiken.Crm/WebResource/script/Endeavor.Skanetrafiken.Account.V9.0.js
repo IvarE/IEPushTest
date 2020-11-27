@@ -277,28 +277,22 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             }
         },
 
-        blockAccountPortal: function (executionContext) {
-
-            var formContext = executionContext.getFormContext();
+        blockAccountPortal: function (formContext) {
 
             var parentAccount = formContext.getAttribute("parentaccountid").getValue();
             var blocked = formContext.getAttribute("ed_islockedportal").getValue();
             var msgText = "";
 
-            if (parentAccount == null && blocked === false) {
+            if (parentAccount == null && blocked === false)
                 msgText = "Är du säker på att du vill spärra hela organisationen från åtkomst till hemsidan?";
-            }
-            else if (parentAccount == null && blocked === true) {
+            else if (parentAccount == null && blocked === true)
                 msgText = "Är du säker på att du vill avblockera hela organisationen och ge åtkomst till hemsidan?";
-            } else if (parentAccount != null && blocked === false) {
+            else if (parentAccount != null && blocked === false)
                 msgText = "Är du säker på att du vill spärra detta kostnadsställe från åtkomst till hemsidan?";
-            }
-            else {
+            else 
                 msgText = "Är du säker på att du vill avblockera detta kostnadsställe och ge åtkomst till hemsidan?";
-            }
 
             Endeavor.formscriptfunctions.ConfirmCustomDialog(msgText,
-
                 function () {
                     try {
                         Endeavor.Skanetrafiken.Account.blockAccountPortalSuccessCallback(formContext);
