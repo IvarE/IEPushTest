@@ -207,9 +207,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         },
 
         showHideCompanyEngagementTab: function (formContext) {
-            var contactId = formContext.data.entity.getId();
+            var contactId = formContext.data.entity.getId().replace("{", "").replace("}", "");
 
-            Xrm.WebApi.retrieveMultipleRecords("ed_companyrole", "?$filter=ed_Contact eq " + contactId).then(
+            Xrm.WebApi.retrieveMultipleRecords("ed_companyrole", "?$filter=_ed_contact_value eq " + contactId).then(
                 function success(results) {
 
                     if (results == null || results.entities.length == 0) {
