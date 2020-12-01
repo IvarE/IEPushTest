@@ -130,9 +130,13 @@ namespace Skanetrafiken.Crm.Controllers
                     if (settings != null)
                     {
                         applicationId = settings.ed_JojoCardDetailsApplicationId;
+                        _log.Info($"ApplicationId: {applicationId}");
                         tenentId = settings.ed_JojoCardDetailsTenentId;
+                        _log.Info($"TenentId: {tenentId}");
                         jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                        _log.Info($"CertName: {jojoCertificateName}");
                         msAuthScope = settings.ed_JojoCardDetailsScope;
+                        _log.Info($"msAuthScope: {msAuthScope}");
                     }
                     else
                     {
@@ -204,6 +208,7 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _log.DebugFormat($"GetCardWithCardNumber: Exception cought -> {ex?.Message}, {ex?.InnerException}, {ex?.InnerException?.Message}");
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");

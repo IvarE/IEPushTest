@@ -2293,6 +2293,7 @@ namespace Skanetrafiken.Crm.Controllers
                 //rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 //_log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 //return rm;
+                _log.DebugFormat($"GetCardWithCardNumber: Exception cought -> {ex?.Message}, {ex?.InnerException}, {ex?.InnerException?.Message}");
                 throw new InvalidPluginExecutionException("Error Getting Card (GetCardWithCardNumber): " + ex.Message);
             }
         }
