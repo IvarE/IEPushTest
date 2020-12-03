@@ -445,9 +445,10 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             }
         },
 
-        checkIfUserHasSecRole: function (formContext) {
+        checkIfUserHasSecRole: function (executionContext) {
             try {
                 var globalContext = Xrm.Utility.getGlobalContext();
+                var formContext = executionContext.getFormContext != null ? executionContext.getFormContext() : executionContext;
 
                 var currentUserRoles = globalContext.userSettings.securityRoles;
                 for (var i = 0; i < currentUserRoles.length; i++) {

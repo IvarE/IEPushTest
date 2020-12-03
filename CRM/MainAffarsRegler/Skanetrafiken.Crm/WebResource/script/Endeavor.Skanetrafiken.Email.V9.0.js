@@ -35,7 +35,7 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
                     formContext.ui.close();
                 },
                 function (e) {
-                    formContext.ui.setFormNotification("Någonting gick fel: " + e, "INFO");
+                    formContext.ui.setFormNotification("Någonting gick fel: " + e.message, "INFO");
                     console.error(e.message);
                 });
         },

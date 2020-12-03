@@ -607,12 +607,11 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         onsave: function (executionContext) {
             
-            var eventArgs = formContext.getEventArgs();
+            var eventArgs = executionContext.getEventArgs();
             var _check_soc = Endeavor.Skanetrafiken.Contact.SocSecNoOnChange(executionContext);
 
-            if (_check_soc == false) {
+            if (_check_soc == false)
                 eventArgs.preventDefault();
-            }
         },
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         checkIfUserHasSecRole: function (executionContext) {
@@ -783,8 +782,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         format_phonenumber: function (executionContext) {
             try {
                 var formContext = executionContext.getFormContext();
-
-                var phoneNumberStr = formContext.getEventSource();
+                var phoneNumberStr = executionContext.getEventSource();
                 var control = formContext.getControl(phoneNumberStr.getName());
 
                 // Verify that the field is valid

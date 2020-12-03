@@ -1007,9 +1007,9 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         },
 
         //Ribbon Methods CGI Incident (from incidentRibbon.js)
-        resolveCase: function (caseid, primaryControl) {
+        resolveCase: function (formContext) {
             try {
-                var formContext = primaryControl;
+                var caseid = formContext.data.entity.getId();
                 if (Endeavor.formscriptfunctions.MandatoryPopulated(formContext) == false) {
                     alert("Ett eller flera obligatoriska fält saknar värde!");
                     return;
@@ -1027,12 +1027,10 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 }
                 //END validera trafikinfo END
 
-
                 if (Endeavor.formscriptfunctions.GetDisabledField("cgi_casesolved", formContext) == true) {
                     alert("Du saknar behörighet att avsluta detta ärende!");
                     return;
                 }
-
 
                 var _incidentstagecode = Endeavor.formscriptfunctions.GetValue("incidentstagecode", formContext);
 
@@ -1050,8 +1048,6 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                         Endeavor.formscriptfunctions.SaveAndCloseEntity(formContext);
                     }
                 }
-
-
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Incident.resolveCase\n\n" + e.message);
