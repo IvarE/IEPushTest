@@ -368,7 +368,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 function (result) {
 
                     var object = JSON.parse(result.responseText)
-                    var movesDone = object.user.accountMoved;
+                    var movesDone = object.GetTicketMoveDataFromMKLResponse;
 
                     window.mklData = fullName + ";" + guid + ";" + movesDone;
                     var windowOptions = { height: 300, width: 600 };
