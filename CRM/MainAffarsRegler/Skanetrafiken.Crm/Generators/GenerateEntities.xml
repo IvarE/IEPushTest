@@ -44,7 +44,9 @@
     <entity>cgi_reimbursementform</entity>
     <entity>cgi_refundtype</entity>
     <entity>cgi_refundaccount</entity>
+    <entity>cgi_refundproduct</entity>
     <entity>cgi_refundresponsible</entity>
+    <entity>cgi_invoicerecipient</entity>
 
 
 
@@ -122,9 +124,11 @@
     <optionset>kbarticle_cgi_appoval</optionset>
 
 
+    <optionset>cgi_refund_cgi_vat_code</optionset>
     <optionset>cgi_refund_statuscode</optionset>
     <optionset>cgi_refund_ed_valuecodetype</optionset>
     <optionset>cgi_refund_ed_refundingtype</optionset>
+    <optionset>cgi_refund_cgi_attestation</optionset>
     <optionset>cgi_travelcard_statuscode</optionset>
     <optionset>cgi_travelcard_ed_blockedstatus</optionset>
     <optionset>ed_creditsaferejectcodes</optionset>
