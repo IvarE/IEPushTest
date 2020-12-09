@@ -87,11 +87,18 @@ namespace CGIXrmRainDanceImport
         {
             try
             {
+                _log.Debug("Trying to get the Connection to Dynamics.");
+
                 // Connect to the CRM web service using a connection string.
                 CrmServiceClient conn = new CrmServiceClient(CrmConnection.GetCrmConnectionString(RunBatch.CredentialFilePath, RunBatch.Entropy));
 
                 // Cast the proxy client to the IOrganizationService interface.
                 IOrganizationService serviceProxy = (IOrganizationService)conn.OrganizationWebProxyClient != null ? (IOrganizationService)conn.OrganizationWebProxyClient : (IOrganizationService)conn.OrganizationServiceProxy;
+
+                if(serviceProxy == null)
+                    _log.Error("Connection to Dynamics failed.");
+                else
+                    _log.Error("Connection to Dynamics succeeded.");
 
                 return new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
             }

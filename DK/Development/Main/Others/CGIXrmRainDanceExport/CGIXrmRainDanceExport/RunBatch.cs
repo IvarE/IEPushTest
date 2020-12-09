@@ -75,12 +75,13 @@ namespace CGIXrmRainDanceExport
 
                 //get all refunds to export.
                 List<RefundEntity> lRefunds = _getPendingRefunds();
+                Console.WriteLine("Number of refunds to process: " + lRefunds.Count);
                 foreach (RefundEntity refund in lRefunds)
                 {
                     try
                     {
-                        _log.Debug(string.Format("Processing refundnumber: {0} | CaseId: {1}", _formatString(refund.cgi_refundnumber), _formatString(refund.cgi_Caseid.ToString())));
-                        Console.WriteLine("Processing refundnumber: {0} | CaseId: {1}", _formatString(refund.cgi_refundnumber), _formatString(refund.cgi_Caseid.ToString()));
+                        _log.Debug(string.Format("Processing refundnumber: {0} | CaseId: {1}", _formatString(refund.cgi_refundnumber), _formatString(refund.cgi_Caseid.Id.ToString())));
+                        Console.WriteLine("Processing refundnumber: {0} | CaseId: {1}", _formatString(refund.cgi_refundnumber), _formatString(refund.cgi_Caseid.Id.ToString()));
 
                         if (refund.cgi_Caseid != null)
                         {
@@ -101,8 +102,8 @@ namespace CGIXrmRainDanceExport
                                     string accountrecord = _createAcountingRecord(refund, contact, incident, responsible, refundproduct, user, refundaccount);
 
                                     _setRecordToExported((Guid)refund.cgi_refundId);
-                                    _log.Debug(string.Format("Refund exported: {0} | CaseId: {1}", _formatString(refund.cgi_refundnumber), _formatString(refund.cgi_Caseid.ToString())));
-                                    Console.WriteLine("Refund exported: {0} | CaseId: {1}", _formatString(refund.cgi_refundnumber), _formatString(refund.cgi_Caseid.ToString()));
+                                    _log.Debug(string.Format("Refund exported: {0} | CaseId: {1}", _formatString(refund.cgi_refundnumber), _formatString(refund.cgi_Caseid.Id.ToString())));
+                                    Console.WriteLine("Refund exported: {0} | CaseId: {1}", _formatString(refund.cgi_refundnumber), _formatString(refund.cgi_Caseid.Id.ToString()));
 
                                     ExportData exportdata = new ExportData
                                     {
@@ -627,11 +628,18 @@ namespace CGIXrmRainDanceExport
         {
             try
             {
+                _log.Debug("Trying to get the Connection to Dynamics.");
+
                 // Connect to the CRM web service using a connection string.
                 CrmServiceClient conn = new CrmServiceClient(CrmConnection.GetCrmConnectionString(RunBatch.CredentialFilePath, RunBatch.Entropy));
 
                 // Cast the proxy client to the IOrganizationService interface.
                 IOrganizationService serviceProxy = (IOrganizationService)conn.OrganizationWebProxyClient != null ? (IOrganizationService)conn.OrganizationWebProxyClient : (IOrganizationService)conn.OrganizationServiceProxy;
+
+                if (serviceProxy == null)
+                    _log.Error("Connection to Dynamics failed.");
+                else
+                    _log.Error("Connection to Dynamics succeeded.");
 
                 return new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
             }
