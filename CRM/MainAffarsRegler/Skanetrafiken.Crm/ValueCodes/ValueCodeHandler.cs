@@ -75,6 +75,7 @@ namespace Skanetrafiken.Crm.ValueCodes
         public static Guid CreateValueCodeGeneric(Plugin.LocalPluginContext localContext, int deliveryType, DateTime validTo, float amount, decimal periodPrice, Generated.ed_valuecode_ed_typeoption type,
             ValueCodeApprovalEntity valueCodeApproval, int voucherType, ContactEntity contact, string phoneNumber, string email, ValueCodeTemplateEntity template, LeadEntity lead, RefundEntity refund, TravelCardEntity travelCard)
         {
+
             localContext.TracingService.Trace($"---> Entering {nameof(CreateValueCodeGeneric)}.");
 
             if (phoneNumber != null && phoneNumber != "")
@@ -101,16 +102,16 @@ namespace Skanetrafiken.Crm.ValueCodes
                 }
             }
 
-
-            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
             string apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_CreateValueCodeVoucher);
             localContext.Trace($"(CreateValueCodeGeneric) API: {apiUrl}");
 
             string InputJSON = string.Empty;
 
             Uri url = new Uri(apiUrl);
+
+            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             HttpWebRequest httpWebRequest = CreateRequest(url);
             httpWebRequest.Method = "POST";
@@ -173,7 +174,6 @@ namespace Skanetrafiken.Crm.ValueCodes
 
             /* ------------------------------------------------ */
 
-
             InputJSON = CreateInputJSONVoucherServiceGeneric(localContext, validTo, (int)template.ed_TemplateId, amount, periodPrice,
                 phoneNumber, email, travelCard, refund);
 
@@ -189,12 +189,14 @@ namespace Skanetrafiken.Crm.ValueCodes
 
             try
             {
+
                 VoucherCrm responseService = new VoucherCrm();
 
                 localContext.Trace($"(CreateValueCodeGeneric) Starting GetResponse from {apiUrl}");
 
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
                 localContext.Trace($"(CreateValueCodeGeneric) Declared httpResponse");
+
                 string response = "";
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
@@ -238,6 +240,7 @@ namespace Skanetrafiken.Crm.ValueCodes
                 }
 
                 throw new WebException($"Ett fel uppstod vid anrop till Voucher Service mot adressen '{apiUrl}'. Ex:{we.Message}, message:{resultFromService}");
+                //throw new WebException($"Ett fel uppstod vid anrop till Voucher Service mot adressen '{apiUrl}'. Ex:{we}, message:{we.Message}");
             }
             catch (ProtocolViolationException pve)
             {
