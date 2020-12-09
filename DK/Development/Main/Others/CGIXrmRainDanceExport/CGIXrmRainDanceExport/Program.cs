@@ -16,7 +16,7 @@ namespace CGIXrmRainDanceExport
             {
                 _log.Debug("Main Started");
 
-                string passwordArgument = "uSEme2!nstal1";
+                string passwordArgument = null;
 
                 if (args != null)
                 {

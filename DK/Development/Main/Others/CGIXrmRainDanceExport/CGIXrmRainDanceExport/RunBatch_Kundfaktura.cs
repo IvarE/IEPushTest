@@ -15,6 +15,8 @@ using System.Globalization;
 using Endeavor.Crm;
 using Microsoft.Xrm.Tooling.Connector;
 using Generated = Skanetrafiken.Crm.Schema.Generated;
+using Microsoft.Xrm.Sdk.Metadata;
+using Microsoft.Xrm.Sdk.Messages;
 
 namespace CGIXrmRainDanceExport
 {
@@ -25,6 +27,7 @@ namespace CGIXrmRainDanceExport
         int _countInvoince;
         decimal _totalsum;
         Plugin.LocalPluginContext localContext = null;
+        OptionMetadataCollection optionsMetadata = null;
         private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         #endregion
 
@@ -34,6 +37,7 @@ namespace CGIXrmRainDanceExport
             try
             {
                 localContext = GenerateLocalContext();
+                optionsMetadata = RetrieveOptionSetMetadata(RefundEntity.EntityLogicalName, RefundEntity.Fields.cgi_vat_code);
             }
             catch (Exception ex)
             {
@@ -59,7 +63,7 @@ namespace CGIXrmRainDanceExport
                 string now = string.Format("{0}{1}{2}{3}{4}{5}", year, month, day, hour, minute, second);
 
                 _fileName = string.Format("{0}\\DK_Kundfaktura_{1}", exportdir, now + ".txt");
-                Console.WriteLine("_fileName:" + _fileName);
+                _log.Debug("_fileName:" + _fileName);
 
                 ObservableCollection<ExportData> lines = new ObservableCollection<ExportData>();
                 int count = 0;
@@ -68,15 +72,16 @@ namespace CGIXrmRainDanceExport
 
                 //get all refunds to export.
                 List<RefundEntity> lRefunds = _getPendingRefunds();
-                Console.WriteLine("Number of refunds to process: " + lRefunds.Count);
+                _log.Debug("Number of refunds to process: " + lRefunds.Count);
+
                 foreach (RefundEntity refund in lRefunds)
                 {
-                    Generated.cgi_refund_cgi_vat_code? vatCode = refund.cgi_vat_code;
+                    int vatCode = refund.cgi_vat_code != null ? (int)refund.cgi_vat_code : int.MinValue;
 
-                    if(vatCode != null)
+                    if (vatCode != int.MinValue)
                     {
-                        string vatName = Enum.GetName(typeof(Generated.cgi_refund_cgi_vat_code), vatCode.Value);
-                        Console.WriteLine("Refundnr: {0}; amount: {1}; vat code name: {2}; net amount: {3}", refund.cgi_refundnumber, refund.cgi_Amount.Value.ToString("#,0.00", CultureInfo.CreateSpecificCulture("sv-SE")), vatName, _calculatenetamount(refund.cgi_Amount, vatName));
+                        string vatName = getlabelFromValueOptionSet(vatCode);
+                        _log.Debug(string.Format("Refundnr: {0}; amount: {1}; vat code name: {2}; net amount: {3}", refund.cgi_refundnumber, refund.cgi_Amount.Value.ToString("#,0.00", CultureInfo.CreateSpecificCulture("sv-SE")), vatName, _calculatenetamount(refund.cgi_Amount, vatName)));
                     }
                     
                     try
@@ -84,7 +89,7 @@ namespace CGIXrmRainDanceExport
                         if (refund.cgi_Caseid != null)
                         {
                             IncidentEntity incident = _getCurrentIncident(refund.cgi_Caseid.Id);
-                            ContactEntity contact = _getCurrentContact(incident.ContactId != null ? incident.ContactId.Id : Guid.Empty);
+                            ContactEntity contact = _getCurrentContact(incident.cgi_Contactid != null ? incident.cgi_Contactid.Id : Guid.Empty);
                             RefundResponsibleEntity responsible = _getCurrentResponsible(refund.cgi_responsibleId != null ? refund.cgi_responsibleId.Id : Guid.Empty);
                             RefundProductEntity refundproduct = _getCurrentRefundProduct(refund.cgi_Productid != null ? refund.cgi_Productid.Id : Guid.Empty);
                             UserEntity user = _getUser(refund.CreatedBy.Id);
@@ -105,7 +110,6 @@ namespace CGIXrmRainDanceExport
 
                                         _setRecordToExported((Guid)refund.cgi_refundId);
                                         _log.Debug(string.Format("Refund exported: {0} | CaseId: {1}", _formatString(refund.cgi_refundnumber), _formatString(refund.cgi_Caseid.Id.ToString())));
-                                        Console.WriteLine("Refund exported: {0} | CaseId: {1}", _formatString(refund.cgi_refundnumber), _formatString(refund.cgi_Caseid.Id.ToString()));
 
                                         ExportData exportdata = new ExportData
                                         {
@@ -261,19 +265,19 @@ namespace CGIXrmRainDanceExport
             string line1 = "05";
             string line2 = string.Format("Ärendenr: {0}", _formatString(incident.TicketNumber)).SetToFixedLengthPadRight(50);
 
-            Generated.cgi_refund_cgi_vat_code? vatCode = refund.cgi_vat_code;
+            int vatCode = refund.cgi_vat_code != null ? (int)refund.cgi_vat_code : int.MinValue;
 
             string line3 = "";
             string line4 = "";
 
-            if (vatCode == null)
+            if (vatCode == int.MinValue)
             {
                 line3 = _calculatenetamount(refund.cgi_Amount, null).SetToFixedLengthPadRight(16); //ex moms
                 line4 = _formatVatCode(null).SetToFixedLengthPadRight(2);
             }
             else
             {
-                string vatName = Enum.GetName(typeof(Generated.cgi_refund_cgi_vat_code), vatCode.Value);
+                string vatName = getlabelFromValueOptionSet(vatCode);
                 line3 = _calculatenetamount(refund.cgi_Amount, vatName).SetToFixedLengthPadRight(16); //ex moms
                 line4 = _formatVatCode(vatName).SetToFixedLengthPadRight(2);
             }
@@ -312,16 +316,16 @@ namespace CGIXrmRainDanceExport
             string line7 = "".SetToFixedLengthPadRight(10);
             string line8 = "";
             string line10 = "";
-            Generated.cgi_refund_cgi_vat_code? vatCode = refund.cgi_vat_code;
+            int vatCode = refund.cgi_vat_code != null ? (int)refund.cgi_vat_code : int.MinValue;
 
-            if(vatCode == null)
+            if (vatCode == int.MinValue)
             {
                 line8 = _formatVatCode(null).SetToFixedLengthPadRight(10);
                 line10 = _calculatenetamount(refund.cgi_Amount, null).SetToFixedLengthPadRight(16); //ex moms
             }
             else
             {
-                string vatName = Enum.GetName(typeof(Generated.cgi_refund_cgi_vat_code), vatCode.Value);
+                string vatName = getlabelFromValueOptionSet(vatCode);
                 line8 = _formatVatCode(vatName).SetToFixedLengthPadRight(10);
                 line10 = _calculatenetamount(refund.cgi_Amount, vatName).SetToFixedLengthPadRight(16); //ex moms
             }
@@ -459,6 +463,26 @@ namespace CGIXrmRainDanceExport
             return temp;
         }
 
+        private string getlabelFromValueOptionSet(int code)
+        {
+            return optionsMetadata.Where(x => x.Value == code).FirstOrDefault().Label.UserLocalizedLabel.Label;
+        }
+
+        private OptionMetadataCollection RetrieveOptionSetMetadata(string entityName, string attributename)
+        {
+            RetrieveAttributeRequest attributeRequest = new RetrieveAttributeRequest
+            {
+                EntityLogicalName = entityName,
+                LogicalName = attributename,
+                RetrieveAsIfPublished = true
+            };
+
+            var attributeResponse = (RetrieveAttributeResponse)localContext.OrganizationService.Execute(attributeRequest);
+            EnumAttributeMetadata attributeMetadata = (EnumAttributeMetadata)attributeResponse.AttributeMetadata;
+
+            return attributeMetadata.OptionSet.Options;
+        }
+
         private List<RefundEntity> _getPendingRefunds()
         {
             ColumnSet columns = new ColumnSet(RefundEntity.Fields.cgi_refundId, RefundEntity.Fields.cgi_refundnumber, RefundEntity.Fields.CreatedOn, RefundEntity.Fields.CreatedBy,
@@ -491,6 +515,12 @@ namespace CGIXrmRainDanceExport
 
         private ContactEntity _getCurrentContact(Guid contactid)
         {
+            if (contactid == Guid.Empty || contactid == null)
+            {
+                _log.Error("The Contact was empty: " + contactid.ToString());
+                return null;
+            }
+
             ColumnSet columns = new ColumnSet(ContactEntity.Fields.ContactId, ContactEntity.Fields.LastName, ContactEntity.Fields.FirstName,
                 ContactEntity.Fields.Address1_Line2, ContactEntity.Fields.Address1_City, ContactEntity.Fields.Address1_PostalCode);
             return XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, ContactEntity.EntityLogicalName, contactid, columns);
@@ -498,6 +528,12 @@ namespace CGIXrmRainDanceExport
 
         private InvoiceRecipientEntity _getCurrentInvoiceRecipient(Guid invoicerecipientid)
         {
+            if (invoicerecipientid == Guid.Empty || invoicerecipientid == null)
+            {
+                _log.Error("The Invoice Recipient was empty: " + invoicerecipientid.ToString());
+                return null;
+            }
+
             ColumnSet columns = new ColumnSet(InvoiceRecipientEntity.Fields.cgi_invoicerecipientId, InvoiceRecipientEntity.Fields.cgi_address1, InvoiceRecipientEntity.Fields.cgi_customer_no,
                 InvoiceRecipientEntity.Fields.cgi_inv_reference, InvoiceRecipientEntity.Fields.cgi_invoicerecipientname, InvoiceRecipientEntity.Fields.cgi_postal_city, InvoiceRecipientEntity.Fields.cgi_postalcode);
             return XrmRetrieveHelper.Retrieve<InvoiceRecipientEntity>(localContext, InvoiceRecipientEntity.EntityLogicalName, invoicerecipientid, columns);
@@ -512,12 +548,24 @@ namespace CGIXrmRainDanceExport
 
         private RefundResponsibleEntity _getCurrentResponsible(Guid responsibleid)
         {
+            if (responsibleid == Guid.Empty || responsibleid == null)
+            {
+                _log.Error("The Responsible was empty: " + responsibleid.ToString());
+                return null;
+            }
+
             ColumnSet columns = new ColumnSet(RefundResponsibleEntity.Fields.cgi_responsible);
             return XrmRetrieveHelper.Retrieve<RefundResponsibleEntity>(localContext, RefundResponsibleEntity.EntityLogicalName, responsibleid, columns);
         }
 
         private RefundProductEntity _getCurrentRefundProduct(Guid refundproductid)
         {
+            if (refundproductid == Guid.Empty || refundproductid == null)
+            {
+                _log.Error("The Refund Product was empty: " + refundproductid.ToString());
+                return null;
+            }
+
             ColumnSet columns = new ColumnSet(RefundProductEntity.Fields.cgi_refundproductname, RefundProductEntity.Fields.cgi_Account);
             FilterExpression filter = new FilterExpression(LogicalOperator.And);
             filter.AddCondition(RefundProductEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.cgi_refundproductState.Active);
@@ -534,6 +582,12 @@ namespace CGIXrmRainDanceExport
 
         private RefundAccountEntity _getRefundAccount(Guid refundaccountid)
         {
+            if (refundaccountid == Guid.Empty || refundaccountid == null)
+            {
+                _log.Error("The Refund Account was empty: " + refundaccountid.ToString());
+                return null;
+            }
+
             ColumnSet columns = new ColumnSet(RefundAccountEntity.Fields.cgi_refundaccountname, RefundAccountEntity.Fields.cgi_Account, RefundAccountEntity.Fields.cgi_refundaccountId);
             FilterExpression filter = new FilterExpression(LogicalOperator.And);
             filter.AddCondition(RefundAccountEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.cgi_refundaccountState.Active);
@@ -544,7 +598,7 @@ namespace CGIXrmRainDanceExport
 
         private void _logErrorOnRefund(Guid refundid, string ex)
         {
-            Console.WriteLine("_logErrorOnRefund: " + ex);
+            _log.Error ("_logErrorOnRefund: " + ex);
 
             try
             {
