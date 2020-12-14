@@ -336,6 +336,9 @@ Endeavor.formscriptfunctions = {
         var message = { confirmButtonLabel: "Ok", text: msgText };
         var alertOptions = { height: 150, width: 280 };
 
+        if (typeof (Xrm) == "undefined")
+            Xrm = parent.Xrm;
+
         Xrm.Navigation.openAlertDialog(message, alertOptions).then(
             function success(result) {
                 console.log("Alert dialog closed");
@@ -350,6 +353,10 @@ Endeavor.formscriptfunctions = {
 
         var confirmStrings = { text: msgText, title: "Confirmation Dialog", "cancelButtonLabel": "Cancel", confirmButtonLabel: "Confirm" };
         var confirmOptions = { height: 200, width: 500 };
+
+        if (typeof (Xrm) == "undefined")
+            Xrm = parent.Xrm;
+
         Xrm.Navigation.openConfirmDialog(confirmStrings, confirmOptions).then(
             function (success) {
                 if (success.confirmed) {
@@ -363,6 +370,9 @@ Endeavor.formscriptfunctions = {
     },
 
     ErrorCustomDialog: function (details, message) {
+
+        if (typeof (Xrm) == "undefined")
+            Xrm = parent.Xrm;
 
         Xrm.Navigation.openErrorDialog({ details: details, message: message }).then(
             function (success) {
@@ -378,6 +388,9 @@ Endeavor.formscriptfunctions = {
         var entityFormOptions = {};
         entityFormOptions["entityName"] = entityName;
         entityFormOptions["entityId"] = entityId;
+
+        if (typeof (Xrm) == "undefined")
+            Xrm = parent.Xrm;
 
         // Open the form.
         Xrm.Navigation.openForm(entityFormOptions).then(
@@ -449,6 +462,9 @@ Endeavor.formscriptfunctions = {
             };
         };
 
+        if (typeof (Xrm) == "undefined")
+            Xrm = parent.Xrm;
+
         Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
     },
 
@@ -474,6 +490,9 @@ Endeavor.formscriptfunctions = {
                 operationName: actionName
             };
         };
+
+        if (typeof (Xrm) == "undefined")
+            Xrm = parent.Xrm;
 
         Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
     },

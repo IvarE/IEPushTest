@@ -1,7 +1,8 @@
 ﻿<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <link href="../css/Endeavor.Skanetrafiken.SearchTravelCards.css" rel="stylesheet" type="text/css" />
+    <link href="../css/Endeavor.Skanetrafiken.SearchTravelCards.css" rel="stylesheet" type="text/css">
+    <script src="../script/Endeavor.Skanetrafiken.formscriptfunctions.js"></script>
 
     <script type="text/javascript">
 
@@ -37,6 +38,7 @@
                             function (result) {
 
                                 debugger;
+                                result = JSON.parse(result.responseText);
                                 var cardNumberResp = result.CardNumberResp;
                                 var isClosed = result.IsClosed;
                                 var amount = result.Amount;
@@ -89,6 +91,8 @@
                             function (result) {
 
                                 debugger;
+                                result = JSON.parse(result.responseText);
+
                                 var cardNumberResp = result.CardNumberResp;
                                 var placeOrderResponse = result.PlaceOrderResponse;
                                 var isClosed = result.IsClosed;
@@ -118,6 +122,7 @@
                                     function (result) {
 
                                         debugger;
+                                        result = JSON.parse(result.responseText);
                                         var captureOrderResponse = result.CaptureOrderResponse;
 
                                         if (placeOrderResponse.indexOf("200") > -1)
@@ -157,10 +162,11 @@
 
     </script>
 
+    <meta>
 </head>
-<body>
+<body style="overflow-wrap: break-word;">
 
-    <div class="container">
+    <div class="container" style="font-family: undefined;">
 
         <div class="row">
             <div class="col-1"><div class="label" id="headerLabel">Sök Jojo-kort:</div></div>
@@ -208,8 +214,8 @@
         </div>
 
         <div class="row">
-            <div class="col-2"><div class="label" style="display: none;">Reserverad:</div><input type="checkbox" id="reserveread" style="display: none;" /></div>
-            <div class="col-2"><button onclick="Endeavor.Skanetrafiken.SearchTravelCards.blockButtonPlaceCaptureOrder()" id="block" type="button" disabled>SPÄRRA KORT</button></div>
+            <div class="col-2"><div class="label" style="display: none;">Reserverad:</div><input type="checkbox" id="reserveread" style="display: none;"></div>
+            <div class="col-2"><button onclick="Endeavor.Skanetrafiken.SearchTravelCards.blockButtonPlaceCaptureOrder()" id="block" type="button" disabled="">SPÄRRA KORT</button></div>
             <div class="col-2"></div>
             <div class="col-2"></div>
             <div class="col-2"></div>
@@ -218,6 +224,7 @@
         </div>
 
     </div>
+
 
 </body>
 </html>
