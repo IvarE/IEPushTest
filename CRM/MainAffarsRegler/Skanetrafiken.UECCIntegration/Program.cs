@@ -46,6 +46,46 @@ namespace Skanetrafiken.UECCIntegration
             }
         }
 
+        public static void RunAutoNumberLogic()
+        {
+            string domainV9User = ConfigurationManager.AppSettings["domainV9User"];
+            string urlV9Organization = ConfigurationManager.AppSettings["urlV9Organization"];
+
+            Console.WriteLine("Please introduce the password: ");
+            string passWordV9 = Console.ReadLine();
+
+            IOrganizationService _service = ConnectToMSCRM(domainV9User, passWordV9, urlV9Organization);
+
+            if (_service == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, "The CRM Service is null.");
+                return;
+            }
+
+            Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _service, null, new TracingService());
+
+            // QueryExpression to Retrieve Organization
+            QueryExpression qe = new QueryExpression("organization")
+            {
+                ColumnSet = new ColumnSet(new string[] { "organizationid", "name", "currentordernumber", "currentkbnumber" })
+            };
+            EntityCollection orgs = localContext.OrganizationService.RetrieveMultiple(qe);
+
+            if (orgs != null && orgs.Entities.Count > 0)
+            {
+                var org = orgs[0];
+                var organizationId = (Guid)org["organizationid"];
+
+                // Creating a new Object to update. Set the CurrentKbNumber to your desired number
+                //Define the seed 
+                SetAutoNumberSeedRequest req = new SetAutoNumberSeedRequest();
+                req.EntityName = "salesorder";
+                req.AttributeName = "ordernumber";
+                req.Value = long.Parse(ConfigurationManager.AppSettings["autoNumber"]);
+                localContext.OrganizationService.Execute(req);
+            }
+        }
+
         static void Main(string[] args)
         {
             try
@@ -54,8 +94,18 @@ namespace Skanetrafiken.UECCIntegration
                 string passWord = string.Empty;
                 string urlOrganization = string.Empty;
 
-                Console.WriteLine("Split the Contacts in Production? (y)");
+                Console.WriteLine("Fix AutoNumber Starting Point? (y)");
                 string input = Console.ReadLine();
+
+                if(input == "y")
+                {
+                    RunAutoNumberLogic();
+                    return;
+                }
+
+                Console.WriteLine("End of AutoNumber");
+                Console.WriteLine("Split the Contacts in Production? (y)");
+                input = Console.ReadLine();
 
                 if (input == "y")
                 {

@@ -42,7 +42,7 @@
 
 .label {
     font-weight: bold;
-    width: 49%;
+    /*width: 49%;*/
     height: 24px;
     float: left;
 }
