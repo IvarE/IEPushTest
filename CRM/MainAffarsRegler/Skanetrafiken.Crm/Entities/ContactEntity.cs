@@ -62,7 +62,8 @@ namespace Skanetrafiken.Crm.Entities
             ContactEntity.Fields.ed_SocialSecurityNumberBlock,
             ContactEntity.Fields.CreatedOn,
             ContactEntity.Fields.ed_CollaborationContact,
-            ContactEntity.Fields.ed_Reseller
+            ContactEntity.Fields.ed_Reseller,
+            ContactEntity.Fields.ContactId
                 );
 
 
@@ -1733,7 +1734,7 @@ namespace Skanetrafiken.Crm.Entities
             if (customerInfo == null)
                 return null;
 
-            ContactEntity contact = FindActiveContact(localContext, customerInfo);
+            ContactEntity contact = FindActiveContact(localContext, customerInfo, account);
 
             //PRIVATKUND
             if (customerInfo.Source != (int)Generated.ed_informationsource.ForetagsPortal &&
@@ -1830,37 +1831,6 @@ namespace Skanetrafiken.Crm.Entities
                             //Skapa inte en ny kontakt utan använd samma kontakt kopplad mot nytt KST
                             return contact;
 
-                            ////Vi ska även kolla så att kontakten inte har en relation till Organizationen
-                            //if (CompanyRoleEntity.DoesRelationshipExist(localContext, "cgi_account_contact", AccountEntity.EntityLogicalName, account.ParentAccountId.Id, ContactEntity.EntityLogicalName, contact.ContactId.Value))
-                            //{
-                            //    //Här ska vi se till att inte skapa upp en ny kontakt utan vi ska skicka detta tillbaka till companyrole som ska skapas.
-                            //    return contact;
-                            //}
-                            //else
-                            //{
-                            //    //Create a new contact
-                            //    contact = new ContactEntity(localContext, customerInfo, feature); //New Code (2020-05-06)
-
-                            //    //Lägg till Contact.AccountRoleCode på contacten för ftg (administratör-ftg)/ SKOL värde 9 (portaladministrator-skol) / seniorvärde 10 (portaladministrator-senior)
-                            //    if (customerInfo.Source == (int)Generated.ed_informationsource.SeniorPortal)
-                            //    {
-                            //        contact.ed_SeniorContact = true;
-                            //        contact.AccountRoleCode = Generated.contact_accountrolecode.PortalAdministratorSenior;
-                            //    }
-                            //    else if (customerInfo.Source == (int)Generated.ed_informationsource.SkolPortal)
-                            //    {
-                            //        contact.ed_SchoolContact = true;
-                            //        contact.AccountRoleCode = Generated.contact_accountrolecode.PortalAdministratorSchool;
-                            //    }
-                            //    else if (customerInfo.Source == (int)Generated.ed_informationsource.ForetagsPortal)
-                            //    {
-                            //        contact.ed_BusinessContact = true;
-                            //        contact.AccountRoleCode = Generated.contact_accountrolecode.PortalAdministratorFTG;
-                            //    }
-
-                            //    // Create new Portal Customer
-                            //    contact.Id = XrmHelper.Create(localContext.OrganizationService, contact);
-                            //}
                         }
                         else
                         {
@@ -2134,7 +2104,7 @@ namespace Skanetrafiken.Crm.Entities
         /// <param name="localContext"></param>
         /// <param name="customerInfo"></param>
         /// <returns></returns>
-        public static ContactEntity FindActiveContact(Plugin.LocalPluginContext localContext, CustomerInfo customerInfo)
+        public static ContactEntity FindActiveContact(Plugin.LocalPluginContext localContext, CustomerInfo customerInfo, AccountEntity account = null)
         {
             //Feature Toggle Entity
             FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_SplittCompany);
@@ -2508,49 +2478,32 @@ namespace Skanetrafiken.Crm.Entities
                         else if (matchingContacts.Count > 1)
                         {
                             //TODO - 2020-09-04 (Christian) - Använd accountets Parentaccount. Kolla relation med contact som vi hittar. Använd den som har en relation med Org.
-                            contact = matchingContacts[0];
+                            if (account != null && account.ParentAccountId != null) 
+                            {
+                                bool foundContact = false;
+                                for (int i = 0; i < matchingContacts.Count; i++)
+                                {
+                                    if (CompanyRoleEntity.DoesRelationshipExist(localContext, "cgi_account_contact", AccountEntity.EntityLogicalName, account.ParentAccountId.Id, ContactEntity.EntityLogicalName, matchingContacts[i].ContactId.Value))
+                                    {
+                                        contact = matchingContacts[i];
+                                        foundContact = true;
+                                        break;
+                                    }
+                                }
+
+                                //If none of the listed Contacts has an association with the Accounts Parent account - Return the first Contact.
+                                if (foundContact == false) 
+                                {
+                                    contact = matchingContacts[0];
+                                }
+                            }
+                            else 
+                            {
+                                contact = matchingContacts[0];
+                            }
                         }
                     }
-                    //else if (matchingContacts != null && matchingContacts.Count() == 0)
-                    //{
-                    //    //TODO: Hitta B2B kontakt som är skapad manuellt i systemet med Förnamn, Efternamn samt BusinessKontakt (saknar SSN-Block)
-                    //    //Updatera kontakten med Personnummer i SSN-Block?
-                    //    FilterExpression secondMatchFilter = new FilterExpression(LogicalOperator.And);
-                    //    secondMatchFilter.AddCondition(ContactEntity.Fields.FirstName, ConditionOperator.Equal, customerInfo.FirstName);
-                    //    secondMatchFilter.AddCondition(ContactEntity.Fields.LastName, ConditionOperator.Equal, customerInfo.LastName);
-                    //    secondMatchFilter.AddCondition(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, customerInfo.CompanyRole[0].Email);
-                    //    secondMatchFilter.AddCondition(ContactEntity.Fields.ed_BusinessContact, ConditionOperator.NotEqual, true);
-                    //    secondMatchFilter.AddCondition(ContactEntity.Fields.ed_SocialSecurityNumberBlock, ConditionOperator.Null);
-
-                    //    List<ContactEntity> secondMatchingContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, ContactEntity.ContactInfoBlock, secondMatchFilter).ToList();
-
-                    //    if (secondMatchingContacts != null && secondMatchingContacts.Count() > 0)
-                    //    {
-                    //        if (secondMatchingContacts.Count == 1)
-                    //        {
-                    //            //Update contact with inforamtion (ex. SSN-Block, )
-                    //            contact = secondMatchingContacts[0];
-                    //        }
-                    //        else if (secondMatchingContacts.Count > 1)
-                    //        {
-                    //            //Get the latest created
-                    //            contact = secondMatchingContacts.Where(x => x.CreatedOn > DateTime.Now).FirstOrDefault(); //Plaveholder
-
-                    //        }
-                    //    }
-                    //    else if (secondMatchingContacts != null && secondMatchingContacts.Count() == 0)
-                    //    {
-
-                    //    }
-
-                    //    if (contact != null)
-                    //    {
-
-                    //    }
-                    //}
                 }
-
-
             }
             #endregion
 
