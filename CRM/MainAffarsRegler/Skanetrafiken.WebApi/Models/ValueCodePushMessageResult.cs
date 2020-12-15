@@ -208,7 +208,8 @@ namespace Skanetrafiken.Crm.Models
                                 {
                                     Id = newValueCode.Id,
                                     ed_Amount = new Money(this.amount),
-                                    ed_RedemptionDate = redeemed
+                                    ed_RedemptionDate = redeemed,
+                                    ed_CanceledOn = (DateTime?)DateTime.UtcNow
                                 };
 
                                 UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
@@ -385,7 +386,8 @@ namespace Skanetrafiken.Crm.Models
                                 {
                                     Id = newValueCode.Id,
                                     ed_Amount = new Money(this.amount),
-                                    ed_RedemptionDate = redeemed
+                                    ed_RedemptionDate = redeemed,
+                                    ed_CanceledOn = (DateTime?)DateTime.UtcNow
                                 };
 
                                 UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
@@ -413,7 +415,8 @@ namespace Skanetrafiken.Crm.Models
                                 {
                                     Id = valueCode.Id,
                                     ed_Amount = new Money(this.amount),
-                                    ed_RedemptionDate = redeemed
+                                    ed_RedemptionDate = redeemed,
+                                    ed_CanceledOn = (DateTime?)DateTime.UtcNow
                                 };
 
                                 UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
@@ -458,7 +461,8 @@ namespace Skanetrafiken.Crm.Models
                                 {
                                     Id = valueCode.Id,
                                     ed_Amount = new Money(this.amount),
-                                    ed_RedemptionDate = redeemed
+                                    ed_RedemptionDate = redeemed,
+                                    ed_CanceledOn = (DateTime?)DateTime.UtcNow
                                 };
 
                                 UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
