@@ -54,6 +54,11 @@ namespace Skanetrafiken.Crm.Controllers
     {
         protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        public static string applicationId = "";
+        public static string tenentId = "";
+        public static string jojoCertificateName = "";
+        public static string msAuthScope = "";
+
         private static readonly TaskFactory _taskFactory = new
         TaskFactory(CancellationToken.None,
                     TaskCreationOptions.None,
@@ -65,17 +70,24 @@ namespace Skanetrafiken.Crm.Controllers
         private static Lazy<IConfidentialClientApplication> _msalApplicationFactory =
             new Lazy<IConfidentialClientApplication>(() =>
             {
-                var certificate = Identity.GetCertToUse("crm-sekundfasaden-acc-sp");
+                //var certificate = Identity.GetCertToUse("crm-sekundfasaden-acc-sp");
                 //var certificate = Identity.GetCertToUse("crm-sekundfasaden-prod-sp");
+                var certificate = Identity.GetCertToUse(jojoCertificateName);
                 _log.DebugFormat($"<----- Initializing: Cert - {certificate?.Subject} ----->");
 
                 //var TentantId = "e1fcb9f3-e5f9-496f-a583-e495dfd57497";
-                var authority = string.Format(CultureInfo.InvariantCulture, "https://login.microsoftonline.com/e1fcb9f3-e5f9-496f-a583-e495dfd57497");
+                //var authority = string.Format(CultureInfo.InvariantCulture, "https://login.microsoftonline.com/e1fcb9f3-e5f9-496f-a583-e495dfd57497");
+                var authority = string.Format(CultureInfo.InvariantCulture, "https://login.microsoftonline.com/" + tenentId);
 
                 _log.DebugFormat($"<----- Initializing: Authority - {authority} ----->");
-
-
                 _log.DebugFormat($"<----- Initializing: ConfidentialClientApplication ----->");
+
+                //Dynamic
+                return ConfidentialClientApplicationBuilder
+                    .Create(applicationId)
+                    .WithCertificate(certificate)
+                    .WithAuthority(new Uri(authority))
+                    .Build();
 
                 //// PROD
                 //return ConfidentialClientApplicationBuilder
@@ -85,11 +97,11 @@ namespace Skanetrafiken.Crm.Controllers
                 //    .Build();
 
                 // ACC
-                return ConfidentialClientApplicationBuilder
-                    .Create("9e84b58e-20aa-4ceb-aa89-abd98253afd2")
-                    .WithCertificate(certificate)
-                    .WithAuthority(new Uri(authority))
-                    .Build();
+                //return ConfidentialClientApplicationBuilder
+                //    .Create("9e84b58e-20aa-4ceb-aa89-abd98253afd2")
+                //    .WithCertificate(certificate)
+                //    .WithAuthority(new Uri(authority))
+                //    .Build();
             });
 
         /// <summary>
@@ -2233,9 +2245,44 @@ namespace Skanetrafiken.Crm.Controllers
 
             try
             {
+                _log.DebugFormat($"GetCardWithCardNumber: Calling -> Get information from settings");
+                //Get information from settings
+                FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
+                CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
+                    CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
+
+                if (settings != null)
+                {
+                    applicationId = settings.ed_JojoCardDetailsApplicationId;
+                    _log.Info($"ApplicationId: {applicationId}");
+                    tenentId = settings.ed_JojoCardDetailsTenentId;
+                    _log.Info($"TenentId: {tenentId}");
+                    jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                    _log.Info($"CertName: {jojoCertificateName}");
+                    msAuthScope = settings.ed_JojoCardDetailsScope;
+                    _log.Info($"msAuthScope: {msAuthScope}");
+                }
+                else
+                {
+                    HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                    badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (GetCardWithCardNumber)");
+                    _log.Info($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
+                    answer = "ERROR - " + new StringContent("Could not find a Settings Information from CRM (GetCardWithCardNumber)");
+                    return answer;
+                }
+
                 _log.DebugFormat($"GetCardWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
                 AuthenticationResult authenticationResponse = _taskFactory
-                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardserviceacc/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default - https://skanetrafiken.se/apps/jojocardservice/.default
+                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default - https://skanetrafiken.se/apps/jojocardservice/.default
                     .Unwrap()
                     .GetAwaiter()
                     .GetResult();
@@ -2253,7 +2300,8 @@ namespace Skanetrafiken.Crm.Controllers
 
                 _log.DebugFormat($"GetCardWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
 
-                string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/card/";
+                string endPoint = settings.ed_JojoCardDetailsAPI + "card/";
+                //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/card/";
                 //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/card/";
                 _log.DebugFormat($"GetCardWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
 
@@ -2321,9 +2369,40 @@ namespace Skanetrafiken.Crm.Controllers
 
             try
             {
+                _log.DebugFormat($"PlaceOrderWithCardNumber: Calling -> Get information from settings");
+                //Get information from settings
+                FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
+                CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
+                    CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
+
+                if (settings != null)
+                {
+                    applicationId = settings.ed_JojoCardDetailsApplicationId;
+                    tenentId = settings.ed_JojoCardDetailsTenentId;
+                    jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                    msAuthScope = settings.ed_JojoCardDetailsScope;
+                }
+                else
+                {
+                    HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                    badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (PlaceOrderWithCardNumber)");
+                    _log.Info($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
+                    answer = "ERROR - " + new StringContent("Could not find a Settings Information from CRM (PlaceOrderWithCardNumber)");
+                    return answer;
+                }
+
                 _log.DebugFormat($"PlaceOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
                 AuthenticationResult authenticationResponse = _taskFactory
-                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardserviceacc/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default - https://skanetrafiken.se/apps/jojocardservice/.default
+                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default - https://skanetrafiken.se/apps/jojocardservice/.default
                     .Unwrap()
                     .GetAwaiter()
                     .GetResult();
@@ -2341,7 +2420,8 @@ namespace Skanetrafiken.Crm.Controllers
 
                 _log.DebugFormat($"PlaceOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
 
-                string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/placeOrder/";
+                string endPoint = settings.ed_JojoCardDetailsAPI + "placeOrder/";
+                //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/placeOrder/";
                 //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/placeOrder/";
                 _log.DebugFormat($"PlaceOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
 
@@ -2423,9 +2503,40 @@ namespace Skanetrafiken.Crm.Controllers
 
             try
             {
+                _log.DebugFormat($"CancelOrderWithCardNumber: Calling -> Get information from settings");
+                //Get information from settings
+                FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
+                CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
+                    CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
+
+                if (settings != null)
+                {
+                    applicationId = settings.ed_JojoCardDetailsApplicationId;
+                    tenentId = settings.ed_JojoCardDetailsTenentId;
+                    jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                    msAuthScope = settings.ed_JojoCardDetailsScope;
+                }
+                else
+                {
+                    HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                    badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (CancelOrderWithCardNumber)");
+                    _log.Info($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
+                    answer = "ERROR - " + new StringContent("Could not find a Settings Information from CRM (CancelOrderWithCardNumber)");
+                    return answer;
+                }
+
                 _log.DebugFormat($"CancelOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
                 AuthenticationResult authenticationResponse = _taskFactory
-                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardserviceacc/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default - https://skanetrafiken.se/apps/jojocardservice/.default
+                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default - https://skanetrafiken.se/apps/jojocardservice/.default
                     .Unwrap()
                     .GetAwaiter()
                     .GetResult();
@@ -2444,7 +2555,8 @@ namespace Skanetrafiken.Crm.Controllers
 
                 _log.DebugFormat($"CancelOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
 
-                string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/cancelOrder/";
+                string endPoint = settings.ed_JojoCardDetailsAPI + "cancelOrder/";
+                //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/cancelOrder/";
                 //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/cancelOrder/";
                 _log.DebugFormat($"CancelOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
 
@@ -2526,9 +2638,40 @@ namespace Skanetrafiken.Crm.Controllers
 
             try
             {
+                _log.DebugFormat($"CaptureOrderWithCardNumber: Calling -> Get information from settings");
+                //Get information from settings
+                FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
+                CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
+                    CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
+                    CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
+
+                if (settings != null)
+                {
+                    applicationId = settings.ed_JojoCardDetailsApplicationId;
+                    tenentId = settings.ed_JojoCardDetailsTenentId;
+                    jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                    msAuthScope = settings.ed_JojoCardDetailsScope;
+                }
+                else
+                {
+                    HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                    badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (CaptureOrderWithCardNumber)");
+                    _log.Info($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
+                    answer = "ERROR - " + new StringContent("Could not find a Settings Information from CRM (CaptureOrderWithCardNumber)");
+                    return answer;
+                }
+
                 _log.DebugFormat($"CaptureOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
                 AuthenticationResult authenticationResponse = _taskFactory
-                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardserviceacc/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default - https://skanetrafiken.se/apps/jojocardservice/.default
+                    .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default - https://skanetrafiken.se/apps/jojocardservice/.default
                     .Unwrap()
                     .GetAwaiter()
                     .GetResult();
@@ -2547,8 +2690,10 @@ namespace Skanetrafiken.Crm.Controllers
 
                 _log.DebugFormat($"CaptureOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
 
-                string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/captureOrder/";
+                //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/captureOrder/";
                 //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/captureOrder/";
+                string endPoint = settings.ed_JojoCardDetailsAPI + "captureOrder/";
+
                 _log.DebugFormat($"CaptureOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
 
                 _log.DebugFormat($"CaptureOrderWithCardNumber: Building Jojo Card CaptureOrder POST Call...");

@@ -386,7 +386,7 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.DebugFormat($"PlaceOrderWithCardNumber: Calling -> Get information from settings");
+                    _log.DebugFormat($"CancelOrderWithCardNumber: Calling -> Get information from settings");
                     //Get information from settings
                     FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
                     settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
@@ -458,7 +458,7 @@ namespace Skanetrafiken.Crm.Controllers
                     myHttpWebRequest.Headers.Add("20", "*/*");
                     myHttpWebRequest.Method = "POST";
 
-                    _log.DebugFormat($"GetCardWithCardNumber: Calling Jojo Card CancelOrder POST...");
+                    _log.DebugFormat($"CancelOrderWithCardNumber: Calling Jojo Card CancelOrder POST...");
                     var myWebResponse = myWebRequest.GetResponse();
                     //Check Status and return ok or not ok
 
@@ -472,7 +472,7 @@ namespace Skanetrafiken.Crm.Controllers
                     myWebResponse.Close();
 
                     var returnJson = new StringContent(json);
-                    _log.DebugFormat($"GetCardWithCardNumber: Jojo Card CancelOrder POST returned -> {returnJson}");
+                    _log.DebugFormat($"CancelOrderWithCardNumber: Jojo Card CancelOrder POST returned -> {returnJson}");
 
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                     resp.Content = returnJson;
@@ -523,7 +523,7 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.DebugFormat($"PlaceOrderWithCardNumber: Calling -> Get information from settings");
+                    _log.DebugFormat($"CaptureOrderWithCardNumber: Calling -> Get information from settings");
                     //Get information from settings
                     FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
                     settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
