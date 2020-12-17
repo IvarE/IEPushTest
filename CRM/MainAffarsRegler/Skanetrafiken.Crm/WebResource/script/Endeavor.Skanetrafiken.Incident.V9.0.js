@@ -93,8 +93,9 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 contactAttribute.getValue && contactAttribute.getValue() && contactAttribute.getValue().length > 0) {
 
                 debugger;
+                var contactId = contactAttribute.getValue()[0].id.replace("{", "").replace("}", "");
                 var columnSet = "emailaddress1,emailaddress2";
-                Xrm.WebApi.retrieveMultipleRecords("contact", "?$select=" + columnSet + "&$filter=contactid eq " + contactAttribute.getValue()[0].id + ")").then(
+                Xrm.WebApi.retrieveMultipleRecords("contact", "?$select=" + columnSet + "&$filter=contactid eq " + contactId).then(
                     function success(result) {
 
                         if (result && result.entities.length > 0) {
