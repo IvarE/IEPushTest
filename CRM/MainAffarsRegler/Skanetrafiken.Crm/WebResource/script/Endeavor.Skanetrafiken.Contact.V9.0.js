@@ -367,12 +367,22 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             Endeavor.formscriptfunctions.callGlobalAction("ed_GetTicketMoveDataFromMKL", inputParameters,
                 function (result) {
 
-                    var object = JSON.parse(result.responseText)
-                    var movesDone = object.GetTicketMoveDataFromMKLResponse;
+                    var object = JSON.parse(result.responseText);
+                    var objectMKLResponse = object.GetTicketMoveDataFromMKLResponse;
+                    objectMKLResponse = objectMKLResponse.replace("Ett fel uppstod vid kommunikation med MKL: ", "");
+                    objectMKLResponse = JSON.parse(objectMKLResponse);
+                    debugger;
+                    if (objectMKLResponse.message != null) {
+                        if (!formContext.ui.setFormNotification(objectMKLResponse.message, "ERROR", Endeavor.Skanetrafiken.Contact._ticketMovesErrorHolder))
+                            Endeavor.formscriptfunctions.AlertCustomDialog(objectMKLResponse.message);
+                        return;
+                    }
+
+                    var movesDone = objectMKLResponse.user.accountMoved;
 
                     window.mklData = fullName + ";" + guid + ";" + movesDone;
                     var windowOptions = { height: 300, width: 600 };
-                    Xrm.Navigation.openWebResource("Endeavor.Skanetrafiken.TicketMoveManager.html", windowOptions, (fullName + ";" + guid + ";" + movesDone));
+                    Xrm.Navigation.openWebResource("ed_/html/Endeavor.Skanetrafiken.TicketMoveManager.html", windowOptions, (fullName + ";" + guid + ";" + movesDone));
 
                 }, function (error) {
                     if (!formContext.ui.setFormNotification(error.message, "ERROR", Endeavor.Skanetrafiken.Contact._ticketMovesErrorHolder))

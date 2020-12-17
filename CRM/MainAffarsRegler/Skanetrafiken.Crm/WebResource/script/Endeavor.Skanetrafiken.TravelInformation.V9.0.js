@@ -1268,7 +1268,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 timestamp_label.value = dateTime;
 
             } catch (e) {
-                Endeavor.formscriptfunctions.AlertCustomDialog("Exception caught in Endeavor.Skanetrafiken.TravelInformation.getCaseActionDate. Error: " + e.message);
+                Endeavor.formscriptfunctions.AlertCustomDialog("Exception caught in Endeavor.Skanetrafiken.TravelInformation.getCaseEventDate. Error: " + e.message);
             }
         },
     }

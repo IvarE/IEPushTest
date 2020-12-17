@@ -164,9 +164,9 @@ namespace CGIXrmRainDanceExport
                         _log.Error("Exception Caught: " + ex.Message);
                     }
                 }
-                _log.Debug("Creating File...");
+                //_log.Debug("Creating File...");
                 _createFile(_fileName, lines);
-                _log.Debug("File Created.");
+                //_log.Debug("File Created.");
             }
             catch (Exception ex)
             {
