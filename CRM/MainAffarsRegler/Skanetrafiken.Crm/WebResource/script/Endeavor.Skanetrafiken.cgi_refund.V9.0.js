@@ -1312,7 +1312,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                             Endeavor.Skanetrafiken.cgi_refund.refundtypeNONE(formContext);
 
                         if (_refundoptionvalue == 285050001)
-                            Endeavor.Skanetrafiken.cgi_refund.refundtypeQUANTITY(_cgi_FinancialTransaction, formContext);
+                            Endeavor.Skanetrafiken.cgi_refund.refundtypeQUANTITY(formContext);
 
                         if (_refundoptionvalue == 285050002)
                             Endeavor.Skanetrafiken.cgi_refund.refundtypeMONEY(formContext);
@@ -1673,7 +1673,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
             }
         },
 
-        refundtypeQUANTITY: function (_cgi_FinancialTransaction, formContext) {
+        refundtypeQUANTITY: function (formContext) {
 
             try {
 
@@ -2614,7 +2614,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Account.format_phonenumber\n\n" + e.message);
+                alert("Fel i Endeavor.Skanetrafiken.cgi_refund.format_phonenumber\n\n" + e.message);
             }
         }
     };

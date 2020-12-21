@@ -331,6 +331,19 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             }
         },
 
+        onChangeActionDateTime: function (executionContext) {
+            try {
+                var formContext = executionContext.getFormContext();
+                var webResourceControl = formContext.getControl("WebResource_TravelInfo");
+                var src = webResourceControl.getSrc();
+                webResourceControl.setSrc(null);
+                webResourceControl.setSrc(src);
+                
+            } catch (e) {
+                alert("Fel i Endeavor.Skanetrafiken.Incident.onChangeActionDateTime\n\n" + e.message);
+            }
+        },
+
         /**
          * This function runs on onLoad.
          * It hides fields from 'Type Of Contact' quick view form if fields are 'false', otherwise show it.
