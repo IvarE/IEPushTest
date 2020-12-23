@@ -4027,6 +4027,64 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
+                    //Handle update of records to indicate that these have been handled
+                    //Get current time
+                    var currentTime = DateTime.UtcNow;
+                    var dateToUse = currentTime.Day.ToString() + currentTime.Month.ToString();
+
+                    //Get Contact
+                    FilterExpression getContactFilter = new FilterExpression(LogicalOperator.And);
+                    getContactFilter.AddCondition(ContactEntity.Fields.ed_SocialSecurityNumberBlock, ConditionOperator.Equal, socialSecurityNumber);
+                    getContactFilter.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active);
+                    getContactFilter.AddCondition(ContactEntity.Fields.ed_BusinessContact, ConditionOperator.Equal, true);
+
+                    //ContactEntity contactToUpdate = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, new ColumnSet(ContactEntity.Fields.Id, ContactEntity.Fields.Address2_UPSZone), getContactFilter);
+                    List<ContactEntity> contactToUpdate = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, new ColumnSet(ContactEntity.Fields.Id, ContactEntity.Fields.Address2_UPSZone), getContactFilter).ToList();
+                    if (contactToUpdate != null && contactToUpdate.Count > 0) 
+                    {
+                        foreach (ContactEntity contactInList in contactToUpdate)
+                        {
+                            //Update the field on the contact with SyncData - Date
+                            ContactEntity updateContact = new ContactEntity();
+                            updateContact.Id = contactInList.Id;
+                            updateContact.Address2_UPSZone = dateToUse;
+                            XrmHelper.Update(localContext, updateContact);
+                        }
+                    }
+
+                    //Get The Account
+                    FilterExpression getAccountFilter = new FilterExpression(LogicalOperator.And);
+                    getAccountFilter.AddCondition(AccountEntity.Fields.AccountNumber, ConditionOperator.Equal, portalId);
+                    getAccountFilter.AddCondition(AccountEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.AccountState.Active);
+
+                    AccountEntity accountToUpdate = XrmRetrieveHelper.RetrieveFirst<AccountEntity>(localContext, new ColumnSet(AccountEntity.Fields.Id, AccountEntity.Fields.Address2_UPSZone), getAccountFilter);
+                    if (accountToUpdate != null) 
+                    {
+                        AccountEntity updateAccount = new AccountEntity();
+                        updateAccount.Id = accountToUpdate.Id;
+                        updateAccount.Address2_UPSZone = dateToUse;
+                        XrmHelper.Update(localContext, updateAccount);
+                    }
+
+                    //if (contactToUpdate != null && accountToUpdate != null) 
+                    //{
+                    //    //Get Compant Role
+                    //    FilterExpression getCompanyRoleFilter = new FilterExpression(LogicalOperator.And);
+                    //    getCompanyRoleFilter.AddCondition(CompanyRoleEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.ed_CompanyRoleState.Active);
+                    //    getCompanyRoleFilter.AddCondition(CompanyRoleEntity.Fields.ed_Contact, ConditionOperator.Equal, contactToUpdate);
+                    //    getCompanyRoleFilter.AddCondition(CompanyRoleEntity.Fields.ed_Account, ConditionOperator.Equal, accountToUpdate);
+
+                    //    CompanyRoleEntity companyRoleToUpdate = XrmRetrieveHelper.RetrieveFirst<CompanyRoleEntity>(localContext, new ColumnSet(CompanyRoleEntity.Fields.Id, CompanyRoleEntity.Fields.ModifiedOn), getCompanyRoleFilter);
+
+                    //    if (companyRoleToUpdate != null) 
+                    //    {
+                    //        CompanyRoleEntity updateCompanyRole = new CompanyRoleEntity();
+                    //        updateCompanyRole.Id = companyRoleToUpdate.Id;
+                    //        //updateCompanyRole.ModifiedOn = (DateTime?)currentTime;
+                    //        XrmHelper.Update(localContext, updateCompanyRole);
+                    //    }
+                    //}
+
                     // Get Contact(-s)
                     QueryExpression contactQuery = new QueryExpression()
                     {
