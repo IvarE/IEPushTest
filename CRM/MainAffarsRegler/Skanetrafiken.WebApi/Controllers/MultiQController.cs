@@ -75,13 +75,18 @@ namespace Skanetrafiken.Crm.Controllers
             int threadId = Thread.CurrentThread.ManagedThreadId;
             _log.DebugFormat($"Th={threadId} - Post called with Payload:\n {CrmPlusControl.SerializeNoNull(fileInfo)}");
 
-            if (fileInfo == null || fileInfo.OrderId == null || fileInfo.FileName == null)
-            {
-                HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                erm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-                _log.DebugFormat($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
-                return erm;
-            }
+            HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.NotImplemented);
+            erm.Content = new StringContent("This method is no longer Implemented. It's Deprecated since 14/01/2021");
+            _log.DebugFormat($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
+            return erm;
+
+            //if (fileInfo == null || fileInfo.OrderId == null || fileInfo.FileName == null)
+            //{
+            //    HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
+            //    erm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
+            //    _log.DebugFormat($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
+            //    return erm;
+            //}
 
             //// TOKEN VERIFICATION - TO CHECK
             //try
@@ -101,9 +106,9 @@ namespace Skanetrafiken.Crm.Controllers
             //    return tokenResponse;
             //}
 
-            HttpResponseMessage rm = CrmPlusControl.PostDeliveryReport(threadId, fileInfo);
-            _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-            return rm;
+            //HttpResponseMessage rm = CrmPlusControl.PostDeliveryReport(threadId, fileInfo);
+            //_log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+            //return rm;
         }
     }
 }

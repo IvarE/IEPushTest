@@ -73,18 +73,9 @@ namespace Endeavor.Crm.MultiQService
                 string pdfMimeType = @"application/pdf";
                 string pdfFilter = "*.pdf";
 
-                QueryExpression queryOrders = new QueryExpression(OrderEntity.EntityLogicalName);
-                queryOrders.NoLock = true;
-                queryOrders.ColumnSet.AddColumns(OrderEntity.Fields.SalesOrderId, OrderEntity.Fields.ed_DeliveryReportName, OrderEntity.Fields.StateCode, OrderEntity.Fields.StatusCode);
-                queryOrders.Criteria.AddCondition(OrderEntity.Fields.ed_DeliveryReportStatus, ConditionOperator.Equal, (int)ed_deliveryreportstatus.Creatednotuploaded);
-                queryOrders.Criteria.AddCondition(OrderEntity.Fields.ed_DeliveryReportName, ConditionOperator.NotNull);
-
-                List<OrderEntity> lOrders = XrmRetrieveHelper.RetrieveMultiple<OrderEntity>(localContext, queryOrders);
-                _log.Info($"Found " + lOrders.Count + " that have a Delivery Report Name and have a Status of 'Created and Not Uploaded'.");
-
                 List<MultiQFile> pdfFiles = GetFileList(multiQLocation, pdfFilter);
 
-                if (pdfFiles == null)
+                if (pdfFiles == null || pdfFiles.Count == 0)
                 {
                     _log.Error($"There is no PDF Files in this location: " + multiQLocation);
                     return;
@@ -92,49 +83,76 @@ namespace Endeavor.Crm.MultiQService
 
                 _log.Info($"Found " + pdfFiles.Count + " PDF files in the location: " + multiQLocation);
 
+                List<OrderEntity> lOrders = GetAllRelevantOrders(localContext, pdfFiles);
+                _log.Info($"Found " + lOrders.Count + " that have a matching file on the MultiQ Import Location.");
+
                 foreach (OrderEntity order in lOrders)
                 {
-                    if (order.ed_DeliveryReportName != null)
+                    Guid orderId = (Guid)order.SalesOrderId;
+                    string orderNumber = order.OrderNumber;
+
+                    if(orderNumber == null)
                     {
-                        List<MultiQFile> lFiles = pdfFiles.Where(x => x.fileName == order.ed_DeliveryReportName).ToList();
-
-                        if (lFiles.Count == 1)
-                        {
-                            MultiQFile file = lFiles.FirstOrDefault();
-                            string base64File = DownloadFile(file.filePath);
-
-                            if (base64File != null)
-                            {
-                                Annotation note = new Annotation();
-                                note.Subject = file.fileName;
-                                note.NoteText = "Generated Report file from MultiQ for this Order.";
-                                note.ObjectTypeCode = OrderEntity.EntityLogicalName;
-                                note.ObjectId = new EntityReference(OrderEntity.EntityLogicalName, (Guid)order.SalesOrderId);
-                                note.MimeType = pdfMimeType;
-                                note.FileName = file.fileName;
-                                note.DocumentBody = base64File;
-
-                                Guid idNote = XrmHelper.Create(localContext, note);
-                                _log.Info($"Note: " + idNote + " with Attachment was created on Related Order: " + order.SalesOrderId);
-
-                                UpdateOrderStatus(localContext, (Guid)order.SalesOrderId, order.StateCode, order.StatusCode);
-
-                                bool isMoved = MoveFile(file.filePath, multiQLocationArchive + file.fileName);
-                                if (isMoved)
-                                    _log.Info($"The file " + file + " was moved to History.");
-                                else
-                                    _log.Info($"The file " + file + " was not moved to History. Please check the Exception for more details.");
-                            }
-                            else
-                                _log.Error($"The Base64 for the file: " + file.fileName + " is null.");
-                        }
-                        else if (lFiles.Count == 0)
-                            _log.Info($"There is no file named: " + order.ed_DeliveryReportName + " on the Shared Folder: " + multiQLocation + ".");
-                        else if (lFiles.Count > 1)
-                            _log.Info($"There is more than one file named: " + order.ed_DeliveryReportName + " on the Shared Folder: " + multiQLocation + ".");
+                        _log.Error($"The order number for the order: " + orderId + " is null.");
+                        continue;
                     }
-                    else
-                        _log.Error($"The File Name of the Order " + order.SalesOrderId + " was null.");
+
+                    List<MultiQFile> lFiles = pdfFiles.Where(x => x.fileName.Contains(orderNumber)).ToList();
+
+                    if (lFiles.Count == 0)
+                    {
+                        _log.Info($"There is no file that contains the Order Number: " + orderNumber + " on the Shared Folder: " + multiQLocation + ".");
+                        continue;
+                    }
+                    else if (lFiles.Count > 1)
+                    {
+                        _log.Info($"There is more than one file that contains the Order Number: " + orderNumber + " on the Shared Folder: " + multiQLocation + ".");
+                        continue;
+                    }
+                    else if (lFiles.Count == 1)
+                    {
+                        MultiQFile file = lFiles.FirstOrDefault();
+
+                        if (file.filePath == null)
+                        {
+                            _log.Error($"The file path for the MultiQ File is null.");
+                            continue;
+                        }
+
+                        string base64File = DownloadFile(file.filePath);
+
+                        if (base64File == null)
+                        {
+                            _log.Error($"The Base64 for the file: " + file.fileName + " is null.");
+                            continue;
+                        }
+
+                        bool hasFile = CheckIfOrderAlreadyHasFile(localContext, orderId, file.fileName);
+
+                        if (hasFile)
+                        {
+                            _log.Error($"The OrderId: " + orderId + " for the file: " + file.fileName + " already is updated on CRM.");
+                            continue;
+                        }
+
+                        Annotation note = new Annotation();
+                        note.Subject = file.fileName;
+                        note.NoteText = "Generated Report file from MultiQ for this Order.";
+                        note.ObjectTypeCode = OrderEntity.EntityLogicalName;
+                        note.ObjectId = new EntityReference(OrderEntity.EntityLogicalName, (Guid)order.SalesOrderId);
+                        note.MimeType = pdfMimeType;
+                        note.FileName = file.fileNameExtension;
+                        note.DocumentBody = base64File;
+
+                        Guid idNote = XrmHelper.Create(localContext, note);
+                        _log.Info($"Note: " + idNote + " with Attachment was created on Related Order: " + order.SalesOrderId);
+
+                        bool isMoved = MoveFile(file.filePath, multiQLocationArchive + file.fileNameExtension);
+                        if (isMoved)
+                            _log.Info($"The file " + file + " was moved to History.");
+                        else
+                            _log.Info($"The file " + file + " was not moved to History. Please check the Exception for more details.");
+                    }
                 }
 
                 _log.Info($"ReportUploader Done");
@@ -145,55 +163,57 @@ namespace Endeavor.Crm.MultiQService
             }
         }
 
-        public void UpdateOrderStatus(Plugin.LocalPluginContext localContext, Guid orderId, SalesOrderState? oldState, salesorder_statuscode? oldStatus)
+        public static bool CheckIfOrderAlreadyHasFile(Plugin.LocalPluginContext localContext, Guid orderId, string fileName)
         {
-            bool needsStateUpdate = false;
+            bool hasFile = false;
 
-            if(oldState == null || oldStatus == null)
+            QueryExpression queryAnnotation = new QueryExpression(Annotation.EntityLogicalName);
+            queryAnnotation.NoLock = true;
+            queryAnnotation.Criteria.AddCondition(Annotation.Fields.Subject, ConditionOperator.Equal, fileName);
+            queryAnnotation.Criteria.AddCondition(Annotation.Fields.ObjectId, ConditionOperator.Equal, orderId);
+            queryAnnotation.Criteria.AddCondition(Annotation.Fields.ObjectTypeCode, ConditionOperator.Equal, OrderEntity.EntityLogicalName);
+
+            List<Annotation> lAnnotations = XrmRetrieveHelper.RetrieveMultiple<Annotation>(localContext, queryAnnotation);
+
+            if (lAnnotations.Count == 1)
+                return !hasFile;
+            else if (lAnnotations.Count == 0)
+                _log.Info("There was no Annotation on Order: " + orderId + " with Subject: " + fileName);
+            else if (lAnnotations.Count > 1)
+                _log.Info("There was more than one Annotation on Order: " + orderId + " with Subject: " + fileName);
+
+            return hasFile;
+        }
+
+        public List<OrderEntity> GetAllRelevantOrders(Plugin.LocalPluginContext localContext, List<MultiQFile> pdfFiles)
+        {
+            QueryExpression queryAllRelevantOrders = new QueryExpression(OrderEntity.EntityLogicalName);
+            queryAllRelevantOrders.ColumnSet = new ColumnSet(OrderEntity.Fields.SalesOrderId, OrderEntity.Fields.OrderNumber);
+
+            FilterExpression filter = new FilterExpression();
+            queryAllRelevantOrders.Criteria.AddFilter(filter);
+
+            filter.FilterOperator = LogicalOperator.Or;
+            foreach (MultiQFile file in pdfFiles)
             {
-                _log.Error("State Code or Status Code is null. The Order was not updated with 'Created Uploaded' status.");
-                return;
-            }
-
-            if (oldState != SalesOrderState.Active || (oldStatus != salesorder_statuscode.Pending && oldStatus != salesorder_statuscode.New))
-            {
-                _log.Debug("Order " + orderId + " needs to be open to perform the Update.");
-
-                SetStateRequest stateRequest = new SetStateRequest();
-                stateRequest.State = new OptionSetValue((int)SalesOrderState.Active);
-                stateRequest.Status = new OptionSetValue((int)salesorder_statuscode.New);
-
-                stateRequest.EntityMoniker = new EntityReference(OrderEntity.EntityLogicalName, orderId);
-
-                SetStateResponse stateSetResponse = (SetStateResponse)localContext.OrganizationService.Execute(stateRequest);
-
-                needsStateUpdate = true;
-                _log.Debug("Order " + orderId + " was opened sucessfully.");
-            }
-
-            OrderEntity uOrder = new OrderEntity();
-            uOrder.Id = orderId;
-            uOrder.ed_DeliveryReportStatus = ed_deliveryreportstatus.Createduploaded;
-
-            XrmHelper.Update(localContext, uOrder);
-            _log.Debug("Order " + orderId + " was updated with Report Status 'Created Uploaded'");
-
-            if (needsStateUpdate)
-            {
-                _log.Debug("Close Order with the previous State Code and Status Code");
-                int newStatus = (int)salesorder_statuscode.Complete;
-
-                Entity orderClose = new Entity("orderclose");
-                orderClose["salesorderid"] = new EntityReference(SalesOrder.EntityLogicalName, orderId);
-                FulfillSalesOrderRequest request = new FulfillSalesOrderRequest
+                if (file.fileName == null)
                 {
-                    OrderClose = orderClose,
-                    Status = new OptionSetValue(newStatus)
-                };
+                    _log.Error($"The file name for the MultiQ File is null.");
+                    continue;
+                }
+                
+                string[] words = file.fileName.Split('_');
+                string orderId = words.LastOrDefault();
 
-                localContext.OrganizationService.Execute(request);
-                _log.Debug("Order " + orderId + " was closed sucessfully.");
+                if (orderId == null)
+                {
+                    _log.Error($"The OrderId for the file: " + file.fileName + " is null.");
+                    continue;
+                }
+                filter.AddCondition(OrderEntity.Fields.OrderNumber, ConditionOperator.Equal, orderId);
             }
+
+            return XrmRetrieveHelper.RetrieveMultiple<OrderEntity>(localContext, queryAllRelevantOrders);
         }
 
         public List<MultiQFile> GetFileList(string path, string filter)
@@ -207,7 +227,8 @@ namespace Endeavor.Crm.MultiQService
                 for (int i = 0; i < files.Length; i++)
                 {
                     MultiQFile mFile = new MultiQFile();
-                    mFile.fileName = Path.GetFileName(files[i]);
+                    mFile.fileNameExtension = Path.GetFileName(files[i]);
+                    mFile.fileName = Path.GetFileNameWithoutExtension(files[i]);
                     mFile.filePath = files[i];
 
                     lFiles.Add(mFile);

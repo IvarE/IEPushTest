@@ -98,6 +98,30 @@ namespace Skanetrafiken.Crm.Models
         public bool userRemovable { get; set; }
         public bool userEditable { get; set; }
 
+        internal static bool CheckIfOrderAlreadyHasFile(Plugin.LocalPluginContext localContext, Guid orderId, string orderNumber, log4net.ILog _log)
+        {
+            bool hasFile = false;
+
+            QueryExpression queryAnnotation = new QueryExpression(Annotation.EntityLogicalName);
+            queryAnnotation.NoLock = true;
+            queryAnnotation.Criteria.AddCondition(Annotation.Fields.Subject, ConditionOperator.Like, "%"+orderNumber+"%");
+
+            LinkEntity link_salesorder = queryAnnotation.AddLink(OrderEntity.EntityLogicalName, Annotation.Fields.ObjectId, OrderEntity.Fields.SalesOrderId);
+            link_salesorder.EntityAlias = "ac";
+            link_salesorder.LinkCriteria.AddCondition(OrderEntity.Fields.SalesOrderId, ConditionOperator.Equal, orderId);
+
+            List<Annotation> lAnnotations = XrmRetrieveHelper.RetrieveMultiple<Annotation>(localContext, queryAnnotation);
+
+            if (lAnnotations.Count == 1)
+                return !hasFile;
+            else if (lAnnotations.Count == 0)
+                _log.Info("There was no Annotation on Order: " + orderId + " with Subject containing: " + orderNumber);
+            else if (lAnnotations.Count > 1)
+                _log.Info("There was more than one Annotation on Order: " + orderId + " with Subject containing: " + orderNumber);
+
+            return hasFile;
+        }
+
         internal static List<OrderRow> GetOrderProductsFromOrder(Plugin.LocalPluginContext localContext, Guid orderId, string pattern, log4net.ILog _log)
         {
             _log.Debug($"Entered GetOrderProductsFromOrder");
@@ -178,13 +202,14 @@ namespace Skanetrafiken.Crm.Models
             orderMQ.date = dateNow;
             orderMQ.notes = "";
 
-            if (orderCRM.ed_DeliveryReportStatus != null && orderCRM.ed_DeliveryReportStatus.Value == ed_deliveryreportstatus.Createduploaded)
+            bool hasFile = CheckIfOrderAlreadyHasFile(localContext, (Guid)orderCRM.SalesOrderId, orderCRM.OrderNumber, _log);
+
+            if (hasFile)
             {
                 _log.Debug($"DeliveryReportCreated=True");
                 orderMQ.deliveryReportCreated = true;
             }
-            else if (orderCRM.ed_DeliveryReportStatus != null && (orderCRM.ed_DeliveryReportStatus.Value == ed_deliveryreportstatus.Notcreated ||
-                     orderCRM.ed_DeliveryReportStatus.Value == ed_deliveryreportstatus.Creatednotuploaded))
+            else
             {
                 _log.Debug($"DeliveryReportCreated=False");
                 orderMQ.deliveryReportCreated = false;
@@ -240,7 +265,7 @@ namespace Skanetrafiken.Crm.Models
             orderMQ.regDate = now;
 
             orderMQ.stage = null;
-            orderMQ.probability = (int)orderCRM.ed_Probability;
+            orderMQ.probability = orderCRM.ed_Probability != null ? (int)orderCRM.ed_Probability : int.MinValue;
             orderMQ.modDate = now;
             orderMQ.clientConnection = null;
             orderMQ.currencyRate = 1;
