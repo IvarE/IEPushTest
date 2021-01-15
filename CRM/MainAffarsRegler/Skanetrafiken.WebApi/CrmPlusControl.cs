@@ -4042,6 +4042,7 @@ namespace Skanetrafiken.Crm.Controllers
                     List<ContactEntity> contactToUpdate = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, new ColumnSet(ContactEntity.Fields.Id, ContactEntity.Fields.Address2_UPSZone), getContactFilter).ToList();
                     if (contactToUpdate != null && contactToUpdate.Count > 0) 
                     {
+                        _log.DebugFormat($"Th={threadId} - Uppdating Contacts");
                         foreach (ContactEntity contactInList in contactToUpdate)
                         {
                             //Update the field on the contact with SyncData - Date
@@ -4060,6 +4061,7 @@ namespace Skanetrafiken.Crm.Controllers
                     AccountEntity accountToUpdate = XrmRetrieveHelper.RetrieveFirst<AccountEntity>(localContext, new ColumnSet(AccountEntity.Fields.Id, AccountEntity.Fields.Address2_UPSZone), getAccountFilter);
                     if (accountToUpdate != null) 
                     {
+                        _log.DebugFormat($"Th={threadId} - Uppdating Account");
                         AccountEntity updateAccount = new AccountEntity();
                         updateAccount.Id = accountToUpdate.Id;
                         updateAccount.Address2_UPSZone = dateToUse;
@@ -4085,6 +4087,7 @@ namespace Skanetrafiken.Crm.Controllers
                     //    }
                     //}
 
+                    _log.DebugFormat($"Th={threadId} - Searching for Company Role!");
                     // Get Contact(-s)
                     QueryExpression contactQuery = new QueryExpression()
                     {
@@ -4142,33 +4145,38 @@ namespace Skanetrafiken.Crm.Controllers
                     };
 
                     List<ContactEntity> contacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactQuery);
-
+                    _log.DebugFormat($"Th={threadId} - Checking search result for Company Role!");
                     if (contacts == null || contacts.Count == 0 /*|| contacts.Count > 1*/)
                     {
+                        _log.DebugFormat($"Th={threadId} - No Contact Found: Returning 404 - Not Found!");
                         //HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.BadRequest);
                         HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.NotFound);
                         rmNoContactFound.Content = new StringContent(string.Format(Resources.UnexpectedException,
                             $"Found no matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}"));
                         return rmNoContactFound;
                     }
-                    else if (contacts.Count > 1)
+                    else if (contacts != null && contacts.Count > 1)
                     {
+                        _log.DebugFormat($"Th={threadId} - Multiple Contacts Found: Returning 409 - Conflict!");
                         HttpResponseMessage multipleContactFound = new HttpResponseMessage(HttpStatusCode.Conflict);
                         multipleContactFound.Content = new StringContent(string.Format(Resources.UnexpectedException,
                             $"Found multiple matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}"));
                         return multipleContactFound;
                     }
 
+                    _log.DebugFormat($"Th={threadId} - Fetching single found contact!");
                     ContactEntity contact = contacts.First();
 
                     // Update Contact with new email
                     if (contact.EMailAddress1.ToLower() != emailAddress.ToLower())
                     {
+                        _log.DebugFormat($"Th={threadId} - Updating contact!");
                         contact.EMailAddress1 = emailAddress;
                         contact.ed_InformationSource = Generated.ed_informationsource.ForetagsPortal;
                         XrmHelper.Update(localContext, contact);
                     }
 
+                    _log.DebugFormat($"Th={threadId} - Setting status to 200 - OK");
                     // Return ContactId
                     HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.OK);
                     //rm.Content = new StringContent(contact.ContactId.ToString());
