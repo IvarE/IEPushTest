@@ -43,7 +43,7 @@ namespace Endeavor.Crm.MultiQService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Import\\MultiQ")]
+        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Import\\MultiQ\\")]
         public string MultiQStoreFiles {
             get {
                 return ((string)(this["MultiQStoreFiles"]));
@@ -52,7 +52,7 @@ namespace Endeavor.Crm.MultiQService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Import\\MultiQ\\History")]
+        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Import\\MultiQ\\History\\")]
         public string MultiQArchive {
             get {
                 return ((string)(this["MultiQArchive"]));
