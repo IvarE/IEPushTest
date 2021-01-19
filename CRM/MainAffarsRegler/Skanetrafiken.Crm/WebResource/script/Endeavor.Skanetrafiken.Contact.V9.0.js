@@ -717,13 +717,18 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     var _roleName = result.entities[0].name;
 
                     try {
-                        var emailField = formContext.getAttribute("emailaddress1").getValue();
+                        var emailField = formContext.getAttribute("emailaddress1");
+
+                        if (emailField == null)
+                            return;
+
+                        var emailValue = emailField.getValue();
 
                         var currForm = formContext.ui.formSelector.getCurrentItem();
                         var currFormId = currForm.getId()
 
                         if (currFormId !== "aa39956c-0a06-4963-873a-2b3e574dbea5" && currFormId !== "4b94250e-b88f-4439-9184-750d56a84fcf") //dont lock email field when using form "Tre Kolumner (Test)" or "Labbvy Admin"
-                            if (emailField && emailField.Length !== 0 && _roleName.indexOf("Handläggare") > 0)
+                            if (emailValue && emailValue.Length !== 0 && _roleName.indexOf("Handläggare") > 0)
                                 Endeavor.formscriptfunctions.SetState("emailaddress1", "true", formContext); //The field should be editable until it has content
                     }
                     catch (ex) {

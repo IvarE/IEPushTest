@@ -468,9 +468,14 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 }
                 else {
                     var _roleName = result.entities[0].name;
-                    var emailField = formContext.getAttribute("emailaddress1").getValue();
+                    var emailField = formContext.getAttribute("emailaddress1");
 
-                    if (emailField && emailField.Length !== 0 && _roleName.indexOf("Handläggare") > 0)
+                    if (emailField == null)
+                        return;
+                        
+                    var emailValue = emailField.getValue();
+
+                    if (emailValue && emailValue.Length !== 0 && _roleName.indexOf("Handläggare") > 0)
                         Endeavor.formscriptfunctions.SetState("emailaddress1", "true", formContext); //The field should only be editable until it has content
                 }
             }

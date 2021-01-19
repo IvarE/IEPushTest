@@ -810,7 +810,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                 removeTimeZone = function (datetime) {
 
-                    if (datetime == null)
+                    if (datetime == null || datetime == "-")
                         return null;
 
                     return new Date(datetime).toISOString();
