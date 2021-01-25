@@ -50,8 +50,7 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
 
             var formContext = executionContext.getFormContext();
 
-            Endeavor.Skanetrafiken.Email.setRegardingObjectidFromQuerystringParam(formContext);
-            Endeavor.Skanetrafiken.Email.setToFromQuerystringParam(formContext);
+            
             Endeavor.Skanetrafiken.Email.addLookupFilter(formContext);
 
             var _form_type = formContext.ui.getFormType();
@@ -60,6 +59,8 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
                 case FORM_TYPE_CREATE:
                     Endeavor.Skanetrafiken.Email.removeMailToOnLoad(formContext);
                     Endeavor.Skanetrafiken.Email.SetSenderEmail(_form_type, formContext);
+                    Endeavor.Skanetrafiken.Email.setToFromQuerystringParam(formContext);
+                    Endeavor.Skanetrafiken.Email.setRegardingObjectidFromQuerystringParam(formContext);
                     break;
                 case FORM_TYPE_UPDATE:
                     Endeavor.Skanetrafiken.Email.SetSenderEmail(_form_type, formContext);
