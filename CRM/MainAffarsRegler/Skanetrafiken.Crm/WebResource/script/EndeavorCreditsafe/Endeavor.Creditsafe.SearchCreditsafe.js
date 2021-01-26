@@ -499,57 +499,57 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
             }
         },
 
-        fetchRelationTypesFromRows: function (jsonArray) {
-            try {
-                var resultArray = [];
-                var accountsCrmId = [];
-                for (var i = 0; i < jsonArray.length; i++) {
-                    var json = jsonArray[i];
-                    if (json && json.CRMId && json.CRMId !== "00000000-0000-0000-0000-000000000000") {
-                        var id = "%27" + json.CRMId.toUpperCase() + "%27";
-                        accountsCrmId.push(id);
-                    } else {
-                        var obj = {
-                            "_edp_relationtypeid_value": "00000000-0000-0000-0000-000000000000",
-                            "accountid": "00000000-0000-0000-0000-000000000000"
-                        }
-                        resultArray.push(obj);
-                    }
-                }
-                //%2775DEDB81-83CD-E911-A975-000D3A389769%27,%27BA73F57B-DBC3-E911-A96C-000D3A389D2C%27
-                var properyValues = "";
-                for (var i = 0; i < accountsCrmId.length - 1; i++) {
-                    properyValues += accountsCrmId[i] + ",";
-                }
-                properyValues += accountsCrmId[accountsCrmId.length - 1]; //last item, no comma seperator
+        //fetchRelationTypesFromRows: function (jsonArray) {
+        //    try {
+        //        var resultArray = [];
+        //        var accountsCrmId = [];
+        //        for (var i = 0; i < jsonArray.length; i++) {
+        //            var json = jsonArray[i];
+        //            if (json && json.CRMId && json.CRMId !== "00000000-0000-0000-0000-000000000000") {
+        //                var id = "%27" + json.CRMId.toUpperCase() + "%27";
+        //                accountsCrmId.push(id);
+        //            } else {
+        //                var obj = {
+        //                    "_edp_relationtypeid_value": "00000000-0000-0000-0000-000000000000",
+        //                    "accountid": "00000000-0000-0000-0000-000000000000"
+        //                }
+        //                resultArray.push(obj);
+        //            }
+        //        }
+        //        //%2775DEDB81-83CD-E911-A975-000D3A389769%27,%27BA73F57B-DBC3-E911-A96C-000D3A389D2C%27
+        //        var properyValues = "";
+        //        for (var i = 0; i < accountsCrmId.length - 1; i++) {
+        //            properyValues += accountsCrmId[i] + ",";
+        //        }
+        //        properyValues += accountsCrmId[accountsCrmId.length - 1]; //last item, no comma seperator
 
-                var entityNameString = "accounts";
+        //        var entityNameString = "accounts";
 
-                if (Xrm.Internal.isUci()) {
-                    entityNameString = "account";
-                }
+        //        if (Xrm.Internal.isUci()) {
+        //            entityNameString = "account";
+        //        }
 
-                var query = "?$select=accountid,_edp_relationtypeid_value&$filter=Microsoft.Dynamics.CRM.In(PropertyName=%27accountid%27,PropertyValues=[" + properyValues + "])";
-                return Xrm.WebApi.retrieveMultipleRecords(entityNameString, query, 50).then(
-                    function (r) {
-                        if (r && r.entities && r.entities.length > 0) {
-                            for (var i = 0; i < r.entities.length; i++) {
-                                resultArray.push(r.entities[i]);
-                            }
-                            return resultArray;
-                        } else {
-                            return "";
-                        }
-                    },
-                    function (error) {
-                        console.log(error.message);
-                        return "";
-                    }
-                );
-            } catch (error) {
-                console.log("Error in fetchRelationType: " + error)
-            }
-        },
+        //        var query = "?$select=accountid,_edp_relationtypeid_value&$filter=Microsoft.Dynamics.CRM.In(PropertyName=%27accountid%27,PropertyValues=[" + properyValues + "])";
+        //        return Xrm.WebApi.retrieveMultipleRecords(entityNameString, query, 50).then(
+        //            function (r) {
+        //                if (r && r.entities && r.entities.length > 0) {
+        //                    for (var i = 0; i < r.entities.length; i++) {
+        //                        resultArray.push(r.entities[i]);
+        //                    }
+        //                    return resultArray;
+        //                } else {
+        //                    return "";
+        //                }
+        //            },
+        //            function (error) {
+        //                console.log(error.message);
+        //                return "";
+        //            }
+        //        );
+        //    } catch (error) {
+        //        console.log("Error in fetchRelationType: " + error)
+        //    }
+        //},
 
         createGrid: function (responseAsJson) {
             //Stop loading splash
@@ -663,16 +663,16 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
                 gridComplete: function () {
                     Endeavor.Creditsafe.SearchCreditsafe.changeGridCheckbox();
                     Endeavor.Creditsafe.SearchCreditsafe.colorCodeRows();
-                    Endeavor.Creditsafe.SearchCreditsafe.fetchAllRelationTypes().then(
-                        function (r) {
-                            Endeavor.Creditsafe.SearchCreditsafe.addAllOtherRelationTypes();
-                            console.log("GlobalRelationTypes.length: " + GlobalRelationTypes.length);
-                        },
-                        function (error) {
-                            $("#relation-type").empty();
-                            $("#relation-type").append("<option value=empty> -- </option>");
-                        }
-                    );
+                    //Endeavor.Creditsafe.SearchCreditsafe.fetchAllRelationTypes().then(
+                    //    function (r) {
+                    //        Endeavor.Creditsafe.SearchCreditsafe.addAllOtherRelationTypes();
+                    //        console.log("GlobalRelationTypes.length: " + GlobalRelationTypes.length);
+                    //    },
+                    //    function (error) {
+                    //        $("#relation-type").empty();
+                    //        $("#relation-type").append("<option value=empty> -- </option>");
+                    //    }
+                    //);
                 }
             });
 
@@ -695,8 +695,8 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
 
             //Add event listeners to the buttons
             document.getElementById("button-create-crm").addEventListener("click", function () {
-                //Endeavor.Creditsafe.SearchCreditsafe.getSelectedRows("Account")
-                Endeavor.Creditsafe.SearchCreditsafe.confirmRelationTypeChanges("Account");
+                Endeavor.Creditsafe.SearchCreditsafe.getSelectedRows("Account")
+                //Endeavor.Creditsafe.SearchCreditsafe.confirmRelationTypeChanges("Account");
             });
             document.getElementById("button-lead-crm").addEventListener("click", function () {
                 Endeavor.Creditsafe.SearchCreditsafe.getSelectedRows("Lead")
@@ -749,56 +749,56 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
             }
         },
 
-        confirmRelationTypeChanges: function (entityName) {
-            var selectedRelationType = $("#relation-type").val();
-            var selectedRelationName = $("#relation-type option:selected").text();
-            var selectedIDs = $("#jqGrid").getGridParam("selarrrow");
-            var message = Endeavor.Creditsafe.Resources.ChangeRelationType + ":\n"; //"You are about to change the following relation types:\n";
-            var confirmFlag = false;
+        //confirmRelationTypeChanges: function (entityName) {
+        //    var selectedRelationType = $("#relation-type").val();
+        //    var selectedRelationName = $("#relation-type option:selected").text();
+        //    var selectedIDs = $("#jqGrid").getGridParam("selarrrow");
+        //    var message = Endeavor.Creditsafe.Resources.ChangeRelationType + ":\n"; //"You are about to change the following relation types:\n";
+        //    var confirmFlag = false;
 
-            for (var i = 0; i < selectedIDs.length; i++) {
-                var rowRelationId = $("#jqGrid").jqGrid('getCell', selectedIDs[i], 'edp_RelationType');
-                var rowCRMId = $("#jqGrid").jqGrid('getCell', selectedIDs[i], 'CRMId');
-                var bothEmpty = !(rowRelationId === "" && selectedRelationType === "empty");
-                var notEqual = rowRelationId !== selectedRelationType;
-                var freshCompany = rowCRMId === "" || rowCRMId === "00000000-0000-0000-0000-000000000000";
+        //    for (var i = 0; i < selectedIDs.length; i++) {
+        //        var rowRelationId = $("#jqGrid").jqGrid('getCell', selectedIDs[i], 'edp_RelationType');
+        //        var rowCRMId = $("#jqGrid").jqGrid('getCell', selectedIDs[i], 'CRMId');
+        //        var bothEmpty = !(rowRelationId === "" && selectedRelationType === "empty");
+        //        var notEqual = rowRelationId !== selectedRelationType;
+        //        var freshCompany = rowCRMId === "" || rowCRMId === "00000000-0000-0000-0000-000000000000";
 
-                if (notEqual && bothEmpty && !freshCompany) {
-                    confirmFlag = true;
-                    var rowRelationName = $("#jqGrid").jqGrid('getCell', selectedIDs[i], 'edp_RelationTypeName');
-                    var rowCompanyName = $("#jqGrid").jqGrid('getCell', selectedIDs[i], 'Name');
+        //        if (notEqual && bothEmpty && !freshCompany) {
+        //            confirmFlag = true;
+        //            var rowRelationName = $("#jqGrid").jqGrid('getCell', selectedIDs[i], 'edp_RelationTypeName');
+        //            var rowCompanyName = $("#jqGrid").jqGrid('getCell', selectedIDs[i], 'Name');
 
-                    rowRelationName = rowRelationName === "" ? "N/A" : rowRelationName;
-                    rowCompanyName = rowCompanyName === "" ? "N/A" : rowCompanyName;
-                    selectedRelationName = selectedRelationName === " -- " ? "N/A" : selectedRelationName;
-                    message += rowCompanyName + ": " + rowRelationName + " --> " + selectedRelationName + "\n";
-                }
-            }
-            message += Endeavor.Creditsafe.Resources.SureProceed;//"Do you want to proceed?";
+        //            rowRelationName = rowRelationName === "" ? "N/A" : rowRelationName;
+        //            rowCompanyName = rowCompanyName === "" ? "N/A" : rowCompanyName;
+        //            selectedRelationName = selectedRelationName === " -- " ? "N/A" : selectedRelationName;
+        //            message += rowCompanyName + ": " + rowRelationName + " --> " + selectedRelationName + "\n";
+        //        }
+        //    }
+        //    message += Endeavor.Creditsafe.Resources.SureProceed;//"Do you want to proceed?";
 
-            var confirmStrings = {
-                text: message, title: Endeavor.Creditsafe.Resources.DetectedRelationTypeChanges,//"Detected RelationType Change",
-                confirmButtonLabel: Endeavor.Creditsafe.Resources.Confirm, cancelButtonLabel: Endeavor.Creditsafe.Resources.Cancel
-            };
-            var confirmOptions = { height: 250, width: 500 };
+        //    var confirmStrings = {
+        //        text: message, title: Endeavor.Creditsafe.Resources.DetectedRelationTypeChanges,//"Detected RelationType Change",
+        //        confirmButtonLabel: Endeavor.Creditsafe.Resources.Confirm, cancelButtonLabel: Endeavor.Creditsafe.Resources.Cancel
+        //    };
+        //    var confirmOptions = { height: 250, width: 500 };
 
-            if (confirmFlag) {
-                Xrm.Navigation.openConfirmDialog(confirmStrings, confirmOptions).then(
-                    function (r) {
-                        if (r.confirmed) {
-                            Endeavor.Creditsafe.SearchCreditsafe.getSelectedRows(entityName);
-                        }
+        //    if (confirmFlag) {
+        //        Xrm.Navigation.openConfirmDialog(confirmStrings, confirmOptions).then(
+        //            function (r) {
+        //                if (r.confirmed) {
+        //                    Endeavor.Creditsafe.SearchCreditsafe.getSelectedRows(entityName);
+        //                }
 
-                    },
-                    function (error) {
-                        console.log("error: " + error.message);
-                    }
-                );
-            } else {
-                Endeavor.Creditsafe.SearchCreditsafe.getSelectedRows(entityName);
-            }
+        //            },
+        //            function (error) {
+        //                console.log("error: " + error.message);
+        //            }
+        //        );
+        //    } else {
+        //        Endeavor.Creditsafe.SearchCreditsafe.getSelectedRows(entityName);
+        //    }
 
-        },
+        //},
 
         handleRelationTypeValues: function (result) {
             var setToEmpty = false;
@@ -862,61 +862,61 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
                 jsonArray.push(item);
             }
 
-            if (jsonArray && jsonArray.length > 0) {
-                Endeavor.Creditsafe.SearchCreditsafe.fetchRelationTypesFromRows(jsonArray).then(
-                    function (result) {
-                        Endeavor.Creditsafe.SearchCreditsafe.saveRelationTypesToGrid(jsonArray, result);
-                        Endeavor.Creditsafe.SearchCreditsafe.handleRelationTypeValues(result);
-                    },
-                    function (error) {
-                        console.log(error);
-                        Endeavor.Creditsafe.SearchCreditsafe.handleRelationTypeValues(null);
+            //if (jsonArray && jsonArray.length > 0) {
+            //    Endeavor.Creditsafe.SearchCreditsafe.fetchRelationTypesFromRows(jsonArray).then(
+            //        function (result) {
+            //            Endeavor.Creditsafe.SearchCreditsafe.saveRelationTypesToGrid(jsonArray, result);
+            //            Endeavor.Creditsafe.SearchCreditsafe.handleRelationTypeValues(result);
+            //        },
+            //        function (error) {
+            //            console.log(error);
+            //            Endeavor.Creditsafe.SearchCreditsafe.handleRelationTypeValues(null);
 
-                        //error just set to relationtype to "--" and print message
-                    }
-                );
-            } else {
-                Endeavor.Creditsafe.SearchCreditsafe.handleRelationTypeValues(null);
-            }
+            //            //error just set to relationtype to "--" and print message
+            //        }
+            //    );
+            //} else {
+            //    Endeavor.Creditsafe.SearchCreditsafe.handleRelationTypeValues(null);
+            //}
 
 
         },
 
-        fetchAllRelationTypes: function () {
-            var entityNameString = "edp_relationtypes";
+        //fetchAllRelationTypes: function () {
+        //    var entityNameString = "edp_relationtypes";
 
-            if (Xrm.Internal.isUci()) {
-                entityNameString = "edp_relationtype";
-            }
+        //    if (Xrm.Internal.isUci()) {
+        //        entityNameString = "edp_relationtype";
+        //    }
 
-            var query = "?$select=edp_relationtypeid, edp_name";
-            return Xrm.WebApi.retrieveMultipleRecords(entityNameString, query, 50).then(
-                function (r) {
-                    if (r && r.entities && r.entities.length > 0) {
-                        GlobalRelationTypes = r.entities;
-                        return "success";
-                    }
-                },
-                function (error) {
-                    console.log(error.message);
-                    return "error";
-                }
-            );
-        },
+        //    var query = "?$select=edp_relationtypeid, edp_name";
+        //    return Xrm.WebApi.retrieveMultipleRecords(entityNameString, query, 50).then(
+        //        function (r) {
+        //            if (r && r.entities && r.entities.length > 0) {
+        //                GlobalRelationTypes = r.entities;
+        //                return "success";
+        //            }
+        //        },
+        //        function (error) {
+        //            console.log(error.message);
+        //            return "error";
+        //        }
+        //    );
+        //},
 
-        addAllOtherRelationTypes: function () {
-            if (!($("#relation-type option[value=empty").length > 0)) {
-                $("#relation-type").append("<option value=empty> -- </option>");
-            }
+        //addAllOtherRelationTypes: function () {
+        //    if (!($("#relation-type option[value=empty").length > 0)) {
+        //        $("#relation-type").append("<option value=empty> -- </option>");
+        //    }
 
-            if (GlobalRelationTypes && GlobalRelationTypes.length > 0) {
-                for (var i = 0; i < GlobalRelationTypes.length; i++) {
-                    if (!($("#relation-type option[value=" + GlobalRelationTypes[i].edp_relationtypeid + "]").length > 0)) {
-                        $("#relation-type").append('<option value="' + GlobalRelationTypes[i].edp_relationtypeid + '">' + GlobalRelationTypes[i].edp_name + '</option>');
-                    }
-                }
-            }
-        },
+        //    if (GlobalRelationTypes && GlobalRelationTypes.length > 0) {
+        //        for (var i = 0; i < GlobalRelationTypes.length; i++) {
+        //            if (!($("#relation-type option[value=" + GlobalRelationTypes[i].edp_relationtypeid + "]").length > 0)) {
+        //                $("#relation-type").append('<option value="' + GlobalRelationTypes[i].edp_relationtypeid + '">' + GlobalRelationTypes[i].edp_name + '</option>');
+        //            }
+        //        }
+        //    }
+        //},
 
         //Gets all selected rows and creates a json structure with all the values to be sent to the backend.
         //Requires entity name, as a string,"Account" or "Lead" to be passed in
@@ -1219,16 +1219,16 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
 
         forceUpdateCRM: function (json, doNotRefreshParentFlag, entityName, returnMode) {
             var request = {
-                IgnoreDuplicateRules: 1, //1 == true, othernum == false
+                //IgnoreDuplicateRules: 1, //1 == true, othernum == false
                 InAccounts: JSON.stringify(json),
                 getMetadata: function () { //maybe this here?
                     return {
                         boundParameter: null,
                         parameterTypes: {
-                            "IgnoreDuplicateRules": {
-                                "typeName": "Edm.Int32",
-                                "structuralProperty": 1
-                            },
+                            //"IgnoreDuplicateRules": {
+                            //    "typeName": "Edm.Int32",
+                            //    "structuralProperty": 1
+                            //},
                             "InAccounts": {
                                 "typeName": "Edm.String",
                                 "structuralProperty": 1 // Primitive Type
@@ -1288,22 +1288,22 @@ if (typeof (Endeavor.Creditsafe.SearchCreditsafe) == "undefined") {
                 });
         },
 
-        updateCRM: function (formContext, json, noOfRecords, noGUI, entityName, ignoreDuplicateRules) {
+        updateCRM: function (formContext, json, noOfRecords, noGUI, entityName /*ignoreDuplicateRules*/) {
             try {
 
                 var doNotRefreshParentFlag = false;
 
                 var request = {
-                    IgnoreDuplicateRules: ignoreDuplicateRules, //1 == true, othernum == false
+                    //IgnoreDuplicateRules: ignoreDuplicateRules, //1 == true, othernum == false
                     InAccounts: JSON.stringify(json),
                     getMetadata: function () { //maybe this here?
                         return {
                             boundParameter: null,
                             parameterTypes: {
-                                "IgnoreDuplicateRules": {
-                                    "typeName": "Edm.Int32",
-                                    "structuralProperty": 1
-                                },
+                                //"IgnoreDuplicateRules": {
+                                //    "typeName": "Edm.Int32",
+                                //    "structuralProperty": 1
+                                //},
                                 "InAccounts": {
                                     "typeName": "Edm.String",
                                     "structuralProperty": 1 // Primitive Type

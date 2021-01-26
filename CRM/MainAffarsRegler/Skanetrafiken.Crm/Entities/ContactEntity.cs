@@ -1048,17 +1048,18 @@ namespace Skanetrafiken.Crm.Entities
                 //Should not validate again through old functionality
                 wasAlreadyValidated = true;
             }
-            else if (!string.IsNullOrEmpty(contactToProcess.cgi_socialsecuritynumber) && 
-                (contactToProcess.ed_CollaborationContact == true || contactToProcess.ed_AgentContact == true ||
-                contactToProcess.ed_Reseller == true || contactToProcess.ed_BusinessContact == true ||
-                contactToProcess.ed_SchoolContact == true || contactToProcess.ed_SeniorContact == true ||
-                contactToProcess.ed_InfotainmentContact == true))
-            {
-                localContext.Trace("CheckContactsBySocialSecurityNumber");
-                CheckContactsBySocialSecurityNumber(localContext, contactToProcess.cgi_socialsecuritynumber, isCreate);
-                //Should still validate through old functionality
-                wasAlreadyValidated = false;
-            }
+            //25/01/2021 - Chris: New rule where we can have multiple COntacts with same SSN in cgi_socialsecuritynumber (DevOps: 3292)
+            //else if (!string.IsNullOrEmpty(contactToProcess.cgi_socialsecuritynumber) && 
+            //    (contactToProcess.ed_CollaborationContact == true || contactToProcess.ed_AgentContact == true ||
+            //    contactToProcess.ed_Reseller == true || contactToProcess.ed_BusinessContact == true ||
+            //    contactToProcess.ed_SchoolContact == true || contactToProcess.ed_SeniorContact == true ||
+            //    contactToProcess.ed_InfotainmentContact == true))
+            //{
+            //    localContext.Trace("CheckContactsBySocialSecurityNumber");
+            //    CheckContactsBySocialSecurityNumber(localContext, contactToProcess.cgi_socialsecuritynumber, isCreate);
+            //    //Should still validate through old functionality
+            //    wasAlreadyValidated = false;
+            //}
 
             localContext.Trace("End ValidateDuplicatesByContactType");
             return wasAlreadyValidated;
@@ -1242,26 +1243,27 @@ namespace Skanetrafiken.Crm.Entities
                 return;
             }
 
-            if (!Contains(ContactEntity.Fields.EMailAddress2) && !(Contains(ContactEntity.Fields.cgi_socialsecuritynumber) && ed_HasSwedishSocialSecurityNumber.HasValue && ed_HasSwedishSocialSecurityNumber.Value))
+            if (!Contains(ContactEntity.Fields.EMailAddress2) /*&& !(Contains(ContactEntity.Fields.cgi_socialsecuritynumber) && ed_HasSwedishSocialSecurityNumber.HasValue && ed_HasSwedishSocialSecurityNumber.Value)*/)
             {
-                localContext.Trace($"Contact does not contain EMailAddress2 or has a swedish social security number. No duplicate check will be done.");
+                localContext.Trace($"Contact does not contain EMailAddress2. No duplicate check will be done.");
                 return;
             }
 
             FilterExpression conflictFilter = new FilterExpression(LogicalOperator.Or);
-            if (Contains(ContactEntity.Fields.cgi_socialsecuritynumber) && ed_HasSwedishSocialSecurityNumber.HasValue && ed_HasSwedishSocialSecurityNumber.Value)
-            {
-                FilterExpression socSecFilter = new FilterExpression(LogicalOperator.And)
-                {
-                    Conditions =
-                        {
-                            new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
-                            new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, cgi_socialsecuritynumber),
-                            new ConditionExpression(ContactEntity.Fields.ContactId, ConditionOperator.NotEqual, ContactId)
-                        }
-                };
-                conflictFilter.AddFilter(socSecFilter);
-            }
+            //25/01/2021 - Chris: New rule where we can have multiple COntacts with same SSN in cgi_socialsecuritynumber (DevOps: 3292)
+            //if (Contains(ContactEntity.Fields.cgi_socialsecuritynumber) && ed_HasSwedishSocialSecurityNumber.HasValue && ed_HasSwedishSocialSecurityNumber.Value)
+            //{
+            //    FilterExpression socSecFilter = new FilterExpression(LogicalOperator.And)
+            //    {
+            //        Conditions =
+            //            {
+            //                new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
+            //                new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, cgi_socialsecuritynumber),
+            //                new ConditionExpression(ContactEntity.Fields.ContactId, ConditionOperator.NotEqual, ContactId)
+            //            }
+            //    };
+            //    conflictFilter.AddFilter(socSecFilter);
+            //}
             if (Contains(ContactEntity.Fields.EMailAddress2))
             {
                 FilterExpression emailFilter = new FilterExpression(LogicalOperator.Or)
@@ -1329,13 +1331,14 @@ namespace Skanetrafiken.Crm.Entities
                         CombineContacts(localContext, new List<ContactEntity> { conflict });
                     }
                 }
-                else if (conflict.Contains(ContactEntity.Fields.cgi_socialsecuritynumber) && conflict.cgi_socialsecuritynumber.Equals(cgi_socialsecuritynumber))
-                {
-                    if (infoSource.Equals(Generated.ed_informationsource.AdmSkapaKund))
-                        throw new ApplicationException(string.Format(Properties.Resources.CouldNotCreateCustomerSocSec));
-                    else
-                        throw new ApplicationException(string.Format(Properties.Resources.CouldNotUpdateContactSocialSecurityConflict));
-                }
+                //25/01/2021 - Chris: New rule where we can have multiple COntacts with same SSN in cgi_socialsecuritynumber (DevOps: 3292)
+                //else if (conflict.Contains(ContactEntity.Fields.cgi_socialsecuritynumber) && conflict.cgi_socialsecuritynumber.Equals(cgi_socialsecuritynumber))
+                //{
+                //    if (infoSource.Equals(Generated.ed_informationsource.AdmSkapaKund))
+                //        throw new ApplicationException(string.Format(Properties.Resources.CouldNotCreateCustomerSocSec));
+                //    else
+                //        throw new ApplicationException(string.Format(Properties.Resources.CouldNotUpdateContactSocialSecurityConflict));
+                //}
                 else
                 {
                     // TODO - Marcus Stenswed - Krockar när man skapar nytt konto via Webben och skickar felmeddelande

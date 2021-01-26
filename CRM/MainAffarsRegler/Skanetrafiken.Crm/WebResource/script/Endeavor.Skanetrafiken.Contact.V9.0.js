@@ -31,6 +31,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             var formContext = executionContext.getFormContext();
             var formType = formContext.ui.getFormType();
 
+            var formIsOnLoad = true;
+            Endeavor.Skanetrafiken.Contact.resetRequiredLevel(executionContext, formIsOnLoad);
+
             switch (formType) {
                 case FORM_TYPE_CREATE:
 
@@ -97,12 +100,12 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             }
         },
 
-        resetRequiredLevel: function (executionContext) {
-
+        resetRequiredLevel: function (executionContext, formIsOnLoad) {
+            
             var formContext = executionContext.getFormContext();
-
+            debugger;
             var stateCode = formContext.getAttribute("statecode");
-            if (stateCode == null) {
+            if (stateCode == null || (stateCode != null && stateCode.getValue() == 0)) {
 
                 var businessContact = formContext.getAttribute("ed_businesscontact");
                 var agentContact = formContext.getAttribute("ed_agentcontact");
@@ -110,9 +113,12 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 var schoolContact = formContext.getAttribute("ed_schoolcontact");
                 var infotainmentContact = formContext.getAttribute("ed_infotainmentcontact");
                 var privateContact = formContext.getAttribute("ed_privatecustomercontact");
+                var resellerContact = formContext.getAttribute("ed_reseller");
+                var collaborationContact = formContext.getAttribute("ed_collaborationcontact");
 
                 if (businessContact != null && agentContact != null && seniorContact != null &&
-                    schoolContact != null && infotainmentContact != null && privateContact != null) {
+                    schoolContact != null && infotainmentContact != null && privateContact != null
+                    && resellerContact != null && collaborationContact != null) {
 
                     var businessValue = businessContact.getValue();
                     var agentValue = agentContact.getValue();
@@ -120,9 +126,18 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     var schoolValue = schoolContact.getValue();
                     var infotainmentValue = infotainmentContact.getValue();
                     var privateValue = privateContact.getValue();
+                    var resellerValue = resellerContact.getValue();
+                    var collaborationValue = collaborationContact.getValue();
+
+                    if (stateCode == null && formIsOnLoad == true)
+                    {
+                        privateContact.setValue(true);
+                        privateValue = true;
+                    }
 
                     if (businessValue != false || agentValue != false || seniorValue != false ||
-                        schoolValue != false || infotainmentValue != false || privateValue != false) {
+                        schoolValue != false || infotainmentValue != false || privateValue != false
+                        || resellerValue != false || collaborationValue != false) {
 
                         businessContact.setRequiredLevel("none");
                         agentContact.setRequiredLevel("none");
@@ -130,8 +145,216 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         schoolContact.setRequiredLevel("none");
                         infotainmentContact.setRequiredLevel("none");
                         privateContact.setRequiredLevel("none");
+                        resellerContact.setRequiredLevel("none");
+                        collaborationContact.setRequiredLevel("none");
+
+                        if (privateValue != false) {
+
+                            businessContact.setValue(false);
+                            formContext.getControl("ed_businesscontact").setDisabled(true);
+
+                            schoolContact.setValue(false);
+                            formContext.getControl("ed_schoolcontact").setDisabled(true);
+
+                            seniorContact.setValue(false);
+                            formContext.getControl("ed_seniorcontact").setDisabled(true);
+
+                            infotainmentContact.setValue(false);
+                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
+
+                            agentContact.setValue(false);
+                            formContext.getControl("ed_agentcontact").setDisabled(true);
+
+                            resellerContact.setValue(false);
+                            formContext.getControl("ed_reseller").setDisabled(true);
+
+                            collaborationContact.setValue(false);
+                            formContext.getControl("ed_collaborationcontact").setDisabled(true);
+
+                        }
+                        else if (businessValue != false)
+                        {
+
+                            privateContact.setValue(false);
+                            formContext.getControl("ed_privatecustomercontact").setDisabled(true);
+
+                            schoolContact.setValue(false);
+                            formContext.getControl("ed_schoolcontact").setDisabled(true);
+
+                            seniorContact.setValue(false);
+                            formContext.getControl("ed_seniorcontact").setDisabled(true);
+
+                            infotainmentContact.setValue(false);
+                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
+
+                            agentContact.setValue(false);
+                            formContext.getControl("ed_agentcontact").setDisabled(true);
+
+                            resellerContact.setValue(false);
+                            formContext.getControl("ed_reseller").setDisabled(true);
+
+                            collaborationContact.setValue(false);
+                            formContext.getControl("ed_collaborationcontact").setDisabled(true);
+
+                        }
+                        else if (schoolValue != false) {
+
+                            privateContact.setValue(false);
+                            formContext.getControl("ed_privatecustomercontact").setDisabled(true);
+
+                            businessContact.setValue(false);
+                            formContext.getControl("ed_businesscontact").setDisabled(true);
+
+                            seniorContact.setValue(false);
+                            formContext.getControl("ed_seniorcontact").setDisabled(true);
+
+                            infotainmentContact.setValue(false);
+                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
+
+                            agentContact.setValue(false);
+                            formContext.getControl("ed_agentcontact").setDisabled(true);
+
+                            resellerContact.setValue(false);
+                            formContext.getControl("ed_reseller").setDisabled(true);
+
+                            collaborationContact.setValue(false);
+                            formContext.getControl("ed_collaborationcontact").setDisabled(true);
+
+                        }
+                        else if (seniorValue != false) {
+
+                            privateContact.setValue(false);
+                            formContext.getControl("ed_privatecustomercontact").setDisabled(true);
+
+                            businessContact.setValue(false);
+                            formContext.getControl("ed_businesscontact").setDisabled(true);
+
+                            schoolContact.setValue(false);
+                            formContext.getControl("ed_schoolcontact").setDisabled(true);
+
+                            infotainmentContact.setValue(false);
+                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
+
+                            agentContact.setValue(false);
+                            formContext.getControl("ed_agentcontact").setDisabled(true);
+
+                            resellerContact.setValue(false);
+                            formContext.getControl("ed_reseller").setDisabled(true);
+
+                            collaborationContact.setValue(false);
+                            formContext.getControl("ed_collaborationcontact").setDisabled(true);
+
+                        }
+                        else if (infotainmentValue != false) {
+
+                            privateContact.setValue(false);
+                            formContext.getControl("ed_privatecustomercontact").setDisabled(true);
+
+                            businessContact.setValue(false);
+                            formContext.getControl("ed_businesscontact").setDisabled(true);
+
+                            schoolContact.setValue(false);
+                            formContext.getControl("ed_schoolcontact").setDisabled(true);
+
+                            seniorContact.setValue(false);
+                            formContext.getControl("ed_seniorcontact").setDisabled(true);
+
+                            agentContact.setValue(false);
+                            formContext.getControl("ed_agentcontact").setDisabled(true);
+
+                            resellerContact.setValue(false);
+                            formContext.getControl("ed_reseller").setDisabled(true);
+
+                            collaborationContact.setValue(false);
+                            formContext.getControl("ed_collaborationcontact").setDisabled(true);
+
+                        }
+                        else if (agentValue != false) {
+
+                            privateContact.setValue(false);
+                            formContext.getControl("ed_privatecustomercontact").setDisabled(true);
+
+                            businessContact.setValue(false);
+                            formContext.getControl("ed_businesscontact").setDisabled(true);
+
+                            schoolContact.setValue(false);
+                            formContext.getControl("ed_schoolcontact").setDisabled(true);
+
+                            seniorContact.setValue(false);
+                            formContext.getControl("ed_seniorcontact").setDisabled(true);
+
+                            infotainmentContact.setValue(false);
+                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
+
+                            resellerContact.setValue(false);
+                            formContext.getControl("ed_reseller").setDisabled(true);
+
+                            collaborationContact.setValue(false);
+                            formContext.getControl("ed_collaborationcontact").setDisabled(true);
+
+                        }
+                        else if (resellerValue != false) {
+
+                            privateContact.setValue(false);
+                            formContext.getControl("ed_privatecustomercontact").setDisabled(true);
+
+                            businessContact.setValue(false);
+                            formContext.getControl("ed_businesscontact").setDisabled(true);
+
+                            schoolContact.setValue(false);
+                            formContext.getControl("ed_schoolcontact").setDisabled(true);
+
+                            seniorContact.setValue(false);
+                            formContext.getControl("ed_seniorcontact").setDisabled(true);
+
+                            infotainmentContact.setValue(false);
+                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
+
+                            agentContact.setValue(false);
+                            formContext.getControl("ed_agentcontact").setDisabled(true);
+
+                            collaborationContact.setValue(false);
+                            formContext.getControl("ed_collaborationcontact").setDisabled(true);
+
+                        }
+                        else if (collaborationValue != false) {
+
+                            privateContact.setValue(false);
+                            formContext.getControl("ed_privatecustomercontact").setDisabled(true);
+
+                            businessContact.setValue(false);
+                            formContext.getControl("ed_businesscontact").setDisabled(true);
+
+                            schoolContact.setValue(false);
+                            formContext.getControl("ed_schoolcontact").setDisabled(true);
+
+                            seniorContact.setValue(false);
+                            formContext.getControl("ed_seniorcontact").setDisabled(true);
+
+                            infotainmentContact.setValue(false);
+                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
+
+                            agentContact.setValue(false);
+                            formContext.getControl("ed_agentcontact").setDisabled(true);
+
+                            resellerContact.setValue(false);
+                            formContext.getControl("ed_reseller").setDisabled(true);
+
+                        }
                     }
-                    else if (businessValue == false && agentValue == false && seniorValue == false && schoolValue == false && infotainmentValue == false && privateValue == false) {
+                    else if (businessValue == false && agentValue == false
+                        && seniorValue == false && schoolValue == false
+                        && infotainmentValue == false && privateValue == false
+                        && resellerValue == false && collaborationValue == false) {
+
+                        formContext.getControl("ed_businesscontact").setDisabled(false);
+                        formContext.getControl("ed_agentcontact").setDisabled(false);
+                        formContext.getControl("ed_seniorcontact").setDisabled(false);
+                        formContext.getControl("ed_schoolcontact").setDisabled(false);
+                        formContext.getControl("ed_infotainmentcontact").setDisabled(false);
+                        formContext.getControl("ed_privatecustomercontact").setDisabled(false);
+                        formContext.getControl("ed_reseller").setDisabled(false);
+                        formContext.getControl("ed_collaborationcontact").setDisabled(false);
 
                         businessContact.setRequiredLevel("required");
                         agentContact.setRequiredLevel("required");
@@ -139,6 +362,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         schoolContact.setRequiredLevel("required");
                         infotainmentContact.setRequiredLevel("required");
                         privateContact.setRequiredLevel("required");
+                        resellerContact.setRequiredLevel("required");
+                        collaborationContact.setRequiredLevel("required");
                     }
                 }
             }
@@ -657,6 +882,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         onFormLoad: function (executionContext) {
             try {
                 var formContext = executionContext.getFormContext();
+
+                var formIsOnLoad = true;
+                Endeavor.Skanetrafiken.Contact.resetRequiredLevel(executionContext, formIsOnLoad);
 
                 switch (formContext.ui.getFormType()) {
                     case FORM_TYPE_CREATE:
