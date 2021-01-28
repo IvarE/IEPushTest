@@ -126,13 +126,19 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
             try {
                 var formContext = executionContext.getFormContext();
 
-                var _incidentid = Endeavor.formscriptfunctions.GetLookupid("regardingobjectid");
                 var _act_value = formContext.data.entity.attributes.get("cgi_getfilelink").getValue();
                 var _attribute = formContext.getAttribute("regardingobjectid");
+
+                if (_attribute == null) {
+                    alert("Den här e-postadressen har ingen associerad post.");
+                    return;
+                }
+
                 var _lookup = _attribute.getValue();
 
                 if (_lookup != null) {
                     var entity_name = _lookup[0].entityType;
+                    var _incidentid = _lookup[0].id.replace("{", "").replace("}", "");
 
                     if (entity_name == "incident" && _act_value == true)
                         Endeavor.OData_Querys.GetFilelinks(_incidentid, formContext);

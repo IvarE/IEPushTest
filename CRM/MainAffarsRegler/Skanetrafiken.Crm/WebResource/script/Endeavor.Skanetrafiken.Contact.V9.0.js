@@ -925,7 +925,13 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 var currentUserRoles = globalContext.userSettings.securityRoles;
                 for (var i = 0; i < currentUserRoles.length; i++) {
                     var userRoleId = currentUserRoles[i];
-                    Endeavor.OData_Querys.GetSecRolesNameContact(userRoleId, formContext);
+
+                    var globalContext = Xrm.Utility.getGlobalContext();
+                    var clientURL = globalContext.getClientUrl();
+
+                    var url = clientURL + "/api/data/v9.0/roles?$select=name&$filter=roleid eq " + userRoleId;
+                    var results = Endeavor.formscriptfunctions.fetchJSONResults(url);
+                    Endeavor.Skanetrafiken.Contact.checkIfUserHasRole_callback(results, formContext);
                 }
             }
             catch (e) {
@@ -942,7 +948,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     var _handlingOfficer = "Skånetrafiken Handläggare";
                     var _handlingOfficerPlus = "Skånetrafiken Handläggare plus";
 
-                    var _roleName = result.entities[0].name;
+                    var _roleName = result[0].name;
 
                     try {
                         var emailField = formContext.getAttribute("emailaddress1");
