@@ -507,8 +507,11 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             for (var i = 0; i < allSelectedRows.getAll().length; i++) {
                 var selectedRow = allSelectedRows.getAll()[i];
 
-                for (var j = 0; j < selectedRow.getAttribute().length; j++) {
-                    var selectedAttribute = selectedRow.getAttribute()[j];
+                var selectedAttribute = selectedRow.getAttribute != null ? selectedRow.getAttribute() : selectedRow.getData().getEntity().getAttributes().getAll();
+
+                for (var j = 0; j < selectedAttribute.length; j++) {
+
+                    var selectedAttribute = selectedAttribute[j];
                     if (selectedAttribute.getName() == fieldName) {
                         var value = selectedAttribute.getValue();
                         return Endeavor.Skanetrafiken.Contact._urlRelativeFrontOffice + value;
