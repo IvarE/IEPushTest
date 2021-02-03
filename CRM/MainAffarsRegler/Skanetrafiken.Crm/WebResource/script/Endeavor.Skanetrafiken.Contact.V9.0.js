@@ -507,8 +507,11 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             for (var i = 0; i < allSelectedRows.getAll().length; i++) {
                 var selectedRow = allSelectedRows.getAll()[i];
 
-                for (var j = 0; j < selectedRow.getAttribute().length; j++) {
-                    var selectedAttribute = selectedRow.getAttribute()[j];
+                var selectedAttribute = selectedRow.getAttribute != null ? selectedRow.getAttribute() : selectedRow.getData().getEntity().getAttributes().getAll();
+
+                for (var j = 0; j < selectedAttribute.length; j++) {
+
+                    var selectedAttribute = selectedAttribute[j];
                     if (selectedAttribute.getName() == fieldName) {
                         var value = selectedAttribute.getValue();
                         return Endeavor.Skanetrafiken.Contact._urlRelativeFrontOffice + value;
@@ -521,13 +524,13 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
         onFrontOfficeIntegration: function (formContext) {
 
-            var fieldNameReskort = "ed_cardnumber";
-            var gridContextReskort = formContext.getControl("Relaterat_Reskort");
-            var allSelectedRowsReskort = gridContextReskort.getGrid().getSelectedRows();
+            //var fieldNameReskort = "ed_cardnumber";
+            //var gridContextReskort = formContext.getControl("Relaterat_Reskort");
+            //var allSelectedRowsReskort = gridContextReskort.getGrid().getSelectedRows();
 
-            var openUrlReskort = Endeavor.Skanetrafiken.Contact.findValueFrontOffice(allSelectedRowsReskort, fieldNameReskort);
-            if (openUrlReskort != null)
-                window.open(openUrlReskort, "_reskort");
+            //var openUrlReskort = Endeavor.Skanetrafiken.Contact.findValueFrontOffice(allSelectedRowsReskort, fieldNameReskort);
+            //if (openUrlReskort != null)
+            //    window.open(openUrlReskort, "_reskort");
 
             var fieldNameSingapore = "st_ticketid";
             var gridContextSingapore = formContext.getControl("Singapore_Biljetter");
@@ -537,13 +540,13 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             if (openUrlSingapore != null)
                 window.open(openUrlSingapore, "_singapore");
 
-            var fieldNameValuecodes = "ed_mobilenumber";
-            var gridContextValuecodes = formContext.getControl("related_valuecodes");
-            var allSelectedRowsValuecodes = gridContextValuecodes.getGrid().getSelectedRows();
+            //var fieldNameValuecodes = "ed_mobilenumber";
+            //var gridContextValuecodes = formContext.getControl("related_valuecodes");
+            //var allSelectedRowsValuecodes = gridContextValuecodes.getGrid().getSelectedRows();
 
-            var openUrlValueCode = Endeavor.Skanetrafiken.Contact.findValueFrontOffice(allSelectedRowsValuecodes, fieldNameValuecodes);
-            if (openUrlValueCode != null)
-                window.open(openUrlValueCode, "_valuecode");
+            //var openUrlValueCode = Endeavor.Skanetrafiken.Contact.findValueFrontOffice(allSelectedRowsValuecodes, fieldNameValuecodes);
+            //if (openUrlValueCode != null)
+            //    window.open(openUrlValueCode, "_valuecode");
         },
 
         onSocialSecurityNumberChange: function (executionContext) {

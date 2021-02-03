@@ -832,8 +832,9 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                             "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
                             "cgi_travelinformation": travelinformation,
                             "cgi_journeynumber": getElementValue(saveEntity.directjourney, "JourneyNumber"),
-                            "cgi_transport": getElementValue(saveEntity.directjourney, "LineDesignation"),
-                            "cgi_tour": getElementValue(saveEntity.directjourney, "LineDesignation"),
+                            "cgi_transport": getElementValue(saveEntity.directjourney, "PrimaryDestinationName"),
+                            "cgi_line": getElementValue(saveEntity.directjourney, "LineDesignation"),
+                            "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
                             "cgi_linedesignation": getElementValue(saveEntity.directjourney, "PrimaryDestinationName"),
                             "cgi_startplanned": removeTimeZone(getElementValue(saveEntity.directjourney, "PlannedDepartureDateTime")),
                             "cgi_startactual": removeTimeZone(getElementValue(saveEntity.directjourney, "ObservedDepartureDateTime")), //ActualDepartureTime
