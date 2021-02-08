@@ -26,8 +26,8 @@ if (typeof (Endeavor.Skanetrafiken.FrontOffice) == "undefined") {
 
             var formName = formItem.getLabel();
 
-            for (var i = 0; i < Endeavor.Skanetrafiken.Contact._listOfFormsFrontOffice.length; i++) {
-                var valueList = Endeavor.Skanetrafiken.Contact._listOfFormsFrontOffice[i];
+            for (var i = 0; i < Endeavor.Skanetrafiken.FrontOffice._listOfFormsFrontOffice.length; i++) {
+                var valueList = Endeavor.Skanetrafiken.FrontOffice._listOfFormsFrontOffice[i];
                 if (formName == valueList) {
                     return true;
                 }
@@ -47,7 +47,7 @@ if (typeof (Endeavor.Skanetrafiken.FrontOffice) == "undefined") {
                     var selectedAttribute = selectedAttribute[j];
                     if (selectedAttribute.getName() == fieldName) {
                         var value = selectedAttribute.getValue();
-                        return Endeavor.Skanetrafiken.Contact._urlRelativeFrontOffice + value;
+                        return Endeavor.Skanetrafiken.FrontOffice._urlRelativeFrontOffice + value;
                     }
                 }
             }
@@ -61,7 +61,7 @@ if (typeof (Endeavor.Skanetrafiken.FrontOffice) == "undefined") {
             //var gridContextReskort = formContext.getControl("Relaterat_Reskort");
             //var allSelectedRowsReskort = gridContextReskort.getGrid().getSelectedRows();
 
-            //var openUrlReskort = Endeavor.Skanetrafiken.Contact.findValueFrontOffice(allSelectedRowsReskort, fieldNameReskort);
+            //var openUrlReskort = Endeavor.Skanetrafiken.FrontOffice.findValueFrontOffice(allSelectedRowsReskort, fieldNameReskort);
             //if (openUrlReskort != null)
             //    window.open(openUrlReskort, "_reskort");
 
@@ -69,7 +69,7 @@ if (typeof (Endeavor.Skanetrafiken.FrontOffice) == "undefined") {
             //var gridContextValuecodes = formContext.getControl("related_valuecodes");
             //var allSelectedRowsValuecodes = gridContextValuecodes.getGrid().getSelectedRows();
 
-            //var openUrlValueCode = Endeavor.Skanetrafiken.Contact.findValueFrontOffice(allSelectedRowsValuecodes, fieldNameValuecodes);
+            //var openUrlValueCode = Endeavor.Skanetrafiken.FrontOffice.findValueFrontOffice(allSelectedRowsValuecodes, fieldNameValuecodes);
             //if (openUrlValueCode != null)
             //    window.open(openUrlValueCode, "_valuecode");
 
@@ -77,7 +77,7 @@ if (typeof (Endeavor.Skanetrafiken.FrontOffice) == "undefined") {
             var gridContextSingapore = formContext.getControl("Singapore_Biljetter");
             var allSelectedRowsSingapore = gridContextSingapore.getGrid().getSelectedRows();
 
-            var openUrlSingapore = Endeavor.Skanetrafiken.Contact.findValueFrontOffice(allSelectedRowsSingapore, fieldNameSingapore);
+            var openUrlSingapore = Endeavor.Skanetrafiken.FrontOffice.findValueFrontOffice(allSelectedRowsSingapore, fieldNameSingapore);
             if (openUrlSingapore != null)
                 window.open(openUrlSingapore, "_singapore");
         },
