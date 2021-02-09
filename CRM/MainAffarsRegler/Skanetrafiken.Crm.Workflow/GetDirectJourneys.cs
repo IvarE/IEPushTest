@@ -5,6 +5,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Workflow;
 using Endeavor.Crm;
 using Skanetrafiken.Crm.Entities;
+using System.ServiceModel;
 
 namespace Skanetrafiken.Crm
 {
@@ -69,6 +70,50 @@ namespace Skanetrafiken.Crm
             }
 
             localContext.Trace($"GetCardDetails finished.");
+
+        }
+
+        private static BasicHttpBinding GetPubTransBasicHttpBinding(string name)
+        {
+            var binding = new BasicHttpBinding
+            {
+                Name = name,
+                OpenTimeout = TimeSpan.FromSeconds(20),
+                MaxReceivedMessageSize = 20971520,
+                Security = new BasicHttpSecurity()
+                {
+                    Mode = BasicHttpSecurityMode.TransportCredentialOnly,
+                    Transport = new HttpTransportSecurity()
+                    {
+                        ClientCredentialType = HttpClientCredentialType.Basic
+                    }
+                }
+            };
+            return binding;
+        }
+
+        internal static StopMonitoringServiceClient GetStopMonitoringServiceClient()
+        {
+            var serviceEndpointUrl = "http://PWS.ST.HOGIACLOUD.SE:9980/pws/StopMonitoringService";
+            var binding = GetPubTransBasicHttpBinding("StopMonitoringService");
+
+            var endpoint = new EndpointAddress(string.Format("{0}/Pws/StopMonitoringService", serviceEndpointUrl));
+            return new StopMonitoringServiceClient(binding, endpoint)
+            {
+                ClientCredentials =
+                {
+                    UserName =
+                    {
+                        UserName = _userName,
+                        Password = _password
+                    }
+                }
+            };
+        }
+
+
+        public static void Test()
+        {
 
         }
 
