@@ -1,0 +1,18 @@
+﻿<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/" xmlns:cgic="http://schemas.datacontract.org/2004/07/CGICRMPortalService">
+
+    <tem:RegisterTravelCard>
+      <tem:travelCard>
+        <cgic:AccountId>eab5f76d-586e-e411-80d3-0050569010ad</cgic:AccountId>
+        <cgic:Blocked>false</cgic:Blocked>
+        <cgic:CardName>CGI</cgic:CardName>
+        <cgic:CardNumber>123456787</cgic:CardNumber>
+        <cgic:CustomerType>Private</cgic:CustomerType>
+        <cgic:PeriodCardTypeTitle>Periodkort</cgic:PeriodCardTypeTitle>
+        <cgic:PeriodValidFrom>2014-11-01</cgic:PeriodValidFrom>
+        <cgic:PeriodValidTo>2014-12-31</cgic:PeriodValidTo>
+        <cgic:ValueCardTypeTitle>Värdekort</cgic:ValueCardTypeTitle>
+      </tem:travelCard>
+      <tem:callerId>?</tem:callerId>
+    </tem:RegisterTravelCard>
+
+</soapenv:Envelope>

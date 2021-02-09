@@ -1,0 +1,27 @@
+<?xml version="1.0" standalone="yes"?>
+<xs:schema targetNamespace="http://BIFF.org/AutoloadActivity.xsd" xmlns:mstns="http://cubic.com" xmlns="http://BIFF.org/AutoloadActivity.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified" xmlns:app3="http://BIFF.org/AutoloadActivity.xsd" xmlns:app2="urn:schemas-microsoft-com:xml-diffgram-v1" xmlns:app1="urn:schemas-microsoft-com:xml-msdata">
+  <xs:import namespace="urn:schemas-microsoft-com:xml-msdata" schemaLocation="GetAutoloadActivityReportResponse_app1.xsd" />
+  <xs:import namespace="urn:schemas-microsoft-com:xml-diffgram-v1" schemaLocation="GetAutoloadActivityReportResponse_app2.xsd" />
+  <xs:import namespace="http://cubic.com" schemaLocation="GetAutoloadActivityReportResponse.xsd" />
+  <xs:element name="AutoloadActivity">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Activity" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CardSerialNumber" type="xs:string" minOccurs="0" app1:Ordinal="0" />
+              <xs:element name="RequestID" type="xs:string" minOccurs="0" app1:Ordinal="1" />
+              <xs:element name="CardSection" type="xs:string" minOccurs="0" app1:Ordinal="2" />
+              <xs:element name="Currency" type="xs:string" minOccurs="0" app1:Ordinal="3" />
+              <xs:element name="Price" type="xs:string" minOccurs="0" app1:Ordinal="4" />
+              <xs:element name="StatusCode" type="xs:string" minOccurs="0" app1:Ordinal="5" />
+              <xs:element name="DateLoaded" type="xs:string" minOccurs="0" app1:Ordinal="6" />
+            </xs:sequence>
+            <xs:attribute ref="app2:id" />
+            <xs:attribute ref="app1:rowOrder" />
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

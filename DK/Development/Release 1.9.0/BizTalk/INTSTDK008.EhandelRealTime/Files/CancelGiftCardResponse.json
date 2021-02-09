@@ -1,0 +1,6 @@
+{
+    "CancelledGiftCardCodes": ["X1Y2Z3"],
+    "Message": "Värdekoden makulerades",
+    "ErrorMessage": "Hej",
+    "StatusCode": 200
+}

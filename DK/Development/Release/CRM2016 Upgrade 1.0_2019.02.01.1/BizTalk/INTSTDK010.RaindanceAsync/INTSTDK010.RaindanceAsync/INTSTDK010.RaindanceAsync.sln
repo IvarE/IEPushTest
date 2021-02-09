@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK010.Shared.Pipeline", "INTSTDK010.RaindanceAsync\INTSTDK010.Shared.Pipeline.btproj", "{9132C743-29ED-4B91-9DE9-74941B05635E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK010.Shared.PipelineComponents.Archiver", "INTSTDK010.Shared.PipelineComponents.Archiver\INTSTDK010.Shared.PipelineComponents.Archiver.csproj", "{F0A76D16-D072-48A0-84D7-E0BD8337E94B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK010.Shared.PipelineComponents", "INTSTDK010.Shared.PipelineComponents\INTSTDK010.Shared.PipelineComponents.csproj", "{901EB7B9-5E95-4159-8254-B6A8881C45F0}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://wmsi003915:8080/tfs/idccollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = INTSTDK010.RaindanceAsync\\INTSTDK010.Shared.Pipeline.btproj
+		SccProjectName1 = INTSTDK010.RaindanceAsync
+		SccLocalPath1 = INTSTDK010.RaindanceAsync
+		SccProjectUniqueName2 = INTSTDK010.Shared.PipelineComponents.Archiver\\INTSTDK010.Shared.PipelineComponents.Archiver.csproj
+		SccProjectName2 = INTSTDK010.Shared.PipelineComponents.Archiver
+		SccLocalPath2 = INTSTDK010.Shared.PipelineComponents.Archiver
+		SccProjectUniqueName3 = INTSTDK010.Shared.PipelineComponents\\INTSTDK010.Shared.PipelineComponents.csproj
+		SccProjectName3 = INTSTDK010.Shared.PipelineComponents
+		SccLocalPath3 = INTSTDK010.Shared.PipelineComponents
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9132C743-29ED-4B91-9DE9-74941B05635E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9132C743-29ED-4B91-9DE9-74941B05635E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9132C743-29ED-4B91-9DE9-74941B05635E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{9132C743-29ED-4B91-9DE9-74941B05635E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9132C743-29ED-4B91-9DE9-74941B05635E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9132C743-29ED-4B91-9DE9-74941B05635E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F0A76D16-D072-48A0-84D7-E0BD8337E94B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0A76D16-D072-48A0-84D7-E0BD8337E94B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0A76D16-D072-48A0-84D7-E0BD8337E94B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0A76D16-D072-48A0-84D7-E0BD8337E94B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{901EB7B9-5E95-4159-8254-B6A8881C45F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{901EB7B9-5E95-4159-8254-B6A8881C45F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{901EB7B9-5E95-4159-8254-B6A8881C45F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{901EB7B9-5E95-4159-8254-B6A8881C45F0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

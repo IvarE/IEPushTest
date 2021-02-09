@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="ftp://78.41.243.184/subramanians/SourceCodeMovement/CGIXrmExtConnectorServicePublished/" deleteExistingFiles="True" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Profile1" publishMethod="FTP" replaceMatchingFiles="False" userName="subramanians" savePWD="True" userPWD="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApAT2UL4tgEKd3mPf69Yv8QAAAAACAAAAAAADZgAAwAAAABAAAAAgejBJAGIuC5BzIUW5u9GbAAAAAASAAACgAAAAEAAAALfyz0vBPVdjTeMCtWtLVqIgAAAAMltLkneSb2HgtGmW5ufYLWa2c04LU9IbxcqddCex414UAAAAItq/rp/sRhwxTFeFHFgoP/FYrNI=" SelectedForPublish="True">
+    <file relUrl="Web.config" publishTime="04/30/2014 09:08:29" />
+    <file relUrl="bin/CGIXrmExtConnectorService.dll" publishTime="04/30/2014 09:08:27" />
+    <file relUrl="bin/Microsoft.Xrm.Sdk.dll" publishTime="03/26/2014 12:43:13" />
+    <file relUrl="bin/Microsoft.Xrm.Sdk.Deployment.dll" publishTime="03/26/2014 12:43:13" />
+    <file relUrl="bin/Microsoft.Xrm.Client.xml" publishTime="03/26/2014 12:43:12" />
+    <file relUrl="bin/CGIXrmWinLibrary.dll" publishTime="03/26/2014 12:43:09" />
+    <file relUrl="bin/CGIXrmExtConnectorService.pdb" publishTime="04/30/2014 09:08:27" />
+    <file relUrl="ExtConnectorService.svc" publishTime="04/23/2014 12:53:20" />
+    <file relUrl="bin/Microsoft.Xrm.Sdk.xml" publishTime="03/26/2014 12:43:13" />
+    <file relUrl="bin/Microsoft.Crm.Sdk.Proxy.xml" publishTime="03/26/2014 12:43:12" />
+    <file relUrl="bin/Microsoft.Xrm.Client.dll" publishTime="03/26/2014 12:43:13" />
+    <file relUrl="bin/Microsoft.Crm.Sdk.Proxy.dll" publishTime="03/26/2014 12:43:13" />
+    <file relUrl="bin/Microsoft.Xrm.Sdk.Deployment.xml" publishTime="03/26/2014 12:43:13" />
+  </publishProfile>
+</publishData>

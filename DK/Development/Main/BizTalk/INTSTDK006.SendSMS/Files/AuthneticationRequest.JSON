@@ -1,0 +1,8 @@
+{
+"Data":
+{
+"Username": "user@company.com",
+"Password": "aSecretPassword"
+},
+"AuthenticationToken": null
+}

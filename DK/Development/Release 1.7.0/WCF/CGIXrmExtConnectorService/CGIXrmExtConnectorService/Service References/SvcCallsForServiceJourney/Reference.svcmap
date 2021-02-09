@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="9e32c496-2d58-4e21-8f9b-ec99ca01a932" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://v-dkbiz.int.skanetrafiken.com/INTSTDK001/CallsForServiceJourney.svc?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="BizTalkServiceInstance1.wsdl" MetadataType="Wsdl" ID="281d8e9c-f568-41f2-aaf2-82ff9de37af0" SourceId="1" SourceUrl="http://v-dkbiz.int.skanetrafiken.com/INTSTDK001/CallsForServiceJourney.svc?wsdl" />
+    <MetadataFile FileName="CallsForServiceJourney2.xsd" MetadataType="Schema" ID="1192c1d9-8fd4-4a59-9671-5203f2f2a2bd" SourceId="1" SourceUrl="http://v-dkbiz.int.skanetrafiken.com/INTSTDK001/CallsForServiceJourney.svc?xsd=xsd2" />
+    <MetadataFile FileName="CallsForServiceJourney21.xsd" MetadataType="Schema" ID="7f61bf76-ba41-4416-8010-9317e63f2538" SourceId="1" SourceUrl="http://v-dkbiz.int.skanetrafiken.com/INTSTDK001/CallsForServiceJourney.svc?xsd=xsd3" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

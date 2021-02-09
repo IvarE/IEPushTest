@@ -1,0 +1,6 @@
+<?xml version="1.0" standalone="yes"?>
+<xs:schema targetNamespace="urn:schemas-microsoft-com:xml-msdata" xmlns:mstns="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/VehicleMonitoringService" xmlns="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified" xmlns:app2="urn:schemas-microsoft-com:xml-msdata" xmlns:app1="urn:schemas-microsoft-com:xml-diffgram-v1">
+  <xs:import namespace="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/VehicleMonitoringService" schemaLocation="GetCallsforServiceJourneyResponse.xsd" />
+  <xs:import namespace="urn:schemas-microsoft-com:xml-diffgram-v1" schemaLocation="GetCallsforServiceJourneyResponse_app1.xsd" />
+  <xs:attribute name="rowOrder" app2:Prefix="msdata" type="xs:string" />
+</xs:schema>

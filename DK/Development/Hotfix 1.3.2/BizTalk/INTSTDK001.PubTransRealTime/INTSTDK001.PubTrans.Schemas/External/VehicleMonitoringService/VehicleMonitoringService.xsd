@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema elementFormDefault="qualified"
+           targetNamespace="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/VehicleMonitoringService"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/VehicleMonitoringService"
+           xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1">
+  <xs:import schemaLocation=".\Diffgram.xsd" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" />
+  <xs:element name="GetCallsforServiceJourney">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="forServiceJourneyIdOrGid" nillable="true" type="xs:string"/>
+        <xs:element minOccurs="0" name="atOperatingDate" type="xs:dateTime"/>
+        <xs:element minOccurs="0" name="atStopGid" nillable="true" type="xs:string"/>
+        <xs:element minOccurs="0" name="includeArrivalsTable" type="xs:boolean"/>
+        <xs:element minOccurs="0" name="includeDeparturesTable" type="xs:boolean"/>
+        <xs:element minOccurs="0" name="includeDeviationTables" type="xs:boolean"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCallsforServiceJourneyResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetCallsforServiceJourneyResult" nillable="true">
+          <xs:complexType>
+            <xs:annotation>
+              <xs:appinfo>
+                <ActualType Name="DataSet" Namespace="http://schemas.datacontract.org/2004/07/System.Data" />
+              </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+              <xs:any processContents="skip"/>
+              <xs:element ref="diffgr:diffgram"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCall">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="forDatedServiceJourneyIdOrGid" nillable="true" type="xs:string"/>
+        <xs:element minOccurs="0" name="atOperatingDayDate" type="xs:dateTime"/>
+        <xs:element minOccurs="0" name="atSequenceNumber" type="xs:int"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCallResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetCallResult" nillable="true">
+          <xs:complexType>
+            <xs:annotation>
+              <xs:appinfo>
+                <ActualType Name="DataSet" Namespace="http://schemas.datacontract.org/2004/07/System.Data" />
+              </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+              <xs:any/>
+              <!-- below should be a diffgram when the method is implemented in PubTrans -->
+              <xs:any/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

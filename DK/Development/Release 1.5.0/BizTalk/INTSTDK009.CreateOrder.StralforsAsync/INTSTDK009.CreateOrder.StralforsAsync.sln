@@ -1,0 +1,115 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{B6CE6F81-64B8-4BB2-AEDC-B5CD54B7A3BB}"
+	ProjectSection(SolutionItems) = preProject
+		Files\CorporateOrderResult.xml = Files\CorporateOrderResult.xml
+		Files\CreateOrder.xml = Files\CreateOrder.xml
+		EHANdelParameters.xml = EHANdelParameters.xml
+		Files\Företag-exempelfil.xml = Files\Företag-exempelfil.xml
+		Files\GenericOrderResult.xml = Files\GenericOrderResult.xml
+		Files\ORDER_Företag-exempelfil.xml = Files\ORDER_Företag-exempelfil.xml
+		Files\OrderEnvelope.xml = Files\OrderEnvelope.xml
+		Files\Privat-exempelfil.xml = Files\Privat-exempelfil.xml
+		Files\PrivateOrderResult.xml = Files\PrivateOrderResult.xml
+		Files\SinglePrivateOrderResult.xml = Files\SinglePrivateOrderResult.xml
+		Files\WcfServiceDescription.xml = Files\WcfServiceDescription.xml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK009.STIP.Schemas", "INTSTDK009.STIP.Schemas\INTSTDK009.STIP.Schemas.btproj", "{94508AD6-BCB2-4212-81E3-4D9E4DBD5F29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK009.Stralfors.Schemas", "INTSTDK009.Stralfors.Schemas\INTSTDK009.Stralfors.Schemas.btproj", "{8A4885FC-262D-4F42-BE11-780D9B52A035}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK009.STIP.Transformations", "INTSTDK009.STIP.Transformations\INTSTDK009.STIP.Transformations.btproj", "{878B1492-91BA-418E-B48D-E83B5BFF0842}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK009.Shared.PipelineComponents", "INTSTDK009.Shared.PipelineComponents\INTSTDK009.Shared.PipelineComponents.csproj", "{F2811BA2-5545-45FD-82F9-D25F270D9B09}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK009.Shared.Pipelines", "INTSTDK009.Shared.Pipelines\INTSTDK009.Shared.Pipelines.btproj", "{FF17028F-3067-4CAF-ACC2-1417C18ABBED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK009.Shared.PipelineComponents.Archiver", "INTSTDK009.Shared.PipelineComponents.Archiver\INTSTDK009.Shared.PipelineComponents.Archiver.csproj", "{31199E94-F7AC-4197-9D0F-14E4ABECF220}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BAM", "BAM", "{1F2920D8-0FD5-4952-AB48-5572C8A8719C}"
+	ProjectSection(SolutionItems) = preProject
+		BAM\INTSTDK009.StralforsAsync.CreateOrderRx.btt = BAM\INTSTDK009.StralforsAsync.CreateOrderRx.btt
+		BAM\INTSTDK009.StralforsAsync.CreateOrderTx.btt = BAM\INTSTDK009.StralforsAsync.CreateOrderTx.btt
+		BAM\INTSTDK009.StralforsAsync.OrderResult.btt = BAM\INTSTDK009.StralforsAsync.OrderResult.btt
+		BAM\INTSTDK009.StralforsAsync.xlsx = BAM\INTSTDK009.StralforsAsync.xlsx
+		BAM\INTSTDK009.StralforsAsync.xml = BAM\INTSTDK009.StralforsAsync.xml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK009.Shared.PipelineComponents.FailedMessageArchiver", "INTSTDK009.Shared.PipelineComponents.FailedMessageArchiver\INTSTDK009.Shared.PipelineComponents.FailedMessageArchiver.csproj", "{AC147A44-CDDD-4817-8121-1E222310A4D2}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 8
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://wmsi003915:8080/tfs/idccollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = INTSTDK009.STIP.Schemas\\INTSTDK009.STIP.Schemas.btproj
+		SccProjectName1 = INTSTDK009.STIP.Schemas
+		SccLocalPath1 = INTSTDK009.STIP.Schemas
+		SccProjectUniqueName2 = INTSTDK009.Stralfors.Schemas\\INTSTDK009.Stralfors.Schemas.btproj
+		SccProjectName2 = INTSTDK009.Stralfors.Schemas
+		SccLocalPath2 = INTSTDK009.Stralfors.Schemas
+		SccProjectUniqueName3 = INTSTDK009.STIP.Transformations\\INTSTDK009.STIP.Transformations.btproj
+		SccProjectName3 = INTSTDK009.STIP.Transformations
+		SccLocalPath3 = INTSTDK009.STIP.Transformations
+		SccProjectUniqueName4 = INTSTDK009.Shared.PipelineComponents\\INTSTDK009.Shared.PipelineComponents.csproj
+		SccProjectName4 = INTSTDK009.Shared.PipelineComponents
+		SccLocalPath4 = INTSTDK009.Shared.PipelineComponents
+		SccProjectUniqueName5 = INTSTDK009.Shared.Pipelines\\INTSTDK009.Shared.Pipelines.btproj
+		SccProjectName5 = INTSTDK009.Shared.Pipelines
+		SccLocalPath5 = INTSTDK009.Shared.Pipelines
+		SccProjectUniqueName6 = INTSTDK009.Shared.PipelineComponents.Archiver\\INTSTDK009.Shared.PipelineComponents.Archiver.csproj
+		SccProjectName6 = INTSTDK009.Shared.PipelineComponents.Archiver
+		SccLocalPath6 = INTSTDK009.Shared.PipelineComponents.Archiver
+		SccProjectUniqueName7 = INTSTDK009.Shared.PipelineComponents.FailedMessageArchiver\\INTSTDK009.Shared.PipelineComponents.FailedMessageArchiver.csproj
+		SccProjectName7 = INTSTDK009.Shared.PipelineComponents.FailedMessageArchiver
+		SccLocalPath7 = INTSTDK009.Shared.PipelineComponents.FailedMessageArchiver
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94508AD6-BCB2-4212-81E3-4D9E4DBD5F29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94508AD6-BCB2-4212-81E3-4D9E4DBD5F29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94508AD6-BCB2-4212-81E3-4D9E4DBD5F29}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{94508AD6-BCB2-4212-81E3-4D9E4DBD5F29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94508AD6-BCB2-4212-81E3-4D9E4DBD5F29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94508AD6-BCB2-4212-81E3-4D9E4DBD5F29}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{8A4885FC-262D-4F42-BE11-780D9B52A035}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A4885FC-262D-4F42-BE11-780D9B52A035}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A4885FC-262D-4F42-BE11-780D9B52A035}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{8A4885FC-262D-4F42-BE11-780D9B52A035}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A4885FC-262D-4F42-BE11-780D9B52A035}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A4885FC-262D-4F42-BE11-780D9B52A035}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{878B1492-91BA-418E-B48D-E83B5BFF0842}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{878B1492-91BA-418E-B48D-E83B5BFF0842}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{878B1492-91BA-418E-B48D-E83B5BFF0842}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{878B1492-91BA-418E-B48D-E83B5BFF0842}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{878B1492-91BA-418E-B48D-E83B5BFF0842}.Release|Any CPU.Build.0 = Release|Any CPU
+		{878B1492-91BA-418E-B48D-E83B5BFF0842}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F2811BA2-5545-45FD-82F9-D25F270D9B09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2811BA2-5545-45FD-82F9-D25F270D9B09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF17028F-3067-4CAF-ACC2-1417C18ABBED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF17028F-3067-4CAF-ACC2-1417C18ABBED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF17028F-3067-4CAF-ACC2-1417C18ABBED}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{FF17028F-3067-4CAF-ACC2-1417C18ABBED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF17028F-3067-4CAF-ACC2-1417C18ABBED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF17028F-3067-4CAF-ACC2-1417C18ABBED}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{31199E94-F7AC-4197-9D0F-14E4ABECF220}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31199E94-F7AC-4197-9D0F-14E4ABECF220}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31199E94-F7AC-4197-9D0F-14E4ABECF220}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31199E94-F7AC-4197-9D0F-14E4ABECF220}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC147A44-CDDD-4817-8121-1E222310A4D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC147A44-CDDD-4817-8121-1E222310A4D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC147A44-CDDD-4817-8121-1E222310A4D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC147A44-CDDD-4817-8121-1E222310A4D2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

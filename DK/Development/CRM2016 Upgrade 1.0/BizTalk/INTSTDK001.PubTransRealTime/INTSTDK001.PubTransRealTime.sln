@@ -1,0 +1,75 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{E2BD3645-894D-440B-B64B-7DA0D4751653}"
+	ProjectSection(SolutionItems) = preProject
+		Files\GetCallsforServiceJourneyResponse.xml = Files\GetCallsforServiceJourneyResponse.xml
+		Files\Pubtrans\GetDirectJourneysBetweenStopsRequestResponse_NoEnv.xml = Files\Pubtrans\GetDirectJourneysBetweenStopsRequestResponse_NoEnv.xml
+		Files\GetDirectJourneysBetweenStopsResponse.xml = Files\GetDirectJourneysBetweenStopsResponse.xml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK001.PubTrans.Transformations", "INTSTDK001.PubTrans.Transformations\INTSTDK001.PubTrans.Transformations.btproj", "{DA4A729E-E4B6-4617-B319-4C9CA893F980}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK001.STIP.Schemas", "INTSTDK001.STIP.Schemas\INTSTDK001.STIP.Schemas.btproj", "{01F0B05C-2805-447B-BE6A-F19485F90EA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK001.STIP.Transformations", "INTSTDK001.STIP.Transformations\INTSTDK001.STIP.Transformations.btproj", "{F0B24F8B-1CFC-4EED-8FA1-78CBF61FF423}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK001.PubTrans.Schemas", "INTSTDK001.PubTrans.Schemas\INTSTDK001.PubTrans.Schemas.btproj", "{9AFECB2B-2D11-4D3D-929D-EB82F851DAAF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WcfServiceDescription", "WcfServiceDescription", "{47450837-AD40-4001-B943-4A209CB24113}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://wmsi003915:8080/tfs/idccollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = INTSTDK001.PubTrans.Transformations\\INTSTDK001.PubTrans.Transformations.btproj
+		SccProjectName1 = INTSTDK001.PubTrans.Transformations
+		SccLocalPath1 = INTSTDK001.PubTrans.Transformations
+		SccProjectUniqueName2 = INTSTDK001.STIP.Schemas\\INTSTDK001.STIP.Schemas.btproj
+		SccProjectName2 = INTSTDK001.STIP.Schemas
+		SccLocalPath2 = INTSTDK001.STIP.Schemas
+		SccProjectUniqueName3 = INTSTDK001.STIP.Transformations\\INTSTDK001.STIP.Transformations.btproj
+		SccProjectName3 = INTSTDK001.STIP.Transformations
+		SccLocalPath3 = INTSTDK001.STIP.Transformations
+		SccProjectUniqueName4 = INTSTDK001.PubTrans.Schemas\\INTSTDK001.PubTrans.Schemas.btproj
+		SccProjectName4 = INTSTDK001.PubTrans.Schemas
+		SccLocalPath4 = INTSTDK001.PubTrans.Schemas
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DA4A729E-E4B6-4617-B319-4C9CA893F980}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA4A729E-E4B6-4617-B319-4C9CA893F980}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA4A729E-E4B6-4617-B319-4C9CA893F980}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{DA4A729E-E4B6-4617-B319-4C9CA893F980}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA4A729E-E4B6-4617-B319-4C9CA893F980}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA4A729E-E4B6-4617-B319-4C9CA893F980}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{01F0B05C-2805-447B-BE6A-F19485F90EA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01F0B05C-2805-447B-BE6A-F19485F90EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01F0B05C-2805-447B-BE6A-F19485F90EA7}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{01F0B05C-2805-447B-BE6A-F19485F90EA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01F0B05C-2805-447B-BE6A-F19485F90EA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01F0B05C-2805-447B-BE6A-F19485F90EA7}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F0B24F8B-1CFC-4EED-8FA1-78CBF61FF423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0B24F8B-1CFC-4EED-8FA1-78CBF61FF423}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0B24F8B-1CFC-4EED-8FA1-78CBF61FF423}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F0B24F8B-1CFC-4EED-8FA1-78CBF61FF423}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0B24F8B-1CFC-4EED-8FA1-78CBF61FF423}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0B24F8B-1CFC-4EED-8FA1-78CBF61FF423}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{9AFECB2B-2D11-4D3D-929D-EB82F851DAAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AFECB2B-2D11-4D3D-929D-EB82F851DAAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AFECB2B-2D11-4D3D-929D-EB82F851DAAF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{9AFECB2B-2D11-4D3D-929D-EB82F851DAAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AFECB2B-2D11-4D3D-929D-EB82F851DAAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AFECB2B-2D11-4D3D-929D-EB82F851DAAF}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

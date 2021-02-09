@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="0a42ed15-c66e-489c-a0c6-28777e3a993c" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://sekunduat.skanetrafiken.se:4001/ExtConnectorService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ExtConnectorService.xsd" MetadataType="Schema" ID="57648335-f5dd-4ba7-9a0c-dd8f8f3a44e1" SourceId="1" SourceUrl="http://sekunduat.skanetrafiken.se:4001/ExtConnectorService.svc?xsd=xsd3" />
+    <MetadataFile FileName="ExtConnectorService1.xsd" MetadataType="Schema" ID="629ab6d0-6b43-4e05-8bf4-fc56af55605f" SourceId="1" SourceUrl="http://sekunduat.skanetrafiken.se:4001/ExtConnectorService.svc?xsd=xsd2" />
+    <MetadataFile FileName="ExtConnectorService2.xsd" MetadataType="Schema" ID="3a5160f3-1290-4e30-94de-fb2909814aed" SourceId="1" SourceUrl="http://sekunduat.skanetrafiken.se:4001/ExtConnectorService.svc?xsd=xsd4" />
+    <MetadataFile FileName="ExtConnectorService3.xsd" MetadataType="Schema" ID="86011f46-f610-484b-8daf-5ff88381590f" SourceId="1" SourceUrl="http://sekunduat.skanetrafiken.se:4001/ExtConnectorService.svc?xsd=xsd1" />
+    <MetadataFile FileName="ExtConnectorService.wsdl" MetadataType="Wsdl" ID="467cebe5-41e7-4b15-8041-e358e122a0d7" SourceId="1" SourceUrl="http://sekunduat.skanetrafiken.se:4001/ExtConnectorService.svc?wsdl" />
+    <MetadataFile FileName="ExtConnectorService4.xsd" MetadataType="Schema" ID="2aa660cb-f051-4445-8488-b6aa7b61dc2e" SourceId="1" SourceUrl="http://sekunduat.skanetrafiken.se:4001/ExtConnectorService.svc?xsd=xsd0" />
+    <MetadataFile FileName="ExtConnectorService.disco" MetadataType="Disco" ID="110467de-f09f-4f5b-8375-5f7fbbca4261" SourceId="1" SourceUrl="http://sekunduat.skanetrafiken.se:4001/ExtConnectorService.svc?disco" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

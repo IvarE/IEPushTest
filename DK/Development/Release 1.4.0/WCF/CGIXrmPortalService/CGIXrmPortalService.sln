@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGIXrmPortalService", "CGIXrmPortalService.csproj", "{444D080B-4FAB-4DE3-806B-EEAF849BC890}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGIXrmLogger", "..\..\Others\CGIXrmLogger\CGIXrmLogger.csproj", "{73F74590-72AF-4DCD-B101-3A449036D550}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Acceptance|Any CPU = Acceptance|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Development|Any CPU = Development|Any CPU
+		Production|Any CPU = Production|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Test|Any CPU = Test|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{444D080B-4FAB-4DE3-806B-EEAF849BC890}.Acceptance|Any CPU.ActiveCfg = Acceptance|Any CPU
+		{444D080B-4FAB-4DE3-806B-EEAF849BC890}.Acceptance|Any CPU.Build.0 = Acceptance|Any CPU
+		{444D080B-4FAB-4DE3-806B-EEAF849BC890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{444D080B-4FAB-4DE3-806B-EEAF849BC890}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{444D080B-4FAB-4DE3-806B-EEAF849BC890}.Development|Any CPU.ActiveCfg = Development|Any CPU
+		{444D080B-4FAB-4DE3-806B-EEAF849BC890}.Development|Any CPU.Build.0 = Development|Any CPU
+		{444D080B-4FAB-4DE3-806B-EEAF849BC890}.Production|Any CPU.ActiveCfg = Production|Any CPU
+		{444D080B-4FAB-4DE3-806B-EEAF849BC890}.Production|Any CPU.Build.0 = Production|Any CPU
+		{444D080B-4FAB-4DE3-806B-EEAF849BC890}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{444D080B-4FAB-4DE3-806B-EEAF849BC890}.Release|Any CPU.Build.0 = Release|Any CPU
+		{444D080B-4FAB-4DE3-806B-EEAF849BC890}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{444D080B-4FAB-4DE3-806B-EEAF849BC890}.Test|Any CPU.Build.0 = Test|Any CPU
+		{73F74590-72AF-4DCD-B101-3A449036D550}.Acceptance|Any CPU.ActiveCfg = Acceptance|Any CPU
+		{73F74590-72AF-4DCD-B101-3A449036D550}.Acceptance|Any CPU.Build.0 = Acceptance|Any CPU
+		{73F74590-72AF-4DCD-B101-3A449036D550}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73F74590-72AF-4DCD-B101-3A449036D550}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73F74590-72AF-4DCD-B101-3A449036D550}.Development|Any CPU.ActiveCfg = Development|Any CPU
+		{73F74590-72AF-4DCD-B101-3A449036D550}.Development|Any CPU.Build.0 = Development|Any CPU
+		{73F74590-72AF-4DCD-B101-3A449036D550}.Production|Any CPU.ActiveCfg = Production|Any CPU
+		{73F74590-72AF-4DCD-B101-3A449036D550}.Production|Any CPU.Build.0 = Production|Any CPU
+		{73F74590-72AF-4DCD-B101-3A449036D550}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73F74590-72AF-4DCD-B101-3A449036D550}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73F74590-72AF-4DCD-B101-3A449036D550}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{73F74590-72AF-4DCD-B101-3A449036D550}.Test|Any CPU.Build.0 = Test|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs-ext.cgisouth.wm.net:8080/tfs/skanetrafiken
+		SccProjectUniqueName0 = CGIXrmPortalService.csproj
+		SccProjectName0 = .
+		SccAuxPath0 = https://tfs-ext.cgisouth.wm.net:8080/tfs/skanetrafiken
+		SccLocalPath0 = .
+		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName1 = ..\\..\\Others\\CGIXrmLogger\\CGIXrmLogger.csproj
+		SccProjectName1 = ../../Others/CGIXrmLogger
+		SccAuxPath1 = https://tfs-ext.cgisouth.wm.net:8080/tfs/skanetrafiken
+		SccLocalPath1 = ..\\..\\Others\\CGIXrmLogger
+		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+	EndGlobalSection
+EndGlobal

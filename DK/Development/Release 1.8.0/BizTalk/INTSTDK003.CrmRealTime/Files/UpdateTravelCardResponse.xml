@@ -1,0 +1,10 @@
+﻿<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Body>
+    <UpdateTravelCardResponse xmlns="http://tempuri.org/">
+      <UpdateTravelCardResult xmlns:a="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+        <a:Message i:nil="true"/>
+        <a:Status>SUCCESS</a:Status>
+      </UpdateTravelCardResult>
+    </UpdateTravelCardResponse>
+  </s:Body>
+</s:Envelope>

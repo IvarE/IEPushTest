@@ -1,0 +1,349 @@
+﻿{
+    "swagger": "2.0",
+    "info": {
+        "version": "v1",
+        "title": "Skanetrafiken.Crm"
+    },
+    "host": "crm.endeavor.se:8091",
+    "schemes": [ "https" ],
+    "paths": {
+        "/api/Contacts": {
+            "get": {
+                "tags": [ "Contacts" ],
+                "operationId": "Contacts_Get",
+                "consumes": [ ],
+                "produces": [ "application/json", "text/json" ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": { "type": "object" }
+                    }
+                },
+                "deprecated": false
+            },
+            "post": {
+                "tags": [ "Contacts" ],
+                "operationId": "Contacts_Post",
+                "consumes": [ "application/json", "text/json", "application/x-www-form-urlencoded" ],
+                "produces": [ "application/json", "text/json" ],
+                "parameters": [
+                    {
+                        "name": "info",
+                        "in": "body",
+                        "required": true,
+                        "schema": { "$ref": "#/definitions/CustomerInfo" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": { "type": "object" }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/Contacts/{idOrEmail}": {
+            "get": {
+                "tags": [ "Contacts" ],
+                "operationId": "Contacts_GetWithIdOrEmail",
+                "consumes": [ ],
+                "produces": [ "application/json", "text/json" ],
+                "parameters": [
+                    {
+                        "name": "idOrEmail",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": { "type": "object" }
+                    }
+                },
+                "deprecated": false
+            },
+            "put": {
+                "tags": [ "Contacts" ],
+                "operationId": "Contacts_Put",
+                "consumes": [ "application/json", "text/json", "application/x-www-form-urlencoded" ],
+                "produces": [ "application/json", "text/json" ],
+                "parameters": [
+                    {
+                        "name": "idOrEmail",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "info",
+                        "in": "body",
+                        "required": true,
+                        "schema": { "$ref": "#/definitions/CustomerInfo" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": { "type": "object" }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/Contacts/GetLatestLinkGuid/{idOrEmail}": {
+            "get": {
+                "tags": [ "Contacts" ],
+                "operationId": "Contacts_GetLatestLinkGuid",
+                "consumes": [ ],
+                "produces": [ "application/json", "text/json" ],
+                "parameters": [
+                    {
+                        "name": "idOrEmail",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": { "type": "object" }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/Contacts/{time}/{price}": {
+            "post": {
+                "tags": [ "Contacts" ],
+                "operationId": "Contacts_Post2Param",
+                "consumes": [ "application/json", "text/json", "application/x-www-form-urlencoded" ],
+                "produces": [ "application/json", "text/json" ],
+                "parameters": [
+                    {
+                        "name": "time",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "price",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "info",
+                        "in": "body",
+                        "required": true,
+                        "schema": { "$ref": "#/definitions/CustomerInfo" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": { "type": "object" }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/Leads": {
+            "get": {
+                "tags": [ "Leads" ],
+                "operationId": "Leads_Get",
+                "consumes": [ ],
+                "produces": [ "application/json", "text/json" ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": { "type": "object" }
+                    }
+                },
+                "deprecated": false
+            },
+            "post": {
+                "tags": [ "Leads" ],
+                "operationId": "Leads_Post",
+                "consumes": [ "application/json", "text/json", "application/x-www-form-urlencoded" ],
+                "produces": [ "application/json", "text/json" ],
+                "parameters": [
+                    {
+                        "name": "info",
+                        "in": "body",
+                        "required": true,
+                        "schema": { "$ref": "#/definitions/CustomerInfo" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": { "type": "object" }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/Leads/{idOrEmail}": {
+            "get": {
+                "tags": [ "Leads" ],
+                "operationId": "Leads_GetWithIdOrEmail",
+                "consumes": [ ],
+                "produces": [ "application/json", "text/json" ],
+                "parameters": [
+                    {
+                        "name": "idOrEmail",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": { "type": "object" }
+                    }
+                },
+                "deprecated": false
+            },
+            "put": {
+                "tags": [ "Leads" ],
+                "operationId": "Leads_Put",
+                "consumes": [ "application/json", "text/json", "application/x-www-form-urlencoded" ],
+                "produces": [ "application/json", "text/json" ],
+                "parameters": [
+                    {
+                        "name": "idOrEmail",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "info",
+                        "in": "body",
+                        "required": true,
+                        "schema": { "$ref": "#/definitions/CustomerInfo" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": { "type": "object" }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/Leads/GetLatestLinkGuid/{idOrEmail}": {
+            "get": {
+                "tags": [ "Leads" ],
+                "operationId": "Leads_GetLatestLinkGuid",
+                "consumes": [ ],
+                "produces": [ "application/json", "text/json" ],
+                "parameters": [
+                    {
+                        "name": "idOrEmail",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": { "type": "object" }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/Leads/{time}/{price}": {
+            "post": {
+                "tags": [ "Leads" ],
+                "operationId": "Leads_Post2Param",
+                "consumes": [ "application/json", "text/json", "application/x-www-form-urlencoded" ],
+                "produces": [ "application/json", "text/json" ],
+                "parameters": [
+                    {
+                        "name": "time",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "price",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "info",
+                        "in": "body",
+                        "required": true,
+                        "schema": { "$ref": "#/definitions/CustomerInfo" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": { "type": "object" }
+                    }
+                },
+                "deprecated": false
+            }
+        }
+    },
+    "definitions": {
+        "CustomerInfo": {
+            "type": "object",
+            "properties": {
+                "source": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "firstName": { "type": "string" },
+                "lastName": { "type": "string" },
+                "addressBlock": { "$ref": "#/definitions/CustomerInfoAddressBlock" },
+                "telephone": { "type": "string" },
+                "mobile": { "type": "string" },
+                "socialSecurityNumber": { "type": "string" },
+                "swedishSocialSecurityNumber": { "type": "boolean" },
+                "swedishSocialSecurityNumberSpecified": { "type": "boolean" },
+                "email": { "type": "string" },
+                "creditsafeOk": { "type": "boolean" },
+                "creditsafeOkSpecified": { "type": "boolean" },
+                "avliden": { "type": "boolean" },
+                "avlidenSpecified": { "type": "boolean" },
+                "utvandrad": { "type": "boolean" },
+                "utvandradSpecified": { "type": "boolean" },
+                "emailInvalid": { "type": "boolean" },
+                "emailInvalidSpecified": { "type": "boolean" },
+                "newEmail": { "type": "string" },
+                "guid": { "type": "string" },
+                "isAddressEnteredManually": { "type": "boolean" },
+                "isAddressEnteredManuallySpecified": { "type": "boolean" },
+                "isAddressInformationComplete": { "type": "boolean" },
+                "isAddressInformationCompleteSpecified": { "type": "boolean" },
+                "allowPurchase": { "type": "boolean" },
+                "allowPurchaseSpecified": { "type": "boolean" },
+                "allowAutoload": { "type": "boolean" },
+                "allowAutoloadSpecified": { "type": "boolean" }
+            }
+        },
+        "CustomerInfoAddressBlock": {
+            "type": "object",
+            "properties": {
+                "co": { "type": "string" },
+                "line1": { "type": "string" },
+                "postalCode": { "type": "string" },
+                "city": { "type": "string" },
+                "countryISO": { "type": "string" }
+            }
+        }
+    }
+}

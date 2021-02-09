@@ -1,0 +1,391 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EE3B7945-589D-49EF-8005-4350DFEB2478}</ProjectGuid>
+    <ProjectTypeGuids>{32f31d43-81cc-4c15-9de6-3fc5453562b6};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Skanetrafiken.Crm</RootNamespace>
+    <AssemblyName>Skanetrafiken.Crm.Workflow</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Keyfile.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Produktion|AnyCPU'">
+    <OutputPath>bin\Produktion\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Test\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Acceptans|AnyCPU'">
+    <OutputPath>bin\Acceptans\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Dev\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="jose-jwt, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\jose-jwt.2.2.0\lib\net40\jose-jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.CrmSdk.CoreAssemblies.8.1.0\lib\net45\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.IdentityModel.6.1.7600.16394\lib\net35\Microsoft.IdentityModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.CrmSdk.CoreAssemblies.8.1.0\lib\net45\Microsoft.Xrm.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk.Workflow, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.CrmSdk.Workflow.8.1.0\lib\net45\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activities" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Workflow.Activities" />
+    <Reference Include="System.Workflow.ComponentModel" />
+    <Reference Include="System.Workflow.Runtime" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Skanetrafiken.Crm\ApiHelper.cs">
+      <Link>ApiHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\ColumnBlockSchemas\CustomerInfoBlock.cs">
+      <Link>WebApiColumnBlocks\CustomerInfoBlock.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\ColumnBlockSchemas\NotificationInfoBlock.cs">
+      <Link>WebApiColumnBlocks\NotificationInfoBlock.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\ColumnBlockSchemas\StatusBlock.cs">
+      <Link>WebApiColumnBlocks\StatusBlock.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\CountryUtility.cs">
+      <Link>CountryUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\CustomerUtility.cs">
+      <Link>CustomerUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\AccountEntity.cs">
+      <Link>Entities\AccountEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ActivityPartyEntity.cs">
+      <Link>Entities\ActivityPartyEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\AsyncOperationEntity.cs">
+      <Link>Entities\AsyncOperationEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CampaignEntity.cs">
+      <Link>Entities\CampaignEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CampaignItemEntity.cs">
+      <Link>Entities\CampaignItemEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CampaignResponseEntity.cs">
+      <Link>Entities\CampaignResponseEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CgiCategoryDetailEntity.cs">
+      <Link>Entities\CgiCategoryDetailEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CgiSettingEntity.cs">
+      <Link>Entities\CgiSettingEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CompanyRoleEntity.cs">
+      <Link>Entities\CompanyRoleEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ContactEntity.cs">
+      <Link>Entities\ContactEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CountryEntity.cs">
+      <Link>Entities\CountryEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CreditOrderRowEntity.cs">
+      <Link>Entities\CreditOrderRowEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CustomerAddressEntity.cs">
+      <Link>Entities\CustomerAddressEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\DeltabatchQueueEntity.cs">
+      <Link>DeltabatchQueueEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\EmailEntity.cs">
+      <Link>Entities\EmailEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\EmailTemplateProxyEntity.cs">
+      <Link>Entities\EmailTemplateProxyEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\IncidentEntity.cs">
+      <Link>Entities\IncidentEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\LeadEntity.cs">
+      <Link>Entities\LeadEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\MergeRecordsEntity.cs">
+      <Link>Entities\MergeRecordsEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\NotifyMKLEntity.cs">
+      <Link>Entities\NotifyMKLEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ProcessStageEntity.cs">
+      <Link>Entities\ProcessStageEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ProductEntity.cs">
+      <Link>Entities\ProductEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\RefundAccountEntity.cs">
+      <Link>Entities\RefundAccountEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\RefundEntity.cs">
+      <Link>Entities\RefundEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\RefundResponsibleEntity.cs">
+      <Link>Entities\RefundResponsibleEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\RefundTypeEntity.cs">
+      <Link>Entities\RefundTypeEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ReimbursementFormEntity.cs">
+      <Link>Entities\ReimbursementFormEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ReturnMessageWebApiEntity.cs">
+      <Link>Entities\ReturnMessageWebApiEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\Role.cs">
+      <Link>Entities\Role.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\SentTextMessageEntity.cs">
+      <Link>Entities\SentTextMessageEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\SystemUserEntity.cs">
+      <Link>Entities\SystemUserEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\SystemUserRoles.cs">
+      <Link>Entities\SystemUserRoles.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\TemplateEntity.cs">
+      <Link>Entities\TemplateEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\TravelCardEntity.cs">
+      <Link>Entities\TravelCardEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ValueCodeApprovalEntity.cs">
+      <Link>Entities\ValueCodeApprovalEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ValueCodeEntity.cs">
+      <Link>Entities\ValueCodeEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ValueCodeTemplateEntity.cs">
+      <Link>Entities\ValueCodeTemplateEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ValueCodeTransactionEntity.cs">
+      <Link>Entities\ValueCodeTransactionEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\GeneratedEntities.cs">
+      <Link>GeneratedEntities.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Identity.cs">
+      <Link>Identity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\IdentityContract.cs">
+      <Link>IdentityContract.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Properties\Resources.Designer.cs">
+      <Link>Resources.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Skanetrafiken.Crm.UnitTest\TestDataHelper.cs">
+      <Link>TestDataHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\TextMessageSender\BosbecAPIHandler.cs">
+      <Link>TextMessageSender\BosbecAPIHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\ValueCodes\ValueCodeHandler.cs">
+      <Link>ValueCodes\ValueCodeHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\XrmRetrieveHelper.cs">
+      <Link>XrmRetrieveHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\TextMessageEntity.cs">
+      <Link>Entities\TextMessageEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\TextMessageTemplateEntity.cs">
+      <Link>Entities\TextMessageTemplateEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\UserSettingsEntity.cs">
+      <Link>UserSettingsEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\TextMessageSender\MultipleTextMessage.cs">
+      <Link>TextMessageSender\MultipleTextMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\TextMessageSender\SingleTextMessage.cs">
+      <Link>TextMessageSender\SingleleTextMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\TextMessageSender\TextMessageToSend.cs">
+      <Link>TextMessageSender\TextMessageToSend.cs</Link>
+    </Compile>
+    <Compile Include="ApproveValueCode.cs" />
+    <Compile Include="ApproveValueCodeApproval.cs" />
+    <Compile Include="BigInteger.cs" />
+    <Compile Include="BlockAccountPortal.cs" />
+    <Compile Include="BlockCardBiztalk.cs" />
+    <Compile Include="BlockCompanyRolePortal.cs" />
+    <Compile Include="BlockCustomerPortal.cs" />
+    <Compile Include="CancelValueCode.cs" />
+    <Compile Include="CreateValueCodeApproval.cs" />
+    <Compile Include="CreateValueCodeGeneric.cs" />
+    <Compile Include="DeclineValueCode.cs" />
+    <Compile Include="EntityExtensionMethods.cs" />
+    <Compile Include="Ezrsa.cs" />
+    <Compile Include="GenerateCampaignCodeWrapper.cs" />
+    <Compile Include="CreateAndSendValueCodeFromRefund.cs" />
+    <Compile Include="CreateMultipleValueCodes.cs" />
+    <Compile Include="GetFormattedDateString.cs" />
+    <Compile Include="GetDateTimeDifference.cs" />
+    <Compile Include="GetServiceJourney.cs" />
+    <Compile Include="GetOrganisationalUnits.cs" />
+    <Compile Include="GetDirectJourneys.cs" />
+    <Compile Include="GetContractors.cs" />
+    <Compile Include="GetLineDetails.cs" />
+    <Compile Include="GetValueCode.cs" />
+    <Compile Include="GetCardBalance.cs" />
+    <Compile Include="MergeOldAccountWithPortal.cs" />
+    <Compile Include="ParseBlockCardResponseFromBiztalk.cs" />
+    <Compile Include="ParseCardDetailsFromBiztalk.cs" />
+    <Compile Include="Plugin.cs" />
+    <Compile Include="PrintRefundReports.cs" />
+    <Compile Include="RecalculateStatisticsOfCampaign.cs" />
+    <Compile Include="RechargeCard.cs" />
+    <Compile Include="GetCardTransactions.cs" />
+    <Compile Include="GetOutstandingCharges.cs" />
+    <Compile Include="GetCardDetails.cs" />
+    <Compile Include="CreateCreditOrder.cs" />
+    <Compile Include="GenerateCampaignCodesRecursive.cs" />
+    <Compile Include="AnonymiseUnderlyingLeadsRecursive.cs" />
+    <Compile Include="AllowOneMoreTicketMove.cs" />
+    <Compile Include="GetTicketMoveDataFromMKL.cs" />
+    <Compile Include="GetOrders.cs" />
+    <Compile Include="SendEmailFromRibbon.cs" />
+    <Compile Include="SendTextMessage.cs" />
+    <Compile Include="SendValueCode.cs" />
+    <Compile Include="UpdateTextMessageStatus.cs" />
+    <Compile Include="UpdateTopicOnUnderlyingLeadsRecursive.cs" />
+    <Compile Include="UpdateLeadSourceOnUnderlyingLeadsRecursive.cs" />
+    <Compile Include="SynchroniseLeads.cs" />
+    <Compile Include="MergeRecordsStart.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="XrmHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Keyfile.snk" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\Skanetrafiken.Crm\Properties\Resources.resx">
+      <Link>Properties\Resources.resx</Link>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild"> </Target>
+  -->
+</Project>

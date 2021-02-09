@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="yes"?>
+<xs:schema targetNamespace="urn:schemas-microsoft-com:xml-diffgram-v1" xmlns:mstns="http://cubic.com" xmlns="urn:schemas-microsoft-com:xml-diffgram-v1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified" xmlns:app2="urn:schemas-microsoft-com:xml-diffgram-v1" xmlns:app3="http://Biff.com/CardTransactions.xsd" xmlns:app1="urn:schemas-microsoft-com:xml-msdata">
+  <xs:import namespace="urn:schemas-microsoft-com:xml-msdata" schemaLocation="Diffgram_CardTransactions_RowOrder.xsd" />
+  <xs:import namespace="http://cubic.com" schemaLocation="GetCardTransactionsResponse.xsd" />
+  <xs:import namespace="http://Biff.com/CardTransactions.xsd" schemaLocation="CardTransactions.xsd" />
+  <xs:attribute name="id" app1:Prefix="diffgr" type="xs:string" />
+  <xs:element name="diffgram" app1:Prefix="diffgr">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="app3:CardTransactions" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

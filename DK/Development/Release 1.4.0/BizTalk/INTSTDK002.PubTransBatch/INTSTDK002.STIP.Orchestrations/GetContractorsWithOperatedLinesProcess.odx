@@ -1,0 +1,703 @@
+﻿#if __DESIGNER_DATA
+#error Do not define __DESIGNER_DATA.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<om:MetaModel MajorVersion="1" MinorVersion="3" Core="2b131234-7959-458d-834f-2dc0769ce683" ScheduleModel="66366196-361d-448d-976f-cab5e87496d2" xmlns:om="http://schemas.microsoft.com/BizTalk/2003/DesignerData">
+    <om:Element Type="Module" OID="e4dcf018-cbd1-47da-a6e9-9b4cb60531e2" LowerBound="1.1" HigherBound="175.1">
+        <om:Property Name="ReportToAnalyst" Value="True" />
+        <om:Property Name="Name" Value="INTSTDK002.STIP.Orchestrations" />
+        <om:Property Name="Signal" Value="False" />
+        <om:Element Type="ServiceDeclaration" OID="7e23403e-79ff-4691-804d-bc1f139fd796" ParentLink="Module_ServiceDeclaration" LowerBound="32.1" HigherBound="174.1">
+            <om:Property Name="InitializedTransactionType" Value="False" />
+            <om:Property Name="IsInvokable" Value="False" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="GetContractorsWithOperatedLinesProcess" />
+            <om:Property Name="Signal" Value="False" />
+            <om:Element Type="VariableDeclaration" OID="578edf39-2bfe-4467-b30a-f4e788064d98" ParentLink="ServiceDeclaration_VariableDeclaration" LowerBound="50.1" HigherBound="51.1">
+                <om:Property Name="UseDefaultConstructor" Value="True" />
+                <om:Property Name="Type" Value="System.Xml.XmlDocument" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="xmlDoc" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="f9425d66-43aa-4047-8be6-b7b77ea6944e" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="43.1" HigherBound="44.1">
+                <om:Property Name="Type" Value="INTSTDK002.STIP.Orchestrations.Triggers.GetContractorsWithOperatedLines" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="Trigger" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="fdbcde16-6b2f-4d1a-9f17-9b7f7a00ccff" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="44.1" HigherBound="45.1">
+                <om:Property Name="Type" Value="INTSTDK002.PubTrans.Schemas.OrganisationalDataService.GetContractorsWithOperatedLinesResponse" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="GetContractorsWithOperatedLinesResponse" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="63bb3ffe-cc25-43d0-9001-85ba86c526b6" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="45.1" HigherBound="46.1">
+                <om:Property Name="Type" Value="INTSTDK002.CRM.Schemas.CompositeOperation_GetContractorsWithOperatedLinesProcess.RequestResponse" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="CompositeOperationResponse" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="051c50c1-3cb6-406d-8f65-dfb2f276eb2e" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="46.1" HigherBound="47.1">
+                <om:Property Name="Type" Value="INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetContractorsWithOperatedLinesProcess_EmptyTables" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SP_EmptyTables" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="e43103e9-837f-496d-907e-12277ece5a21" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="47.1" HigherBound="48.1">
+                <om:Property Name="Type" Value="INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetContractorsWithOperatedLinesProcess_EmptyTablesResponse" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SP_EmptyTablesResponse" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="e7d92ecf-7ae4-4039-97bc-03c4b48b5f59" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="48.1" HigherBound="49.1">
+                <om:Property Name="Type" Value="BTS.soap_envelope_1__1.Fault" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SoapFault" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="513a03a8-68eb-4620-b299-b3a0a31ce4a9" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="49.1" HigherBound="50.1">
+                <om:Property Name="Type" Value="INTSTDK002.STIP.Orchestrations.FaultException" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SoapFaultMessage" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="ServiceBody" OID="a219e178-f7e9-4e5f-895a-342aef85a822" ParentLink="ServiceDeclaration_ServiceBody">
+                <om:Property Name="Signal" Value="False" />
+                <om:Element Type="Receive" OID="3272c00f-5c67-4d4f-83de-0c3f60345b98" ParentLink="ServiceBody_Statement" LowerBound="53.1" HigherBound="56.1">
+                    <om:Property Name="Activate" Value="True" />
+                    <om:Property Name="PortName" Value="ReceiveGcwoTrigger" />
+                    <om:Property Name="MessageName" Value="Trigger" />
+                    <om:Property Name="OperationName" Value="RequestGcwoTrigger" />
+                    <om:Property Name="OperationMessageName" Value="Request" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Rcv_Trigger" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+                <om:Element Type="VariableAssignment" OID="1bf92d0d-a535-43ae-b139-e7138aa04f43" ParentLink="ServiceBody_Statement" LowerBound="56.1" HigherBound="58.1">
+                    <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] Trigger GetContractorsWithOperatedLines received&quot;);" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Trace" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+                <om:Element Type="Scope" OID="833ec830-1575-4acf-910e-a85d05317d0e" ParentLink="ServiceBody_Statement" LowerBound="58.1" HigherBound="172.1">
+                    <om:Property Name="InitializedTransactionType" Value="True" />
+                    <om:Property Name="IsSynchronized" Value="False" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Scope_RequestData" />
+                    <om:Property Name="Signal" Value="True" />
+                    <om:Element Type="Send" OID="4316ab72-8691-4ecd-8b1f-f86303a90119" ParentLink="ComplexStatement_Statement" LowerBound="63.1" HigherBound="65.1">
+                        <om:Property Name="PortName" Value="RequestGcwoData" />
+                        <om:Property Name="MessageName" Value="Trigger" />
+                        <om:Property Name="OperationName" Value="SendRequestGcwoData" />
+                        <om:Property Name="OperationMessageName" Value="Request" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="Snd_Trigger" />
+                        <om:Property Name="Signal" Value="True" />
+                    </om:Element>
+                    <om:Element Type="VariableAssignment" OID="434f22a4-7345-4c52-b0df-21da6091e783" ParentLink="ComplexStatement_Statement" LowerBound="65.1" HigherBound="67.1">
+                        <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans requested data&quot;);" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="Trace" />
+                        <om:Property Name="Signal" Value="False" />
+                    </om:Element>
+                    <om:Element Type="Receive" OID="94b704fa-19cf-498b-b149-9c9b4242b07a" ParentLink="ComplexStatement_Statement" LowerBound="67.1" HigherBound="69.1">
+                        <om:Property Name="Activate" Value="False" />
+                        <om:Property Name="PortName" Value="RequestGcwoData" />
+                        <om:Property Name="MessageName" Value="GetContractorsWithOperatedLinesResponse" />
+                        <om:Property Name="OperationName" Value="SendRequestGcwoData" />
+                        <om:Property Name="OperationMessageName" Value="Response" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="Rcv_GetContractorsWithOperatedLinesRequestResponse" />
+                        <om:Property Name="Signal" Value="True" />
+                    </om:Element>
+                    <om:Element Type="VariableAssignment" OID="6f827578-f884-4155-a9ff-43cae5268927" ParentLink="ComplexStatement_Statement" LowerBound="69.1" HigherBound="71.1">
+                        <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans data response received&quot;);" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="Trace" />
+                        <om:Property Name="Signal" Value="True" />
+                    </om:Element>
+                    <om:Element Type="Scope" OID="40e72f27-0a58-4858-9a12-7be199188d3a" ParentLink="ComplexStatement_Statement" LowerBound="71.1" HigherBound="132.1">
+                        <om:Property Name="InitializedTransactionType" Value="True" />
+                        <om:Property Name="IsSynchronized" Value="False" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="Scope_EmptyTables" />
+                        <om:Property Name="Signal" Value="True" />
+                        <om:Element Type="Construct" OID="15ec4aa1-717f-4a4c-aafe-e6ebf89b7251" ParentLink="ComplexStatement_Statement" LowerBound="76.1" HigherBound="83.1">
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Create_SP_EmptyTables" />
+                            <om:Property Name="Signal" Value="True" />
+                            <om:Element Type="MessageAssignment" OID="01389c61-4075-4421-bbc3-e860bfd213e9" ParentLink="ComplexStatement_Statement" LowerBound="79.1" HigherBound="82.1">
+                                <om:Property Name="Expression" Value="xmlDoc.LoadXml(&quot;&lt;ns0:SP_INTSTDK002_GetContractorsWithOperatedLinesProcess_EmptyTables xmlns:ns0=\&quot;http://schemas.microsoft.com/Sql/2008/05/Procedures/dbo\&quot; /&gt; &quot;);&#xD;&#xA;SP_EmptyTables = xmlDoc;" />
+                                <om:Property Name="ReportToAnalyst" Value="False" />
+                                <om:Property Name="Name" Value="Assign_SP_EmptyTables" />
+                                <om:Property Name="Signal" Value="False" />
+                            </om:Element>
+                            <om:Element Type="MessageRef" OID="4125bdd3-89f8-4a4d-acfb-3cd3c3d65ad4" ParentLink="Construct_MessageRef" LowerBound="77.39" HigherBound="77.53">
+                                <om:Property Name="Ref" Value="SP_EmptyTables" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Signal" Value="False" />
+                            </om:Element>
+                        </om:Element>
+                        <om:Element Type="Send" OID="a322622d-9b6e-4b8f-82cf-c35ff4931bec" ParentLink="ComplexStatement_Statement" LowerBound="83.1" HigherBound="85.1">
+                            <om:Property Name="PortName" Value="EmptyGcwoTables" />
+                            <om:Property Name="MessageName" Value="SP_EmptyTables" />
+                            <om:Property Name="OperationName" Value="SendGcwoEmptyTables" />
+                            <om:Property Name="OperationMessageName" Value="Request" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Snd_SP_EmptyTables" />
+                            <om:Property Name="Signal" Value="True" />
+                        </om:Element>
+                        <om:Element Type="VariableAssignment" OID="3250ed13-b49d-463a-98c9-d4b8dafc14a4" ParentLink="ComplexStatement_Statement" LowerBound="85.1" HigherBound="87.1">
+                            <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM empty tables request&quot;);" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Trace" />
+                            <om:Property Name="Signal" Value="True" />
+                        </om:Element>
+                        <om:Element Type="Receive" OID="371d2245-cae4-4035-98f6-e03793bf7190" ParentLink="ComplexStatement_Statement" LowerBound="87.1" HigherBound="89.1">
+                            <om:Property Name="Activate" Value="False" />
+                            <om:Property Name="PortName" Value="EmptyGcwoTables" />
+                            <om:Property Name="MessageName" Value="SP_EmptyTablesResponse" />
+                            <om:Property Name="OperationName" Value="SendGcwoEmptyTables" />
+                            <om:Property Name="OperationMessageName" Value="Response" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Rcv_SP_EmptyTablesResponse" />
+                            <om:Property Name="Signal" Value="True" />
+                        </om:Element>
+                        <om:Element Type="VariableAssignment" OID="b4388398-cff5-47eb-9331-79b5d7c980f3" ParentLink="ComplexStatement_Statement" LowerBound="89.1" HigherBound="91.1">
+                            <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM empty tables response&quot;);" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Trace" />
+                            <om:Property Name="Signal" Value="True" />
+                        </om:Element>
+                        <om:Element Type="Scope" OID="e42e5ab4-47e6-48d6-a5c6-e7ce4c1eab73" ParentLink="ComplexStatement_Statement" LowerBound="91.1" HigherBound="118.1">
+                            <om:Property Name="InitializedTransactionType" Value="True" />
+                            <om:Property Name="IsSynchronized" Value="False" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Scope_InsertData" />
+                            <om:Property Name="Signal" Value="True" />
+                            <om:Element Type="Send" OID="73179252-8dbb-44c2-97ca-8b23873526c0" ParentLink="ComplexStatement_Statement" LowerBound="96.1" HigherBound="98.1">
+                                <om:Property Name="PortName" Value="InsertGcwoData" />
+                                <om:Property Name="MessageName" Value="GetContractorsWithOperatedLinesResponse" />
+                                <om:Property Name="OperationName" Value="SendInsertGcwoData" />
+                                <om:Property Name="OperationMessageName" Value="Request" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="Snd_CompositeOperation" />
+                                <om:Property Name="Signal" Value="True" />
+                            </om:Element>
+                            <om:Element Type="VariableAssignment" OID="bf65c210-c608-498a-b359-0c56127f0a5b" ParentLink="ComplexStatement_Statement" LowerBound="98.1" HigherBound="100.1">
+                                <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM data sent&quot;);" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="Trace" />
+                                <om:Property Name="Signal" Value="False" />
+                            </om:Element>
+                            <om:Element Type="Receive" OID="9bf34f55-8d5c-48c1-b27c-945553843426" ParentLink="ComplexStatement_Statement" LowerBound="100.1" HigherBound="102.1">
+                                <om:Property Name="Activate" Value="False" />
+                                <om:Property Name="PortName" Value="InsertGcwoData" />
+                                <om:Property Name="MessageName" Value="CompositeOperationResponse" />
+                                <om:Property Name="OperationName" Value="SendInsertGcwoData" />
+                                <om:Property Name="OperationMessageName" Value="Response" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="Rcv_CompositeOperationResponse" />
+                                <om:Property Name="Signal" Value="True" />
+                            </om:Element>
+                            <om:Element Type="VariableAssignment" OID="6df97491-8d75-4a9c-b500-4af76af52724" ParentLink="ComplexStatement_Statement" LowerBound="102.1" HigherBound="104.1">
+                                <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM data response received&quot;);" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="Trace" />
+                                <om:Property Name="Signal" Value="True" />
+                            </om:Element>
+                            <om:Element Type="Catch" OID="bfc94fb2-4804-4d0c-b911-8214982c9a0b" ParentLink="Scope_Catch" LowerBound="107.1" HigherBound="116.1">
+                                <om:Property Name="ExceptionName" Value="ex" />
+                                <om:Property Name="ExceptionType" Value="System.Exception" />
+                                <om:Property Name="IsFaultMessage" Value="False" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="CatchException" />
+                                <om:Property Name="Signal" Value="True" />
+                                <om:Element Type="VariableAssignment" OID="dfdbc130-9dab-4ada-8bdb-01c2b8badd32" ParentLink="Catch_Statement" LowerBound="110.1" HigherBound="113.1">
+                                    <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM PubTrans_Staging exception while inserting data: &quot; + ex.Message);&#xD;&#xA;System.Diagnostics.EventLog.WriteEntry(&quot;XLANG/s&quot;, &quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM PubTrans_Staging exception while inserting data: &quot; + ex.Message, System.Diagnostics.EventLogEntryType.Error);" />
+                                    <om:Property Name="ReportToAnalyst" Value="True" />
+                                    <om:Property Name="Name" Value="TraceAndLog" />
+                                    <om:Property Name="Signal" Value="True" />
+                                </om:Element>
+                                <om:Element Type="Suspend" OID="b2e65fb4-13ba-4167-beac-1485fca57ece" ParentLink="Catch_Statement" LowerBound="113.1" HigherBound="115.1">
+                                    <om:Property Name="ErrorMessage" Value="&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM PubTrans_Staging exception while inserting data, restart integration; &quot; + ex.Message;" />
+                                    <om:Property Name="ReportToAnalyst" Value="True" />
+                                    <om:Property Name="Name" Value="Suspend" />
+                                    <om:Property Name="Signal" Value="False" />
+                                </om:Element>
+                            </om:Element>
+                        </om:Element>
+                        <om:Element Type="Catch" OID="51206b03-7861-4948-ac46-d9cacc654170" ParentLink="Scope_Catch" LowerBound="121.1" HigherBound="130.1">
+                            <om:Property Name="ExceptionName" Value="ex" />
+                            <om:Property Name="ExceptionType" Value="System.Exception" />
+                            <om:Property Name="IsFaultMessage" Value="False" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="CatchException" />
+                            <om:Property Name="Signal" Value="True" />
+                            <om:Element Type="VariableAssignment" OID="6db9f3f7-38ff-42c1-a7f8-86752078e99b" ParentLink="Catch_Statement" LowerBound="124.1" HigherBound="127.1">
+                                <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM PubTrans_Staging exception while deleting table data: &quot; + ex.Message);&#xD;&#xA;System.Diagnostics.EventLog.WriteEntry(&quot;XLANG/s&quot;, &quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM PubTrans_Staging exception while deleting table data: &quot; + ex.Message, System.Diagnostics.EventLogEntryType.Error);" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="TraceAndLog" />
+                                <om:Property Name="Signal" Value="True" />
+                            </om:Element>
+                            <om:Element Type="Suspend" OID="eb4be146-3b7c-4612-b703-ad81f7cf86af" ParentLink="Catch_Statement" LowerBound="127.1" HigherBound="129.1">
+                                <om:Property Name="ErrorMessage" Value="&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM PubTrans_Staging exception while deleting table data, restart integration; &quot; + ex.Message;" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="Suspend" />
+                                <om:Property Name="Signal" Value="True" />
+                            </om:Element>
+                        </om:Element>
+                    </om:Element>
+                    <om:Element Type="Catch" OID="361fe5f8-5f0a-4db2-8be9-e95db6626e7d" ParentLink="Scope_Catch" LowerBound="135.1" HigherBound="152.1">
+                        <om:Property Name="ExceptionName" Value="sfex" />
+                        <om:Property Name="ExceptionType" Value="RequestGcwoData.SendRequestGcwoData.Fault" />
+                        <om:Property Name="IsFaultMessage" Value="False" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="CatchFaultException" />
+                        <om:Property Name="Signal" Value="True" />
+                        <om:Element Type="Construct" OID="15d821c5-9a9c-4300-ad10-25b77a1a1abf" ParentLink="Catch_Statement" LowerBound="138.1" HigherBound="146.1">
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="X_SoapFault_To_SoapFaultMessage" />
+                            <om:Property Name="Signal" Value="True" />
+                            <om:Element Type="MessageAssignment" OID="76db6193-fb09-42a3-a4c3-04b960f3badf" ParentLink="ComplexStatement_Statement" LowerBound="141.1" HigherBound="143.1">
+                                <om:Property Name="Expression" Value="SoapFault = sfex;" />
+                                <om:Property Name="ReportToAnalyst" Value="False" />
+                                <om:Property Name="Name" Value="AssignSoapFault" />
+                                <om:Property Name="Signal" Value="True" />
+                            </om:Element>
+                            <om:Element Type="Transform" OID="1de5c66a-da24-4cae-a711-829623af34dc" ParentLink="ComplexStatement_Statement" LowerBound="143.1" HigherBound="145.1">
+                                <om:Property Name="ClassName" Value="INTSTDK002.STIP.Orchestrations.X_SoapFault_To_SoapFaultMessage" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Name" Value="X_SoapFault_To_SoapFaultMessage" />
+                                <om:Property Name="Signal" Value="True" />
+                                <om:Element Type="MessagePartRef" OID="45079669-9456-467e-8c75-a55a9883c75a" ParentLink="Transform_InputMessagePartRef" LowerBound="144.124" HigherBound="144.133">
+                                    <om:Property Name="MessageRef" Value="SoapFault" />
+                                    <om:Property Name="ReportToAnalyst" Value="True" />
+                                    <om:Property Name="Name" Value="MessagePartReference_1" />
+                                    <om:Property Name="Signal" Value="False" />
+                                </om:Element>
+                                <om:Element Type="MessagePartRef" OID="5680523b-d28b-495a-8080-66143835e795" ParentLink="Transform_OutputMessagePartRef" LowerBound="144.40" HigherBound="144.56">
+                                    <om:Property Name="MessageRef" Value="SoapFaultMessage" />
+                                    <om:Property Name="ReportToAnalyst" Value="True" />
+                                    <om:Property Name="Name" Value="MessagePartReference_2" />
+                                    <om:Property Name="Signal" Value="False" />
+                                </om:Element>
+                            </om:Element>
+                            <om:Element Type="MessageRef" OID="9a1ab1cb-b25c-4507-bbde-c23ec952c0a6" ParentLink="Construct_MessageRef" LowerBound="139.35" HigherBound="139.44">
+                                <om:Property Name="Ref" Value="SoapFault" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Signal" Value="False" />
+                            </om:Element>
+                            <om:Element Type="MessageRef" OID="31754bb3-3b1b-4f14-bc73-1e0b1637d55b" ParentLink="Construct_MessageRef" LowerBound="139.46" HigherBound="139.62">
+                                <om:Property Name="Ref" Value="SoapFaultMessage" />
+                                <om:Property Name="ReportToAnalyst" Value="True" />
+                                <om:Property Name="Signal" Value="False" />
+                            </om:Element>
+                        </om:Element>
+                        <om:Element Type="VariableAssignment" OID="78f92357-a6fa-406e-825e-54de59b78262" ParentLink="Catch_Statement" LowerBound="146.1" HigherBound="149.1">
+                            <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans SOAP fault: &quot; + SoapFaultMessage.Message);&#xD;&#xA;System.Diagnostics.EventLog.WriteEntry(&quot;XLANG/s&quot;, &quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans SOAP fault &quot; + SoapFaultMessage.Message, System.Diagnostics.EventLogEntryType.Error);" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="TraceAndLog" />
+                            <om:Property Name="Signal" Value="False" />
+                        </om:Element>
+                        <om:Element Type="Suspend" OID="e40880ba-46ee-40e5-91ea-9ccb0adfc650" ParentLink="Catch_Statement" LowerBound="149.1" HigherBound="151.1">
+                            <om:Property Name="ErrorMessage" Value="&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans SOAP fault, restart integration; &quot; + SoapFaultMessage.Message;" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Suspend" />
+                            <om:Property Name="Signal" Value="False" />
+                        </om:Element>
+                    </om:Element>
+                    <om:Element Type="Catch" OID="c47b5150-a5e6-43e0-83be-de15e3437f0e" ParentLink="Scope_Catch" LowerBound="152.1" HigherBound="161.1">
+                        <om:Property Name="ExceptionName" Value="soapEx" />
+                        <om:Property Name="ExceptionType" Value="System.Web.Services.Protocols.SoapException" />
+                        <om:Property Name="IsFaultMessage" Value="False" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="CatchSoapException" />
+                        <om:Property Name="Signal" Value="True" />
+                        <om:Element Type="VariableAssignment" OID="9aca2af2-6edf-43c4-b4c7-f369a1c43f36" ParentLink="Catch_Statement" LowerBound="155.1" HigherBound="158.1">
+                            <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans SOAP exception: &quot; + soapEx.Message);&#xD;&#xA;System.Diagnostics.EventLog.WriteEntry(&quot;XLANG/s&quot;, &quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans SOAP exception: &quot; + soapEx.Message, System.Diagnostics.EventLogEntryType.Error);" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="TraceAndLog" />
+                            <om:Property Name="Signal" Value="False" />
+                        </om:Element>
+                        <om:Element Type="Suspend" OID="6022de52-9547-473e-8eb0-d3bac98dd677" ParentLink="Catch_Statement" LowerBound="158.1" HigherBound="160.1">
+                            <om:Property Name="ErrorMessage" Value="&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans SOAP exception, restart integration; &quot; + soapEx.Message;" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Suspend" />
+                            <om:Property Name="Signal" Value="True" />
+                        </om:Element>
+                    </om:Element>
+                    <om:Element Type="Catch" OID="fb94cb29-f234-4df4-8e33-2509836892f6" ParentLink="Scope_Catch" LowerBound="161.1" HigherBound="170.1">
+                        <om:Property Name="ExceptionName" Value="ex" />
+                        <om:Property Name="ExceptionType" Value="System.Exception" />
+                        <om:Property Name="IsFaultMessage" Value="False" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="CatchException" />
+                        <om:Property Name="Signal" Value="True" />
+                        <om:Element Type="VariableAssignment" OID="69c0ab5c-13e3-4209-a63f-46aa664e69fc" ParentLink="Catch_Statement" LowerBound="164.1" HigherBound="167.1">
+                            <om:Property Name="Expression" Value="System.Diagnostics.Trace.WriteLine(&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans exception: &quot; + ex.Message);&#xD;&#xA;System.Diagnostics.EventLog.WriteEntry(&quot;XLANG/s&quot;, &quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans exception: &quot; + ex.Message, System.Diagnostics.EventLogEntryType.Error);" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="TraceAndLog" />
+                            <om:Property Name="Signal" Value="True" />
+                        </om:Element>
+                        <om:Element Type="Suspend" OID="d5a3b7a3-3e6c-48f2-b793-39e685dcc98a" ParentLink="Catch_Statement" LowerBound="167.1" HigherBound="169.1">
+                            <om:Property Name="ErrorMessage" Value="&quot;[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans exception, restart integration; &quot; + ex.Message;" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="Suspend" />
+                            <om:Property Name="Signal" Value="False" />
+                        </om:Element>
+                    </om:Element>
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="2acf4c9c-1b3c-4d2d-a23c-4f19ca215d36" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="35.1" HigherBound="37.1">
+                <om:Property Name="PortModifier" Value="Uses" />
+                <om:Property Name="Orientation" Value="Right" />
+                <om:Property Name="PortIndex" Value="116" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="INTSTDK002.STIP.Orchestrations.InsertGcwoDataType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="InsertGcwoData" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="LogicalBindingAttribute" OID="0981fa01-2838-409f-9811-6d457fed8c43" ParentLink="PortDeclaration_CLRAttribute" LowerBound="35.1" HigherBound="36.1">
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="f5486717-8a46-4fda-bddc-16e83e4ef26d" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="37.1" HigherBound="39.1">
+                <om:Property Name="PortModifier" Value="Uses" />
+                <om:Property Name="Orientation" Value="Right" />
+                <om:Property Name="PortIndex" Value="20" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="INTSTDK002.STIP.Orchestrations.RequestGcwoDataType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="RequestGcwoData" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="LogicalBindingAttribute" OID="8eefe0c5-e2af-4c30-9a6d-48b24ce24d19" ParentLink="PortDeclaration_CLRAttribute" LowerBound="37.1" HigherBound="38.1">
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="f9816172-575a-4b47-a4ed-8f2ccd468de8" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="39.1" HigherBound="41.1">
+                <om:Property Name="PortModifier" Value="Uses" />
+                <om:Property Name="Orientation" Value="Right" />
+                <om:Property Name="PortIndex" Value="90" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="INTSTDK002.STIP.Orchestrations.EmptyGcwoTablesType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="EmptyGcwoTables" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="LogicalBindingAttribute" OID="4cc0636f-c20a-47d6-a7d1-9185cbfcde94" ParentLink="PortDeclaration_CLRAttribute" LowerBound="39.1" HigherBound="40.1">
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="a6143b4f-ae55-498f-83e9-fc585dde4df7" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="41.1" HigherBound="43.1">
+                <om:Property Name="PortModifier" Value="Implements" />
+                <om:Property Name="Orientation" Value="Left" />
+                <om:Property Name="PortIndex" Value="4" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="INTSTDK002.STIP.Orchestrations.ReceiveGcwoTriggerType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="ReceiveGcwoTrigger" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="LogicalBindingAttribute" OID="9b9e983a-432c-43ce-b8c4-2f3dd57234ff" ParentLink="PortDeclaration_CLRAttribute" LowerBound="41.1" HigherBound="42.1">
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="PortType" OID="2b2395be-6e2e-465b-8544-3d3c7e027e77" ParentLink="Module_PortType" LowerBound="4.1" HigherBound="11.1">
+            <om:Property Name="Synchronous" Value="False" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="ReceiveGcwoTriggerType" />
+            <om:Property Name="Signal" Value="True" />
+            <om:Element Type="OperationDeclaration" OID="b2629dbe-c7d2-4d89-82fc-7b7848dae0dd" ParentLink="PortType_OperationDeclaration" LowerBound="6.1" HigherBound="10.1">
+                <om:Property Name="OperationType" Value="OneWay" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="RequestGcwoTrigger" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="MessageRef" OID="f7510239-ce7a-424f-ba2c-0c68e789a690" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="8.13" HigherBound="8.53">
+                    <om:Property Name="Ref" Value="INTSTDK002.STIP.Orchestrations.Triggers.GetContractorsWithOperatedLines" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="PortType" OID="73118ab2-d02f-4341-9022-b0d6b5297532" ParentLink="Module_PortType" LowerBound="11.1" HigherBound="18.1">
+            <om:Property Name="Synchronous" Value="True" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="RequestGcwoDataType" />
+            <om:Property Name="Signal" Value="True" />
+            <om:Element Type="OperationDeclaration" OID="aac68286-1af5-42ab-a0a8-811bcc153b2b" ParentLink="PortType_OperationDeclaration" LowerBound="13.1" HigherBound="17.1">
+                <om:Property Name="OperationType" Value="RequestResponse" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SendRequestGcwoData" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="MessageRef" OID="7942bd87-b9d1-41be-9456-e37e65f0a5b7" ParentLink="OperationDeclaration_FaultMessageRef" LowerBound="15.150" HigherBound="15.186">
+                    <om:Property Name="Ref" Value="BTS.soap_envelope_1__1.Fault" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Fault" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+                <om:Element Type="MessageRef" OID="1984c6f2-033f-4a11-bd1d-ac85c83adf4e" ParentLink="OperationDeclaration_ResponseMessageRef" LowerBound="15.55" HigherBound="15.148">
+                    <om:Property Name="Ref" Value="INTSTDK002.PubTrans.Schemas.OrganisationalDataService.GetContractorsWithOperatedLinesResponse" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Response" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+                <om:Element Type="MessageRef" OID="a39f72b4-2d1d-4cd6-bf23-d60351cc9847" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="15.13" HigherBound="15.53">
+                    <om:Property Name="Ref" Value="INTSTDK002.STIP.Orchestrations.Triggers.GetContractorsWithOperatedLines" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="PortType" OID="671a2323-31de-42c1-9607-9a1d6149b570" ParentLink="Module_PortType" LowerBound="18.1" HigherBound="25.1">
+            <om:Property Name="Synchronous" Value="True" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="InsertGcwoDataType" />
+            <om:Property Name="Signal" Value="True" />
+            <om:Element Type="OperationDeclaration" OID="ea58337f-f04b-40b7-a64f-b9ffa1928b26" ParentLink="PortType_OperationDeclaration" LowerBound="20.1" HigherBound="24.1">
+                <om:Property Name="OperationType" Value="RequestResponse" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SendInsertGcwoData" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="MessageRef" OID="d6d926ec-6a3c-45ec-bc10-c9d2b71733dd" ParentLink="OperationDeclaration_ResponseMessageRef" LowerBound="22.108" HigherBound="22.204">
+                    <om:Property Name="Ref" Value="INTSTDK002.CRM.Schemas.CompositeOperation_GetContractorsWithOperatedLinesProcess.RequestResponse" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Response" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+                <om:Element Type="MessageRef" OID="9846923c-a269-48f3-8147-9090e8045495" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="22.13" HigherBound="22.106">
+                    <om:Property Name="Ref" Value="INTSTDK002.PubTrans.Schemas.OrganisationalDataService.GetContractorsWithOperatedLinesResponse" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="PortType" OID="1bf4a30b-99d3-4770-a138-1aa609963261" ParentLink="Module_PortType" LowerBound="25.1" HigherBound="32.1">
+            <om:Property Name="Synchronous" Value="True" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="EmptyGcwoTablesType" />
+            <om:Property Name="Signal" Value="True" />
+            <om:Element Type="OperationDeclaration" OID="ad08cf56-7944-4428-8e85-3435fa259607" ParentLink="PortType_OperationDeclaration" LowerBound="27.1" HigherBound="31.1">
+                <om:Property Name="OperationType" Value="RequestResponse" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SendGcwoEmptyTables" />
+                <om:Property Name="Signal" Value="True" />
+                <om:Element Type="MessageRef" OID="52516b1b-9c00-43cb-90ce-3e7918cb63f5" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="29.13" HigherBound="29.114">
+                    <om:Property Name="Ref" Value="INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetContractorsWithOperatedLinesProcess_EmptyTables" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+                <om:Element Type="MessageRef" OID="cb3e776f-311d-4b27-8bbb-f31f838c641d" ParentLink="OperationDeclaration_ResponseMessageRef" LowerBound="29.116" HigherBound="29.225">
+                    <om:Property Name="Ref" Value="INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetContractorsWithOperatedLinesProcess_EmptyTablesResponse" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Response" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+    </om:Element>
+</om:MetaModel>
+#endif // __DESIGNER_DATA
+[Microsoft.XLANGs.BaseTypes.BPELExportable(false)]
+module INTSTDK002.STIP.Orchestrations
+{
+    internal porttype ReceiveGcwoTriggerType
+    {
+        oneway RequestGcwoTrigger
+        {
+            Triggers.GetContractorsWithOperatedLines
+        };
+    };
+    internal porttype RequestGcwoDataType
+    {
+        requestresponse SendRequestGcwoData
+        {
+            Triggers.GetContractorsWithOperatedLines, INTSTDK002.PubTrans.Schemas.OrganisationalDataService.GetContractorsWithOperatedLinesResponse, Fault = BTS.soap_envelope_1__1.Fault
+        };
+    };
+    internal porttype InsertGcwoDataType
+    {
+        requestresponse SendInsertGcwoData
+        {
+            INTSTDK002.PubTrans.Schemas.OrganisationalDataService.GetContractorsWithOperatedLinesResponse, INTSTDK002.CRM.Schemas.CompositeOperation_GetContractorsWithOperatedLinesProcess.RequestResponse
+        };
+    };
+    internal porttype EmptyGcwoTablesType
+    {
+        requestresponse SendGcwoEmptyTables
+        {
+            INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetContractorsWithOperatedLinesProcess_EmptyTables, INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetContractorsWithOperatedLinesProcess_EmptyTablesResponse
+        };
+    };
+    [Microsoft.XLANGs.BaseTypes.BPELExportable(false)]
+    internal service GetContractorsWithOperatedLinesProcess
+    {
+        [Microsoft.XLANGs.BaseTypes.LogicalBinding()]
+        port uses InsertGcwoDataType InsertGcwoData;
+        [Microsoft.XLANGs.BaseTypes.LogicalBinding()]
+        port uses RequestGcwoDataType RequestGcwoData;
+        [Microsoft.XLANGs.BaseTypes.LogicalBinding()]
+        port uses EmptyGcwoTablesType EmptyGcwoTables;
+        [Microsoft.XLANGs.BaseTypes.LogicalBinding()]
+        port implements ReceiveGcwoTriggerType ReceiveGcwoTrigger;
+        message Triggers.GetContractorsWithOperatedLines Trigger;
+        message INTSTDK002.PubTrans.Schemas.OrganisationalDataService.GetContractorsWithOperatedLinesResponse GetContractorsWithOperatedLinesResponse;
+        message INTSTDK002.CRM.Schemas.CompositeOperation_GetContractorsWithOperatedLinesProcess.RequestResponse CompositeOperationResponse;
+        message INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetContractorsWithOperatedLinesProcess_EmptyTables SP_EmptyTables;
+        message INTSTDK002.CRM.Schemas.Procedure_dbo.SP_INTSTDK002_GetContractorsWithOperatedLinesProcess_EmptyTablesResponse SP_EmptyTablesResponse;
+        message BTS.soap_envelope_1__1.Fault SoapFault;
+        message FaultException SoapFaultMessage;
+        System.Xml.XmlDocument xmlDoc;
+        body ()
+        {
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("3272c00f-5c67-4d4f-83de-0c3f60345b98")]
+            activate receive (ReceiveGcwoTrigger.RequestGcwoTrigger, Trigger);
+            xmlDoc = new System.Xml.XmlDocument();
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("1bf92d0d-a535-43ae-b139-e7138aa04f43")]
+            System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] Trigger GetContractorsWithOperatedLines received");
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("833ec830-1575-4acf-910e-a85d05317d0e")]
+            scope
+            {
+                body
+                {
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("4316ab72-8691-4ecd-8b1f-f86303a90119")]
+                    send (RequestGcwoData.SendRequestGcwoData, Trigger);
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("434f22a4-7345-4c52-b0df-21da6091e783")]
+                    System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans requested data");
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("94b704fa-19cf-498b-b149-9c9b4242b07a")]
+                    receive (RequestGcwoData.SendRequestGcwoData, GetContractorsWithOperatedLinesResponse);
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("6f827578-f884-4155-a9ff-43cae5268927")]
+                    System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans data response received");
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("40e72f27-0a58-4858-9a12-7be199188d3a")]
+                    scope
+                    {
+                        body
+                        {
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("15ec4aa1-717f-4a4c-aafe-e6ebf89b7251")]
+                            construct SP_EmptyTables
+                            {
+                                [Microsoft.XLANGs.BaseTypes.DesignerPosition("01389c61-4075-4421-bbc3-e860bfd213e9")]
+                                xmlDoc.LoadXml("<ns0:SP_INTSTDK002_GetContractorsWithOperatedLinesProcess_EmptyTables xmlns:ns0=\"http://schemas.microsoft.com/Sql/2008/05/Procedures/dbo\" /> ");
+                                SP_EmptyTables = xmlDoc;
+                            }
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("a322622d-9b6e-4b8f-82cf-c35ff4931bec")]
+                            send (EmptyGcwoTables.SendGcwoEmptyTables, SP_EmptyTables);
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("3250ed13-b49d-463a-98c9-d4b8dafc14a4")]
+                            System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM empty tables request");
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("371d2245-cae4-4035-98f6-e03793bf7190")]
+                            receive (EmptyGcwoTables.SendGcwoEmptyTables, SP_EmptyTablesResponse);
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("b4388398-cff5-47eb-9331-79b5d7c980f3")]
+                            System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM empty tables response");
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("e42e5ab4-47e6-48d6-a5c6-e7ce4c1eab73")]
+                            scope
+                            {
+                                body
+                                {
+                                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("73179252-8dbb-44c2-97ca-8b23873526c0")]
+                                    send (InsertGcwoData.SendInsertGcwoData, GetContractorsWithOperatedLinesResponse);
+                                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("bf65c210-c608-498a-b359-0c56127f0a5b")]
+                                    System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM data sent");
+                                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("9bf34f55-8d5c-48c1-b27c-945553843426")]
+                                    receive (InsertGcwoData.SendInsertGcwoData, CompositeOperationResponse);
+                                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("6df97491-8d75-4a9c-b500-4af76af52724")]
+                                    System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM data response received");
+                                }
+                                exceptions
+                                {
+                                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("bfc94fb2-4804-4d0c-b911-8214982c9a0b")]
+                                    catch (System.Exception ex)
+                                    {
+                                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("dfdbc130-9dab-4ada-8bdb-01c2b8badd32")]
+                                        System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM PubTrans_Staging exception while inserting data: " + ex.Message);
+                                        System.Diagnostics.EventLog.WriteEntry("XLANG/s", "[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM PubTrans_Staging exception while inserting data: " + ex.Message, System.Diagnostics.EventLogEntryType.Error);
+                                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("b2e65fb4-13ba-4167-beac-1485fca57ece")]
+                                        suspend "[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM PubTrans_Staging exception while inserting data, restart integration; " + ex.Message;
+                                    }
+                                }
+                            }
+                        }
+                        exceptions
+                        {
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("51206b03-7861-4948-ac46-d9cacc654170")]
+                            catch (System.Exception ex)
+                            {
+                                [Microsoft.XLANGs.BaseTypes.DesignerPosition("6db9f3f7-38ff-42c1-a7f8-86752078e99b")]
+                                System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM PubTrans_Staging exception while deleting table data: " + ex.Message);
+                                System.Diagnostics.EventLog.WriteEntry("XLANG/s", "[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM PubTrans_Staging exception while deleting table data: " + ex.Message, System.Diagnostics.EventLogEntryType.Error);
+                                [Microsoft.XLANGs.BaseTypes.DesignerPosition("eb4be146-3b7c-4612-b703-ad81f7cf86af")]
+                                suspend "[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] CRM PubTrans_Staging exception while deleting table data, restart integration; " + ex.Message;
+                            }
+                        }
+                    }
+                }
+                exceptions
+                {
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("361fe5f8-5f0a-4db2-8be9-e95db6626e7d")]
+                    catch (RequestGcwoData.SendRequestGcwoData.Fault sfex)
+                    {
+                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("15d821c5-9a9c-4300-ad10-25b77a1a1abf")]
+                        construct SoapFault, SoapFaultMessage
+                        {
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("76db6193-fb09-42a3-a4c3-04b960f3badf")]
+                            SoapFault = sfex;
+                            [Microsoft.XLANGs.BaseTypes.DesignerPosition("1de5c66a-da24-4cae-a711-829623af34dc")]
+                            transform (SoapFaultMessage) = INTSTDK002.STIP.Orchestrations.X_SoapFault_To_SoapFaultMessage (SoapFault);
+                        }
+                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("78f92357-a6fa-406e-825e-54de59b78262")]
+                        System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans SOAP fault: " + SoapFaultMessage.Message);
+                        System.Diagnostics.EventLog.WriteEntry("XLANG/s", "[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans SOAP fault " + SoapFaultMessage.Message, System.Diagnostics.EventLogEntryType.Error);
+                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("e40880ba-46ee-40e5-91ea-9ccb0adfc650")]
+                        suspend "[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans SOAP fault, restart integration; " + SoapFaultMessage.Message;
+                    }
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("c47b5150-a5e6-43e0-83be-de15e3437f0e")]
+                    catch (System.Web.Services.Protocols.SoapException soapEx)
+                    {
+                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("9aca2af2-6edf-43c4-b4c7-f369a1c43f36")]
+                        System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans SOAP exception: " + soapEx.Message);
+                        System.Diagnostics.EventLog.WriteEntry("XLANG/s", "[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans SOAP exception: " + soapEx.Message, System.Diagnostics.EventLogEntryType.Error);
+                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("6022de52-9547-473e-8eb0-d3bac98dd677")]
+                        suspend "[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans SOAP exception, restart integration; " + soapEx.Message;
+                    }
+                    [Microsoft.XLANGs.BaseTypes.DesignerPosition("fb94cb29-f234-4df4-8e33-2509836892f6")]
+                    catch (System.Exception ex)
+                    {
+                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("69c0ab5c-13e3-4209-a63f-46aa664e69fc")]
+                        System.Diagnostics.Trace.WriteLine("[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans exception: " + ex.Message);
+                        System.Diagnostics.EventLog.WriteEntry("XLANG/s", "[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans exception: " + ex.Message, System.Diagnostics.EventLogEntryType.Error);
+                        [Microsoft.XLANGs.BaseTypes.DesignerPosition("d5a3b7a3-3e6c-48f2-b793-39e685dcc98a")]
+                        suspend "[INTSTDK002.PubTransBatch.GetContractorsWithOperatedLines] PubTrans exception, restart integration; " + ex.Message;
+                    }
+                }
+            }
+        }
+    }
+}
+

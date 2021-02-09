@@ -1,0 +1,419 @@
+﻿      <GetDirectJourneysBetweenStopsResponse xmlns="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/StopMonitoringService">
+         <GetDirectJourneysBetweenStopsResult>
+            <xs:schema id="GetDirectJourneysBetweenStopsMethod" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+               <xs:element name="GetDirectJourneysBetweenStopsMethod" msdata:IsDataSet="true" msdata:Locale="sv-SE">
+                  <xs:complexType>
+                     <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="DirectJourneysBetweenStops">
+                           <xs:complexType>
+                              <xs:sequence>
+                                 <xs:element name="DatedVehicleJourneyId" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="ServiceJourneyGid" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="OperatingDayDate" type="xs:dateTime" minOccurs="0"/>
+                                 <xs:element name="ContractorGid" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="LineDesignation" type="xs:string" minOccurs="0"/>
+                                 <xs:element name="JourneyNumber" type="xs:int" minOccurs="0"/>
+                                 <xs:element name="DirectionOfLineDescription" type="xs:string" minOccurs="0"/>
+                                 <xs:element name="OriginName" type="xs:string" minOccurs="0"/>
+                                 <xs:element name="OriginShortName" type="xs:string" minOccurs="0"/>
+                                 <xs:element name="OriginPlaceGid" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="PrimaryDestinationName" type="xs:string" minOccurs="0"/>
+                                 <xs:element name="PrimaryDestinationShortName" type="xs:string" minOccurs="0"/>
+                                 <xs:element name="PrimaryDestinationGid" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="SecondaryDestinationName" type="xs:string" minOccurs="0"/>
+                                 <xs:element name="SecondaryDestinationShortName" type="xs:string" minOccurs="0"/>
+                                 <xs:element name="SecondaryDestinationGid" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="DepartureId" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="DepartureStopPointGid" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="DepartureType" type="xs:short" minOccurs="0"/>
+                                 <xs:element name="DepartureSequenceNumber" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="PlannedDepartureDateTime" type="xs:dateTime" minOccurs="0"/>
+                                 <xs:element name="ArrivalId" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="ArrivalStopPointGid" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="ArrivalType" type="xs:short" minOccurs="0"/>
+                                 <xs:element name="ArrivalSequenceNumber" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="PlannedArrivalDateTime" type="xs:dateTime" minOccurs="0"/>
+                                 <xs:element name="ExpectedToBeMonitored" type="xs:int" minOccurs="0"/>
+                                 <xs:element name="TargetDepartureStopPointGid" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="TargetDepartureDateTime" type="xs:dateTime" minOccurs="0"/>
+                                 <xs:element name="EstimatedDepartureDateTime" type="xs:dateTime" minOccurs="0"/>
+                                 <xs:element name="ObservedDepartureDateTime" type="xs:dateTime" minOccurs="0"/>
+                                 <xs:element name="ArrivalStopPointGid1" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="ObservedArrivalDateTime" type="xs:dateTime" minOccurs="0"/>
+                              </xs:sequence>
+                           </xs:complexType>
+                        </xs:element>
+                        <xs:element name="DeviationMessageVersion">
+                           <xs:complexType>
+                              <xs:sequence>
+                                 <xs:element name="Id" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="PublicNote" type="xs:string" minOccurs="0"/>
+                                 <xs:element name="InternalNote" type="xs:string" minOccurs="0"/>
+                                 <xs:element name="PriorityImportanceLevel" type="xs:short" minOccurs="0"/>
+                                 <xs:element name="PriorityInfluenceLevel" type="xs:short" minOccurs="0"/>
+                                 <xs:element name="PriorityUrgencyLevel" type="xs:short" minOccurs="0"/>
+                              </xs:sequence>
+                           </xs:complexType>
+                        </xs:element>
+                        <xs:element name="DeviationMessageVariant">
+                           <xs:complexType>
+                              <xs:sequence>
+                                 <xs:element name="Id" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="IsPartOfDeviationMessageId" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="Content" type="xs:string" minOccurs="0"/>
+                                 <xs:element name="ContentTypeLongCode" type="xs:string" minOccurs="0"/>
+                                 <xs:element name="UsageTypeLongCode" type="xs:string" minOccurs="0"/>
+                                 <xs:element name="LanguageCode" type="xs:string" minOccurs="0"/>
+                              </xs:sequence>
+                           </xs:complexType>
+                        </xs:element>
+                        <xs:element name="ServiceJourneyDeviation">
+                           <xs:complexType>
+                              <xs:sequence>
+                                 <xs:element name="Id" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="IsOnDatedVehicleJourneyId" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="HasDeviationMessageVersionId" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="ConsequenceLongCode" type="xs:string" minOccurs="0"/>
+                              </xs:sequence>
+                           </xs:complexType>
+                        </xs:element>
+                        <xs:element name="DepartureDeviation">
+                           <xs:complexType>
+                              <xs:sequence>
+                                 <xs:element name="Id" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="IsOnDepartureId" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="AffectsLaterArrivalsYesNo" type="xs:boolean" minOccurs="0"/>
+                                 <xs:element name="HasDeviationMessageVersionId" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="ConsequenceLongCode" type="xs:string" minOccurs="0"/>
+                              </xs:sequence>
+                           </xs:complexType>
+                        </xs:element>
+                        <xs:element name="ArrivalDeviation">
+                           <xs:complexType>
+                              <xs:sequence>
+                                 <xs:element name="Id" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="IsOnArrivalId" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="AffectsPreviousDeparturesYesNo" type="xs:boolean" minOccurs="0"/>
+                                 <xs:element name="HasDeviationMessageVersionId" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="ConsequenceLongCode" type="xs:string" minOccurs="0"/>
+                              </xs:sequence>
+                           </xs:complexType>
+                        </xs:element>
+                        <xs:element name="TargetAudience">
+                           <xs:complexType>
+                              <xs:sequence>
+                                 <xs:element name="IsForDeviationMessageVersionId" type="xs:decimal" minOccurs="0"/>
+                                 <xs:element name="TypeCode" type="xs:string" minOccurs="0"/>
+                              </xs:sequence>
+                           </xs:complexType>
+                        </xs:element>
+                     </xs:choice>
+                  </xs:complexType>
+               </xs:element>
+            </xs:schema>
+            <diffgr:diffgram xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+               <GetDirectJourneysBetweenStopsMethod xmlns="">
+                  <DirectJourneysBetweenStops diffgr:id="DirectJourneysBetweenStops1" msdata:rowOrder="0">
+                     <DatedVehicleJourneyId>1120502043356319</DatedVehicleJourneyId>
+                     <ServiceJourneyGid>9015012000800053</ServiceJourneyGid>
+                     <OperatingDayDate>2014-05-13T00:00:00+02:00</OperatingDayDate>
+                     <ContractorGid>9013012002400000</ContractorGid>
+                     <LineDesignation>8</LineDesignation>
+                     <JourneyNumber>53</JourneyNumber>
+                     <DirectionOfLineDescription>Centralen</DirectionOfLineDescription>
+                     <PrimaryDestinationName>Västra hamnen</PrimaryDestinationName>
+                     <SecondaryDestinationName>Dockan</SecondaryDestinationName>
+                     <DepartureId>1120000139839209</DepartureId>
+                     <DepartureStopPointGid>9025012008000004</DepartureStopPointGid>
+                     <DepartureType>2</DepartureType>
+                     <DepartureSequenceNumber>20</DepartureSequenceNumber>
+                     <PlannedDepartureDateTime>2014-05-13T08:01:00+02:00</PlannedDepartureDateTime>
+                     <ArrivalId>1120000139839213</ArrivalId>
+                     <ArrivalStopPointGid>9025012008005101</ArrivalStopPointGid>
+                     <ArrivalType>2</ArrivalType>
+                     <ArrivalSequenceNumber>24</ArrivalSequenceNumber>
+                     <PlannedArrivalDateTime>2014-05-13T08:04:44+02:00</PlannedArrivalDateTime>
+                     <ExpectedToBeMonitored>0</ExpectedToBeMonitored>
+                     <TargetDepartureStopPointGid>9025012008000004</TargetDepartureStopPointGid>
+                     <TargetDepartureDateTime>2014-05-13T08:01:00+02:00</TargetDepartureDateTime>
+                     <ArrivalStopPointGid1>9025012008005101</ArrivalStopPointGid1>
+                  </DirectJourneysBetweenStops>
+                  <DirectJourneysBetweenStops diffgr:id="DirectJourneysBetweenStops2" msdata:rowOrder="1">
+                     <DatedVehicleJourneyId>1120502043356637</DatedVehicleJourneyId>
+                     <ServiceJourneyGid>9015012000800055</ServiceJourneyGid>
+                     <OperatingDayDate>2014-05-13T00:00:00+02:00</OperatingDayDate>
+                     <ContractorGid>9013012002400000</ContractorGid>
+                     <LineDesignation>8</LineDesignation>
+                     <JourneyNumber>55</JourneyNumber>
+                     <DirectionOfLineDescription>Centralen</DirectionOfLineDescription>
+                     <PrimaryDestinationName>Västra hamnen</PrimaryDestinationName>
+                     <SecondaryDestinationName>Dockan</SecondaryDestinationName>
+                     <DepartureId>1120000139839243</DepartureId>
+                     <DepartureStopPointGid>9025012008000004</DepartureStopPointGid>
+                     <DepartureType>2</DepartureType>
+                     <DepartureSequenceNumber>20</DepartureSequenceNumber>
+                     <PlannedDepartureDateTime>2014-05-13T08:06:00+02:00</PlannedDepartureDateTime>
+                     <ArrivalId>1120000139839247</ArrivalId>
+                     <ArrivalStopPointGid>9025012008005101</ArrivalStopPointGid>
+                     <ArrivalType>2</ArrivalType>
+                     <ArrivalSequenceNumber>24</ArrivalSequenceNumber>
+                     <PlannedArrivalDateTime>2014-05-13T08:09:44+02:00</PlannedArrivalDateTime>
+                     <ExpectedToBeMonitored>0</ExpectedToBeMonitored>
+                     <TargetDepartureStopPointGid>9025012008000004</TargetDepartureStopPointGid>
+                     <TargetDepartureDateTime>2014-05-13T08:06:00+02:00</TargetDepartureDateTime>
+                     <ArrivalStopPointGid1>9025012008005101</ArrivalStopPointGid1>
+                  </DirectJourneysBetweenStops>
+                  <DirectJourneysBetweenStops diffgr:id="DirectJourneysBetweenStops3" msdata:rowOrder="2">
+                     <DatedVehicleJourneyId>1120502043356955</DatedVehicleJourneyId>
+                     <ServiceJourneyGid>9015012000800057</ServiceJourneyGid>
+                     <OperatingDayDate>2014-05-13T00:00:00+02:00</OperatingDayDate>
+                     <ContractorGid>9013012002400000</ContractorGid>
+                     <LineDesignation>8</LineDesignation>
+                     <JourneyNumber>57</JourneyNumber>
+                     <DirectionOfLineDescription>Centralen</DirectionOfLineDescription>
+                     <PrimaryDestinationName>Västra hamnen</PrimaryDestinationName>
+                     <SecondaryDestinationName>Dockan</SecondaryDestinationName>
+                     <DepartureId>1120000139839277</DepartureId>
+                     <DepartureStopPointGid>9025012008000004</DepartureStopPointGid>
+                     <DepartureType>2</DepartureType>
+                     <DepartureSequenceNumber>20</DepartureSequenceNumber>
+                     <PlannedDepartureDateTime>2014-05-13T08:11:00+02:00</PlannedDepartureDateTime>
+                     <ArrivalId>1120000139839281</ArrivalId>
+                     <ArrivalStopPointGid>9025012008005101</ArrivalStopPointGid>
+                     <ArrivalType>2</ArrivalType>
+                     <ArrivalSequenceNumber>24</ArrivalSequenceNumber>
+                     <PlannedArrivalDateTime>2014-05-13T08:14:44+02:00</PlannedArrivalDateTime>
+                     <ExpectedToBeMonitored>0</ExpectedToBeMonitored>
+                     <TargetDepartureStopPointGid>9025012008000004</TargetDepartureStopPointGid>
+                     <TargetDepartureDateTime>2014-05-13T08:11:00+02:00</TargetDepartureDateTime>
+                     <ArrivalStopPointGid1>9025012008005101</ArrivalStopPointGid1>
+                  </DirectJourneysBetweenStops>
+                  <DirectJourneysBetweenStops diffgr:id="DirectJourneysBetweenStops4" msdata:rowOrder="3">
+                     <DatedVehicleJourneyId>1120502043357273</DatedVehicleJourneyId>
+                     <ServiceJourneyGid>9015012000800059</ServiceJourneyGid>
+                     <OperatingDayDate>2014-05-13T00:00:00+02:00</OperatingDayDate>
+                     <ContractorGid>9013012002400000</ContractorGid>
+                     <LineDesignation>8</LineDesignation>
+                     <JourneyNumber>59</JourneyNumber>
+                     <DirectionOfLineDescription>Centralen</DirectionOfLineDescription>
+                     <PrimaryDestinationName>Västra hamnen</PrimaryDestinationName>
+                     <SecondaryDestinationName>Dockan</SecondaryDestinationName>
+                     <DepartureId>1120000139839311</DepartureId>
+                     <DepartureStopPointGid>9025012008000004</DepartureStopPointGid>
+                     <DepartureType>2</DepartureType>
+                     <DepartureSequenceNumber>20</DepartureSequenceNumber>
+                     <PlannedDepartureDateTime>2014-05-13T08:16:00+02:00</PlannedDepartureDateTime>
+                     <ArrivalId>1120000139839315</ArrivalId>
+                     <ArrivalStopPointGid>9025012008005101</ArrivalStopPointGid>
+                     <ArrivalType>2</ArrivalType>
+                     <ArrivalSequenceNumber>24</ArrivalSequenceNumber>
+                     <PlannedArrivalDateTime>2014-05-13T08:19:44+02:00</PlannedArrivalDateTime>
+                     <ExpectedToBeMonitored>0</ExpectedToBeMonitored>
+                     <TargetDepartureStopPointGid>9025012008000004</TargetDepartureStopPointGid>
+                     <TargetDepartureDateTime>2014-05-13T08:16:00+02:00</TargetDepartureDateTime>
+                     <ArrivalStopPointGid1>9025012008005101</ArrivalStopPointGid1>
+                  </DirectJourneysBetweenStops>
+                  <DirectJourneysBetweenStops diffgr:id="DirectJourneysBetweenStops5" msdata:rowOrder="4">
+                     <DatedVehicleJourneyId>1120502043357591</DatedVehicleJourneyId>
+                     <ServiceJourneyGid>9015012000800061</ServiceJourneyGid>
+                     <OperatingDayDate>2014-05-13T00:00:00+02:00</OperatingDayDate>
+                     <ContractorGid>9013012002400000</ContractorGid>
+                     <LineDesignation>8</LineDesignation>
+                     <JourneyNumber>61</JourneyNumber>
+                     <DirectionOfLineDescription>Centralen</DirectionOfLineDescription>
+                     <PrimaryDestinationName>Västra hamnen</PrimaryDestinationName>
+                     <SecondaryDestinationName>Dockan</SecondaryDestinationName>
+                     <DepartureId>1120000139839345</DepartureId>
+                     <DepartureStopPointGid>9025012008000004</DepartureStopPointGid>
+                     <DepartureType>2</DepartureType>
+                     <DepartureSequenceNumber>20</DepartureSequenceNumber>
+                     <PlannedDepartureDateTime>2014-05-13T08:21:00+02:00</PlannedDepartureDateTime>
+                     <ArrivalId>1120000139839349</ArrivalId>
+                     <ArrivalStopPointGid>9025012008005101</ArrivalStopPointGid>
+                     <ArrivalType>2</ArrivalType>
+                     <ArrivalSequenceNumber>24</ArrivalSequenceNumber>
+                     <PlannedArrivalDateTime>2014-05-13T08:24:44+02:00</PlannedArrivalDateTime>
+                     <ExpectedToBeMonitored>0</ExpectedToBeMonitored>
+                     <TargetDepartureStopPointGid>9025012008000004</TargetDepartureStopPointGid>
+                     <TargetDepartureDateTime>2014-05-13T08:21:00+02:00</TargetDepartureDateTime>
+                     <ArrivalStopPointGid1>9025012008005101</ArrivalStopPointGid1>
+                  </DirectJourneysBetweenStops>
+                  <DirectJourneysBetweenStops diffgr:id="DirectJourneysBetweenStops6" msdata:rowOrder="5">
+                     <DatedVehicleJourneyId>1120502043357909</DatedVehicleJourneyId>
+                     <ServiceJourneyGid>9015012000800063</ServiceJourneyGid>
+                     <OperatingDayDate>2014-05-13T00:00:00+02:00</OperatingDayDate>
+                     <ContractorGid>9013012002400000</ContractorGid>
+                     <LineDesignation>8</LineDesignation>
+                     <JourneyNumber>63</JourneyNumber>
+                     <DirectionOfLineDescription>Centralen</DirectionOfLineDescription>
+                     <PrimaryDestinationName>Västra hamnen</PrimaryDestinationName>
+                     <SecondaryDestinationName>Dockan</SecondaryDestinationName>
+                     <DepartureId>1120000139839379</DepartureId>
+                     <DepartureStopPointGid>9025012008000004</DepartureStopPointGid>
+                     <DepartureType>2</DepartureType>
+                     <DepartureSequenceNumber>20</DepartureSequenceNumber>
+                     <PlannedDepartureDateTime>2014-05-13T08:26:00+02:00</PlannedDepartureDateTime>
+                     <ArrivalId>1120000139839383</ArrivalId>
+                     <ArrivalStopPointGid>9025012008005101</ArrivalStopPointGid>
+                     <ArrivalType>2</ArrivalType>
+                     <ArrivalSequenceNumber>24</ArrivalSequenceNumber>
+                     <PlannedArrivalDateTime>2014-05-13T08:29:44+02:00</PlannedArrivalDateTime>
+                     <ExpectedToBeMonitored>0</ExpectedToBeMonitored>
+                     <TargetDepartureStopPointGid>9025012008000004</TargetDepartureStopPointGid>
+                     <TargetDepartureDateTime>2014-05-13T08:26:00+02:00</TargetDepartureDateTime>
+                     <ArrivalStopPointGid1>9025012008005101</ArrivalStopPointGid1>
+                  </DirectJourneysBetweenStops>
+                  <DirectJourneysBetweenStops diffgr:id="DirectJourneysBetweenStops7" msdata:rowOrder="6">
+                     <DatedVehicleJourneyId>1120502043358227</DatedVehicleJourneyId>
+                     <ServiceJourneyGid>9015012000800065</ServiceJourneyGid>
+                     <OperatingDayDate>2014-05-13T00:00:00+02:00</OperatingDayDate>
+                     <ContractorGid>9013012002400000</ContractorGid>
+                     <LineDesignation>8</LineDesignation>
+                     <JourneyNumber>65</JourneyNumber>
+                     <DirectionOfLineDescription>Centralen</DirectionOfLineDescription>
+                     <PrimaryDestinationName>Västra hamnen</PrimaryDestinationName>
+                     <SecondaryDestinationName>Dockan</SecondaryDestinationName>
+                     <DepartureId>1120000139839413</DepartureId>
+                     <DepartureStopPointGid>9025012008000004</DepartureStopPointGid>
+                     <DepartureType>2</DepartureType>
+                     <DepartureSequenceNumber>20</DepartureSequenceNumber>
+                     <PlannedDepartureDateTime>2014-05-13T08:31:00+02:00</PlannedDepartureDateTime>
+                     <ArrivalId>1120000139839417</ArrivalId>
+                     <ArrivalStopPointGid>9025012008005101</ArrivalStopPointGid>
+                     <ArrivalType>2</ArrivalType>
+                     <ArrivalSequenceNumber>24</ArrivalSequenceNumber>
+                     <PlannedArrivalDateTime>2014-05-13T08:34:44+02:00</PlannedArrivalDateTime>
+                     <ExpectedToBeMonitored>0</ExpectedToBeMonitored>
+                     <TargetDepartureStopPointGid>9025012008000004</TargetDepartureStopPointGid>
+                     <TargetDepartureDateTime>2014-05-13T08:31:00+02:00</TargetDepartureDateTime>
+                     <ArrivalStopPointGid1>9025012008005101</ArrivalStopPointGid1>
+                  </DirectJourneysBetweenStops>
+                  <DirectJourneysBetweenStops diffgr:id="DirectJourneysBetweenStops8" msdata:rowOrder="7">
+                     <DatedVehicleJourneyId>1120502043358545</DatedVehicleJourneyId>
+                     <ServiceJourneyGid>9015012000800067</ServiceJourneyGid>
+                     <OperatingDayDate>2014-05-13T00:00:00+02:00</OperatingDayDate>
+                     <ContractorGid>9013012002400000</ContractorGid>
+                     <LineDesignation>8</LineDesignation>
+                     <JourneyNumber>67</JourneyNumber>
+                     <DirectionOfLineDescription>Centralen</DirectionOfLineDescription>
+                     <PrimaryDestinationName>Västra hamnen</PrimaryDestinationName>
+                     <SecondaryDestinationName>Dockan</SecondaryDestinationName>
+                     <DepartureId>1120000139839447</DepartureId>
+                     <DepartureStopPointGid>9025012008000004</DepartureStopPointGid>
+                     <DepartureType>2</DepartureType>
+                     <DepartureSequenceNumber>20</DepartureSequenceNumber>
+                     <PlannedDepartureDateTime>2014-05-13T08:36:00+02:00</PlannedDepartureDateTime>
+                     <ArrivalId>1120000139839451</ArrivalId>
+                     <ArrivalStopPointGid>9025012008005101</ArrivalStopPointGid>
+                     <ArrivalType>2</ArrivalType>
+                     <ArrivalSequenceNumber>24</ArrivalSequenceNumber>
+                     <PlannedArrivalDateTime>2014-05-13T08:39:44+02:00</PlannedArrivalDateTime>
+                     <ExpectedToBeMonitored>0</ExpectedToBeMonitored>
+                     <TargetDepartureStopPointGid>9025012008000004</TargetDepartureStopPointGid>
+                     <TargetDepartureDateTime>2014-05-13T08:36:00+02:00</TargetDepartureDateTime>
+                     <ArrivalStopPointGid1>9025012008005101</ArrivalStopPointGid1>
+                  </DirectJourneysBetweenStops>
+                  <DirectJourneysBetweenStops diffgr:id="DirectJourneysBetweenStops9" msdata:rowOrder="8">
+                     <DatedVehicleJourneyId>1120502043358863</DatedVehicleJourneyId>
+                     <ServiceJourneyGid>9015012000800069</ServiceJourneyGid>
+                     <OperatingDayDate>2014-05-13T00:00:00+02:00</OperatingDayDate>
+                     <ContractorGid>9013012002400000</ContractorGid>
+                     <LineDesignation>8</LineDesignation>
+                     <JourneyNumber>69</JourneyNumber>
+                     <DirectionOfLineDescription>Centralen</DirectionOfLineDescription>
+                     <PrimaryDestinationName>Västra hamnen</PrimaryDestinationName>
+                     <SecondaryDestinationName>Dockan</SecondaryDestinationName>
+                     <DepartureId>1120000139839481</DepartureId>
+                     <DepartureStopPointGid>9025012008000004</DepartureStopPointGid>
+                     <DepartureType>2</DepartureType>
+                     <DepartureSequenceNumber>20</DepartureSequenceNumber>
+                     <PlannedDepartureDateTime>2014-05-13T08:41:00+02:00</PlannedDepartureDateTime>
+                     <ArrivalId>1120000139839485</ArrivalId>
+                     <ArrivalStopPointGid>9025012008005101</ArrivalStopPointGid>
+                     <ArrivalType>2</ArrivalType>
+                     <ArrivalSequenceNumber>24</ArrivalSequenceNumber>
+                     <PlannedArrivalDateTime>2014-05-13T08:44:44+02:00</PlannedArrivalDateTime>
+                     <ExpectedToBeMonitored>0</ExpectedToBeMonitored>
+                     <TargetDepartureStopPointGid>9025012008000004</TargetDepartureStopPointGid>
+                     <TargetDepartureDateTime>2014-05-13T08:41:00+02:00</TargetDepartureDateTime>
+                     <ArrivalStopPointGid1>9025012008005101</ArrivalStopPointGid1>
+                  </DirectJourneysBetweenStops>
+                  <DirectJourneysBetweenStops diffgr:id="DirectJourneysBetweenStops10" msdata:rowOrder="9">
+                     <DatedVehicleJourneyId>1120502043359181</DatedVehicleJourneyId>
+                     <ServiceJourneyGid>9015012000800071</ServiceJourneyGid>
+                     <OperatingDayDate>2014-05-13T00:00:00+02:00</OperatingDayDate>
+                     <ContractorGid>9013012002400000</ContractorGid>
+                     <LineDesignation>8</LineDesignation>
+                     <JourneyNumber>71</JourneyNumber>
+                     <DirectionOfLineDescription>Centralen</DirectionOfLineDescription>
+                     <PrimaryDestinationName>Västra hamnen</PrimaryDestinationName>
+                     <SecondaryDestinationName>Dockan</SecondaryDestinationName>
+                     <DepartureId>1120000139839515</DepartureId>
+                     <DepartureStopPointGid>9025012008000004</DepartureStopPointGid>
+                     <DepartureType>2</DepartureType>
+                     <DepartureSequenceNumber>20</DepartureSequenceNumber>
+                     <PlannedDepartureDateTime>2014-05-13T08:46:00+02:00</PlannedDepartureDateTime>
+                     <ArrivalId>1120000139839519</ArrivalId>
+                     <ArrivalStopPointGid>9025012008005101</ArrivalStopPointGid>
+                     <ArrivalType>2</ArrivalType>
+                     <ArrivalSequenceNumber>24</ArrivalSequenceNumber>
+                     <PlannedArrivalDateTime>2014-05-13T08:49:44+02:00</PlannedArrivalDateTime>
+                     <ExpectedToBeMonitored>0</ExpectedToBeMonitored>
+                     <TargetDepartureStopPointGid>9025012008000004</TargetDepartureStopPointGid>
+                     <TargetDepartureDateTime>2014-05-13T08:46:00+02:00</TargetDepartureDateTime>
+                     <ArrivalStopPointGid1>9025012008005101</ArrivalStopPointGid1>
+                  </DirectJourneysBetweenStops>
+                  <DirectJourneysBetweenStops diffgr:id="DirectJourneysBetweenStops11" msdata:rowOrder="10">
+                     <DatedVehicleJourneyId>1120502043359499</DatedVehicleJourneyId>
+                     <ServiceJourneyGid>9015012000800073</ServiceJourneyGid>
+                     <OperatingDayDate>2014-05-13T00:00:00+02:00</OperatingDayDate>
+                     <ContractorGid>9013012002400000</ContractorGid>
+                     <LineDesignation>8</LineDesignation>
+                     <JourneyNumber>73</JourneyNumber>
+                     <DirectionOfLineDescription>Centralen</DirectionOfLineDescription>
+                     <PrimaryDestinationName>Västra hamnen</PrimaryDestinationName>
+                     <SecondaryDestinationName>Dockan</SecondaryDestinationName>
+                     <DepartureId>1120000139839549</DepartureId>
+                     <DepartureStopPointGid>9025012008000004</DepartureStopPointGid>
+                     <DepartureType>2</DepartureType>
+                     <DepartureSequenceNumber>20</DepartureSequenceNumber>
+                     <PlannedDepartureDateTime>2014-05-13T08:51:00+02:00</PlannedDepartureDateTime>
+                     <ArrivalId>1120000139839553</ArrivalId>
+                     <ArrivalStopPointGid>9025012008005101</ArrivalStopPointGid>
+                     <ArrivalType>2</ArrivalType>
+                     <ArrivalSequenceNumber>24</ArrivalSequenceNumber>
+                     <PlannedArrivalDateTime>2014-05-13T08:54:44+02:00</PlannedArrivalDateTime>
+                     <ExpectedToBeMonitored>0</ExpectedToBeMonitored>
+                     <TargetDepartureStopPointGid>9025012008000004</TargetDepartureStopPointGid>
+                     <TargetDepartureDateTime>2014-05-13T08:51:00+02:00</TargetDepartureDateTime>
+                     <ArrivalStopPointGid1>9025012008005101</ArrivalStopPointGid1>
+                  </DirectJourneysBetweenStops>
+                  <DirectJourneysBetweenStops diffgr:id="DirectJourneysBetweenStops12" msdata:rowOrder="11">
+                     <DatedVehicleJourneyId>1120502043359817</DatedVehicleJourneyId>
+                     <ServiceJourneyGid>9015012000800075</ServiceJourneyGid>
+                     <OperatingDayDate>2014-05-13T00:00:00+02:00</OperatingDayDate>
+                     <ContractorGid>9013012002400000</ContractorGid>
+                     <LineDesignation>8</LineDesignation>
+                     <JourneyNumber>75</JourneyNumber>
+                     <DirectionOfLineDescription>Centralen</DirectionOfLineDescription>
+                     <PrimaryDestinationName>Västra hamnen</PrimaryDestinationName>
+                     <SecondaryDestinationName>Dockan</SecondaryDestinationName>
+                     <DepartureId>1120000139839583</DepartureId>
+                     <DepartureStopPointGid>9025012008000004</DepartureStopPointGid>
+                     <DepartureType>2</DepartureType>
+                     <DepartureSequenceNumber>20</DepartureSequenceNumber>
+                     <PlannedDepartureDateTime>2014-05-13T08:56:00+02:00</PlannedDepartureDateTime>
+                     <ArrivalId>1120000139839587</ArrivalId>
+                     <ArrivalStopPointGid>9025012008005101</ArrivalStopPointGid>
+                     <ArrivalType>2</ArrivalType>
+                     <ArrivalSequenceNumber>24</ArrivalSequenceNumber>
+                     <PlannedArrivalDateTime>2014-05-13T08:59:44+02:00</PlannedArrivalDateTime>
+                     <ExpectedToBeMonitored>0</ExpectedToBeMonitored>
+                     <TargetDepartureStopPointGid>9025012008000004</TargetDepartureStopPointGid>
+                     <TargetDepartureDateTime>2014-05-13T08:56:00+02:00</TargetDepartureDateTime>
+                     <ArrivalStopPointGid1>9025012008005101</ArrivalStopPointGid1>
+                  </DirectJourneysBetweenStops>
+               </GetDirectJourneysBetweenStopsMethod>
+            </diffgr:diffgram>
+         </GetDirectJourneysBetweenStopsResult>
+      </GetDirectJourneysBetweenStopsResponse>

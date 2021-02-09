@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="EAIConnectorService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tempuri.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="EAIConnectorService.xsd" namespace="http://tempuri.org/"/>
+      <xsd:import schemaLocation="EAIConnectorService_1.xsd" namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+      <xsd:import schemaLocation="EAIConnectorService_1_2.xsd" namespace="http://schemas.datacontract.org/2004/07/CGIXrmEAIConnectorService"/>
+      <xsd:import schemaLocation="EAIConnectorService_1_2_3.xsd" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IEAIConnectorService_GetAgentUserId_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAgentUserId"/>
+  </wsdl:message>
+  <wsdl:message name="IEAIConnectorService_GetAgentUserId_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAgentUserIdResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IAllBinaryService_GetCustomerDetails_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCustomerDetails"/>
+  </wsdl:message>
+  <wsdl:message name="IAllBinaryService_GetCustomerDetails_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCustomerDetailsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IAllBinaryService_GetCustomerIdForTravelCard_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCustomerIdForTravelCard"/>
+  </wsdl:message>
+  <wsdl:message name="IAllBinaryService_GetCustomerIdForTravelCard_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCustomerIdForTravelCardResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="IEAIConnectorService">
+    <wsdl:operation name="GetAgentUserId">
+      <wsdl:input wsaw:Action="http://tempuri.org/IEAIConnectorService/GetAgentUserId" message="tns:IEAIConnectorService_GetAgentUserId_InputMessage"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IEAIConnectorService/GetAgentUserIdResponse" message="tns:IEAIConnectorService_GetAgentUserId_OutputMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="IAllBinaryService">
+    <wsdl:operation name="GetCustomerDetails">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAllBinaryService/GetCustomerDetails" message="tns:IAllBinaryService_GetCustomerDetails_InputMessage"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IAllBinaryService/GetCustomerDetailsResponse" message="tns:IAllBinaryService_GetCustomerDetails_OutputMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetCustomerIdForTravelCard">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAllBinaryService/GetCustomerIdForTravelCard" message="tns:IAllBinaryService_GetCustomerIdForTravelCard_InputMessage"/>
+      <wsdl:output wsaw:Action="http://tempuri.org/IAllBinaryService/GetCustomerIdForTravelCardResponse" message="tns:IAllBinaryService_GetCustomerIdForTravelCard_OutputMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IEAIConnectorService" type="tns:IEAIConnectorService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetAgentUserId">
+      <soap:operation soapAction="http://tempuri.org/IEAIConnectorService/GetAgentUserId" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="BasicHttpBinding_IAllBinaryService" type="tns:IAllBinaryService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetCustomerDetails">
+      <soap:operation soapAction="http://tempuri.org/IAllBinaryService/GetCustomerDetails" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCustomerIdForTravelCard">
+      <soap:operation soapAction="http://tempuri.org/IAllBinaryService/GetCustomerIdForTravelCard" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="EAIConnectorService">
+    <wsdl:port name="BasicHttpBinding_IEAIConnectorService" binding="tns:BasicHttpBinding_IEAIConnectorService">
+      <soap:address location="http://v-dkcrm-tst:4003/EAIConnectorService.svc"/>
+    </wsdl:port>
+    <wsdl:port name="BasicHttpBinding_IAllBinaryService" binding="tns:BasicHttpBinding_IAllBinaryService">
+      <soap:address location="http://v-dkcrm-tst:4003/EAIConnectorService.svc"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

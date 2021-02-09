@@ -1,0 +1,103 @@
+﻿<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+   <s:Body>
+<GetDataBySecureResponse xmlns="https://webservice.creditsafe.se/getdata/">
+
+  <GetDataBySecureResult>
+    <SearchNumber>197205069011</SearchNumber>
+    <TransactionId>1a2b</TransactionId>
+    <Block_Name>NORDISK_P_BASIC</Block_Name>
+    <Parameters>
+      <xs:schema id="NewDataSet" xmlns=""
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xs:element name="NewDataSet" msdata:IsDataSet="true"
+        msdata:UseCurrentLocale="true">
+          <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="GETDATA_RESPONSE">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="PNR" type="xs:string"
+                    minOccurs="0" />
+                    <xs:element name="FIRST_NAME" type="xs:string"
+                    minOccurs="0" />
+                    <xs:element name="GIVEN_NAME" type="xs:string"
+                    minOccurs="0" />
+                    <xs:element name="LAST_NAME" type="xs:string"
+                    minOccurs="0" />
+                    <xs:element name="CO_ADDRESS" type="xs:string"
+                    minOccurs="0" />
+                    <xs:element name="REGISTERED_ADDRESS"
+                    type="xs:string" minOccurs="0" />
+                    <xs:element name="ADDRESS" type="xs:string"
+                    minOccurs="0" />
+                    <xs:element name="ZIPCODE" type="xs:string"
+                    minOccurs="0" />
+                    <xs:element name="TOWN" type="xs:string"
+                    minOccurs="0" />
+                    <xs:element name="SPEC_CO_ADDRESS"
+                    type="xs:string" minOccurs="0" />
+                    <xs:element name="SPEC_ADDRESS"
+                    type="xs:string" minOccurs="0" />
+                    <xs:element name="SPEC_ZIPCODE"
+                    type="xs:string" minOccurs="0" />
+                    <xs:element name="SPEC_COUNTRY"
+                    type="xs:string" minOccurs="0" />
+                    <xs:element name="SPEC_TOWN" type="xs:string"
+                    minOccurs="0" />
+                    <xs:element name="SPEC_REGISTERED_ADDRESS"
+                    type="xs:string" minOccurs="0" />
+                    <xs:element name="SEARCH_DATE" type="xs:string"
+                    minOccurs="0" />
+                    <xs:element name="EMIGRATED" type="xs:string"
+                    minOccurs="0" />
+                    <xs:element name="EMIGRATED_DATE"
+                    type="xs:string" minOccurs="0" />
+                    <xs:element name="PROTECTED" type="xs:string"
+                    minOccurs="0" />
+                    <xs:element name="GENDER" type="xs:string"
+                    minOccurs="0" />
+                    <xs:element name="AGE" type="xs:string"
+                    minOccurs="0" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+      </xs:schema>
+      <diffgr:diffgram xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+      xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1">
+        <NewDataSet xmlns="">
+          <GETDATA_RESPONSE diffgr:id="GETDATA_RESPONSE1"
+          msdata:rowOrder="0" diffgr:hasChanges="inserted">
+            <PNR>197205069011</PNR>
+            <FIRST_NAME>JOHN ERIK</FIRST_NAME>
+            <GIVEN_NAME>JOHN</GIVEN_NAME>
+            <LAST_NAME>LEKTORP</LAST_NAME>
+            <CO_ADDRESS />
+            <REGISTERED_ADDRESS>TORKHUSGATAN 8 B LGH
+            1001</REGISTERED_ADDRESS>
+            <ADDRESS>TORKHUSGATAN 8 B LGH 1001</ADDRESS>
+            <ZIPCODE>12065</ZIPCODE>
+            <TOWN>STOCKHOLM</TOWN>
+            <SPEC_CO_ADDRESS />
+            <SPEC_ADDRESS />
+            <SPEC_ZIPCODE />
+            <SPEC_COUNTRY />
+            <SPEC_TOWN />
+            <SPEC_REGISTERED_ADDRESS />
+            <SEARCH_DATE>20140910</SEARCH_DATE>
+            <EMIGRATED>NEJ</EMIGRATED>
+            <EMIGRATED_DATE />
+            <PROTECTED>NEJ</PROTECTED>
+            <GENDER>MAN</GENDER>
+            <AGE>42</AGE>
+          </GETDATA_RESPONSE>
+        </NewDataSet>
+      </diffgr:diffgram>
+    </Parameters>
+  </GetDataBySecureResult>
+</GetDataBySecureResponse>
+   </s:Body>
+</s:Envelope>

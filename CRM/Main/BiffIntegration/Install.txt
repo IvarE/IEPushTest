@@ -1,0 +1,57 @@
+﻿CodeSigningPassword: EndeavorL0veSkåne
+
+
+Setup a debug computer.
+* Make sure u run the application with /Password:XYZ and /PassSQLDatabaseUser:XYD parameters. This will create the needed credentials files.
+  Endeavor Credentials manager will NOT work to create the password file.
+
+Installation
+* Use the Release (not Debug) build to install the service.
+* Prefered installation folder is D:\Program Files (x86)\Endeavor\BiffIntegrationService.
+* Installation of the service should be made in an Administrator Command Prompt.
+* Use "C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe" "D:\Program Files (x86)\Endeavor\BiffIntegrationService\BiffIntegration.exe" to install the application.
+
+Update configuration
+* Change the application config file and enter the correct connection information.
+
+To use integrated authentication
+* Set the account on the installed service. 
+* Set the EndpointType setting in the application config file to ActiveDirectory.
+* Clear	the UserName setting in the application config file.
+
+
+To use stored credentials
+* Set the UserName setting in the application config file
+* Run the service application with the /Password:XYZ and /PassSQLDatabaseUser:XYD as parameters to store the password. 
+  Example "D:\Program Files (x86)\Endeavor\BiffIntegrationService\BiffIntegration.exe" /Password:XYZ
+  You will receive an error message that you cannot start a service from the command line. The password will be stored anyway.
+  Observe that you must create the password using the same account as the service will execute under. I.e. if the user ScheduleSvc
+  is used as the service account then your need to login or runas this user when setting the password.
+  The runas program does not work with local system, so if you wish to run the service with local system then you need to use psexec to
+  start a command prompt with local system.
+
+
+Installerad i maskin / sql
+Test    :v-dkcrm-tst
+Acc     :v-dkcrm-acc / V-DKSQL4-ACC
+Prod    :v-dkcrm3
+Prod2016:V-DK-CRM01-BE / DKSQL-CL1-AGCRM
+klar med SQL.
+
+
+
+SQL:
+Se dokument CRMTravelCards.docx
+
+1.  Install BIFF solution in CRM
+1.1 Install CRM database and procedures
+	In SQL Cluster environments: https://docs.microsoft.com/en-us/sql/database-engine/availability-groups/windows/availability-group-add-a-database
+1.2 Configure settings in CRM, Run Time for BIFF-Integration.
+2. Copy all files to D:\Program Files (x86)\Endeavor\BiffIntegrationService
+3. Install service using help above (Installation).
+	Use username dbDKReadDW(xxx)
+4. Make sure account dbDKReadDW(xxx) as modify rights in D:\ProgramData\Endeavor
+5. Create credentials file using (To use stored credentials). SQL password is not required.
+	Run in context: dbDKReadDW(xxx), save password for CRM (account D1\svcCRMAPP01(xxx))
+	Please note this section: "Observe that you must create the password using the same account""
+

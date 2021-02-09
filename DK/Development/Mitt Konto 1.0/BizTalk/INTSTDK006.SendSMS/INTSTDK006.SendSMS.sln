@@ -1,0 +1,76 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK006.STIP.Schemas", "INTSTDK006.STIP.Schemas\INTSTDK006.STIP.Schemas.btproj", "{7BC9F5B9-C1AA-4F0B-92AA-BA110F154AEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK006.SendSMS.Orchestrations", "INTSTDK006.SendSMS.Orchestrations\INTSTDK006.SendSMS.Orchestrations.btproj", "{518D0D7C-A747-4723-AE4C-45C1F2D5093F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK006.Bosbec.Schemas", "INTSTDK006.Bosbec.Schemas\INTSTDK006.Bosbec.Schemas.btproj", "{1FBCC53E-A2D7-44B3-9F53-325C6ACECC08}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{429820F9-446E-4DD8-BF8F-309F92CDDD23}"
+	ProjectSection(SolutionItems) = preProject
+		AuthenticationResponse.xml = AuthenticationResponse.xml
+		Files\AuthneticationRequest.JSON = Files\AuthneticationRequest.JSON
+		Files\AuthneticationResponse.JSON = Files\AuthneticationResponse.JSON
+		Files\SendMessageRequest.JSON = Files\SendMessageRequest.JSON
+		Files\SendMessageResponse.JSON = Files\SendMessageResponse.JSON
+		WcfServiceDescription\WcfServiceDescription.xml = WcfServiceDescription\WcfServiceDescription.xml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK.SendSMS.Pipelines", "INTSTDK.SendSMS.Pipelines\INTSTDK.SendSMS.Pipelines.btproj", "{450B64F3-24A0-4BF7-B997-51A5A3A5493F}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://wmsi003915:8080/tfs/idccollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = INTSTDK006.STIP.Schemas\\INTSTDK006.STIP.Schemas.btproj
+		SccProjectName1 = INTSTDK006.STIP.Schemas
+		SccLocalPath1 = INTSTDK006.STIP.Schemas
+		SccProjectUniqueName2 = INTSTDK006.SendSMS.Orchestrations\\INTSTDK006.SendSMS.Orchestrations.btproj
+		SccProjectName2 = INTSTDK006.SendSMS.Orchestrations
+		SccLocalPath2 = INTSTDK006.SendSMS.Orchestrations
+		SccProjectUniqueName3 = INTSTDK006.Bosbec.Schemas\\INTSTDK006.Bosbec.Schemas.btproj
+		SccProjectName3 = INTSTDK006.Bosbec.Schemas
+		SccLocalPath3 = INTSTDK006.Bosbec.Schemas
+		SccProjectUniqueName4 = INTSTDK.SendSMS.Pipelines\\INTSTDK.SendSMS.Pipelines.btproj
+		SccProjectName4 = INTSTDK.SendSMS.Pipelines
+		SccLocalPath4 = INTSTDK.SendSMS.Pipelines
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7BC9F5B9-C1AA-4F0B-92AA-BA110F154AEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BC9F5B9-C1AA-4F0B-92AA-BA110F154AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BC9F5B9-C1AA-4F0B-92AA-BA110F154AEE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{7BC9F5B9-C1AA-4F0B-92AA-BA110F154AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BC9F5B9-C1AA-4F0B-92AA-BA110F154AEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BC9F5B9-C1AA-4F0B-92AA-BA110F154AEE}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{518D0D7C-A747-4723-AE4C-45C1F2D5093F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{518D0D7C-A747-4723-AE4C-45C1F2D5093F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{518D0D7C-A747-4723-AE4C-45C1F2D5093F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{518D0D7C-A747-4723-AE4C-45C1F2D5093F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{518D0D7C-A747-4723-AE4C-45C1F2D5093F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{518D0D7C-A747-4723-AE4C-45C1F2D5093F}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{1FBCC53E-A2D7-44B3-9F53-325C6ACECC08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FBCC53E-A2D7-44B3-9F53-325C6ACECC08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FBCC53E-A2D7-44B3-9F53-325C6ACECC08}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{1FBCC53E-A2D7-44B3-9F53-325C6ACECC08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FBCC53E-A2D7-44B3-9F53-325C6ACECC08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FBCC53E-A2D7-44B3-9F53-325C6ACECC08}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{450B64F3-24A0-4BF7-B997-51A5A3A5493F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{450B64F3-24A0-4BF7-B997-51A5A3A5493F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{450B64F3-24A0-4BF7-B997-51A5A3A5493F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{450B64F3-24A0-4BF7-B997-51A5A3A5493F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{450B64F3-24A0-4BF7-B997-51A5A3A5493F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{450B64F3-24A0-4BF7-B997-51A5A3A5493F}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,678 @@
+﻿    <GetAutoloadActivityReportResponse xmlns="http://cubic.com">
+      <GetAutoloadActivityReportResult msdata:SchemaSerializationMode="ExcludeSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xs:schema id="AutoloadActivity" targetNamespace="http://BIFF.org/AutoloadActivity.xsd" xmlns:mstns="http://BIFF.org/AutoloadActivity.xsd" xmlns="http://BIFF.org/AutoloadActivity.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified">
+          <xs:element name="AutoloadActivity" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+            <xs:complexType>
+              <xs:choice minOccurs="0" maxOccurs="unbounded" />
+            </xs:complexType>
+          </xs:element>
+        </xs:schema>
+        <diffgr:diffgram xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1">
+          <AutoloadActivity xmlns="http://BIFF.org/AutoloadActivity.xsd">
+            <Activity diffgr:id="Activity1" msdata:rowOrder="0">
+              <CardSerialNumber>3706331888</CardSerialNumber>
+              <RequestID>1896523</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-02T08:19:48+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity2" msdata:rowOrder="1">
+              <CardSerialNumber>3706331888</CardSerialNumber>
+              <RequestID>1896523</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-04T11:03:59+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity3" msdata:rowOrder="2">
+              <CardSerialNumber>3706331888</CardSerialNumber>
+              <RequestID>1896523</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-18T13:39:38+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity4" msdata:rowOrder="3">
+              <CardSerialNumber>3706329920</CardSerialNumber>
+              <RequestID>1896524</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-02T08:19:34+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity5" msdata:rowOrder="4">
+              <CardSerialNumber>3706329920</CardSerialNumber>
+              <RequestID>1896524</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-04T11:06:32+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity6" msdata:rowOrder="5">
+              <CardSerialNumber>3706378832</CardSerialNumber>
+              <RequestID>1896525</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-03T11:34:00+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity7" msdata:rowOrder="6">
+              <CardSerialNumber>805336132</CardSerialNumber>
+              <RequestID>1896526</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-03T12:05:50+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity8" msdata:rowOrder="7">
+              <CardSerialNumber>607683172</CardSerialNumber>
+              <RequestID>1896527</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-04T13:55:15+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity9" msdata:rowOrder="8">
+              <CardSerialNumber>607688756</CardSerialNumber>
+              <RequestID>1896528</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-04T13:55:21+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity10" msdata:rowOrder="9">
+              <CardSerialNumber>3706327984</CardSerialNumber>
+              <RequestID>1896529</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-05T08:28:41+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity11" msdata:rowOrder="10">
+              <CardSerialNumber>3706368064</CardSerialNumber>
+              <RequestID>1896530</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-05T08:28:44+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity12" msdata:rowOrder="11">
+              <CardSerialNumber>805336132</CardSerialNumber>
+              <RequestID>1896531</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity13" msdata:rowOrder="12">
+              <CardSerialNumber>805269140</CardSerialNumber>
+              <RequestID>1896532</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity14" msdata:rowOrder="13">
+              <CardSerialNumber>3706378832</CardSerialNumber>
+              <RequestID>1896533</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity15" msdata:rowOrder="14">
+              <CardSerialNumber>607688756</CardSerialNumber>
+              <RequestID>1896543</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity16" msdata:rowOrder="15">
+              <CardSerialNumber>607683172</CardSerialNumber>
+              <RequestID>1896544</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity17" msdata:rowOrder="16">
+              <CardSerialNumber>1515190983</CardSerialNumber>
+              <RequestID>1896563</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity18" msdata:rowOrder="17">
+              <CardSerialNumber>607691012</CardSerialNumber>
+              <RequestID>1896564</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity19" msdata:rowOrder="18">
+              <CardSerialNumber>607691012</CardSerialNumber>
+              <RequestID>1896565</RequestID>
+              <CardSection>2</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity20" msdata:rowOrder="19">
+              <CardSerialNumber>607688756</CardSerialNumber>
+              <RequestID>1896566</RequestID>
+              <CardSection>2</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity21" msdata:rowOrder="20">
+              <CardSerialNumber>805336132</CardSerialNumber>
+              <RequestID>1896567</RequestID>
+              <CardSection>2</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity22" msdata:rowOrder="21">
+              <CardSerialNumber>805327812</CardSerialNumber>
+              <RequestID>1896583</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity23" msdata:rowOrder="22">
+              <CardSerialNumber>805327812</CardSerialNumber>
+              <RequestID>1896584</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity24" msdata:rowOrder="23">
+              <CardSerialNumber>607691012</CardSerialNumber>
+              <RequestID>1896585</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity25" msdata:rowOrder="24">
+              <CardSerialNumber>805296996</CardSerialNumber>
+              <RequestID>1896586</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity26" msdata:rowOrder="25">
+              <CardSerialNumber>805314164</CardSerialNumber>
+              <RequestID>1896587</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity27" msdata:rowOrder="26">
+              <CardSerialNumber>805314164</CardSerialNumber>
+              <RequestID>1896588</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity28" msdata:rowOrder="27">
+              <CardSerialNumber>607691012</CardSerialNumber>
+              <RequestID>1896589</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity29" msdata:rowOrder="28">
+              <CardSerialNumber>607691012</CardSerialNumber>
+              <RequestID>1896590</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity30" msdata:rowOrder="29">
+              <CardSerialNumber>805269140</CardSerialNumber>
+              <RequestID>1896591</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity31" msdata:rowOrder="30">
+              <CardSerialNumber>3706361920</CardSerialNumber>
+              <RequestID>1896592</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-18T13:11:27+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity32" msdata:rowOrder="31">
+              <CardSerialNumber>2485595671</CardSerialNumber>
+              <RequestID>1896593</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-18T13:29:27+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity33" msdata:rowOrder="32">
+              <CardSerialNumber>2485595671</CardSerialNumber>
+              <RequestID>1896593</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-26T09:16:05+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity34" msdata:rowOrder="33">
+              <CardSerialNumber>2485595671</CardSerialNumber>
+              <RequestID>1896593</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-01T10:48:44+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity35" msdata:rowOrder="34">
+              <CardSerialNumber>2502692807</CardSerialNumber>
+              <RequestID>1896594</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-18T13:30:52+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity36" msdata:rowOrder="35">
+              <CardSerialNumber>2502692807</CardSerialNumber>
+              <RequestID>1896594</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-22T13:28:17+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity37" msdata:rowOrder="36">
+              <CardSerialNumber>2502692807</CardSerialNumber>
+              <RequestID>1896594</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-01T10:49:51+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity38" msdata:rowOrder="37">
+              <CardSerialNumber>2502690695</CardSerialNumber>
+              <RequestID>1896595</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-26T11:03:19+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity39" msdata:rowOrder="38">
+              <CardSerialNumber>2502690695</CardSerialNumber>
+              <RequestID>1896595</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-05T03:30:18+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity40" msdata:rowOrder="39">
+              <CardSerialNumber>2502690599</CardSerialNumber>
+              <RequestID>1896596</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-26T09:18:41+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity41" msdata:rowOrder="40">
+              <CardSerialNumber>2502690599</CardSerialNumber>
+              <RequestID>1896596</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-04T00:30:28+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity42" msdata:rowOrder="41">
+              <CardSerialNumber>2502690599</CardSerialNumber>
+              <RequestID>1896596</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-06T03:01:52+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity43" msdata:rowOrder="42">
+              <CardSerialNumber>2502690599</CardSerialNumber>
+              <RequestID>1896596</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-08T00:31:08+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity44" msdata:rowOrder="43">
+              <CardSerialNumber>2502692727</CardSerialNumber>
+              <RequestID>1896597</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-26T11:21:06+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity45" msdata:rowOrder="44">
+              <CardSerialNumber>2502692727</CardSerialNumber>
+              <RequestID>1896597</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-03T23:30:45+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity46" msdata:rowOrder="45">
+              <CardSerialNumber>2502692727</CardSerialNumber>
+              <RequestID>1896597</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-05T00:31:24+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity47" msdata:rowOrder="46">
+              <CardSerialNumber>1472850375</CardSerialNumber>
+              <RequestID>1896598</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>2</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity48" msdata:rowOrder="47">
+              <CardSerialNumber>1472853367</CardSerialNumber>
+              <RequestID>1896599</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-01T16:51:07+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity49" msdata:rowOrder="48">
+              <CardSerialNumber>2502793031</CardSerialNumber>
+              <RequestID>1896600</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>2</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity50" msdata:rowOrder="49">
+              <CardSerialNumber>2502640663</CardSerialNumber>
+              <RequestID>1896601</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-26T13:16:13+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity51" msdata:rowOrder="50">
+              <CardSerialNumber>2502640663</CardSerialNumber>
+              <RequestID>1896601</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-01T16:51:25+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity52" msdata:rowOrder="51">
+              <CardSerialNumber>1472772295</CardSerialNumber>
+              <RequestID>1896602</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-18T13:59:21+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity53" msdata:rowOrder="52">
+              <CardSerialNumber>1472772295</CardSerialNumber>
+              <RequestID>1896602</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-01T16:51:44+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity54" msdata:rowOrder="53">
+              <CardSerialNumber>2485603847</CardSerialNumber>
+              <RequestID>1896603</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-26T11:15:14+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity55" msdata:rowOrder="54">
+              <CardSerialNumber>2485603847</CardSerialNumber>
+              <RequestID>1896603</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-01T12:50:19+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity56" msdata:rowOrder="55">
+              <CardSerialNumber>2485596711</CardSerialNumber>
+              <RequestID>1896604</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-26T09:57:33+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity57" msdata:rowOrder="56">
+              <CardSerialNumber>2485596711</CardSerialNumber>
+              <RequestID>1896604</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-01T16:51:50+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity58" msdata:rowOrder="57">
+              <CardSerialNumber>2502640743</CardSerialNumber>
+              <RequestID>1896605</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-18T13:55:21+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity59" msdata:rowOrder="58">
+              <CardSerialNumber>2502640743</CardSerialNumber>
+              <RequestID>1896605</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-24T13:59:12+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity60" msdata:rowOrder="59">
+              <CardSerialNumber>2502640743</CardSerialNumber>
+              <RequestID>1896605</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-01T11:07:44+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity61" msdata:rowOrder="60">
+              <CardSerialNumber>2502641655</CardSerialNumber>
+              <RequestID>1896606</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-18T13:43:27+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity62" msdata:rowOrder="61">
+              <CardSerialNumber>2502641655</CardSerialNumber>
+              <RequestID>1896606</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-26T09:13:36+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity63" msdata:rowOrder="62">
+              <CardSerialNumber>2502641655</CardSerialNumber>
+              <RequestID>1896606</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-29T14:13:23+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity64" msdata:rowOrder="63">
+              <CardSerialNumber>2502641655</CardSerialNumber>
+              <RequestID>1896606</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-01T11:05:22+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity65" msdata:rowOrder="64">
+              <CardSerialNumber>1472853415</CardSerialNumber>
+              <RequestID>1896607</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-18T13:27:24+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity66" msdata:rowOrder="65">
+              <CardSerialNumber>1472853415</CardSerialNumber>
+              <RequestID>1896607</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-06-26T13:04:30+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity67" msdata:rowOrder="66">
+              <CardSerialNumber>1472853415</CardSerialNumber>
+              <RequestID>1896607</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <Price>50</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-01T10:46:10+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity68" msdata:rowOrder="67">
+              <CardSerialNumber>2502577495</CardSerialNumber>
+              <RequestID>1896608</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>2</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity69" msdata:rowOrder="68">
+              <CardSerialNumber>3706331888</CardSerialNumber>
+              <RequestID>1896609</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity70" msdata:rowOrder="69">
+              <CardSerialNumber>1472850375</CardSerialNumber>
+              <RequestID>1896610</RequestID>
+              <CardSection>2</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity71" msdata:rowOrder="70">
+              <CardSerialNumber>1472853367</CardSerialNumber>
+              <RequestID>1896611</RequestID>
+              <CardSection>2</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity72" msdata:rowOrder="71">
+              <CardSerialNumber>2502640743</CardSerialNumber>
+              <RequestID>1896612</RequestID>
+              <CardSection>2</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity73" msdata:rowOrder="72">
+              <CardSerialNumber>2502640663</CardSerialNumber>
+              <RequestID>1896613</RequestID>
+              <CardSection>2</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity74" msdata:rowOrder="73">
+              <CardSerialNumber>3706361920</CardSerialNumber>
+              <RequestID>1896614</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity75" msdata:rowOrder="74">
+              <CardSerialNumber>3706329920</CardSerialNumber>
+              <RequestID>1896615</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity76" msdata:rowOrder="75">
+              <CardSerialNumber>2485603847</CardSerialNumber>
+              <RequestID>1896616</RequestID>
+              <CardSection>2</CardSection>
+              <Currency>SEK</Currency>
+              <Price>200</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-01T12:50:19+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity77" msdata:rowOrder="76">
+              <CardSerialNumber>2502793031</CardSerialNumber>
+              <RequestID>1896617</RequestID>
+              <CardSection>2</CardSection>
+              <Currency>SEK</Currency>
+              <Price>200</Price>
+              <StatusCode>2</StatusCode>
+              <DateLoaded>2014-07-01T12:49:28+02:00</DateLoaded>
+            </Activity>
+            <Activity diffgr:id="Activity78" msdata:rowOrder="77">
+              <CardSerialNumber>805327812</CardSerialNumber>
+              <RequestID>1896618</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity79" msdata:rowOrder="78">
+              <CardSerialNumber>805327812</CardSerialNumber>
+              <RequestID>1896619</RequestID>
+              <CardSection>1</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity80" msdata:rowOrder="79">
+              <CardSerialNumber>607688756</CardSerialNumber>
+              <RequestID>1896623</RequestID>
+              <CardSection>2</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+            <Activity diffgr:id="Activity81" msdata:rowOrder="80">
+              <CardSerialNumber>2502864647</CardSerialNumber>
+              <RequestID>0</RequestID>
+              <CardSection>2</CardSection>
+              <Currency>SEK</Currency>
+              <StatusCode>3</StatusCode>
+            </Activity>
+          </AutoloadActivity>
+        </diffgr:diffgram>
+      </GetAutoloadActivityReportResult>
+    </GetAutoloadActivityReportResponse>

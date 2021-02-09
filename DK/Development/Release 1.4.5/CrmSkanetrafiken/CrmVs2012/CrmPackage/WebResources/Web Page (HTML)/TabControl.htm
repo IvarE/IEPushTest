@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <style type="text/css">
+        .mybutton 
+        { 
+            background-color:White; 
+            border-style:none; 
+            cursor:pointer; 
+            display: inline; 
+            margin-right:30px;  
+            font-family:Segoe UI, Arial, Sans-Serif; 
+            font-size: 12px; 
+            font-weight: bold;
+            }
+    </style>
+
+    <title></title>
+</head>
+<body>
+
+<script type="text/jscript">
+    function BClickHide() {
+        try { window.parent.CGISweden.incident.setAlltabsNoVisible(); }
+        catch (e) { alert(e.Message); }
+    }
+
+    function BClickCategory() {
+        try { window.parent.CGISweden.incident.showcategories_OnChange(); }
+        catch (e) { alert(e.Message); }
+    }
+
+    function BClickCustInfo() {
+        try { window.parent.CGISweden.incident.showcustomer_OnChange(); }
+        catch (e) { alert(e.Message); }
+    }
+
+    function BClickNotes() {
+        try { window.parent.CGISweden.incident.shownotes_OnChange(); }
+        catch (e) { alert(e.Message); }
+    }
+
+    function BClickCampaign() {
+        try { window.parent.CGISweden.incident.showcampaign_OnChange(); }
+        catch (e) { alert(e.Message); }
+    }
+
+    function BClickSummary() {
+        try { window.parent.CGISweden.incident.showsummary_OnChange(); }
+        catch (e) { alert(e.Message); }
+    }
+
+    function BClickArticle() {
+        try { window.parent.CGISweden.incident.showkbarticles_OnChange(); }
+        catch (e) { alert(e.Message); }
+    }
+
+    function BClickFacebook() {
+        try { window.parent.CGISweden.incident.showfacebook_OnChange(); }
+        catch (e) { alert(e.Message); }
+    }
+
+    function BClickChat() {
+        try { window.parent.CGISweden.incident.showchat_OnChange(); }
+        catch (e) { alert(e.Message); }
+    }
+
+</script>
+
+<div>
+<div class="mybutton" onclick="BClickHide();">Göm alla</div>
+<div class="mybutton" onclick="BClickCategory();">Kategorier</div>
+<div class="mybutton" onclick="BClickCustInfo();">Kundinfo</div>
+<div class="mybutton" onclick="BClickNotes();">Noteringar</div>
+<div class="mybutton" onclick="BClickCampaign();">Kampanjer</div>
+<div class="mybutton" onclick="BClickSummary();">Historik</div>
+<div class="mybutton" onclick="BClickArticle();">KB Artiklar</div>
+<div class="mybutton" onclick="BClickFacebook();">Facebook</div>
+<div class="mybutton" onclick="BClickChat();">Chat</div>
+
+</div>
+
+</body>
+</html>

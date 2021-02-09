@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<filter>
+  <entities>
+    <entity>contact</entity>
+    <entity>incident</entity>
+    <entity>cgi_setting</entity>
+    <entity>edp_Country</entity>
+
+  </entities>
+  <optionsets languageCode="1053">
+    <optionset>ed_contact_ed_stakecode</optionset>
+  </optionsets>
+</filter>

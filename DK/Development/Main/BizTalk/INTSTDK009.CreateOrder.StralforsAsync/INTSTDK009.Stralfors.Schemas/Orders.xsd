@@ -1,0 +1,48 @@
+﻿<xs:schema id="Orders" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" >
+  <xs:element name="Orders">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Order">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="OrderNo" type="xs:string" minOccurs="0" />
+              <xs:element name="OrderTime" type="xs:string" minOccurs="0" />
+              <xs:element name="ShippingAddress" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Name" type="xs:string" minOccurs="0" />
+                    <xs:element name="ContactPerson" type="xs:string" minOccurs="0" />
+                    <xs:element name="CellPhone" type="xs:string" minOccurs="0" />
+                    <xs:element name="EMail" type="xs:string" minOccurs="0" />
+                    <xs:element name="Address1" type="xs:string" minOccurs="0" />
+                    <xs:element name="Address2" type="xs:string" minOccurs="0" />
+                    <xs:element name="PostalCode" type="xs:string" minOccurs="0" />
+                    <xs:element name="City" type="xs:string" minOccurs="0" />
+                    <xs:element name="CountryCode" type="xs:string" minOccurs="0" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Products" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Product" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Reference" type="xs:string" minOccurs="0" />
+                          <xs:element name="ProductCode" type="xs:string" minOccurs="0" />
+                          <xs:element name="Name" type="xs:string" minOccurs="0" />
+                          <xs:element name="Qty" type="xs:string" minOccurs="0" />
+                          <xs:element name="NameOnCard" type="xs:string" minOccurs="0" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,110 @@
+﻿<html>
+
+<head>
+    <link href="../CSS/Endeavor.Skanetrafiken.getOrders.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        function onLoad() {
+
+            var formContext = getFormContext();
+            if (formContext) {
+                formContext.Endeavor.Skanetrafiken.getOrders.setDocument(document);
+            }
+
+            var startdate = new Date();
+            startdate.setDate(startdate.getDate() - 45);
+            document.getElementById('startDate').value = startdate.toISOString().substring(0, 10);
+            
+            document.getElementById('endDate').value = (new Date()).toISOString().substring(0, 10);
+        }
+
+        function getFormContext() {
+            for (i = 0; i < window.parent.frames.length; i++) {
+                var frame = window.parent.frames[i];
+                if (typeof frame.Endeavor !== "undefined" && typeof frame.Endeavor.Skanetrafiken !== "undefined" && typeof frame.Endeavor.Skanetrafiken.getOrders !== "undefined") {
+                    return frame;
+                }
+            }
+
+            for (i = 0; i < window.parent.parent.frames.length; i++) {
+                var frame = window.parent.parent.frames[i];
+                if (typeof frame.Endeavor !== "undefined" && typeof frame.Endeavor.Skanetrafiken !== "undefined" && typeof frame.Endeavor.Skanetrafiken.getOrders !== "undefined") {
+                    return frame;
+                }
+            }
+
+            alert("GetOrders service is unavailable. Please contact your systems administrator.")
+
+            return null;
+        }
+
+        function callOrderSearch(document) {
+            var formContext = getFormContext();
+            if (formContext) {
+                formContext.Endeavor.Skanetrafiken.getOrders.orderSearch(document);
+            }
+        }
+
+    </script>
+
+</head>
+
+<body onload="window.onLoad();">
+    <table id="searchfield" cellpadding="5" cellspacing="5" border="0" bgColor="#EEEEEE">
+        <tr>
+            <th style="width:10px"></th>
+            <th>Ordernummer</th>
+            <th><input type="text" id="orderNr" size="8"></th>
+            <th>Kortnummer</th>
+            <th><input type="text" id="cardNr" size="8"></th>
+            <th>Datum från</th>
+            <th><input type="text" id="startDate" size="8"></th>
+            <th>Datum till</th>
+            <th><input type="text" id="endDate" size="8"></th>
+            <th><button onclick="callOrderSearch(document)" id="searchButton" style="margin-left:20px;">Sök</button></th>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <th>Ordrar</th>
+        </tr>
+    </table>
+    <table id="orders">
+        <thead>
+            <tr>
+                <th style="width:10px"></th>
+                <th>Ordernummer</th>
+                <th>Datum</th>
+                <th>Belopp</th>
+                <th>Moms</th>
+                <th>Krediterbart</th>
+                <th>Ej krediterbart</th>
+                <th>Orderstatus</th>
+                <th>Ordertyp</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <table>
+        <tr>
+            <th>Kreditordrar</th>
+        </tr>
+    </table>
+    <table id="creditorders">
+        <thead>
+            <tr>
+                <th style="width:10px"></th>
+                <th>Ordernummer</th>
+                <th>Datum</th>
+                <th>Tid</th>
+                <th>Produkt</th>
+                <th>Referensnummer</th>
+                <th>Skapad av</th>
+                <th>Orsak</th>
+                <th>Belopp</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</body>
+</html>

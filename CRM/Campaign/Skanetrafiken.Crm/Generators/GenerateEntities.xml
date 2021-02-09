@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<filter>
+  <entities>
+    <entity>account</entity>
+    <entity>activityparty</entity>
+    <entity>campaign</entity>
+    <entity>contact</entity>
+    <entity>email</entity>
+    <entity>incident</entity>
+    <entity>lead</entity>
+    <entity>product</entity>
+    <entity>processstage</entity>
+    <entity>queueitem</entity>
+    <entity>role</entity>
+    <entity>systemuser</entity>
+    <entity>systemuserroles</entity>
+    <entity>template</entity>
+
+    <entity>campaignitem</entity>
+
+    <entity>cgi_setting</entity>
+
+    <entity>ed_deltabatcherrorlog</entity>
+    <entity>ed_deltabatcherrorlogrow</entity>
+    <entity>ed_deltabatchqueue</entity>
+    <entity>ed_mergerecords</entity>
+    <entity>ed_notifymkl</entity>
+    
+    <entity>edp_country</entity>
+  </entities>
+  <optionsets>
+    <optionset>campaign_statuscode</optionset>
+    <optionset>campaign_typecode</optionset>
+    <optionset>contact_statuscode</optionset>
+    <optionset>email_statuscode</optionset>
+    <optionset>lead_statuscode</optionset>
+    <optionset>lead_leadsourcecode</optionset>
+    <optionset>processstage_category</optionset>
+
+    <optionset>ed_creditsaferejectcodes</optionset>
+    <optionset>ed_informationsource</optionset>
+
+    <optionset>ed_campaign_ed_leadtopic</optionset>
+    <optionset>ed_deltabatchqueue_ed_deltabatchoperation</optionset>
+    <optionset>ed_deltabatchqueue_statuscode</optionset>
+    <optionset>ed_notifymkl_statuscode</optionset>
+    <optionset>ed_notifymkl_ed_method</optionset>
+
+  </optionsets>
+</filter>

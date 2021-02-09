@@ -1,0 +1,34 @@
+﻿{"Orders": [{
+"OrderNumber": "PO5000107",
+"OrderStatus": "InProgress",
+"Currency": "SEK",
+"Language": "sv",
+"OrderDate": "2014-11-14T14:23:18.807Z",
+"OrderTotal": 0,
+"OrderTotalVat": 0,
+"OrderDiscount": 0,
+"OrderDiscountVat": 0,
+"PaymentTotal": 0,
+"PaymentTotalVat": 0,
+"ShippingTotal": 0,
+"ShippingTotalVat": 0,
+"CustomerNumber": "1e71f1eb-70ed-4cd5-bc48-76bfe350686f",
+"CustomerNumber2": "10001",
+"CustomerOrganizationNumber": "556646-1876",
+"CustomerName": "Glenn Hysen",
+"OrderItems": [   {
+"Code": "CompanyCardJojo365",
+"Name": "Jojo 365",
+"CardNumber": "",
+"Amount": 1,
+"Price": 18895,
+"Tax": 0,
+"Discount": 0
+}],
+"PaymentTypes": [   {
+"Code": "c316d4cb-5b0d-416b-9228-e464e49253bf",
+"Name": "Faktura",
+"ReferenceNumber": "",
+"Sum": 18895
+}]
+}]}

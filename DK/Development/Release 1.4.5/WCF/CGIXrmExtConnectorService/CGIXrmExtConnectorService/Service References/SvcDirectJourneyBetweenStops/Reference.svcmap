@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="7962edf4-0873-49de-aba2-a0b255b388b9" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://v-dkbiz-tst.int.skanetrafiken.com/INTSTDK001/DirectJourneysBetweenStops.svc?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="DirectJourneysBetweenStops.xsd" MetadataType="Schema" ID="4f41e1b6-c6a5-42fd-be67-79eea02ac45b" SourceId="1" SourceUrl="http://v-dkbiz-tst.int.skanetrafiken.com/INTSTDK001/DirectJourneysBetweenStops.svc?xsd=xsd3" />
+    <MetadataFile FileName="BizTalkServiceInstance1.wsdl" MetadataType="Wsdl" ID="431a380b-a2d3-484d-82b0-34faef5d4fc8" SourceId="1" SourceUrl="http://v-dkbiz-tst.int.skanetrafiken.com/INTSTDK001/DirectJourneysBetweenStops.svc?wsdl" />
+    <MetadataFile FileName="DirectJourneysBetweenStops1.xsd" MetadataType="Schema" ID="75a0b4d5-ce42-4361-92a0-91e33a13931e" SourceId="1" SourceUrl="http://v-dkbiz-tst.int.skanetrafiken.com/INTSTDK001/DirectJourneysBetweenStops.svc?xsd=xsd2" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

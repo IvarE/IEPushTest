@@ -1,0 +1,6 @@
+﻿{
+"Success": true,
+"Message": "Card 123456 recharged successfully with 100 SEK",
+"ErrorMessage": "Error",
+"StatusCode": 200
+}

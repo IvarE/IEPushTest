@@ -1,0 +1,172 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using CGIXrmHandler;
+using Microsoft.Xrm.Sdk;
+using System.Configuration;
+using System.Collections.ObjectModel;
+
+public partial class PASS_DoAction : System.Web.UI.Page
+{
+    //?sFN=X 500&sLN=Testsson&sA=Kvarnstensg 8 &sPA=25227 Helsingborg&sPH=&sPW=&sPF=&sEM=&sSSN=5202023030&sPR=Helsingborgs kommun&sOP1=stmbcnv&sOP2=multibcbsa&sBid=9693322&iDC=1&sTTJ=FT&sTCN=Taxi Kurir i Malmö AB&iTCID=107&iTLID=0&iTJID=0&iTFID=0&sTFN=   Kvarnstensg 8  25227 Helsingborg&sTFD=20140919&sTFT=0950&iTTID=0&sTTN= Helsingborgs Stadsteater Karl Johans g 1  25221 Helsingborg&sTTD=20140919&sTTT=0958&sTCID=21012P
+    //?sFN=X 500&sLN=Testsson&sA=Kvarnstensg 8 &sPA=25227 Helsingborg&sPH=&sPW=&sPF=&sEM=&sSSN=5202023030&sPR=Skånetrafiken&sOP1=stmbcnv&sOP2=multibcbsa&sBid=9693458&iDC=2&sTTJ=NÄR&sTCN=Maximilians Transporter | Josef 1&iTCID=82&iTLID=0 | 1000&iTJID=0 | 1000&iTFID=0 | 1000&sTFN= Lund Bankgatan [hpl] Lilla Tvärg 26  22352 Lund | Josef 3&sTFD=20140919 | Josef 4&sTFT=1719 | Josef 5&iTTID=0 | 1000&sTTN= V Hoby k:a [hpl] Västra Hoby 172  22591 Lund | Josef 6&sTTD=20140919 | Josef 7&sTTT=1740 | Josef 8&sTCID=3005P Lu | Josef 2
+    //?sFN=SR r&sPA=25227 Helsiäängborg&sEM=agneta.h@bredband.net&sPH=Testar&sPW=&iDC=3&sTFN=||tätt&sTTT=jo|sef|&sTTD=sef|jo|ttt&sTCID=fes|jo|ttt
+    //?sFN=X 500&sLN=Testsson&sA=Kvarnstensg 8 &sPA=25227 Helsingborg&sPH=&sPW=&sPF=&sEM=&sSSN=345&sPR=Skånetrafiken&sOP1=stmbcnv&sOP2=multibcbsa&sBid=9693453&iDC=1&sTTJ=NÄR&sTCN=Maximilians Transporter&iTCID=82&iTLID=0&iTJID=0&iTFID=0&sTFN= V Hoby k:a [hpl] Västra Hoby 172  22591 Lund&sTFD=20140919&sTFT=0819&iTTID=0&sTTN= Lund Bankgatan [hpl] Lilla Tvärg 26  22352 Lund&sTTD=20140919&sTTT=0840&sTCID=51001P
+
+    private PASSHandler passHandler;
+    
+    CGIXrmLogger.LogToCrm log2Crm = new CGIXrmLogger.LogToCrm();
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            if (Request.QueryString.HasKeys())
+            {
+                passHandler = new PASSHandler();
+                passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "***********************************************************************************************");
+                passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Start");
+
+                foreach (String key in Request.QueryString.AllKeys)
+                {
+                    passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Key: " + key + " Value: " + Request.QueryString[key]);
+                }
+                
+                CGIXrmHandler.PASS.CrmClasses.Incident incident = new CGIXrmHandler.PASS.CrmClasses.Incident();
+                incident.sFN = string.IsNullOrEmpty(Request.QueryString["sFN"]) ? null : Request.QueryString["sFN"];
+                incident.sLN = string.IsNullOrEmpty(Request.QueryString["sLN"]) ? null : Request.QueryString["sLN"];
+                incident.sA = string.IsNullOrEmpty(Request.QueryString["sA"]) ? null : Request.QueryString["sA"];
+                incident.sPA = string.IsNullOrEmpty(Request.QueryString["sPA"]) ? null : Request.QueryString["sPA"];
+                incident.sPH = string.IsNullOrEmpty(Request.QueryString["sPH"]) ? null : Request.QueryString["sPH"];
+                incident.sPW = string.IsNullOrEmpty(Request.QueryString["sPW"]) ? null : Request.QueryString["sPW"];
+                incident.sPM = string.IsNullOrEmpty(Request.QueryString["sPM"]) ? null : Request.QueryString["sPM"];
+                incident.sPF = string.IsNullOrEmpty(Request.QueryString["sPF"]) ? null : Request.QueryString["sPF"];
+                incident.sEM = string.IsNullOrEmpty(Request.QueryString["sEM"]) ? string.Empty : Request.QueryString["sEM"];
+                incident.sSSN = string.IsNullOrEmpty(Request.QueryString["sSSN"]) ? string.Empty : Request.QueryString["sSSN"];
+                incident.sPR = string.IsNullOrEmpty(Request.QueryString["sPR"]) ? null : Request.QueryString["sPR"];
+                incident.sOP1 = string.IsNullOrEmpty(Request.QueryString["sOP1"]) ? null : Request.QueryString["sOP1"];
+                incident.sOP2 = string.IsNullOrEmpty(Request.QueryString["sOP2"]) ? null : Request.QueryString["sOP2"];
+                incident.sTTJ = string.IsNullOrEmpty(Request.QueryString["sTTJ"]) ? null : Request.QueryString["sTTJ"];
+                incident.iBID = string.IsNullOrEmpty(Request.QueryString["iBID"]) ? null : (int?)Int32.Parse(Request.QueryString["iBID"]);
+                incident.iDC = string.IsNullOrEmpty(Request.QueryString["iDC"]) ? null : (int?)Int32.Parse(Request.QueryString["iDC"]);
+
+                passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Find customer");
+
+                ObservableCollection<CGIXrmHandler.PASS.CrmClasses.Contact> contacts = passHandler.FetchContacts(incident);     //(incident.sSSN, incident.sEM);
+
+                if (contacts.Count == 1)
+                {
+                    CGIXrmHandler.PASS.CrmClasses.Contact contact = contacts.FirstOrDefault();
+                    passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Found 1 customer : " + contact.ContactId);
+                    incident.Customer = new EntityReference(contact.LogicalName, contact.ContactId);
+                    incident.Contact = new EntityReference(contact.LogicalName, contact.ContactId);
+                }
+                else
+                {
+                    passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Anonymous customer");
+                    EntityReference anonymousCustomer = passHandler.GetAnonymousCustomer();
+                    if (anonymousCustomer != null)
+                        incident.Customer = anonymousCustomer;
+                    else
+                        throw new Exception("Could not find customer!");
+                }
+
+                CGIXrmHandler.PASS.CrmClasses.PASSTravelInformation[] passTravelInformations = new CGIXrmHandler.PASS.CrmClasses.PASSTravelInformation[(int)incident.iDC];
+                CGIXrmHandler.PASS.CrmClasses.PASSTravelInformation passTravelInformation = new CGIXrmHandler.PASS.CrmClasses.PASSTravelInformation();
+
+                passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Find travelinformation");
+
+                if (incident.iDC >= 1)
+                {
+                    for (int i = 0; i < incident.iDC; i++)
+                    {
+                        passTravelInformation.PASSTravelInformationName = string.Format("{0} : {1}", "PASS", DateTime.Now.ToShortDateString());
+                        passTravelInformation.sTCN = string.IsNullOrEmpty(Request.QueryString["sTCN"]) ? null
+                            : string.IsNullOrEmpty(Request.QueryString["sTCN"].Split('|')[i]) ? null
+                                : Request.QueryString["sTCN"].Split('|')[i];
+                        passTravelInformation.sTCID = string.IsNullOrEmpty(Request.QueryString["sTCID"]) ? null
+                            : string.IsNullOrEmpty(Request.QueryString["sTCID"].Split('|')[i]) ? null
+                                : Request.QueryString["sTCID"].Split('|')[i];
+                        passTravelInformation.iTLID = string.IsNullOrEmpty(Request.QueryString["iTLID"]) ? null
+                            : string.IsNullOrEmpty(Request.QueryString["iTLID"].Split('|')[i]) ? null
+                                : (int?)Int32.Parse(Request.QueryString["iTLID"].Split('|')[i]);
+                        passTravelInformation.sTLN = string.IsNullOrEmpty(Request.QueryString["sTLN"]) ? null
+                            : string.IsNullOrEmpty(Request.QueryString["sTLN"].Split('|')[i]) ? null
+                                : Request.QueryString["sTLN"].Split('|')[i];
+                        passTravelInformation.sTRN = string.IsNullOrEmpty(Request.QueryString["sTRN"]) ? null
+                            : string.IsNullOrEmpty(Request.QueryString["sTRN"].Split('|')[i]) ? null
+                                : Request.QueryString["sTRN"].Split('|')[i];
+                        passTravelInformation.iTJID = string.IsNullOrEmpty(Request.QueryString["iTJID"]) ? null
+                            : string.IsNullOrEmpty(Request.QueryString["iTJID"].Split('|')[i]) ? null
+                                : (int?)Int32.Parse(Request.QueryString["iTJID"].Split('|')[i]);
+                        passTravelInformation.iTFID = string.IsNullOrEmpty(Request.QueryString["iTFID"]) ? null
+                            : string.IsNullOrEmpty(Request.QueryString["iTFID"].Split('|')[i]) ? null
+                                : (int?)Int32.Parse(Request.QueryString["iTFID"].Split('|')[i]);
+                        passTravelInformation.sTFN = string.IsNullOrEmpty(Request.QueryString["sTFN"]) ? null
+                            : string.IsNullOrEmpty(Request.QueryString["sTFN"].Split('|')[i]) ? null
+                                : Request.QueryString["sTFN"].Split('|')[i];
+                        passTravelInformation.sTFD = string.IsNullOrEmpty(Request.QueryString["sTFD"]) ? null
+                            : string.IsNullOrEmpty(Request.QueryString["sTFD"].Split('|')[i]) ? null
+                                : Request.QueryString["sTFD"].Split('|')[i];
+                        passTravelInformation.sTFT = string.IsNullOrEmpty(Request.QueryString["sTFT"]) ? null
+                            : string.IsNullOrEmpty(Request.QueryString["sTFT"].Split('|')[i]) ? null
+                                : Request.QueryString["sTFT"].Split('|')[i];
+                        passTravelInformation.iTTID = string.IsNullOrEmpty(Request.QueryString["iTTID"]) ? null
+                            : string.IsNullOrEmpty(Request.QueryString["iTTID"].Split('|')[i]) ? null
+                                : (int?)Int32.Parse(Request.QueryString["iTTID"].Split('|')[i]);
+                        passTravelInformation.sTTN = string.IsNullOrEmpty(Request.QueryString["sTTN"]) ? null
+                            : string.IsNullOrEmpty(Request.QueryString["sTTN"].Split('|')[i]) ? null
+                                : Request.QueryString["sTTN"].Split('|')[i];
+                        passTravelInformation.sTTD = string.IsNullOrEmpty(Request.QueryString["sTTD"]) ? null
+                            : string.IsNullOrEmpty(Request.QueryString["sTTD"].Split('|')[i]) ? null
+                                : Request.QueryString["sTTD"].Split('|')[i];
+                        passTravelInformation.sTTT = string.IsNullOrEmpty(Request.QueryString["sTTT"]) ? null
+                            : string.IsNullOrEmpty(Request.QueryString["sTTT"].Split('|')[i]) ? null
+                                : Request.QueryString["sTTT"].Split('|')[i];
+                        passTravelInformations[i] = passTravelInformation;
+                    }
+                }
+
+                passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Enter DoAction");
+                DoAction(incident, passTravelInformations);
+
+            }
+        }
+    }
+    
+    private void DoAction(CGIXrmHandler.PASS.CrmClasses.Incident incident, CGIXrmHandler.PASS.CrmClasses.PASSTravelInformation[] passTravelInformations)
+    {
+        try
+        {
+            passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Logtrace");
+            log2Crm.Trace("Entering Do Action Method", "PASS.DoAction", "CGIXrmPortal");
+            passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Enter ExecutePASSRequest");
+            Guid guid = passHandler.ExecutePASSRequest(incident, passTravelInformations);
+            //string URL = "http://v-dkcrm-utv/Skanetrafiken/main.aspx?etc=112&extraqs=&id=%7b{0}%7d&newWindow=true&pagetype=entityrecord";
+            passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Redirect to guid = " + guid);
+            Response.Redirect(GenerateUrl(guid));
+            passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Stop");
+            passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "***********************************************************************************************");
+        }
+        catch (Exception ex)
+        {
+            log2Crm.Exception("Error Processing Request with Error Message :" + ex.Message, "PASS.DoAction", ex, "CGIXrmPortal");
+        }
+    }
+
+    private string GenerateUrl(Guid recordId)
+    {
+        passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Find BaseUrl");
+        string baseUrl = ConfigurationManager.AppSettings["BaseUrl"].ToString();
+        passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "BaseUrl = " + baseUrl);
+        string objectTypeCode = "112";
+        if (!string.IsNullOrEmpty(baseUrl))
+            return string.Format(baseUrl, objectTypeCode, recordId);
+        else
+            throw new Exception("No Matching URL found!");
+    }
+
+}

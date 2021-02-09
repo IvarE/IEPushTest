@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRM.Travel.Information", "CRM.Travel.Information\CRM.Travel.Information.csproj", "{8779F84C-CE87-4F7F-86D8-6110B4260041}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRM.Travel.Information.Web", "CRM.Travel.Information.Web\CRM.Travel.Information.Web.csproj", "{DD5096D7-6245-4863-8A5B-1110F81F2CBD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8779F84C-CE87-4F7F-86D8-6110B4260041} = {8779F84C-CE87-4F7F-86D8-6110B4260041}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Acceptance|Any CPU = Acceptance|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Development|Any CPU = Development|Any CPU
+		Production|Any CPU = Production|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Test|Any CPU = Test|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8779F84C-CE87-4F7F-86D8-6110B4260041}.Acceptance|Any CPU.ActiveCfg = Acceptance|Any CPU
+		{8779F84C-CE87-4F7F-86D8-6110B4260041}.Acceptance|Any CPU.Build.0 = Acceptance|Any CPU
+		{8779F84C-CE87-4F7F-86D8-6110B4260041}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8779F84C-CE87-4F7F-86D8-6110B4260041}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8779F84C-CE87-4F7F-86D8-6110B4260041}.Development|Any CPU.ActiveCfg = Development|Any CPU
+		{8779F84C-CE87-4F7F-86D8-6110B4260041}.Development|Any CPU.Build.0 = Development|Any CPU
+		{8779F84C-CE87-4F7F-86D8-6110B4260041}.Production|Any CPU.ActiveCfg = Production|Any CPU
+		{8779F84C-CE87-4F7F-86D8-6110B4260041}.Production|Any CPU.Build.0 = Production|Any CPU
+		{8779F84C-CE87-4F7F-86D8-6110B4260041}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8779F84C-CE87-4F7F-86D8-6110B4260041}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8779F84C-CE87-4F7F-86D8-6110B4260041}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{8779F84C-CE87-4F7F-86D8-6110B4260041}.Test|Any CPU.Build.0 = Test|Any CPU
+		{DD5096D7-6245-4863-8A5B-1110F81F2CBD}.Acceptance|Any CPU.ActiveCfg = Acceptance|Any CPU
+		{DD5096D7-6245-4863-8A5B-1110F81F2CBD}.Acceptance|Any CPU.Build.0 = Acceptance|Any CPU
+		{DD5096D7-6245-4863-8A5B-1110F81F2CBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD5096D7-6245-4863-8A5B-1110F81F2CBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD5096D7-6245-4863-8A5B-1110F81F2CBD}.Development|Any CPU.ActiveCfg = Development|Any CPU
+		{DD5096D7-6245-4863-8A5B-1110F81F2CBD}.Development|Any CPU.Build.0 = Development|Any CPU
+		{DD5096D7-6245-4863-8A5B-1110F81F2CBD}.Production|Any CPU.ActiveCfg = Production|Any CPU
+		{DD5096D7-6245-4863-8A5B-1110F81F2CBD}.Production|Any CPU.Build.0 = Production|Any CPU
+		{DD5096D7-6245-4863-8A5B-1110F81F2CBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD5096D7-6245-4863-8A5B-1110F81F2CBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD5096D7-6245-4863-8A5B-1110F81F2CBD}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{DD5096D7-6245-4863-8A5B-1110F81F2CBD}.Test|Any CPU.Build.0 = Test|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs-ext.cgisouth.wm.net:8080/tfs/skanetrafiken
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = CRM.Travel.Information.Web\\CRM.Travel.Information.Web.csproj
+		SccProjectName1 = CRM.Travel.Information.Web
+		SccLocalPath1 = CRM.Travel.Information.Web
+		SccProjectUniqueName2 = CRM.Travel.Information\\CRM.Travel.Information.csproj
+		SccProjectName2 = CRM.Travel.Information
+		SccLocalPath2 = CRM.Travel.Information
+	EndGlobalSection
+EndGlobal

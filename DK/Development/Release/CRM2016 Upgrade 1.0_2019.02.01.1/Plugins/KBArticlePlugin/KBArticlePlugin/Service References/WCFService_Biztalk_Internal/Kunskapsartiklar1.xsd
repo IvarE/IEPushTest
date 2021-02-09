@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://wwww.skanetrafiken.se/DK/INTSTDK013/KBArtiklarResponse/20161114" xmlns:b="http://schemas.microsoft.com/BizTalk/2003" targetNamespace="http://wwww.skanetrafiken.se/DK/INTSTDK013/KBArtiklarResponse/20161114" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="KBArtiklarResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="Message" type="xs:string" />
+        <xs:element minOccurs="0" name="ActionType" type="xs:string" />
+        <xs:element minOccurs="0" name="KbArticleID" type="xs:string" />
+        <xs:element minOccurs="0" name="Error">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" name="Type" type="xs:string" />
+              <xs:element minOccurs="0" name="ErrorMessage" type="xs:string" />
+              <xs:element minOccurs="0" name="HttpStatusCode" type="xs:string" />
+              <xs:element minOccurs="0" name="Time" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

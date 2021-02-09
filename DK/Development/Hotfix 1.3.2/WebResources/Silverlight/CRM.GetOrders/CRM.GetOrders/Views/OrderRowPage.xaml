@@ -1,0 +1,82 @@
+﻿<controls:ChildWindow 
+    xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"  
+                      xmlns:GetOrders="clr-namespace:CRM.GetOrders"  
+                      xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"  
+                      x:Class="CRM.GetOrders.Views.OrderRowPage"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+           xmlns:conv="clr-namespace:CRM.GetOrders.Views"
+           HorizontalAlignment="Stretch"
+           Height="300" 
+           Title="OrderRowPage" HasCloseButton="False">
+
+    <controls:ChildWindow.Resources>
+        <conv:DecimalConverter x:Key="decimalConverter"/>
+    </controls:ChildWindow.Resources>
+
+    <Grid x:Name="LayoutRoot" Margin="2">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Column="0" Grid.Row="0">
+            <sdk:DataGrid x:Name="grdOrderRows" AutoGenerateColumns="False" >
+                <sdk:DataGrid.Columns>
+                    <sdk:DataGridTextColumn Header="Code" Binding="{Binding Path=Code}" Width="100" IsReadOnly="True" />
+                    <sdk:DataGridTemplateColumn Header="Discount" Width="75">
+                        <sdk:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Discount, Converter={StaticResource decimalConverter}}" Margin="0,3,5,0" HorizontalAlignment="Right" />
+                            </DataTemplate>
+                        </sdk:DataGridTemplateColumn.CellTemplate>
+                    </sdk:DataGridTemplateColumn>
+                    <sdk:DataGridTextColumn Header="Name" Binding="{Binding Path=Name}" Width="*" IsReadOnly="True" />
+                    <sdk:DataGridTemplateColumn Header="Price" Width="75">
+                        <sdk:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=RowPrice, Converter={StaticResource decimalConverter}}" Margin="0,3,5,0" HorizontalAlignment="Right" />
+                            </DataTemplate>
+                        </sdk:DataGridTemplateColumn.CellTemplate>
+                    </sdk:DataGridTemplateColumn>
+                    <sdk:DataGridTextColumn Header="Quantity" Binding="{Binding Path=Quantity}" Width="75" IsReadOnly="True" />
+                    <sdk:DataGridTemplateColumn Header="Rowtotal" Width="75">
+                        <sdk:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Price, Converter={StaticResource decimalConverter}}" Margin="0,3,5,0" HorizontalAlignment="Right" />
+                            </DataTemplate>
+                        </sdk:DataGridTemplateColumn.CellTemplate>
+                    </sdk:DataGridTemplateColumn>
+
+                    <sdk:DataGridTemplateColumn Header="Change" Width="100">
+                        <!--<sdk:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding AmountChange, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1,0,0,0" />
+                            </DataTemplate>
+                        </sdk:DataGridTemplateColumn.CellTemplate>-->
+                        <sdk:DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <GetOrders:NumericTextBox ReplaceMode="True" AcceptsReturn="True" NumberOfDecimals="2" Text="{Binding AmountChange, Mode=TwoWay}" />
+                            </DataTemplate>
+                        </sdk:DataGridTemplateColumn.CellEditingTemplate>
+                    </sdk:DataGridTemplateColumn>
+                    <sdk:DataGridTemplateColumn Header="Reason" MinWidth="150">
+                        <sdk:DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Reason, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1,0,0,0" MaxLength="100" MinWidth="150" />
+                            </DataTemplate>
+                        </sdk:DataGridTemplateColumn.CellEditingTemplate>
+                    </sdk:DataGridTemplateColumn>
+                </sdk:DataGrid.Columns>
+            </sdk:DataGrid>
+        </Grid>
+
+        <toolkit:BusyIndicator x:Name="bsyWait" VerticalAlignment="Center" HorizontalAlignment="Center" BusyContent="Vänta..." />
+
+        <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="0,12,0,0" Grid.Row="1" />
+        <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="0,12,79,0" Grid.Row="1" />
+        <Button x:Name="BT_Payment" Content="Betalningar" Click="BT_Payment_Click" Width="75" Height="23" HorizontalAlignment="Left" Margin="0,12,0,0" Grid.Row="1" />
+        <Button x:Name="BT_ShippingAddress" Content="Leveransadress" Click="BT_ShippingAddress_Click" Width="103" Height="23" HorizontalAlignment="Left" Margin="87,12,0,0" Grid.Row="1" />
+    </Grid>
+</controls:ChildWindow>

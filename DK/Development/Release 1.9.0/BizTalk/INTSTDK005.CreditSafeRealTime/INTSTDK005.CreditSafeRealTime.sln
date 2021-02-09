@@ -1,0 +1,83 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK005.CreditSafe.Schemas", "INTSTDK005.CreditSafe.Schemas\INTSTDK005.CreditSafe.Schemas.btproj", "{2896F158-A266-4AEC-90A5-A83307A6D912}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK005.CreditSafe.Transformations", "INTSTDK005.CreditSafe.Transformations\INTSTDK005.CreditSafe.Transformations.btproj", "{63F96425-B2D2-4559-BB7F-BCB6B473D5D7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestFiles", "TestFiles", "{42599CDF-62C2-4226-B109-3D1E905BE940}"
+	ProjectSection(SolutionItems) = preProject
+		Files\creditsafe_se_GetDataSecureResponse.xml = Files\creditsafe_se_GetDataSecureResponse.xml
+		Files\GetDataBySecureResponse_Combo.xml = Files\GetDataBySecureResponse_Combo.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "wsdl", "wsdl", "{62BBBBBD-3CEC-4B2A-806D-7006164A004E}"
+	ProjectSection(SolutionItems) = preProject
+		Files\Company\cas_service_1.wsdl = Files\Company\cas_service_1.wsdl
+		Files\GetDataSecure\getdata_1.wsdl = Files\GetDataSecure\getdata_1.wsdl
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK005.STIP.Schemas", "INTSTDK005.STIP.Schemas\INTSTDK005.STIP.Schemas.btproj", "{EB9CA2F2-27D2-4983-9137-B3F3B8249A12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INTSTDK005.STIP.Transformations", "INTSTDK005.STIP.Transformations\INTSTDK005.STIP.Transformations.btproj", "{622AC3F6-9359-44E1-B230-6674F10F5D2D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WcfServiceDescription", "WcfServiceDescription", "{64935CD2-CBCC-42D5-8C92-7BC2D9FAE29F}"
+	ProjectSection(SolutionItems) = preProject
+		WcfServiceDescription\WcfServiceDescription.xml = WcfServiceDescription\WcfServiceDescription.xml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://wmsi003915:8080/tfs/idccollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = INTSTDK005.CreditSafe.Schemas\\INTSTDK005.CreditSafe.Schemas.btproj
+		SccProjectName1 = INTSTDK005.CreditSafe.Schemas
+		SccLocalPath1 = INTSTDK005.CreditSafe.Schemas
+		SccProjectUniqueName2 = INTSTDK005.CreditSafe.Transformations\\INTSTDK005.CreditSafe.Transformations.btproj
+		SccProjectName2 = INTSTDK005.CreditSafe.Transformations
+		SccLocalPath2 = INTSTDK005.CreditSafe.Transformations
+		SccProjectUniqueName3 = INTSTDK005.STIP.Schemas\\INTSTDK005.STIP.Schemas.btproj
+		SccProjectName3 = INTSTDK005.STIP.Schemas
+		SccLocalPath3 = INTSTDK005.STIP.Schemas
+		SccProjectUniqueName4 = INTSTDK005.STIP.Transformations\\INTSTDK005.STIP.Transformations.btproj
+		SccProjectName4 = INTSTDK005.STIP.Transformations
+		SccLocalPath4 = INTSTDK005.STIP.Transformations
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2896F158-A266-4AEC-90A5-A83307A6D912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2896F158-A266-4AEC-90A5-A83307A6D912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2896F158-A266-4AEC-90A5-A83307A6D912}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{2896F158-A266-4AEC-90A5-A83307A6D912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2896F158-A266-4AEC-90A5-A83307A6D912}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2896F158-A266-4AEC-90A5-A83307A6D912}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{63F96425-B2D2-4559-BB7F-BCB6B473D5D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63F96425-B2D2-4559-BB7F-BCB6B473D5D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63F96425-B2D2-4559-BB7F-BCB6B473D5D7}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{63F96425-B2D2-4559-BB7F-BCB6B473D5D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63F96425-B2D2-4559-BB7F-BCB6B473D5D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63F96425-B2D2-4559-BB7F-BCB6B473D5D7}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{EB9CA2F2-27D2-4983-9137-B3F3B8249A12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB9CA2F2-27D2-4983-9137-B3F3B8249A12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB9CA2F2-27D2-4983-9137-B3F3B8249A12}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{EB9CA2F2-27D2-4983-9137-B3F3B8249A12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB9CA2F2-27D2-4983-9137-B3F3B8249A12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB9CA2F2-27D2-4983-9137-B3F3B8249A12}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{622AC3F6-9359-44E1-B230-6674F10F5D2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{622AC3F6-9359-44E1-B230-6674F10F5D2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{622AC3F6-9359-44E1-B230-6674F10F5D2D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{622AC3F6-9359-44E1-B230-6674F10F5D2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{622AC3F6-9359-44E1-B230-6674F10F5D2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{622AC3F6-9359-44E1-B230-6674F10F5D2D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

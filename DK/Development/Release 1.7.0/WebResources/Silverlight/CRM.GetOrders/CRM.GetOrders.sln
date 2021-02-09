@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRM.GetOrders", "CRM.GetOrders\CRM.GetOrders.csproj", "{1B06B3FB-AF55-4748-8E14-081B3885FF31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRM.GetOrders.Web", "CRM.GetOrders.Web\CRM.GetOrders.Web.csproj", "{12996701-0080-4F1F-87B0-C7C7FF96C54A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Acceptance|Any CPU = Acceptance|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Development|Any CPU = Development|Any CPU
+		Production|Any CPU = Production|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Test|Any CPU = Test|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B06B3FB-AF55-4748-8E14-081B3885FF31}.Acceptance|Any CPU.ActiveCfg = Acceptance|Any CPU
+		{1B06B3FB-AF55-4748-8E14-081B3885FF31}.Acceptance|Any CPU.Build.0 = Acceptance|Any CPU
+		{1B06B3FB-AF55-4748-8E14-081B3885FF31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B06B3FB-AF55-4748-8E14-081B3885FF31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B06B3FB-AF55-4748-8E14-081B3885FF31}.Development|Any CPU.ActiveCfg = Development|Any CPU
+		{1B06B3FB-AF55-4748-8E14-081B3885FF31}.Development|Any CPU.Build.0 = Development|Any CPU
+		{1B06B3FB-AF55-4748-8E14-081B3885FF31}.Production|Any CPU.ActiveCfg = Production|Any CPU
+		{1B06B3FB-AF55-4748-8E14-081B3885FF31}.Production|Any CPU.Build.0 = Production|Any CPU
+		{1B06B3FB-AF55-4748-8E14-081B3885FF31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B06B3FB-AF55-4748-8E14-081B3885FF31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B06B3FB-AF55-4748-8E14-081B3885FF31}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{1B06B3FB-AF55-4748-8E14-081B3885FF31}.Test|Any CPU.Build.0 = Test|Any CPU
+		{12996701-0080-4F1F-87B0-C7C7FF96C54A}.Acceptance|Any CPU.ActiveCfg = Acceptance|Any CPU
+		{12996701-0080-4F1F-87B0-C7C7FF96C54A}.Acceptance|Any CPU.Build.0 = Acceptance|Any CPU
+		{12996701-0080-4F1F-87B0-C7C7FF96C54A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12996701-0080-4F1F-87B0-C7C7FF96C54A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12996701-0080-4F1F-87B0-C7C7FF96C54A}.Development|Any CPU.ActiveCfg = Development|Any CPU
+		{12996701-0080-4F1F-87B0-C7C7FF96C54A}.Development|Any CPU.Build.0 = Development|Any CPU
+		{12996701-0080-4F1F-87B0-C7C7FF96C54A}.Production|Any CPU.ActiveCfg = Production|Any CPU
+		{12996701-0080-4F1F-87B0-C7C7FF96C54A}.Production|Any CPU.Build.0 = Production|Any CPU
+		{12996701-0080-4F1F-87B0-C7C7FF96C54A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12996701-0080-4F1F-87B0-C7C7FF96C54A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12996701-0080-4F1F-87B0-C7C7FF96C54A}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{12996701-0080-4F1F-87B0-C7C7FF96C54A}.Test|Any CPU.Build.0 = Test|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs-ext.cgisouth.wm.net:8080/tfs/skanetrafiken
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = CRM.GetOrders.Web\\CRM.GetOrders.Web.csproj
+		SccProjectName1 = CRM.GetOrders.Web
+		SccLocalPath1 = CRM.GetOrders.Web
+		SccProjectUniqueName2 = CRM.GetOrders\\CRM.GetOrders.csproj
+		SccProjectName2 = CRM.GetOrders
+		SccLocalPath2 = CRM.GetOrders
+	EndGlobalSection
+EndGlobal

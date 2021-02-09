@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="TopologyDataService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:tns="http://tempuri.org/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:i0="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/TopologyDataService" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex">
+  <wsp:Policy wsu:Id="TopologyDataService_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <http:BasicAuthentication xmlns:http="http://schemas.microsoft.com/ws/06/2004/policy/http"/>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:import namespace="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/TopologyDataService" location="TopologyDataService.wsdl"/>
+  <wsdl:types/>
+  <wsdl:binding name="TopologyDataService" type="i0:ITopologyDataService">
+    <wsp:PolicyReference URI="#TopologyDataService_policy"/>
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetZones">
+      <soap:operation soapAction="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/TopologyDataService/ITopologyDataService/GetZones" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="LicenseFaultDetailFault">
+        <soap:fault name="LicenseFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ConfigurationFaultDetailFault">
+        <soap:fault name="ConfigurationFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ClientFaultDetailFault">
+        <soap:fault name="ClientFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="RuntimeFaultDetailFault">
+        <soap:fault name="RuntimeFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationFaultDetailFault">
+        <soap:fault name="ImplementationFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TopologyDataService">
+    <wsdl:port name="TopologyDataService" binding="tns:TopologyDataService">
+      <soap:address location="http://10.16.100.113:9981/Pws/TopologyDataService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

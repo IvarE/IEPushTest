@@ -1,0 +1,16 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+   <s:Body>
+      <s:Fault>
+         <faultcode>s:Client</faultcode>
+         <faultstring xml:lang="sv-SE">Method GetDeparturesAtStopMethod is not implemented.</faultstring>
+         <detail>
+            <RuntimeFaultDetail xmlns="http://schemas.datacontract.org/2004/07/Hogia.PubTrans.WebServices" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+               <Message xmlns="http://schemas.pubtrans.hogia.se/webservices/2008/11">Method GetDeparturesAtStopMethod is not implemented.</Message>
+               <MethodName xmlns="http://schemas.pubtrans.hogia.se/webservices/2008/11">GetDeparturesAtStopMethod</MethodName>
+               <Parameters xmlns="http://schemas.pubtrans.hogia.se/webservices/2008/11">@AtStopGid = '9021012080000000', @ForDirectionOfLine1Gid = '9021012080051000', @ForTimeWindowStartDateTime = '2014-05-13 08:00:00', @ForTimeWindowDuration = 59</Parameters>
+               <Reason xmlns="http://schemas.pubtrans.hogia.se/webservices/2008/11">Runtime fault: {0}</Reason>
+            </RuntimeFaultDetail>
+         </detail>
+      </s:Fault>
+   </s:Body>
+</s:Envelope>

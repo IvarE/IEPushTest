@@ -1,0 +1,42 @@
+﻿ <GetCustomerResponse xmlns="http://tempuri.org/">
+      <GetCustomerResult xmlns:a="http://schemas.datacontract.org/2004/07/CGICRMPortalService.Models" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+        <a:Message i:nil="true"/>
+        <a:Status>SUCCESS</a:Status>
+        <a:Customer>
+          <a:AccountFirstName>Tobbe</a:AccountFirstName>
+          <a:AccountId>ef92d607-2e79-e411-80d4-0050569010ad</a:AccountId>
+          <a:AccountLastName>Hysen</a:AccountLastName>
+          <a:AccountNumber>7765</a:AccountNumber>
+          <a:Addresses>
+            <a:Address>
+              <a:AddressId i:nil="true"/>
+              <a:AddressType>Invoice</a:AddressType>
+              <a:CareOff i:nil="true"/>
+              <a:City i:nil="true"/>
+              <a:CompanyName i:nil="true"/>
+              <a:ContactPerson i:nil="true"/>
+              <a:ContactPhoneNumber i:nil="true"/>
+              <a:Country i:nil="true"/>
+              <a:County i:nil="true"/>
+              <a:CustomerAddressId>00000000-0000-0000-0000-000000000000</a:CustomerAddressId>
+              <a:PostalCode i:nil="true"/>
+              <a:SMSNotificationNumber i:nil="true"/>
+              <a:Street i:nil="true"/>
+            </a:Address>
+          </a:Addresses>
+          <a:AllowAutoLoad>false</a:AllowAutoLoad>
+          <a:CompanyName>Tobbe Hysen</a:CompanyName>
+          <a:CustomerType>Private</a:CustomerType>
+          <a:Deleted>false</a:Deleted>
+          <a:Email>ny@starrepublic.com</a:Email>
+          <a:InActive>false</a:InActive>
+          <a:MaxCardsAutoLoad>0</a:MaxCardsAutoLoad>
+          <a:MobilePhone>0701-112233</a:MobilePhone>
+          <a:OrganizationCreditApproved>false</a:OrganizationCreditApproved>
+          <a:OrganizationNumber i:nil="true"/>
+          <a:OrganizationSubNumber i:nil="true"/>
+          <a:Phone i:nil="true"/>
+          <a:SocialSecurtiyNumber i:nil="true"/>
+        </a:Customer>
+      </GetCustomerResult>
+    </GetCustomerResponse>

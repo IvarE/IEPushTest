@@ -1,0 +1,17 @@
+﻿<configuration>
+    <system.serviceModel>
+        <bindings>
+            <basicHttpBinding>
+                <binding name="BasicHttpBinding_ITravelCard" maxBufferSize="2147483647"
+                    maxReceivedMessageSize="2147483647">
+                    <security mode="None" />
+                </binding>
+            </basicHttpBinding>
+        </bindings>
+        <client>
+            <endpoint address="http://10.16.229.122:4500/CGIXrmTravelCard/TravelCard.svc"
+                binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_ITravelCard"
+                contract="TravelCardService.ITravelCard" name="BasicHttpBinding_ITravelCard" />
+        </client>
+    </system.serviceModel>
+</configuration>

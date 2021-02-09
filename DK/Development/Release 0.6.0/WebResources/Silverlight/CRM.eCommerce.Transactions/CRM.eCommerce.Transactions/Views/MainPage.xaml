@@ -1,0 +1,60 @@
+﻿<UserControl xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"  x:Class="CRM.eCommerce.Transactions.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="400" d:DesignWidth="800">
+    
+    <Grid>
+        
+        <Grid x:Name="LoadingRoot" Background="White" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="13" />
+            </Grid.RowDefinitions>
+            
+            <TextBlock Grid.Row="0" Text="..." VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Portable User Interface" FontSize="10" />
+            <TextBlock x:Name="LoadingVersion" Grid.Row="1" Text="0.0.0.0" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontFamily="Portable User Interface" FontSize="10" />
+        </Grid>
+        
+        <Grid x:Name="LayoutRoot" Background="White" Visibility="Visible">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="13" />
+            </Grid.RowDefinitions>
+            
+            <Grid Grid.Row="0">
+                <Border BorderBrush="Black" BorderThickness="0,1">
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock Text="CustNo:" Height="23" VerticalAlignment="Center" Margin="0,4,0,0" />
+                        <TextBlock Text="AAA" Height="23" VerticalAlignment="Center" Margin="10,4,0,0" Width="100" />
+
+                        <TextBlock Text="OrderID:" Height="23" VerticalAlignment="Center" Margin="10,4,0,0" />
+                        <TextBox Text="BBB" Height="23" VerticalAlignment="Center" Margin="10,0,0,0" Width="200"  />
+
+                        <TextBlock Text="DateFrom:" Height="23" VerticalAlignment="Center" Margin="10,4,0,0" />
+                        <TextBox Text="2014-01-01" Height="23" VerticalAlignment="Center" Margin="10,0,0,0" />
+
+                        <TextBlock Text="DateTo:" Height="23" VerticalAlignment="Center" Margin="10,4,0,0" />
+                        <TextBox Text="2014-12-31" Height="23" VerticalAlignment="Center" Margin="10,0,0,0" />
+
+                        <Button Content="Search" Height="23" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+            
+            <sdk:DataGrid Grid.Row="1" AutoGenerateColumns="False" CanUserReorderColumns="False">
+                <sdk:DataGrid.Columns>
+                    <sdk:DataGridCheckBoxColumn CanUserReorder="True" CanUserResize="True" CanUserSort="True" Header="A" Width="Auto" />
+                    <sdk:DataGridCheckBoxColumn CanUserReorder="True" CanUserResize="True" CanUserSort="True" Header="B" Width="Auto" />
+                    <sdk:DataGridCheckBoxColumn CanUserReorder="True" CanUserResize="True" CanUserSort="True" Header="C" Width="Auto" />
+                </sdk:DataGrid.Columns>
+            </sdk:DataGrid>
+            
+            <TextBlock x:Name="LayoutRootVersion" Grid.Row="2" Text="0.0.0.0" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontFamily="Portable User Interface" FontSize="10" />
+        </Grid>
+
+    </Grid>
+</UserControl>

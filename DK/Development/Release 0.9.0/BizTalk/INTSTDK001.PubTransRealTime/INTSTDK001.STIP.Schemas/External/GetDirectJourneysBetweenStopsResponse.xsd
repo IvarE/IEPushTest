@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://www.skanetrafiken.com/DK/INTSTDK001/GetDirectJourneysBetweenStopsResponse/20141023" xmlns:b="http://schemas.microsoft.com/BizTalk/2003" 
+           targetNamespace="http://www.skanetrafiken.com/DK/INTSTDK001/GetDirectJourneysBetweenStopsResponse/20141023" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="GetDirectJourneysBetweenStopsResponse">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DirectJourneysBetweenStops">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="DatedVehicleJourneyId" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="ServiceJourneyGid" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="OperatingDayDate" type="xs:dateTime" minOccurs="0"/>
+              <xs:element name="ContractorGid" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="LineDesignation" type="xs:string" minOccurs="0"/>
+              <xs:element name="JourneyNumber" type="xs:int" minOccurs="0"/>
+              <xs:element name="DirectionOfLineDescription" type="xs:string" minOccurs="0"/>
+              <xs:element name="OriginName" type="xs:string" minOccurs="0"/>
+              <xs:element name="OriginShortName" type="xs:string" minOccurs="0"/>
+              <xs:element name="OriginPlaceGid" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="PrimaryDestinationName" type="xs:string" minOccurs="0"/>
+              <xs:element name="PrimaryDestinationShortName" type="xs:string" minOccurs="0"/>
+              <xs:element name="PrimaryDestinationGid" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="SecondaryDestinationName" type="xs:string" minOccurs="0"/>
+              <xs:element name="SecondaryDestinationShortName" type="xs:string" minOccurs="0"/>
+              <xs:element name="SecondaryDestinationGid" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="DepartureId" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="DepartureStopPointGid" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="DepartureType" type="xs:short" minOccurs="0"/>
+              <xs:element name="DepartureSequenceNumber" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="PlannedDepartureDateTime" type="xs:dateTime" minOccurs="0"/>
+              <xs:element name="ArrivalId" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="ArrivalStopPointGid" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="ArrivalType" type="xs:short" minOccurs="0"/>
+              <xs:element name="ArrivalSequenceNumber" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="PlannedArrivalDateTime" type="xs:dateTime" minOccurs="0"/>
+              <xs:element name="ExpectedToBeMonitored" type="xs:int" minOccurs="0"/>
+              <xs:element name="TargetDepartureStopPointGid" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="TargetDepartureDateTime" type="xs:dateTime" minOccurs="0"/>
+              <xs:element name="EstimatedDepartureDateTime" type="xs:dateTime" minOccurs="0"/>
+              <xs:element name="ObservedDepartureDateTime" type="xs:dateTime" minOccurs="0"/>
+              <xs:element name="ArrivalStopPointGid1" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="ObservedArrivalDateTime" type="xs:dateTime" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="DeviationMessageVersion">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="PublicNote" type="xs:string" minOccurs="0"/>
+              <xs:element name="InternalNote" type="xs:string" minOccurs="0"/>
+              <xs:element name="PriorityImportanceLevel" type="xs:short" minOccurs="0"/>
+              <xs:element name="PriorityInfluenceLevel" type="xs:short" minOccurs="0"/>
+              <xs:element name="PriorityUrgencyLevel" type="xs:short" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="DeviationMessageVariant">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="IsPartOfDeviationMessageId" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="Content" type="xs:string" minOccurs="0"/>
+              <xs:element name="ContentTypeLongCode" type="xs:string" minOccurs="0"/>
+              <xs:element name="UsageTypeLongCode" type="xs:string" minOccurs="0"/>
+              <xs:element name="LanguageCode" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ServiceJourneyDeviation">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="IsOnDatedVehicleJourneyId" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="HasDeviationMessageVersionId" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="ConsequenceLongCode" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="DepartureDeviation">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="IsOnDepartureId" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="AffectsLaterArrivalsYesNo" type="xs:boolean" minOccurs="0"/>
+              <xs:element name="HasDeviationMessageVersionId" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="ConsequenceLongCode" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ArrivalDeviation">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="IsOnArrivalId" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="AffectsPreviousDeparturesYesNo" type="xs:boolean" minOccurs="0"/>
+              <xs:element name="HasDeviationMessageVersionId" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="ConsequenceLongCode" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="TargetAudience">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="IsForDeviationMessageVersionId" type="xs:decimal" minOccurs="0"/>
+              <xs:element name="TypeCode" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
