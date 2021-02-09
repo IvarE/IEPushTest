@@ -42,7 +42,7 @@ namespace Endeavor.Crm.DeltabatchService
             }
             else
             {
-                throw new Exception($"Could not find Credentials file at: {DeltabatchService.CredentialFilePath}. Please create with Endeavor NUnit Credentials Manager");
+                throw new Exception($"Could not find Credentials file at: {DeltabatchService.CreditsafeCredentialFilePath}. Please create with Endeavor NUnit Credentials Manager");
             }
         }
 

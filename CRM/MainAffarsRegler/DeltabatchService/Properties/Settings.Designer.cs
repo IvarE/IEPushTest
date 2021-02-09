@@ -12,7 +12,7 @@ namespace Endeavor.Crm.DeltabatchService.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -34,7 +34,7 @@ namespace Endeavor.Crm.DeltabatchService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp\\Deltabatch\\ToSend")]
+        [global::System.Configuration.DefaultSettingValueAttribute("E:\\DeltabatchFiles\\ToSend")]
         public string DeltabatchSendFileLocation {
             get {
                 return ((string)(this["DeltabatchSendFileLocation"]));
@@ -70,7 +70,7 @@ namespace Endeavor.Crm.DeltabatchService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp\\Deltabatch\\Retrieved")]
+        [global::System.Configuration.DefaultSettingValueAttribute("E:\\DeltabatchFiles\\Retrieved")]
         public string DeltabatchRetrievedFileLocation {
             get {
                 return ((string)(this["DeltabatchRetrievedFileLocation"]));
@@ -97,19 +97,10 @@ namespace Endeavor.Crm.DeltabatchService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("teodor.ostwald@endeavor.se")]
+        [global::System.Configuration.DefaultSettingValueAttribute("carl-viggo.oldertz@endeavor.se")]
         public string DeveloperMailAddress {
             get {
                 return ((string)(this["DeveloperMailAddress"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("80000")]
-        public int DeltabatchQueueCount {
-            get {
-                return ((int)(this["DeltabatchQueueCount"]));
             }
         }
         
@@ -155,6 +146,15 @@ namespace Endeavor.Crm.DeltabatchService.Properties {
         public string CreditsafeLoginUsername {
             get {
                 return ((string)(this["CreditsafeLoginUsername"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80000")]
+        public int DeltabatchQueueCount {
+            get {
+                return ((int)(this["DeltabatchQueueCount"]));
             }
         }
     }
