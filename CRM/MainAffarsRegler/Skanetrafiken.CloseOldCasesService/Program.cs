@@ -42,10 +42,10 @@ namespace Skanetrafiken.CloseOldCasesService
                 }
 
 #if DEBUG
-                //Workaround to make it possible to debug a service.
-                OrdersService service = new OrdersService();
-                service.Execute();
-                System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
+                ////Workaround to make it possible to debug a service.
+                //OrdersService service = new OrdersService();
+                //service.Execute();
+                //System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
 #else
                 ServiceBase[] ServicesToRun;
                 ServicesToRun = new ServiceBase[]
