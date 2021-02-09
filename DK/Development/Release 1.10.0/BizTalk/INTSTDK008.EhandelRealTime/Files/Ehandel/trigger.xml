@@ -1,4 +1,0 @@
-﻿<ns0:CreditOrderRequest xmlns:ns0="http://www.skanetrafiken.se/DK/INTSTDK008/CreditOrder/20141031">
-  <orderNumber>PO11485722</orderNumber> 
-  <sum>10</sum> 
-</ns0:CreditOrderRequest>

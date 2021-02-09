@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<preserve resultType="8" virtualPath="/CGIXrmPortal/global.asax" hash="ffffffffadb9a270" filehash="16b3659bc2b1" flags="150000" assembly="App_global.asax" type="ASP.global_asax">
-    <filedeps>
-        <filedep name="/CGIXrmPortal/global.asax" />
-    </filedeps>
-</preserve>

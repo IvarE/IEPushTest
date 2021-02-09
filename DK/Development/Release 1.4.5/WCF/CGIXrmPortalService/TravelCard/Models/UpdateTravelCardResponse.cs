@@ -1,8 +1,0 @@
-﻿using CGICRMPortalService.Shared.Models;
-
-namespace CGICRMPortalService.TravelCard.Models
-{
-    public class UpdateTravelCardResponse:Response
-    {
-    }
-}
