@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<createMobileCoupon xmlns="http://INTSTDK012.STIP.CouponService.Schemas/20150316">
-  <campaignNumberRequest xmlns="">
-    <validityInDays>5</validityInDays>
-    <campaignNumber>52177</campaignNumber>
-    <amount>100</amount>
-  </campaignNumberRequest>
-</createMobileCoupon>

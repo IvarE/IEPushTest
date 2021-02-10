@@ -1,4 +1,0 @@
-﻿<int:RequestCardBlock xmlns:int="http://INTSTDK004.EHandel.Schemas.RequestCardBlock">
-         <CardSerialNumber>3547632468</CardSerialNumber>
-         <ReasonCode>1</ReasonCode>
-      </int:RequestCardBlock>

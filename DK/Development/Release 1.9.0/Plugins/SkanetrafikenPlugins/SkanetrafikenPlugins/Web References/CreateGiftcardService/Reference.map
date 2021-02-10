@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Results>
-    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="http://v-dkbiz-tst.int.skanetrafiken.com/INTSTDK008/CreateGiftCard.svc?wsdl" filename="BizTalkServiceInstance.wsdl" />
-    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://v-dkbiz-tst.int.skanetrafiken.com/INTSTDK008/CreateGiftCard.svc?xsd=xsd2" filename="CreateGiftCard.xsd" />
-    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://v-dkbiz-tst.int.skanetrafiken.com/INTSTDK008/CreateGiftCard.svc?xsd=xsd3" filename="CreateGiftCard0.xsd" />
-    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.DiscoveryDocumentReference" url="http://v-dkbiz-tst.int.skanetrafiken.com/INTSTDK008/CreateGiftCard.svc?disco" filename="CreateGiftCard.disco" />
-  </Results>
-</DiscoveryClientResultsFile>

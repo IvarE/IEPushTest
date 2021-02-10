@@ -1,5 +1,0 @@
-<int:RequestProductBlock xmlns:int="http://INTSTDK004.EHandel.Schemas.RequestProductBlock">
-  <CardSerialNumber>00001112131453</CardSerialNumber>
-  <ReasonCode>1</ReasonCode>
-  <CardSection>1</CardSection>
-</int:RequestProductBlock>

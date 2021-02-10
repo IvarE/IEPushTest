@@ -1,7 +1,0 @@
-﻿<GetCustomerIdForTravelCardResponse xmlns="http://tempuri.org/">
-      <GetCustomerIdForTravelCardResult xmlns:a="http://schemas.datacontract.org/2004/07/CGIXrmEAIConnectorService" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-        <a:Message>No Matching Record Found</a:Message>
-        <a:Status>FAILED</a:Status>
-        <a:Details i:nil="true"/>
-      </GetCustomerIdForTravelCardResult>
-    </GetCustomerIdForTravelCardResponse>

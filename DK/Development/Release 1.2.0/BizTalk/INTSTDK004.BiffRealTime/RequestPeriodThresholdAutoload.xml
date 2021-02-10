@@ -1,4 +1,0 @@
-﻿    <ns:RequestPeriodThresholdAutoload xmlns:ns="http://INTSTDK004.EHandel.Schemas.RequestPeriodThresholdAutoload/20140919" >
-      <CardSerialNumber>00001112131453</CardSerialNumber>
-      <DisableThresholdAutoload>true</DisableThresholdAutoload>
-    </ns:RequestPeriodThresholdAutoload>
