@@ -1,0 +1,39 @@
+<Orders>
+        <Order>
+                <OrderNo>625</OrderNo>
+                <OrderTime>2014-09-12 13:31:13</OrderTime>
+                <ShippingAddress>
+                        <Name>Tess T. Persson</Name>
+                        <ContactPerson>Tess T. Persson</ContactPerson>
+                        <CellPhone></CellPhone>
+                        <EMail>test@example.com</EMail>
+                        <Address1>Kommunhuset</Address1>
+                        <Address2>Bygg och miljö</Address2>
+                        <PostalCode>233 20</PostalCode>
+                        <City>Svedala</City>
+                        <CountryCode>SE</CountryCode>
+                        <CustomerNumber>42</CustomerNumber>
+                        <County>SKNE</County>
+                        <Municipality>AA</Municipality>
+                        <SocialSecurityNumber>123456-7890</SocialSecurityNumber>
+                </ShippingAddress>
+                <Products>
+                        <Product>
+                                <Reference>18922</Reference>
+                                <ProductCode>4242</ProductCode>
+                                <Name>Jojo senior test</Name>
+                                <Qty>1.00</Qty>
+                                <NameOnCard>Kort 1</NameOnCard>
+                                <ExpirationDate>2099-12-12</ExpirationDate>
+                        </Product>
+                        <Product>
+                                <Reference>18932</Reference>
+                                <ProductCode>42421</ProductCode>
+                                <Name>Jojo Senior test</Name>
+                                <Qty>1.00</Qty>
+                                <NameOnCard>Kort 2</NameOnCard>
+                                <ExpirationDate>2099-12-12</ExpirationDate>
+                        </Product>
+                </Products>
+        </Order>
+</Orders>

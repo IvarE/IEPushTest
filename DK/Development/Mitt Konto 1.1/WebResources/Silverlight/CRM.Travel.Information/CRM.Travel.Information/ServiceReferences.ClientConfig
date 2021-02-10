@@ -1,0 +1,32 @@
+﻿<?xml version="1.0"?>
+<configuration>
+    <system.serviceModel>
+        <bindings>
+            <basicHttpBinding>
+                <binding name="BasicHttpBinding_IPubTransService" maxBufferSize="2147483647"
+                    maxReceivedMessageSize="2147483647">
+                    <security mode="None" />
+                </binding>
+                <binding name="BasicHttpBinding_ICMSIndexService" maxBufferSize="2147483647"
+                    maxReceivedMessageSize="2147483647">
+                    <security mode="None" />
+                </binding>
+                <binding name="BasicHttpBinding_IExtConnectorService" maxBufferSize="2147483647"
+                    maxReceivedMessageSize="2147483647">
+                    <security mode="None" />
+                </binding>
+            </basicHttpBinding>
+        </bindings>
+        <client>
+            <endpoint address="http://sekund.skanetrafiken.se:4001/ExtConnectorService.svc"
+                binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_ICMSIndexService"
+                contract="PubTrans.ICMSIndexService" name="BasicHttpBinding_ICMSIndexService" />
+            <endpoint address="http://sekund.skanetrafiken.se:4001/ExtConnectorService.svc"
+                binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_IPubTransService"
+                contract="PubTrans.IPubTransService" name="BasicHttpBinding_IPubTransService" />
+            <endpoint address="http://sekund.skanetrafiken.se:4001/ExtConnectorService.svc"
+                binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_IExtConnectorService"
+                contract="PubTrans.IExtConnectorService" name="BasicHttpBinding_IExtConnectorService" />
+        </client>
+    </system.serviceModel>
+</configuration>

@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:b="http://schemas.microsoft.com/BizTalk/2003" xmlns:tns="https://webservice.creditsafe.se/CAS/" elementFormDefault="qualified" targetNamespace="https://webservice.creditsafe.se/CAS/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="Account">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="UserName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Password" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TransactionId" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Language" type="tns:LANGUAGE" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="LANGUAGE">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="EN" />
+      <xs:enumeration value="SWE" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ArrayOfERROR">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ERROR" nillable="true" type="tns:ERROR" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ERROR">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Cause_of_Reject" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Reject_text" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Reject_comment" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CasCompanyService">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="cas_company" type="tns:CAS_COMPANY_REQUEST" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CasCompanyServiceResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="CasCompanyServiceResult" type="tns:CAS_COMPANY_RESPONSE" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="CAS_COMPANY_REQUEST">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="account" type="tns:Account" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SearchNumber" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Address1" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ZIP" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Town" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Templates" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LODCustFreeText" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Mobile" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Email" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CAS_COMPANY_RESPONSE">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Org_nr" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TemplateNames" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TransactionId" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Status" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Status_Text" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ErrorList" type="tns:ArrayOfERROR" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Address" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ZIP" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Town" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

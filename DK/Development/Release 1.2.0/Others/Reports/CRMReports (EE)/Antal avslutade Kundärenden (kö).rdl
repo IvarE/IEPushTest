@@ -1,0 +1,524 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Body>
+    <ReportItems>
+      <Textbox Name="textbox1">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Antal avslutade Kundärenden (kö)</Value>
+                <Style>
+                  <FontSize>20pt</FontSize>
+                  <FontWeight>Normal</FontWeight>
+                  <Color>MidnightBlue</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>textbox1</rd:DefaultName>
+        <Height>0.36in</Height>
+        <Width>6in</Width>
+        <Style>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox47">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=Parameters!ParamMonth.Label &amp; ", " &amp; Parameters!ParamYear.Label &amp;
+ "  -  Avslutade: " &amp;
+IIf
+(
+	IsNothing(Sum(Fields!Avslutade.Value, "DataSet1")),
+	"0",
+	Sum(Fields!Avslutade.Value, "DataSet1")
+)</Value>
+                <Style>
+                  <FontSize>11pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>MidnightBlue</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox47</rd:DefaultName>
+        <Top>0.36in</Top>
+        <Height>0.25in</Height>
+        <Width>6in</Width>
+        <ZIndex>1</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Tablix Name="Tablix2">
+        <TablixBody>
+          <TablixColumns>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+          </TablixColumns>
+          <TablixRows>
+            <TablixRow>
+              <Height>0.25in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox3">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Antal</Value>
+                              <Style>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox3</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>Black</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+            <TablixRow>
+              <Height>0.25in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox19">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!Avslutade.Value</Value>
+                              <Style />
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox19</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+          </TablixRows>
+        </TablixBody>
+        <TablixColumnHierarchy>
+          <TablixMembers>
+            <TablixMember />
+          </TablixMembers>
+        </TablixColumnHierarchy>
+        <TablixRowHierarchy>
+          <TablixMembers>
+            <TablixMember>
+              <TablixHeader>
+                <Size>1.79167in</Size>
+                <CellContents>
+                  <Textbox Name="Textbox24">
+                    <CanGrow>true</CanGrow>
+                    <KeepTogether>true</KeepTogether>
+                    <Paragraphs>
+                      <Paragraph>
+                        <TextRuns>
+                          <TextRun>
+                            <Value>Kö</Value>
+                            <Style>
+                              <Color>White</Color>
+                            </Style>
+                          </TextRun>
+                        </TextRuns>
+                        <Style />
+                      </Paragraph>
+                    </Paragraphs>
+                    <rd:DefaultName>Textbox24</rd:DefaultName>
+                    <Style>
+                      <Border>
+                        <Color>LightGrey</Color>
+                        <Style>Solid</Style>
+                      </Border>
+                      <BackgroundColor>Black</BackgroundColor>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingRight>2pt</PaddingRight>
+                      <PaddingTop>2pt</PaddingTop>
+                      <PaddingBottom>2pt</PaddingBottom>
+                    </Style>
+                  </Textbox>
+                </CellContents>
+              </TablixHeader>
+              <TablixMembers>
+                <TablixMember />
+              </TablixMembers>
+            </TablixMember>
+            <TablixMember>
+              <Group Name="Kö">
+                <GroupExpressions>
+                  <GroupExpression>=Fields!QueueName.Value</GroupExpression>
+                </GroupExpressions>
+              </Group>
+              <TablixMembers>
+                <TablixMember>
+                  <TablixMembers>
+                    <TablixMember>
+                      <Group Name="Done" />
+                      <TablixHeader>
+                        <Size>1.79167in</Size>
+                        <CellContents>
+                          <Textbox Name="Done">
+                            <CanGrow>true</CanGrow>
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value>=IIf(
+	IsNothing(Fields!QueueName.Value),
+	"- ingen kö -",
+	Fields!QueueName.Value
+)</Value>
+                                    <Style />
+                                  </TextRun>
+                                </TextRuns>
+                                <Style />
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>Done</rd:DefaultName>
+                            <Style>
+                              <Border>
+                                <Color>LightGrey</Color>
+                                <Style>Solid</Style>
+                              </Border>
+                              <PaddingLeft>2pt</PaddingLeft>
+                              <PaddingRight>2pt</PaddingRight>
+                              <PaddingTop>2pt</PaddingTop>
+                              <PaddingBottom>2pt</PaddingBottom>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixHeader>
+                    </TablixMember>
+                  </TablixMembers>
+                </TablixMember>
+              </TablixMembers>
+            </TablixMember>
+          </TablixMembers>
+        </TablixRowHierarchy>
+        <DataSetName>DataSet1</DataSetName>
+        <Top>0.63417in</Top>
+        <Height>0.5in</Height>
+        <Width>2.79167in</Width>
+        <ZIndex>2</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Tablix>
+    </ReportItems>
+    <Height>4.38417in</Height>
+    <Style />
+  </Body>
+  <Width>26.4375in</Width>
+  <Page>
+    <LeftMargin>1in</LeftMargin>
+    <RightMargin>1in</RightMargin>
+    <TopMargin>1in</TopMargin>
+    <BottomMargin>1in</BottomMargin>
+    <Style />
+  </Page>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource1">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString>Data Source=v-dksql-utv;Initial Catalog=Skanetrafiken_MSCRM</ConnectString>
+        <IntegratedSecurity>true</IntegratedSecurity>
+      </ConnectionProperties>
+      <rd:SecurityType>Integrated</rd:SecurityType>
+      <rd:DataSourceID>d7fadb9c-6d8b-4078-bbc6-54fdfb7c3fc0</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="DataSet1">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ParamYear">
+            <Value>=Parameters!ParamYear.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParamMonth">
+            <Value>=Parameters!ParamMonth.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--DECLARE @ParamYear int = 2015
+--DECLARE @ParamMonth int = 11
+--DECLARE @ParamDay int = 23
+;WITH t as
+(
+SELECT DISTINCT
+	inc.modifiedon,
+	inc.casetypecodename,
+	inc.ticketnumber,
+	inc.title,
+	inc.description,
+	inc.owneridname,
+	inc.modifiedbyname,
+	inc.caseorigincodename,		--kanal
+	qui.queueidname,			--kö
+	IIF(FilteredEmail.senton IS NOT NULL AND inc.incidentstagecode = 285050002,
+	FilteredEmail.createdbyname,
+	IIF
+	(
+		inc.owneridname = '' OR inc.owneridname LIKE '%Skånetrafiken CRM admin%',
+		qui.queueidname,
+		IIF(inc.owneridname = 'Kundtjänst Serviceresor'
+		OR inc.owneridname = 'Kundtjänst Synpunkter'
+		OR inc.owneridname = 'Kundtjänst Öresundståg'
+		OR inc.owneridname = 'Kundtjänst Jojo'
+		OR inc.owneridname = 'Kundtjänst Företag'
+		OR inc.owneridname = 'Kundtjänst 1 linjen'
+		OR inc.owneridname = 'Kundcenter'
+		OR inc.owneridname = 'Kontrollavgifter'
+		, inc.modifiedbyname
+		, IIF(inc.owneridname = 'svc CreateCase'
+		, inc.caseorigincodename
+		, inc.owneridname
+		)
+		)
+	)
+	) AS Hanlaggare, 
+	
+	IIF
+	(
+		inc.statecode = 1,
+		1,
+		0
+	) AS Done,
+
+	1 AS Counter
+
+FROM FilteredIncident inc
+LEFT JOIN 
+(
+	SELECT 
+		x.queueidname
+		,x.objectid
+	FROM 
+	(
+		SELECT  
+			ROW_NUMBER() OVER(PARTITION BY FilteredQueueItem.objectid ORDER BY queueidname DESC) as rownum
+			,queueidname
+			,objectid
+		FROM FilteredQueueItem
+		GROUP BY FilteredQueueItem.objectid, queueidname
+	) AS x
+	WHERE x.rownum = 1 -- Should always be 1 (Also on test cases)
+) AS qui
+ON qui.objectid = inc.incidentid
+LEFT JOIN 
+(
+	SELECT 
+		x.senton
+		,x.createdbyname
+		,x.regardingobjectid
+	FROM 
+	(
+		SELECT  
+			ROW_NUMBER() OVER(PARTITION BY FilteredEmail.regardingobjectid ORDER BY senton DESC) as rownum
+			,senton
+			,createdbyname
+			,FilteredEmail.regardingobjectid as regardingobjectid
+		FROM FilteredEmail
+		WHERE 
+			FilteredEmail.cgi_ask_customer = 1
+		GROUP BY FilteredEmail.regardingobjectid, createdbyname, senton
+	) AS x
+	WHERE x.rownum = 1 --Delete this line to match test case on advanced search
+) AS FilteredEmail
+ON FilteredEmail.regardingobjectid = inc.incidentid
+WHERE
+	(
+		(
+			inc.incidentstagecode = 285050002
+			AND inc.statecode &lt;&gt; 1
+			AND FilteredEmail.senton IS NOT NULL
+			AND YEAR(FilteredEmail.senton) = @ParamYear
+			AND MONTH (FilteredEmail.senton) = @ParamMonth
+			--AND DAY(FIlteredEmail.senton) = @ParamDay
+		)
+		OR
+		(
+			inc.statecode = 1
+			AND YEAR(inc.modifiedon) = @ParamYear
+			AND MONTH(inc.modifiedon) = @ParamMonth
+			--AND DAY(inc.modifiedon) = @ParamDay
+		)
+	)
+) SELECT IIF(t.queueidname = '&lt;svc CreateCase&gt;', 'ResegarantiOnline', t.queueidname) AS QueueName, count(ticketnumber) as Avslutade from t
+group by queueidname</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="QueueName">
+          <DataField>QueueName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Avslutade">
+          <DataField>Avslutade</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="DataSetYear">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT YEAR(GETDATE()) - 4
+UNION
+SELECT YEAR(GETDATE()) - 3
+UNION
+SELECT YEAR(GETDATE()) - 2
+UNION
+SELECT YEAR(GETDATE()) - 1
+UNION
+SELECT YEAR(GETDATE()) - 0</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Year">
+          <DataField />
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="ParamYear">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=Year(DateAdd(DateInterval.Month,-1,Now()))</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>År</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>DataSetYear</DataSetName>
+          <ValueField>Year</ValueField>
+          <LabelField>Year</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="ParamMonth">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=Month(DateAdd(DateInterval.Month,-1,Now()))</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Månad</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Januari</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Februari</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>3</Value>
+            <Label>Mars</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>4</Value>
+            <Label>April</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>5</Value>
+            <Label>Maj</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>6</Value>
+            <Label>Juni</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>7</Value>
+            <Label>Juli</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>8</Value>
+            <Label>Augusti</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>9</Value>
+            <Label>September</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>10</Value>
+            <Label>Oktober</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>11</Value>
+            <Label>November</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>12</Value>
+            <Label>December</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+  </ReportParameters>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>2826192c-75bf-4ccc-8a7a-4d7106b4516f</rd:ReportID>
+</Report>

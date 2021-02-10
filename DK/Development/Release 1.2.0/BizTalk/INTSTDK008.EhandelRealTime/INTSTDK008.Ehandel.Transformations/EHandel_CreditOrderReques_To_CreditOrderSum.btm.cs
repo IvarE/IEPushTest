@@ -1,0 +1,61 @@
+namespace INTSTDK008.Ehandel.Transformations {
+    
+    
+    [Microsoft.XLANGs.BaseTypes.SchemaReference(@"INTSTDK008.Ehandel.Schemas.CreditOrderRequest", typeof(global::INTSTDK008.Ehandel.Schemas.CreditOrderRequest))]
+    [Microsoft.XLANGs.BaseTypes.SchemaReference(@"INTSTDK008.Ehandel.Schemas.CreditOrderSumJSON", typeof(global::INTSTDK008.Ehandel.Schemas.CreditOrderSumJSON))]
+    public sealed class EHandel_CreditOrderReques_To_CreditOrderSum : global::Microsoft.XLANGs.BaseTypes.TransformBase {
+        
+        private const string _strMap = @"<?xml version=""1.0"" encoding=""UTF-16""?>
+<xsl:stylesheet xmlns:xsl=""http://www.w3.org/1999/XSL/Transform"" xmlns:msxsl=""urn:schemas-microsoft-com:xslt"" xmlns:var=""http://schemas.microsoft.com/BizTalk/2003/var"" exclude-result-prefixes=""msxsl var s0"" version=""1.0"" xmlns:ns0=""http://INTSTDK008.Ehandel.Schemas.CreditOrderSumJSON"" xmlns:s0=""http://INTSTDK008.Ehandel.Schemas.CreditOrderRequest"">
+  <xsl:output omit-xml-declaration=""yes"" method=""xml"" version=""1.0"" />
+  <xsl:template match=""/"">
+    <xsl:apply-templates select=""/s0:CreditOrderParameters"" />
+  </xsl:template>
+  <xsl:template match=""/s0:CreditOrderParameters"">
+    <ns0:CreditOrderSum>
+      <sum>
+        <xsl:value-of select=""Sum/text()"" />
+      </sum>
+    </ns0:CreditOrderSum>
+  </xsl:template>
+</xsl:stylesheet>";
+        
+        private const string _strArgList = @"<ExtensionObjects />";
+        
+        private const string _strSrcSchemasList0 = @"INTSTDK008.Ehandel.Schemas.CreditOrderRequest";
+        
+        private const global::INTSTDK008.Ehandel.Schemas.CreditOrderRequest _srcSchemaTypeReference0 = null;
+        
+        private const string _strTrgSchemasList0 = @"INTSTDK008.Ehandel.Schemas.CreditOrderSumJSON";
+        
+        private const global::INTSTDK008.Ehandel.Schemas.CreditOrderSumJSON _trgSchemaTypeReference0 = null;
+        
+        public override string XmlContent {
+            get {
+                return _strMap;
+            }
+        }
+        
+        public override string XsltArgumentListContent {
+            get {
+                return _strArgList;
+            }
+        }
+        
+        public override string[] SourceSchemas {
+            get {
+                string[] _SrcSchemas = new string [1];
+                _SrcSchemas[0] = @"INTSTDK008.Ehandel.Schemas.CreditOrderRequest";
+                return _SrcSchemas;
+            }
+        }
+        
+        public override string[] TargetSchemas {
+            get {
+                string[] _TrgSchemas = new string [1];
+                _TrgSchemas[0] = @"INTSTDK008.Ehandel.Schemas.CreditOrderSumJSON";
+                return _TrgSchemas;
+            }
+        }
+    }
+}

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/CGIXrmTravelCard" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/CGIXrmTravelCard" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://v-dkcrm-utv:4500/CGIXrmTravelCardService/TravelCard.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="GetCardDetailsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CardDetails" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ErrorMessage" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GetCardDetailsResponse" nillable="true" type="tns:GetCardDetailsResponse" />
+  <xs:complexType name="GetCRMCardDetailsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Card" nillable="true" type="tns:Card" />
+      <xs:element minOccurs="0" name="ErrorMessage" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GetCRMCardDetailsResponse" nillable="true" type="tns:GetCRMCardDetailsResponse" />
+  <xs:complexType name="Card">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AccountId" nillable="true" type="ser:guid" />
+      <xs:element minOccurs="0" name="AccountIdName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Autoloadconnectiondate" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Autoloaddisconnectiondate" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Autoloadstatus" type="xs:int" />
+      <xs:element minOccurs="0" name="Autoloadstatusname" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Blocked" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="CardTypeId" nillable="true" type="ser:guid" />
+      <xs:element minOccurs="0" name="CardTypeIdName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ContactId" nillable="true" type="ser:guid" />
+      <xs:element minOccurs="0" name="ContactIdName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Contactnumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="NumberOfZones" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PeriodeicCardType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="StateCode" type="xs:int" />
+      <xs:element minOccurs="0" name="TravelCardID" type="ser:guid" />
+      <xs:element minOccurs="0" name="TravelCardName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ValidFrom" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ValidTo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Value_card_type" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Card" nillable="true" type="tns:Card" />
+  <xs:complexType name="GetCardTransactionsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ErrorMessage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Transactions" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GetCardTransactionsResponse" nillable="true" type="tns:GetCardTransactionsResponse" />
+  <xs:complexType name="GetZoneNamesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ErrorMessage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Zones" nillable="true" type="tns:ArrayOfZone" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GetZoneNamesResponse" nillable="true" type="tns:GetZoneNamesResponse" />
+  <xs:complexType name="ArrayOfZone">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Zone" nillable="true" type="tns:Zone" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfZone" nillable="true" type="tns:ArrayOfZone" />
+  <xs:complexType name="Zone">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ZoneId" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ZoneName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Zone" nillable="true" type="tns:Zone" />
+  <xs:complexType name="GetTravelCardTransactionsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ErrorMessage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TravelCardTransactions" nillable="true" type="tns:ArrayOfTravelCardTransaction" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GetTravelCardTransactionsResponse" nillable="true" type="tns:GetTravelCardTransactionsResponse" />
+  <xs:complexType name="ArrayOfTravelCardTransaction">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TravelCardTransaction" nillable="true" type="tns:TravelCardTransaction" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfTravelCardTransaction" nillable="true" type="tns:ArrayOfTravelCardTransaction" />
+  <xs:complexType name="TravelCardTransaction">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Amount" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CardId" nillable="true" type="ser:guid" />
+      <xs:element minOccurs="0" name="CardSect" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CaseId" nillable="true" type="ser:guid" />
+      <xs:element minOccurs="0" name="Currency" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Date" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DeviceID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="OrigZone" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="OrigZoneName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RecType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Route" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Time" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Transactionid" nillable="true" type="ser:guid" />
+      <xs:element minOccurs="0" name="TravelCard" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TxnType" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="TravelCardTransaction" nillable="true" type="tns:TravelCardTransaction" />
+  <xs:complexType name="GetOutstandingChargesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ErrorMessage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="OutstandingCharges" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GetOutstandingChargesResponse" nillable="true" type="tns:GetOutstandingChargesResponse" />
+  <xs:complexType name="RechargeCardResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ErrorMessage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RechargeCard" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RechargeCardResponse" nillable="true" type="tns:RechargeCardResponse" />
+</xs:schema>

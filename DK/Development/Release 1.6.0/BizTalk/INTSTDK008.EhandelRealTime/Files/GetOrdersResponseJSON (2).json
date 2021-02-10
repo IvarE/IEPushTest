@@ -1,0 +1,2702 @@
+{
+   "Orders":    [
+            {
+         "OrderConfirmationEmail": "dktestare@gmail.com",
+         "OrderDate": "2015-09-14T08:32:31.553Z",
+         "OrderNumber": "AT3000606",
+         "OrderStatus": "Klar",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 48,
+         "OrderTotalVat": 0,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Ersättning",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer":          {
+            "Email": "dktestare@gmail.com",
+            "AccountNumber": "null",
+            "AccountNumber2": "349",
+            "IsCompany": false,
+            "ExtraInfo": "",
+            "CustomerName": "Dktestare Dktestarsson"
+         },
+         "ShippingAddress": "null",
+         "OrderItems": [],
+         "Payments": [         {
+            "PaymentMethodCode": "CompensationPayment",
+            "PaymentMethodName": "Ersättning",
+            "TransactionType": "Dragning",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 48,
+            "TransactionId": "",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-14T08:32:31.74Z",
+               "Message": "IP: 192.168.55.14, user agent: "
+            },
+                        {
+               "Created": "2015-09-14T08:32:30.753Z",
+               "Message": "Orderadress och e-post kopplades till kundvagn. E-post: dktestare@gmail.com. Kördes på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:32:30.833Z",
+               "Message": "Ersättning med värdet: 48 för kortnummer  lades i kundvagn. Kördes på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:32:31.973Z",
+               "Message": "Order skapades på server: DKCMS-ACC4 "
+            },
+                        {
+               "Created": "2015-09-14T08:32:32.207Z",
+               "Message": "Order betalades helt utan DIBS"
+            },
+                        {
+               "Created": "2015-09-14T08:32:32.287Z",
+               "Message": "Ordern skapades på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:33:20.053Z",
+               "Message": "Startade färdigstälnning av värdekupongsorder. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:33:21.96Z",
+               "Message": "Kuponginlösen svarade med Success: True, och meddelandet: CouponCreated. Kördes på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:33:22.113Z",
+               "Message": "Värdekupong (Sms) skapades med meddelandet: CouponCreated, och värdekupongskoden: 62522604. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:33:22.113Z",
+               "Message": "Värdekupongskod: 62522604"
+            },
+                        {
+               "Created": "2015-09-14T08:33:22.443Z",
+               "Message": "Ordern markerades som skickad. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:33:22.817Z",
+               "Message": "Statusen på ordern sattes till 'Klar'. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:33:22.957Z",
+               "Message": "Värdekupongsordern färdigställdes. Kördes på server: DKCMS-ACC4"
+            }
+         ],
+         "Coupons": [         {
+            "BlockedCardNumber": "",
+            "CouponCode": "62522604",
+            "DateCreated": "2015-09-14T10:33:22.943+02:00",
+            "DateSent": "0001-01-01T00:00:00",
+            "IsSent": true,
+            "Receiver": "0705276493",
+            "ShippingMethod": "Via SMS",
+            "ExtraInfo": "null",
+            "CouponSum": 4.8E9,
+            "Attempts": 0,
+            "DateForLastAttempt": "0001-01-01T00:00:00"
+         }],
+         "Shipments": [         {
+            "ShipmentMethodName": "Kupong via SMS",
+            "Status": "Skickad",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Kupong via SMS"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "dktestare@gmail.com",
+         "OrderDate": "2015-09-14T08:29:09.723Z",
+         "OrderNumber": "AT3000605",
+         "OrderStatus": "Klar",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 48,
+         "OrderTotalVat": 0,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Ersättning",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer":          {
+            "Email": "dktestare@gmail.com",
+            "AccountNumber": "null",
+            "AccountNumber2": "349",
+            "IsCompany": false,
+            "ExtraInfo": "",
+            "CustomerName": "Dktestare Dktestarsson"
+         },
+         "ShippingAddress": "null",
+         "OrderItems": [],
+         "Payments": [         {
+            "PaymentMethodCode": "CompensationPayment",
+            "PaymentMethodName": "Ersättning",
+            "TransactionType": "Dragning",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 48,
+            "TransactionId": "",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-14T08:29:10.163Z",
+               "Message": "IP: 192.168.55.14, user agent: "
+            },
+                        {
+               "Created": "2015-09-14T08:29:07.13Z",
+               "Message": "Orderadress och e-post kopplades till kundvagn. E-post: dktestare@gmail.com. Kördes på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:29:07.803Z",
+               "Message": "Ersättning med värdet: 48 för kortnummer  lades i kundvagn. Kördes på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:29:10.663Z",
+               "Message": "Order skapades på server: DKCMS-ACC4 "
+            },
+                        {
+               "Created": "2015-09-14T08:29:10.88Z",
+               "Message": "Order betalades helt utan DIBS"
+            },
+                        {
+               "Created": "2015-09-14T08:29:10.99Z",
+               "Message": "Ordern skapades på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:29:35.147Z",
+               "Message": "Startade färdigstälnning av värdekupongsorder. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:29:37.63Z",
+               "Message": "Kuponginlösen svarade med Success: True, och meddelandet: CouponCreated. Kördes på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:29:37.803Z",
+               "Message": "Värdekupong (Sms) skapades med meddelandet: CouponCreated, och värdekupongskoden: 42305833. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:29:37.803Z",
+               "Message": "Värdekupongskod: 42305833"
+            },
+                        {
+               "Created": "2015-09-14T08:29:38.333Z",
+               "Message": "Ordern markerades som skickad. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:29:38.817Z",
+               "Message": "Statusen på ordern sattes till 'Klar'. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-14T08:29:39.1Z",
+               "Message": "Värdekupongsordern färdigställdes. Kördes på server: DKCMS-ACC4"
+            }
+         ],
+         "Coupons": [         {
+            "BlockedCardNumber": "",
+            "CouponCode": "42305833",
+            "DateCreated": "2015-09-14T10:29:39.007+02:00",
+            "DateSent": "0001-01-01T00:00:00",
+            "IsSent": true,
+            "Receiver": "0705276493",
+            "ShippingMethod": "Via SMS",
+            "ExtraInfo": "null",
+            "CouponSum": 4.8E9,
+            "Attempts": 0,
+            "DateForLastAttempt": "0001-01-01T00:00:00"
+         }],
+         "Shipments": [         {
+            "ShipmentMethodName": "Kupong via SMS",
+            "Status": "Skickad",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Kupong via SMS"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "bbb@ccc.se",
+         "OrderDate": "2015-09-10T13:58:35.183Z",
+         "OrderNumber": "AT3000602",
+         "OrderStatus": "Väntande",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 70,
+         "OrderTotalVat": 4,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Köp av Jojo-kort",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer": "null",
+         "ShippingAddress": "null",
+         "OrderItems":          [
+                        {
+               "Code": "PrivateCardJojoMini",
+               "Name": "Jojo Mini",
+               "CardNumber": "",
+               "Price": 50,
+               "Discount": 0,
+               "Quantity": 1,
+               "ExtraInfo": ""
+            },
+                        {
+               "Code": "CardFeeVariation",
+               "Name": "Kortavgift",
+               "CardNumber": "",
+               "Price": 20,
+               "Discount": 0,
+               "Quantity": 1,
+               "ExtraInfo": ""
+            }
+         ],
+         "Payments": [         {
+            "PaymentMethodCode": "DibsCreditCardAuth",
+            "PaymentMethodName": "Kreditkort",
+            "TransactionType": "Reservation",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 70,
+            "TransactionId": "335970457",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-10T13:58:35.62Z",
+               "Message": "IP: 192.168.55.14, user agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0; Skånetrafiken)"
+            },
+                        {
+               "Created": "2015-09-10T13:58:36.603Z",
+               "Message": "Order skapades på server: DKCMS-ACC3 "
+            },
+                        {
+               "Created": "2015-09-10T13:59:24.557Z",
+               "Message": "https://dkcmsacc.skanetrafiken.se/betalning/dibsreturn/index?order=AT3000602&s=1&reply=A&verifyId=335970457&currency=SEK&sum=70,00&referenceNo=AT3000602&MAC=AC4EB1FF7FA44639156D224B588DBC6B&ccPart=**** **** **** 0000&ccPrefix=471110&ccType=VISA&ccCategory=&verification=verification OK&expM=06&expY=24&csrf=12gcbrbonopef"
+            }
+         ],
+         "Coupons": [],
+         "Shipments": [         {
+            "ShipmentMethodName": "Strålfors",
+            "Status": "",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Stralfors"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "abc@def.se",
+         "OrderDate": "2015-09-10T11:55:39.48Z",
+         "OrderNumber": "AT3000601",
+         "OrderStatus": "Väntande",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 70,
+         "OrderTotalVat": 4,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Köp av Jojo-kort",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer": "null",
+         "ShippingAddress": "null",
+         "OrderItems":          [
+                        {
+               "Code": "PrivateCardJojoMini",
+               "Name": "Jojo Mini",
+               "CardNumber": "",
+               "Price": 50,
+               "Discount": 0,
+               "Quantity": 1,
+               "ExtraInfo": ""
+            },
+                        {
+               "Code": "CardFeeVariation",
+               "Name": "Kortavgift",
+               "CardNumber": "",
+               "Price": 20,
+               "Discount": 0,
+               "Quantity": 1,
+               "ExtraInfo": ""
+            }
+         ],
+         "Payments": [         {
+            "PaymentMethodCode": "DibsCreditCardAuth",
+            "PaymentMethodName": "Kreditkort",
+            "TransactionType": "Reservation",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 70,
+            "TransactionId": "335885271",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-10T11:55:39.777Z",
+               "Message": "IP: 192.168.55.14, user agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0; Skånetrafiken)"
+            },
+                        {
+               "Created": "2015-09-10T11:55:40.76Z",
+               "Message": "Order skapades på server: DKCMS-ACC3 "
+            },
+                        {
+               "Created": "2015-09-10T11:57:34.29Z",
+               "Message": "https://dkcmsacc.skanetrafiken.se/betalning/dibsreturn/index?order=AT3000601&s=1&reply=A&verifyId=335885271&currency=SEK&sum=70,00&referenceNo=AT3000601&MAC=8E5FFFD11499F12B41ECFC6B888DB5C2&ccPart=**** **** **** 0000&ccPrefix=471110&ccType=VISA&ccCategory=&verification=verification OK&expM=06&expY=24&csrf=kj2ha4lw5hzr"
+            }
+         ],
+         "Coupons": [],
+         "Shipments": [         {
+            "ShipmentMethodName": "Strålfors",
+            "Status": "",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Stralfors"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "hyfsat.underbart@yahoo.se",
+         "OrderDate": "2015-09-09T13:58:55.593Z",
+         "OrderNumber": "AT3000598",
+         "OrderStatus": "Avbruten",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 70,
+         "OrderTotalVat": 4,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Köp av Jojo-kort",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer":          {
+            "Email": "hyfsat.underbart@yahoo.se",
+            "AccountNumber": "null",
+            "AccountNumber2": "540",
+            "IsCompany": false,
+            "ExtraInfo": "",
+            "CustomerName": "Lisa Nilsson Ödlund"
+         },
+         "ShippingAddress": "null",
+         "OrderItems":          [
+                        {
+               "Code": "CardFeeVariation",
+               "Name": "Kortavgift",
+               "CardNumber": "",
+               "Price": 20,
+               "Discount": 0,
+               "Quantity": 1,
+               "ExtraInfo": ""
+            },
+                        {
+               "Code": "PrivateCardJojoMini",
+               "Name": "Jojo Mini",
+               "CardNumber": "",
+               "Price": 50,
+               "Discount": 0,
+               "Quantity": 1,
+               "ExtraInfo": ""
+            }
+         ],
+         "Payments": [         {
+            "PaymentMethodCode": "DibsCreditCardAuth",
+            "PaymentMethodName": "Kreditkort",
+            "TransactionType": "Reservation",
+            "Status": "Misslyckad",
+            "GiftCardCode": "",
+            "Sum": 70,
+            "TransactionId": "335678070",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-09T13:58:55.923Z",
+               "Message": "IP: 192.168.55.14, user agent: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36"
+            },
+                        {
+               "Created": "2015-09-09T13:58:56.58Z",
+               "Message": "Order skapades på server: DKCMS-ACC4 "
+            },
+                        {
+               "Created": "2015-09-09T14:00:04.063Z",
+               "Message": "https://dkcmsacc.skanetrafiken.se/betalning/dibsreturn/index?order=AT3000598&s=0&reply=D&verifyId=335678070&currency=SEK&sum=70,00&referenceNo=AT3000598&MAC=153EC3C567604D9D574F8869FF2B99E0&ccPart=**** **** **** 3206&ccPrefix=525412&ccType=MC&ccCategory=KREDIT/BETAL KORT&verification=verification denied&expM=04&expY=19&csrf=-108pnkozwgujf"
+            },
+                        {
+               "Created": "2015-09-09T14:00:04.407Z",
+               "Message": "Ordern avbröts på grund av ett fel vid petalningen i DIBS. Kördes på server DKCMS-ACC4"
+            }
+         ],
+         "Coupons": [],
+         "Shipments": [         {
+            "ShipmentMethodName": "Strålfors",
+            "Status": "",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Stralfors"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "dktestare@gmail.com",
+         "OrderDate": "2015-09-09T11:06:39.907Z",
+         "OrderNumber": "AT3000594",
+         "OrderStatus": "Klar",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 2,
+         "OrderTotalVat": 0,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Ersättning",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer":          {
+            "Email": "dktestare@gmail.com",
+            "AccountNumber": "null",
+            "AccountNumber2": "349",
+            "IsCompany": false,
+            "ExtraInfo": "",
+            "CustomerName": "Dktestare Dktestarsson"
+         },
+         "ShippingAddress": "null",
+         "OrderItems": [],
+         "Payments": [         {
+            "PaymentMethodCode": "CompensationPayment",
+            "PaymentMethodName": "Ersättning",
+            "TransactionType": "Dragning",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 2,
+            "TransactionId": "",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-09T11:06:40.22Z",
+               "Message": "IP: 192.168.55.14, user agent: "
+            },
+                        {
+               "Created": "2015-09-09T11:06:39Z",
+               "Message": "Orderadress och e-post kopplades till kundvagn. E-post: dktestare@gmail.com. Kördes på server DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-09T11:06:39.093Z",
+               "Message": "Ersättning med värdet: 2 för kortnummer  lades i kundvagn. Kördes på server DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-09T11:06:40.5Z",
+               "Message": "Order skapades på server: DKCMS-ACC1 "
+            },
+                        {
+               "Created": "2015-09-09T11:06:40.733Z",
+               "Message": "Order betalades helt utan DIBS"
+            },
+                        {
+               "Created": "2015-09-09T11:06:40.83Z",
+               "Message": "Ordern skapades på server DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-10T08:06:24.803Z",
+               "Message": "Startade färdigstälnning av värdekupongsorder. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:25.757Z",
+               "Message": "Kuponginlösen svarade med Success: True, och meddelandet: CouponCreated. Kördes på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:25.85Z",
+               "Message": "Värdekupong (Sms) skapades med meddelandet: CouponCreated, och värdekupongskoden: 42290931. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:25.85Z",
+               "Message": "Värdekupongskod: 42290931"
+            },
+                        {
+               "Created": "2015-09-10T08:06:26.32Z",
+               "Message": "Ordern markerades som skickad. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:26.493Z",
+               "Message": "Statusen på ordern sattes till 'Klar'. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:26.663Z",
+               "Message": "Värdekupongsordern färdigställdes. Kördes på server: DKCMS-ACC4"
+            }
+         ],
+         "Coupons": [         {
+            "BlockedCardNumber": "",
+            "CouponCode": "42290931",
+            "DateCreated": "2015-09-10T10:06:26.633+02:00",
+            "DateSent": "0001-01-01T00:00:00",
+            "IsSent": true,
+            "Receiver": "0705276492",
+            "ShippingMethod": "Via SMS",
+            "ExtraInfo": "null",
+            "CouponSum": 2.0E8,
+            "Attempts": 0,
+            "DateForLastAttempt": "0001-01-01T00:00:00"
+         }],
+         "Shipments": [         {
+            "ShipmentMethodName": "Kupong via SMS",
+            "Status": "Skickad",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Kupong via SMS"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "dktestare@gmail.com",
+         "OrderDate": "2015-09-09T09:55:12.367Z",
+         "OrderNumber": "AT3000587",
+         "OrderStatus": "Klar",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 2,
+         "OrderTotalVat": 0,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Ersättning",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer":          {
+            "Email": "dktestare@gmail.com",
+            "AccountNumber": "null",
+            "AccountNumber2": "349",
+            "IsCompany": false,
+            "ExtraInfo": "",
+            "CustomerName": "Dktestare Dktestarsson"
+         },
+         "ShippingAddress": "null",
+         "OrderItems": [],
+         "Payments": [         {
+            "PaymentMethodCode": "CompensationPayment",
+            "PaymentMethodName": "Ersättning",
+            "TransactionType": "Dragning",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 2,
+            "TransactionId": "",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-09T09:55:12.807Z",
+               "Message": "IP: 192.168.55.14, user agent: "
+            },
+                        {
+               "Created": "2015-09-09T09:55:10.353Z",
+               "Message": "Orderadress och e-post kopplades till kundvagn. E-post: dktestare@gmail.com. Kördes på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-09T09:55:10.837Z",
+               "Message": "Ersättning med värdet: 2 för kortnummer  lades i kundvagn. Kördes på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-09T09:55:13.307Z",
+               "Message": "Order skapades på server: DKCMS-ACC4 "
+            },
+                        {
+               "Created": "2015-09-09T09:55:13.523Z",
+               "Message": "Order betalades helt utan DIBS"
+            },
+                        {
+               "Created": "2015-09-09T09:55:13.603Z",
+               "Message": "Ordern skapades på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:19.85Z",
+               "Message": "Startade färdigstälnning av värdekupongsorder. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:20.663Z",
+               "Message": "Kuponginlösen svarade med Success: True, och meddelandet: CouponCreated. Kördes på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:20.757Z",
+               "Message": "Värdekupong (Sms) skapades med meddelandet: CouponCreated, och värdekupongskoden: 62536489. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:20.757Z",
+               "Message": "Värdekupongskod: 62536489"
+            },
+                        {
+               "Created": "2015-09-10T08:06:21.1Z",
+               "Message": "Ordern markerades som skickad. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:21.367Z",
+               "Message": "Statusen på ordern sattes till 'Klar'. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:21.493Z",
+               "Message": "Värdekupongsordern färdigställdes. Kördes på server: DKCMS-ACC4"
+            }
+         ],
+         "Coupons": [         {
+            "BlockedCardNumber": "",
+            "CouponCode": "62536489",
+            "DateCreated": "2015-09-10T10:06:21.46+02:00",
+            "DateSent": "0001-01-01T00:00:00",
+            "IsSent": true,
+            "Receiver": "0702-123 534",
+            "ShippingMethod": "Via SMS",
+            "ExtraInfo": "null",
+            "CouponSum": 2.0E8,
+            "Attempts": 0,
+            "DateForLastAttempt": "0001-01-01T00:00:00"
+         }],
+         "Shipments": [         {
+            "ShipmentMethodName": "Kupong via SMS",
+            "Status": "Skickad",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Kupong via SMS"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "per.lindblom@perlindblom.se",
+         "OrderDate": "2015-09-08T14:57:55.197Z",
+         "OrderNumber": "AT3000586",
+         "OrderStatus": "Klar",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 132,
+         "OrderTotalVat": 0,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Ersättning",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer": "null",
+         "ShippingAddress": "null",
+         "OrderItems": [],
+         "Payments": [         {
+            "PaymentMethodCode": "CompensationPayment",
+            "PaymentMethodName": "Ersättning",
+            "TransactionType": "Dragning",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 132,
+            "TransactionId": "",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-08T14:57:55.35Z",
+               "Message": "IP: 192.168.55.14, user agent: "
+            },
+                        {
+               "Created": "2015-09-08T14:57:52.523Z",
+               "Message": "Orderadress och e-post kopplades till kundvagn. E-post: per.lindblom@perlindblom.se. Kördes på server DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-08T14:57:53.29Z",
+               "Message": "Ersättning med värdet: 132 för kortnummer  lades i kundvagn. Kördes på server DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-08T14:57:55.743Z",
+               "Message": "Order skapades på server: DKCMS-ACC2 "
+            },
+                        {
+               "Created": "2015-09-08T14:57:56.007Z",
+               "Message": "Order betalades helt utan DIBS"
+            },
+                        {
+               "Created": "2015-09-08T14:57:56.21Z",
+               "Message": "Ordern skapades på server DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T08:06:18.023Z",
+               "Message": "Startade färdigstälnning av värdekupongsorder. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:18.9Z",
+               "Message": "Kuponginlösen svarade med Success: True, och meddelandet: CouponCreated. Kördes på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:19.04Z",
+               "Message": "Värdekupong (Sms) skapades med meddelandet: CouponCreated, och värdekupongskoden: 42290642. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:19.04Z",
+               "Message": "Värdekupongskod: 42290642"
+            },
+                        {
+               "Created": "2015-09-10T08:06:19.337Z",
+               "Message": "Ordern markerades som skickad. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:19.633Z",
+               "Message": "Statusen på ordern sattes till 'Klar'. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:19.757Z",
+               "Message": "Värdekupongsordern färdigställdes. Kördes på server: DKCMS-ACC4"
+            }
+         ],
+         "Coupons": [         {
+            "BlockedCardNumber": "",
+            "CouponCode": "42290642",
+            "DateCreated": "2015-09-10T10:06:19.743+02:00",
+            "DateSent": "0001-01-01T00:00:00",
+            "IsSent": true,
+            "Receiver": "0736500510",
+            "ShippingMethod": "Via SMS",
+            "ExtraInfo": "null",
+            "CouponSum": 1.32E10,
+            "Attempts": 0,
+            "DateForLastAttempt": "0001-01-01T00:00:00"
+         }],
+         "Shipments": [         {
+            "ShipmentMethodName": "Kupong via SMS",
+            "Status": "Skickad",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Kupong via SMS"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "jeanettemansson@hotmail.com",
+         "OrderDate": "2015-09-08T14:05:50.28Z",
+         "OrderNumber": "AT3000585",
+         "OrderStatus": "Klar",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 50,
+         "OrderTotalVat": 0,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Ersättning",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer":          {
+            "Email": "jeanettemansson@hotmail.com",
+            "AccountNumber": "null",
+            "AccountNumber2": "24",
+            "IsCompany": false,
+            "ExtraInfo": "",
+            "CustomerName": "Jeanette Månsson"
+         },
+         "ShippingAddress": "null",
+         "OrderItems": [],
+         "Payments": [         {
+            "PaymentMethodCode": "CompensationPayment",
+            "PaymentMethodName": "Ersättning",
+            "TransactionType": "Dragning",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 50,
+            "TransactionId": "",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-08T14:05:51.153Z",
+               "Message": "IP: 192.168.55.14, user agent: "
+            },
+                        {
+               "Created": "2015-09-08T14:05:46.53Z",
+               "Message": "Orderadress och e-post kopplades till kundvagn. E-post: jeanettemansson@hotmail.com. Kördes på server DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-08T14:05:47.687Z",
+               "Message": "Ersättning med värdet: 50 för kortnummer  lades i kundvagn. Kördes på server DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-08T14:05:51.7Z",
+               "Message": "Order skapades på server: DKCMS-ACC1 "
+            },
+                        {
+               "Created": "2015-09-08T14:05:52.03Z",
+               "Message": "Order betalades helt utan DIBS"
+            },
+                        {
+               "Created": "2015-09-08T14:05:52.123Z",
+               "Message": "Ordern skapades på server DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-10T08:06:15.993Z",
+               "Message": "Startade färdigstälnning av värdekupongsorder. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:17.117Z",
+               "Message": "Kuponginlösen svarade med Success: True, och meddelandet: CouponCreated. Kördes på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:17.21Z",
+               "Message": "Värdekupong (Sms) skapades med meddelandet: CouponCreated, och värdekupongskoden: 62536199. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:17.21Z",
+               "Message": "Värdekupongskod: 62536199"
+            },
+                        {
+               "Created": "2015-09-10T08:06:17.493Z",
+               "Message": "Ordern markerades som skickad. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:17.773Z",
+               "Message": "Statusen på ordern sattes till 'Klar'. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:17.883Z",
+               "Message": "Värdekupongsordern färdigställdes. Kördes på server: DKCMS-ACC4"
+            }
+         ],
+         "Coupons": [         {
+            "BlockedCardNumber": "",
+            "CouponCode": "62536199",
+            "DateCreated": "2015-09-10T10:06:17.867+02:00",
+            "DateSent": "0001-01-01T00:00:00",
+            "IsSent": true,
+            "Receiver": "0708969099",
+            "ShippingMethod": "Via SMS",
+            "ExtraInfo": "null",
+            "CouponSum": 5.0E9,
+            "Attempts": 0,
+            "DateForLastAttempt": "0001-01-01T00:00:00"
+         }],
+         "Shipments": [         {
+            "ShipmentMethodName": "Kupong via SMS",
+            "Status": "Skickad",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Kupong via SMS"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "per.ahrling@gmail.com",
+         "OrderDate": "2015-09-08T13:22:01.103Z",
+         "OrderNumber": "AT3000584",
+         "OrderStatus": "Väntande",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 220,
+         "OrderTotalVat": 4,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Köp av Jojo-kort",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer": "null",
+         "ShippingAddress": "null",
+         "OrderItems":          [
+                        {
+               "Code": "PrivateCardJojo200",
+               "Name": "Jojo Reskassa",
+               "CardNumber": "",
+               "Price": 200,
+               "Discount": 0,
+               "Quantity": 1,
+               "ExtraInfo": ""
+            },
+                        {
+               "Code": "CardFeeVariation",
+               "Name": "Kortavgift",
+               "CardNumber": "",
+               "Price": 20,
+               "Discount": 0,
+               "Quantity": 1,
+               "ExtraInfo": ""
+            }
+         ],
+         "Payments": [         {
+            "PaymentMethodCode": "DibsCreditCardAuth",
+            "PaymentMethodName": "Kreditkort",
+            "TransactionType": "Reservation",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 220,
+            "TransactionId": "335506572",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-08T13:22:01.243Z",
+               "Message": "IP: 192.168.55.14, user agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; InfoPath.3)"
+            },
+                        {
+               "Created": "2015-09-08T13:22:01.79Z",
+               "Message": "Order skapades på server: DKCMS-ACC4 "
+            },
+                        {
+               "Created": "2015-09-08T13:22:30.12Z",
+               "Message": "https://dkcmsacc.skanetrafiken.se/betalning/dibsreturn/index?order=AT3000584&s=1&reply=A&verifyId=335506572&currency=SEK&sum=220,00&referenceNo=AT3000584&MAC=B86A224C2BD064FDC9D5F08F5AE3144F&ccPart=**** **** **** 0000&ccPrefix=471110&ccType=VISA&ccCategory=&verification=verification OK&expM=09&expY=16&csrf=nhb05w9c0c5z"
+            }
+         ],
+         "Coupons": [],
+         "Shipments": [         {
+            "ShipmentMethodName": "Strålfors",
+            "Status": "",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Stralfors"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "asa.moberg@outlook.com",
+         "OrderDate": "2015-09-08T12:32:14.647Z",
+         "OrderNumber": "AT3000583",
+         "OrderStatus": "Väntande",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 220,
+         "OrderTotalVat": 4,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Köp av Jojo-kort",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer": "null",
+         "ShippingAddress": "null",
+         "OrderItems":          [
+                        {
+               "Code": "PrivateCardJojo200",
+               "Name": "Jojo Reskassa",
+               "CardNumber": "",
+               "Price": 200,
+               "Discount": 0,
+               "Quantity": 1,
+               "ExtraInfo": ""
+            },
+                        {
+               "Code": "CardFeeVariation",
+               "Name": "Kortavgift",
+               "CardNumber": "",
+               "Price": 20,
+               "Discount": 0,
+               "Quantity": 1,
+               "ExtraInfo": ""
+            }
+         ],
+         "Payments": [         {
+            "PaymentMethodCode": "DibsCreditCardAuth",
+            "PaymentMethodName": "Kreditkort",
+            "TransactionType": "Reservation",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 220,
+            "TransactionId": "335498883",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-08T12:32:14.82Z",
+               "Message": "IP: 192.168.55.14, user agent: Mozilla/4.0 (compatible; MSIE 7.0; PPP v5.1 (1,1,1); Windows NT 6.1; Trident/6.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; .NET4.0E; Tablet PC 2.0; MS-RTC LM 8; Skånetrafiken)"
+            },
+                        {
+               "Created": "2015-09-08T12:32:15.38Z",
+               "Message": "Order skapades på server: DKCMS-ACC4 "
+            },
+                        {
+               "Created": "2015-09-08T12:33:03.1Z",
+               "Message": "http://dkcmsacc.skanetrafiken.se/betalning/dibsreturn/index?order=AT3000583&s=1&reply=A&verifyId=335498883&currency=SEK&sum=220,00&referenceNo=AT3000583&MAC=B6BA8F42230592C6361E3D6621DD0E60&ccPart=**** **** **** 0000&ccPrefix=471110&ccType=VISA&ccCategory=&verification=verification OK&expM=12&expY=15&csrf=10xcw2ut77e1t"
+            }
+         ],
+         "Coupons": [],
+         "Shipments": [         {
+            "ShipmentMethodName": "Strålfors",
+            "Status": "",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Stralfors"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "asa.moberg@outlook.com",
+         "OrderDate": "2015-09-08T12:20:07.353Z",
+         "OrderNumber": "AT3000582",
+         "OrderStatus": "Väntande",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 604.99,
+         "OrderTotalVat": 34.24,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Köp av Jojo-kort",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer": "null",
+         "ShippingAddress": "null",
+         "OrderItems": [         {
+            "Code": "JojoSommar",
+            "Name": "Jojo Sommar",
+            "CardNumber": "",
+            "Price": 604.995,
+            "Discount": 0,
+            "Quantity": 1,
+            "ExtraInfo": ""
+         }],
+         "Payments": [         {
+            "PaymentMethodCode": "DibsCreditCardAuth",
+            "PaymentMethodName": "Kreditkort",
+            "TransactionType": "Reservation",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 604.99,
+            "TransactionId": "335497458",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-08T12:20:07.853Z",
+               "Message": "IP: 192.168.55.14, user agent: Mozilla/4.0 (compatible; MSIE 7.0; PPP v5.1 (1,1,1); Windows NT 6.1; Trident/6.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; .NET4.0E; Tablet PC 2.0; MS-RTC LM 8; Skånetrafiken)"
+            },
+                        {
+               "Created": "2015-09-08T12:20:08.807Z",
+               "Message": "Order skapades på server: DKCMS-ACC4 "
+            },
+                        {
+               "Created": "2015-09-08T12:23:01.307Z",
+               "Message": "http://dkcmsacc.skanetrafiken.se/betalning/dibsreturn/index?order=AT3000582&s=1&reply=A&verifyId=335497458&currency=SEK&sum=604,99&referenceNo=AT3000582&MAC=F132035F89A7C9ABB5CF483FCED99FC6&ccPart=**** **** **** 0000&ccPrefix=471110&ccType=VISA&ccCategory=&verification=verification OK&expM=12&expY=15&csrf=-1w4mdm47khbny"
+            }
+         ],
+         "Coupons": [],
+         "Shipments": [         {
+            "ShipmentMethodName": "Strålfors",
+            "Status": "",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Stralfors"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "h.tingstrom@gmail.com",
+         "OrderDate": "2015-09-08T09:55:22.953Z",
+         "OrderNumber": "AT3000581",
+         "OrderStatus": "Klar",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 300,
+         "OrderTotalVat": 0,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Laddning",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer":          {
+            "Email": "h.tingstrom@gmail.com",
+            "AccountNumber": "null",
+            "AccountNumber2": "542",
+            "IsCompany": false,
+            "ExtraInfo": "",
+            "CustomerName": "Håkan Tingström"
+         },
+         "ShippingAddress": "null",
+         "OrderItems": [         {
+            "Code": "PrivateChargeJojo300",
+            "Name": "Laddning Jojo 300kr",
+            "CardNumber": "3320969226",
+            "Price": 300,
+            "Discount": 0,
+            "Quantity": 1,
+            "ExtraInfo": ""
+         }],
+         "Payments":          [
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Reservation",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 300,
+               "TransactionId": "335475632",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Dragning",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 300,
+               "TransactionId": "335475632",
+               "ExtraInfo": ""
+            }
+         ],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-08T09:55:23.203Z",
+               "Message": "IP: 192.168.55.14, user agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; .NET4.0E)"
+            },
+                        {
+               "Created": "2015-09-08T09:55:23.703Z",
+               "Message": "Order skapades på server: DKCMS-ACC1 "
+            },
+                        {
+               "Created": "2015-09-08T09:56:20.75Z",
+               "Message": "http://dkcmsacc.skanetrafiken.se/betalning/dibsreturn/index?order=AT3000581&s=1&reply=A&verifyId=335475632&currency=SEK&sum=300,00&referenceNo=AT3000581&MAC=C3B36DDED32DC7D1967580A7B24170D7&ccPart=**** **** **** 0000&ccPrefix=471110&ccType=VISA&ccCategory=&verification=verification OK&expM=09&expY=15&csrf=-1ajrq1xkydlfb"
+            },
+                        {
+               "Created": "2015-09-08T09:59:33.917Z",
+               "Message": "Ordern markerades som skickad. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-08T09:59:34.213Z",
+               "Message": "Statusen på ordern sattes till 'Klar'. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-08T09:59:34.353Z",
+               "Message": "Ordern färdigställdes i jobbet: CompleteChargeOrderJob. Kördes på server: DKCMS-ACC4"
+            }
+         ],
+         "Coupons": [],
+         "Shipments": [         {
+            "ShipmentMethodName": "Ingen leverans krävs",
+            "Status": "Skickad",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "DefaultShipping"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "napoleon@swipnet.com",
+         "OrderDate": "2015-09-08T08:25:06.323Z",
+         "OrderNumber": "AT3000580",
+         "OrderStatus": "Väntande",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 70,
+         "OrderTotalVat": 4,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Köp av Jojo-kort",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer": "null",
+         "ShippingAddress": "null",
+         "OrderItems":          [
+                        {
+               "Code": "PrivateCardJojoMini",
+               "Name": "Jojo Mini",
+               "CardNumber": "",
+               "Price": 50,
+               "Discount": 0,
+               "Quantity": 1,
+               "ExtraInfo": ""
+            },
+                        {
+               "Code": "CardFeeVariation",
+               "Name": "Kortavgift",
+               "CardNumber": "",
+               "Price": 20,
+               "Discount": 0,
+               "Quantity": 1,
+               "ExtraInfo": ""
+            }
+         ],
+         "Payments": [         {
+            "PaymentMethodCode": "DibsCreditCardAuth",
+            "PaymentMethodName": "Kreditkort",
+            "TransactionType": "Reservation",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 70,
+            "TransactionId": "335463641",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-08T08:25:06.653Z",
+               "Message": "IP: 192.168.55.14, user agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; .NET4.0E)"
+            },
+                        {
+               "Created": "2015-09-08T08:25:07.23Z",
+               "Message": "Order skapades på server: DKCMS-ACC1 "
+            },
+                        {
+               "Created": "2015-09-08T08:25:39.34Z",
+               "Message": "http://dkcmsacc.skanetrafiken.se/betalning/dibsreturn/index?order=AT3000580&s=1&reply=A&verifyId=335463641&currency=SEK&sum=70,00&referenceNo=AT3000580&MAC=65C1BDA0C8AAFE06F2210807E1499944&ccPart=**** **** **** 0000&ccPrefix=471110&ccType=VISA&ccCategory=&verification=verification OK&expM=09&expY=15&csrf=-1fc8b0xf7pg6h"
+            }
+         ],
+         "Coupons": [],
+         "Shipments": [         {
+            "ShipmentMethodName": "Strålfors",
+            "Status": "",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Stralfors"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "gustaf@wasa.com",
+         "OrderDate": "2015-09-08T08:18:05.033Z",
+         "OrderNumber": "AT3000579",
+         "OrderStatus": "Väntande",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 70,
+         "OrderTotalVat": 4,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Köp av Jojo-kort",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer": "null",
+         "ShippingAddress": "null",
+         "OrderItems":          [
+                        {
+               "Code": "PrivateCardJojoMini",
+               "Name": "Jojo Mini",
+               "CardNumber": "",
+               "Price": 50,
+               "Discount": 0,
+               "Quantity": 1,
+               "ExtraInfo": ""
+            },
+                        {
+               "Code": "CardFeeVariation",
+               "Name": "Kortavgift",
+               "CardNumber": "",
+               "Price": 20,
+               "Discount": 0,
+               "Quantity": 1,
+               "ExtraInfo": ""
+            }
+         ],
+         "Payments": [         {
+            "PaymentMethodCode": "DibsCreditCardAuth",
+            "PaymentMethodName": "Kreditkort",
+            "TransactionType": "Reservation",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 70,
+            "TransactionId": "335462977",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-08T08:18:05.237Z",
+               "Message": "IP: 192.168.55.14, user agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; .NET4.0E)"
+            },
+                        {
+               "Created": "2015-09-08T08:18:06.16Z",
+               "Message": "Order skapades på server: DKCMS-ACC1 "
+            },
+                        {
+               "Created": "2015-09-08T08:20:16.033Z",
+               "Message": "http://dkcmsacc.skanetrafiken.se/betalning/dibsreturn/index?order=AT3000579&s=1&reply=A&verifyId=335462977&currency=SEK&sum=70,00&referenceNo=AT3000579&MAC=988482D7CC7994C8B8A8413CB6B1CE15&ccPart=**** **** **** 0000&ccPrefix=471110&ccType=VISA&ccCategory=&verification=verification OK&expM=09&expY=15&csrf=-1rbgtu07owdt6"
+            }
+         ],
+         "Coupons": [],
+         "Shipments": [         {
+            "ShipmentMethodName": "Strålfors",
+            "Status": "",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Stralfors"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "per.lindblom@perlindblom.se",
+         "OrderDate": "2015-09-07T17:02:30.823Z",
+         "OrderNumber": "AT3000574",
+         "OrderStatus": "Klar",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 567,
+         "OrderTotalVat": 0,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Ersättning",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer": "null",
+         "ShippingAddress": "null",
+         "OrderItems": [],
+         "Payments": [         {
+            "PaymentMethodCode": "CompensationPayment",
+            "PaymentMethodName": "Ersättning",
+            "TransactionType": "Dragning",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 567,
+            "TransactionId": "",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-07T17:02:31.217Z",
+               "Message": "IP: 192.168.55.14, user agent: "
+            },
+                        {
+               "Created": "2015-09-07T17:02:27.293Z",
+               "Message": "Orderadress och e-post kopplades till kundvagn. E-post: per.lindblom@perlindblom.se. Kördes på server DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-07T17:02:28.45Z",
+               "Message": "Ersättning med värdet: 567.0000 för kortnummer  lades i kundvagn. Kördes på server DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-07T17:02:31.793Z",
+               "Message": "Order skapades på server: DKCMS-ACC2 "
+            },
+                        {
+               "Created": "2015-09-07T17:02:32.073Z",
+               "Message": "Order betalades helt utan DIBS"
+            },
+                        {
+               "Created": "2015-09-07T17:02:32.263Z",
+               "Message": "Ordern skapades på server DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T08:06:13.587Z",
+               "Message": "Startade färdigstälnning av värdekupongsorder. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:14.913Z",
+               "Message": "Kuponginlösen svarade med Success: True, och meddelandet: CouponCreated. Kördes på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:15.04Z",
+               "Message": "Värdekupong (Email) skapades med meddelandet: CouponCreated, och värdekupongskoden: 021763851782. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:15.04Z",
+               "Message": "Värdekupongskod: 021763851782"
+            },
+                        {
+               "Created": "2015-09-10T08:06:15.4Z",
+               "Message": "Ordern markerades som skickad. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:15.68Z",
+               "Message": "Statusen på ordern sattes till 'Klar'. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T08:06:15.867Z",
+               "Message": "Värdekupongsordern färdigställdes. Kördes på server: DKCMS-ACC4"
+            }
+         ],
+         "Coupons": [         {
+            "BlockedCardNumber": "",
+            "CouponCode": "021763851782",
+            "DateCreated": "2015-09-10T10:06:15.773+02:00",
+            "DateSent": "0001-01-01T00:00:00",
+            "IsSent": true,
+            "Receiver": "per.lindblom@perlindblom.se",
+            "ShippingMethod": "Via e-post",
+            "ExtraInfo": "null",
+            "CouponSum": 5.67E10,
+            "Attempts": 0,
+            "DateForLastAttempt": "0001-01-01T00:00:00"
+         }],
+         "Shipments": [         {
+            "ShipmentMethodName": "Kupong via e-post",
+            "Status": "Skickad",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Kupong via e-post"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "henric.froberg@gmail.com",
+         "OrderDate": "2015-09-07T10:03:29.88Z",
+         "OrderNumber": "AT3000573",
+         "OrderStatus": "Klar",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 54,
+         "OrderTotalVat": 0,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Ersättning",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer": "null",
+         "ShippingAddress": "null",
+         "OrderItems": [],
+         "Payments": [         {
+            "PaymentMethodCode": "CompensationPayment",
+            "PaymentMethodName": "Ersättning",
+            "TransactionType": "Dragning",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 54,
+            "TransactionId": "",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-07T10:03:30.13Z",
+               "Message": "IP: 192.168.55.14, user agent: "
+            },
+                        {
+               "Created": "2015-09-07T10:03:27.163Z",
+               "Message": "Orderadress och e-post kopplades till kundvagn. E-post: henric.froberg@gmail.com. Kördes på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-07T10:03:28.07Z",
+               "Message": "Ersättning med värdet: 54.0000 för kortnummer  lades i kundvagn. Kördes på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-07T10:03:30.663Z",
+               "Message": "Order skapades på server: DKCMS-ACC4 "
+            },
+                        {
+               "Created": "2015-09-07T10:03:30.973Z",
+               "Message": "Order betalades helt utan DIBS"
+            },
+                        {
+               "Created": "2015-09-07T10:03:31.053Z",
+               "Message": "Ordern skapades på server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T07:48:01.47Z",
+               "Message": "Startade färdigstälnning av värdekupongsorder. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T07:48:02.827Z",
+               "Message": "Kuponginlösen svarade med Success: True, och meddelandet: CouponCreated. Kördes på server DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T07:48:02.923Z",
+               "Message": "Värdekupong (Sms) skapades med meddelandet: CouponCreated, och värdekupongskoden: 42290733. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T07:48:02.923Z",
+               "Message": "Värdekupongskod: 42290733"
+            },
+                        {
+               "Created": "2015-09-10T07:48:03.28Z",
+               "Message": "Ordern markerades som skickad. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T07:48:03.5Z",
+               "Message": "Statusen på ordern sattes till 'Klar'. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T07:48:03.623Z",
+               "Message": "Värdekupongsordern färdigställdes. Kördes på server: DKCMS-ACC2"
+            }
+         ],
+         "Coupons": [         {
+            "BlockedCardNumber": "",
+            "CouponCode": "42290733",
+            "DateCreated": "2015-09-10T09:48:03.61+02:00",
+            "DateSent": "0001-01-01T00:00:00",
+            "IsSent": true,
+            "Receiver": "0725847101",
+            "ShippingMethod": "Via SMS",
+            "ExtraInfo": "null",
+            "CouponSum": 5.4E9,
+            "Attempts": 0,
+            "DateForLastAttempt": "0001-01-01T00:00:00"
+         }],
+         "Shipments": [         {
+            "ShipmentMethodName": "Kupong via SMS",
+            "Status": "Skickad",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Kupong via SMS"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "per.lindblom@perlindblom.se",
+         "OrderDate": "2015-09-02T11:57:37.477Z",
+         "OrderNumber": "AT3000572",
+         "OrderStatus": "Klar",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 46,
+         "OrderTotalVat": 0,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Ersättning",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer": "null",
+         "ShippingAddress": "null",
+         "OrderItems": [],
+         "Payments": [         {
+            "PaymentMethodCode": "CompensationPayment",
+            "PaymentMethodName": "Ersättning",
+            "TransactionType": "Dragning",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 46,
+            "TransactionId": "",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-02T11:57:37.663Z",
+               "Message": "Ip: 192.168.55.14, UserAgent "
+            },
+                        {
+               "Created": "2015-09-02T11:57:34.523Z",
+               "Message": "OrderAddess and email set to Cart, email: per.lindblom@perlindblom.se performed on server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T11:57:35.147Z",
+               "Message": "Lineitem added to cart with the amount SEK : with the cardNumber  performed on server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T11:57:38.35Z",
+               "Message": "Order was created on server: DKCMS-ACC4 "
+            },
+                        {
+               "Created": "2015-09-02T11:57:38.787Z",
+               "Message": "Order was fullypayed without dibs"
+            },
+                        {
+               "Created": "2015-09-02T11:57:39.1Z",
+               "Message": "OrderSuccessfully created performed on server DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-10T07:47:59.047Z",
+               "Message": "Startade färdigstälnning av värdekupongsorder. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T07:48:00.517Z",
+               "Message": "Kuponginlösen svarade med Success: True, och meddelandet: CouponCreated. Kördes på server DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T07:48:00.61Z",
+               "Message": "Värdekupong (Email) skapades med meddelandet: CouponCreated, och värdekupongskoden: 021763847282. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T07:48:00.61Z",
+               "Message": "Värdekupongskod: 021763847282"
+            },
+                        {
+               "Created": "2015-09-10T07:48:00.923Z",
+               "Message": "Ordern markerades som skickad. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T07:48:01.22Z",
+               "Message": "Statusen på ordern sattes till 'Klar'. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T07:48:01.373Z",
+               "Message": "Värdekupongsordern färdigställdes. Kördes på server: DKCMS-ACC2"
+            }
+         ],
+         "Coupons": [         {
+            "BlockedCardNumber": "",
+            "CouponCode": "021763847282",
+            "DateCreated": "2015-09-10T09:48:01.343+02:00",
+            "DateSent": "0001-01-01T00:00:00",
+            "IsSent": true,
+            "Receiver": "per.lindblom@perlindblom.se",
+            "ShippingMethod": "Via e-post",
+            "ExtraInfo": "null",
+            "CouponSum": 4.6E9,
+            "Attempts": 0,
+            "DateForLastAttempt": "0001-01-01T00:00:00"
+         }],
+         "Shipments": [         {
+            "ShipmentMethodName": "Kupong via e-post",
+            "Status": "Skickad",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Kupong via e-post"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "per.lindblom@perlindblom.se",
+         "OrderDate": "2015-09-02T11:54:42.2Z",
+         "OrderNumber": "AT3000571",
+         "OrderStatus": "Klar",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 44,
+         "OrderTotalVat": 0,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Ersättning",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer": "null",
+         "ShippingAddress": "null",
+         "OrderItems": [],
+         "Payments": [         {
+            "PaymentMethodCode": "CompensationPayment",
+            "PaymentMethodName": "Ersättning",
+            "TransactionType": "Dragning",
+            "Status": "Behandlad",
+            "GiftCardCode": "",
+            "Sum": 44,
+            "TransactionId": "",
+            "ExtraInfo": ""
+         }],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-02T11:54:42.4Z",
+               "Message": "Ip: 192.168.55.14, UserAgent "
+            },
+                        {
+               "Created": "2015-09-02T11:54:38.01Z",
+               "Message": "OrderAddess and email set to Cart, email: per.lindblom@perlindblom.se performed on server DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T11:54:39.183Z",
+               "Message": "Lineitem added to cart with the amount SEK : with the cardNumber  performed on server DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T11:54:42.933Z",
+               "Message": "Order was created on server: DKCMS-ACC1 "
+            },
+                        {
+               "Created": "2015-09-02T11:54:43.183Z",
+               "Message": "Order was fullypayed without dibs"
+            },
+                        {
+               "Created": "2015-09-02T11:54:43.26Z",
+               "Message": "OrderSuccessfully created performed on server DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-10T07:47:00.843Z",
+               "Message": "Startade färdigstälnning av värdekupongsorder. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T07:47:02.407Z",
+               "Message": "Kuponginlösen svarade med Success: True, och meddelandet: CouponCreated. Kördes på server DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T07:47:02.483Z",
+               "Message": "Värdekupong (Sms) skapades med meddelandet: CouponCreated, och värdekupongskoden: 62536498. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T07:47:02.483Z",
+               "Message": "Värdekupongskod: 62536498"
+            },
+                        {
+               "Created": "2015-09-10T07:47:02.797Z",
+               "Message": "Ordern markerades som skickad. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T07:47:03.313Z",
+               "Message": "Statusen på ordern sattes till 'Klar'. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-10T07:47:03.437Z",
+               "Message": "Värdekupongsordern färdigställdes. Kördes på server: DKCMS-ACC2"
+            }
+         ],
+         "Coupons": [         {
+            "BlockedCardNumber": "",
+            "CouponCode": "62536498",
+            "DateCreated": "2015-09-10T09:47:03.423+02:00",
+            "DateSent": "0001-01-01T00:00:00",
+            "IsSent": true,
+            "Receiver": "0736500510",
+            "ShippingMethod": "Via SMS",
+            "ExtraInfo": "null",
+            "CouponSum": 4.4E9,
+            "Attempts": 0,
+            "DateForLastAttempt": "0001-01-01T00:00:00"
+         }],
+         "Shipments": [         {
+            "ShipmentMethodName": "Kupong via SMS",
+            "Status": "Skickad",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "Kupong via SMS"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "dktestare@gmail.com",
+         "OrderDate": "2015-09-02T10:38:11.123Z",
+         "OrderNumber": "AT3000570",
+         "OrderStatus": "Klar",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 200,
+         "OrderTotalVat": 0,
+         "OrderCreditedTotal": 171,
+         "OrderType": "Laddning",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer": "null",
+         "ShippingAddress": "null",
+         "OrderItems": [         {
+            "Code": "PrivateChargeJojo200",
+            "Name": "Laddning Jojo 200kr",
+            "CardNumber": "2469198439",
+            "Price": 200,
+            "Discount": 0,
+            "Quantity": 1,
+            "ExtraInfo": ""
+         }],
+         "Payments":          [
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Reservation",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 200,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Dragning",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 200,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 10,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 10,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 10,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 10,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 10,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 10,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 10,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 1,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 20,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Kreditering",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 5,
+               "TransactionId": "334427855",
+               "ExtraInfo": ""
+            }
+         ],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-02T10:38:11.403Z",
+               "Message": "Ip: 192.168.55.14, UserAgent Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.3; WOW64; Trident/7.0; .NET4.0E; .NET4.0C; .NET CLR 3.5.30729; .NET CLR 2.0.50727; .NET CLR 3.0.30729; InfoPath.3)"
+            },
+                        {
+               "Created": "2015-09-02T10:38:12.357Z",
+               "Message": "Order was created on server: DKCMS-ACC3 "
+            },
+                        {
+               "Created": "2015-09-02T10:38:41.997Z",
+               "Message": "https://dkcmsacc.skanetrafiken.se/betalning/dibsreturn/index?order=AT3000570&s=1&reply=A&verifyId=334427855&currency=SEK&sum=200,00&referenceNo=AT3000570&MAC=6B7F891F6DE288635C3BF7417D1B9085&ccPart=**** **** **** 0000&ccPrefix=471110&ccType=VISA&ccCategory=&verification=verification OK&expM=09&expY=15&csrf=u9r6bj9u6aa1"
+            },
+                        {
+               "Created": "2015-09-02T10:39:00.383Z",
+               "Message": "CompleteShipment  perfomed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:39:00.51Z",
+               "Message": "Status on order was set to 'Completed' perfomed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:39:00.917Z",
+               "Message": "The order was completed in CompleteChargeOrderJob. perfomed on Server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:40:13.4Z",
+               "Message": "Credit: Credit called, sum: 10, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:40:13.447Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:40:13.493Z",
+               "Message": "Credit: Return form added to order, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:40:13.51Z",
+               "Message": "Credit: Return shipment added, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:40:13.54Z",
+               "Message": "Credit: LineItem added to return order : Laddning Jojo 200kr, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:40:13.727Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:40:13.743Z",
+               "Message": "Credit: Added credit payment on sum 10, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:40:16.01Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:40:16.057Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:42:27.667Z",
+               "Message": "Credit: Credit called, sum: 10, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:42:27.773Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:42:27.867Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:42:27.883Z",
+               "Message": "Credit: Added credit payment on sum 10, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:42:29.447Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T10:42:29.477Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T12:16:21.473Z",
+               "Message": "Credit: Credit called, sum: 10, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T12:16:21.647Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T12:16:21.803Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T12:16:21.817Z",
+               "Message": "Credit: Added credit payment on sum 10, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T12:16:24.443Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T12:16:24.613Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T12:27:54.65Z",
+               "Message": "Credit: Credit called, sum: 10, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T12:27:54.68Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T12:27:54.76Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T12:27:54.76Z",
+               "Message": "Credit: Added credit payment on sum 10, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T12:27:56.587Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T12:27:56.633Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T12:31:35.92Z",
+               "Message": "Credit: Credit called, sum: 10, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T12:31:35.967Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T12:31:36.03Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T12:31:36.03Z",
+               "Message": "Credit: Added credit payment on sum 10, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T12:31:37.797Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T12:31:37.81Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T12:58:47.493Z",
+               "Message": "Credit: Credit called, sum: 10, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T12:58:47.54Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T12:58:47.6Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T12:58:47.6Z",
+               "Message": "Credit: Added credit payment on sum 10, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T12:58:49.523Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T12:58:49.553Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T13:00:01.773Z",
+               "Message": "Credit: Credit called, sum: 10, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T13:00:01.943Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T13:00:02.383Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T13:00:02.397Z",
+               "Message": "Credit: Added credit payment on sum 10, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T13:00:03.93Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T13:00:03.96Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-02T13:21:01.737Z",
+               "Message": "Credit: Credit called, sum: 5, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:21:01.77Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:21:01.877Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:21:01.877Z",
+               "Message": "Credit: Added credit payment on sum 5, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:21:04.05Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:21:04.097Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:28:08.073Z",
+               "Message": "Credit: Credit called, sum: 5, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:28:08.12Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:28:08.557Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:28:08.917Z",
+               "Message": "Credit: Added credit payment on sum 5, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:28:11.747Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:28:11.793Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:59:53.963Z",
+               "Message": "Credit: Credit called, sum: 5, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:59:53.997Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:59:54.073Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:59:54.073Z",
+               "Message": "Credit: Added credit payment on sum 5, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:59:56.15Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T13:59:56.197Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-02T14:16:57.98Z",
+               "Message": "Credit: Credit called, sum: 1, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-02T14:16:58.06Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-02T14:16:58.387Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-02T14:16:58.513Z",
+               "Message": "Credit: Added credit payment on sum 1, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-02T14:17:03.213Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-02T14:17:03.31Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-02T14:23:36.977Z",
+               "Message": "Credit: Credit called, sum: 5, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-02T14:23:37.007Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-02T14:23:37.15Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-02T14:23:37.163Z",
+               "Message": "Credit: Added credit payment on sum 5, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-02T14:23:39.837Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-02T14:23:39.883Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-03T08:40:50.453Z",
+               "Message": "Credit: Credit called, sum: 5, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T08:40:50.487Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T08:40:50.563Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T08:40:50.563Z",
+               "Message": "Credit: Added credit payment on sum 5, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T08:40:53.047Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T08:40:53.093Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T08:49:07.127Z",
+               "Message": "Credit: Credit called, sum: 5, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-03T08:49:07.157Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-03T08:49:07.267Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-03T08:49:07.267Z",
+               "Message": "Credit: Added credit payment on sum 5, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-03T08:49:09.61Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-03T08:49:09.657Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-03T09:16:03.013Z",
+               "Message": "Credit: Credit called, sum: 5, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T09:16:03.043Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T09:16:03.123Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T09:16:03.123Z",
+               "Message": "Credit: Added credit payment on sum 5, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T09:16:05.327Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T09:16:05.387Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T09:45:41.357Z",
+               "Message": "Credit: Credit called, sum: 5, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T09:45:41.39Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T09:45:41.453Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T09:45:41.453Z",
+               "Message": "Credit: Added credit payment on sum 5, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T09:45:43.75Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T09:45:43.797Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-03T09:51:01.48Z",
+               "Message": "Credit: Credit called, sum: 5, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-03T09:51:01.963Z",
+               "Message": "Credit: Locking orderform, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-03T09:51:02.51Z",
+               "Message": "Credit: Payment to credit from : Kreditkort, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-03T09:51:02.51Z",
+               "Message": "Credit: Added credit payment on sum 5, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-03T09:51:06.963Z",
+               "Message": "Credit: Credit complete, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-03T09:51:07.057Z",
+               "Message": "Credit: Unlocking order, performed on server: DKCMS-ACC3"
+            },
+                        {
+               "Created": "2015-09-08T11:26:56.197Z",
+               "Message": "Kredit: Credit called, sum: 5. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-08T11:26:56.227Z",
+               "Message": "Kredit: Locking orderform. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-08T11:26:56.29Z",
+               "Message": "Kredit: Payment to credit from : Kreditkort. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-08T11:26:56.307Z",
+               "Message": "Kredit: Added credit payment on sum 5. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-08T11:26:58.947Z",
+               "Message": "Kredit: Credit complete. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-08T11:26:59.023Z",
+               "Message": "Kredit: Unlocking order. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-08T14:09:27.027Z",
+               "Message": "Kredit: Credit called, sum: 5. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-08T14:09:27.137Z",
+               "Message": "Kredit: Locking orderform. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-08T14:09:27.243Z",
+               "Message": "Kredit: Payment to credit from : Kreditkort. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-08T14:09:27.26Z",
+               "Message": "Kredit: Added credit payment on sum 5. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-08T14:09:30.633Z",
+               "Message": "Kredit: Credit complete. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-08T14:09:30.713Z",
+               "Message": "Kredit: Unlocking order. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-09T07:19:27.263Z",
+               "Message": "Kredit: Credit called, sum: 5. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-09T07:19:27.31Z",
+               "Message": "Kredit: Locking orderform. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-09T07:19:27.56Z",
+               "Message": "Kredit: Payment to credit from : Kreditkort. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-09T07:19:27.577Z",
+               "Message": "Kredit: Added credit payment on sum 5. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-09T07:19:30.7Z",
+               "Message": "Kredit: Credit complete. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-09T07:19:30.78Z",
+               "Message": "Kredit: Unlocking order. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-09T09:16:56.22Z",
+               "Message": "Kredit: Credit called, sum: 5. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-09T09:16:56.267Z",
+               "Message": "Kredit: Locking orderform. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-09T09:16:56.503Z",
+               "Message": "Kredit: Payment to credit from : Kreditkort. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-09T09:16:56.517Z",
+               "Message": "Kredit: Added credit payment on sum 5. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-09T09:16:59.8Z",
+               "Message": "Kredit: Credit complete. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-09T09:16:59.847Z",
+               "Message": "Kredit: Unlocking order. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-09T09:18:47.843Z",
+               "Message": "Kredit: Credit called, sum: 5. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-09T09:18:47.937Z",
+               "Message": "Kredit: Locking orderform. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-09T09:18:48.327Z",
+               "Message": "Kredit: Payment to credit from : Kreditkort. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-09T09:18:48.36Z",
+               "Message": "Kredit: Added credit payment on sum 5. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-09T09:18:54.14Z",
+               "Message": "Kredit: Credit complete. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-09T09:18:54.25Z",
+               "Message": "Kredit: Unlocking order. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-09T11:29:45.503Z",
+               "Message": "Kredit: Credit called, sum: 5. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-09T11:29:45.597Z",
+               "Message": "Kredit: Locking orderform. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-09T11:29:45.863Z",
+               "Message": "Kredit: Payment to credit from : Kreditkort. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-09T11:29:45.88Z",
+               "Message": "Kredit: Added credit payment on sum 5. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-09T11:29:49.77Z",
+               "Message": "Kredit: Credit complete. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-09T11:29:49.817Z",
+               "Message": "Kredit: Unlocking order. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-09T11:32:59.223Z",
+               "Message": "Kredit: Credit called, sum: 20. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-09T11:32:59.317Z",
+               "Message": "Kredit: Locking orderform. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-09T11:32:59.413Z",
+               "Message": "Kredit: Payment to credit from : Kreditkort. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-09T11:32:59.413Z",
+               "Message": "Kredit: Added credit payment on sum 20. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-09T11:33:03.113Z",
+               "Message": "Kredit: Credit complete. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-09T11:33:03.163Z",
+               "Message": "Kredit: Unlocking order. Kördes på server: DKCMS-ACC1"
+            },
+                        {
+               "Created": "2015-09-09T11:34:04.957Z",
+               "Message": "Kredit: Credit called, sum: 100. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-09T11:34:05.05Z",
+               "Message": "Kredit: Locking orderform. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-09T11:34:05.097Z",
+               "Message": "Kreditering misslyckades: Du kan inte kreditera denna summa på ordern. Betalmetodens summa: 200.0000. Redan krediterad summa: 166.0000. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-09T11:34:05.94Z",
+               "Message": "Kredit: Unlocking order. Kördes på server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-17T11:54:51.92Z",
+               "Message": "Kredit: Credit called, sum: 5. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-17T11:54:52.077Z",
+               "Message": "Kredit: Locking orderform. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-17T11:54:52.153Z",
+               "Message": "Kredit: Payment to credit from : Kreditkort. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-17T11:54:52.153Z",
+               "Message": "Kredit: Added credit payment on sum 5. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-17T11:54:55.233Z",
+               "Message": "Kredit: Credit complete. Kördes på server: DKCMS-ACC4"
+            },
+                        {
+               "Created": "2015-09-17T11:54:55.28Z",
+               "Message": "Kredit: Unlocking order. Kördes på server: DKCMS-ACC4"
+            }
+         ],
+         "Coupons": [],
+         "Shipments": [         {
+            "ShipmentMethodName": "Ingen leverans krävs",
+            "Status": "Skickad",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "DefaultShipping"
+         }]
+      },
+            {
+         "OrderConfirmationEmail": "anders.jildestrand@perlindblom.se",
+         "OrderDate": "2015-09-02T10:24:05.377Z",
+         "OrderNumber": "AT3000569",
+         "OrderStatus": "Klar",
+         "System": "Används ej ännu",
+         "SystemExtraInfo": "Används ej ännu",
+         "OrderTotal": 200,
+         "OrderTotalVat": 0,
+         "OrderCreditedTotal": 0,
+         "OrderType": "Laddning",
+         "CampaignCode": "null",
+         "ExtraInfo": "",
+         "Customer": "null",
+         "ShippingAddress": "null",
+         "OrderItems": [         {
+            "Code": "PrivateChargeJojo200",
+            "Name": "Laddning Jojo 200kr",
+            "CardNumber": "2469196439",
+            "Price": 200,
+            "Discount": 0,
+            "Quantity": 1,
+            "ExtraInfo": ""
+         }],
+         "Payments":          [
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Reservation",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 200,
+               "TransactionId": "334425884",
+               "ExtraInfo": ""
+            },
+                        {
+               "PaymentMethodCode": "DibsCreditCardAuth",
+               "PaymentMethodName": "Kreditkort",
+               "TransactionType": "Dragning",
+               "Status": "Behandlad",
+               "GiftCardCode": "",
+               "Sum": 200,
+               "TransactionId": "334425884",
+               "ExtraInfo": ""
+            }
+         ],
+         "OrderNotes":          [
+                        {
+               "Created": "2015-09-02T10:24:05.58Z",
+               "Message": "Ip: 192.168.55.14, UserAgent Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.3; WOW64; Trident/7.0; .NET4.0E; .NET4.0C; .NET CLR 3.5.30729; .NET CLR 2.0.50727; .NET CLR 3.0.30729; InfoPath.3)"
+            },
+                        {
+               "Created": "2015-09-02T10:24:06.61Z",
+               "Message": "Order was created on server: DKCMS-ACC2 "
+            },
+                        {
+               "Created": "2015-09-02T10:25:13.703Z",
+               "Message": "https://dkcmsacc.skanetrafiken.se/betalning/dibsreturn/index?order=AT3000569&s=1&reply=A&verifyId=334425884&currency=SEK&sum=200,00&referenceNo=AT3000569&MAC=38868D3154CB7BC257638CD8A900A358&ccPart=**** **** **** 0000&ccPrefix=471110&ccType=VISA&ccCategory=&verification=verification OK&expM=09&expY=15&csrf=-12nxpfejin1nl"
+            },
+                        {
+               "Created": "2015-09-02T10:29:02.53Z",
+               "Message": "CompleteShipment  perfomed on server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-02T10:29:02.623Z",
+               "Message": "Status on order was set to 'Completed' perfomed on server: DKCMS-ACC2"
+            },
+                        {
+               "Created": "2015-09-02T10:29:02.827Z",
+               "Message": "The order was completed in CompleteChargeOrderJob. perfomed on Server: DKCMS-ACC2"
+            }
+         ],
+         "Coupons": [],
+         "Shipments": [         {
+            "ShipmentMethodName": "Ingen leverans krävs",
+            "Status": "Skickad",
+            "ExtraInfo": "",
+            "ShipmentMethodCode": "DefaultShipping"
+         }]
+      }
+   ],
+   "ErrorMessage": "null",
+   "StatusCode": 200
+}

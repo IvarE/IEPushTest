@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/OrganisationalDataService" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/OrganisationalDataService">
+  <xs:element name="GetContractorInfo">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="atDate" type="xs:dateTime"/>
+        <xs:element minOccurs="0" name="forTransportAuthorityGid" nillable="true" type="xs:string"/>
+        <xs:element minOccurs="0" name="withServiceFunctionCode" nillable="true" type="xs:string"/>
+        <xs:element minOccurs="0" name="includeOperatedLinesTable" nillable="true" type="xs:boolean"/>
+        <xs:element minOccurs="0" name="useLineDisplayOrderVariant" type="xs:unsignedByte"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetContractorsWithOperatedLines">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="fromDate" type="xs:dateTime"/>
+        <xs:element minOccurs="0" name="uotoDate" type="xs:dateTime"/>
+        <xs:element minOccurs="0" name="forTransportAuthorityGid" nillable="true" type="xs:string"/>
+        <xs:element minOccurs="0" name="withServiceFunctionCode" nillable="true" type="xs:string"/>
+        <xs:element minOccurs="0" name="includeOperatedLinesTable" nillable="true" type="xs:boolean"/>
+        <xs:element minOccurs="0" name="useLineDisplayOrderVariant" type="xs:unsignedByte"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetServiceFunctionForLine">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="atDate" type="xs:dateTime"/>
+        <xs:element minOccurs="0" name="forLineGid" nillable="true" type="xs:string"/>
+        <xs:element minOccurs="0" name="withServiceFunctionCode" nillable="true" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetContractsWithLines">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="fromDate" type="xs:dateTime"/>
+        <xs:element minOccurs="0" name="uptoDate" type="xs:dateTime"/>
+        <xs:element minOccurs="0" name="OnlyWithinTransportAuthorityGid" nillable="true" type="xs:string"/>
+        <xs:element minOccurs="0" name="forLineGids" nillable="true" type="xs:string"/>
+        <xs:element minOccurs="0" name="includeLinesInContractTable" nillable="true" type="xs:boolean"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

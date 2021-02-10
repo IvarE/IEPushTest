@@ -1,0 +1,556 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3E5E63EB-B322-4F99-93E8-7F62EB88E1EB}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Skanetrafiken.Crm</RootNamespace>
+    <AssemblyName>Skanetrafiken.WebApi</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\Skanetrafiken.Crm\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="jose-jwt, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\jose-jwt.2.2.0\lib\net40\jose-jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.CrmSdk.CoreAssemblies.8.1.0\lib\net45\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.IdentityModel.6.1.7600.16394\lib\net35\Microsoft.IdentityModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=2.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.2.22.302111727\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms, Version=2.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.2.22.302111727\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.CrmSdk.CoreAssemblies.8.1.0\lib\net45\Microsoft.Xrm.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk.Deployment, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.CrmSdk.Deployment.8.1.0\lib\net45\Microsoft.Xrm.Sdk.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk.Workflow, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.CrmSdk.Workflow.8.1.0\lib\net45\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Tooling.Connector, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.8.1.0.1\lib\net45\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Swashbuckle.Core.5.4.0\lib\net40\Swashbuckle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Workflow.Activities" />
+    <Reference Include="System.Workflow.ComponentModel" />
+    <Reference Include="System.Workflow.Runtime" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Global.asax" />
+    <Content Include="Resources\BIFF-call result1.xml" />
+    <Content Include="Resources\BIFF-call result2.xml" />
+    <Content Include="Resources\BIFF-call result3.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Resources\RedeemedValueCode.json" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\OCTest.Kassagirot\configuration91.svcinfo" />
+    <None Include="Service References\OCTest.Kassagirot\configuration.svcinfo" />
+    <None Include="Service References\OCTest.Kassagirot\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Resources\ValueCodeIncoming1.xml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Skanetrafiken.Crm\ApiHelper.cs">
+      <Link>ApiHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\ColumnBlockSchemas\CustomerInfoBlock.cs">
+      <Link>Entities\CustomerInfoBlock.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\ColumnBlockSchemas\NotificationInfoBlock.cs">
+      <Link>Entities\NotificationInfoBlock.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\ColumnBlockSchemas\StatusBlock.cs">
+      <Link>Entities\StatusBlock.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\CountryUtility.cs">
+      <Link>CountryUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\CustomerUtility.cs">
+      <Link>CustomerUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\AccountEntity.cs">
+      <Link>Entities\AccountEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ActivityPartyEntity.cs">
+      <Link>Entities\ActivityPartyEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CampaignEntity.cs">
+      <Link>Entities\CampaignEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CampaignItemEntity.cs">
+      <Link>Entities\CampaignItemEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CampaignResponseEntity.cs">
+      <Link>Entities\CampaignResponseEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CgiCategoryDetailEntity.cs">
+      <Link>Entities\CgiCategoryDetailEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CgiSettingEntity.cs">
+      <Link>Entities\CgiSettingEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CompanyRoleEntity.cs">
+      <Link>Entities\CompanyRoleEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ContactEntity.cs">
+      <Link>Entities\ContactEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CountryEntity.cs">
+      <Link>Entities\CountryEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\CustomerAddressEntity.cs">
+      <Link>Entities\CustomerAddressEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\DeltabatchQueueEntity.cs">
+      <Link>Entities\DeltabatchQueueEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\EmailEntity.cs">
+      <Link>Entities\EmailEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\EmailTemplateProxyEntity.cs">
+      <Link>Entities\EmailTemplateProxyEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\IncidentEntity.cs">
+      <Link>Entities\IncidentEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\LeadEntity.cs">
+      <Link>Entities\LeadEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\NotifyMKLEntity.cs">
+      <Link>Entities\NotifyMKLEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\OrderStatusEntity.cs">
+      <Link>Entities\OrderStatusEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ProcessStageEntity.cs">
+      <Link>Entities\ProcessStageEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ProductEntity.cs">
+      <Link>Entities\ProductEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\RefundAccountEntity.cs">
+      <Link>Entities\RefundAccountEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\RefundEntity.cs">
+      <Link>Entities\RefundEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\RefundResponsibleEntity.cs">
+      <Link>Entities\RefundResponsibleEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\RefundTypeEntity.cs">
+      <Link>Entities\RefundTypeEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ReimbursementFormEntity.cs">
+      <Link>Entities\ReimbursementFormEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ReturnMessageWebApiEntity.cs">
+      <Link>Entities\ReturnMessageWebApiEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\Role.cs">
+      <Link>Entities\Role.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\SalesOrderEntity.cs">
+      <Link>Entities\SalesOrderEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\SalesOrderLineEntity.cs">
+      <Link>Entities\SalesOrderLineEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\SalesOrderLineTravellerEntity.cs">
+      <Link>Entities\SalesOrderLineTravellerEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\SentTextMessageEntity.cs">
+      <Link>Entities\SentTextMessageEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\SingaporeTicketEntity.cs">
+      <Link>Entities\SingaporeTicketEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\SkaKortEntity.cs">
+      <Link>Entities\SkaKortEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\SystemUserEntity.cs">
+      <Link>Entities\SystemUserEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\SystemUserRoles.cs">
+      <Link>Entities\SystemUserRoles.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\TemplateEntity.cs">
+      <Link>Entities\TemplateEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\TextMessageEntity.cs">
+      <Link>Entities\TextMessageEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\TextMessageTemplateEntity.cs">
+      <Link>Entities\TextMessageTemplateEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\TravelCardEntity.cs">
+      <Link>Entities\TravelCardEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\UnitEntity.cs">
+      <Link>Entities\UnitEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\UnitGroupEntity.cs">
+      <Link>Entities\UnitGroupEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\UserSettingsEntity.cs">
+      <Link>Entities\UserSettingsEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ValueCodeApprovalEntity.cs">
+      <Link>Entities\ValueCodeApprovalEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ValueCodeEntity.cs">
+      <Link>Entities\ValueCodeEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ValueCodeTemplateEntity.cs">
+      <Link>Entities\ValueCodeTemplateEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ValueCodeTransactionEntity.cs">
+      <Link>Entities\ValueCodeTransactionEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\GeneratedEntities.cs">
+      <Link>GeneratedEntities.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Identity.cs">
+      <Link>Identity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\IdentityContract.cs">
+      <Link>IdentityContract.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\TextMessageSender\BosbecAPIHandler.cs">
+      <Link>TextMessageSender\BosbecAPIHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\TextMessageSender\MultipleTextMessage.cs">
+      <Link>TextMessageSender\MultipleTextMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\TextMessageSender\SingleTextMessage.cs">
+      <Link>TextMessageSender\SingleTextMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\TextMessageSender\TextMessageToSend.cs">
+      <Link>TextMessageSender\TextMessageToSend.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\ValueCodes\ValueCodeHandler.cs">
+      <Link>ValueCodes\ValueCodeHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\XrmHelper.cs">
+      <Link>XrmHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\XrmRetrieveHelper.cs">
+      <Link>XrmRetrieveHelper.cs</Link>
+    </Compile>
+    <Compile Include="App_Start\SwaggerConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="ConnectionCacheManager.cs" />
+    <Compile Include="Controllers\AccountsController.cs" />
+    <Compile Include="Controllers\TravelCardController.cs" />
+    <Compile Include="Controllers\ValueCodeController.cs" />
+    <Compile Include="Controllers\PingConnectionController.cs" />
+    <Compile Include="Controllers\SalesOrdersController.cs" />
+    <Compile Include="Controllers\PingController.cs" />
+    <Compile Include="Controllers\NotificationsController.cs" />
+    <Compile Include="Controllers\WrapperController.cs" />
+    <Compile Include="CrmPlusControlCampaign.cs" />
+    <Compile Include="AccountUtility.cs" />
+    <Compile Include="CrmPlusUtility.cs" />
+    <Compile Include="Controllers\ContactsController.cs" />
+    <Compile Include="CrmPlusControl.cs" />
+    <Compile Include="Controllers\LeadsController.cs" />
+    <Compile Include="CrmConnection.cs" />
+    <Compile Include="EntityExtensionMethods.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Help.cs" />
+    <Compile Include="Models\AddressBlock.cs" />
+    <Compile Include="Models\BlockTravelCardReasonCode.cs" />
+    <Compile Include="Models\CardDetails.cs" />
+    <Compile Include="Models\AccountInfo.cs" />
+    <Compile Include="Models\SalesOrderInfo.cs" />
+    <Compile Include="Models\ValueCodeCreation.cs" />
+    <Compile Include="Models\ValueCodePushMessageResult.cs" />
+    <Compile Include="Plugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\OCTest.Kassagirot\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceProvider.cs" />
+    <Compile Include="TracingService.cs" />
+    <Compile Include="WebClientX.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Content Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="log4net.Dev.config">
+      <DependentUpon>log4net.config</DependentUpon>
+    </None>
+    <None Include="log4net.Test.config">
+      <DependentUpon>log4net.config</DependentUpon>
+    </None>
+    <None Include="log4net.Acceptans.config">
+      <DependentUpon>log4net.config</DependentUpon>
+    </None>
+    <None Include="log4net.Produktion.config">
+      <DependentUpon>log4net.config</DependentUpon>
+    </None>
+    <None Include="Properties\PublishProfiles\Skanetrafiken.WebApi.Acc.pubxml" />
+    <None Include="Properties\PublishProfiles\Skanetrafiken.WebApi.Dev.pubxml" />
+    <None Include="Properties\PublishProfiles\Skanetrafiken.WebApi.Prod.pubxml" />
+    <None Include="Properties\PublishProfiles\Skanetrafiken.WebApi.Test.pubxml" />
+    <None Include="Properties\PublishProfiles\Skanetrafiken.WebApi.Uppg2016.pubxml" />
+    <None Include="Resources\Settings.Designer.cs" />
+    <None Include="Service References\OCTest.Kassagirot\CouponCreatorService.wsdl" />
+    <Content Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.batchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.couponForPrintingResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.createCouponForPrintingResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.createMobileCouponResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.createUniqueCouponBatchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.createUniqueCouponResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.createUniqueCouponWithEanCodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.getHeartbeatResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.singleResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Web.Acceptans.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web.Produktion.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Test.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Web.Dev.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Start\App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\OCTest.Kassagirot\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;DEV</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Skanetrafiken.WebApi.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;TEST</DefineConstants>
+    <DocumentationFile>bin\Skanetrafiken.WebApi.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Acceptans|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;ACCEPTANS</DefineConstants>
+    <Optimize>false</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Produktion|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;PRODUKTION</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:37909/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Web\Microsoft.Web.Publishing.Tasks.dll" />
+  <Target Name="AfterBuild" Condition="Exists('log4net.$(Configuration).config')">
+    <!--Generate transformed config in the output directory-->
+    <TransformXml Source="log4net.config" Destination="$(OutputPath)log4net.config" Transform="log4net.$(Configuration).config" />
+  </Target>
+  <Target Name="log4net_config_AfterBuild" AfterTargets="AfterBuild" Condition="Exists('log4net.$(Configuration).config')">
+    <TransformXml Source="log4net.config" Destination="$(OutputPath)log4net.config" Transform="log4net.$(Configuration).config" />
+  </Target>
+</Project>

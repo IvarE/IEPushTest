@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="GetContractorsWithOperatedLinesResponse" targetNamespace="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/OrganisationalDataService" xmlns:mstns="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/OrganisationalDataService" xmlns="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/OrganisationalDataService" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified" xmlns:app1="urn:schemas-microsoft-com:xml-diffgram-v1" xmlns:app2="urn:schemas-microsoft-com:xml-msdata">
+  <xs:import namespace="urn:schemas-microsoft-com:xml-diffgram-v1" schemaLocation="GetContractorsWithOperatedLinesResponse_app1.xsd" />
+  <xs:import namespace="urn:schemas-microsoft-com:xml-msdata" schemaLocation="GetContractorsWithOperatedLinesResponse_app2.xsd" />
+  <xs:element name="GetContractorsWithOperatedLinesResponse" app2:IsDataSet="true" app2:Locale="en-US">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="GetContractorsWithOperatedLinesResult">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:any processContents="skip"/>
+              <xs:element ref="app1:diffgram" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

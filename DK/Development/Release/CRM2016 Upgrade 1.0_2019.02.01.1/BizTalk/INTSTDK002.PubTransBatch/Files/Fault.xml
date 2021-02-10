@@ -1,0 +1,16 @@
+﻿<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+   <s:Body>
+      <s:Fault>
+         <faultcode>s:Client</faultcode>
+         <faultstring xml:lang="sv-SE">The parameter 'fromDate' is not optional.</faultstring>
+         <detail>
+            <ClientFaultDetail xmlns="http://schemas.datacontract.org/2004/07/Hogia.PubTrans.WebServices" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+               <Message xmlns="http://schemas.pubtrans.hogia.se/webservices/2008/11">The parameter 'fromDate' is not optional.</Message>
+               <MethodName xmlns="http://schemas.pubtrans.hogia.se/webservices/2008/11">GetContractorInfoMethod</MethodName>
+               <Parameters i:nil="true" xmlns="http://schemas.pubtrans.hogia.se/webservices/2008/11"/>
+               <Reason xmlns="http://schemas.pubtrans.hogia.se/webservices/2008/11">Client fault: {0}</Reason>
+            </ClientFaultDetail>
+         </detail>
+      </s:Fault>
+   </s:Body>
+</s:Envelope>

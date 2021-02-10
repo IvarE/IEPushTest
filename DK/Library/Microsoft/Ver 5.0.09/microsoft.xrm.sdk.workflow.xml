@@ -1,0 +1,868 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+	<assembly>
+		<name>Microsoft.Xrm.Sdk.Workflow</name>
+	</assembly>
+	<members>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType">
+			<summary>Contains values for the property types supported by workflows.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.Boolean">
+			<summary>Specifies a Boolean property.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.DateTime">
+			<summary>Specifies a DateTime property.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.Decimal">
+			<summary>Specifies a Decimal property.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.EntityReference">
+			<summary>Specifies an <see cref="T:Microsoft.Xrm.Sdk.EntityReference"></see> property.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.Float">
+			<summary>Specifies a Float property.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.Guid">
+			<summary>Specifies a Guid property.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.Integer">
+			<summary>Specifies an Integer property.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.Money">
+			<summary>Specifies a Money property.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.OptionSetValue">
+			<summary>Specifies an <see cref="T:Microsoft.Xrm.Sdk.OptionSetValue"></see> property.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.PartyList">
+			<summary>Specifies a <see cref="F:Microsoft.Xrm.Sdk.Metadata.AttributeTypeCode.PartyList"></see> property.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.String">
+			<summary>Specifies a String property.</summary>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan">
+			<summary>Represents a time interval. </summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.#ctor(System.Int32,System.Int32,System.Int32)">
+			<summary>Initializes a new instance of the XrmTimeSpan class setting the days, hours and minutes.</summary>
+			<param name="hours">Specifies the hours for the time span.</param>
+			<param name="minutes">Specifies the minutes for the time span.</param>
+			<param name="days">Specifies the days for the time span.</param>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+			<summary>Initializes a new instance of the XrmTimeSpan class setting the years, months, days, hours and minutes.</summary>
+			<param name="days">Specifies the days for the time span.</param>
+			<param name="hours">Specifies the hours for the time span.</param>
+			<param name="years">Specifies the years for the time span.</param>
+			<param name="months">Specifies the months for the time span.</param>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.#ctor(System.TimeSpan)">
+			<summary>Initializes a new instance of the CrmTimeSpan class setting the time span.</summary>
+			<param name="value">Specifies the time span.</param>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.Zero">
+			<summary>Represents the zero XrmTimeSpan value. This field is read-only.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.Add(System.DateTime)">
+			<summary>Adds the specified CrmTimeSpan to this instance.</summary>
+			<returns>Returns <see cref="T:System.DateTime"></see>.</returns>
+			<param name="value">A date/time value to add to the current instance value.</param>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.CreateXrmTimeSpan(Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan)">
+			<summary>Creates an instance of a XrmTimeSpan class setting the time span members.</summary>
+			<returns>Returns <see cref="T:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan"></see>.</returns>
+			<param name="cts">Specifies the time span.</param>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.CreateXrmTimeSpan(System.Int32,System.Int32,System.Int32)">
+			<summary>Creates an instance of a XrmTimeSpan class setting the days, hours and minutes.</summary>
+			<returns>Returns <see cref="T:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan"></see>.</returns>
+			<param name="hours">Specifies the hours for the time span.</param>
+			<param name="minutes">Specifies the minutes for the time span.</param>
+			<param name="days">Specifies the days for the time span.</param>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.CreateXrmTimeSpan(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+			<summary>Creates an instance of a XrmTimeSpan class setting the years, months, days, hours and minutes.</summary>
+			<returns>Returns <see cref="T:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan"></see>.</returns>
+			<param name="minutes">Specifies the minutes for the time span.</param>
+			<param name="days">Specifies the days for the time span.</param>
+			<param name="hours">Specifies the hours for the time span.</param>
+			<param name="years">Specifies the years for the time span.</param>
+			<param name="months">Specifies the months for the time span.</param>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.Equals(Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan)">
+			<summary>Returns a value indicating whether this instance is equal to a specified XrmTimeSpan object.</summary>
+			<returns>Returns <see cref="T:System.Boolean"></see>.</returns>
+			<param name="value">Specifies the XrmTimeSpan instance to test for equality with the current instance.</param>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.Equals(System.Object)">
+			<summary>Returns a value indicating whether this instance is equal to a specified object.</summary>
+			<returns>Returns <see cref="T:System.Boolean"></see>.</returns>
+			<param name="obj">Specifies the object to test for equality with the current instance.</param>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.GetHashCode">
+			<summary>Returns a hash code for this instance.</summary>
+			<returns>Returns <see cref="T:System.Int32"></see>.</returns>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.op_Equality(Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan,Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan)">
+			<summary>Indicates whether two XrmTimeSpan instances are equal.</summary>
+			<returns>Returns <see cref="T:System.Boolean"></see>.</returns>
+			<param name="span2">Specifies a XrmTimeSpan.</param>
+			<param name="span1">Specifies a XrmTimeSpan.</param>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.op_Inequality(Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan,Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan)">
+			<summary>Indicates whether two XrmTimeSpan instances are equal.</summary>
+			<returns>Returns <see cref="T:System.Boolean"></see>.</returns>
+			<param name="span2">Specifies a XrmTimeSpan.</param>
+			<param name="span1">Specifies a XrmTimeSpan.</param>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.Subtract(System.DateTime)">
+			<summary>Subtracts the specified XrmTimeSpan from this instance.</summary>
+			<returns>Returns <see cref="T:System.DateTime"></see>.</returns>
+			<param name="value">Specifies a date/time value to subtract.</param>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.Years">
+			<summary>Gets the number of whole years represented by the current XrmTimeSpan structure.</summary>
+			<returns>Returns <see cref="T:System.Int32"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.Months">
+			<summary>Gets the number of whole months represented by the current XrmTimeSpan structure.</summary>
+			<returns>Returns <see cref="T:System.Int32"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.Days">
+			<summary>Gets the number of whole days represented by the current XrmTimeSpan structure.</summary>
+			<returns>Returns <see cref="T:System.Int32"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.Hours">
+			<summary>Gets the number of whole hours represented by the current XrmTimeSpan structure.</summary>
+			<returns>Returns <see cref="T:System.Int32"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.XrmTimeSpan.Minutes">
+			<summary>Gets the number of whole minutes represented by the current XrmTimeSpan structure.</summary>
+			<returns>Returns <see cref="T:System.Int32"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.IStorageService">
+			<summary>internal</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.IStorageService.RetrieveData(System.Guid)">
+			<summary>internal</summary>
+			<returns>Returns <see cref="T:System.Object"></see>.</returns>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.IStorageService.SaveData(System.Guid,System.Object)">
+			<summary>internal</summary>
+			<returns>Returns <see cref="T:System.Guid"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.IWaitNotificationService">
+			<summary>internal</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.IWaitNotificationService.RegisterListener(System.Guid,System.String,System.Guid)">
+			<summary>internal</summary>
+			<returns>Returns <see cref="T:System.Guid"></see>.</returns>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.IWaitNotificationService.UnregisterAllListeners">
+			<summary>internal</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.IWaitNotificationService.UnregisterListener(System.Guid)">
+			<summary>internal</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.IWaitNotificationService.SubscriptionToRegister">
+			<summary>internal</summary>
+			<returns>Returns <see cref="T:Microsoft.Xrm.Sdk.Workflow.WaitSubscription"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.IWorkflowContext">
+			<summary>Provides access to the data associated with the process instance.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.BusinessUnitId">
+			<summary>Gets the global unique identifier of the business unit that the entity currently being processed by the event execution pipeline belongs to.</summary>
+			<returns>Returns <see cref="T:System.Guid"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.CorrelationId">
+			<summary>Gets the global unique identifier for tracking plug-in or custom workflow activity execution. </summary>
+			<returns>Returns <see cref="T:System.Guid"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.Depth">
+			<summary>Gets the current depth of execution in the call stack.</summary>
+			<returns>Returns <see cref="T:System.Int32"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.InitiatingUserId">
+			<summary>Gets the global unique identifier of the system user account under which the current pipeline is executing.</summary>
+			<returns>Returns <see cref="T:System.Guid"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.InputParameters">
+			<summary>Gets the parameters of the request message that triggered the event that caused the plug-in to execute.</summary>
+			<returns>Returns <see cref="T:Microsoft.Xrm.Sdk.ParameterCollection"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.IsExecutingOffline">
+			<summary>Gets a value indicating if the plug-in is executing from the pn_crm_outlook_offline_access client while it is offline. </summary>
+			<returns>Returns <see cref="T:System.Boolean"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.IsInTransaction">
+			<summary>Gets a value indicating if the plug-in is executing within the database transaction.</summary>
+			<returns>Returns <see cref="T:System.Boolean"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.IsOfflinePlayback">
+			<summary>Gets a value indicating if the plug-in is executing as a result of the pn_crm_outlook_offline_access client transitioning from offline to online and synchronizing with the pn_microsoftcrm server.</summary>
+			<returns>Returns <see cref="T:System.Boolean"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.IsolationMode">
+			<summary>Gets a value indicating if the plug-in is executing in the sandbox.</summary>
+			<returns>Returns <see cref="T:System.Int32"></see>. Valid values are 1 (none) or 2 (sandbox).</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.MessageName">
+			<summary>Gets the name of the Web service message that is being processed by the event execution pipeline.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.Mode">
+			<summary>Gets the mode of plug-in execution.</summary>
+			<returns>Returns <see cref="T:System.Int32"></see>. Valid values are 0 (synchronous) and 1 (asynchronous).</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.OperationCreatedOn">
+			<summary>Gets the date and time that the related System Job was created.</summary>
+			<returns>Returns <see cref="T:System.DateTime"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.OperationId">
+			<summary>Gets the global unique identifier of the related System Job.</summary>
+			<returns>Returns <see cref="T:System.Guid"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.OrganizationId">
+			<summary>Gets the global unique identifier of the organization that the entity belongs to and the plug-in executes under.</summary>
+			<returns>Returns <see cref="T:System.Guid"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.OrganizationName">
+			<summary>Gets the unique name of the organization that the entity currently being processed belongs to and the plug-in executes under.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.OutputParameters">
+			<summary>Gets the parameters of the response message after the core platform operation has completed.</summary>
+			<returns>Returns <see cref="T:Microsoft.Xrm.Sdk.ParameterCollection"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.OwningExtension">
+			<summary>Gets a reference to the related SdkMessageProcessingingStep or ServiceEndpoint.</summary>
+			<returns>Returns <see cref="T:Microsoft.Xrm.Sdk.EntityReference"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.PostEntityImages">
+			<summary>Gets the properties of the primary entity after the core platform operation has been completed.</summary>
+			<returns>Returns <see cref="T:Microsoft.Xrm.Sdk.EntityImageCollection"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.PreEntityImages">
+			<summary>Gets the properties of the primary entity before the core platform operation has begins.</summary>
+			<returns>Returns <see cref="T:Microsoft.Xrm.Sdk.EntityImageCollection"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.PrimaryEntityId">
+			<summary>Gets the global unique identifier of the primary entity for which the pipeline is processing events.</summary>
+			<returns>Returns <see cref="T:System.Guid"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.PrimaryEntityName">
+			<summary>Gets the name of the primary entity for which the pipeline is processing events.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.RequestId">
+			<summary>Gets the global unique identifier of the request being processed by the event execution pipeline.</summary>
+			<returns>Returns <see cref="T:System.Nullable`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.SecondaryEntityName">
+			<summary>Gets the name of the secondary entity that has a relationship with the primary entity.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.SharedVariables">
+			<summary>Gets the custom properties that are shared between plug-ins.</summary>
+			<returns>Returns <see cref="T:Microsoft.Xrm.Sdk.ParameterCollection"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.IExecutionContext.UserId">
+			<summary>Gets the global unique identifier of the system user for whom the plug-in invokes Web service methods on behalf of.</summary>
+			<returns>Returns <see cref="T:System.Guid"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.IWorkflowContext.ParentContext">
+			<summary>Gets the parent context.</summary>
+			<returns>Returns <see cref="T:Microsoft.Xrm.Sdk.Workflow.IWorkflowContext"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.IWorkflowContext.StageName">
+			<summary>Gets the stage information of the process instance.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.IWorkflowContext.WorkflowCategory">
+			<summary>Gets the process category information of the process instance: workflow or dialog.</summary>
+			<returns>Returns <see cref="T:System.Int32"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.AttributeDependency">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.AttributeDependency.#ctor">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.AttributeDependency.#ctor(System.String,System.String,System.String)">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.AttributeDependency.ParameterType">
+			<summary>Obsolete.</summary>
+			<returns>Returns <see cref="T:System.Type"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.AttributeDependency.DependentEntityName">
+			<summary>Obsolete.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.AttributeDependency.DependentAttributeName">
+			<summary>Obsolete.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.AttributeTargetAttribute">
+			<summary>Specifies a required attribute of a parameter picklist or status parameter types.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.AttributeTargetAttribute.#ctor(System.String,System.String)">
+			<summary>Initializes a new instance of the AttributeTargetAttribute class.</summary>
+			<param name="attributeName">Specifies a String containing the logical name of the attribute.</param>
+			<param name="entityName">Specifies a String containing the logical name of the entity. See Remarks.</param>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.AttributeTargetAttribute.EntityName">
+			<summary>Gets the logical name of the entity.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.AttributeTargetAttribute.AttributeName">
+			<summary>Gets the logical name of the target attribute.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.CustomEntityDependency">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.CustomEntityDependency.#ctor">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.CustomEntityDependency.#ctor(System.String,System.String)">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.CustomEntityDependency.ParameterType">
+			<summary>Obsolete.</summary>
+			<returns>Returns <see cref="T:System.Type"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.CustomEntityDependency.CustomEntityName">
+			<summary>Obsolete.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.DefaultAttribute">
+			<summary>Specifies an optional default value that is assigned to a parameter.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.DefaultAttribute.#ctor(System.String)">
+			<summary>Initializes a new instance of the DefaultAttribute class setting the value property.</summary>
+			<param name="value">Specifies a String containing the attribute value.</param>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.DefaultAttribute.#ctor(System.String,System.String)">
+			<summary>Initializes a new instance of the DefaultAttribute class setting the value and entity name properties.</summary>
+			<param name="value">Specifies a String containing the attribute value.</param>
+			<param name="entityName">Specifies a String containing the name of the entity.</param>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.DefaultAttribute.EntityName">
+			<summary>Gets the entity name for a value of type lookup, a customer or an owner.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.DefaultAttribute.Value">
+			<summary>Gets the default value.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.EntityCreatedByDependency">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.EntityCreatedByDependency.#ctor">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.EntityCreatedByDependency.#ctor(System.String,System.String)">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.EntityDependencyBase">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.EntityDependencyBase.#ctor">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.EntityDependencyBase.#ctor(System.String,System.String)">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.EntityDependencyBase.ParameterType">
+			<summary>Obsolete.</summary>
+			<returns>Returns <see cref="T:System.Type"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.EntityDependencyBase.EntityAttributes">
+			<summary>Obsolete.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.InputAttribute">
+			<summary>Specifies an input parameter.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.InputAttribute.#ctor(System.String)">
+			<summary>Initializes a new instance of the InputAttribute class setting the name property.</summary>
+			<param name="name">Specifies a String containing the name of the parameter that will appears in the workflow designer UI.</param>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.LocalParameterDependency">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.LocalParameterDependency.#ctor(System.String,System.Type)">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.LocalParameterDependency.ParameterType">
+			<summary>Obsolete.</summary>
+			<returns>Returns <see cref="T:System.Type"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.OutputAttribute">
+			<summary>Specifies an output parameter.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.OutputAttribute.#ctor(System.String)">
+			<summary>Initializes a new instance of the OutputAttribute class.</summary>
+			<param name="name">Specifies a String containing the name of the parameter that will appears in the process designer UI.</param>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.ParameterAttribute">
+			<summary>Specifies the abstract base class used for attributes.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.ParameterAttribute.#ctor(System.String)">
+			<summary>Initializes a new instance of the ParameterAttribute class.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.ParameterAttribute.Name">
+			<summary>Gets the name of the parameter that will appear in the process designer UI.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.ParameterDependencyBase">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.ParameterDependencyBase.#ctor">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.ParameterDependencyBase.#ctor(System.String)">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.ParameterDependencyBase.ParameterName">
+			<summary>Obsolete.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.ParameterDependencyBase.ParameterType">
+			<summary>Obsolete.</summary>
+			<returns>Returns <see cref="T:System.Type"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.PreImageDependency">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.PreImageDependency.#ctor">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.PreImageDependency.#ctor(System.String,System.String)">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.PrimaryEntityDependency">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.PrimaryEntityDependency.#ctor">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.PrimaryEntityDependency.#ctor(System.String,System.String,System.Int32)">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.PrimaryEntityDependency.Type">
+			<summary>Obsolete.</summary>
+			<returns>Returns <see cref="T:System.Int32"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.ReferenceTargetAttribute">
+			<summary>Specifies the required attribute of a parameter for lookup, customer or owner parameter types.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.ReferenceTargetAttribute.#ctor(System.String)">
+			<summary>Initializes a new instance of the ReferenceTargetAttribute class.</summary>
+			<param name="entityName">Specifies a String containing the name of the entity.</param>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.ReferenceTargetAttribute.EntityName">
+			<summary>Gets the name of the entity for the attribute.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.RelatedEntityDependency">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.RelatedEntityDependency.#ctor">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.RelatedEntityDependency.#ctor(System.String,System.String,System.String,System.String)">
+			<summary>Obsolete.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.RelatedEntityDependency.RelatedAttributeName">
+			<summary>Obsolete.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.RelatedEntityDependency.RelatedEntityName">
+			<summary>Obsolete.</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.WaitSubscription">
+			<summary>internal</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.WaitSubscription.#ctor(System.String,System.Guid)">
+			<summary>internal</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.WaitSubscription.EntityName">
+			<summary>internal</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.WaitSubscription.EntityId">
+			<summary>internal</summary>
+			<returns>Returns <see cref="T:System.Guid"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.WorkflowDependencyType">
+			<summary>Contains the integer flags to set the WorkflowDependency.Type attribute. </summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowDependencyType.AttributeDefinition">
+			<summary>Specifies a dependency on an attribute definition.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowDependencyType.CustomEntityDefinition">
+			<summary>Specifies a dependency on a custom entity definition.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowDependencyType.LocalParameter">
+			<summary>Specifies a dependency on a local parameter.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowDependencyType.PrimaryEntityImage">
+			<summary>Specifies a dependency on a primary entity image.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowDependencyType.PrimaryEntityPostImage">
+			<summary>Specifies a dependency on a primary entity post image.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowDependencyType.PrimaryEntityPreImage">
+			<summary>Specifies a dependency on a primary entity pre image.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowDependencyType.RelatedEntityImage">
+			<summary>Specifies a dependency on a related entity image.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowDependencyType.SdkAssociation">
+			<summary>Specifies a dependency on an SDK association.</summary>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.WorkflowStepActivityStatus">
+			<summary>Contains values for the workflow step activity status.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowStepActivityStatus.Canceled">
+			<summary>Indicates the step has been cancelled.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowStepActivityStatus.Failed">
+			<summary>The step has failed.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowStepActivityStatus.InProgress">
+			<summary>The step is in progress.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowStepActivityStatus.SuccessfullyCompleted">
+			<summary>The step has successfully completed.</summary>
+		</member>
+		<member name="F:Microsoft.Xrm.Sdk.Workflow.WorkflowStepActivityStatus.Waiting">
+			<summary>Indicates the step is waiting.</summary>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.ActivityReference">
+			<summary>internal</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.ActivityReference.#ctor">
+			<summary>constructor_initializesActivityReference class.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.ActivityReference.AssemblyQualifiedName">
+			<summary>internal</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.ActivityReference.Arguments">
+			<summary>internal</summary>
+			<returns>Returns <see cref="T:System.Collections.Generic.Dictionary`2"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.ActivityReference.Properties">
+			<summary>internal</summary>
+			<returns>Returns <see cref="T:System.Collections.Generic.Dictionary`2"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.AssignEntity">
+			<summary>Assigns a record to a new owner or routes it to a queue.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.AssignEntity.#ctor">
+			<summary>constructor_initializesAssignEntity class.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.AssignEntity.Entity">
+			<summary>Gets the resulting record following the assignment to a new owner.</summary>
+			<returns>Returns <see cref="T:System.Activities.OutArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.AssignEntity.EntityId">
+			<summary>Sets the ID of the record to assign.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.AssignEntity.Owner">
+			<summary>Sets the new owner for the record.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.AssignEntity.EntityName">
+			<summary>Set the logical name of the entity specified by the EntityId property.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.CreateEntity">
+			<summary>Creates an record.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.CreateEntity.#ctor">
+			<summary>constructor_initializesCreateEntity class.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.CreateEntity.Entity">
+			<summary>Gets or sets the record.</summary>
+			<returns>Returns <see cref="T:System.Activities.InOutArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.CreateEntity.EntityId">
+			<summary>Gets the ID of the record that was created.</summary>
+			<returns>Returns <see cref="T:System.Activities.OutArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.CreateEntity.EntityName">
+			<summary>Sets the logical entity name of the record to create.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.GetEntityProperty">
+			<summary>Retrieves the value of an entity attribute and converts the value to the specified type.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.GetEntityProperty.#ctor">
+			<summary>constructor_initializesGetEntityProperty class.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.GetEntityProperty.Entity">
+			<summary>Gets or sets the entity instance (record) from which to get the attribute value.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.GetEntityProperty.TargetType">
+			<summary>Gets or sets the type of the value to be retrieved.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.GetEntityProperty.Attribute">
+			<summary>Gets or sets the logical name of the attribute.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.GetEntityProperty.EntityName">
+			<summary>Gets or sets the logical name of the entity.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.GetEntityProperty.Value">
+			<summary>Gets the value of the specified entity attribute.</summary>
+			<returns>Returns <see cref="T:System.Activities.OutArgument`1"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.GetPrimaryEntity">
+			<summary>Retrieves an entity reference for the primary entity for the workflow instance.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.GetPrimaryEntity.#ctor">
+			<summary>constructor_initializesGetPrimaryEntity class.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.GetPrimaryEntity.PrimaryEntityReference">
+			<summary>Gets the entity reference for the primary entity.</summary>
+			<returns>Returns <see cref="T:System.Activities.OutArgument`1"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Postpone">
+			<summary>Suspends the workflow until the specified date and time. </summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Postpone.#ctor">
+			<summary>constructor_initializesPostpone class.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Postpone.PostponeUntil">
+			<summary>Sets the date and time the workflow execution will resume.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Postpone.BlockExecution">
+			<summary>Sets whether the workflow execution should be suspended.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Postpone.BookmarkCallback">
+			<summary>Gest the callback method used when workflow execution is resumed.</summary>
+			<returns>Returns <see cref="T:System.Activities.BookmarkCallback"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.ReferenceLiteral`1">
+			<summary>internal</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.ReferenceLiteral`1.#ctor">
+			<summary>internal</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.ReferenceLiteral`1.#ctor(`0)">
+			<summary>internal</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.ReferenceLiteral`1.CanConvertToString(System.Windows.Markup.IValueSerializerContext)">
+			<summary>internal</summary>
+			<returns>Returns <see cref="T:System.Boolean"></see>.</returns>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.ReferenceLiteral`1.ConvertToString(System.Windows.Markup.IValueSerializerContext)">
+			<summary>internal</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.ReferenceLiteral`1.ShouldSerializeValue">
+			<summary>internal</summary>
+			<returns>Returns <see cref="T:System.Boolean"></see>.</returns>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.ReferenceLiteral`1.ToString">
+			<summary>internal</summary>
+			<returns>Returns <see cref="T:System.String"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.RetrieveEntity">
+			<summary>Retrieves a record.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.RetrieveEntity.#ctor">
+			<summary>constructor_initializesRetrieveEntity class.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.RetrieveEntity.Entity">
+			<summary>Gets the retrieved record.</summary>
+			<returns>Returns <see cref="T:System.Activities.OutArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.RetrieveEntity.EntityName">
+			<summary>Set the logical name of the entity specified by the EntityId property.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.RetrieveEntity.EntityId">
+			<summary>Sets the ID of the record to be retrieved.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.RetrieveEntity.Attributes">
+			<summary>Sets the collection of logical names of the attributes to be retrieved.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.RetrieveEntity.ThrowIfNotExists">
+			<summary>Sets whether the workflow should throw an exception if the record does not exist.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.SendEmail">
+			<summary>Sends an e-mail message.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.SendEmail.#ctor">
+			<summary>constructor_initializesSendEmail class.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SendEmail.EntityId">
+			<summary>Gets the ID of the resulting e-mail record.</summary>
+			<returns>Returns <see cref="T:System.Activities.OutArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SendEmail.Entity">
+			<summary>Gets or sets the e-mail record.</summary>
+			<returns>Returns <see cref="T:System.Activities.InOutArgument`1"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.SendEmailFromTemplate">
+			<summary>Sends an e-mail message to a recipient using an e-mail template.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.SendEmailFromTemplate.#ctor">
+			<summary>constructor_initializesSendEmailFromTemplate class.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SendEmailFromTemplate.Entity">
+			<summary>Gets or sets the e-mail entity instance (record).</summary>
+			<returns>Returns <see cref="T:System.Activities.InOutArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SendEmailFromTemplate.EntityId">
+			<summary>Gets the ID of the resulting e-mail.</summary>
+			<returns>Returns <see cref="T:System.Activities.OutArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SendEmailFromTemplate.RegardingId">
+			<summary>Sets the ID of the entity instance with which the e-mail message is associated</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SendEmailFromTemplate.RegardingType">
+			<summary>Sets the logical entity name of the entity represented by the RegardingdId property.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SendEmailFromTemplate.TemplateId">
+			<summary>Sets the ID of the e-mail template to use.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.SetEntityProperty">
+			<summary>Sets a property (attribute) of a record.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.SetEntityProperty.#ctor">
+			<summary>constructor_initializesSetEntityProperty class.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SetEntityProperty.Entity">
+			<summary>Gets or sets the record.</summary>
+			<returns>Returns <see cref="T:System.Activities.InOutArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SetEntityProperty.Attribute">
+			<summary>Sets the logical name of the attribute.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SetEntityProperty.EntityName">
+			<summary>Sets the logical entity name of the record specified in the Entity property.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SetEntityProperty.Value">
+			<summary>Sets the value for the attribute specified in the Attribute property.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SetEntityProperty.TargetType">
+			<summary>Sets the type for the value to be converted to.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.SetState">
+			<summary>Sets the state and status of a record.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.SetState.#ctor">
+			<summary>constructor_initializesSetState class.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SetState.EntityId">
+			<summary>Sets the ID of the record to update.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SetState.Entity">
+			<summary>Gets the resulting record following the update.</summary>
+			<returns>Returns <see cref="T:System.Activities.OutArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SetState.EntityName">
+			<summary>Set the logical name of the entity specified by the EntityId property.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SetState.State">
+			<summary>Sets the new state for the record.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.SetState.Status">
+			<summary>Sets the new status that corresponds to the State property.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.StartChildWorkflow">
+			<summary>Starts a child workflow.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.StartChildWorkflow.#ctor">
+			<summary>constructor_initializesStartChildWorkflow class.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.StartChildWorkflow.EntityName">
+			<summary>Sets the logical name of the entity specified by the EntityId property.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.StartChildWorkflow.EntityId">
+			<summary>Sets the ID of the primary entity for the child workflow.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.StartChildWorkflow.WorkflowId">
+			<summary>Sets the ID of the workflow to be started.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.UpdateEntity">
+			<summary>Updates a record.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.UpdateEntity.#ctor">
+			<summary>constructor_initializesUpdateEntity class.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.UpdateEntity.Entity">
+			<summary>Gets or sets the record.</summary>
+			<returns>Returns <see cref="T:System.Activities.InOutArgument`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.UpdateEntity.EntityName">
+			<summary>Sets the logical entity name of the entity instance to update.</summary>
+			<returns>Returns <see cref="T:System.Activities.InArgument`1"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Activities.Workflow">
+			<summary>The base class for all workflows in pn_microsoftcrm.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Activities.Workflow.#ctor">
+			<summary>constructor_initializesWorkflow class.</summary>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Workflow.Activities">
+			<summary>Gets the collection of activities for this workflow.</summary>
+			<returns>Returns <see cref="T:System.Collections.ObjectModel.Collection`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Workflow.Variables">
+			<summary>Gets the collection of workflow variables.</summary>
+			<returns>Returns <see cref="T:System.Collections.ObjectModel.Collection`1"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Workflow.OnChildComplete">
+			<summary>Gets the callback method called when a child of this sequence completes execution.</summary>
+			<returns>Returns <see cref="T:System.Activities.CompletionCallback"></see>.</returns>
+		</member>
+		<member name="P:Microsoft.Xrm.Sdk.Workflow.Activities.Workflow.BookmarkCallback">
+			<summary>Gets the callback method called when the workflow is resumed.</summary>
+			<returns>Returns <see cref="T:System.Activities.BookmarkCallback"></see>.</returns>
+		</member>
+		<member name="T:Microsoft.Xrm.Sdk.Workflow.Designers.WorkflowDesigner">
+			<summary>internal</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Designers.WorkflowDesigner.#ctor">
+			<summary>constructor_initializesWorkflowDesigner class.</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Designers.WorkflowDesigner.InitializeComponent">
+			<summary>internal</summary>
+		</member>
+		<member name="M:Microsoft.Xrm.Sdk.Workflow.Designers.WorkflowDesigner.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+			<summary>Internal</summary>
+		</member>
+	</members>
+</doc>

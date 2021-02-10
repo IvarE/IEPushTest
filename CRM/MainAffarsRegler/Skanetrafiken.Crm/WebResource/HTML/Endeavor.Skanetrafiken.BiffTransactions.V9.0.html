@@ -1,0 +1,260 @@
+﻿<html>
+<head>
+    <link href="../css/Endeavor.Skanetrafiken.BiffTransactions.css" rel="stylesheet" type="text/css" />
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+
+    <script>
+
+        function onLoad(document) {
+            debugger;
+            var datefrom = new Date();
+            datefrom.setDate(datefrom.getDate() - 45);
+            document.getElementById('datefrom').value = datefrom.toISOString().substring(0, 10);
+            document.getElementById('dateto').value = (new Date()).toISOString().substring(0, 10);
+
+            if (Xrm.Page != null && Xrm.Page.getAttribute("cgi_travelcardnumber") != null)
+                document.getElementById('cardnr').value = Xrm.Page.getAttribute("cgi_travelcardnumber").getValue();
+
+            setDocument();
+        }
+
+        function getFormContext() {
+            // parent
+            for (i = 0; i < window.parent.frames.length; i++) {
+                var frame = window.parent.frames[i];
+                if (typeof frame.Endeavor !== "undefined" && typeof frame.Endeavor.Skanetrafiken !== "undefined" && typeof frame.Endeavor.Skanetrafiken.BiffTransactions !== "undefined") {
+                    return frame;
+                }
+            }
+
+            // parent.parent
+            for (i = 0; i < window.parent.parent.frames.length; i++) {
+                var frame = window.parent.parent.frames[i];
+                if (typeof frame.Endeavor !== "undefined" && typeof frame.Endeavor.Skanetrafiken !== "undefined" && typeof frame.Endeavor.Skanetrafiken.BiffTransactions !== "undefined") {
+                    return frame;
+                }
+            }
+
+            alert("BiffTransactions service is unavailable. Please contact your systems administrator.")
+            return null;
+        }
+
+        function setDocument() {
+            var formContext = getFormContext();
+            if (formContext) {
+                formContext.Endeavor.Skanetrafiken.BiffTransactions.setDocument(document);
+            }
+        }
+
+        function getDetailsAndTransactions() {
+            var formContext = getFormContext();
+            if (formContext) {
+                try {
+                    formContext.Endeavor.Skanetrafiken.BiffTransactions.getDetailsAndTransactions();
+                }
+                catch (e) {
+                    alert(e.message)
+                }
+            }
+        }
+
+        function transactionSearch() {
+            var formContext = getFormContext();
+            if (formContext) {
+                try {
+                    formContext.Endeavor.Skanetrafiken.BiffTransactions.transactionSearch();
+                }
+                catch (e) {
+                    alert(e.message)
+                }
+            }
+        }
+
+        function reload() {
+            var formContext = getFormContext();
+            if (formContext) {
+                try {
+                    formContext.Endeavor.Skanetrafiken.BiffTransactions.reload();
+                }
+                catch (e) {
+                    alert(e.message)
+                }
+            }
+        }
+
+    </script>
+
+</head>
+
+<body onload="onLoad(document);">
+    <form class="search">
+        <b>Sök kort:</b>
+        <input type="text" id="cardnr" value="">
+        <input type="button" value="Sök" onclick="getDetailsAndTransactions(document)">
+    </form>
+    <table>
+        <tr>
+            <td colspan="3">
+                <table>
+                    <tr class="headingrow">
+                        <td class="heading" colspan=1>CRM</td>
+                        <td class="heading" colspan=1>Spärr</td>
+                        <td class="heading" colspan=1>Reskassa</td>
+                        <td class="heading" colspan=1>Period</td>
+                    </tr>
+                    <tr>
+                        <td class="type" colspan=1>Kund:</td>
+                        <td class="type" colspan=1>Status:</td>
+                        <td class="type" colspan=1>Status laddning:</td>
+                        <td class="type" colspan=1>Korttyp:</td>
+                    </tr>
+                    <tr>
+                        <td class="value" id="name" colspan=1>&nbsp;</td>
+                        <td class="value" id="status" colspan=1>&nbsp;</td>
+                        <td class="value" id="loadstatus" colspan=1>&nbsp;</td>
+                        <td class="value" id="cardtype" colspan=1>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="type" colspan=1>Kortnamn:</td>
+                        <td class="type" colspan=1>Orsak:</td>
+                        <td class="type" colspan=1>Värde:</td>
+                        <td class="type" colspan=1>Startdatum:</td>
+                    </tr>
+                    <tr>
+                        <td class="value" id="cardname" colspan=1>&nbsp;</td>
+                        <td class="value" id="reason" colspan=1>&nbsp;</td>
+                        <td class="value" id="balance" colspan=1>&nbsp;</td>
+                        <td class="value" id="startdate" colspan=1>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="type" colspan=1>Autoladda:</td>
+                        <td class="type" colspan=1>Periodkort spärrat:</td>
+                        <td class="type" colspan=1>Outhämtad laddning:</td>
+                        <td class="type" colspan=1>Slutdatum:</td>
+                    </tr>
+                    <tr>
+                        <td class="value" id="autoloadstatus" colspan=1>&nbsp;</td>
+                        <td class="value" id="hotlisted" colspan=1>&nbsp;</td>
+                        <td class="value" id="outstandingcharges" colspan=1>&nbsp;</td>
+                        <td class="value" id="enddate" colspan=1>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="type" colspan=1>Anslutningsdatum:</td>
+                        <td class="type" colspan=1>Reskassa spärrad:</td>
+                        <td class="type" colspan=1>
+                            <input type="button" id="reloadbutton" disabled value="Ladda om" onclick="reload()">
+                        </td>
+                        <td class="type" colspan=1>Belopp:</td>
+                    </tr>
+                    <tr>
+                        <td class="value" id="autoloadstartdate" colspan=1>&nbsp;</td>
+                        <td class="value" id="blocked" colspan=1>&nbsp;</td>
+                        <td class="value" colspan=1>&nbsp;</td>
+                        <td class="value" id="pricepaid" colspan=1>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="type" colspan=1>Slutdatum autoladda:</td>
+                        <td class="type" colspan=1>&nbsp;</td>
+                        <td class="type" colspan=1>&nbsp;</td>
+                        <td class="type" colspan=1>Väntande perioder:</td>
+                    </tr>
+                    <tr>
+                        <td class="value" id="autoloadenddate" colspan=1>&nbsp;</td>
+                        <td class="value" colspan=1>&nbsp;</td>
+                        <td class="value" colspan=1>&nbsp;</td>
+                        <td class="value" id="waitingperiods" colspan=1>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="type" colspan=1>Kreditkortsnummer:</td>
+                        <td class="type" colspan=1>&nbsp;</td>
+                        <td class="type" colspan=1>&nbsp;</td>
+                        <td class="type" colspan=1>Aktiverad Autoladda period:</td>
+                    </tr>
+                    <tr>
+                        <td class="value" id="creditcardnr" colspan=1>&nbsp;</td>
+                        <td class="value" colspan=1>&nbsp;</td>
+                        <td class="value" colspan=1>&nbsp;</td>
+                        <td class="value" id="activatedautoload" colspan=1>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="type" colspan=1>Misslyckade dragningar:</td>
+                        <td class="type" colspan=1>&nbsp;</td>
+                        <td class="type" colspan=1>&nbsp;</td>
+                        <td class="type" colspan=1>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="value" id="failedattempts" colspan=1>&nbsp;</td>
+                        <td class="value" colspan=1>&nbsp;</td>
+                        <td class="value" colspan=1>&nbsp;</td>
+                        <td class="value" colspan=1>&nbsp;</td>
+                    </tr>
+                    <tr><td>&nbsp;</td></tr>
+                </table>
+            </td>
+            <td valign="top" id="zonelist">
+                <div>
+                    <table>
+                        <tr>
+                            <td class="heading">Zoner</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table id="zonetable">
+                                    <!--zones are inserted here-->
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <form class="search">
+        <b>Sök från:</b>
+        <input type="text" id="datefrom" value="">
+        <b> till:</b>
+        <input type="text" id="dateto" value="">
+        <input type="button" value="Sök" onclick="transactionSearch()">
+    </form>
+    <table id="transactionstable">
+        <thead>
+            <tr>
+                <th class="buttonheading"></th>
+                <th>Senaste dragning</th>
+                <th>Tid</th>
+                <th>Typ</th>
+                <th>Logpost</th>
+                <th colspan=2>Transaktion</th>
+                <th>Belopp</th>
+                <th>Startzon</th>
+                <th colspan=3>Linje</th>
+                <th>EnhetsID</th>
+            </tr>
+        </thead>
+        <tbody id="transactionsbody" class="transactionsbody">
+            <tr class="blankrow"></tr>
+        </tbody>
+    </table>
+    <table id="savedtransactionstable">
+        <thead>
+            <tr>
+                <th class="buttonheading"></th>
+                <th>Kortnummer</th> <!-- TravelCardId -->
+                <th>Datum</th> <!-- Date -->
+                <th>Tid</th> <!-- Time -->
+                <th>Typ</th> <!-- CardSect -->
+                <th>Logpost</th> <!-- RecType -->
+                <th colspan=2>Transaktion</th> <!-- TxnType -->
+                <th>Belopp</th> <!-- Amount -->
+                <th>Startzon</th> <!-- OrigNameZone -->
+                <th colspan=3>Linje</th> <!-- Route -->
+                <th>EnhetsID</th> <!-- DeviceId -->
+                <th id="deleteheading"></th> <!-- DeleteButton -->
+            </tr>
+        </thead>
+        <tbody id="savedtransactionsbody" class="transactionsbody">
+            <tr class="blankrow"></tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <style type="text/css">
+        .myHeaderStyle 
+        { 
+            font-family:Segoe UI, Arial, Sans-Serif; 
+            font-size: 20px; 
+            font-weight: normal;
+            text-align:left;
+            vertical-align:top;
+        }
+        .myTextStyle 
+        { 
+            font-family:Segoe UI, Arial, Sans-Serif; 
+            font-size: 12px; 
+            font-weight: normal;
+        }
+    </style>
+    <title></title>
+</head>
+<body>
+    <script type="text/jscript">
+        function addRow(tableData) {
+            try {
+                var _table = document.getElementById("dataTable");
+                var _row = _table.insertRow();
+                var _cell = _row.insertCell();
+                _cell.innerHTML = tableData;
+            }
+            catch (e) {
+                alert("Error in CategoryView.addRow\n\n" + e.Message);
+            }
+        }
+
+        function deleteRows() {
+            try {
+                var _table = document.getElementById("dataTable");
+                var _rows = _table.rows.length - 1;
+                for (x = _rows; x >= 0; x--) {
+                    _table.deleteRow(x);
+                }
+            }
+            catch (e) {
+                alert("Error in CategoryView.deleteRows\n\n" + e.Message);
+            }
+        }
+    </script>
+    <div class="myTextStyle">
+    <div class="myHeaderStyle">Kategorier</div>
+    <table id="dataTable" width="Auto" border="0">        
+        <tr>            
+            <td></td>          
+        </tr>    
+     </table>
+     </div>
+</body>
+</html>

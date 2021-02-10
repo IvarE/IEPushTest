@@ -358,13 +358,6 @@
     <Compile Include="SendEmailFromRibbon.cs" />
     <Compile Include="SendTextMessage.cs" />
     <Compile Include="SendValueCode.cs" />
-    <Compile Include="Service References\StopMonitoringService\Reference.cs" />
-    <Compile Include="Service References\StopMonitoringService\Reference1.cs" />
-    <Compile Include="Service References\StopMonitoringService\Reference2.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
     <Compile Include="UpdateTextMessageStatus.cs" />
     <Compile Include="UpdateTopicOnUnderlyingLeadsRecursive.cs" />
     <Compile Include="UpdateLeadSourceOnUnderlyingLeadsRecursive.cs" />
@@ -388,23 +381,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Service References\StopMonitoringService\StopMonitoringService.wsdl" />
-    <None Include="Service References\StopMonitoringService\StopMonitoringService.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\StopMonitoringService\StopMonitoringService1.wsdl" />
-    <None Include="Service References\StopMonitoringService\StopMonitoringService1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\StopMonitoringService\StopMonitoringService2.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\StopMonitoringService\StopMonitoringService3.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\StopMonitoringService\StopMonitoringService4.xsd">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -417,15 +393,6 @@
       <Link>Properties\Resources.resx</Link>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Service References\StopMonitoringService\configuration.svcinfo" />
-    <Content Include="Service References\StopMonitoringService\configuration91.svcinfo" />
-    <Content Include="Service References\StopMonitoringService\Reference.svcmap">
-      <Generator>Xaml Activity Generator</Generator>
-      <LastGenOutput>Reference2.cs</LastGenOutput>
-    </Content>
-    <Content Include="Service References\StopMonitoringService\StopMonitoringService.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+        function onClickSearchTicket() {
+            debugger;
+
+            //var myGrid = gridContext.getGrid();
+            //var myGridRows = myGrid.GetRows();
+
+
+            var ticketId = document.getElementById("ticketid").value;
+
+            if (ticketId == null || ticketId == undefined || ticketId == "") {
+                alert("The Ticket Id is null or empty. Please enter a value.");
+                return;
+            }
+
+            var openUrl = "https://sttravelconfiguratorweb.azurewebsites.net/ticketdetails/" + ticketId; //EBU5J9J
+            window.open(openUrl);
+        }
+
+        function onLoad(parameters) {
+            debugger;
+        }
+
+    </script>
+
+</head>
+<body onload="onLoad()">
+
+    <div>
+        <div><input type="text" id="ticketid" style="border:1px solid #c0c0c0;" /> <button onclick="onClickSearchTicket()">Search</button></div>
+    </div>
+
+    <!--<iframe style="width:100%;height:500px;" id="frontOfficeiFrameId" src=""></iframe>-->
+</body>
+</html>

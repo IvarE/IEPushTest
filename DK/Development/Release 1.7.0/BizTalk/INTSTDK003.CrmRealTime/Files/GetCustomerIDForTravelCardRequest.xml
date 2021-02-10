@@ -1,0 +1,6 @@
+﻿<tem:GetCustomerIdForTravelCard xmlns:tem="http://tempuri.org/" xmlns:arr="http://schemas.microsoft.com/2003/10/Serialization/Arrays>">
+      <tem:travelCard>
+        <!--Zero or more repetitions:-->
+        <arr:string>223456787</arr:string>
+      </tem:travelCard>
+    </tem:GetCustomerIdForTravelCard>

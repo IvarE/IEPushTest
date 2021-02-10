@@ -1,0 +1,10 @@
+﻿<ns0:GetDirectJourneysBetweenStops xmlns:ns0="http://www.skanetrafiken.se/INTSTDK001GetDirectJourneysBetweenStops">
+  <ns0:fromStopAreaGid>fromStopAreaGid_0</ns0:fromStopAreaGid>
+  <ns0:toStopAreaGid>toStopAreaGid_0</ns0:toStopAreaGid>
+  <ns0:forTimeWindowStartDateTime>1999-05-31T13:20:00.000-05:00</ns0:forTimeWindowStartDateTime>
+  <ns0:forTimeWindowDuration>125</ns0:forTimeWindowDuration>
+  <ns0:withDepartureMaxCount>10</ns0:withDepartureMaxCount>
+  <ns0:forLineGids>forLineGids_0</ns0:forLineGids>
+  <ns0:forProducts>forProducts_0</ns0:forProducts>
+  <ns0:purposeOfLineGroupingCode>purposeOfLineGroupingCode_0</ns0:purposeOfLineGroupingCode>
+</ns0:GetDirectJourneysBetweenStops>

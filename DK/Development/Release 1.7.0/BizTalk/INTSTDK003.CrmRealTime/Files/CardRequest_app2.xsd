@@ -1,0 +1,40 @@
+<?xml version="1.0" standalone="yes"?>
+<xs:schema targetNamespace="http://tempuri.org/" xmlns:mstns="http://schemas.xmlsoap.org/soap/envelope/" xmlns="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified" xmlns:app2="http://tempuri.org/" xmlns:app1="http://schemas.datacontract.org/2004/07/CGICRMPortalService">
+  <xs:import namespace="http://schemas.xmlsoap.org/soap/envelope/" schemaLocation="CardRequest.xsd" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/CGICRMPortalService" schemaLocation="CardRequest_app1.xsd" />
+  <xs:element name="UpdateTravelCard" msdata:Prefix="tem">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="callerId" msdata:Prefix="tem" type="xs:string" minOccurs="0" />
+        <xs:element name="travelCard" msdata:Prefix="tem" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="app1:AccountId" minOccurs="0" />
+              <xs:element ref="app1:AutoloadConnectionDate" minOccurs="0" />
+              <xs:element ref="app1:AutoloadDisconnectionDate" minOccurs="0" />
+              <xs:element ref="app1:AutoloadStatus" minOccurs="0" />
+              <xs:element ref="app1:Blocked" minOccurs="0" />
+              <xs:element ref="app1:CardCategory" minOccurs="0" />
+              <xs:element ref="app1:CardName" minOccurs="0" />
+              <xs:element ref="app1:CardNumber" minOccurs="0" />
+              <xs:element ref="app1:CreditCardMask" minOccurs="0" />
+              <xs:element ref="app1:Currency" minOccurs="0" />
+              <xs:element ref="app1:CustomerType" minOccurs="0" />
+              <xs:element ref="app1:FailedAttemptsToChargeMoney" minOccurs="0" />
+              <xs:element ref="app1:LatestAutoloadAmount" minOccurs="0" />
+              <xs:element ref="app1:LatestChargeDate" minOccurs="0" />
+              <xs:element ref="app1:LatestFailedAttempt" minOccurs="0" />
+              <xs:element ref="app1:PeriodCardTypeId" minOccurs="0" />
+              <xs:element ref="app1:PeriodCardTypeTitle" minOccurs="0" />
+              <xs:element ref="app1:PeriodValidFrom" minOccurs="0" />
+              <xs:element ref="app1:PeriodValidTo" minOccurs="0" />
+              <xs:element ref="app1:ValueCardTypeId" minOccurs="0" />
+              <xs:element ref="app1:ValueCardTypeTitle" minOccurs="0" />
+              <xs:element ref="app1:VerifyId" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

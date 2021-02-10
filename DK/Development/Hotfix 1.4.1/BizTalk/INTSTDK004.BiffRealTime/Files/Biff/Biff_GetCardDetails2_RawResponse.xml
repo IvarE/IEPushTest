@@ -1,0 +1,56 @@
+﻿<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+   <soap:Header>
+      <wsa:Action>http://cubic.com/GetCardDetails2Response</wsa:Action>
+      <wsa:MessageID>urn:uuid:aaecd13f-05f7-4ae3-9571-2493b2852c39</wsa:MessageID>
+      <wsa:RelatesTo>urn:uuid:036bfd5d-702e-4d83-9ba7-2026553e33e7</wsa:RelatesTo>
+      <wsa:To>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+      <wsse:Security>
+         <wsu:Timestamp wsu:Id="Timestamp-e5e7dcc1-49b3-49fe-8959-04859d64a5b9">
+            <wsu:Created>2014-09-18T09:09:22Z</wsu:Created>
+            <wsu:Expires>2014-09-18T09:14:22Z</wsu:Expires>
+         </wsu:Timestamp>
+      </wsse:Security>
+   </soap:Header>
+   <soap:Body>
+      <GetCardDetails2Response xmlns="http://cubic.com">
+         <GetCardDetails2Result msdata:SchemaSerializationMode="ExcludeSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+            <xs:schema id="CardDetails2" targetNamespace="http://Biff.com/CardDetails2.xsd" attributeFormDefault="qualified" elementFormDefault="qualified" xmlns:mstns="http://Biff.com/CardDetails2.xsd" xmlns="http://Biff.com/CardDetails2.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+               <xs:element name="CardDetails2" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+                  <xs:complexType>
+                     <xs:choice minOccurs="0" maxOccurs="unbounded"/>
+                  </xs:complexType>
+               </xs:element>
+            </xs:schema>
+            <diffgr:diffgram xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1">
+               <CardDetails2 xmlns="http://Biff.com/CardDetails2.xsd">
+                  <CardInformation diffgr:id="CardInformation1" msdata:rowOrder="0" diffgr:hasChanges="modified">
+                     <CardNumber>3547632468</CardNumber>
+                     <CardIssuer>Skånetrafiken CSC</CardIssuer>
+                     <CardKind>4</CardKind>
+                     <CardHotlisted>false</CardHotlisted>
+                     <CardTypePeriod>0</CardTypePeriod>
+                     <CardTypeValue>3161</CardTypeValue>
+                     <CardValueProductType>RESKASSA SKÅNE</CardValueProductType>
+                  </CardInformation>
+                  <PurseDetails diffgr:id="PurseDetails1" msdata:rowOrder="0">
+                     <CardCategory>4</CardCategory>
+                     <Balance>200</Balance>
+                     <Currency>SEK</Currency>
+                     <OutstandingDirectedAutoload>false</OutstandingDirectedAutoload>
+                     <OutstandingEnableThresholdAutoload>false</OutstandingEnableThresholdAutoload>
+                     <Hotlisted>false</Hotlisted>
+                  </PurseDetails>
+               </CardDetails2>
+               <diffgr:before>
+                  <CardInformation diffgr:id="CardInformation1" msdata:rowOrder="0" xmlns="http://Biff.com/CardDetails2.xsd">
+                     <CardNumber>3547632468</CardNumber>
+                     <CardIssuer>Skånetrafiken CSC</CardIssuer>
+                     <CardKind>4</CardKind>
+                     <CardHotlisted>false</CardHotlisted>
+                  </CardInformation>
+               </diffgr:before>
+            </diffgr:diffgram>
+         </GetCardDetails2Result>
+      </GetCardDetails2Response>
+   </soap:Body>
+</soap:Envelope>

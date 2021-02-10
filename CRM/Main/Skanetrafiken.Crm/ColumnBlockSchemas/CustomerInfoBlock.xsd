@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="CustomerInfoBlockSchema"
+    targetNamespace="Skanetrafiken.Crm"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    xmlns="Skanetrafiken.Crm"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:complexType name="CustomerInfo">
+    <xs:sequence>
+      <xs:element minOccurs="1" name="Source" type="xs:int" />
+      <xs:element minOccurs="0" name="FirstName" type="xs:string" />
+      <xs:element minOccurs="0" name="LastName" type="xs:string" />
+      <xs:element minOccurs="0" name="AddressBlock">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="CO" type="xs:string" />
+            <xs:element minOccurs="0" name="Line1" type="xs:string" />
+            <xs:element minOccurs="0" name="PostalCode" type="xs:string" />
+            <xs:element minOccurs="0" name="City" type="xs:string" />
+            <xs:element minOccurs="0" name="CountryISO" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CompanyRole">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="PortalId" type="xs:string" />
+            <xs:element minOccurs="0" name="CompanyRole" type="xs:int" />
+            <xs:element minOccurs="0" name="Email" type="xs:string" />
+            <xs:element minOccurs="0" name="Telephone" type="xs:string" />
+            <xs:element minOccurs="0" name="isLockedPortal" type="xs:boolean" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="Telephone" type="xs:string" />
+      <xs:element minOccurs="0" name="Mobile" type="xs:string" />
+      <xs:element minOccurs="0" name="SocialSecurityNumber" type="xs:string" />
+      <xs:element minOccurs="0" name="SwedishSocialSecurityNumber" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Email" type="xs:string" />
+      <xs:element minOccurs="0" name="CreditsafeOk" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Avliden" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Utvandrad" type="xs:boolean" />
+      <xs:element minOccurs="0" name="EmailInvalid" type="xs:boolean" />
+      <xs:element minOccurs="0" name="NewEmail" type="xs:string" />
+      <xs:element minOccurs="0" name="Guid" type="xs:string" />
+      <xs:element minOccurs="0" name="MklId" type="xs:string" />
+      <xs:element minOccurs="0" name="isLockedPortal" type="xs:boolean" />
+      <xs:element minOccurs="0" name="isAddressEnteredManually" type="xs:boolean" />
+      <xs:element minOccurs="0" name="isAddressInformationComplete" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--Child that inherited CustomerInfo-->
+  <xs:element name="ContactInfo">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="CustomerInfo">
+          <xs:sequence>
+            <xs:element minOccurs="0" name="isEmailChangeInProgress" type="xs:boolean" />
+            <xs:element minOccurs="0" name="SpecAddressBlock">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="CO" type="xs:string" />
+                  <xs:element minOccurs="0" name="Line1" type="xs:string" />
+                  <xs:element minOccurs="0" name="PostalCode" type="xs:string" />
+                  <xs:element minOccurs="0" name="City" type="xs:string" />
+                  <xs:element minOccurs="0" name="CountryName" type="xs:string" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>      
+    </xs:complexType>
+  </xs:element>
+
+  <!--Child that inherited CustomerInfo-->
+  <xs:element name="LeadInfo">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="CustomerInfo">
+          <xs:sequence>
+            <xs:element minOccurs="0" name="CampaignCode" type="xs:string"/>
+            <xs:element minOccurs="0" name="CampaignId" type="xs:string"/>
+            <xs:element minOccurs="0" name="IsCampaignActive" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="CampaignDiscountPercent" type="xs:int"/>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="CampaignProducts" type="xs:string"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  
+</xs:schema>

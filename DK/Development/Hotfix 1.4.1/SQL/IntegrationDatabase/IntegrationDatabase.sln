@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "IntegrationDatabase", "IntegrationDatabase\IntegrationDatabase.sqlproj", "{CD2A1DB0-8EE7-400A-8CB5-46684F5ADB61}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "PubTransDatabase", "..\PubTransDatabase\PubTransDatabase.sqlproj", "{CD44C163-FF98-4987-BED5-EE89F315ACE3}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Skanetrafiken_MSCRM", "Skanetrafiken_MSCRM\Skanetrafiken_MSCRM.sqlproj", "{4814F4E4-308B-445D-989B-910430BB1A56}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs-ext.cgisouth.wm.net:8080/tfs/skanetrafiken
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = IntegrationDatabase\\IntegrationDatabase.sqlproj
+		SccProjectName1 = IntegrationDatabase
+		SccLocalPath1 = IntegrationDatabase
+		SccProjectUniqueName2 = ..\\PubTransDatabase\\PubTransDatabase.sqlproj
+		SccProjectName2 = ../PubTransDatabase
+		SccLocalPath2 = ..\\PubTransDatabase
+		SccProjectUniqueName3 = Skanetrafiken_MSCRM\\Skanetrafiken_MSCRM.sqlproj
+		SccProjectName3 = Skanetrafiken_MSCRM
+		SccLocalPath3 = Skanetrafiken_MSCRM
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CD2A1DB0-8EE7-400A-8CB5-46684F5ADB61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD2A1DB0-8EE7-400A-8CB5-46684F5ADB61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD2A1DB0-8EE7-400A-8CB5-46684F5ADB61}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{CD2A1DB0-8EE7-400A-8CB5-46684F5ADB61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD2A1DB0-8EE7-400A-8CB5-46684F5ADB61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD2A1DB0-8EE7-400A-8CB5-46684F5ADB61}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{CD44C163-FF98-4987-BED5-EE89F315ACE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD44C163-FF98-4987-BED5-EE89F315ACE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD44C163-FF98-4987-BED5-EE89F315ACE3}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{CD44C163-FF98-4987-BED5-EE89F315ACE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD44C163-FF98-4987-BED5-EE89F315ACE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD44C163-FF98-4987-BED5-EE89F315ACE3}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{4814F4E4-308B-445D-989B-910430BB1A56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4814F4E4-308B-445D-989B-910430BB1A56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4814F4E4-308B-445D-989B-910430BB1A56}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{4814F4E4-308B-445D-989B-910430BB1A56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4814F4E4-308B-445D-989B-910430BB1A56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4814F4E4-308B-445D-989B-910430BB1A56}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

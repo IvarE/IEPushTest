@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="CGI.CRM.WCFService.ReportGenerator.ReportGeneratorService" CodeBehind="ReportGeneratorService.svc.cs" %>

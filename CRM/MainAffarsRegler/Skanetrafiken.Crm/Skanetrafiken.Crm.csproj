@@ -1,0 +1,559 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{848A5DE3-4C23-4AF9-A72E-AC1FE6CF93D6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Skanetrafiken.Crm</RootNamespace>
+    <AssemblyName>Skanetrafiken.Crm</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Keyfile.snk</AssemblyOriginatorKeyFile>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Test\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;TEST</DefineConstants>
+    <NoWarn>1591</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Optimize>false</Optimize>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Acceptans|AnyCPU'">
+    <OutputPath>bin\Acceptans\</OutputPath>
+    <DefineConstants>TRACE;ACCEPTANCE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Produktion|AnyCPU'">
+    <OutputPath>bin\Produktion\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Dev\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <NoWarn>1591</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="jose-jwt">
+      <HintPath>packages\jose-jwt.2.2.0\lib\net40\jose-jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.CrmSdk.CoreAssemblies.8.1.0\lib\net45\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Identity.Client, Version=4.15.0.0, Culture=neutral, PublicKeyToken=0a613f4dd989e8ae, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Identity.Client.4.15.0\lib\net45\Microsoft.Identity.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.IdentityModel.6.1.7600.16394\lib\net35\Microsoft.IdentityModel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.IdentityModel.Clients.ActiveDirectory.5.2.7\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.Xrm.Sdk, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.CrmSdk.CoreAssemblies.8.1.0\lib\net45\Microsoft.Xrm.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Workflow.Activities" />
+    <Reference Include="System.Workflow.ComponentModel" />
+    <Reference Include="System.Workflow.Runtime" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApiHelper.cs" />
+    <Compile Include="Entities\PaymentMethodEntity.cs" />
+    <Compile Include="Entities\PaymentEntity.cs" />
+    <Compile Include="Entities\KBArticleEntity.cs" />
+    <Compile Include="Entities\OrderPurchaseTypeEntity.cs" />
+    <Compile Include="PreAccountUpdate.cs" />
+    <Compile Include="PreAccountCreate.cs" />
+    <Compile Include="CountryUtility.cs" />
+    <Compile Include="Entities\AsyncOperationEntity.cs" />
+    <Compile Include="Entities\CgiCategoryDetailEntity.cs" />
+    <Compile Include="Entities\CompanyRoleEntity.cs" />
+    <Compile Include="Entities\CurrencyEntity.cs" />
+    <Compile Include="Entities\CustomerAddressEntity.cs" />
+    <Compile Include="Entities\CampaignResponseEntity.cs" />
+    <Compile Include="Entities\CreditOrderRowEntity.cs" />
+    <Compile Include="Entities\EmailTemplateProxyEntity.cs" />
+    <Compile Include="Entities\FeatureTogglingEntity.cs" />
+    <Compile Include="Entities\OrderEntity.cs" />
+    <Compile Include="Entities\OrderProductEntity.cs" />
+    <Compile Include="Entities\OrderStatusEntity.cs" />
+    <Compile Include="Entities\RefundAccountEntity.cs" />
+    <Compile Include="Entities\RefundEntity.cs" />
+    <Compile Include="Entities\RefundResponsibleEntity.cs" />
+    <Compile Include="Entities\RefundTypeEntity.cs" />
+    <Compile Include="Entities\ReimbursementFormEntity.cs" />
+    <Compile Include="Entities\ReturnMessageWebApiEntity.cs" />
+    <Compile Include="Entities\SalesOrderLineEntity.cs" />
+    <Compile Include="Entities\SalesOrderLineTravellerEntity.cs" />
+    <Compile Include="Entities\SentTextMessageEntity.cs" />
+    <Compile Include="Entities\SingaporeTicketEntity.cs" />
+    <Compile Include="Entities\SkaKortEntity.cs" />
+    <Compile Include="Entities\TextMessageEntity.cs" />
+    <Compile Include="Entities\TextMessageTemplateEntity.cs" />
+    <Compile Include="Entities\UnitEntity.cs" />
+    <Compile Include="Entities\UnitGroupEntity.cs" />
+    <Compile Include="Entities\ProcessStageEntity.cs" />
+    <Compile Include="Entities\ProductEntity.cs" />
+    <Compile Include="Entities\BiffIntegrationErrorLogRowEntity.cs" />
+    <Compile Include="Entities\BiffIntegrationErrorLogEntity.cs" />
+    <Compile Include="Entities\DeltabatchLogEntity.cs" />
+    <Compile Include="Entities\DeltabatchErrorLogRowEntity.cs" />
+    <Compile Include="Entities\DeltabatchErrorLogEntity.cs" />
+    <Compile Include="Entities\DeltabatchQueueEntity.cs" />
+    <Compile Include="Entities\UserSettingsEntity.cs" />
+    <Compile Include="Entities\TravelCardEntity.cs" />
+    <Compile Include="Entities\SalesOrderEntity.cs" />
+    <Compile Include="Entities\CampaignEntity.cs" />
+    <Compile Include="Entities\CampaignItemEntity.cs" />
+    <Compile Include="Entities\ValueCodeApprovalEntity.cs" />
+    <Compile Include="Entities\ValueCodeEntity.cs" />
+    <Compile Include="Entities\ValueCodeTemplateEntity.cs" />
+    <Compile Include="Entities\ValueCodeTransactionEntity.cs" />
+    <Compile Include="EntityExtensionMethods.cs" />
+    <Compile Include="Identity.cs" />
+    <Compile Include="ColumnBlockSchemas\NotificationInfoBlock.cs">
+      <DependentUpon>NotificationInfoBlock.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\IncidentEntity.cs" />
+    <Compile Include="Entities\NotifyMKLEntity.cs" />
+    <Compile Include="Entities\QueueItemEntity.cs" />
+    <Compile Include="Entities\SystemUserRoles.cs" />
+    <Compile Include="Entities\Role.cs" />
+    <Compile Include="Entities\MergeRecordsEntity.cs" />
+    <Compile Include="Entities\CgiSettingEntity.cs" />
+    <Compile Include="IdentityContract.cs" />
+    <Compile Include="Plugin.cs" />
+    <Compile Include="PostCampaignResponseCreate_Async.cs" />
+    <Compile Include="PostCampaignUpdate_Async.cs" />
+    <Compile Include="PostCompanyRoleCreate_Async.cs" />
+    <Compile Include="PostQualifyLead_Async.cs" />
+    <Compile Include="PostRefundCreate_Async.cs" />
+    <Compile Include="PostTemplateCreate.cs" />
+    <Compile Include="PreCampaignResponseCreate.cs" />
+    <Compile Include="PreCampaignResponseUpdate.cs" />
+    <Compile Include="PreContactMerge.cs" />
+    <Compile Include="PreKBArticleUpdate_Sync.cs" />
+    <Compile Include="PreQualifyLead.cs" />
+    <Compile Include="PreLeadSetState.cs" />
+    <Compile Include="PostLeadSetState_Async.cs" />
+    <Compile Include="PostContactSetState_Async.cs" />
+    <Compile Include="PostContactDelete_Async.cs" />
+    <Compile Include="PostContactUpdate_Async.cs" />
+    <Compile Include="PostContactCreate_Async.cs" />
+    <Compile Include="PostNotifyMKLCreate_Async.cs" />
+    <Compile Include="PreCampaignUpdate.cs" />
+    <Compile Include="PreAssociate.cs" />
+    <Compile Include="PreProductUpdate.cs" />
+    <Compile Include="PreLeadUpdate.cs" />
+    <Compile Include="PreLeadCreate.cs" />
+    <Compile Include="PreContactSetState.cs" />
+    <Compile Include="PreTemplateDelete.cs" />
+    <Compile Include="PreValidationContactDelete.cs" />
+    <Compile Include="PreValueCodeApprovalCreate.cs" />
+    <Compile Include="PreValueCodeApprovalUpdate.cs" />
+    <Compile Include="PreValueCodeTemplateCreate.cs" />
+    <Compile Include="PreValueCodeTemplateUpdate.cs" />
+    <Compile Include="Service References\OCTest.Kassagirot\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="TextMessageSender\MultipleTextMessage.cs" />
+    <Compile Include="TextMessageSender\SingleTextMessage.cs" />
+    <Compile Include="TextMessageSender\BosbecAPIHandler.cs" />
+    <Compile Include="TextMessageSender\TextMessageToSend.cs" />
+    <Compile Include="ValueCodes\ValueCodeHandler.cs" />
+    <Compile Include="XrmHelper.cs" />
+    <Compile Include="XrmRetrieveHelper.cs" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.FrontOffice.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.getOrders.V9.0.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MargeAccounts.V9.0.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MergeRecordsStarter.V9.0.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.SearchTravelCards.V9.0.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.TicketMoveManager.V9.0.html" />
+    <Content Include="WebResource\script\Endeavor.Common.Data.js" />
+    <Content Include="WebResource\script\Endeavor.Common.Page.js" />
+    <Content Include="WebResource\script\Endeavor.Common.SaveAndCopyEntity.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.cgi_representative.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.cgi_travelcard.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.ed_mergerecords.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.FrontOffice.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Opportunity.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.QueueItem.V9.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCodeApproval.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.KBArticle.V9.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCodeTransaction.V9.0.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.Account.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.CreditsafeAccount.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.CreditsafeConfiguration.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.Resources.1031.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.Resources.1033.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.Resources.1053.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.Creditsafe.SearchCreditsafe.js" />
+    <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.CreditSafe.SolutionConfigurationPage.js" />
+    <Content Include="WebResource\script\Endeavor.Library.formscriptfunctions.js" />
+    <Content Include="WebResource\script\Endeavor.Library.OData_Querys.js" />
+    <Content Include="WebResource\script\SDK.Rest.js" />
+    <None Include="ColumnBlockSchemas\NotificationInfoBlock.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ColumnBlockSchemas\CustomerInfoBlock.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="ColumnBlockSchemas\GenerateClasses.cmd" />
+    <None Include="ColumnBlockSchemas\StatusBlock.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <Compile Include="Entities\CountryEntity.cs" />
+    <Compile Include="Entities\TemplateEntity.cs" />
+    <Compile Include="Entities\SystemUserEntity.cs" />
+    <Compile Include="Entities\ActivityPartyEntity.cs" />
+    <Compile Include="Entities\EmailEntity.cs" />
+    <Compile Include="Entities\AccountEntity.cs" />
+    <Compile Include="Entities\LeadEntity.cs" />
+    <Compile Include="Entities\ContactEntity.cs" />
+    <Compile Include="ColumnBlockSchemas\CustomerInfoBlock.cs">
+      <DependentUpon>CustomerInfoBlock.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ColumnBlockSchemas\StatusBlock.cs">
+      <DependentUpon>StatusBlock.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="CustomerUtility.cs" />
+    <Compile Include="PluginConfiguration.cs" />
+    <None Include="Generators\GenerateJavaScriptEntities.cmd" />
+    <None Include="Generators\GenerateSoapMessages.cmd" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="PostMergeRecordsCreate_async.cs" />
+    <None Include="PostOpportunityDelete.cs" />
+    <None Include="PostOpportunityUpdate.cs" />
+    <None Include="Keyfile.snk" />
+    <Compile Include="PreContactCreate.cs" />
+    <Compile Include="PreContactUpdate.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratedEntities.cs" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="QlikView\Update_DK_QVD.bat" />
+    <None Include="Service References\OCTest.Kassagirot\CouponCreatorService.wsdl" />
+    <None Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.batchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.couponForPrintingResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.createCouponForPrintingResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.createMobileCouponResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.createUniqueCouponBatchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.createUniqueCouponResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.createUniqueCouponWithEanCodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.getHeartbeatResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.singleResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Generators\GenerateEntities.cmd" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.VisualBasic.PowerPacks.10.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft Visual Basic PowerPacks 10.0</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Generators\GenerateEntities.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Generators\GenerateJavaScriptEntities.xml" />
+    <None Include="Service References\OCTest.Kassagirot\configuration91.svcinfo" />
+    <None Include="Service References\OCTest.Kassagirot\configuration.svcinfo" />
+    <None Include="Service References\OCTest.Kassagirot\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Sql\QueryDuplicatePersonnummer.sql" />
+    <Content Include="WebResource\css\Endeavor.Skanetrafiken.SearchTravelCards.css" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.BiffTransactions.V9.0.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MargeAccounts.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.SearchTravelCards.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.TravelInformation.V9.0.html" />
+    <Content Include="WebResource\image\ed_account_block16.png" />
+    <Content Include="WebResource\image\ed_account_block32.png" />
+    <Content Include="WebResource\image\ed_account_unblock16.png" />
+    <Content Include="WebResource\image\ed_account_unblock32.png" />
+    <Content Include="WebResource\image\ed_companyrole_block16.png" />
+    <Content Include="WebResource\image\ed_companyrole_block32.png" />
+    <Content Include="WebResource\image\ed_companyrole_unblock16.png" />
+    <Content Include="WebResource\image\ed_companyrole_unblock32.png" />
+    <Content Include="WebResource\image\ed_contact_block16.png" />
+    <Content Include="WebResource\image\ed_contact_block32.png" />
+    <Content Include="WebResource\image\ed_contact_unblock16.png" />
+    <Content Include="WebResource\image\ed_contact_unblock32.png" />
+    <Content Include="WebResource\image\ed_valuecodeapproval_16.png" />
+    <Content Include="WebResource\image\ed_valuecodeapproval_32.png" />
+    <Content Include="WebResource\image\send_valuecode_16.png" />
+    <Content Include="WebResource\script\CrmFetchKit.js" />
+    <Content Include="WebResource\script\ed_biffintegrationlog_16.ico" />
+    <Content Include="WebResource\script\ed_Cejn.Resources.1033.js" />
+    <Content Include="WebResource\script\ed_Cejn.Resources.1053.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.ed_mergerecords.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Account.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.BiffTransactions.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Campaign.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.cgi_refund.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.CompanyRole.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.BiffTransactions.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Campaign.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.cgi_refund.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Account.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.CompanyRole.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Contact.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Contact.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Contact_debugForm.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Contact_debugForm.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Email.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Email.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.getOrders.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.getOrders.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Incident.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Incident.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.OptionSet.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.TextMessage.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.TextMessage.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.TravelInformation.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.TravelInformation.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCode.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCode.V9.0.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCodeApproval.js" />
+    <Content Include="WebResource\script\head.load.js" />
+    <Content Include="WebResource\script\jquery.1.11.1.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_AllowOneMoreTicketMove.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_BlockAccountPortal.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_BlockCompanyRolePortal.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_BlockCustomerPortal.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_CreateCreditOrder.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_GetCardDetails.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_GetCardTransactions.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_GetContractors.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_GetDirectJourneys.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_GetLineDetails.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_GetOrders.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_GetOrganisationalUnits.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_GetOutstandingCharges.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_GetServiceJourney.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_GetTicketMoveDataFromMKL.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_MergeRecordsActionWorkflow.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_PrintRefundReports.min.js" />
+    <Content Include="WebResource\script\Sdk.ed_RechargeCard.min.js" />
+    <Content Include="WebResource\script\sdk.metadata.js" />
+    <Content Include="WebResource\script\Sdk.Soap.min.js" />
+    <Content Include="WebResource\script\spin.min.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_AllowOneMoreTicketMove.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_BlockAccountPortal.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_BlockCompanyRolePortal.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_BlockCustomerPortal.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_CreateCreditOrder.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_GetCardDetails.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_GetCardTransactions.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_GetContractors.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_GetDirectJourneys.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_GetLineDetails.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_GetOrders.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_GetOrganisationalUnits.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_GetOutstandingCharges.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_GetServiceJourney.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_GetTicketMoveDataFromMKL.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_MergeRecordsActionWorkflow.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_PrintRefundReports.vsdoc.js" />
+    <Content Include="WebResource\script\vsdoc\Sdk.ed_RechargeCard.vsdoc.js" />
+    <Content Include="Sql\AuditBaseIndex.sql" />
+    <Content Include="Sql\ContactBaseIndex.sql" />
+    <Content Include="Sql\CustomerAddressBaseIndex.sql" />
+    <Content Include="Sql\DeleteContact_Indexes.sql" />
+    <Content Include="Sql\IncidentBaseIndex.sql" />
+    <Content Include="Sql\NewIndexes20170529.sql" />
+    <Content Include="Sql\QueueItemBaseIndex.sql" />
+    <Content Include="WebResource\css\Endeavor.Skanetrafiken.BiffTransactions.css" />
+    <Content Include="WebResource\css\Endeavor.Skanetrafiken.getOrders.css" />
+    <Content Include="WebResource\css\Endeavor.Skanetrafiken.TravelInformation.css" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.BiffTransactions.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.getOrders.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.TicketMoveManager.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.TravelInformation.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MergeRecordsStarter.html" />
+    <Content Include="WebResource\image\ed_biffintegrationlog_32.ico" />
+    <Content Include="WebResource\image\ed_deltabatcherrorlogrow_16.png" />
+    <Content Include="WebResource\image\ed_deltabatcherrorlogrow_32.png" />
+    <Content Include="WebResource\image\ed_deltabatcherrorlog_16.png" />
+    <Content Include="WebResource\image\ed_deltabatcherrorlog_32.png" />
+    <Content Include="WebResource\image\ed_deltabatchlog_16.png" />
+    <Content Include="WebResource\image\ed_deltabatchlog_32.png" />
+    <Content Include="WebResource\image\ed_deltabatchqueue_16.png" />
+    <Content Include="WebResource\image\ed_deltabatchqueue_32.png" />
+    <Content Include="WebResource\image\ed_mergerecords_16.png" />
+    <Content Include="WebResource\image\ed_mergerecords_32.png" />
+    <Content Include="WebResource\image\ed_salesorder_16.png" />
+    <Content Include="WebResource\image\ed_salesorder_32.png" />
+    <Content Include="WebResource\image\ed_systemparameter_16.png" />
+    <Content Include="WebResource\image\ed_systemparameter_32.png" />
+    <Content Include="WebResource\image\SLMedallion_SVE.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\OCTest.Kassagirot\" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+  </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

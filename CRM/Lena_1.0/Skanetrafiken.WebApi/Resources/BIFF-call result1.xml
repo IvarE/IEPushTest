@@ -1,0 +1,51 @@
+﻿<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Body>
+    <ns1:GetCardDetails2Response xmlns:ns1="http://www.skanetrafiken.com/DK/INTSTDK004/GetCardDetails2Response/20141216" xmlns:ns0="http://www.skanetrafiken.com/DK/INTSTDK004/CardDetails2/20141216">
+      <ns1:GetCardDetails2Result>
+        <ns0:CardDetails2>
+          <ns0:CardInformation>
+            <ns0:CardNumber>17251994</ns0:CardNumber>
+            <ns0:CardIssuer>Skånetrafiken CSC</ns0:CardIssuer>
+            <ns0:CardKind>4</ns0:CardKind>
+            <ns0:CardHotlisted>true</ns0:CardHotlisted>
+            <ns0:CardTypePeriod>3182</ns0:CardTypePeriod>
+            <ns0:CardTypeValue>3161</ns0:CardTypeValue>
+            <ns0:CardValueProductType>RESKASSA SKÅNE</ns0:CardValueProductType>
+          </ns0:CardInformation>
+          <ns0:PurseDetails>
+            <ns0:CardCategory>4</ns0:CardCategory>
+            <ns0:Balance>62.4</ns0:Balance>
+            <ns0:Currency>SEK</ns0:Currency>
+            <ns0:OutstandingDirectedAutoload>false</ns0:OutstandingDirectedAutoload>
+            <ns0:OutstandingEnableThresholdAutoload>false</ns0:OutstandingEnableThresholdAutoload>
+            <ns0:Hotlisted>false</ns0:Hotlisted>
+            <ns0:HotlistReason>Lost</ns0:HotlistReason>
+          </ns0:PurseDetails>
+          <ns0:PeriodDetails>
+            <ns0:CardCategory>2</ns0:CardCategory>
+            <ns0:ProductType>BAS HELSINGBORG</ns0:ProductType>
+            <ns0:PeriodStart>2016-08-26T00:00:00+02:00</ns0:PeriodStart>
+            <ns0:PeriodEnd>2016-09-24T00:00:00+02:00</ns0:PeriodEnd>
+            <ns0:WaitingPeriods>0</ns0:WaitingPeriods>
+            <ns0:ZoneListID>1</ns0:ZoneListID>
+            <ns0:PricePaid>49900</ns0:PricePaid>
+            <ns0:Currency>SEK</ns0:Currency>
+            <ns0:OutstandingDirectedAutoload>false</ns0:OutstandingDirectedAutoload>
+            <ns0:OutstandingEnableThresholdAutoload>false</ns0:OutstandingEnableThresholdAutoload>
+            <ns0:Hotlisted>false</ns0:Hotlisted>
+            <ns0:HotlistReason>Lost</ns0:HotlistReason>
+            <ns0:ContractSerialNumber>1</ns0:ContractSerialNumber>
+          </ns0:PeriodDetails>
+          <ns0:ZoneLists>
+            <ns0:ZoneListID>1</ns0:ZoneListID>
+            <ns0:Zone>1006</ns0:Zone>
+          </ns0:ZoneLists>
+          <ns0:ZoneLists>
+            <ns0:ZoneListID>1</ns0:ZoneListID>
+            <ns0:Zone>1070</ns0:Zone>
+          </ns0:ZoneLists>
+        </ns0:CardDetails2>
+      </ns1:GetCardDetails2Result>
+    </ns1:GetCardDetails2Response>
+  </s:Body>
+</s:Envelope>

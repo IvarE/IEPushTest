@@ -1,0 +1,7 @@
+{
+    "OrderNumber": "PO123456789",
+    "OrderCreated": true,
+    "Message": "OrderSucessfullyCreated",
+    "ErrorMessage": "ErrorMessage",
+    "StatusCode": 200
+}

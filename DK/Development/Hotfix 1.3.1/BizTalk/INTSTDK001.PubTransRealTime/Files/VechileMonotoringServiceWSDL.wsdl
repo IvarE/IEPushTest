@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+-<wsdl:definitions xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:i0="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/VehicleMonitoringService" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://tempuri.org/" name="VehicleMonitoringService">
+  -<wsp:Policy wsu:Id="VehicleMonitoringService_policy">
+    -<wsp:ExactlyOne>
+      -<wsp:All>
+        <http:BasicAuthentication xmlns:http="http://schemas.microsoft.com/ws/06/2004/policy/http"/>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:import location="http://10.16.100.113:9981/Pws/VehicleMonitoringService?wsdl=wsdl0" namespace="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/VehicleMonitoringService"/>
+  <wsdl:types/>
+  -<wsdl:binding name="VehicleMonitoringService" type="i0:IVehicleMonitoringService">
+    <wsp:PolicyReference URI="#VehicleMonitoringService_policy"/>
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    -<wsdl:operation name="GetCallsforServiceJourney">
+      <soap:operation style="document" soapAction="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/VehicleMonitoringService/IVehicleMonitoringService/GetCallsforServiceJourney"/>
+      -<wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      -<wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      -<wsdl:fault name="RuntimeFaultDetailFault">
+        <soap:fault name="RuntimeFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+      -<wsdl:fault name="NotSupportedFaultDetailFault">
+        <soap:fault name="NotSupportedFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+      -<wsdl:fault name="ImplementationFaultDetailFault">
+        <soap:fault name="ImplementationFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+      -<wsdl:fault name="ConfigurationFaultDetailFault">
+        <soap:fault name="ConfigurationFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+      -<wsdl:fault name="ClientFaultDetailFault">
+        <soap:fault name="ClientFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+      -<wsdl:fault name="LicenseFaultDetailFault">
+        <soap:fault name="LicenseFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    -<wsdl:operation name="GetCall">
+      <soap:operation style="document" soapAction="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/VehicleMonitoringService/IVehicleMonitoringService/GetCall"/>
+      -<wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      -<wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      -<wsdl:fault name="RuntimeFaultDetailFault">
+        <soap:fault name="RuntimeFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+      -<wsdl:fault name="ConfigurationFaultDetailFault">
+        <soap:fault name="ConfigurationFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+      -<wsdl:fault name="ClientFaultDetailFault">
+        <soap:fault name="ClientFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+      -<wsdl:fault name="ImplementationFaultDetailFault">
+        <soap:fault name="ImplementationFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+      -<wsdl:fault name="NotSupportedFaultDetailFault">
+        <soap:fault name="NotSupportedFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+      -<wsdl:fault name="LicenseFaultDetailFault">
+        <soap:fault name="LicenseFaultDetailFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  -<wsdl:service name="VehicleMonitoringService">
+    -<wsdl:port name="VehicleMonitoringService" binding="tns:VehicleMonitoringService">
+      <soap:address location="http://10.16.100.113:9981/Pws/VehicleMonitoringService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,29 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
+    <title>Merge Records</title>
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+    <script src="../script/ed_mergerecords.js"></script>
+</head>
+<body">
+    <div id="upperPartDiv" class="upperPartDiv">
+        <table style="align-content:center">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <span id="lang-generate">Merge records?</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="align-content:center"><button id="buttonYes" onclick="Endeavor.Skanetrafiken.Merge.startMerge()" type="button"><span id="lang-yes">YES</span></button></td>
+                    <td style="align-content:center"><button id="buttonNo" onclick="Endeavor.Skanetrafiken.Merge.closeWindow()" type="button"><span id="lang-no">NO</span></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="spinnerDiv" class="spinnerDiv" style="height:auto;width:98%;align-content:center;">
+
+    </div>
+    </body>
+</html>

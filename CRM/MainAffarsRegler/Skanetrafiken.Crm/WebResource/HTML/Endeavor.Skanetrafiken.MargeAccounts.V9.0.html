@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Account Merger</title>
+    <style type="text/css">
+        h3 {
+            margin-top: 100px;
+            margin-bottom: auto;
+            margin-right: 150px;
+            margin-left: 150px;
+            text-align: center
+        }
+
+        #accountInput {
+            display: inline-block;
+        }
+
+        #inputForm {
+            text-align: center;
+        }
+
+        #statusText {
+            color: red;
+        }
+
+        #mergeBtn {
+            margin: 0px 0px 0px 20px;
+        }
+    </style>
+
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+
+    <script>
+        function mergeAccounts() {
+            var mergeButton = document.getElementById('mergeBtn');
+            var oldAccInput = document.getElementById('oldAccountInput');
+            var newAccInput = document.getElementById('newAccountInput');
+
+            if (!isInputEmpty(oldAccInput, newAccInput))
+                return;
+
+            showHideElements(mergeButton, oldAccInput, newAccInput);
+
+            var inputParameters = [{ "Field": "oldAccountNumber", "Value": oldAccInput.value.replace(/ /g, ''), "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                { "Field": "MaxTransactions", "Value": newAccInput.value.replace(/ /g, ''), "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 }];
+
+            Endeavor.formscriptfunctions.callGlobalAction("ed_MergeAccountsPortalen", inputParameters,
+                function (result) {
+
+                    var migrationStatusLabel = document.getElementById('statusText');
+                    if (result.MergeResponse == null || result.MergeResponse != "")
+                        migrationStatusLabel.innerHTML = "Något fel inträffade. Vänligen kontakta administratör. \n\nFel: " + result.MergeResponse;
+                    else {
+                        migrationStatusLabel.style.color = "green";
+                        migrationStatusLabel.innerHTML = "OK!";
+                    }
+
+                    showHideElements(mergeButton, oldAccInput, newAccInput);
+                },
+                function (error) {
+                    var errorMessage = "Error in  Merge Action: " + error.message;
+                    console.log(errorMessage);
+                    Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
+
+                    showHideElements(mergeButton, oldAccInput, newAccInput);
+                });
+        }
+
+        function showHideElements(btn, oldAccInput, newAccInput) {
+            if (btn) {
+                if (btn.value == "Migrera")
+                    btn.value = "Bearbetar";
+                else btn.value = "Migrera";
+
+                btn.disabled = !btn.disabled;
+                oldAccInput.disabled = !oldAccInput.disabled;
+                newAccInput.disabled = !newAccInput.disabled;
+            }
+        }
+
+        function isInputEmpty(oldAccInput, newAccInput) {
+            if (!oldAccInput.value || !newAccInput.value) {
+                alert("Vänligen ange båda kontonummren.");
+                return false;
+            } return true;
+
+        }
+    </script>
+
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="text-center text-primary">V&auml;nligen ange konton som du vill sammanfoga.</h3>
+                <div id="inputForm">
+                    <div id="accountInput"><label for="oldAccountInput">Gammal konto</label> <input type="text" class="form-control" id="oldAccountInput" placeholder="Kundnummer" /></div>
+                    <span style="font-size: 100px; color: #9999">&rarr;</span> <span style="font-size: 100px; color: #9999">&larr;</span>
+                    <div id="accountInput"><label for="newAccountInput">Portal-konto </label> <input type="text" class="form-control" id="newAccountInput" placeholder="Kundnummer" /></div>
+                    <input id="mergeBtn" type="button" class="btn btn-primary" onclick="mergeAccounts()" value="Migrera" />
+                    <div><label>Migrering status:</label> <label id="statusText">V&auml;ntar p&aring; migrering</label></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
