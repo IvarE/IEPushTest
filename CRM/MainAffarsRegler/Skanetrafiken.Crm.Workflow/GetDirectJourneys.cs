@@ -6,6 +6,8 @@ using Microsoft.Xrm.Sdk.Workflow;
 using Endeavor.Crm;
 using Skanetrafiken.Crm.Entities;
 using System.ServiceModel;
+using Skanetrafiken.Crm.StopMonitoringService;
+using System.Data;
 
 namespace Skanetrafiken.Crm
 {
@@ -92,7 +94,7 @@ namespace Skanetrafiken.Crm
             return binding;
         }
 
-        internal static StopMonitoringServiceClient GetStopMonitoringServiceClient()
+        internal static StopMonitoringServiceClient GetStopMonitoringServiceClient(string _userName, string _passWord)
         {
             var serviceEndpointUrl = "http://PWS.ST.HOGIACLOUD.SE:9980/pws/StopMonitoringService";
             var binding = GetPubTransBasicHttpBinding("StopMonitoringService");
@@ -105,15 +107,52 @@ namespace Skanetrafiken.Crm
                     UserName =
                     {
                         UserName = _userName,
-                        Password = _password
+                        Password = _passWord
                     }
                 }
             };
         }
 
 
-        public static void Test()
+        public static void ExecuteCodeActivityPubTrans(Plugin.LocalPluginContext localContext, string fromStopAreaGid, string toStopAreaGid, string tripDateTime, string forLineGids, string transportType)
         {
+            // ONLY ASSIGNED IF TRAIN. REQUIRED FOR REQUEST
+            string aot = "";
+            string district = "PRODUCT";
+            if (transportType == "TRAIN")
+            {
+                aot = "AOT";
+                district = "DISTRICT";
+            }
+
+            byte timeDuration = 120;
+            int departureMaxCount = 9999;
+
+            string _serviceEndPointUrl = string.Empty;
+            string _userName = string.Empty;
+            string _passWord = string.Empty;
+
+            try
+            {
+                _serviceEndPointUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_BizTalkGetDirectJourneysService);
+                _userName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_BizTalkGetDirectJourneysService);
+                _passWord = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_BizTalkGetDirectJourneysService);
+            }
+            catch (Exception ex)
+            {
+                localContext.Trace($"An error occurred when retreiving PubTrans URL/Credentials: {ex.Message}");
+                throw new Exception($"An error occurred when retreiving PubTrans URL/Credentials: {ex.Message}", ex);
+            }
+
+            using (var client = GetDirectJourneys.GetStopMonitoringServiceClient(_userName, _passWord))
+            {
+                //In RGOL I have two different set of values sent to PWS depending on if it is a train or not. Maybe you need to verify this in your setup I crm
+                //TRAIN
+                DataSet ds = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, null, aot, district);
+
+                //If not TRAIN
+                DataSet dsNotTrain = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, null, productCode, district);
+            }
 
         }
 

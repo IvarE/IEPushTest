@@ -315,6 +315,7 @@
     <Compile Include="BlockAccountPortal.cs" />
     <Compile Include="CancelValueCode.cs" />
     <Compile Include="CancelOrder.cs" />
+    <Compile Include="CrmConnection.cs" />
     <Compile Include="FrontOffice.cs" />
     <Compile Include="GetCard.cs" />
     <Compile Include="PlaceOrder.cs" />
@@ -358,6 +359,11 @@
     <Compile Include="SendEmailFromRibbon.cs" />
     <Compile Include="SendTextMessage.cs" />
     <Compile Include="SendValueCode.cs" />
+    <Compile Include="Service References\StopMonitoringService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="UpdateTextMessageStatus.cs" />
     <Compile Include="UpdateTopicOnUnderlyingLeadsRecursive.cs" />
     <Compile Include="UpdateLeadSourceOnUnderlyingLeadsRecursive.cs" />
@@ -381,6 +387,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Service References\StopMonitoringService\StopMonitoringService.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -393,6 +400,45 @@
       <Link>Properties\Resources.resx</Link>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\StopMonitoringService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\StopMonitoringService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\StopMonitoringService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\StopMonitoringService\Reference.svcmap">
+      <Generator>Xaml Activity Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\StopMonitoringService\endpointConfigurationNameResolver.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <XamlAppDef Include="Service References\StopMonitoringService\Skanetrafiken.Crm.StopMonitoringService.IStopMonitoringService.GetDeparturesAtStop.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+      <SubType>Designer</SubType>
+    </XamlAppDef>
+  </ItemGroup>
+  <ItemGroup>
+    <XamlAppDef Include="Service References\StopMonitoringService\Skanetrafiken.Crm.StopMonitoringService.IStopMonitoringService.GetDirectJourneysBetweenStops.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+      <SubType>Designer</SubType>
+    </XamlAppDef>
+  </ItemGroup>
+  <ItemGroup>
+    <XamlAppDef Include="Service References\StopMonitoringService\Skanetrafiken.Crm.StopMonitoringService.IStopMonitoringService.GetCallsAtStop.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+      <SubType>Designer</SubType>
+    </XamlAppDef>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
