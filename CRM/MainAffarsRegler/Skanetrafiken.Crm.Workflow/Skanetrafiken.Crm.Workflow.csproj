@@ -316,7 +316,6 @@
     <Compile Include="CancelValueCode.cs" />
     <Compile Include="CancelOrder.cs" />
     <Compile Include="CrmConnection.cs" />
-    <Compile Include="FrontOffice.cs" />
     <Compile Include="GetCard.cs" />
     <Compile Include="PlaceOrder.cs" />
     <Compile Include="CaptureOrder.cs" />
