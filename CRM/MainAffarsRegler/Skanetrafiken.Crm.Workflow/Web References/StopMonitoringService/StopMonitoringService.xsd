@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/StopMonitoringService" elementFormDefault="qualified" targetNamespace="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/StopMonitoringService" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="GetDeparturesAtStop">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="atStopGid" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="forDirectionOfLineGids" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="forTimeWindowStartDateTime" type="xs:dateTime" />
+        <xs:element minOccurs="0" name="forTimeWindowDuration" nillable="true" type="xs:unsignedByte" />
+        <xs:element minOccurs="0" name="withDepartureMaxCount" nillable="true" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetDeparturesAtStopResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetDeparturesAtStopResult" nillable="true">
+          <xs:complexType>
+            <xs:annotation>
+              <xs:appinfo>
+                <ActualType Name="DataSet" Namespace="http://schemas.datacontract.org/2004/07/System.Data" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+              <xs:element ref="xs:schema" />
+              <xs:any />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetDirectJourneysBetweenStops">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="fromStopAreaGid" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="toStopAreaGid" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="forTimeWindowStartDateTime" type="xs:dateTime" />
+        <xs:element minOccurs="0" name="forTimeWindowDuration" nillable="true" type="xs:unsignedByte" />
+        <xs:element minOccurs="0" name="withDepartureMaxCount" nillable="true" type="xs:int" />
+        <xs:element minOccurs="0" name="forLineGids" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="forProducts" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="purposeOfLineGroupingCode" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetDirectJourneysBetweenStopsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetDirectJourneysBetweenStopsResult" nillable="true">
+          <xs:complexType>
+            <xs:annotation>
+              <xs:appinfo>
+                <ActualType Name="DataSet" Namespace="http://schemas.datacontract.org/2004/07/System.Data" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+              <xs:element ref="xs:schema" />
+              <xs:any />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCallsAtStop">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="atStopGid" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="forTimeWindowStartDateTime" type="xs:dateTime" />
+        <xs:element minOccurs="0" name="forTimeWindowDurationMinutes" type="xs:int" />
+        <xs:element minOccurs="0" name="includeArrivalsTable" type="xs:boolean" />
+        <xs:element minOccurs="0" name="includeDeparturesTable" type="xs:boolean" />
+        <xs:element minOccurs="0" name="includeDeviationTables" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCallsAtStopResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetCallsAtStopResult" nillable="true">
+          <xs:complexType>
+            <xs:annotation>
+              <xs:appinfo>
+                <ActualType Name="DataSet" Namespace="http://schemas.datacontract.org/2004/07/System.Data" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+              </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+              <xs:element ref="xs:schema" />
+              <xs:any />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

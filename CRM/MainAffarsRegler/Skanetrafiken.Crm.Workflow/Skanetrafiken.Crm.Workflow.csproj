@@ -370,6 +370,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Web References\StopMonitoringService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
     <Compile Include="XrmHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -381,6 +386,27 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\StopMonitoringService\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\StopMonitoringService\StopMonitoringService.wsdl" />
+    <None Include="Web References\StopMonitoringService\StopMonitoringService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web References\StopMonitoringService\StopMonitoringService0.wsdl" />
+    <None Include="Web References\StopMonitoringService\StopMonitoringService0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web References\StopMonitoringService\StopMonitoringService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web References\StopMonitoringService\StopMonitoringService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web References\StopMonitoringService\StopMonitoringService3.xsd">
+      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -394,6 +420,19 @@
       <Link>Properties\Resources.resx</Link>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://pws.st.hogiacloud.se:9980/Pws/StopMonitoringService%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\StopMonitoringService\</RelPath>
+      <UpdateFromURL>http://pws.st.hogiacloud.se:9980/Pws/StopMonitoringService%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Skanetrafiken_Crm_Workflow_StopMonitoringService_StopMonitoringService</CachedSettingsPropName>
+    </WebReferenceUrl>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

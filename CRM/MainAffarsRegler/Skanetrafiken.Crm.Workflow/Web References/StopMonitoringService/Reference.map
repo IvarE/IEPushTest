@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Results>
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://pws.st.hogiacloud.se:9980/Pws/StopMonitoringService?xsd=xsd0" filename="StopMonitoringService.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="http://pws.st.hogiacloud.se:9980/Pws/StopMonitoringService?wsdl" filename="StopMonitoringService.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="http://pws.st.hogiacloud.se:9980/Pws/StopMonitoringService?wsdl=wsdl0" filename="StopMonitoringService0.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://pws.st.hogiacloud.se:9980/Pws/StopMonitoringService?xsd=xsd4" filename="StopMonitoringService0.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://pws.st.hogiacloud.se:9980/Pws/StopMonitoringService?xsd=xsd2" filename="StopMonitoringService1.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://pws.st.hogiacloud.se:9980/Pws/StopMonitoringService?xsd=xsd1" filename="StopMonitoringService2.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://pws.st.hogiacloud.se:9980/Pws/StopMonitoringService?xsd=xsd3" filename="StopMonitoringService3.xsd" />
+  </Results>
+</DiscoveryClientResultsFile>

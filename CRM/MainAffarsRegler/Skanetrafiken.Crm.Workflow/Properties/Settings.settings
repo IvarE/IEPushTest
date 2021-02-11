@@ -20,5 +20,8 @@
     <Setting Name="CRMTravelInformationDBName" Type="System.String" Scope="User">
       <Value Profile="(Default)">PubTrans_Staging</Value>
     </Setting>
+    <Setting Name="Skanetrafiken_Crm_Workflow_StopMonitoringService_StopMonitoringService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://pws.st.hogiacloud.se:9980/Pws/StopMonitoringService</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
