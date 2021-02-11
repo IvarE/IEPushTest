@@ -1,0 +1,127 @@
+<Activity mc:Ignorable="sap2010 sads" x:Class="Skanetrafiken.Crm.StopMonitoringService.Activities.GetDirectJourneysBetweenStops" this:GetDirectJourneysBetweenStops.EndpointConfigurationName="StopMonitoringService"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:p="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/StopMonitoringService"
+ xmlns:p1="http://schemas.microsoft.com/netfx/2009/xaml/servicemodel"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:sc="clr-namespace:System.ComponentModel;assembly=System"
+ xmlns:scs="clr-namespace:Skanetrafiken.Crm.StopMonitoringService;assembly=Skanetrafiken.Crm.Workflow"
+ xmlns:scs1="clr-namespace:Skanetrafiken.Crm.StopMonitoringService;assembly=Skanetrafiken.Crm.Workflow, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+ xmlns:sd="clr-namespace:System.Data;assembly=System.Data"
+ xmlns:sd1="clr-namespace:System.Data;assembly=System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+ xmlns:sxs="clr-namespace:System.Xml.Serialization;assembly=System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+ xmlns:this="clr-namespace:Skanetrafiken.Crm.StopMonitoringService.Activities"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="EndpointConfigurationName" Type="x:String">
+      <x:Property.Attributes>
+        <sc:DefaultValueAttribute>
+          <x:Arguments>
+            <x:String>StopMonitoringService</x:String>
+          </x:Arguments>
+        </sc:DefaultValueAttribute>
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="fromStopAreaGid" Type="InArgument(x:String)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="toStopAreaGid" Type="InArgument(x:String)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="forTimeWindowStartDateTime" Type="InArgument(s:DateTime)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="forTimeWindowDuration" Type="InArgument(s:Nullable(x:Byte))">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="withDepartureMaxCount" Type="InArgument(s:Nullable(x:Int32))">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="forLineGids" Type="InArgument(x:String)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="forProducts" Type="InArgument(x:String)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="purposeOfLineGroupingCode" Type="InArgument(x:String)">
+      <x:Property.Attributes>
+        <RequiredArgumentAttribute />
+      </x:Property.Attributes>
+    </x:Property>
+    <x:Property Name="GetDirectJourneysBetweenStopsResult" Type="OutArgument(sd:DataSet)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>Assembly references and imported namespaces serialized as XML namespaces</mva:VisualBasic.Settings>
+  <Sequence>
+    <Sequence.Variables>
+      <x:Reference>__ReferenceID1</x:Reference>
+      <x:Reference>__ReferenceID2</x:Reference>
+    </Sequence.Variables>
+    <p1:Send x:Name="__ReferenceID0" Action="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/StopMonitoringService/IStopMonitoringService/GetDirectJourneysBetweenStops" OperationName="GetDirectJourneysBetweenStops" SerializerOption="XmlSerializer" ServiceContractName="p:IStopMonitoringService">
+      <p1:Send.CorrelationInitializers>
+        <p1:RequestReplyCorrelationInitializer>
+          <p1:RequestReplyCorrelationInitializer.CorrelationHandle>
+            <InArgument x:TypeArguments="p1:CorrelationHandle">
+              <VariableValue x:TypeArguments="p1:CorrelationHandle">
+                <VariableValue.Variable>
+                  <Variable x:TypeArguments="p1:CorrelationHandle" x:Name="__ReferenceID2" />
+                </VariableValue.Variable>
+              </VariableValue>
+            </InArgument>
+          </p1:RequestReplyCorrelationInitializer.CorrelationHandle>
+        </p1:RequestReplyCorrelationInitializer>
+      </p1:Send.CorrelationInitializers>
+      <p1:Send.KnownTypes>
+        <x:Type Type="scs:FaultDetail" />
+        <x:Type Type="scs:LicenseFaultDetail" />
+        <x:Type Type="scs:ImplementationFaultDetail" />
+        <x:Type Type="scs:NotSupportedFaultDetail" />
+        <x:Type Type="scs:RuntimeFaultDetail" />
+        <x:Type Type="scs:ClientFaultDetail" />
+        <x:Type Type="scs:ConfigurationFaultDetail" />
+      </p1:Send.KnownTypes>
+      <p1:SendMessageContent>
+        <InArgument x:TypeArguments="scs:GetDirectJourneysBetweenStopsRequest">[New Skanetrafiken.Crm.StopMonitoringService.GetDirectJourneysBetweenStopsRequest() With { .fromStopAreaGid = fromStopAreaGid, .toStopAreaGid = toStopAreaGid, .forTimeWindowStartDateTime = forTimeWindowStartDateTime, .forTimeWindowDuration = forTimeWindowDuration, .withDepartureMaxCount = withDepartureMaxCount, .forLineGids = forLineGids, .forProducts = forProducts, .purposeOfLineGroupingCode = purposeOfLineGroupingCode }]</InArgument>
+      </p1:SendMessageContent>
+      <p1:Send.EndpointConfigurationName>
+        <PropertyReference x:TypeArguments="x:String" PropertyName="EndpointConfigurationName" />
+      </p1:Send.EndpointConfigurationName>
+    </p1:Send>
+    <p1:ReceiveReply Request="{x:Reference __ReferenceID0}" Action="http://schemas.pubtrans.hogia.se/webservices/dataset/2008/11/StopMonitoringService/IStopMonitoringService/GetDirectJourneysBetweenStopsResponse">
+      <p1:ReceiveMessageContent>
+        <OutArgument x:TypeArguments="scs:GetDirectJourneysBetweenStopsResponse">
+          <VariableReference x:TypeArguments="scs:GetDirectJourneysBetweenStopsResponse">
+            <VariableReference.Variable>
+              <Variable x:TypeArguments="scs:GetDirectJourneysBetweenStopsResponse" x:Name="__ReferenceID1" Name="tempResult_3d5651203617452fb425c6c31a3f3d33" />
+            </VariableReference.Variable>
+          </VariableReference>
+        </OutArgument>
+      </p1:ReceiveMessageContent>
+    </p1:ReceiveReply>
+    <Assign>
+      <Assign.To>
+        <OutArgument x:TypeArguments="sd:DataSet">[GetDirectJourneysBetweenStopsResult]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="sd:DataSet">[tempResult_3d5651203617452fb425c6c31a3f3d33.GetDirectJourneysBetweenStopsResult]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <sads:DebugSymbol.Symbol>d8MBQzpcV1xDUk1cQ1JNXE1haW5BZmZhcnNSZWdsZXJcU2thbmV0cmFmaWtlbi5Dcm0uV29ya2Zsb3dcU2VydmljZSBSZWZlcmVuY2VzXFN0b3BNb25pdG9yaW5nU2VydmljZVxTa2FuZXRyYWZpa2VuLkNybS5TdG9wTW9uaXRvcmluZ1NlcnZpY2UuSVN0b3BNb25pdG9yaW5nU2VydmljZS5HZXREaXJlY3RKb3VybmV5c0JldHdlZW5TdG9wcy54YW1sCUcDfg4CAQFMBWkPAgEKagV0FwIBB3UFfA4CAQJkUGT6AwIBDFEPVR8CAQttC3EfAgEJejJ6gwECAQV3M3dYAgED</sads:DebugSymbol.Symbol>
+  </Sequence>
+</Activity>

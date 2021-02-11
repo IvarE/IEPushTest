@@ -9,6 +9,7 @@ using System.ServiceModel;
 using Skanetrafiken.Crm.StopMonitoringService;
 using System.Data;
 using Newtonsoft.Json;
+using System.Web.Services.Protocols;
 
 namespace Skanetrafiken.Crm
 {
@@ -151,7 +152,7 @@ namespace Skanetrafiken.Crm
             string _passWord = CrmConnection.ToInsecureString(CrmConnection.DecryptString(_encryptPassWord, entropy));
             localContext.Trace("PassWord DELETE THIS: " + _passWord);
 
-            using (var client = GetDirectJourneys.GetStopMonitoringServiceClient(_userName, _passWord))
+            using (var client = GetDirectJourneys.GetStopMonitoringServiceClient(_serviceEndPointUrl, _userName, _passWord))
             {
                 DataSet dsJourneys = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, null, aot, district);
                 dsJourneys.AcceptChanges();
