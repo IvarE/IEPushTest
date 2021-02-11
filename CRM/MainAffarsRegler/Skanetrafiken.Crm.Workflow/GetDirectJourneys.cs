@@ -8,6 +8,7 @@ using Skanetrafiken.Crm.Entities;
 using System.ServiceModel;
 using Skanetrafiken.Crm.StopMonitoringService;
 using System.Data;
+using Newtonsoft.Json;
 
 namespace Skanetrafiken.Crm
 {
@@ -59,11 +60,12 @@ namespace Skanetrafiken.Crm
             string tripDateTime = TripDateTime.Get(activityContext);
             string forLineGids = ForLineGids.Get(activityContext);
             string transportType = TransportType.Get(activityContext);
+            string productCode = "";
 
             // Execute-metod
             try
             {
-                string responsetext = ExecuteCodeActivity(localContext, fromStopArea, toStopArea, tripDateTime, forLineGids, transportType);
+                string responsetext = ExecuteCodeActivityPubTrans(localContext, fromStopArea, toStopArea, tripDateTime, forLineGids, transportType, productCode);
                 DirectJourneysResponse.Set(activityContext, responsetext);
             }
             catch (Exception ex)
@@ -71,7 +73,7 @@ namespace Skanetrafiken.Crm
                 DirectJourneysResponse.Set(activityContext, "An error occurred when contacting TravelInformation webservice: " + ex.Message);
             }
 
-            localContext.Trace($"GetCardDetails finished.");
+            localContext.Trace($"GetDirectJourneys finished.");
 
         }
 
@@ -94,12 +96,11 @@ namespace Skanetrafiken.Crm
             return binding;
         }
 
-        internal static StopMonitoringServiceClient GetStopMonitoringServiceClient(string _userName, string _passWord)
+        internal static StopMonitoringServiceClient GetStopMonitoringServiceClient(string _serviceEndpointUrl, string _userName, string _passWord)
         {
-            var serviceEndpointUrl = "http://PWS.ST.HOGIACLOUD.SE:9980/pws/StopMonitoringService";
             var binding = GetPubTransBasicHttpBinding("StopMonitoringService");
 
-            var endpoint = new EndpointAddress(string.Format("{0}/Pws/StopMonitoringService", serviceEndpointUrl));
+            var endpoint = new EndpointAddress(string.Format("{0}/Pws/StopMonitoringService", _serviceEndpointUrl));
             return new StopMonitoringServiceClient(binding, endpoint)
             {
                 ClientCredentials =
@@ -113,11 +114,12 @@ namespace Skanetrafiken.Crm
             };
         }
 
-
-        public static void ExecuteCodeActivityPubTrans(Plugin.LocalPluginContext localContext, string fromStopAreaGid, string toStopAreaGid, string tripDateTime, string forLineGids, string transportType)
+        public static string ExecuteCodeActivityPubTrans(Plugin.LocalPluginContext localContext, string fromStopAreaGid, string toStopAreaGid, string tripDateTime, string forLineGids, string transportType, string productCode)
         {
+            string responseJourneys = string.Empty;
+
             // ONLY ASSIGNED IF TRAIN. REQUIRED FOR REQUEST
-            string aot = "";
+            string aot = productCode;
             string district = "PRODUCT";
             if (transportType == "TRAIN")
             {
@@ -127,16 +129,18 @@ namespace Skanetrafiken.Crm
 
             byte timeDuration = 120;
             int departureMaxCount = 9999;
+            DateTime departureDate = DateTime.Parse(tripDateTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
 
+            byte[] entropy = System.Text.Encoding.Unicode.GetBytes("PubTransService");
             string _serviceEndPointUrl = string.Empty;
             string _userName = string.Empty;
-            string _passWord = string.Empty;
+            string _encryptPassWord = string.Empty;
 
             try
             {
-                _serviceEndPointUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_BizTalkGetDirectJourneysService);
-                _userName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_BizTalkGetDirectJourneysService);
-                _passWord = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_BizTalkGetDirectJourneysService);
+                _serviceEndPointUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.cgi_PubTransService);
+                _userName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_PubTransUserName);
+                _encryptPassWord = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_PubTransPassWord);
             }
             catch (Exception ex)
             {
@@ -144,16 +148,17 @@ namespace Skanetrafiken.Crm
                 throw new Exception($"An error occurred when retreiving PubTrans URL/Credentials: {ex.Message}", ex);
             }
 
+            string _passWord = CrmConnection.ToInsecureString(CrmConnection.DecryptString(_encryptPassWord, entropy));
+            localContext.Trace("PassWord DELETE THIS: " + _passWord);
+
             using (var client = GetDirectJourneys.GetStopMonitoringServiceClient(_userName, _passWord))
             {
-                //In RGOL I have two different set of values sent to PWS depending on if it is a train or not. Maybe you need to verify this in your setup I crm
-                //TRAIN
-                DataSet ds = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, null, aot, district);
-
-                //If not TRAIN
-                DataSet dsNotTrain = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, null, productCode, district);
+                DataSet dsJourneys = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, null, aot, district);
+                dsJourneys.AcceptChanges();
+                responseJourneys = JsonConvert.SerializeObject(dsJourneys, Formatting.Indented);
             }
 
+            return responseJourneys;
         }
 
         public static string ExecuteCodeActivity(Plugin.LocalPluginContext localContext, string fromStopAreaGid, string toStopAreaGid, string tripDateTime, string forLineGids, string transportType)
