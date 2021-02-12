@@ -128,19 +128,19 @@ namespace Skanetrafiken.Crm
             }
 
             byte timeDuration = 120;
-            int departureMaxCount = 9999;
+            int departureMaxCount = 30;
             DateTime departureDate = DateTime.Parse(tripDateTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
 
             byte[] entropy = System.Text.Encoding.Unicode.GetBytes("PubTransService");
             string _serviceEndPointUrl = string.Empty;
             string _userName = string.Empty;
-            string _encryptPassWord = string.Empty;
+            string _passWord = string.Empty;
 
             try
             {
                 _serviceEndPointUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.cgi_PubTransService);
                 _userName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_PubTransUserName);
-                _encryptPassWord = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_PubTransPassWord);
+                _passWord = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_PubTransPassWord);
             }
             catch (Exception ex)
             {
@@ -148,10 +148,9 @@ namespace Skanetrafiken.Crm
                 throw new Exception($"An error occurred when retrieving PubTrans URL/Credentials: {ex.Message}", ex);
             }
 
-            string _passWord = CrmConnection.ToInsecureString(CrmConnection.DecryptString(_encryptPassWord, entropy));
-            localContext.Trace("PassWord DELETE THIS: " + _passWord);
+            //string _passWord = CrmConnection.ToInsecureString(CrmConnection.DecryptString(_encryptPassWord, entropy));
+            //localContext.Trace("PassWord DELETE THIS: " + _passWord);
 
-            throw new Exception("test");
             try
             {
                 using (var client = GetDirectJourneys.GetStopMonitoringServiceClient(_serviceEndPointUrl, _userName, _passWord))
