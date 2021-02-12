@@ -8,8 +8,7 @@ using Skanetrafiken.Crm.Entities;
 using System.ServiceModel;
 using Skanetrafiken.Crm.StopMonitoringService;
 using System.Data;
-using Newtonsoft.Json;
-using System.Web.Services.Protocols;
+using System.Web.Script.Serialization;
 
 namespace Skanetrafiken.Crm
 {
@@ -156,7 +155,9 @@ namespace Skanetrafiken.Crm
             {
                 DataSet dsJourneys = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, null, aot, district);
                 dsJourneys.AcceptChanges();
-                responseJourneys = JsonConvert.SerializeObject(dsJourneys, Formatting.Indented);
+
+                var serializer = new JavaScriptSerializer();
+                responseJourneys = serializer.Serialize(dsJourneys);
             }
 
             return responseJourneys;
