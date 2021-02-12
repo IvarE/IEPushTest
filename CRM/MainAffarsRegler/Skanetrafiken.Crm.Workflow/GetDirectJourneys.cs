@@ -144,20 +144,29 @@ namespace Skanetrafiken.Crm
             }
             catch (Exception ex)
             {
-                localContext.Trace($"An error occurred when retreiving PubTrans URL/Credentials: {ex.Message}");
-                throw new Exception($"An error occurred when retreiving PubTrans URL/Credentials: {ex.Message}", ex);
+                localContext.Trace($"An error occurred when retrieving PubTrans URL/Credentials: {ex.Message}");
+                throw new Exception($"An error occurred when retrieving PubTrans URL/Credentials: {ex.Message}", ex);
             }
 
             string _passWord = CrmConnection.ToInsecureString(CrmConnection.DecryptString(_encryptPassWord, entropy));
             localContext.Trace("PassWord DELETE THIS: " + _passWord);
 
-            using (var client = GetDirectJourneys.GetStopMonitoringServiceClient(_serviceEndPointUrl, _userName, _passWord))
+            throw new Exception("test");
+            try
             {
-                DataSet dsJourneys = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, null, aot, district);
-                dsJourneys.AcceptChanges();
+                using (var client = GetDirectJourneys.GetStopMonitoringServiceClient(_serviceEndPointUrl, _userName, _passWord))
+                {
+                    DataSet dsJourneys = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, null, aot, district);
+                    //dsJourneys.AcceptChanges();
 
-                var serializer = new JavaScriptSerializer();
-                responseJourneys = serializer.Serialize(dsJourneys);
+                    var serializer = new JavaScriptSerializer();
+                    responseJourneys = serializer.Serialize(dsJourneys);
+                }
+            }
+            catch (Exception ex)
+            {
+                localContext.Trace($"An error occurred when sending the request to PubTrans: {ex.Message}");
+                throw new Exception($"An error occurred when sending the request to PubTrans: {ex.Message}", ex);
             }
 
             return responseJourneys;

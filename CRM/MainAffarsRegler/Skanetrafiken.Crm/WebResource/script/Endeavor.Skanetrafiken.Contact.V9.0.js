@@ -88,10 +88,16 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             var formType = formContext.ui.getFormType();
             if (formType == 1) { //Create
                 Endeavor.Skanetrafiken.Contact.isMoreThanPrivateContact(formContext);
-                formContext.getAttribute("ed_informationsource").setValue(8); // 8-AdmSkapaKund
+
+                if (formContext.getAttribute("ed_informationsource") != null)
+                    formContext.getAttribute("ed_informationsource").setValue(8); // 8-AdmSkapaKund
+
             } else if (formType == 2) { //Update
                 Endeavor.Skanetrafiken.Contact.isMoreThanPrivateContact(formContext);
-                formContext.getAttribute("ed_informationsource").setValue(12); // 12-AdmAndraKund
+
+                if (formContext.getAttribute("ed_informationsource") != null)
+                    formContext.getAttribute("ed_informationsource").setValue(12); // 12-AdmAndraKund
+
             } else {
                 // TODO teo - Vad gör vi om formuläret sparas och det varken är Create eller Update?
             }

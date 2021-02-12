@@ -17,13 +17,13 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             var formContext = executionContext.getFormContext();
             var formType = formContext.ui.getFormType();
 
+            if (formContext.getAttribute("ed_informationsource") == null)
+                return;
+
             if (formType == 1) //Create
                 formContext.getAttribute("ed_informationsource").setValue(8);  // 8-AdmSkapaKund
             else if (formType == 2) //Update
                 formContext.getAttribute("ed_informationsource").setValue(12);  // Skall vara 12 men är bytt till 3-OinloggatKop 
-             else {
-                // TODO teo - Vad gör vi om formuläret sparas och det varken är Create eller Update?
-            }
         },
 
         onSocialSecurityNumberChange: function (executionContext) {
