@@ -136,16 +136,17 @@ namespace Skanetrafiken.Crm
             int departureMaxCount = 30;
             DateTime departureDate = DateTime.Parse(tripDateTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
 
-            byte[] entropy = System.Text.Encoding.Unicode.GetBytes("PubTransService");
             string _serviceEndPointUrl = string.Empty;
             string _userName = string.Empty;
             string _passWordEncrypt = string.Empty;
+            string _encryptionKey = string.Empty;
 
             try
             {
                 _serviceEndPointUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.cgi_PubTransService);
                 _userName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_PubTransUserName);
                 _passWordEncrypt = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_PubTransPassWord);
+                _encryptionKey = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_PubTransEncryptionKey);
             }
             catch (Exception ex)
             {
@@ -153,9 +154,7 @@ namespace Skanetrafiken.Crm
                 throw new Exception($"An error occurred when retrieving PubTrans URL/Credentials: {ex.Message}", ex);
             }
 
-            string _passWord = Decrypt("FBmSRydIbEtfgoJTr1R7Jbwrb+SXc4h2N8UxmJztGzM=", "PubTransPassWord");
-
-            throw new Exception("123: " + _passWord);
+            string _passWord = Decrypt(_passWordEncrypt, _encryptionKey);
 
             try
             {
@@ -199,47 +198,31 @@ namespace Skanetrafiken.Crm
             return cipherText;
         }
 
-        public static SecureString DecryptString(string encryptedData, byte[] entropy)
+        /// <summary>
+        /// Use this function to encrypt a password to be placed on the Settings entity on Sekund
+        /// </summary>
+        /// <param name="clearText"></param>
+        /// <param name="encryptionKey"></param>
+        /// <returns></returns>
+        public static string Encrypt(string clearText, string encryptionKey)
         {
-            try
+            byte[] clearBytes = Encoding.Unicode.GetBytes(clearText);
+            using (Aes encryptor = Aes.Create())
             {
-                byte[] decryptedData = System.Security.Cryptography.ProtectedData.Unprotect(
-                    Convert.FromBase64String(encryptedData),
-                    entropy,
-                    System.Security.Cryptography.DataProtectionScope.CurrentUser);
-                return ToSecureString(System.Text.Encoding.Unicode.GetString(decryptedData));
+                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(encryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+                encryptor.Key = pdb.GetBytes(32);
+                encryptor.IV = pdb.GetBytes(16);
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        cs.Write(clearBytes, 0, clearBytes.Length);
+                        cs.Close();
+                    }
+                    clearText = Convert.ToBase64String(ms.ToArray());
+                }
             }
-            catch (Exception e)
-            {
-                //return new SecureString();
-                return ToSecureString(e.Message);
-            }
-        }
-
-        public static SecureString ToSecureString(string input)
-        {
-            SecureString secure = new SecureString();
-            foreach (char c in input)
-            {
-                secure.AppendChar(c);
-            }
-            secure.MakeReadOnly();
-            return secure;
-        }
-
-        public static string ToInsecureString(SecureString input)
-        {
-            string returnValue = string.Empty;
-            IntPtr ptr = System.Runtime.InteropServices.Marshal.SecureStringToBSTR(input);
-            try
-            {
-                returnValue = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(ptr);
-            }
-            finally
-            {
-                System.Runtime.InteropServices.Marshal.ZeroFreeBSTR(ptr);
-            }
-            return returnValue;
+            return clearText;
         }
     }
 }
