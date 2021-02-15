@@ -25302,6 +25302,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_pubtransencryptionkey")]
+		public string ed_PubTransEncryptionKey
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_pubtransencryptionkey");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_pubtransencryptionkey", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_pubtranspassword")]
 		public string ed_PubTransPassWord
 		{
@@ -26157,6 +26173,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_OutstandingChargesAPIUserName = "ed_outstandingchargesapiusername";
 			
+			public const string ed_PubTransEncryptionKey = "ed_pubtransencryptionkey";
+			
 			public const string ed_PubTransPassWord = "ed_pubtranspassword";
 			
 			public const string ed_PubTransUserName = "ed_pubtransusername";
@@ -26332,6 +26350,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_OutstandingChargesAPIPassword = 100;
 			
 			public const int ed_OutstandingChargesAPIUserName = 100;
+			
+			public const int ed_PubTransEncryptionKey = 100;
 			
 			public const int ed_PubTransPassWord = 400;
 			
