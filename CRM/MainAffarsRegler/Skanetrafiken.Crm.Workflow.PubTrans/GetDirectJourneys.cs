@@ -1,19 +1,21 @@
 ﻿using System;
-using System.Text;
+using System.Data;
 using System.Activities;
+using System.ServiceModel;
+using System.Web.Script.Serialization;
+
+using Endeavor.Crm;
+
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Workflow;
-using Endeavor.Crm;
+
 using Skanetrafiken.Crm.Entities;
-using System.ServiceModel;
-using System.Data;
-using System.Web.Script.Serialization;
+using Skanetrafiken.Crm.StopMonitoringService;
 
 namespace Skanetrafiken.Crm
 {
     public class GetDirectJourneys : CodeActivity
     {
-
         [Input("FromStopAreaGid")]
         [RequiredArgument()]
         public InArgument<string> FromStopAreaGid { get; set; }
@@ -115,7 +117,7 @@ namespace Skanetrafiken.Crm
 
         public static string ExecuteCodeActivityPubTrans(Plugin.LocalPluginContext localContext, string fromStopAreaGid, string toStopAreaGid, string tripDateTime, string forLineGids, string transportType, string productCode)
         {
-            string responseJourneys = string.Empty;
+            string responseJourneys = "test";
 
             // ONLY ASSIGNED IF TRAIN. REQUIRED FOR REQUEST
             string aot = productCode;
@@ -147,18 +149,17 @@ namespace Skanetrafiken.Crm
                 throw new Exception($"An error occurred when retrieving PubTrans URL/Credentials: {ex.Message}", ex);
             }
 
-            //string _passWord = CrmConnection.ToInsecureString(CrmConnection.DecryptString(_encryptPassWord, entropy));
-            //localContext.Trace("PassWord DELETE THIS: " + _passWord);
-
             try
             {
                 using (var client = GetDirectJourneys.GetStopMonitoringServiceClient(_serviceEndPointUrl, _userName, _passWord))
                 {
                     DataSet dsJourneys = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, null, aot, district);
-                    //dsJourneys.AcceptChanges();
+                    dsJourneys.AcceptChanges();
 
-                    var serializer = new JavaScriptSerializer();
-                    responseJourneys = serializer.Serialize(dsJourneys);
+                    //var serializer = new JavaScriptSerializer();
+                    //responseJourneys = serializer.Serialize(dsJourneys);
+
+                    responseJourneys = "Count: " + dsJourneys.Tables.Count + " ---DataSetName: " + dsJourneys.DataSetName;
                 }
             }
             catch (Exception ex)
@@ -168,83 +169,6 @@ namespace Skanetrafiken.Crm
             }
 
             return responseJourneys;
-        }
-
-        public static string ExecuteCodeActivity(Plugin.LocalPluginContext localContext, string fromStopAreaGid, string toStopAreaGid, string tripDateTime, string forLineGids, string transportType)
-        {
-
-            // ONLY ASSIGNED IF TRAIN. REQUIRED FOR REQUEST
-            string aot = "";
-            string district = "";
-            if (transportType == "TRAIN")
-            {
-                aot = "AOT";
-                district = "DISTRICT";
-            }
-
-            // MAKE SOAP REQUEST
-            string soapmessage =
-                "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:ns='http://www.skanetrafiken.com/DK/INTSTDK001/GetDirectJourneyBetweenStopsRequest/20141023'>" +
-                "<soapenv:Header/>" +
-                    "<soapenv:Body>" +
-                        "<ns:GetDirectJourneysBetweenStops>" +
-                            "<fromStopAreaGid>" + fromStopAreaGid + "</fromStopAreaGid>" +
-                            "<toStopAreaGid>" + toStopAreaGid + "</toStopAreaGid>" +
-                            "<forTimeWindowStartDateTime>" + tripDateTime + "</forTimeWindowStartDateTime>" +
-                            "<forTimeWindowDuration>" + 120 + "</forTimeWindowDuration>" +
-                            "<withDepartureMaxCount>" + 9999 + "</withDepartureMaxCount>" +
-                            "<forLineGids>" + forLineGids + "</forLineGids>" +
-                            "<forProducts>" + aot + "</forProducts>" +
-                            "<purposeOfLineGroupingCode>" + district + "</purposeOfLineGroupingCode>" +
-                        "</ns:GetDirectJourneysBetweenStops>" +
-                    "</soapenv:Body>" +
-                "</soapenv:Envelope>";
-
-            string soapResponse = "";
-            string bizTalkUrl = "";
-
-            //TRY GET SERVICE URL
-            try
-            {
-                //TODO
-                bizTalkUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_BizTalkGetDirectJourneysService);
-            }
-            catch (Exception ex)
-            {
-                localContext.Trace($"An error occurred when retreiving BizTalk URL: {ex.Message}");
-                throw new Exception($"An error occurred when retreiving BizTalk URL: {ex.Message}", ex);
-            }
-
-            // REMOVE SUFFIX OF URL
-            string[] parts = bizTalkUrl.Split('/');
-            string soapActionAddress = "";
-            for (int x = 0; x < parts.Length - 1; x++)
-            {
-                soapActionAddress += parts[x];
-                soapActionAddress += "/";
-            }
-
-            //TRY SEND REQUEST
-            try
-            {
-                using (var client = new System.Net.WebClient())
-                {
-                    // the Content-Type needs to be set to XML
-                    client.Headers.Add("Content-Type", "text/xml;charset=utf-8");
-                    client.Headers.Add("SOAPAction", "\"" + soapActionAddress + "");
-                    client.Encoding = Encoding.UTF8;
-                    //client.Credentials = new System.Net.NetworkCredential("crmadmin", "__", "d1");
-                    soapResponse = client.UploadString("" + bizTalkUrl + "", soapmessage);
-                }
-            }
-            catch (Exception ex)
-            {
-                localContext.Trace($"An error occurred when contacting BizTalk service: {ex.Message}");
-                throw new Exception($"An error occurred when contacting BizTalk service: {ex.Message}", ex);
-            }
-
-            return soapResponse;
-
         }
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="c22233a0-7915-44e9-a40b-d42487826320" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="ab061c96-e905-4e77-b700-a8fa09f1abcf" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -24,7 +24,7 @@
     <MetadataSource Address="C:\Users\Pedro\OneDrive\Ambiente de Trabalho\StopMonitoringService.xml" Protocol="file" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="StopMonitoringService.wsdl" MetadataType="Wsdl" ID="f5e7c5c0-fefa-4c37-82e9-930a44077a85" SourceId="1" SourceUrl="file:///C:/Users/Pedro/OneDrive/Ambiente de Trabalho/StopMonitoringService.xml" />
+    <MetadataFile FileName="StopMonitoringService.wsdl" MetadataType="Wsdl" ID="e63b6998-a32e-4aca-b845-52d0eb9bcee4" SourceId="1" SourceUrl="file:///C:/Users/Pedro/OneDrive/Ambiente de Trabalho/StopMonitoringService.xml" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
