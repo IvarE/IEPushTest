@@ -49,6 +49,8 @@ namespace Skanetrafiken.Crm
 
         protected override void Execute(CodeActivityContext activityContext)
         {
+            throw new NotImplementedException("The method 'Skanetrafiken.Crm.Workflow.GetDirectJourneys' is no longer implemented.");
+
             // GENERATE CONTEXT
             Plugin.LocalPluginContext localContext = GetLocalContext(activityContext);
             localContext.Trace($"GetDirectJourneys started.");
@@ -59,12 +61,11 @@ namespace Skanetrafiken.Crm
             string tripDateTime = TripDateTime.Get(activityContext);
             string forLineGids = ForLineGids.Get(activityContext);
             string transportType = TransportType.Get(activityContext);
-            string productCode = "";
 
             // Execute-metod
             try
             {
-                string responsetext = ExecuteCodeActivityPubTrans(localContext, fromStopArea, toStopArea, tripDateTime, forLineGids, transportType, productCode);
+                string responsetext = ExecuteCodeActivity(localContext, fromStopArea, toStopArea, tripDateTime, forLineGids, transportType);
                 DirectJourneysResponse.Set(activityContext, responsetext);
             }
             catch (Exception ex)
@@ -74,100 +75,6 @@ namespace Skanetrafiken.Crm
 
             localContext.Trace($"GetDirectJourneys finished.");
 
-        }
-
-        private static BasicHttpBinding GetPubTransBasicHttpBinding(string name)
-        {
-            var binding = new BasicHttpBinding
-            {
-                Name = name,
-                OpenTimeout = TimeSpan.FromSeconds(20),
-                MaxReceivedMessageSize = 20971520,
-                Security = new BasicHttpSecurity()
-                {
-                    Mode = BasicHttpSecurityMode.TransportCredentialOnly,
-                    Transport = new HttpTransportSecurity()
-                    {
-                        ClientCredentialType = HttpClientCredentialType.Basic
-                    }
-                }
-            };
-            return binding;
-        }
-
-        internal static StopMonitoringServiceClient GetStopMonitoringServiceClient(string _serviceEndpointUrl, string _userName, string _passWord)
-        {
-            var binding = GetPubTransBasicHttpBinding("StopMonitoringService");
-
-            var endpoint = new EndpointAddress(string.Format("{0}/Pws/StopMonitoringService", _serviceEndpointUrl));
-            return new StopMonitoringServiceClient(binding, endpoint)
-            {
-                ClientCredentials =
-                {
-                    UserName =
-                    {
-                        UserName = _userName,
-                        Password = _passWord
-                    }
-                }
-            };
-        }
-
-        public static string ExecuteCodeActivityPubTrans(Plugin.LocalPluginContext localContext, string fromStopAreaGid, string toStopAreaGid, string tripDateTime, string forLineGids, string transportType, string productCode)
-        {
-            string responseJourneys = string.Empty;
-
-            // ONLY ASSIGNED IF TRAIN. REQUIRED FOR REQUEST
-            string aot = productCode;
-            string district = "PRODUCT";
-            if (transportType == "TRAIN")
-            {
-                aot = "AOT";
-                district = "DISTRICT";
-            }
-
-            byte timeDuration = 120;
-            int departureMaxCount = 30;
-            DateTime departureDate = DateTime.Parse(tripDateTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
-
-            byte[] entropy = System.Text.Encoding.Unicode.GetBytes("PubTransService");
-            string _serviceEndPointUrl = string.Empty;
-            string _userName = string.Empty;
-            string _passWord = string.Empty;
-
-            try
-            {
-                _serviceEndPointUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.cgi_PubTransService);
-                _userName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_PubTransUserName);
-                _passWord = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_PubTransPassWord);
-            }
-            catch (Exception ex)
-            {
-                localContext.Trace($"An error occurred when retrieving PubTrans URL/Credentials: {ex.Message}");
-                throw new Exception($"An error occurred when retrieving PubTrans URL/Credentials: {ex.Message}", ex);
-            }
-
-            //string _passWord = CrmConnection.ToInsecureString(CrmConnection.DecryptString(_encryptPassWord, entropy));
-            //localContext.Trace("PassWord DELETE THIS: " + _passWord);
-
-            try
-            {
-                using (var client = GetDirectJourneys.GetStopMonitoringServiceClient(_serviceEndPointUrl, _userName, _passWord))
-                {
-                    DataSet dsJourneys = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, null, aot, district);
-                    //dsJourneys.AcceptChanges();
-
-                    var serializer = new JavaScriptSerializer();
-                    responseJourneys = serializer.Serialize(dsJourneys);
-                }
-            }
-            catch (Exception ex)
-            {
-                localContext.Trace($"An error occurred when sending the request to PubTrans: {ex.Message}");
-                throw new Exception($"An error occurred when sending the request to PubTrans: {ex.Message}", ex);
-            }
-
-            return responseJourneys;
         }
 
         public static string ExecuteCodeActivity(Plugin.LocalPluginContext localContext, string fromStopAreaGid, string toStopAreaGid, string tripDateTime, string forLineGids, string transportType)

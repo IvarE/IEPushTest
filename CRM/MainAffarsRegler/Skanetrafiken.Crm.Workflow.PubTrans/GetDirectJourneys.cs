@@ -11,6 +11,7 @@ using Microsoft.Xrm.Sdk.Workflow;
 
 using Skanetrafiken.Crm.Entities;
 using Skanetrafiken.Crm.StopMonitoringService;
+using System.Security;
 
 namespace Skanetrafiken.Crm
 {
@@ -101,7 +102,7 @@ namespace Skanetrafiken.Crm
         {
             var binding = GetPubTransBasicHttpBinding("StopMonitoringService");
 
-            var endpoint = new EndpointAddress(string.Format("{0}/Pws/StopMonitoringService", _serviceEndpointUrl));
+            var endpoint = new EndpointAddress(_serviceEndpointUrl);
             return new StopMonitoringServiceClient(binding, endpoint)
             {
                 ClientCredentials =
@@ -117,7 +118,7 @@ namespace Skanetrafiken.Crm
 
         public static string ExecuteCodeActivityPubTrans(Plugin.LocalPluginContext localContext, string fromStopAreaGid, string toStopAreaGid, string tripDateTime, string forLineGids, string transportType, string productCode)
         {
-            string responseJourneys = "test";
+            string responseJourneys = "";
 
             // ONLY ASSIGNED IF TRAIN. REQUIRED FOR REQUEST
             string aot = productCode;
@@ -135,13 +136,13 @@ namespace Skanetrafiken.Crm
             byte[] entropy = System.Text.Encoding.Unicode.GetBytes("PubTransService");
             string _serviceEndPointUrl = string.Empty;
             string _userName = string.Empty;
-            string _passWord = string.Empty;
+            string _passWordEncrypt = string.Empty;
 
             try
             {
                 _serviceEndPointUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.cgi_PubTransService);
                 _userName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_PubTransUserName);
-                _passWord = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_PubTransPassWord);
+                _passWordEncrypt = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_PubTransPassWord);
             }
             catch (Exception ex)
             {
@@ -149,17 +150,20 @@ namespace Skanetrafiken.Crm
                 throw new Exception($"An error occurred when retrieving PubTrans URL/Credentials: {ex.Message}", ex);
             }
 
+            string _passWord = ToInsecureString(DecryptString(_passWordEncrypt, entropy));
+
+            throw new Exception("123: " + _passWord);
+
             try
             {
                 using (var client = GetDirectJourneys.GetStopMonitoringServiceClient(_serviceEndPointUrl, _userName, _passWord))
                 {
                     DataSet dsJourneys = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, null, aot, district);
-                    dsJourneys.AcceptChanges();
 
-                    //var serializer = new JavaScriptSerializer();
-                    //responseJourneys = serializer.Serialize(dsJourneys);
+                    var serializer = new JavaScriptSerializer();
+                    responseJourneys = serializer.Serialize(dsJourneys);
 
-                    responseJourneys = "Count: " + dsJourneys.Tables.Count + " ---DataSetName: " + dsJourneys.DataSetName;
+                    //responseJourneys = "Count: " + dsJourneys.Tables.Count + " ---DataSetName: " + dsJourneys.DataSetName;
                 }
             }
             catch (Exception ex)
@@ -169,6 +173,48 @@ namespace Skanetrafiken.Crm
             }
 
             return responseJourneys;
+        }
+
+        public static SecureString DecryptString(string encryptedData, byte[] entropy)
+        {
+            try
+            {
+                byte[] decryptedData = System.Security.Cryptography.ProtectedData.Unprotect(
+                    Convert.FromBase64String(encryptedData),
+                    entropy,
+                    System.Security.Cryptography.DataProtectionScope.CurrentUser);
+                return ToSecureString(System.Text.Encoding.Unicode.GetString(decryptedData));
+            }
+            catch (Exception)
+            {
+                return new SecureString();
+            }
+        }
+
+        public static SecureString ToSecureString(string input)
+        {
+            SecureString secure = new SecureString();
+            foreach (char c in input)
+            {
+                secure.AppendChar(c);
+            }
+            secure.MakeReadOnly();
+            return secure;
+        }
+
+        public static string ToInsecureString(SecureString input)
+        {
+            string returnValue = string.Empty;
+            IntPtr ptr = System.Runtime.InteropServices.Marshal.SecureStringToBSTR(input);
+            try
+            {
+                returnValue = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(ptr);
+            }
+            finally
+            {
+                System.Runtime.InteropServices.Marshal.ZeroFreeBSTR(ptr);
+            }
+            return returnValue;
         }
     }
 }
