@@ -12,6 +12,9 @@ using Microsoft.Xrm.Sdk.Workflow;
 using Skanetrafiken.Crm.Entities;
 using Skanetrafiken.Crm.StopMonitoringService;
 using System.Security;
+using System.Security.Cryptography;
+using System.IO;
+using System.Text;
 
 namespace Skanetrafiken.Crm
 {
@@ -150,7 +153,7 @@ namespace Skanetrafiken.Crm
                 throw new Exception($"An error occurred when retrieving PubTrans URL/Credentials: {ex.Message}", ex);
             }
 
-            string _passWord = ToInsecureString(DecryptString(_passWordEncrypt, entropy));
+            string _passWord = Decrypt("FBmSRydIbEtfgoJTr1R7Jbwrb+SXc4h2N8UxmJztGzM=", "PubTransPassWord");
 
             throw new Exception("123: " + _passWord);
 
@@ -175,6 +178,27 @@ namespace Skanetrafiken.Crm
             return responseJourneys;
         }
 
+        public static string Decrypt(string cipherText, string encryptionKey)
+        {
+            byte[] cipherBytes = Convert.FromBase64String(cipherText);
+            using (Aes encryptor = Aes.Create())
+            {
+                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(encryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+                encryptor.Key = pdb.GetBytes(32);
+                encryptor.IV = pdb.GetBytes(16);
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateDecryptor(), CryptoStreamMode.Write))
+                    {
+                        cs.Write(cipherBytes, 0, cipherBytes.Length);
+                        cs.Close();
+                    }
+                    cipherText = Encoding.Unicode.GetString(ms.ToArray());
+                }
+            }
+            return cipherText;
+        }
+
         public static SecureString DecryptString(string encryptedData, byte[] entropy)
         {
             try
@@ -185,9 +209,10 @@ namespace Skanetrafiken.Crm
                     System.Security.Cryptography.DataProtectionScope.CurrentUser);
                 return ToSecureString(System.Text.Encoding.Unicode.GetString(decryptedData));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return new SecureString();
+                //return new SecureString();
+                return ToSecureString(e.Message);
             }
         }
 
