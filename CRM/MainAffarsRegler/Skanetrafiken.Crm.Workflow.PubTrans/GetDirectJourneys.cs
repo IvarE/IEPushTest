@@ -161,11 +161,7 @@ namespace Skanetrafiken.Crm
                 using (var client = GetDirectJourneys.GetStopMonitoringServiceClient(_serviceEndPointUrl, _userName, _passWord))
                 {
                     DataSet dsJourneys = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, null, aot, district);
-
-                    var serializer = new JavaScriptSerializer();
-                    responseJourneys = serializer.Serialize(dsJourneys);
-
-                    //responseJourneys = "Count: " + dsJourneys.Tables.Count + " ---DataSetName: " + dsJourneys.DataSetName;
+                    responseJourneys = dsJourneys.GetXml();
                 }
             }
             catch (Exception ex)
