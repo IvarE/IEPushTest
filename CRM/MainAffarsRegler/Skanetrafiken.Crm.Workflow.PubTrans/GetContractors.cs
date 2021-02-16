@@ -1,16 +1,18 @@
 ﻿using System;
+using System.Data;
 using System.Activities;
+using System.Data.SqlClient;
+
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Workflow;
-using Endeavor.Crm;
-using System.Data.SqlClient;
-using System.Data;
 
-namespace Skanetrafiken.Crm.Entities
+using Endeavor.Crm;
+using Skanetrafiken.Crm.Entities;
+
+namespace Skanetrafiken.Crm
 {
     public class GetContractors : CodeActivity
     {
-        
         [Output("GetContractorsResponse")]
         public OutArgument<string> GetContractorsResponse { get; set; }
 
@@ -26,12 +28,10 @@ namespace Skanetrafiken.Crm.Entities
 
         protected override void Execute(CodeActivityContext activityContext)
         {
-            throw new NotImplementedException("The method 'Skanetrafiken.Crm.Workflow.GetContractors' is no longer implemented.");
-
             //GENERATE CONTEXT
             Plugin.LocalPluginContext localContext = GetLocalContext(activityContext);
             localContext.Trace($"GetContractors started.");
-            
+
             //TRY EXECUTE
             try
             {
@@ -49,8 +49,7 @@ namespace Skanetrafiken.Crm.Entities
 
         public static string ExecuteCodeActivity(Plugin.LocalPluginContext localContext)
         {
-
-            string query = "SELECT * " +
+            string query = "SELECT [Gid], [IsOrganisationId]" +
                            "FROM [Contractor]" +
                            "FOR XML AUTO";
 
@@ -70,12 +69,9 @@ namespace Skanetrafiken.Crm.Entities
 
             string rowsxml = "";
             foreach (DataRow row in dataTable.Rows)
-            {
-                rowsxml = rowsxml + row[0].ToString();
-            }
+                rowsxml += row[0].ToString();
 
             return rowsxml;
-                    
         }
 
         private static SqlConnection CreateSqlConnectionDeltaDatabase(Plugin.LocalPluginContext localContext)

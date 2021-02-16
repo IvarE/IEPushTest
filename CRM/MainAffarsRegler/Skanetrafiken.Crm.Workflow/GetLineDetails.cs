@@ -31,6 +31,8 @@ namespace Skanetrafiken.Crm.Entities
 
         protected override void Execute(CodeActivityContext activityContext)
         {
+            throw new NotImplementedException("The method 'Skanetrafiken.Crm.Workflow.GetLineDetails' is no longer implemented.");
+
             //GENERATE CONTEXT
             Plugin.LocalPluginContext localContext = GetLocalContext(activityContext);
             localContext.Trace($"GetLineDetails started.");

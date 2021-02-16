@@ -26,6 +26,8 @@ namespace Skanetrafiken.Crm.Entities
 
         protected override void Execute(CodeActivityContext activityContext)
         {
+            throw new NotImplementedException("The method 'Skanetrafiken.Crm.Workflow.GetOrganisationalUnits' is no longer implemented.");
+
             //GENERATE CONTEXT
             Plugin.LocalPluginContext localContext = GetLocalContext(activityContext);
             localContext.Trace($"GetOrganisationalUnits started.");

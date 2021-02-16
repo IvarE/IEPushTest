@@ -1,18 +1,20 @@
 ﻿using System;
+using System.Data;
 using System.Activities;
+using System.Data.SqlClient;
+
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Workflow;
-using Endeavor.Crm;
-using System.Data.SqlClient;
-using System.Data;
 
-namespace Skanetrafiken.Crm.Entities
+using Endeavor.Crm;
+using Skanetrafiken.Crm.Entities;
+
+namespace Skanetrafiken.Crm
 {
-    public class GetContractors : CodeActivity
+    public class GetOrganisationalUnits : CodeActivity
     {
-        
-        [Output("GetContractorsResponse")]
-        public OutArgument<string> GetContractorsResponse { get; set; }
+        [Output("GetOrganisationalUnitsResponse")]
+        public OutArgument<string> GetOrganisationalUnitsResponse { get; set; }
 
         private Plugin.LocalPluginContext GetLocalContext(CodeActivityContext activityContext)
         {
@@ -26,32 +28,29 @@ namespace Skanetrafiken.Crm.Entities
 
         protected override void Execute(CodeActivityContext activityContext)
         {
-            throw new NotImplementedException("The method 'Skanetrafiken.Crm.Workflow.GetContractors' is no longer implemented.");
-
             //GENERATE CONTEXT
             Plugin.LocalPluginContext localContext = GetLocalContext(activityContext);
-            localContext.Trace($"GetContractors started.");
-            
+            localContext.Trace($"GetOrganisationalUnits started.");
+
             //TRY EXECUTE
             try
             {
                 string response = ExecuteCodeActivity(localContext);
-                GetContractorsResponse.Set(activityContext, response);
+                GetOrganisationalUnitsResponse.Set(activityContext, response);
             }
             catch (Exception ex)
             {
-                GetContractorsResponse.Set(activityContext, ex.Message);
+                GetOrganisationalUnitsResponse.Set(activityContext, ex.Message);
             }
 
-            localContext.Trace($"GetContractors finished.");
+            localContext.Trace($"GetOrganisationalUnits finished.");
 
         }
 
         public static string ExecuteCodeActivity(Plugin.LocalPluginContext localContext)
         {
-
-            string query = "SELECT * " +
-                           "FROM [Contractor]" +
+            string query = "SELECT [Id], [Name], [Code] " +
+                           "FROM [OrganisationalUnit] " +
                            "FOR XML AUTO";
 
             DataTable dataTable = new DataTable();
@@ -70,12 +69,9 @@ namespace Skanetrafiken.Crm.Entities
 
             string rowsxml = "";
             foreach (DataRow row in dataTable.Rows)
-            {
-                rowsxml = rowsxml + row[0].ToString();
-            }
+                rowsxml += row[0].ToString();
 
             return rowsxml;
-                    
         }
 
         private static SqlConnection CreateSqlConnectionDeltaDatabase(Plugin.LocalPluginContext localContext)
