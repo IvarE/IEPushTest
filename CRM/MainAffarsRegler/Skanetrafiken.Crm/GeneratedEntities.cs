@@ -10700,6 +10700,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 ed_slots_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_slots_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_Slots ed_slots_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_slots_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_slots_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 ed_textmessage_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -53715,6 +53732,842 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 	}
 	
+	public enum ed_SlotsState
+	{
+		
+		Active = 0,
+		
+		Inactive = 1,
+	}
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("ed_slots")]
+	public partial class ed_Slots : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public ed_Slots() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "ed_slots";
+		
+		public const int EntityTypeCode = 10203;
+		
+		/// <summary>
+		/// Unique identifier of the user who created the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who created the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_bookingday")]
+		public System.Nullable<System.DateTime> ed_BookingDay
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_bookingday");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_bookingday", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_bookingstatus")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ed_BookingStatus
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("ed_bookingstatus");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_bookingstatus", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_customprice")]
+		public Microsoft.Xrm.Sdk.Money ed_CustomPrice
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_customprice");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_customprice", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Custom Price in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_customprice_base")]
+		public Microsoft.Xrm.Sdk.Money ed_customprice_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_customprice_base");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_extended")]
+		public System.Nullable<bool> ed_Extended
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_extended");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_extended", value);
+			}
+		}
+		
+		/// <summary>
+		/// The name of the custom entity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_name")]
+		public string ed_name
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_name");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_name", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_opportunity")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_Opportunity
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_opportunity");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_opportunity", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_order")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_Order
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_order");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_order", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_orderproductid")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_OrderProductID
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_orderproductid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_orderproductid", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_productid")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_ProductID
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_productid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_productid", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_quote")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_Quote
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_quote");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_quote", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_quoteproductid")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_QuoteProductID
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_quoteproductid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_quoteproductid", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_slotid")]
+		public string ed_SlotID
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_slotid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_slotid", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_slotnumber")]
+		public System.Nullable<int> ed_SlotNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("ed_slotnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_slotnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for entity instances
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_slotsid")]
+		public System.Nullable<System.Guid> ed_SlotsId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("ed_slotsid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_slotsid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_slotsid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.ed_SlotsId = value;
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_standardprice")]
+		public Microsoft.Xrm.Sdk.Money ed_StandardPrice
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_standardprice");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_standardprice", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Standard Price in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_standardprice_base")]
+		public Microsoft.Xrm.Sdk.Money ed_standardprice_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_standardprice_base");
+			}
+		}
+		
+		/// <summary>
+		/// Exchange rate for the currency associated with the entity with respect to the base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+		}
+		
+		/// <summary>
+		/// Sequence number of the import that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who modified the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the record was modified.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who modified the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Owner Id
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ownerid")]
+		public Microsoft.Xrm.Sdk.EntityReference OwnerId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ownerid");
+			}
+			set
+			{
+				this.SetAttributeValue("ownerid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for the business unit that owns the record
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningbusinessunit")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningBusinessUnit
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningbusinessunit");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for the team that owns the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningTeam
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningteam");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for the user that owns the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningUser
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owninguser");
+			}
+		}
+		
+		/// <summary>
+		/// Status of the Slots
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.ed_SlotsState> statecode
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.ed_SlotsState)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.ed_SlotsState), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("statecode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statecode", new Microsoft.Xrm.Sdk.OptionSetValue(((int)(value))));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Reason for the status of the Slots
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue statuscode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+			}
+			set
+			{
+				this.SetAttributeValue("statuscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timezoneruleversionnumber")]
+		public System.Nullable<int> TimeZoneRuleVersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("timezoneruleversionnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the currency associated with the entity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public Microsoft.Xrm.Sdk.EntityReference TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Time zone code that was in use when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("utcconversiontimezonecode")]
+		public System.Nullable<int> UTCConversionTimeZoneCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("utcconversiontimezonecode");
+			}
+			set
+			{
+				this.SetAttributeValue("utcconversiontimezonecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version Number
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_slots_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_slots_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> ed_slots_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("ed_slots_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("ed_slots_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_product_ed_slots_Product
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_productid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_product_ed_slots_Product")]
+		public Skanetrafiken.Crm.Schema.Generated.Product ed_product_ed_slots_Product
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Product>("ed_product_ed_slots_Product", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Product>("ed_product_ed_slots_Product", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_salesorder_ed_slots_Order
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_order")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorder_ed_slots_Order")]
+		public Skanetrafiken.Crm.Schema.Generated.SalesOrder ed_salesorder_ed_slots_Order
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SalesOrder>("ed_salesorder_ed_slots_Order", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SalesOrder>("ed_salesorder_ed_slots_Order", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_salesorderdetail_ed_slots_OrderProductID
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_orderproductid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderdetail_ed_slots_OrderProductID")]
+		public Skanetrafiken.Crm.Schema.Generated.SalesOrderDetail ed_salesorderdetail_ed_slots_OrderProductID
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SalesOrderDetail>("ed_salesorderdetail_ed_slots_OrderProductID", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SalesOrderDetail>("ed_salesorderdetail_ed_slots_OrderProductID", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_ed_slots_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_slots_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_ed_slots_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_slots_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_ed_slots_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_slots_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_ed_slots_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_slots_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_ed_slots_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_slots_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_ed_slots_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_slots_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_ed_slots_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_slots_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_ed_slots_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_slots_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_ed_slots
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_slots")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_ed_slots
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_ed_slots", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 TransactionCurrency_ed_Slots
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_ed_Slots")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_ed_Slots
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_ed_Slots", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_ed_Slots", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 user_ed_slots
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_ed_slots")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser user_ed_slots
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("user_ed_slots", null);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string ed_BookingDay = "ed_bookingday";
+			
+			public const string ed_BookingStatus = "ed_bookingstatus";
+			
+			public const string ed_CustomPrice = "ed_customprice";
+			
+			public const string ed_customprice_Base = "ed_customprice_base";
+			
+			public const string ed_Extended = "ed_extended";
+			
+			public const string ed_name = "ed_name";
+			
+			public const string ed_Opportunity = "ed_opportunity";
+			
+			public const string ed_Order = "ed_order";
+			
+			public const string ed_OrderProductID = "ed_orderproductid";
+			
+			public const string ed_ProductID = "ed_productid";
+			
+			public const string ed_Quote = "ed_quote";
+			
+			public const string ed_QuoteProductID = "ed_quoteproductid";
+			
+			public const string ed_SlotID = "ed_slotid";
+			
+			public const string ed_SlotNumber = "ed_slotnumber";
+			
+			public const string ed_SlotsId = "ed_slotsid";
+			
+			public const string Id = "ed_slotsid";
+			
+			public const string ed_StandardPrice = "ed_standardprice";
+			
+			public const string ed_standardprice_Base = "ed_standardprice_base";
+			
+			public const string ExchangeRate = "exchangerate";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string OwnerId = "ownerid";
+			
+			public const string OwningBusinessUnit = "owningbusinessunit";
+			
+			public const string OwningTeam = "owningteam";
+			
+			public const string OwningUser = "owninguser";
+			
+			public const string statecode = "statecode";
+			
+			public const string statuscode = "statuscode";
+			
+			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
+			
+			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
+			
+			public const string VersionNumber = "versionnumber";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int ed_name = 100;
+			
+			public const int ed_SlotID = 100;
+		}
+	}
+	
 	public enum ed_TextMessageState
 	{
 		
@@ -80211,6 +81064,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_product_ed_slots_Product
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_product_ed_slots_Product")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_Slots> ed_product_ed_slots_Product
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_product_ed_slots_Product", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_product_ed_slots_Product", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N Product_Annotation
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Product_Annotation")]
@@ -85489,6 +86358,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_salesorder_ed_slots_Order
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorder_ed_slots_Order")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_Slots> ed_salesorder_ed_slots_Order
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_salesorder_ed_slots_Order", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_salesorder_ed_slots_Order", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N order_details
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("order_details")]
@@ -87317,6 +88202,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("volumediscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_salesorderdetail_ed_slots_OrderProductID
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_salesorderdetail_ed_slots_OrderProductID")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_Slots> ed_salesorderdetail_ed_slots_OrderProductID
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_salesorderdetail_ed_slots_OrderProductID", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_salesorderdetail_ed_slots_OrderProductID", null, value);
 			}
 		}
 		
@@ -93619,6 +94520,70 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N lk_ed_slots_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_slots_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_Slots> lk_ed_slots_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("lk_ed_slots_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("lk_ed_slots_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_ed_slots_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_slots_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_Slots> lk_ed_slots_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("lk_ed_slots_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("lk_ed_slots_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_ed_slots_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_slots_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_Slots> lk_ed_slots_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("lk_ed_slots_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("lk_ed_slots_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_ed_slots_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_slots_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_Slots> lk_ed_slots_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("lk_ed_slots_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("lk_ed_slots_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N lk_ed_textmessagetemplate_createdby
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_textmessagetemplate_createdby")]
@@ -96035,6 +97000,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N user_ed_slots
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_ed_slots")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_Slots> user_ed_slots
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("user_ed_slots", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("user_ed_slots", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N user_ed_textmessagetemplate
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_ed_textmessagetemplate")]
@@ -97971,6 +98952,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_senttextmessage>("team_ed_senttextmessage", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_ed_slots
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_ed_slots")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_Slots> team_ed_slots
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("team_ed_slots", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("team_ed_slots", null, value);
 			}
 		}
 		
@@ -99941,6 +100938,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("TransactionCurrency_ed_salesorderline", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_ed_Slots
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_ed_Slots")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_Slots> TransactionCurrency_ed_Slots
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("TransactionCurrency_ed_Slots", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("TransactionCurrency_ed_Slots", null, value);
 			}
 		}
 		
@@ -103745,6 +104758,17 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.ed_SKAkort>();
+			}
+		}
+		
+		/// <summary>
+		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.ed_Slots"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.ed_Slots> ed_SlotsSet
+		{
+			get
+			{
+				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.ed_Slots>();
 			}
 		}
 		
