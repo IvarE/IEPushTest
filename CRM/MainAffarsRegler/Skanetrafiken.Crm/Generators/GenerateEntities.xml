@@ -78,7 +78,7 @@
     <entity>ed_slots</entity>
     <entity>ed_emailtemplateproxy</entity>
     <entity>ed_returnmessagewebapi</entity>
-
+    <entity>productpricelevel</entity>
 
 
     <entity>edp_country</entity>

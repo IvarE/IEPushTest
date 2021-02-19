@@ -11024,6 +11024,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 ProductPriceLevel_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ProductPriceLevel_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel ProductPriceLevel_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("ProductPriceLevel_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("ProductPriceLevel_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 Queue_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -42599,6 +42616,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_bookingsystem")]
+		public System.Nullable<bool> ed_bookingsystem
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_bookingsystem");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_bookingsystem", value);
+			}
+		}
+		
+		/// <summary>
 		/// Unique identifier for entity instances
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_featuretogglingid")]
@@ -43047,6 +43080,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string CreatedOnBehalfBy = "createdonbehalfby";
 			
 			public const string ed_BlockTravelCardAPI = "ed_blocktravelcardapi";
+			
+			public const string ed_bookingsystem = "ed_bookingsystem";
 			
 			public const string ed_FeatureTogglingId = "ed_featuretogglingid";
 			
@@ -79453,6 +79488,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N price_level_product_price_levels
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("price_level_product_price_levels")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel> price_level_product_price_levels
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("price_level_product_price_levels", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("price_level_product_price_levels", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N price_level_products
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("price_level_products")]
@@ -79992,6 +80043,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("processstage_phonecalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N processstage_productpricelevels
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_productpricelevels")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel> processstage_productpricelevels
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("processstage_productpricelevels", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("processstage_productpricelevels", null, value);
 			}
 		}
 		
@@ -81160,6 +81227,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N product_price_levels
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("product_price_levels")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel> product_price_levels
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("product_price_levels", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("product_price_levels", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N product_Teams
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("product_Teams")]
@@ -81531,6 +81614,793 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int VendorName = 100;
 			
 			public const int VendorPartNumber = 100;
+		}
+	}
+	
+	/// <summary>
+	/// Information about how to price a product in the specified price level, including pricing method, rounding option, and discount type based on a specified product unit.
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("productpricelevel")]
+	public partial class ProductPriceLevel : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public ProductPriceLevel() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "productpricelevel";
+		
+		public const int EntityTypeCode = 1026;
+		
+		/// <summary>
+		/// Monetary amount for the price list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("amount")]
+		public Microsoft.Xrm.Sdk.Money Amount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("amount");
+			}
+			set
+			{
+				this.SetAttributeValue("amount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Amount field converted to the system's default base currency, if specified as a fixed amount. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("amount_base")]
+		public Microsoft.Xrm.Sdk.Money Amount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("amount_base");
+			}
+		}
+		
+		/// <summary>
+		/// lk_productpricelevelbase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the price list was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// lk_productpricelevelbase_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// discount_type_product_price_levels
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("discounttypeid")]
+		public Microsoft.Xrm.Sdk.EntityReference DiscountTypeId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("discounttypeid");
+			}
+			set
+			{
+				this.SetAttributeValue("discounttypeid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the conversion rate of the record's currency. The exchange rate is used to convert all money fields in the record from the local currency to the system's default currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data import or data migration that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// lk_productpricelevelbase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the price list was last modified.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// lk_productpricelevelbase_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the organization associated with the price list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("organizationid")]
+		public System.Nullable<System.Guid> OrganizationId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("organizationid");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Percentage for the price list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("percentage")]
+		public System.Nullable<decimal> Percentage
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("percentage");
+			}
+			set
+			{
+				this.SetAttributeValue("percentage", value);
+			}
+		}
+		
+		/// <summary>
+		/// price_level_product_price_levels
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pricelevelid")]
+		public Microsoft.Xrm.Sdk.EntityReference PriceLevelId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("pricelevelid");
+			}
+			set
+			{
+				this.SetAttributeValue("pricelevelid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Pricing method applied to the price list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pricingmethodcode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PricingMethodCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("pricingmethodcode");
+			}
+			set
+			{
+				this.SetAttributeValue("pricingmethodcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the Process.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("processid")]
+		public System.Nullable<System.Guid> ProcessId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("processid");
+			}
+			set
+			{
+				this.SetAttributeValue("processid", value);
+			}
+		}
+		
+		/// <summary>
+		/// product_price_levels
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productid")]
+		public Microsoft.Xrm.Sdk.EntityReference ProductId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("productid");
+			}
+			set
+			{
+				this.SetAttributeValue("productid", value);
+			}
+		}
+		
+		/// <summary>
+		/// User-defined product number.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productnumber")]
+		public string ProductNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("productnumber");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the price list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productpricelevelid")]
+		public System.Nullable<System.Guid> ProductPriceLevelId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("productpricelevelid");
+			}
+			set
+			{
+				this.SetAttributeValue("productpricelevelid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productpricelevelid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.ProductPriceLevelId = value;
+			}
+		}
+		
+		/// <summary>
+		/// Quantity of the product that must be sold for a given price level.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quantitysellingcode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue QuantitySellingCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("quantitysellingcode");
+			}
+			set
+			{
+				this.SetAttributeValue("quantitysellingcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Rounding option amount for the price list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("roundingoptionamount")]
+		public Microsoft.Xrm.Sdk.Money RoundingOptionAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("roundingoptionamount");
+			}
+			set
+			{
+				this.SetAttributeValue("roundingoptionamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Rounding Amount field converted to the system's default base currency for reporting purposes. The calculations use the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("roundingoptionamount_base")]
+		public Microsoft.Xrm.Sdk.Money RoundingOptionAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("roundingoptionamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Option for rounding the price list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("roundingoptioncode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue RoundingOptionCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("roundingoptioncode");
+			}
+			set
+			{
+				this.SetAttributeValue("roundingoptioncode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Policy for rounding the price list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("roundingpolicycode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue RoundingPolicyCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("roundingpolicycode");
+			}
+			set
+			{
+				this.SetAttributeValue("roundingpolicycode", value);
+			}
+		}
+		
+		/// <summary>
+		/// processstage_productpricelevels
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		public System.Nullable<System.Guid> StageId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("stageid");
+			}
+			set
+			{
+				this.SetAttributeValue("stageid", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timezoneruleversionnumber")]
+		public System.Nullable<int> TimeZoneRuleVersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("timezoneruleversionnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// transactioncurrency_productpricelevel
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public Microsoft.Xrm.Sdk.EntityReference TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("traversedpath")]
+		public string TraversedPath
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("traversedpath");
+			}
+			set
+			{
+				this.SetAttributeValue("traversedpath", value);
+			}
+		}
+		
+		/// <summary>
+		/// unit_of_measurement_product_price_levels
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("uomid")]
+		public Microsoft.Xrm.Sdk.EntityReference UoMId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("uomid");
+			}
+			set
+			{
+				this.SetAttributeValue("uomid", value);
+			}
+		}
+		
+		/// <summary>
+		/// unit_of_measure_schedule_product_price_level
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("uomscheduleid")]
+		public Microsoft.Xrm.Sdk.EntityReference UoMScheduleId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("uomscheduleid");
+			}
+			set
+			{
+				this.SetAttributeValue("uomscheduleid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Time zone code that was in use when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("utcconversiontimezonecode")]
+		public System.Nullable<int> UTCConversionTimeZoneCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("utcconversiontimezonecode");
+			}
+			set
+			{
+				this.SetAttributeValue("utcconversiontimezonecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the price list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ProductPriceLevel_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ProductPriceLevel_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> ProductPriceLevel_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("ProductPriceLevel_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("ProductPriceLevel_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N productpricelevel_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("productpricelevel_Teams")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> productpricelevel_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("productpricelevel_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("productpricelevel_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_productpricelevel_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_productpricelevel_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_productpricelevel_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_productpricelevel_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_productpricelevel_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_productpricelevel_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_productpricelevel_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_productpricelevel_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_productpricelevelbase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_productpricelevelbase_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_productpricelevelbase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_productpricelevelbase_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_productpricelevelbase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_productpricelevelbase_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_productpricelevelbase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_productpricelevelbase_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 price_level_product_price_levels
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pricelevelid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("price_level_product_price_levels")]
+		public Skanetrafiken.Crm.Schema.Generated.PriceLevel price_level_product_price_levels
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PriceLevel>("price_level_product_price_levels", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PriceLevel>("price_level_product_price_levels", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 processstage_productpricelevels
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_productpricelevels")]
+		public Skanetrafiken.Crm.Schema.Generated.ProcessStage processstage_productpricelevels
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_productpricelevels", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_productpricelevels", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 product_price_levels
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("product_price_levels")]
+		public Skanetrafiken.Crm.Schema.Generated.Product product_price_levels
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Product>("product_price_levels", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Product>("product_price_levels", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 transactioncurrency_productpricelevel
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_productpricelevel")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_productpricelevel
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_productpricelevel", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_productpricelevel", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 unit_of_measure_schedule_product_price_level
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("uomscheduleid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("unit_of_measure_schedule_product_price_level")]
+		public Skanetrafiken.Crm.Schema.Generated.UoMSchedule unit_of_measure_schedule_product_price_level
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.UoMSchedule>("unit_of_measure_schedule_product_price_level", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.UoMSchedule>("unit_of_measure_schedule_product_price_level", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 unit_of_measurement_product_price_levels
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("uomid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("unit_of_measurement_product_price_levels")]
+		public Skanetrafiken.Crm.Schema.Generated.UoM unit_of_measurement_product_price_levels
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.UoM>("unit_of_measurement_product_price_levels", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.UoM>("unit_of_measurement_product_price_levels", null, value);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string Amount = "amount";
+			
+			public const string Amount_Base = "amount_base";
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string DiscountTypeId = "discounttypeid";
+			
+			public const string ExchangeRate = "exchangerate";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string OrganizationId = "organizationid";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string Percentage = "percentage";
+			
+			public const string PriceLevelId = "pricelevelid";
+			
+			public const string PricingMethodCode = "pricingmethodcode";
+			
+			public const string ProcessId = "processid";
+			
+			public const string ProductId = "productid";
+			
+			public const string ProductNumber = "productnumber";
+			
+			public const string ProductPriceLevelId = "productpricelevelid";
+			
+			public const string Id = "productpricelevelid";
+			
+			public const string QuantitySellingCode = "quantitysellingcode";
+			
+			public const string RoundingOptionAmount = "roundingoptionamount";
+			
+			public const string RoundingOptionAmount_Base = "roundingoptionamount_base";
+			
+			public const string RoundingOptionCode = "roundingoptioncode";
+			
+			public const string RoundingPolicyCode = "roundingpolicycode";
+			
+			public const string StageId = "stageid";
+			
+			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
+			
+			public const string TraversedPath = "traversedpath";
+			
+			public const string UoMId = "uomid";
+			
+			public const string UoMScheduleId = "uomscheduleid";
+			
+			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
+			
+			public const string VersionNumber = "versionnumber";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int ProductNumber = 100;
+			
+			public const int TraversedPath = 1250;
 		}
 	}
 	
@@ -95480,6 +96350,70 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N lk_productpricelevel_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_productpricelevel_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel> lk_productpricelevel_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("lk_productpricelevel_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("lk_productpricelevel_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_productpricelevel_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_productpricelevel_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel> lk_productpricelevel_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("lk_productpricelevel_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("lk_productpricelevel_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_productpricelevelbase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_productpricelevelbase_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel> lk_productpricelevelbase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("lk_productpricelevelbase_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("lk_productpricelevelbase_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_productpricelevelbase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_productpricelevelbase_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel> lk_productpricelevelbase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("lk_productpricelevelbase_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("lk_productpricelevelbase_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N lk_queue_createdonbehalfby
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_queue_createdonbehalfby")]
@@ -99401,6 +100335,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 productpricelevel_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("productpricelevel_Teams")]
+		public Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel productpricelevel_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("productpricelevel_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("productpricelevel_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 queue_team
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("queueid")]
@@ -101086,6 +102037,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N transactioncurrency_productpricelevel
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_productpricelevel")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel> transactioncurrency_productpricelevel
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("transactioncurrency_productpricelevel", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("transactioncurrency_productpricelevel", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N TransactionCurrency_Queue
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_Queue")]
@@ -101677,6 +102644,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N unit_of_measurement_product_price_levels
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("unit_of_measurement_product_price_levels")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel> unit_of_measurement_product_price_levels
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("unit_of_measurement_product_price_levels", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("unit_of_measurement_product_price_levels", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N unit_of_measurement_products
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("unit_of_measurement_products")]
@@ -102219,6 +103202,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.UoM>("unit_of_measure_schedule_conversions", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N unit_of_measure_schedule_product_price_level
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("unit_of_measure_schedule_product_price_level")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel> unit_of_measure_schedule_product_price_level
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("unit_of_measure_schedule_product_price_level", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("unit_of_measure_schedule_product_price_level", null, value);
 			}
 		}
 		
@@ -104945,6 +105944,17 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.Product>();
+			}
+		}
+		
+		/// <summary>
+		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel> ProductPriceLevelSet
+		{
+			get
+			{
+				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>();
 			}
 		}
 		
