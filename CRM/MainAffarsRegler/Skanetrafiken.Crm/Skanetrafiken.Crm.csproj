@@ -144,6 +144,7 @@
     <Compile Include="Entities\PaymentEntity.cs" />
     <Compile Include="Entities\KBArticleEntity.cs" />
     <Compile Include="Entities\OrderPurchaseTypeEntity.cs" />
+    <Compile Include="Entities\SlotsEntity.cs" />
     <Compile Include="PreAccountUpdate.cs" />
     <Compile Include="PreAccountCreate.cs" />
     <Compile Include="CountryUtility.cs" />

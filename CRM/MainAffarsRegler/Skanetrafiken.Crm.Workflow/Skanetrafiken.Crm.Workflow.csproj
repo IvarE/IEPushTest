@@ -243,6 +243,9 @@
     <Compile Include="..\Skanetrafiken.Crm\Entities\SentTextMessageEntity.cs">
       <Link>Entities\SentTextMessageEntity.cs</Link>
     </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\SlotsEntity.cs">
+      <Link>Entities\SlotsEntity.cs</Link>
+    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\SystemUserEntity.cs">
       <Link>Entities\SystemUserEntity.cs</Link>
     </Compile>
@@ -316,6 +319,7 @@
     <Compile Include="CancelValueCode.cs" />
     <Compile Include="CancelOrder.cs" />
     <Compile Include="CrmConnection.cs" />
+    <Compile Include="GenerateSlots.cs" />
     <Compile Include="GetCard.cs" />
     <Compile Include="PlaceOrder.cs" />
     <Compile Include="CaptureOrder.cs" />
