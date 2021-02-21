@@ -22,7 +22,7 @@ namespace Skanetrafiken.Crm.Entities
         public InArgument<DateTime> EndDate { get; set; }
 
         [Output("OK")]
-        public OutArgument<string> OK { get; set; }
+        public OutArgument<Boolean> OK { get; set; }
 
         [Output("Message")]
         public OutArgument<string> Message { get; set; }
