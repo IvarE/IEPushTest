@@ -219,6 +219,9 @@
     <Compile Include="..\Skanetrafiken.Crm\Entities\ProductEntity.cs">
       <Link>Entities\ProductEntity.cs</Link>
     </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ProductPriceLevelEntity.cs">
+      <Link>Entities\ProductPriceLevelEntity.cs</Link>
+    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\RefundAccountEntity.cs">
       <Link>Entities\RefundAccountEntity.cs</Link>
     </Compile>
@@ -257,6 +260,9 @@
     </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\TravelCardEntity.cs">
       <Link>Entities\TravelCardEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\UnitEntity.cs">
+      <Link>Entities\UnitEntity.cs</Link>
     </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\ValueCodeApprovalEntity.cs">
       <Link>Entities\ValueCodeApprovalEntity.cs</Link>

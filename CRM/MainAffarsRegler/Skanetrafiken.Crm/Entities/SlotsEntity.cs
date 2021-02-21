@@ -26,6 +26,7 @@ namespace Skanetrafiken.Crm.Entities
 
         public static GenerateSlotsResponse GenerateSlots (Plugin.LocalPluginContext localContext,Guid productId, int quantityPerDay, DateTime startDate, DateTime endDate)
         {
+            string productName = "";
 
             GenerateSlotsResponse response = new GenerateSlotsResponse();
 
@@ -39,7 +40,7 @@ namespace Skanetrafiken.Crm.Entities
             
 
             ColumnSet productColumns = new ColumnSet(false);
-            productColumns.AddColumn(ProductEntity.Fields.Price);
+            productColumns.AddColumn(ProductEntity.Fields.Name);
 
             Money priceProduct = new Money(0);
 
@@ -47,26 +48,62 @@ namespace Skanetrafiken.Crm.Entities
 
             ProductEntity product = XrmRetrieveHelper.Retrieve<ProductEntity>(localContext, productId, productColumns);
 
-            if(product != null)
-            {
-                //if (product.Contains(ProductEntity.Fields.Price) && product.Price != null)
-                    //priceProduct = product.;
-            }
-            else
+            if (product == null)
             {
                 response.OK = false;
                 response.Message = "Product not found.";
                 return response;
             }
+            else
+            {
+                if(product.Contains(ProductEntity.Fields.Name) && !string.IsNullOrEmpty(product.Name))
+                {
+                    productName = product.Name;
+                }
+            }
+            QueryExpression queryProductPriceLevel = new QueryExpression();
+            queryProductPriceLevel.EntityName = ProductPriceLevelEntity.EntityLogicalName;
+            queryProductPriceLevel.ColumnSet = new ColumnSet(ProductPriceLevelEntity.Fields.Amount);
+            queryProductPriceLevel.Criteria.AddCondition(ProductPriceLevelEntity.Fields.ProductId, ConditionOperator.Equal, productId);
+
+            LinkEntity linkEntity = new LinkEntity()
+            {
+                EntityAlias = UnitEntity.EntityLogicalName,
+                LinkFromEntityName = ProductPriceLevelEntity.EntityLogicalName,
+                LinkFromAttributeName = ProductPriceLevelEntity.Fields.UoMId,
+                LinkToEntityName = UnitEntity.EntityLogicalName,
+                LinkToAttributeName = UnitEntity.Fields.UoMId
+
+            };
+            linkEntity.LinkCriteria.AddCondition(UnitEntity.Fields.Name, ConditionOperator.Like, "1 dag");
+
+            ProductPriceLevelEntity productPL = XrmRetrieveHelper.RetrieveFirst<ProductPriceLevelEntity>(localContext, queryProductPriceLevel);
+
+            if(productPL != null && productPL.Contains(ProductPriceLevelEntity.Fields.Amount) && productPL.Amount != null)
+            {
+                priceProduct = productPL.Amount;
+            }
+            else
+            {
+                response.OK = false;
+                response.Message = "Product not found or price not defined.";
+                return response;
+            }
 
             do
             {
-                
+                SlotsEntity slot = new SlotsEntity();
+                string date = startDate.ToString("dd/MM/yyyy");
+
+                slot.ed_name = productName + " - " + date;
+                slot.ed_BookingDay = startDate;
+                slot.ed_StandardPrice = priceProduct;
+
+                XrmHelper.Create(localContext, slot);
+
             }
             while (DateTime.Compare(startDate,endDate) <= 0);
             
-            
-
             return response;
         }
 
