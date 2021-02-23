@@ -5,24 +5,31 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Workflow;
 using Endeavor.Crm;
 using System.Runtime.Serialization;
+using Skanetrafiken.Crm.Entities;
 
-namespace Skanetrafiken.Crm.Entities
+namespace Skanetrafiken.Crm
 {
     public class GenerateSlots : CodeActivity
     {
+
         [Input("ProductID")]
+        [RequiredArgument()]
         public InArgument<string> ProductId { get; set; }
+
         [Input("QuantityPerDay")]
+        [RequiredArgument()]
         public InArgument<int> QuantityPerDay { get; set; }
 
         [Input("StartDate")]
+        [RequiredArgument()]
         public InArgument<DateTime> StartDate { get; set; }
 
         [Input("EndDate")]
+        [RequiredArgument()]
         public InArgument<DateTime> EndDate { get; set; }
 
         [Output("OK")]
-        public OutArgument<Boolean> OK { get; set; }
+        public OutArgument<bool> OK { get; set; }
 
         [Output("Message")]
         public OutArgument<string> Message { get; set; }
@@ -43,16 +50,19 @@ namespace Skanetrafiken.Crm.Entities
             //TRY EXECUTE
             try
             {
+                //throw new InvalidWorkflowException("test");
                 //GENERATE CONTEXT
                 Plugin.LocalPluginContext localContext = GetLocalContext(activityContext);
 
-                localContext.TracingService.Trace($"GenerateSlots started.");
+                localContext.Trace($"GenerateSlots started.");
 
                 //GET VALUE(S)
                 string product = ProductId.Get(activityContext);
                 int quantityPerDay = QuantityPerDay.Get(activityContext);
                 DateTime startDate = StartDate.Get(activityContext);
                 DateTime endDate = EndDate.Get(activityContext);
+                
+
 
                 if(string.IsNullOrEmpty(product))
                 {
@@ -61,6 +71,10 @@ namespace Skanetrafiken.Crm.Entities
 
                     return;
                 }
+
+                product.Replace("{", "");
+                product.Replace("}", "");
+
 
                 Guid productId = Guid.Parse(product);
 

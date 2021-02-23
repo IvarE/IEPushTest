@@ -59,7 +59,9 @@
                 "ed_name": "Test1 WebAPI"
             }
 
-            //generateSlotsAction(slotsPerDay, startDate, endDate, productId);
+            generateSlotsAction(slotsPerDay, startDate, endDate, productId);
+
+            /*
             parent.Xrm.WebApi.createRecord("ed_slots", data).then(
 
                 function (result) {
@@ -67,8 +69,8 @@
                 },
                 function (error) {
                     console.log(error);
-                };
-
+                });
+                */
         }
         
 
@@ -83,28 +85,32 @@
             Endeavor.formscriptfunctions.callGlobalAction("ed_GenerateSlots", inputParameters,
 
                 function (result) {
-                    
-                    if (result.OK == null || result.OK == false) {
-                        if (result.Message != null && result.Message != "") {
-                            alert(result.Message);
-                            return;
-                        }
-                        else
-                        {
-                            alert("Error: Unknown problem generating slots.");
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        if (result.Message != null && result.Message != false) {
-                            alert(result.Message);
-                            return;
+                    if (result.responseText != null && result.responseText != "undefined" && result.responseText != "") {
+                        var response = JSON.parse(result.responseText);
+                        if (response.OK == null || response.OK == false) {
+                            if (response.Message != null && response.Message != "") {
+                                alert(response.Message);
+                                return;
+                            }
+                            else {
+                                alert("Error: Unknown problem generating slots.");
+                                return;
+                            }
                         }
                         else {
-                            alert(result.Message);
-                            return;
+                            if (response.Message != null && response.Message != false) {
+                                alert(response.Message);
+                                return;
+                            }
+                            else {
+                                alert(response.Message);
+                                return;
+                            }
                         }
+                    }
+                    else {
+                        alert("Error: Unknown problem generating slots.");
+                        return;
                     }
             },
                 function (error) {
