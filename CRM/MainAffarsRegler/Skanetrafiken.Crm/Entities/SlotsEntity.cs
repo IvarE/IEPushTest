@@ -106,6 +106,7 @@ namespace Skanetrafiken.Crm.Entities
                     slot.ed_name = productName + " - " + date;
                     slot.ed_BookingDay = startDate;
                     slot.ed_StandardPrice = priceProduct;
+                    slot.ed_ProductID = new EntityReference(ProductEntity.EntityLogicalName, productId);
 
                     XrmHelper.Create(localContext, slot);
                 }
