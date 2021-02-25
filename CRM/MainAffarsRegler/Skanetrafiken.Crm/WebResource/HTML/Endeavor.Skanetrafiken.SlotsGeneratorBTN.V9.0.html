@@ -1,0 +1,129 @@
+﻿<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="../script/Endeavor.Skanetrafiken.formscriptfunctions.js"></script>
+    <title></title>
+    <style>
+        .button {
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            background-color: #008CBA;
+            width: 200px;
+        }
+    </style>
+
+    <script>
+        function generateSlots() {
+            var formContext = parent.Xrm.Page;
+            if (formContext == null || formContext == "undefined") {
+                alert("Error: Internal error with formContext.")
+                return;
+            }
+            var slotsPerDay = formContext.getAttribute("ed_noslots").getValue();
+
+            var productId = formContext.data.entity.getId();
+            if (productId == null || productId == "undefined") {
+                alert("Error: Not possible to retrieve current product Id.")
+                return;
+            }
+            if (slotsPerDay == null || slotsPerDay == "undefined" || slotsPerDay <= 0) {
+                alert("Error: Number of slots needs to be greater than 0.")
+                return;
+            }
+
+            var startDate = formContext.getAttribute("ed_slots_from").getValue();
+            if (startDate == null || startDate == "undefined") {
+                alert("Error: Slottar Från needs to have a value.")
+                return;
+            }
+
+            var endDate = formContext.getAttribute("ed_slots_to").getValue();
+            if (endDate == null || endDate == "undefined") {
+                alert("Error: Slottar To needs to have a value.")
+                return;
+            }
+
+            if (startDate > endDate) {
+                alert("Error: Slottar Från is after Slottar To.")
+                return;
+            }
+            var data =
+            {
+                "ed_name": "Test1 WebAPI"
+            }
+
+            generateSlotsAction(slotsPerDay, startDate, endDate, productId);
+
+            /*
+            parent.Xrm.WebApi.createRecord("ed_slots", data).then(
+
+                function (result) {
+                    console.log(result);
+                },
+                function (error) {
+                    console.log(error);
+                });
+                */
+        }
+        
+
+        function generateSlotsAction(slotsPerDay, startDate, endDate, productId) {
+
+            var inputParameters = [{ "Field": "ProductID", "Value": productId, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                { "Field": "QuantityPerDay", "Value": slotsPerDay, "TypeName": Endeavor.formscriptfunctions.getParameterType("int"), "StructuralProperty": 1 },
+                { "Field": "StartDate", "Value": startDate, "TypeName": Endeavor.formscriptfunctions.getParameterType("datetime"), "StructuralProperty": 1 },
+                { "Field": "EndDate", "Value": endDate, "TypeName": Endeavor.formscriptfunctions.getParameterType("datetime"), "StructuralProperty": 1 }
+            ];
+
+            Endeavor.formscriptfunctions.callGlobalAction("ed_GenerateSlots", inputParameters,
+
+                function (result) {
+                    if (result.responseText != null && result.responseText != "undefined" && result.responseText != "") {
+                        var response = JSON.parse(result.responseText);
+                        if (response.OK == null || response.OK == false) {
+                            if (response.Message != null && response.Message != "") {
+                                alert(response.Message);
+                                return;
+                            }
+                            else {
+                                alert("Error: Unknown problem generating slots.");
+                                return;
+                            }
+                        }
+                        else {
+                            if (response.Message != null && response.Message != false) {
+                                alert(response.Message);
+                                return;
+                            }
+                            else {
+                                alert(response.Message);
+                                return;
+                            }
+                        }
+                    }
+                    else {
+                        alert("Error: Unknown problem generating slots.");
+                        return;
+                    }
+            },
+                function (error) {
+                    var errorMessage = "Error in  Slots creation." + error.message;
+                    console.log(errorMessage);
+                    Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
+                });
+
+        }
+    </script>
+</head>
+
+<body>
+    <button class="button" onclick="generateSlots()">Generate Slots</button>
+</body>
+</html>

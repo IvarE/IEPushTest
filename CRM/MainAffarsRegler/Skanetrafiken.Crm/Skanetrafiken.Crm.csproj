@@ -144,6 +144,7 @@
     <Compile Include="Entities\PaymentEntity.cs" />
     <Compile Include="Entities\KBArticleEntity.cs" />
     <Compile Include="Entities\OrderPurchaseTypeEntity.cs" />
+    <Compile Include="Entities\ProductPriceLevelEntity.cs" />
     <Compile Include="Entities\SlotsEntity.cs" />
     <Compile Include="PreAccountUpdate.cs" />
     <Compile Include="PreAccountCreate.cs" />
@@ -253,6 +254,7 @@
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MargeAccounts.V9.0.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MergeRecordsStarter.V9.0.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.SearchTravelCards.V9.0.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.SlotsGeneratorBTN.V9.0.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.TicketMoveManager.V9.0.html" />
     <Content Include="WebResource\script\Endeavor.Common.Data.js" />
     <Content Include="WebResource\script\Endeavor.Common.Page.js" />
