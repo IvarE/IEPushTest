@@ -65,12 +65,11 @@ namespace Skanetrafiken.Crm
             string tripDateTime = TripDateTime.Get(activityContext);
             string forLineGids = ForLineGids.Get(activityContext);
             string transportType = TransportType.Get(activityContext);
-            string productCode = "";
 
             // Execute-metod
             try
             {
-                string responsetext = ExecuteCodeActivityPubTrans(localContext, fromStopArea, toStopArea, tripDateTime, forLineGids, transportType, productCode);
+                string responsetext = ExecuteCodeActivityPubTrans(localContext, fromStopArea, toStopArea, tripDateTime, forLineGids, transportType);
                 DirectJourneysResponse.Set(activityContext, responsetext);
             }
             catch (Exception ex)
@@ -119,17 +118,23 @@ namespace Skanetrafiken.Crm
             };
         }
 
-        public static string ExecuteCodeActivityPubTrans(Plugin.LocalPluginContext localContext, string fromStopAreaGid, string toStopAreaGid, string tripDateTime, string forLineGids, string transportType, string productCode)
+        public static string ExecuteCodeActivityPubTrans(Plugin.LocalPluginContext localContext, string fromStopAreaGid, string toStopAreaGid, string tripDateTime, string forLineGids, string transportType)
         {
             string responseJourneys = "";
 
             // ONLY ASSIGNED IF TRAIN. REQUIRED FOR REQUEST
-            string aot = productCode;
+            string aot = "";
             string district = "PRODUCT";
             if (transportType == "TRAIN")
             {
                 aot = "AOT";
                 district = "DISTRICT";
+            }
+
+            if(forLineGids != null)
+            {
+                aot = null;
+                district = null;
             }
 
             byte timeDuration = 120;
@@ -160,7 +165,7 @@ namespace Skanetrafiken.Crm
             {
                 using (var client = GetDirectJourneys.GetStopMonitoringServiceClient(_serviceEndPointUrl, _userName, _passWord))
                 {
-                    DataSet dsJourneys = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, null, aot, district);
+                    DataSet dsJourneys = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, forLineGids, aot, district);
                     responseJourneys = dsJourneys.GetXml();
                 }
             }
