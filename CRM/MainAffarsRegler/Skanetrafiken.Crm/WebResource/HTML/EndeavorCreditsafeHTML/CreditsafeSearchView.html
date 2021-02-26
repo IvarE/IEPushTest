@@ -1,0 +1,127 @@
+﻿<html>
+<head>
+    <meta content="IE=10,chrome=1" http-equiv="X-UA-Compatible">    <!--Make IE behave like IE10-->
+    <meta charset="utf-8" http-equiv="X-UA-Compatible" content="IE=EDGE">
+    <!-- The jQuery library is a prerequisite for all jqSuite products -->
+    <script type="text/ecmascript" src="../script/jquery.1.11.1.min.js"></script>
+    <!--<script src="../../../../_static/_common/scripts/jquery-2.1.1.min.js?ver=1925082467"></script>-->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" type="text/css" href="../css/bootstraptheme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="../script/bootstrap.min.js"></script>
+
+    <!-- This is the Javascript file of jqGrid -->
+    <script type="text/ecmascript" src="../script/jquery.jqGrid.min.js"></script>
+    <!-- This is the localization file of the grid controlling messages, labels, etc. -->
+    <!-- We support more than 40 localizations -->
+    <script type="text/ecmascript" src="../script/grid.locale.en.js"></script>
+    <!-- A link to a jQuery UI ThemeRoller theme, more than 22 built-in and many more custom -->
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/jquery.ui.css">
+    <!-- The link to the CSS that the grid needs -->
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/ui.jqgrid.css">
+    <!--Used for loading screen-->
+    <link type="text/css" rel="stylesheet" href="../css/waitMe.min.css">
+    <!--Used for loadingscreen-->
+    <script type="text/javascript" src="../script/waitMe.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../css/CreditsafeSearchView.css">
+
+
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+    <script type="text/javascript" src="../script/SDK.Rest.js"></script>
+    <script type="text/javascript" src="../script/Sdk.Soap.min.js"></script>
+    <script type="text/javascript" src="../script/Sdk.edp_SearchCompany.min.js"></script>
+    <script type="text/javascript" src="../script/Sdk.edp_HandleCompanyData.min.js"></script>
+    <script type="text/javascript" src="../script/Endeavor.Common.Data.js"></script>
+    <script type="text/javascript" src="../script/Endeavor.Creditsafe.Resources.1033.js"></script>
+    <title></title>
+    <meta>
+</head>
+<body style="overflow-wrap: break-word;">
+    <ol class="breadcrumb">
+        <li id="breadcrumbSearch" class="active"></li>
+        <li id="breadcrumbResult"></li>
+        <!--<li><a href="#">On map</a></li>-->
+    </ol>
+
+    <!-- ******************** Search view ******************** -->
+    <div id="searchView">
+        <div id="search-title" class="header-title"></div>
+        <div id="search-desc" class="header-desc"></div>
+        <br>
+        <br>
+        <form action="#">
+            <p>
+                <label class="LabelCompanyName"></label>
+                <input type="text" id="CompanyName" value="--" onfocus="Endeavor.Creditsafe.SearchCreditsafe.inputOnFocus(this)" onblur="Endeavor.Creditsafe.SearchCreditsafe.inputOnBlur(this)">
+            </p>
+            <p>
+                <label class="LabelOrganisationNumber"></label>
+                <input type="text" id="OrganisationNumber" value="--" onfocus="Endeavor.Creditsafe.SearchCreditsafe.inputOnFocus(this)" onblur="Endeavor.Creditsafe.SearchCreditsafe.inputOnBlur(this)">
+            </p>
+            <p>
+                <label class="LabelAdress"></label>
+                <input type="text" id="Address" value="--" onfocus="Endeavor.Creditsafe.SearchCreditsafe.inputOnFocus(this)" onblur="Endeavor.Creditsafe.SearchCreditsafe.inputOnBlur(this)">
+            </p>
+            <p>
+                <label class="LabelPostalCode"></label>
+                <input type="text" id="PostalCode" value="--" onfocus="Endeavor.Creditsafe.SearchCreditsafe.inputOnFocus(this)" onblur="Endeavor.Creditsafe.SearchCreditsafe.inputOnBlur(this)">
+            </p>
+            <p>
+                <label class="LabelCity"></label>
+                <input type="text" id="City" value="--" onfocus="Endeavor.Creditsafe.SearchCreditsafe.inputOnFocus(this)" onblur="Endeavor.Creditsafe.SearchCreditsafe.inputOnBlur(this)">
+            </p>
+            <p>
+                <label class="LabelCountry"></label>
+
+                <select id="countries"></select>
+            </p>
+        </form>
+        <br>
+        <div class="crm-footer">
+            <div class="crm-footer-left">
+                <button type="button" id="search" class="crm-button"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ******************** Result Grid ******************** -->
+    <div id="resultGrid" style="display:none">
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+
+        <br>
+        <div id="localized-footer" class="localized-footer">
+            <div class="localized-footer-left">
+                <p>
+                    <label id="Label-de-reason-code" class="localized-footer-label"></label>
+                    <select id="de-reason-code" class="crm-select"></select>
+                </p>
+            </div>
+        </div>
+        <div class="crm-footer">
+            <div class="crm-footer-left">
+                <button type="button" id="button-create-crm" class="crm-button"></button>
+                <button type="button" id="button-lead-crm" class="crm-button"></button>
+                <!--<button type="button" id="button-contact-crm" class="crm-button"></button>-->
+            </div>
+        </div>
+        <div class="crm-footer">
+            <div class="crm-footer-left">
+                <label>RelationType</label>
+                <select id="relation-type"></select>
+            </div>
+        </div>
+
+        <br>
+        <br>
+    </div>
+    <!-- Main file -->
+    <script defer="" type="text/javascript" src="../script/Endeavor.Creditsafe.SearchCreditsafe"></script>
+
+
+</body>
+</html>
