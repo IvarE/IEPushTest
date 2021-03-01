@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.Crm.Workflow.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.Reports", "..\Skanetrafiken.Reports\Skanetrafiken.Reports.csproj", "{AF3BC81A-5A6A-4AEA-96B3-9547E4233C7B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkaneCloseCasesService", "..\SkaneCloseCasesService\SkaneCloseCasesService.csproj", "{95F53F66-084A-4DCD-995F-30ACA00A533F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Acceptans|Any CPU = Acceptans|Any CPU
@@ -233,6 +235,18 @@ Global
 		{AF3BC81A-5A6A-4AEA-96B3-9547E4233C7B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF3BC81A-5A6A-4AEA-96B3-9547E4233C7B}.Test|Any CPU.ActiveCfg = Release|Any CPU
 		{AF3BC81A-5A6A-4AEA-96B3-9547E4233C7B}.Test|Any CPU.Build.0 = Release|Any CPU
+		{95F53F66-084A-4DCD-995F-30ACA00A533F}.Acceptans|Any CPU.ActiveCfg = Release|Any CPU
+		{95F53F66-084A-4DCD-995F-30ACA00A533F}.Acceptans|Any CPU.Build.0 = Release|Any CPU
+		{95F53F66-084A-4DCD-995F-30ACA00A533F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95F53F66-084A-4DCD-995F-30ACA00A533F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95F53F66-084A-4DCD-995F-30ACA00A533F}.Dev|Any CPU.ActiveCfg = Debug|Any CPU
+		{95F53F66-084A-4DCD-995F-30ACA00A533F}.Dev|Any CPU.Build.0 = Debug|Any CPU
+		{95F53F66-084A-4DCD-995F-30ACA00A533F}.Produktion|Any CPU.ActiveCfg = Release|Any CPU
+		{95F53F66-084A-4DCD-995F-30ACA00A533F}.Produktion|Any CPU.Build.0 = Release|Any CPU
+		{95F53F66-084A-4DCD-995F-30ACA00A533F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95F53F66-084A-4DCD-995F-30ACA00A533F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95F53F66-084A-4DCD-995F-30ACA00A533F}.Test|Any CPU.ActiveCfg = Release|Any CPU
+		{95F53F66-084A-4DCD-995F-30ACA00A533F}.Test|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

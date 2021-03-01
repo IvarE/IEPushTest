@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Endeavor.Crm.CloseCasesService.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="CredentialsFilePath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%APPDATA%\Endeavor\CloseCasesService.Credential.xml</Value>
+    </Setting>
+    <Setting Name="FileUploadScheduleCronExpression" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0 0 5 1/1 * ? *</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

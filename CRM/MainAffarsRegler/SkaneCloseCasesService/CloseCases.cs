@@ -1,0 +1,113 @@
+﻿using System;
+using Quartz;
+using System.Collections.Generic;
+
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Tooling.Connector;
+
+using Skanetrafiken.Crm.Entities;
+using Skanetrafiken.Crm.Schema.Generated;
+
+namespace Endeavor.Crm.CloseCasesService
+{
+    [DisallowConcurrentExecution, PersistJobDataAfterExecution]
+    public class CloseCases : IJob
+    {
+        public const string DataMapModifiedAfter = "ModifiedAfterUpload";
+        public const string GroupName = "Report Uploader Schedule";
+        public const string TriggerDescription = "ReportUploader Schedule Trigger";
+        public const string JobDescription = "ReportUploader Schedule Job";
+        public const string TriggerName = "ReportUploaderTrigger";
+        public const string JobName = "ReportUploader";
+
+        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        public static Plugin.LocalPluginContext GenerateLocalContext()
+        {
+            // Connect to the CRM web service using a connection string.
+            CrmServiceClient conn = new CrmServiceClient(CrmConnection.GetCrmConnectionString(CasesService.CredentialFilePath, CasesService.Entropy));
+
+            // Cast the proxy client to the IOrganizationService interface.
+            IOrganizationService serviceProxy = (IOrganizationService)conn.OrganizationWebProxyClient != null ? (IOrganizationService)conn.OrganizationWebProxyClient : (IOrganizationService)conn.OrganizationServiceProxy;
+
+            Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+            return localContext;
+        }
+
+        public void Execute(IJobExecutionContext context)
+        {
+            _log.Debug(string.Format(Properties.Resources.TriggerExecuting, context.Trigger.Description ?? context.Trigger.Key.Name));
+
+            JobDataMap dataMap = context.JobDetail.JobDataMap;
+
+            DateTime modifiedAfter = dataMap.GetDateTime(DataMapModifiedAfter);
+
+            _log.Debug(string.Format(Properties.Resources.ScheduleJobExecuting, context.JobDetail.Description ?? context.JobDetail.Key.Name ?? "NULL", modifiedAfter.ToString() ?? "NULL"));
+
+            ExecuteJob();
+
+            _log.Debug(string.Format(Properties.Resources.ScheduleJobExecuted, context.JobDetail.Description ?? context.JobDetail.Key.Name, modifiedAfter.ToString()));
+        }
+
+        public void ExecuteJob()
+        {
+            Plugin.LocalPluginContext localContext = null;
+
+            try
+            {
+                localContext = GenerateLocalContext();
+
+                if (localContext == null)
+                {
+                    _log.Error($"Connection to CRM was not possible.\n LocalContext is null.\n\n");
+                    return;
+                }
+
+                QueryExpression queryCases = new QueryExpression(IncidentEntity.EntityLogicalName);
+                queryCases.NoLock = true;
+                queryCases.Criteria.AddCondition(IncidentEntity.Fields.StateCode, ConditionOperator.Equal, IncidentState.Active);
+                queryCases.Criteria.AddCondition(IncidentEntity.Fields.StatusCode, ConditionOperator.Equal, 1); //generate optionset
+                //queryCases.Criteria.AddCondition(IncidentEntity.Fields.)
+
+                List<IncidentEntity> lUnansweredCases = XrmRetrieveHelper.RetrieveMultiple<IncidentEntity>(localContext, queryCases);
+                _log.Info($"Found " + lUnansweredCases.Count + " Unanswered Cases.");
+
+                foreach (IncidentEntity incident in lUnansweredCases)
+                {
+                    try
+                    {
+                        //var incidentResolution = new IncidentResolution
+                        //{
+                        //    Subject = "Resolved Sample Incident",
+                        //    IncidentId = new EntityReference(Incident.EntityLogicalName, _incidentId)
+                        //};
+
+                        //// Close the incident with the resolution.
+                        //var closeIncidentRequest = new CloseIncidentRequest
+                        //{
+                        //    IncidentResolution = incidentResolution,
+                        //    Status = new OptionSetValue((int)incident_statuscode.ProblemSolved)
+                        //};
+
+                        //localContext.OrganizationService.Execute(closeIncidentRequest);
+
+                        _log.Info($"Unanswered Incident {incident.Id} closed.");
+                    }
+                    catch (Exception e)
+                    {
+                        _log.Error($"Exception caught in Close Case {incident.Id}\n{e.Message}\n\n");
+                    }
+                }
+
+                _log.Info($"CloseCases Done");
+            }
+            catch (Exception e)
+            {
+                _log.Error($"Exception caught in CloseCases.ExecuteJob():\n{e.Message}\n\n");
+            }
+        }
+    }
+}

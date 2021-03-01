@@ -1938,6 +1938,9 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 //Endeavor.formscriptfunctions.HideOrDisplayField("cgi_amountwithtax", true);
                 //Endeavor.formscriptfunctions.SetRequiredLevel("cgi_amountwithtax", "required");
                 Endeavor.formscriptfunctions.HideOrDisplayField("cgi_comments", true, formContext);
+
+                Endeavor.formscriptfunctions.HideOrDisplayField("cgi_reimbursementformid", true, formContext);
+                Endeavor.formscriptfunctions.SetRequiredLevel("cgi_reimbursementformid", "required", formContext);
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.cgi_refund.refundtypeMONEY\n\n" + e.message);

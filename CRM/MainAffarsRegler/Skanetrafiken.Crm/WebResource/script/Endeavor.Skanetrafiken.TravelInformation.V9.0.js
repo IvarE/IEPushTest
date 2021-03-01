@@ -761,7 +761,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 var contractorGid = getElementValue(directjourney, "ContractorGid");
                 var contractor = Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(contractorGid);
                 if (!contractor)
-                    contractor = "-";
+                    contractor = "X";
 
                 cell = journeyrow.insertCell();
                 cell.innerHTML = contractor;

@@ -13,6 +13,7 @@
     <entity>contact</entity>
     <entity>email</entity>
     <entity>incident</entity>
+    <entity>incidentresolution</entity>
     <entity>lead</entity>
     <entity>pricelevel</entity>
     <entity>product</entity>
@@ -110,6 +111,7 @@
     <optionset>incident_caseorigincode</optionset>
     <optionset>incident_prioritycode</optionset>
     <optionset>incident_incidentstagecode</optionset>
+    <optionset>incident_statuscode</optionset>
 
     <optionset>contact_statuscode</optionset>
     <optionset>contact_accountrolecode</optionset>
