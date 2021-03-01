@@ -4170,6 +4170,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N account_IncidentResolutions
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("account_IncidentResolutions")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.IncidentResolution> account_IncidentResolutions
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("account_IncidentResolutions", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("account_IncidentResolutions", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N account_master_account
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("account_master_account", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
@@ -5911,6 +5927,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 incidentresolution_activity_parties
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activityid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("incidentresolution_activity_parties")]
+		public Skanetrafiken.Crm.Schema.Generated.IncidentResolution incidentresolution_activity_parties
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("incidentresolution_activity_parties", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("incidentresolution_activity_parties", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 lead_activity_parties
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("partyid")]
@@ -7065,6 +7098,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("Incident_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 IncidentResolution_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("IncidentResolution_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.IncidentResolution IncidentResolution_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("IncidentResolution_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("IncidentResolution_Annotation", null, value);
 			}
 		}
 		
@@ -10887,6 +10937,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 IncidentResolution_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("IncidentResolution_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.IncidentResolution IncidentResolution_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("IncidentResolution_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("IncidentResolution_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 KbArticle_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -13288,6 +13355,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("Campaign_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N campaign_IncidentResolutions
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("campaign_IncidentResolutions")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.IncidentResolution> campaign_IncidentResolutions
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("campaign_IncidentResolutions", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("campaign_IncidentResolutions", null, value);
 			}
 		}
 		
@@ -15948,6 +16031,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage>("CampaignResponse_ed_TextMessages", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 CampaignResponse_IncidentResolutions
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("originatingactivityid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("CampaignResponse_IncidentResolutions")]
+		public Skanetrafiken.Crm.Schema.Generated.IncidentResolution CampaignResponse_IncidentResolutions
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("CampaignResponse_IncidentResolutions", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("CampaignResponse_IncidentResolutions", null, value);
 			}
 		}
 		
@@ -31080,6 +31180,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_kundresan")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ed_Kundresan
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("ed_kundresan");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_kundresan", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_lasttraveldate")]
 		public System.Nullable<System.DateTime> ed_LastTravelDate
 		{
@@ -31122,6 +31238,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_linkexpirydate", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_lojalitet")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ed_lojalitet
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("ed_lojalitet");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_lojalitet", value);
 			}
 		}
 		
@@ -34917,11 +35049,15 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_isLockedPortal = "ed_islockedportal";
 			
+			public const string ed_Kundresan = "ed_kundresan";
+			
 			public const string ed_LastTravelDate = "ed_lasttraveldate";
 			
 			public const string ed_LatestLinkGuid = "ed_latestlinkguid";
 			
 			public const string ed_LinkExpiryDate = "ed_linkexpirydate";
+			
+			public const string ed_lojalitet = "ed_lojalitet";
 			
 			public const string ed_MklId = "ed_mklid";
 			
@@ -65999,6 +66135,26 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		Canceled = 2,
 	}
 	
+	public enum incident_statuscode
+	{
+		
+		ProblemSolved = 5,
+		
+		InformationProvided = 1000,
+		
+		Canceled = 6,
+		
+		Merged = 2000,
+		
+		InProgress = 1,
+		
+		OnHold = 2,
+		
+		WaitingforDetails = 3,
+		
+		Researching = 4,
+	}
+	
 	/// <summary>
 	/// Service request case associated with a account.
 	/// </summary>
@@ -70059,15 +70215,30 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// Select the case's status.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
-		public Microsoft.Xrm.Sdk.OptionSetValue StatusCode
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.incident_statuscode> StatusCode
 		{
 			get
 			{
-				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.incident_statuscode)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.incident_statuscode), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
 			}
 			set
 			{
-				this.SetAttributeValue("statuscode", value);
+				if ((value == null))
+				{
+					this.SetAttributeValue("statuscode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statuscode", new Microsoft.Xrm.Sdk.OptionSetValue((int)value));
+				}
 			}
 		}
 		
@@ -70368,6 +70539,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Incident>("incident_existingcase", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Incident_IncidentResolutions
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Incident_IncidentResolutions")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.IncidentResolution> Incident_IncidentResolutions
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("Incident_IncidentResolutions", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("Incident_IncidentResolutions", null, value);
 			}
 		}
 		
@@ -71874,6 +72061,1703 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int TicketNumber = 100;
 			
 			public const int Title = 200;
+			
+			public const int TraversedPath = 1250;
+		}
+	}
+	
+	public enum IncidentResolutionState
+	{
+		
+		Scheduled = 3,
+		
+		Open = 0,
+		
+		Completed = 1,
+		
+		Canceled = 2,
+	}
+	
+	/// <summary>
+	/// Special type of activity that includes description of the resolution, billing status, and the duration of the case.
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("incidentresolution")]
+	public partial class IncidentResolution : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public IncidentResolution() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "incidentresolution";
+		
+		public const int EntityTypeCode = 4206;
+		
+		/// <summary>
+		/// Additional information provided by the external application as JSON. For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activityadditionalparams")]
+		public string ActivityAdditionalParams
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("activityadditionalparams");
+			}
+			set
+			{
+				this.SetAttributeValue("activityadditionalparams", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activityid")]
+		public System.Nullable<System.Guid> ActivityId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("activityid");
+			}
+			set
+			{
+				this.SetAttributeValue("activityid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activityid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.ActivityId = value;
+			}
+		}
+		
+		/// <summary>
+		/// Type of activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activitytypecode")]
+		public string ActivityTypeCode
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("activitytypecode");
+			}
+		}
+		
+		/// <summary>
+		/// Actual duration of the case resolution activity in minutes.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("actualdurationminutes")]
+		public System.Nullable<int> ActualDurationMinutes
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("actualdurationminutes");
+			}
+			set
+			{
+				this.SetAttributeValue("actualdurationminutes", value);
+			}
+		}
+		
+		/// <summary>
+		/// Actual end time of the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("actualend")]
+		public System.Nullable<System.DateTime> ActualEnd
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("actualend");
+			}
+			set
+			{
+				this.SetAttributeValue("actualend", value);
+			}
+		}
+		
+		/// <summary>
+		/// Actual start time of the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("actualstart")]
+		public System.Nullable<System.DateTime> ActualStart
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("actualstart");
+			}
+			set
+			{
+				this.SetAttributeValue("actualstart", value);
+			}
+		}
+		
+		/// <summary>
+		/// Blind Carbon-copy (bcc) recipients of the activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("bcc")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> Bcc
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.EntityCollection collection = this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityCollection>("bcc");
+				if (((collection != null) 
+							&& (collection.Entities != null)))
+				{
+					return System.Linq.Enumerable.Cast<Skanetrafiken.Crm.Schema.Generated.ActivityParty>(collection.Entities);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("bcc", value);
+				}
+				else
+				{
+					this.SetAttributeValue("bcc", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Category for the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("category")]
+		public string Category
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("category");
+			}
+			set
+			{
+				this.SetAttributeValue("category", value);
+			}
+		}
+		
+		/// <summary>
+		/// Carbon-copy (cc) recipients of the activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cc")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> Cc
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.EntityCollection collection = this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityCollection>("cc");
+				if (((collection != null) 
+							&& (collection.Entities != null)))
+				{
+					return System.Linq.Enumerable.Cast<Skanetrafiken.Crm.Schema.Generated.ActivityParty>(collection.Entities);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("cc", value);
+				}
+				else
+				{
+					this.SetAttributeValue("cc", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Shows how contact about the social activity originated, such as from Twitter or Facebook. This field is read-only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("community")]
+		public Microsoft.Xrm.Sdk.OptionSetValue Community
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("community");
+			}
+			set
+			{
+				this.SetAttributeValue("community", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who created the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the external party who created the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdbyexternalparty")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedByExternalParty
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdbyexternalparty");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the case resolution activity was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who created the incidentresolution.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Customer with which the activity is associated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customers")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> Customers
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.EntityCollection collection = this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityCollection>("customers");
+				if (((collection != null) 
+							&& (collection.Entities != null)))
+				{
+					return System.Linq.Enumerable.Cast<Skanetrafiken.Crm.Schema.Generated.ActivityParty>(collection.Entities);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("customers", value);
+				}
+				else
+				{
+					this.SetAttributeValue("customers", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the delivery of the activity was last attempted.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("deliverylastattemptedon")]
+		public System.Nullable<System.DateTime> DeliveryLastAttemptedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("deliverylastattemptedon");
+			}
+		}
+		
+		/// <summary>
+		/// Priority of delivery of the activity to the email server.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("deliveryprioritycode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue DeliveryPriorityCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("deliveryprioritycode");
+			}
+			set
+			{
+				this.SetAttributeValue("deliveryprioritycode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type additional information that describes the case resolution.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("description")]
+		public string Description
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("description");
+			}
+			set
+			{
+				this.SetAttributeValue("description", value);
+			}
+		}
+		
+		/// <summary>
+		/// The message id of activity which is returned from Exchange Server.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangeitemid")]
+		public string ExchangeItemId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("exchangeitemid");
+			}
+			set
+			{
+				this.SetAttributeValue("exchangeitemid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Exchange rate for the currency associated with the activitypointer with respect to the base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the web link of Activity of type email.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangeweblink")]
+		public string ExchangeWebLink
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("exchangeweblink");
+			}
+			set
+			{
+				this.SetAttributeValue("exchangeweblink", value);
+			}
+		}
+		
+		/// <summary>
+		/// Person who the activity is from.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("from")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> From
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.EntityCollection collection = this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityCollection>("from");
+				if (((collection != null) 
+							&& (collection.Entities != null)))
+				{
+					return System.Linq.Enumerable.Cast<Skanetrafiken.Crm.Schema.Generated.ActivityParty>(collection.Entities);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("from", value);
+				}
+				else
+				{
+					this.SetAttributeValue("from", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data import or data migration that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Incident_IncidentResolutions
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("incidentid")]
+		public Microsoft.Xrm.Sdk.EntityReference IncidentId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("incidentid");
+			}
+			set
+			{
+				this.SetAttributeValue("incidentid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type of instance of a recurring series.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("instancetypecode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue InstanceTypeCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("instancetypecode");
+			}
+		}
+		
+		/// <summary>
+		/// Information about whether the case resolution activity was billed as part of resolving a case.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isbilled")]
+		public System.Nullable<bool> IsBilled
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isbilled");
+			}
+			set
+			{
+				this.SetAttributeValue("isbilled", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ismapiprivate")]
+		public System.Nullable<bool> IsMapiPrivate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ismapiprivate");
+			}
+			set
+			{
+				this.SetAttributeValue("ismapiprivate", value);
+			}
+		}
+		
+		/// <summary>
+		/// Information regarding whether the activity is a regular activity type or event type.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isregularactivity")]
+		public System.Nullable<bool> IsRegularActivity
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isregularactivity");
+			}
+		}
+		
+		/// <summary>
+		/// Information that specifies if the case resolution activity was created from a workflow rule.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isworkflowcreated")]
+		public System.Nullable<bool> IsWorkflowCreated
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isworkflowcreated");
+			}
+			set
+			{
+				this.SetAttributeValue("isworkflowcreated", value);
+			}
+		}
+		
+		/// <summary>
+		/// Contains the date and time stamp of the last on hold time.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("lastonholdtime")]
+		public System.Nullable<System.DateTime> LastOnHoldTime
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("lastonholdtime");
+			}
+			set
+			{
+				this.SetAttributeValue("lastonholdtime", value);
+			}
+		}
+		
+		/// <summary>
+		/// Left the voice mail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("leftvoicemail")]
+		public System.Nullable<bool> LeftVoiceMail
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("leftvoicemail");
+			}
+			set
+			{
+				this.SetAttributeValue("leftvoicemail", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who last modified the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the external party who modified the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedbyexternalparty")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedByExternalParty
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedbyexternalparty");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the case resolution activity was last modified.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who last modified the incidentresolution.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows how long, in minutes, that the record was on hold.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("onholdtime")]
+		public System.Nullable<int> OnHoldTime
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("onholdtime");
+			}
+		}
+		
+		/// <summary>
+		/// List of optional attendees for the activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("optionalattendees")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> OptionalAttendees
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.EntityCollection collection = this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityCollection>("optionalattendees");
+				if (((collection != null) 
+							&& (collection.Entities != null)))
+				{
+					return System.Linq.Enumerable.Cast<Skanetrafiken.Crm.Schema.Generated.ActivityParty>(collection.Entities);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("optionalattendees", value);
+				}
+				else
+				{
+					this.SetAttributeValue("optionalattendees", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Person who organized the activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("organizer")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> Organizer
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.EntityCollection collection = this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityCollection>("organizer");
+				if (((collection != null) 
+							&& (collection.Entities != null)))
+				{
+					return System.Linq.Enumerable.Cast<Skanetrafiken.Crm.Schema.Generated.ActivityParty>(collection.Entities);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("organizer", value);
+				}
+				else
+				{
+					this.SetAttributeValue("organizer", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user or team who owns the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ownerid")]
+		public Microsoft.Xrm.Sdk.EntityReference OwnerId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ownerid");
+			}
+			set
+			{
+				this.SetAttributeValue("ownerid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the business unit that owns the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningbusinessunit")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningBusinessUnit
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningbusinessunit");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the team who owns the case resolution.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningTeam
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningteam");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who owns the case resolution.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningUser
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owninguser");
+			}
+		}
+		
+		/// <summary>
+		/// Outsource vendor with which activity is associated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("partners")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> Partners
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.EntityCollection collection = this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityCollection>("partners");
+				if (((collection != null) 
+							&& (collection.Entities != null)))
+				{
+					return System.Linq.Enumerable.Cast<Skanetrafiken.Crm.Schema.Generated.ActivityParty>(collection.Entities);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("partners", value);
+				}
+				else
+				{
+					this.SetAttributeValue("partners", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("postponeactivityprocessinguntil")]
+		public System.Nullable<System.DateTime> PostponeActivityProcessingUntil
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("postponeactivityprocessinguntil");
+			}
+		}
+		
+		/// <summary>
+		/// Priority of the activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("prioritycode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PriorityCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("prioritycode");
+			}
+			set
+			{
+				this.SetAttributeValue("prioritycode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the Process.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("processid")]
+		public System.Nullable<System.Guid> ProcessId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("processid");
+			}
+			set
+			{
+				this.SetAttributeValue("processid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the object with which the activity is associated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		public Microsoft.Xrm.Sdk.EntityReference RegardingObjectId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("regardingobjectid");
+			}
+			set
+			{
+				this.SetAttributeValue("regardingobjectid", value);
+			}
+		}
+		
+		/// <summary>
+		/// List of required attendees for the activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("requiredattendees")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> RequiredAttendees
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.EntityCollection collection = this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityCollection>("requiredattendees");
+				if (((collection != null) 
+							&& (collection.Entities != null)))
+				{
+					return System.Linq.Enumerable.Cast<Skanetrafiken.Crm.Schema.Generated.ActivityParty>(collection.Entities);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("requiredattendees", value);
+				}
+				else
+				{
+					this.SetAttributeValue("requiredattendees", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Users or facility/equipment that are required for the activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("resources")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> Resources
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.EntityCollection collection = this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityCollection>("resources");
+				if (((collection != null) 
+							&& (collection.Entities != null)))
+				{
+					return System.Linq.Enumerable.Cast<Skanetrafiken.Crm.Schema.Generated.ActivityParty>(collection.Entities);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("resources", value);
+				}
+				else
+				{
+					this.SetAttributeValue("resources", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Scheduled duration of the case resolution activity, specified in minutes.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("scheduleddurationminutes")]
+		public System.Nullable<int> ScheduledDurationMinutes
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("scheduleddurationminutes");
+			}
+		}
+		
+		/// <summary>
+		/// Scheduled end time of the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("scheduledend")]
+		public System.Nullable<System.DateTime> ScheduledEnd
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("scheduledend");
+			}
+			set
+			{
+				this.SetAttributeValue("scheduledend", value);
+			}
+		}
+		
+		/// <summary>
+		/// Scheduled start time of the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("scheduledstart")]
+		public System.Nullable<System.DateTime> ScheduledStart
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("scheduledstart");
+			}
+			set
+			{
+				this.SetAttributeValue("scheduledstart", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the mailbox associated with the sender of the email message.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("sendermailboxid")]
+		public Microsoft.Xrm.Sdk.EntityReference SenderMailboxId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("sendermailboxid");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the activity was sent.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("senton")]
+		public System.Nullable<System.DateTime> SentOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("senton");
+			}
+		}
+		
+		/// <summary>
+		/// Uniqueidentifier specifying the id of recurring series of an instance.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("seriesid")]
+		public System.Nullable<System.Guid> SeriesId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("seriesid");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the service with which the case resolution activity is associated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("serviceid")]
+		public Microsoft.Xrm.Sdk.EntityReference ServiceId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("serviceid");
+			}
+			set
+			{
+				this.SetAttributeValue("serviceid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the service level agreement (SLA) that you want to apply to the case record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("slaid")]
+		public Microsoft.Xrm.Sdk.EntityReference SLAId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("slaid");
+			}
+			set
+			{
+				this.SetAttributeValue("slaid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Last SLA that was applied to this case. This field is for internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("slainvokedid")]
+		public Microsoft.Xrm.Sdk.EntityReference SLAInvokedId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("slainvokedid");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time by which the activities are sorted.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("sortdate")]
+		public System.Nullable<System.DateTime> SortDate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("sortdate");
+			}
+			set
+			{
+				this.SetAttributeValue("sortdate", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the Stage.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		public System.Nullable<System.Guid> StageId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("stageid");
+			}
+			set
+			{
+				this.SetAttributeValue("stageid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows whether the case resolution is open, completed, or canceled. By default, all case resolutions are completed and the status value can't be changed.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.IncidentResolutionState> StateCode
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.IncidentResolutionState)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.IncidentResolutionState), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("statecode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statecode", new Microsoft.Xrm.Sdk.OptionSetValue(((int)(value))));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Reason for the status of the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue StatusCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+			}
+			set
+			{
+				this.SetAttributeValue("statuscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Subcategory of the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("subcategory")]
+		public string Subcategory
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("subcategory");
+			}
+			set
+			{
+				this.SetAttributeValue("subcategory", value);
+			}
+		}
+		
+		/// <summary>
+		/// Subject associated with the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("subject")]
+		public string Subject
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("subject");
+			}
+			set
+			{
+				this.SetAttributeValue("subject", value);
+			}
+		}
+		
+		/// <summary>
+		/// Time spent on the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timespent")]
+		public System.Nullable<int> TimeSpent
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("timespent");
+			}
+			set
+			{
+				this.SetAttributeValue("timespent", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timezoneruleversionnumber")]
+		public System.Nullable<int> TimeZoneRuleVersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("timezoneruleversionnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Person who is the receiver of the activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("to")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> To
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.EntityCollection collection = this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityCollection>("to");
+				if (((collection != null) 
+							&& (collection.Entities != null)))
+				{
+					return System.Linq.Enumerable.Cast<Skanetrafiken.Crm.Schema.Generated.ActivityParty>(collection.Entities);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("to", value);
+				}
+				else
+				{
+					this.SetAttributeValue("to", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the currency associated with the activitypointer.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public Microsoft.Xrm.Sdk.EntityReference TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("traversedpath")]
+		public string TraversedPath
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("traversedpath");
+			}
+			set
+			{
+				this.SetAttributeValue("traversedpath", value);
+			}
+		}
+		
+		/// <summary>
+		/// Time zone code that was in use when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("utcconversiontimezonecode")]
+		public System.Nullable<int> UTCConversionTimeZoneCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("utcconversiontimezonecode");
+			}
+			set
+			{
+				this.SetAttributeValue("utcconversiontimezonecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the case.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N CampaignResponse_IncidentResolutions
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("CampaignResponse_IncidentResolutions")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.CampaignResponse> CampaignResponse_IncidentResolutions
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.CampaignResponse>("CampaignResponse_IncidentResolutions", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.CampaignResponse>("CampaignResponse_IncidentResolutions", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N incidentresolution_activity_parties
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("incidentresolution_activity_parties")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> incidentresolution_activity_parties
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ActivityParty>("incidentresolution_activity_parties", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ActivityParty>("incidentresolution_activity_parties", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N IncidentResolution_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("IncidentResolution_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> IncidentResolution_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("IncidentResolution_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("IncidentResolution_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N IncidentResolution_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("IncidentResolution_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> IncidentResolution_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("IncidentResolution_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("IncidentResolution_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N incidentresolution_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("incidentresolution_Teams")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> incidentresolution_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("incidentresolution_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("incidentresolution_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 account_IncidentResolutions
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("account_IncidentResolutions")]
+		public Skanetrafiken.Crm.Schema.Generated.Account account_IncidentResolutions
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("account_IncidentResolutions", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("account_IncidentResolutions", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 campaign_IncidentResolutions
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("campaign_IncidentResolutions")]
+		public Skanetrafiken.Crm.Schema.Generated.Campaign campaign_IncidentResolutions
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Campaign>("campaign_IncidentResolutions", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Campaign>("campaign_IncidentResolutions", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Incident_IncidentResolutions
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("incidentid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Incident_IncidentResolutions")]
+		public Skanetrafiken.Crm.Schema.Generated.Incident Incident_IncidentResolutions
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("Incident_IncidentResolutions", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("Incident_IncidentResolutions", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 incidentresolution_transactioncurrency_transactioncurrencyid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("incidentresolution_transactioncurrency_transactioncurrencyid")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency incidentresolution_transactioncurrency_transactioncurrencyid
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("incidentresolution_transactioncurrency_transactioncurrencyid", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("incidentresolution_transactioncurrency_transactioncurrencyid", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lead_IncidentResolutions
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lead_IncidentResolutions")]
+		public Skanetrafiken.Crm.Schema.Generated.Lead lead_IncidentResolutions
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Lead>("lead_IncidentResolutions", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Lead>("lead_IncidentResolutions", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_incidentresolution_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_incidentresolution_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_incidentresolution_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_incidentresolution_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_incidentresolution_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_incidentresolution_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_incidentresolution_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_incidentresolution_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_incidentresolution_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_incidentresolution_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_incidentresolution_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_incidentresolution_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_incidentresolution_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_incidentresolution_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_incidentresolution_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_incidentresolution_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_incidentresolution
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_incidentresolution")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_incidentresolution
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_incidentresolution", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 user_incidentresolution
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_incidentresolution")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser user_incidentresolution
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("user_incidentresolution", null);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string ActivityAdditionalParams = "activityadditionalparams";
+			
+			public const string ActivityId = "activityid";
+			
+			public const string Id = "activityid";
+			
+			public const string ActivityTypeCode = "activitytypecode";
+			
+			public const string ActualDurationMinutes = "actualdurationminutes";
+			
+			public const string ActualEnd = "actualend";
+			
+			public const string ActualStart = "actualstart";
+			
+			public const string Bcc = "bcc";
+			
+			public const string Category = "category";
+			
+			public const string Cc = "cc";
+			
+			public const string Community = "community";
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedByExternalParty = "createdbyexternalparty";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string Customers = "customers";
+			
+			public const string DeliveryLastAttemptedOn = "deliverylastattemptedon";
+			
+			public const string DeliveryPriorityCode = "deliveryprioritycode";
+			
+			public const string Description = "description";
+			
+			public const string ExchangeItemId = "exchangeitemid";
+			
+			public const string ExchangeRate = "exchangerate";
+			
+			public const string ExchangeWebLink = "exchangeweblink";
+			
+			public const string From = "from";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string IncidentId = "incidentid";
+			
+			public const string InstanceTypeCode = "instancetypecode";
+			
+			public const string IsBilled = "isbilled";
+			
+			public const string IsMapiPrivate = "ismapiprivate";
+			
+			public const string IsRegularActivity = "isregularactivity";
+			
+			public const string IsWorkflowCreated = "isworkflowcreated";
+			
+			public const string LastOnHoldTime = "lastonholdtime";
+			
+			public const string LeftVoiceMail = "leftvoicemail";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedByExternalParty = "modifiedbyexternalparty";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string OnHoldTime = "onholdtime";
+			
+			public const string OptionalAttendees = "optionalattendees";
+			
+			public const string Organizer = "organizer";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string OwnerId = "ownerid";
+			
+			public const string OwningBusinessUnit = "owningbusinessunit";
+			
+			public const string OwningTeam = "owningteam";
+			
+			public const string OwningUser = "owninguser";
+			
+			public const string Partners = "partners";
+			
+			public const string PostponeActivityProcessingUntil = "postponeactivityprocessinguntil";
+			
+			public const string PriorityCode = "prioritycode";
+			
+			public const string ProcessId = "processid";
+			
+			public const string RegardingObjectId = "regardingobjectid";
+			
+			public const string RequiredAttendees = "requiredattendees";
+			
+			public const string Resources = "resources";
+			
+			public const string ScheduledDurationMinutes = "scheduleddurationminutes";
+			
+			public const string ScheduledEnd = "scheduledend";
+			
+			public const string ScheduledStart = "scheduledstart";
+			
+			public const string SenderMailboxId = "sendermailboxid";
+			
+			public const string SentOn = "senton";
+			
+			public const string SeriesId = "seriesid";
+			
+			public const string ServiceId = "serviceid";
+			
+			public const string SLAId = "slaid";
+			
+			public const string SLAInvokedId = "slainvokedid";
+			
+			public const string SortDate = "sortdate";
+			
+			public const string StageId = "stageid";
+			
+			public const string StateCode = "statecode";
+			
+			public const string StatusCode = "statuscode";
+			
+			public const string Subcategory = "subcategory";
+			
+			public const string Subject = "subject";
+			
+			public const string TimeSpent = "timespent";
+			
+			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
+			
+			public const string To = "to";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
+			
+			public const string TraversedPath = "traversedpath";
+			
+			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
+			
+			public const string VersionNumber = "versionnumber";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int ActivityAdditionalParams = 8192;
+			
+			public const int Category = 250;
+			
+			public const int Description = 100000;
+			
+			public const int ExchangeItemId = 200;
+			
+			public const int ExchangeWebLink = 1250;
+			
+			public const int Subcategory = 250;
+			
+			public const int Subject = 200;
 			
 			public const int TraversedPath = 1250;
 		}
@@ -76247,6 +78131,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("Lead_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lead_IncidentResolutions
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lead_IncidentResolutions")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.IncidentResolution> lead_IncidentResolutions
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("lead_IncidentResolutions", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("lead_IncidentResolutions", null, value);
 			}
 		}
 		
@@ -96030,6 +97930,70 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N lk_incidentresolution_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_incidentresolution_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.IncidentResolution> lk_incidentresolution_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("lk_incidentresolution_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("lk_incidentresolution_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_incidentresolution_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_incidentresolution_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.IncidentResolution> lk_incidentresolution_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("lk_incidentresolution_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("lk_incidentresolution_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_incidentresolution_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_incidentresolution_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.IncidentResolution> lk_incidentresolution_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("lk_incidentresolution_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("lk_incidentresolution_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_incidentresolution_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_incidentresolution_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.IncidentResolution> lk_incidentresolution_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("lk_incidentresolution_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("lk_incidentresolution_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N lk_kbarticle_createdonbehalfby
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_kbarticle_createdonbehalfby")]
@@ -98030,6 +99994,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N user_incidentresolution
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_incidentresolution")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.IncidentResolution> user_incidentresolution
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("user_incidentresolution", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("user_incidentresolution", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N user_parent_user
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_parent_user", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
@@ -100002,6 +101982,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N team_incidentresolution
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_incidentresolution")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.IncidentResolution> team_incidentresolution
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("team_incidentresolution", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("team_incidentresolution", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N team_incidents
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_incidents")]
@@ -100194,6 +102190,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("incident_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 incidentresolution_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("incidentresolution_Teams")]
+		public Skanetrafiken.Crm.Schema.Generated.IncidentResolution incidentresolution_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("incidentresolution_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("incidentresolution_Teams", null, value);
 			}
 		}
 		
@@ -101697,6 +103710,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage>("ed_textmessage_transactioncurrency_transactioncurrencyid", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N incidentresolution_transactioncurrency_transactioncurrencyid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("incidentresolution_transactioncurrency_transactioncurrencyid")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.IncidentResolution> incidentresolution_transactioncurrency_transactioncurrencyid
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("incidentresolution_transactioncurrency_transactioncurrencyid", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("incidentresolution_transactioncurrency_transactioncurrencyid", null, value);
 			}
 		}
 		
@@ -105878,6 +107907,17 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.Incident>();
+			}
+		}
+		
+		/// <summary>
+		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.IncidentResolution"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.IncidentResolution> IncidentResolutionSet
+		{
+			get
+			{
+				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>();
 			}
 		}
 		
