@@ -73,8 +73,9 @@
     <Reference Include="Quartz, Version=2.3.3.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
       <HintPath>..\Skanetrafiken.Crm\packages\Quartz.2.3.3\lib\net40\Quartz.dll</HintPath>
     </Reference>
-    <Reference Include="Skanetrafiken.Crm">
-      <HintPath>..\Skanetrafiken.Crm\bin\Dev\Skanetrafiken.Crm.dll</HintPath>
+    <Reference Include="Skanetrafiken.Crm, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e2c407508c1fd5c9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Skanetrafiken.Crm\bin\Test\Skanetrafiken.Crm.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
@@ -147,6 +148,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Install.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

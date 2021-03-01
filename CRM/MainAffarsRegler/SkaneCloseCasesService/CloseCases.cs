@@ -68,9 +68,9 @@ namespace Endeavor.Crm.CloseCasesService
 
                 QueryExpression queryCases = new QueryExpression(IncidentEntity.EntityLogicalName);
                 queryCases.NoLock = true;
-                queryCases.Criteria.AddCondition(IncidentEntity.Fields.StateCode, ConditionOperator.Equal, IncidentState.Active);
-                queryCases.Criteria.AddCondition(IncidentEntity.Fields.StatusCode, ConditionOperator.Equal, 1); //generate optionset
-                //queryCases.Criteria.AddCondition(IncidentEntity.Fields.)
+                queryCases.Criteria.AddCondition(IncidentEntity.Fields.StateCode, ConditionOperator.Equal, (int)IncidentState.Active);
+                queryCases.Criteria.AddCondition(IncidentEntity.Fields.IncidentStageCode, ConditionOperator.Equal, (int)incident_incidentstagecode.NotAnswered); //what is the field to put in here????
+                queryCases.Criteria.AddCondition(IncidentEntity.Fields.CreatedOn, ConditionOperator.OlderThanXYears, 1); //Cases Older than 1 Year
 
                 List<IncidentEntity> lUnansweredCases = XrmRetrieveHelper.RetrieveMultiple<IncidentEntity>(localContext, queryCases);
                 _log.Info($"Found " + lUnansweredCases.Count + " Unanswered Cases.");
@@ -79,22 +79,27 @@ namespace Endeavor.Crm.CloseCasesService
                 {
                     try
                     {
-                        //var incidentResolution = new IncidentResolution
-                        //{
-                        //    Subject = "Resolved Sample Incident",
-                        //    IncidentId = new EntityReference(Incident.EntityLogicalName, _incidentId)
-                        //};
+                        IncidentEntity nIncident = new IncidentEntity();
+                        nIncident.Id = incident.Id;
+                        nIncident.IncidentStageCode = incident_incidentstagecode.Resolved; //Completed??????
 
-                        //// Close the incident with the resolution.
-                        //var closeIncidentRequest = new CloseIncidentRequest
-                        //{
-                        //    IncidentResolution = incidentResolution,
-                        //    Status = new OptionSetValue((int)incident_statuscode.ProblemSolved)
-                        //};
+                        XrmHelper.Update(localContext, nIncident);
+                        _log.Info($"Incident {incident.Id} was updated with StageCode Resolved.");
 
-                        //localContext.OrganizationService.Execute(closeIncidentRequest);
+                        IncidentResolution incidentResolution = new IncidentResolution
+                        {
+                            Subject = "Resolved Incident " + incident.Id,
+                            IncidentId = new EntityReference(Incident.EntityLogicalName, incident.Id)
+                        };
 
-                        _log.Info($"Unanswered Incident {incident.Id} closed.");
+                        CloseIncidentRequest closeIncidentRequest = new CloseIncidentRequest
+                        {
+                            IncidentResolution = incidentResolution,
+                            Status = new OptionSetValue((int)incident_statuscode.ProblemSolved) //Completed?????
+                        };
+
+                        localContext.OrganizationService.Execute(closeIncidentRequest);
+                        _log.Info($"Unanswered Incident {incident.Id} closed with Status 'Problem Solved'.");
                     }
                     catch (Exception e)
                     {
