@@ -123,7 +123,7 @@ namespace Skanetrafiken.Crm
             string responseJourneys = "";
 
             // ONLY ASSIGNED IF TRAIN. REQUIRED FOR REQUEST
-            string aot = "";
+            string aot = string.Empty;
             string district = "PRODUCT";
             if (transportType == "TRAIN")
             {
@@ -131,7 +131,7 @@ namespace Skanetrafiken.Crm
                 district = "DISTRICT";
             }
 
-            if(forLineGids != null)
+            if(forLineGids != null && forLineGids != string.Empty)
             {
                 aot = null;
                 district = null;
@@ -163,6 +163,8 @@ namespace Skanetrafiken.Crm
 
             try
             {
+                localContext.Trace($"fromStopAreaGid: {fromStopAreaGid} toStopAreaGid: {toStopAreaGid} departureDate: {departureDate} timeDuration: {timeDuration} departureMaxCount: {departureMaxCount} forLineGids: {forLineGids} aot: {aot} district: {district}");
+                
                 using (var client = GetDirectJourneys.GetStopMonitoringServiceClient(_serviceEndPointUrl, _userName, _passWord))
                 {
                     DataSet dsJourneys = client.GetDirectJourneysBetweenStops(fromStopAreaGid, toStopAreaGid, departureDate, timeDuration, departureMaxCount, forLineGids, aot, district);
