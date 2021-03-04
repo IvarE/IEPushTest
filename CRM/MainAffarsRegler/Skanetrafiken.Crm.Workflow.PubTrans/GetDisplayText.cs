@@ -1,0 +1,180 @@
+﻿using System;
+using System.Activities;
+
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Workflow;
+
+using Endeavor.Crm;
+
+namespace Skanetrafiken.Crm
+{
+    public class GetDisplayText : CodeActivity
+    {
+        [Input("StartPlanned")]
+        public InArgument<DateTime> StartPlanned { get; set; }
+
+        [Input("StartActual")]
+        public InArgument<DateTime> StartActual { get; set; }
+
+        [Input("ArrivalPlanned")]
+        public InArgument<DateTime> ArrivalPlanned { get; set; }
+
+        [Input("ArrivalActual")]
+        public InArgument<DateTime> ArrivalActual { get; set; }
+
+        [Input("InputFormat")]
+        [RequiredArgument()]
+        public InArgument<string> InputFormat { get; set; }
+
+        [Input("Transport")]
+        public InArgument<string> Transport { get; set; }
+
+        [Input("City")]
+        public InArgument<string> City { get; set; }
+
+        [Input("Line")]
+        public InArgument<string> Line { get; set; }
+
+        [Input("Tour")]
+        public InArgument<string> Tour { get; set; }
+
+        [Input("Start")]
+        public InArgument<string> Start { get; set; }
+
+        [Input("Stop")]
+        public InArgument<string> Stop { get; set; }
+
+        [Input("Contractor")]
+        public InArgument<string> Contractor { get; set; }
+
+        [Output("DisplayText")]
+        public OutArgument<string> DisplayText { get; set; }
+
+        private Plugin.LocalPluginContext GetLocalContext(CodeActivityContext activityContext)
+        {
+            IWorkflowContext workflowContext = activityContext.GetExtension<IWorkflowContext>();
+            IOrganizationServiceFactory serviceFactory = activityContext.GetExtension<IOrganizationServiceFactory>();
+            IOrganizationService organizationService = serviceFactory.CreateOrganizationService(workflowContext.InitiatingUserId);
+            ITracingService tracingService = activityContext.GetExtension<ITracingService>();
+
+            return new Plugin.LocalPluginContext(null, organizationService, null, tracingService);
+        }
+
+        protected override void Execute(CodeActivityContext activityContext)
+        {
+            //GENERATE CONTEXT
+            Plugin.LocalPluginContext localContext = GetLocalContext(activityContext);
+            localContext.Trace($"GetDisplayText started.");
+
+            //TRY EXECUTE
+            try
+            {
+                // GET VALUE(S)
+                string inputFormat = InputFormat.Get(activityContext);
+                string transport = Transport.Get(activityContext);
+                string city = City.Get(activityContext);
+                string line = Line.Get(activityContext);
+                string tour = Tour.Get(activityContext);
+                string start = Start.Get(activityContext);
+                string stop = Stop.Get(activityContext);
+                string contractor = Contractor.Get(activityContext);
+                DateTime dStartPlanned = StartPlanned.Get(activityContext).ToLocalTime();
+                DateTime dStartActual = StartActual.Get(activityContext).ToLocalTime();
+                DateTime dArrivalPlanned = ArrivalPlanned.Get(activityContext).ToLocalTime();
+                DateTime dArrivalActual = ArrivalActual.Get(activityContext).ToLocalTime();
+
+                string sTour = GetTour(inputFormat, tour, start, stop, dStartPlanned, dStartActual, dArrivalPlanned, dArrivalActual);
+
+                string displayText = ExecuteCodeActivity(transport, city, line, sTour, contractor);
+                DisplayText.Set(activityContext, displayText);
+            }
+            catch (Exception ex)
+            {
+                localContext.Trace("Exception: " + ex.Message);
+                DisplayText.Set(activityContext, "Failed to generate 'Display Text'");
+            }
+
+            localContext.Trace($"GetDisplayText finished.");
+        }
+
+        public static string ExecuteCodeActivity(string transport, string city, string line, string tour, string contractor)
+        {
+            string displayText = string.Empty;
+
+            if (transport.ToUpper() == "REGIONBUS" || transport == "SkåneExpressen")
+                displayText = SetDisplayTextRegionbus(transport, line, tour, contractor);
+            else if (transport.ToUpper() == "STADSBUSS")
+                displayText = SetDisplayTextCitybus(transport, city, line, tour, contractor);
+            else
+                displayText = SetDisplayTextTrain(transport, line, tour, contractor);
+
+            return displayText;
+        }
+
+        public static string SetDisplayTextTrain(string transport, string line, string tour, string contractor)
+        {
+            return "Trafikslag: " + transport + " Linje: " + line + " " + tour + " Entreprenör: " + contractor;
+        }
+        public static string SetDisplayTextRegionbus(string transport, string line, string tour, string contractor)
+        {
+            string trafik = "Trafikslag: ";
+
+            int lineNumber = int.Parse(line);
+            if (lineNumber > 400 && lineNumber < 430)
+                trafik += "SkåneExpressen";
+            else
+                trafik += transport;
+
+            return trafik + " Linje: " + line + " " + tour + " Entreprenör: " + contractor;
+        }
+        public static string SetDisplayTextCitybus(string transport, string city, string line, string tour, string contractor)
+        {
+            return "Trafikslag: " + transport + " Stad: " + city + " Linje: " + line + " " + tour + " Entreprenör: " + contractor;
+        }
+        public static string GetTour(string inputFormat, string tour, string start, string stop, DateTime dStartPlanned, DateTime dStartActual, DateTime dArrivalPlanned, DateTime dArrivalActual)
+        {
+            DateTime minDateLocal = DateTime.MinValue.ToLocalTime();
+
+            string startplannedtime = "X";
+            if (dStartPlanned != null && dStartPlanned != minDateLocal)
+                startplannedtime = dStartPlanned.ToString(inputFormat);
+
+            string arrivalplannedtime = "X";
+            if (dArrivalPlanned != null && dArrivalPlanned != minDateLocal)
+                arrivalplannedtime = dArrivalPlanned.ToString(inputFormat);
+
+            string startactualtime = "X";
+            if (dStartActual != null && dStartActual != minDateLocal)
+                startactualtime = dStartActual.ToString(inputFormat);
+
+            string arrivalactualtime = "X";
+            if (dArrivalActual != null && dArrivalActual != minDateLocal)
+                arrivalactualtime = dArrivalActual.ToString(inputFormat);
+
+            var actualStartTimes = " [X] ";
+            if (startactualtime != "X" && startplannedtime != "X")
+            {
+                var diferenceMinuts = GetDifferenceBetweenDates(dStartActual, dStartPlanned);
+                actualStartTimes = " [" + startactualtime + " (" + diferenceMinuts + ")] ";
+            }
+
+            var actualArrivalTimes = " [X] ";
+            if (arrivalactualtime != "X" && arrivalplannedtime != "X")
+            {
+                var diferenceMinuts = GetDifferenceBetweenDates(dArrivalActual, dArrivalPlanned);
+                actualArrivalTimes = " [" + arrivalactualtime + " (" + diferenceMinuts + ")] ";
+            }
+
+            return "Tur: [" + tour + "] " + startplannedtime + actualStartTimes + start + " - " + arrivalplannedtime + actualArrivalTimes + stop;
+        }
+        public static string GetDifferenceBetweenDates(DateTime actualDate, DateTime plannedDate)
+        {
+            double totalMinuts = ((double)actualDate.Subtract(plannedDate).TotalMinutes);
+
+            if (totalMinuts == 0)
+                return "0";
+            else
+                return totalMinuts.ToString("+0;-#");
+        }
+    }
+}
