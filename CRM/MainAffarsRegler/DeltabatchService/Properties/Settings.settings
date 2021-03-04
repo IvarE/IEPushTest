@@ -29,9 +29,6 @@
     <Setting Name="DeveloperMailAddress" Type="System.String" Scope="Application">
       <Value Profile="(Default)">carl-viggo.oldertz@endeavor.se</Value>
     </Setting>
-    <Setting Name="FileUploadScheduleCronExpression" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">0 0 23 1/1 * ? *</Value>
-    </Setting>
     <Setting Name="CredentialsFilePath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">%APPDATA%\Endeavor\DeltabatchService.Credential.xml</Value>
     </Setting>
@@ -46,6 +43,9 @@
     </Setting>
     <Setting Name="DeltabatchQueueCount" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">80000</Value>
+    </Setting>
+    <Setting Name="FileUploadScheduleCronExpression" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0 0 23 1/1 * ? *</Value>
     </Setting>
   </Settings>
 </SettingsFile>
