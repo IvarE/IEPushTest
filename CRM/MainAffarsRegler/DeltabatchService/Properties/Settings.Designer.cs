@@ -106,15 +106,6 @@ namespace Endeavor.Crm.DeltabatchService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0 0 23 1/1 * ? *")]
-        public string FileUploadScheduleCronExpression {
-            get {
-                return ((string)(this["FileUploadScheduleCronExpression"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\Endeavor\\DeltabatchService.Credential.xml")]
         public string CredentialsFilePath {
             get {
@@ -155,6 +146,15 @@ namespace Endeavor.Crm.DeltabatchService.Properties {
         public int DeltabatchQueueCount {
             get {
                 return ((int)(this["DeltabatchQueueCount"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0 23 1/1 * ? *")]
+        public string FileUploadScheduleCronExpression {
+            get {
+                return ((string)(this["FileUploadScheduleCronExpression"]));
             }
         }
     }
