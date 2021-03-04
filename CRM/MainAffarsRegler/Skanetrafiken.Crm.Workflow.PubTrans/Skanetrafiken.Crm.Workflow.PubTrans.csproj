@@ -86,6 +86,7 @@
     <Compile Include="GetContractors.cs" />
     <Compile Include="GetDirectJourneys.cs" />
     <Compile Include="GetDisplayText.cs" />
+    <Compile Include="GetFormattedDateString.cs" />
     <Compile Include="GetLineDetails.cs" />
     <Compile Include="GetOrganisationalUnits.cs" />
     <Compile Include="Plugin.cs" />

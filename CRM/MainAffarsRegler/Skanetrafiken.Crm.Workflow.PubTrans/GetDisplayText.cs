@@ -79,9 +79,9 @@ namespace Skanetrafiken.Crm
                 string stop = Stop.Get(activityContext);
                 string contractor = Contractor.Get(activityContext);
                 DateTime dStartPlanned = StartPlanned.Get(activityContext).ToLocalTime();
-                DateTime dStartActual = StartActual.Get(activityContext).ToLocalTime();
+                DateTime dStartActual = StartActual.Get(activityContext);
                 DateTime dArrivalPlanned = ArrivalPlanned.Get(activityContext).ToLocalTime();
-                DateTime dArrivalActual = ArrivalActual.Get(activityContext).ToLocalTime();
+                DateTime dArrivalActual = ArrivalActual.Get(activityContext);
 
                 string sTour = GetTour(inputFormat, tour, start, stop, dStartPlanned, dStartActual, dArrivalPlanned, dArrivalActual);
 
@@ -133,7 +133,7 @@ namespace Skanetrafiken.Crm
         }
         public static string GetTour(string inputFormat, string tour, string start, string stop, DateTime dStartPlanned, DateTime dStartActual, DateTime dArrivalPlanned, DateTime dArrivalActual)
         {
-            DateTime minDateLocal = DateTime.MinValue.ToLocalTime();
+            DateTime minDateLocal = DateTime.MinValue;
 
             string startplannedtime = "X";
             if (dStartPlanned != null && dStartPlanned != minDateLocal)
