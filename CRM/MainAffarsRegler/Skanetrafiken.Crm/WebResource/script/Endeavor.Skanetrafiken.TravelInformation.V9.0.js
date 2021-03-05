@@ -882,6 +882,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                     var entity = null;
                     var document = Endeavor.Skanetrafiken.TravelInformation.document;
+                    var line = Endeavor.Skanetrafiken.TravelInformation.currentLine;
                     var incidentId = Endeavor.Skanetrafiken.TravelInformation.formContext.data.entity.getId().substring(1, 37);
 
                     if (saveEntity.transporttype == "TRAIN") {
@@ -890,7 +891,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                         entity = {
                             "cgi_displaytext": "",
-                            "cgi_transport": getElementValue(saveEntity.directjourney, "PrimaryDestinationName"),
+                            "cgi_transport": getElementValue(saveEntity.directjourney, "LineDesignation"), //getElementValue(saveEntity.directjourney, "PrimaryDestinationName"),
                             "cgi_line": getElementValue(saveEntity.directjourney, "LineDesignation"),
                             "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
                             "cgi_start": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("fromlist").value),
@@ -947,7 +948,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                             entity = {
                                 "cgi_displaytext": "",
                                 "cgi_transport": "Regionbuss",
-                                "cgi_line": getElementValue(saveEntity.directjourney, "LineDesignation"),
+                                "cgi_line": getElementValue(line, "LineNumber"), //getElementValue(saveEntity.directjourney, "LineDesignation"),
                                 "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
                                 "cgi_start": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("fromlist").value),
                                 "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
@@ -958,10 +959,10 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                 "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
                                 "cgi_deviationmessage": saveEntity.deviationMessage,//getElementValue(saveEntity.directjourney, "Details"),
 
-                                "cgi_startplanned": removeTimeZone(getElementValue(saveEntity.directjourney, "PlannedDepartureDateTime")),
-                                "cgi_startactual": removeTimeZone(getElementValue(saveEntity.directjourney, "ObservedDepartureDateTime")), //ActualDepartureTime
-                                "cgi_arivalplanned": removeTimeZone(getElementValue(saveEntity.directjourney, "PlannedArrivalDateTime")),
-                                "cgi_arivalactual": removeTimeZone(getElementValue(saveEntity.directjourney, 'ObservedArrivalDateTime')), //ActualArrivalTime
+                                "cgi_startplanned": getISOStringDate(getElementValue(saveEntity.directjourney, "PlannedDepartureDateTime")),
+                                "cgi_startactual": getISOStringDate(getElementValue(saveEntity.directjourney, "ObservedDepartureDateTime")), //ActualDepartureTime
+                                "cgi_arivalplanned": getISOStringDate(getElementValue(saveEntity.directjourney, "PlannedArrivalDateTime")),
+                                "cgi_arivalactual": getISOStringDate(getElementValue(saveEntity.directjourney, 'ObservedArrivalDateTime')), //ActualArrivalTime
                                 "cgi_startactualdatetime": removeTimeZone(getElementValueReturnNull(saveEntity.directjourney, "ObservedDepartureDateTime")), //ActualDepartureTime
                                 "cgi_arrivalactualdatetime": removeTimeZone(getElementValueReturnNull(saveEntity.directjourney, 'ObservedArrivalDateTime')) //ActualArrivalTime
                             }
@@ -1005,7 +1006,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                 "cgi_displaytext": "",
                                 "cgi_transport": "Stadsbuss",
                                 "cgi_city": Endeavor.Skanetrafiken.TravelInformation.getCityFromGid(saveEntity.city),
-                                "cgi_line": getElementValue(saveEntity.directjourney, "LineDesignation"),
+                                "cgi_line": getElementValue(line, "LineNumber"), //getElementValue(saveEntity.directjourney, "LineDesignation"),
                                 "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
                                 "cgi_start": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("fromlist").value),
                                 "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
@@ -1017,10 +1018,10 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                 "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
                                 "cgi_deviationmessage": saveEntity.deviationMessage, //getElementValue(saveEntity.directjourney, "Details"),
 
-                                "cgi_startplanned": removeTimeZone(getElementValue(saveEntity.directjourney, "PlannedDepartureDateTime")),
-                                "cgi_startactual": removeTimeZone(getElementValue(saveEntity.directjourney, 'ObservedDepartureDateTime')), //ActualDepartureTime
-                                "cgi_arivalplanned": removeTimeZone(getElementValue(saveEntity.directjourney, "PlannedArrivalDateTime")),
-                                "cgi_arivalactual": removeTimeZone(getElementValue(saveEntity.directjourney, 'ObservedArrivalDateTime')), //ActualArrivalTime
+                                "cgi_startplanned": getISOStringDate(getElementValue(saveEntity.directjourney, "PlannedDepartureDateTime")),
+                                "cgi_startactual": getISOStringDate(getElementValue(saveEntity.directjourney, 'ObservedDepartureDateTime')), //ActualDepartureTime
+                                "cgi_arivalplanned": getISOStringDate(getElementValue(saveEntity.directjourney, "PlannedArrivalDateTime")),
+                                "cgi_arivalactual": getISOStringDate(getElementValue(saveEntity.directjourney, 'ObservedArrivalDateTime')), //ActualArrivalTime
                                 "cgi_startactualdatetime": removeTimeZone(getElementValueReturnNull(saveEntity.directjourney, "ObservedDepartureDateTime")), //ActualDepartureTime
                                 "cgi_arrivalactualdatetime": removeTimeZone(getElementValueReturnNull(saveEntity.directjourney, 'ObservedArrivalDateTime')) //ActualArrivalTime
                             }
