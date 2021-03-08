@@ -113,18 +113,78 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             }
         },
 
-        getDeviationMessage: function (departureId, arrivalId) {
+        getDeviationMessage: function (lDeviationMessage, lDepartureDeviation, lArrivalDeviation, departureId, arrivalId) {
 
+            // LOCAL FUNCTION
+            getElementValue = function (element, value) {
+                if (element != null) {
+                    var elements = element.getElementsByTagName(value);
+                    if (elements && elements[0] && elements[0].firstChild.nodeValue)
+                        return elements[0].firstChild.nodeValue;
+                    else
+                        return "X";
+                }
+                else
+                    return "X";
+            }
+
+            debugger;
             if (departureId == "X" && arrivalId == "X")
                 return "";
 
+            var finalDeviation = "";
+
             if (departureId != "X") {
 
+                var lDeparture = [];
+
+                for (var i = 0; i < lDepartureDeviation.length; i++) {
+                    var isOnDepartureId = getElementValue(lDepartureDeviation[i], "IsOnDepartureId");
+
+                    if (isOnDepartureId != departureId)
+                        continue;
+                    else
+                        lDeparture.push(getElementValue(lDepartureDeviation[i], "HasDeviationMessageVersionId"));
+                }
+
+                for (var j = 0; j < lDeviationMessage.length; j++) {
+                    var isPartOfDeviationMessageId = getElementValue(lDeviationMessage[j], "IsPartOfDeviationMessageId");
+                    var usageTypeLongCode = getElementValue(lDeviationMessage[j], "UsageTypeLongCode");
+
+                    if (usageTypeLongCode != "DETAILS")
+                        continue;
+
+                    if (lDeparture.indexOf(isPartOfDeviationMessageId) >= 0)
+                        finalDeviation += getElementValue(lDeviationMessage[j], "Content") + "\n";
+                }
             }
 
             if (arrivalId != "X") {
 
+                var lArrival = [];
+
+                for (var i = 0; i < lArrivalDeviation.length; i++) {
+                    var isOnArrivalId = getElementValue(lArrivalDeviation[i], "IsOnArrivalId");
+
+                    if (isOnArrivalId != arrivalId)
+                        continue;
+                    else
+                        lArrival.push(getElementValue(lArrivalDeviation[i], "HasDeviationMessageVersionId"));
+                }
+
+                for (var j = 0; j < lDeviationMessage.length; j++) {
+                    var isPartOfDeviationMessageId = getElementValue(lDeviationMessage[j], "IsPartOfDeviationMessageId");
+                    var usageTypeLongCode = getElementValue(lDeviationMessage[j], "UsageTypeLongCode");
+
+                    if (usageTypeLongCode != "DETAILS")
+                        continue;
+
+                    if (lArrival.indexOf(isPartOfDeviationMessageId) >= 0)
+                        finalDeviation += getElementValue(lDeviationMessage[j], "Content") + "\n";
+                }
             }
+
+            return finalDeviation;
         },
 
         getContractorFromGid: function (gid) {
@@ -691,7 +751,10 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
         populateTravelInformation: function (transporttype, city, response) {
 
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
-            directjourneys = response.getElementsByTagName("DirectJourneysBetweenStops");
+            var directjourneys = response.getElementsByTagName("DirectJourneysBetweenStops");
+            var deviationMessageVariant = response.getElementsByTagName("DeviationMessageVariant");
+            var departureDeviation = response.getElementsByTagName("DepartureDeviation");
+            var arrivalDeviation = response.getElementsByTagName("ArrivalDeviation");
 
             var travelinformationbody = document.getElementById("travelinformationbody");
             travelinformationbody.innerHTML = "";
@@ -737,7 +800,9 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 var cell = journeyrow.insertCell();
                 cell.style = "text-align: center";
 
-                var deviationMessage = Endeavor.Skanetrafiken.TravelInformation.getDeviationMessage(getElementValue(directjourney, "DepartureId"), getElementValue(directjourney, "ArrivalId"));
+                var departureId = getElementValue(directjourney, "DepartureId");
+                var arrivalId = getElementValue(directjourney, "ArrivalId");
+                var deviationMessage = Endeavor.Skanetrafiken.TravelInformation.getDeviationMessage(deviationMessageVariant, departureDeviation, arrivalDeviation, departureId, arrivalId);
 
                 var saveEntity = {
                     transporttype: transporttype,
@@ -778,6 +843,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 cell.innerHTML = journeyNumber.concat(directionOfLineDescription);
 
                 cell = journeyrow.insertCell();
+                cell.style.whiteSpace = "pre-wrap";
                 cell.innerHTML = deviationMessage;
             }
         },
