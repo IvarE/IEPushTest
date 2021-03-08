@@ -23,7 +23,7 @@
         function generateSlots() {
             var formContext = parent.Xrm.Page;
             if (formContext == null || formContext == "undefined") {
-                alert("Error: Internal error with formContext.")
+                
                 return;
             }
             var slotsPerDay = formContext.getAttribute("ed_noslots").getValue();
@@ -120,6 +120,9 @@
                 });
 
         }
+
+        //level = "ERROR" / "WARNING" / "INFO"
+        function displayNotification(formContext,level)
     </script>
 </head>
 
