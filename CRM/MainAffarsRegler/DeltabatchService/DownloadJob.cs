@@ -850,6 +850,7 @@ namespace Endeavor.Crm.DeltabatchService
         public void RetrieveFile()
         {
             _log.Info("Entered RetrieveFile()");
+            _log.InfoFormat($"Retrieved File Path is: " + Properties.Settings.Default.DeltabatchRetrievedFileLocation);
             sftp = null;
             try
             {

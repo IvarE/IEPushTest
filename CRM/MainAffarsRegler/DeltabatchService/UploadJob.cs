@@ -122,6 +122,8 @@ namespace Endeavor.Crm.DeltabatchService
             StringBuilder minusFileBuilder = new StringBuilder();
             try
             {
+                _log.Info($"Send File Path is: {Properties.Settings.Default.DeltabatchSendFileLocation}");
+
                 List<DeltabatchQueueEntity> list = new List<DeltabatchQueueEntity>();
                 foreach (DeltabatchQueueEntity dbq in currentQueues)
                 {
