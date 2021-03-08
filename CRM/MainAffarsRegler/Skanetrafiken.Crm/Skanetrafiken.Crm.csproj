@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiHelper.cs" />
+    <Compile Include="Entities\OpportunityEntity.cs" />
     <Compile Include="Entities\PaymentMethodEntity.cs" />
     <Compile Include="Entities\PaymentEntity.cs" />
     <Compile Include="Entities\KBArticleEntity.cs" />
