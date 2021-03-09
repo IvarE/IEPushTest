@@ -34,7 +34,7 @@ namespace Endeavor.Crm.CloseCasesService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(" 0 0 5 1/1 * ? *")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0/1 * 1/1 * ? *")]
         public string CloseCaseScheduleCronExpression {
             get {
                 return ((string)(this["CloseCaseScheduleCronExpression"]));

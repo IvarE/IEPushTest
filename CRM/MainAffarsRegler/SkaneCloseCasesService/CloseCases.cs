@@ -9,6 +9,9 @@ using Microsoft.Xrm.Tooling.Connector;
 
 using Skanetrafiken.Crm.Entities;
 using Skanetrafiken.Crm.Schema.Generated;
+using Microsoft.Xrm.Sdk.Messages;
+using System.Linq;
+using System.ServiceModel;
 
 namespace Endeavor.Crm.CloseCasesService
 {
@@ -75,6 +78,13 @@ namespace Endeavor.Crm.CloseCasesService
                 List<IncidentEntity> lUnansweredCases = XrmRetrieveHelper.RetrieveMultiple<IncidentEntity>(localContext, queryCases);
                 _log.Info($"Found " + lUnansweredCases.Count + " Unanswered Cases.");
 
+                //DEBUG
+                List<IncidentEntity> aux = new List<IncidentEntity>();
+                aux.AddRange(lUnansweredCases.GetRange(0, 10));
+                lUnansweredCases = aux;
+
+                List<OrganizationRequest> requestsLst = new List<OrganizationRequest>();
+
                 foreach (IncidentEntity incident in lUnansweredCases)
                 {
                     try
@@ -83,8 +93,10 @@ namespace Endeavor.Crm.CloseCasesService
                         nIncident.Id = incident.Id;
                         nIncident.IncidentStageCode = incident_incidentstagecode.Resolved;
 
-                        XrmHelper.Update(localContext, nIncident);
-                        _log.Info($"Incident {incident.Id} was updated with StageCode Resolved.");
+                        UpdateRequest updateCase = new UpdateRequest()
+                        {
+                            Target = nIncident
+                        };
 
                         IncidentResolution incidentResolution = new IncidentResolution
                         {
@@ -98,13 +110,26 @@ namespace Endeavor.Crm.CloseCasesService
                             Status = new OptionSetValue((int)incident_statuscode.ProblemSolved)
                         };
 
-                        localContext.OrganizationService.Execute(closeIncidentRequest);
-                        _log.Info($"Unanswered Incident {incident.Id} closed with Status 'Problem Solved'.");
+
+                        requestsLst.Add(updateCase);
+                        requestsLst.Add(closeIncidentRequest);
                     }
                     catch (Exception e)
                     {
                         _log.Error($"Exception caught in Close Case {incident.Id}\n{e.Message}\n\n");
                     }
+                }
+
+                ExecuteMultipleResponse responseWithResults = ExecuteMultipleRequests(localContext, requestsLst, true, true);
+
+                // process the results returned in the responses
+                if (responseWithResults != null && responseWithResults.IsFaulted == true)
+                {
+                    _log.Error(String.Join("; ", responseWithResults.Responses.ToList().FindAll(x => x.Fault != null).Select(x => x.Fault.Message)));
+                }
+                else if(responseWithResults != null && responseWithResults.IsFaulted == false)
+                {
+                    _log.Info(lUnansweredCases.Count + " Cases Updated sucessfully.");
                 }
 
                 _log.Info($"CloseCases Done");
@@ -113,6 +138,82 @@ namespace Endeavor.Crm.CloseCasesService
             {
                 _log.Error($"Exception caught in CloseCases.ExecuteJob():\n{e.Message}\n\n");
             }
+        }
+
+        /// <summary>
+        /// Saves the changes that the OrganizationServic is tracking to Microsoft Dynamics CRM.
+        /// </summary>
+        /// <param name="continueOnError">Indicates whether further execution of message requests should continue if a fault is returned for the current request being processed.</param>
+        /// <param name="returnResponses">Indicates if a response for each message request processed should be returned. </param>
+        /// <returns></returns>
+        public static ExecuteMultipleResponse ExecuteMultipleRequests(Plugin.LocalPluginContext localContext, List<OrganizationRequest> requestsLst, Boolean continueOnError, Boolean returnResponses, int defaultBatchSize = 250)
+        {
+            // return reponses
+            ExecuteMultipleResponse responseWithResults = null;
+
+            // list of OrganizationRequests
+            var organizationRequestsList = new List<OrganizationRequest>();
+            // Add the custom requests to the request collection.
+            organizationRequestsList.AddRange(requestsLst);
+
+            // if no request is to be sent, exit
+            if (organizationRequestsList.Count == 0)
+            {
+                return null;
+            }
+
+            // Create an ExecuteMultipleRequest object.
+            var requestWithResults = new ExecuteMultipleRequest()
+            {
+                // Assign settings that define execution behavior: continue on error, return responses. 
+                Settings = new ExecuteMultipleSettings()
+                {
+                    ContinueOnError = continueOnError,
+                    ReturnResponses = returnResponses
+                },
+            };
+
+            // split requests according to BatchSize
+            int batchSize = defaultBatchSize;
+            int offset = 0;
+            while (organizationRequestsList.Count > offset)
+            {
+                var tempRequestSet = organizationRequestsList.Skip(offset).Take(batchSize);
+
+                // Create an empty organization request collection.
+                requestWithResults.Requests = new OrganizationRequestCollection();
+                requestWithResults.Requests.AddRange(tempRequestSet);
+
+                // Execute all the requests in the request collection using a single web method call.
+                try
+                {
+                    responseWithResults =
+                        (ExecuteMultipleResponse)localContext.OrganizationService.Execute(requestWithResults);
+                }
+                catch (FaultException<OrganizationServiceFault> fault)
+                {
+                    // Check if the maximum batch size has been exceeded. The maximum batch size is only included in the fault if it
+                    // the input request collection count exceeds the maximum batch size.
+                    if (fault.Detail.ErrorDetails.Contains("MaxBatchSize"))
+                    {
+                        int maxBatchSize = Convert.ToInt32(fault.Detail.ErrorDetails["MaxBatchSize"]);
+                        if (maxBatchSize < requestWithResults.Requests.Count)
+                        {
+                            // Here you could reduce the size of your request collection and re-submit the ExecuteMultiple request.
+                            // For this sample, that only issues a few requests per batch, we will just print out some info. However,
+                            // this code will never be executed because the default max batch size is 1000.
+                            batchSize = maxBatchSize;
+                            continue;
+                        }
+                    }
+                }
+
+                // increment requests counter
+                offset += tempRequestSet.Count();
+            }
+
+            // return responses
+            return responseWithResults;
         }
     }
 }
