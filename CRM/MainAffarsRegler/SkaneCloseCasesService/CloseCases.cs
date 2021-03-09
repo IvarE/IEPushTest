@@ -16,11 +16,11 @@ namespace Endeavor.Crm.CloseCasesService
     public class CloseCases : IJob
     {
         public const string DataMapModifiedAfter = "ModifiedAfterUpload";
-        public const string GroupName = "Report Uploader Schedule";
-        public const string TriggerDescription = "ReportUploader Schedule Trigger";
-        public const string JobDescription = "ReportUploader Schedule Job";
-        public const string TriggerName = "ReportUploaderTrigger";
-        public const string JobName = "ReportUploader";
+        public const string GroupName = "Close Cases Schedule";
+        public const string TriggerDescription = "CloseCases Schedule Trigger";
+        public const string JobDescription = "CloseCases Schedule Job";
+        public const string TriggerName = "CloseCasesTrigger";
+        public const string JobName = "CloseCases";
 
         private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
