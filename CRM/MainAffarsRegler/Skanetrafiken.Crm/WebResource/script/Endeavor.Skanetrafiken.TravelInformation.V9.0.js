@@ -299,11 +299,52 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 });
         },
 
-        dropDownTrain: function () {
+        filterRelevantValues: function (childNodes, nameTag, idTag, existsFromTag, existsUpToTag, timestamp) {
 
+            var options = [];
+
+            for (var i = 0; i < childNodes.length; i++) {
+
+                var child = childNodes[i];
+                var isRelevant = false;
+
+                if (existsFromTag == null && existsUpToTag == null)
+                    isRelevant = true;
+
+                var existsFromDate = child.getElementsByTagName(existsFromTag);
+                var existsUpToDate = child.getElementsByTagName(existsUpToTag);
+
+                if (existsFromDate.length > 0 && existsUpToDate.length > 0) {
+                    if (timestamp >= new Date(existsFromDate[0].firstChild.nodeValue) && timestamp <= new Date(existsUpToDate[0].firstChild.nodeValue))
+                        isRelevant = true;
+                }
+                else if (existsFromDate.length > 0 && existsUpToDate.length == 0) {
+                    if (timestamp >= new Date(existsFromDate[0].firstChild.nodeValue))
+                        isRelevant = true;
+                }
+                else if (existsFromDate.length == 0 && existsUpToDate.length > 0) {
+                    if (timestamp <= new Date(existsUpToDate[0].firstChild.nodeValue))
+                        isRelevant = true;
+                }
+
+                if (isRelevant) {
+                    var name = child.getElementsByTagName(nameTag)[0].firstChild.nodeValue;
+                    var id = child.getElementsByTagName(idTag)[0].firstChild.nodeValue;
+
+                    var option = { name: name, value: id };
+                    options.push(option);
+                }               
+            }
+
+            return options;
+        },
+
+        dropDownTrain: function () {
+            debugger;
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
+            var timestamp = new Date(document.getElementById("timestamp").value);
+
             var trainXmlDoc = Endeavor.Skanetrafiken.TravelInformation.response;
-            
             var error = trainXmlDoc.getElementsByTagName('ErrorMessage');
 
             if (error.length > 0)
@@ -311,19 +352,9 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             else {
 
                 var fromlist = document.getElementById('fromlist');
-                var options = [];
-
                 var stopareas = trainXmlDoc.getElementsByTagName("StopAreas")[0].childNodes;
-                for (var i = 0; i < stopareas.length; i++) {
 
-                    var stoparea = stopareas[i];
-
-                    var name = stoparea.getElementsByTagName("StopAreaName")[0].firstChild.nodeValue;
-                    var id = stoparea.getElementsByTagName("StopAreaGid")[0].firstChild.nodeValue;
-
-                    var option = { name: name, value: id };
-                    options.push(option);
-                }
+                var options = Endeavor.Skanetrafiken.TravelInformation.filterRelevantValues(stopareas, "StopAreaName", "StopAreaGid", "ExistsFromDate", "ExistsUpToDate", timestamp);
 
                 Endeavor.Skanetrafiken.TravelInformation.stopareas = options;
                 Endeavor.Skanetrafiken.TravelInformation.populateSelectionList(fromlist, options, true);
@@ -331,10 +362,11 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
         },
 
         dropDownRegionbus: function () {
-
+            debugger;
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
-            var regionBusXmlDoc = Endeavor.Skanetrafiken.TravelInformation.response;
+            var timestamp = new Date(document.getElementById("timestamp").value);
 
+            var regionBusXmlDoc = Endeavor.Skanetrafiken.TravelInformation.response;
             var error = regionBusXmlDoc.getElementsByTagName('ErrorMessage');
 
             if (error.length > 0)
@@ -342,28 +374,20 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             else {
 
                 var linelist = document.getElementById('linelist');
-                var options = [];
-
                 var lines = regionBusXmlDoc.getElementsByTagName("Lines")[0].childNodes;
-                for (var i = 0; i < lines.length; i++) {
 
-                    var line = lines[i];
-                    var name = line.getElementsByTagName("LineNumber")[0].firstChild.nodeValue;
-                    var id = line.getElementsByTagName("LineGid")[0].firstChild.nodeValue;
-
-                    var option = { name: name, value: id };
-                    options.push(option);
-                }
+                var options = Endeavor.Skanetrafiken.TravelInformation.filterRelevantValues(lines, "LineNumber", "LineGid", null, null, timestamp);
 
                 Endeavor.Skanetrafiken.TravelInformation.populateSelectionList(linelist, options, false);
             }
         },
 
         dropDownStradbus: function () {
-
+            debugger;
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
-            var stradBusXmlDoc = Endeavor.Skanetrafiken.TravelInformation.response;
+            var timestamp = new Date(document.getElementById("timestamp").value);
 
+            var stradBusXmlDoc = Endeavor.Skanetrafiken.TravelInformation.response;
             var error = stradBusXmlDoc.getElementsByTagName('ErrorMessage');
 
             if (error.length > 0)
@@ -371,18 +395,9 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             else {
 
                 var citylist = document.getElementById('citylist');
-                var options = [];
-
                 var cities = stradBusXmlDoc.getElementsByTagName("Zones")[0].childNodes;
-                for (var i = 0; i < cities.length; i++) {
 
-                    var city = cities[i];
-                    var name = city.getElementsByTagName("ZoneName")[0].firstChild.nodeValue;
-                    var id = city.getElementsByTagName("ZoneId")[0].firstChild.nodeValue;
-
-                    var option = { name: name, value: id };
-                    options.push(option);
-                }
+                var options = Endeavor.Skanetrafiken.TravelInformation.filterRelevantValues(cities, "ZoneName", "ZoneId", "ZoneExistsFromDate", "ZoneExistsUptoDate", timestamp);
 
                 Endeavor.Skanetrafiken.TravelInformation.cities = options;
                 Endeavor.Skanetrafiken.TravelInformation.populateSelectionList(citylist, options, true);
@@ -390,9 +405,8 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
         },
 
         setCity: function () {
-
+            debugger;
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
-
             var timestamp = new Date(document.getElementById("timestamp").value);
 
             var fromlist = document.getElementById("fromlist");
@@ -400,43 +414,13 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             var linelist = document.getElementById("linelist");
             var citylist = document.getElementById("citylist");
 
-            var options = [];
-
             var cityid = citylist.value; // WHAT IF CITY IS NOT SELECTED? POSSIBLE? NO?
             var city = Endeavor.Skanetrafiken.TravelInformation.getCity(cityid);
-
             var lines = city.getElementsByTagName("Lines")[0].childNodes;
-            for (var i = 0; i < lines.length; i++) {
 
-                var line = lines[i];
+            var options = Endeavor.Skanetrafiken.TravelInformation.filterRelevantValues(lines, "LineDesignation", "LineGid", "LineExistsFromDate", "LineExistsUptoDate", timestamp);
 
-                var name = line.getElementsByTagName("LineDesignation")[0].firstChild.nodeValue;
-                var id = line.getElementsByTagName("LineGid")[0].firstChild.nodeValue;
-
-                var isLineActive = true;
-                if (line.getElementsByTagName("LineExistsUpToDate")[0]) {
-                    var LineExistsUptoDate = new Date(line.getElementsByTagName("LineExistsUpToDate")[0].firstChild.nodeValue);
-
-                    if (timestamp < LineExistsUptoDate) {
-                        for (var k = 0; k < options.length; k++) {
-                            if (id === options[k].value) {
-                                options.splice(k, 1);
-                                options.splice(k, 1);
-                            }
-                        }
-                        isLineActive = true;
-                    }
-                    else
-                        isLineActive = false;
-                }
-
-                if (isLineActive) {
-
-                    var option = { name: name, value: id };
-                    options.push(option);
-                }
-            }
-            if (options.length < 1 || options == undefined)
+            if (options == null || options.length < 1)
                 Endeavor.formscriptfunctions.AlertCustomDialog("Staden saknar aktiva linjer för angivet datum.");
 
             fromlist.innerHTML = '<option value="" selected disabled hidden >Välj</option>';
@@ -475,16 +459,12 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
         },
 
         setLine: function () {
-
+            debugger;
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
-
             var timestamp = new Date(document.getElementById("timestamp").value);
 
             var fromlist = document.getElementById("fromlist");
-            var fromoptions = [];
-
             var tolist = document.getElementById("tolist");
-            var tooptions = [];
 
             var cityid = document.getElementById("citylist").value;
             var lineid = document.getElementById("linelist").value;
@@ -493,94 +473,33 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             Endeavor.Skanetrafiken.TravelInformation.currentLine = line;
             Endeavor.Skanetrafiken.TravelInformation.currentCity = document.getElementById("citylist").value;
 
-            if (line.getElementsByTagName("StopAreas")[0]) {
-                var stopareas = line.getElementsByTagName("StopAreas")[0].childNodes;
-                for (var i = 0; i < stopareas.length; i++) {
-
-                    var stoparea = stopareas[i];
-                    var isFoundInfromoptions = true;
-
-                    var name = stoparea.getElementsByTagName("StopAreaName")[0].firstChild.nodeValue;
-                    var id = stoparea.getElementsByTagName("StopAreaGid")[0].firstChild.nodeValue;
-
-                    if (stoparea.getElementsByTagName("StopExistsUptoDate")[0] == undefined) {
-
-                        //add first value to array
-                        if (fromoptions.length < 1 || fromoptions == undefined) {
-                            isFoundInfromoptions = false;
-                        }
-                        else { // check if stoparea is pushed already
-                            for (var j = 0; j < fromoptions.length; j++) {
-                                if (id === fromoptions[j].value) {
-                                    isFoundInfromoptions = true;
-                                }
-                                else {
-                                    isFoundInfromoptions = false;
-                                }
-                            }
-                        }
-
-                        if (!isFoundInfromoptions) {
-                            var fromoption = { name: name, value: id };
-                            fromoptions.push(fromoption);
-
-                            var tooption = { name: name, value: id };
-                            tooptions.push(tooption);
-                        }
-                    }
-                    else {
-                        //var stopExistsUptoDate = stoparea.getElementsByTagName("StopAreaName")[0].firstChild.nodeValue;
-                        var stopExistsUptoDate = new Date(stoparea.getElementsByTagName("StopExistsUptoDate")[0].firstChild.nodeValue);
-
-                        if (timestamp < stopExistsUptoDate) {
-                            for (var k = 0; k < fromoptions.length; k++) {
-                                if (id === fromoptions[k].value) {
-                                    fromoptions.splice(k, 1);
-                                    tooptions.splice(k, 1);
-                                }
-                            }
-                            var fromoption = { name: name, value: id };
-                            fromoptions.push(fromoption);
-
-                            var tooption = { name: name, value: id };
-                            tooptions.push(tooption);
-                        }
-                    }
-                }
-
-                Endeavor.Skanetrafiken.TravelInformation.stopareas = fromoptions;
-                Endeavor.Skanetrafiken.TravelInformation.populateSelectionList(fromlist, fromoptions, true);
-                Endeavor.Skanetrafiken.TravelInformation.populateSelectionList(tolist, tooptions, true);
-            }
-            else
+            if (line.getElementsByTagName("StopAreas").length == 0)
                 Endeavor.formscriptfunctions.AlertCustomDialog("Linjen saknar hållplatser.");
+
+            var stopareas = line.getElementsByTagName("StopAreas")[0].childNodes;
+            var options = Endeavor.Skanetrafiken.TravelInformation.filterRelevantValues(stopareas, "StopAreaName", "StopAreaGid", "StopExistsFromDate", "StopExistsUptoDate", timestamp);
+
+            Endeavor.Skanetrafiken.TravelInformation.stopareas = options;
+            Endeavor.Skanetrafiken.TravelInformation.populateSelectionList(fromlist, options, true);
+            Endeavor.Skanetrafiken.TravelInformation.populateSelectionList(tolist, options, true);
         },
 
         setFrom: function () {
-
+            debugger;
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
+            var timestamp = new Date(document.getElementById("timestamp").value);
 
             var transporttype = document.getElementById("transportlist").value;
+
             if (transporttype == "TRAIN") {
 
                 var fromid = document.getElementById("fromlist").value;
                 var tolist = document.getElementById("tolist");
-                var options = [];
 
                 var fromstoparea = Endeavor.Skanetrafiken.TravelInformation.getStopArea(fromid);
-
                 var uptostopareas = fromstoparea.getElementsByTagName("UptoStopAreas")[0].childNodes;
-                for (var i = 0; i < uptostopareas.length; i++) {
 
-                    var stoparea = uptostopareas[i];
-
-                    // CHECK IF STOP HAS ENDED? UNKNOWN NAME TAG
-                    var name = stoparea.getElementsByTagName("StopAreaName")[0].firstChild.nodeValue;
-                    var id = stoparea.getElementsByTagName("StopAreaGid")[0].firstChild.nodeValue;
-
-                    var tooption = { name: name, value: id };
-                    options.push(tooption);
-                }
+                var options = Endeavor.Skanetrafiken.TravelInformation.filterRelevantValues(uptostopareas, "StopAreaName", "StopAreaGid", "ExistsFromDate", "ExistsUpToDate", timestamp);
 
                 Endeavor.Skanetrafiken.TravelInformation.populateSelectionList(tolist, options, true);
             }
