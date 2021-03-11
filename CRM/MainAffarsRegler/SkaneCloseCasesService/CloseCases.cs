@@ -71,6 +71,7 @@ namespace Endeavor.Crm.CloseCasesService
 
                 QueryExpression queryCases = new QueryExpression(IncidentEntity.EntityLogicalName);
                 queryCases.NoLock = true;
+                queryCases.ColumnSet = new ColumnSet(IncidentEntity.Fields.StateCode, IncidentEntity.Fields.IncidentStageCode, Incident.Fields.CreatedOn);
                 queryCases.Criteria.AddCondition(IncidentEntity.Fields.StateCode, ConditionOperator.Equal, (int)IncidentState.Active);
                 queryCases.Criteria.AddCondition(IncidentEntity.Fields.IncidentStageCode, ConditionOperator.Equal, (int)incident_incidentstagecode.NotAnswered);
                 queryCases.Criteria.AddCondition(IncidentEntity.Fields.CreatedOn, ConditionOperator.OlderThanXYears, 1); //Cases Older than 1 Year
@@ -113,6 +114,8 @@ namespace Endeavor.Crm.CloseCasesService
 
                         requestsLst.Add(updateCase);
                         requestsLst.Add(closeIncidentRequest);
+
+                        _log.InfoFormat($"Case: " + incident.Id + " created on " + incident.CreatedOn + " was added to request batch to be Resolved.");
                     }
                     catch (Exception e)
                     {
