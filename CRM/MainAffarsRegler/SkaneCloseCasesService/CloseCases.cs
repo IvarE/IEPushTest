@@ -88,6 +88,7 @@ namespace Endeavor.Crm.CloseCasesService
 
                 foreach (IncidentEntity incident in lUnansweredCases)
                 {
+                    _log.Debug($"Processing Incident: {incident.Id} CreatedOn: {incident.CreatedOn} StateCode: {incident.StateCode} IncidentStageCode: {incident.IncidentStageCode}");
                     try
                     {
                         IncidentEntity nIncident = new IncidentEntity();
