@@ -267,6 +267,7 @@
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.cgi_travelcard.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.ed_mergerecords.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.FrontOffice.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Lead.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Opportunity.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.QueueItem.V9.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCodeApproval.V9.0.js" />
