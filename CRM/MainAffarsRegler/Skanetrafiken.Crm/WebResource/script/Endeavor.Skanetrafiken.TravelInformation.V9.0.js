@@ -17,6 +17,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
         organisations: null,
         cities: null,
         stopareas: null,
+        lines: null,
 
         currentLine: null,
         currentCity: "",
@@ -107,7 +108,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                         Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
                     });
             }
-            else if ((transport == "REGIONBUS" || transport == "STRADBUS") && line) {
+            else if ((transport == "REGIONBUS" || transport == "STADSBUSS") && line) {
                 // GetContractors called onLoad, i.e. no request made in method populateContractorInformation
                 Endeavor.Skanetrafiken.TravelInformation.populateContractorInformation(transport, city, line);
             }
@@ -285,7 +286,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                         Endeavor.Skanetrafiken.TravelInformation.dropDownRegionbus();
                     }
-                    else if (value == "STRADBUS") {
+                    else if (value == "STADSBUSS") {
                         citylist.style.visibility = "visible";
                         linelist.style.visibility = "visible";
 
@@ -300,7 +301,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
         },
 
         filterRelevantValues: function (childNodes, nameTag, idTag, existsFromTag, existsUpToTag, timestamp) {
-
+            debugger;
             var options = [];
 
             for (var i = 0; i < childNodes.length; i++) {
@@ -354,9 +355,10 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 var fromlist = document.getElementById('fromlist');
                 var stopareas = trainXmlDoc.getElementsByTagName("StopAreas")[0].childNodes;
 
-                var options = Endeavor.Skanetrafiken.TravelInformation.filterRelevantValues(stopareas, "StopAreaName", "StopAreaGid", "ExistsFromDate", "ExistsUpToDate", timestamp);
+                var options = Endeavor.Skanetrafiken.TravelInformation.filterRelevantValues(stopareas, "StopAreaName", "StopAreaGid", "ExistsFromDate", "ExistsUptoDate", timestamp);
 
                 Endeavor.Skanetrafiken.TravelInformation.stopareas = options;
+                Endeavor.Skanetrafiken.TravelInformation.lines = trainXmlDoc.getElementsByTagName("Lines")[0].childNodes;
                 Endeavor.Skanetrafiken.TravelInformation.populateSelectionList(fromlist, options, true);
             }
         },
@@ -589,7 +591,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
             return returnline;
         },
-
+        
         getStopArea: function (stopareaid) {
 
             var returnarea = null;
@@ -606,6 +608,30 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             }
 
             return returnarea;
+        },
+
+        getLineTrainType: function (lines, serviceGid) {
+            debugger;
+            var line = null;
+            var firstDigit = serviceGid.substring(7, 8);
+
+            var _lineNumber = null;
+            if (firstDigit == "0")
+                _lineNumber = serviceGid.substring(8, 11);
+            else
+                _lineNumber = serviceGid.substring(7, 11);
+
+            for (var i = 0; i < lines.length; i++) {
+
+                var lineNumber = lines[i].getElementsByTagName("Number")[0].firstChild.nodeValue;
+                if (lineNumber == _lineNumber) {
+                    var designation = lines[i].getElementsByTagName("Designation")[0].firstChild.nodeValue;
+                    line = { lineNumber: lineNumber, lineDesignation: designation };
+                    break;
+                }
+            }
+
+            return line;
         },
 
         populateContractorInformation: function (transporttype, city, line) {
@@ -723,11 +749,20 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 var arrivalId = getElementValue(directjourney, "ArrivalId");
                 var deviationMessage = Endeavor.Skanetrafiken.TravelInformation.getDeviationMessage(deviationMessageVariant, departureDeviation, arrivalDeviation, departureId, arrivalId);
 
+                var _line = null;
+                debugger;
+                if (transporttype == "TRAIN") {
+
+                    var serviceGid = directjourney.getElementsByTagName("ServiceJourneyGid")[0].firstChild.nodeValue;
+                    if (serviceGid != null)
+                        _line = Endeavor.Skanetrafiken.TravelInformation.getLineTrainType(Endeavor.Skanetrafiken.TravelInformation.lines, serviceGid);
+                }
+
                 var saveEntity = {
                     transporttype: transporttype,
                     city: city,
                     directjourney: directjourney,
-                    line: null,
+                    line: _line,
                     contractorName: null,
                     deviationMessage: deviationMessage,
                 };
@@ -874,11 +909,12 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                         var travelinformation = ((new Date()).toISOString().substring(0, 19)).replace("T", " ") + " => " + getElementValue(saveEntity.directjourney, "DirectionOfLineDescription");
 
+                        debugger;
                         entity = {
                             "cgi_displaytext": "",
-                            "cgi_transport": getElementValue(saveEntity.directjourney, "LineDesignation"), //getElementValue(saveEntity.directjourney, "PrimaryDestinationName"),
-                            "cgi_line": getElementValue(saveEntity.directjourney, "LineDesignation"),
-                            "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
+                            "cgi_transport": saveEntity.line.lineDesignation,
+                            "cgi_line": saveEntity.line.lineNumber,
+                            "cgi_tour": saveEntity.line.lineNumber,
                             "cgi_start": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("fromlist").value),
                             "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
                             "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
@@ -956,7 +992,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                         if (entity != null)
                             Endeavor.Skanetrafiken.TravelInformation.setDisplayTextRegionbus(entity);
                     }
-                    else if (saveEntity.transporttype == "STRADBUS") {
+                    else if (saveEntity.transporttype == "STADSBUSS") {
 
                         var travelinformation = ((new Date()).toISOString().substring(0, 19)).replace("T", " ") + " => " + getElementValue(saveEntity.directjourney, "DirectionOfLineDescription");
 
