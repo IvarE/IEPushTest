@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiHelper.cs" />
+    <Compile Include="Entities\OpportunityEntity.cs" />
     <Compile Include="Entities\PaymentMethodEntity.cs" />
     <Compile Include="Entities\PaymentEntity.cs" />
     <Compile Include="Entities\KBArticleEntity.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Entities\QuoteEntity.cs" />
     <Compile Include="Entities\QuoteProductEntity.cs" />
     <Compile Include="Entities\SlotsEntity.cs" />
+    <Compile Include="PostQuoteProductCreate.cs" />
     <Compile Include="PreAccountUpdate.cs" />
     <Compile Include="PreAccountCreate.cs" />
     <Compile Include="CountryUtility.cs" />
@@ -265,6 +267,7 @@
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.cgi_travelcard.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.ed_mergerecords.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.FrontOffice.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Lead.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Opportunity.V9.0.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.QueueItem.V9.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCodeApproval.V9.0.js" />

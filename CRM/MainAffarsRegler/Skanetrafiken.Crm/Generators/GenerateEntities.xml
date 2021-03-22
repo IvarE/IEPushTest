@@ -15,6 +15,10 @@
     <entity>incident</entity>
     <entity>incidentresolution</entity>
     <entity>lead</entity>
+    <entity>opportunity</entity>
+    <entity>opportunityproduct</entity>
+    <entity>order</entity>
+    <entity>orderdetail</entity>
     <entity>pricelevel</entity>
     <entity>product</entity>
     <entity>processstage</entity>

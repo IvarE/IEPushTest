@@ -15,7 +15,7 @@ if (typeof (Endeavor.Skanetrafiken.FrontOffice) == "undefined") {
 
         _urlRelativeFrontOffice: "https://sttravelconfiguratorweb.azurewebsites.net/ticketdetails/",
         _listOfFormsFrontOffice: ["Contact (3 - Skånetrafiken)", "Kund (3 - Skånetrafiken)", "RGOL", "SalesOrderLIne_Admin",
-            "Information (Skånetrafiken)", "Köp och Sälj", "Information"],
+            "Information (Skånetrafiken)", "Köp och Sälj", "Information", "Köp och Sälj"],
 
         onFrontOfficeDisplay: function (formContext) {
             debugger;
@@ -44,9 +44,9 @@ if (typeof (Endeavor.Skanetrafiken.FrontOffice) == "undefined") {
 
                 for (var j = 0; j < selectedAttribute.length; j++) {
 
-                    var selectedAttribute = selectedAttribute[j];
-                    if (selectedAttribute.getName() == fieldName) {
-                        var value = selectedAttribute.getValue();
+                    var selectAttribute = selectedAttribute[j];
+                    if (selectAttribute.getName() == fieldName) {
+                        var value = selectAttribute.getValue();
                         return Endeavor.Skanetrafiken.FrontOffice._urlRelativeFrontOffice + value;
                     }
                 }
@@ -101,6 +101,18 @@ if (typeof (Endeavor.Skanetrafiken.FrontOffice) == "undefined") {
             var openUrlCase = Endeavor.Skanetrafiken.FrontOffice._urlRelativeFrontOffice + ticketNumber1;
             if (openUrlCase != null)
                 window.open(openUrlCase, "_ticketNumber");
+        },
+
+        onFrontOfficeIntegrationSalesOrder: function (formContext) {
+
+            debugger;
+            var fieldNameTicket = "ed_ticketid";
+            var gridContextTicketId = formContext.getControl("SalesOrderLines");
+            var allSelectedRowsTicketId = gridContextTicketId.getGrid().getSelectedRows();
+
+            var openUrlTicketId = Endeavor.Skanetrafiken.FrontOffice.findValueFrontOffice(allSelectedRowsTicketId, fieldNameTicket);
+            if (openUrlTicketId != null)
+                window.open(openUrlTicketId, "_salesorder");
         },
 
         onFrontOfficeIntegrationSalesOrderLine: function (formContext) {

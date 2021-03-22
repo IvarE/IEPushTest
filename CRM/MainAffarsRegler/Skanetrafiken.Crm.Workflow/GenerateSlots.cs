@@ -88,7 +88,7 @@ namespace Skanetrafiken.Crm
             catch (Exception ex)
             {
                 OK.Set(activityContext, false);
-                Message.Set(activityContext, $"Kunde inte skapa värdkod. Vänligen kontakta kundtjänst. StripError (GenerateSlots): { ex.Message}");
+                Message.Set(activityContext, $"Could not generate Slots. (GenerateSlots): { ex.Message}");
             }
         }
         public static SlotsEntity.GenerateSlotsResponse ExecuteCodeActivity(Plugin.LocalPluginContext localContext, Guid productId, int quantityPerDay, DateTime startDate, DateTime endDate)
