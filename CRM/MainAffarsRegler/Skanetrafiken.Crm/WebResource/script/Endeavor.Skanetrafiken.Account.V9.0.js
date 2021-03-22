@@ -21,6 +21,36 @@ if (typeof (Endeavor.Skanetrafiken) == "undefined") {
 if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
     Endeavor.Skanetrafiken.Account = {
 
+
+        onSave: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+            var seniorCustomer = formContext.getAttribute("ed_seniorcustomer");
+            var schoolCustomer = formContext.getAttribute("ed_schoolcustomer");
+            var reseller = formContext.getAttribute("ed_reseller");
+            var collaborationCustomer = formContext.getAttribute("ed_collaborationcustomer");
+            var customer = formContext.getAttribute("ed_customer");
+            var portalCustomer = formContext.getAttribute("ed_portalcustomer");
+            var agent = formContext.getAttribute("ed_agent");
+            var infotainment = formContext.getAttribute("ed_infotainmentcustomer");
+
+            if (seniorCustomer.getValue() == false && schoolCustomer.getValue() == false && reseller.getValue() == false && collaborationCustomer.getValue() == false && customer.getValue() == false && portalCustomer.getValue() == false && agent.getValue() == false && infotainment.getValue() == false) {
+                seniorCustomer.setRequiredLevel("required");
+                schoolCustomer.setRequiredLevel("required");
+                reseller.setRequiredLevel("required");
+                collaborationCustomer.setRequiredLevel("required");
+                customer.setRequiredLevel("required");
+                portalCustomer.setRequiredLevel("required");
+                agent.setRequiredLevel("required");
+                infotainment.setRequiredLevel("required");
+
+                Xrm.Navigation.openAlertDialog({ text: "Vänligen ange sammanhang innan ni sparar" });
+            }
+
+        },
+
+
         onLoad: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
@@ -73,6 +103,55 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                     }
                 }
             }
+        },
+
+        resetRequiredLevelForAllTypes: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+                var seniorCustomer = formContext.getAttribute("ed_seniorcustomer");
+                var schoolCustomer = formContext.getAttribute("ed_schoolcustomer");
+                var reseller = formContext.getAttribute("ed_reseller");
+                var collaborationCustomer = formContext.getAttribute("ed_collaborationcustomer");
+                var customer = formContext.getAttribute("ed_customer");
+                var portalCustomer = formContext.getAttribute("ed_portalcustomer");
+                var agent = formContext.getAttribute("ed_agent");
+                var infotainment = formContext.getAttribute("ed_infotainmentcustomer");
+
+                if (seniorCustomer != null && schoolCustomer != null && reseller != null && collaborationCustomer != null && customer != null && portalCustomer != null && agent != null && infotainment != null) {
+
+                    var seniorValue = seniorCustomer.getValue();
+                    var schoolValue = schoolCustomer.getValue();
+                    var resellerValue = reseller.getValue();
+                    var collaborationValue = collaborationCustomer.getValue();
+                    var customerValue = customer.getValue();
+                    var portalValue = portalCustomer.getValue();
+                    var agentValue = agent.getValue();
+                    var infotainmentValue = infotainment.getValue();
+                    
+
+                    if (seniorValue != false || schoolValue != false || resellerValue != false || collaborationValue != false || customerValue != false || portalValue != false || agentValue != false || infotainmentValue != false) {
+                        seniorCustomer.setRequiredLevel("none");
+                        schoolCustomer.setRequiredLevel("none");
+                        reseller.setRequiredLevel("none");
+                        collaborationCustomer.setRequiredLevel("none");
+                        customer.setRequiredLevel("none");
+                        portalCustomer.setRequiredLevel("none");
+                        agent.setRequiredLevel("none");
+                        infotainment.setRequiredLevel("none");
+                    }
+                    else if (seniorValue == false && schoolValue == false && resellerValue == false && collaborationValue == false && customerValue == false && portalValue == false && agentValue == false && infotainmentValue == false) {
+                        seniorCustomer.setRequiredLevel("required");
+                        schoolCustomer.setRequiredLevel("required");
+                        reseller.setRequiredLevel("required");
+                        collaborationCustomer.setRequiredLevel("required");
+                        customer.setRequiredLevel("required");
+                        portalCustomer.setRequiredLevel("required");
+                        agent.setRequiredLevel("required");
+                        infotainment.setRequiredLevel("required");
+                    }
+                }
+            
         },
 
         onChangeTypeOfAccount: function (executionContext) {
