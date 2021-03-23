@@ -15,10 +15,16 @@
     <entity>incident</entity>
     <entity>incidentresolution</entity>
     <entity>lead</entity>
+    <entity>opportunity</entity>
+    <entity>opportunityproduct</entity>
+    <entity>order</entity>
+    <entity>orderdetail</entity>
     <entity>pricelevel</entity>
     <entity>product</entity>
     <entity>processstage</entity>
     <entity>phonecall</entity>
+    <entity>quote</entity>
+    <entity>quotedetail</entity>
     <entity>queue</entity>
     <entity>queueitem</entity>
     <entity>role</entity>

@@ -4458,6 +4458,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N opportunity_customer_accounts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_customer_accounts")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> opportunity_customer_accounts
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_customer_accounts", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_customer_accounts", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N opportunity_parent_account
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_parent_account")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> opportunity_parent_account
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_parent_account", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_parent_account", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N order_customer_accounts
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("order_customer_accounts")]
@@ -4470,6 +4502,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SalesOrder>("order_customer_accounts", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N quote_customer_accounts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_customer_accounts")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Quote> quote_customer_accounts
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_customer_accounts", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_customer_accounts", null, value);
 			}
 		}
 		
@@ -5961,6 +6009,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 opportunity_activity_parties
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("partyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_activity_parties")]
+		public Skanetrafiken.Crm.Schema.Generated.Opportunity opportunity_activity_parties
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_activity_parties", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_activity_parties", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 phonecall_activity_parties
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activityid")]
@@ -5991,6 +6056,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Queue>("queue_activity_parties", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 quote_activity_parties
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("partyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_activity_parties")]
+		public Skanetrafiken.Crm.Schema.Generated.Quote quote_activity_parties
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_activity_parties", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_activity_parties", null, value);
 			}
 		}
 		
@@ -7205,6 +7287,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 Opportunity_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Opportunity_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.Opportunity Opportunity_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("Opportunity_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("Opportunity_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 PhoneCall_Annotation
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
@@ -7235,6 +7334,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Product>("Product_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Quote_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Quote_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.Quote Quote_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("Quote_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("Quote_Annotation", null, value);
 			}
 		}
 		
@@ -9055,6 +9171,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 Opportunity_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Opportunity_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.Opportunity Opportunity_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("Opportunity_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("Opportunity_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 processstage_appointments
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
@@ -9068,6 +9201,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Quote_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Quote_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.Quote Quote_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("Quote_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("Quote_Appointments", null, value);
 			}
 		}
 		
@@ -11040,6 +11190,40 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 Opportunity_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Opportunity_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.Opportunity Opportunity_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("Opportunity_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("Opportunity_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 OpportunityProduct_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("OpportunityProduct_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.OpportunityProduct OpportunityProduct_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("OpportunityProduct_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("OpportunityProduct_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 PhoneCall_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -11138,6 +11322,40 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.QueueItem>("QueueItem_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Quote_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Quote_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.Quote Quote_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("Quote_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("Quote_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 QuoteDetail_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("QuoteDetail_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.QuoteDetail QuoteDetail_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("QuoteDetail_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("QuoteDetail_AsyncOperations", null, value);
 			}
 		}
 		
@@ -13391,6 +13609,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N campaign_opportunities
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("campaign_opportunities")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> campaign_opportunities
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("campaign_opportunities", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("campaign_opportunities", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N campaign_orders
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("campaign_orders")]
@@ -13419,6 +13653,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Campaign_Phonecalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N campaign_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("campaign_quotes")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Quote> campaign_quotes
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("campaign_quotes", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("campaign_quotes", null, value);
 			}
 		}
 		
@@ -34196,6 +34446,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_contact_opportunity_contact
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_contact_opportunity_contact")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> ed_contact_opportunity_contact
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("ed_contact_opportunity_contact", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("ed_contact_opportunity_contact", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_contact_quote_contact
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_contact_quote_contact")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Quote> ed_contact_quote_contact
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("ed_contact_quote_contact", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("ed_contact_quote_contact", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_contact_salesorder_contact
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_contact_salesorder_contact")]
@@ -34292,6 +34574,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N opportunity_customer_contacts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_customer_contacts")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> opportunity_customer_contacts
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_customer_contacts", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_customer_contacts", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N opportunity_parent_contact
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_parent_contact")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> opportunity_parent_contact
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_parent_contact", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_parent_contact", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N order_customer_contacts
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("order_customer_contacts")]
@@ -34304,6 +34618,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SalesOrder>("order_customer_contacts", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N quote_customer_contacts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_customer_contacts")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Quote> quote_customer_contacts
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_customer_contacts", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_customer_contacts", null, value);
 			}
 		}
 		
@@ -34400,6 +34730,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SalesOrder>("contactorders_association", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:N contactquotes_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("contactquotes_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Quote> contactquotes_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("contactquotes_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("contactquotes_association", null, value);
 			}
 		}
 		
@@ -45887,6 +46233,40 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 opportunity_ed_notifymkls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_ed_notifymkls")]
+		public Skanetrafiken.Crm.Schema.Generated.Opportunity opportunity_ed_notifymkls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_ed_notifymkls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_ed_notifymkls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 quote_ed_notifymkls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_ed_notifymkls")]
+		public Skanetrafiken.Crm.Schema.Generated.Quote quote_ed_notifymkls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_ed_notifymkls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_ed_notifymkls", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 salesorder_ed_notifymkls
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -54507,6 +54887,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 ed_opportunity_ed_slots_Opportunity
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_opportunity")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_opportunity_ed_slots_Opportunity")]
+		public Skanetrafiken.Crm.Schema.Generated.Opportunity ed_opportunity_ed_slots_Opportunity
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("ed_opportunity_ed_slots_Opportunity", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("ed_opportunity_ed_slots_Opportunity", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 ed_product_ed_slots_Product
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_productid")]
@@ -54520,6 +54917,40 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Product>("ed_product_ed_slots_Product", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_quote_ed_slots_Quote
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_quote")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_quote_ed_slots_Quote")]
+		public Skanetrafiken.Crm.Schema.Generated.Quote ed_quote_ed_slots_Quote
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("ed_quote_ed_slots_Quote", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("ed_quote_ed_slots_Quote", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_quotedetail_ed_slots_QuoteProduct
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_quoteproductid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_quotedetail_ed_slots_QuoteProduct")]
+		public Skanetrafiken.Crm.Schema.Generated.QuoteDetail ed_quotedetail_ed_slots_QuoteProduct
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("ed_quotedetail_ed_slots_QuoteProduct", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("ed_quotedetail_ed_slots_QuoteProduct", null, value);
 			}
 		}
 		
@@ -56683,6 +57114,40 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Lead>("lead_ed_TextMessages", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 opportunity_ed_TextMessages
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_ed_TextMessages")]
+		public Skanetrafiken.Crm.Schema.Generated.Opportunity opportunity_ed_TextMessages
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_ed_TextMessages", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_ed_TextMessages", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 quote_ed_TextMessages
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_ed_TextMessages")]
+		public Skanetrafiken.Crm.Schema.Generated.Quote quote_ed_TextMessages
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_ed_TextMessages", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_ed_TextMessages", null, value);
 			}
 		}
 		
@@ -65665,6 +66130,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 Opportunity_Emails
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Opportunity_Emails")]
+		public Skanetrafiken.Crm.Schema.Generated.Opportunity Opportunity_Emails
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("Opportunity_Emails", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("Opportunity_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 processstage_emails
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
@@ -65691,6 +66173,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Queue>("Queue_Email_EmailSender", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Quote_Emails
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Quote_Emails")]
+		public Skanetrafiken.Crm.Schema.Generated.Quote Quote_Emails
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("Quote_Emails", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("Quote_Emails", null, value);
 			}
 		}
 		
@@ -78199,6 +78698,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N opportunity_originating_lead
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_originating_lead")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> opportunity_originating_lead
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_originating_lead", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_originating_lead", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:N accountleads_association
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("accountleads_association")]
@@ -78468,6 +78983,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("lead_parent_contact", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lead_qualifying_opportunity
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("qualifyingopportunityid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lead_qualifying_opportunity")]
+		public Skanetrafiken.Crm.Schema.Generated.Opportunity lead_qualifying_opportunity
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("lead_qualifying_opportunity", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("lead_qualifying_opportunity", null, value);
 			}
 		}
 		
@@ -79146,6 +79678,3903 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int YomiLastName = 150;
 			
 			public const int YomiMiddleName = 150;
+		}
+	}
+	
+	public enum OpportunityState
+	{
+		
+		Open = 0,
+		
+		Won = 1,
+		
+		Lost = 2,
+	}
+	
+	/// <summary>
+	/// Potential revenue-generating event, or sale to an account, which needs to be tracked through a sales process to completion.
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("opportunity")]
+	public partial class Opportunity : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public Opportunity() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "opportunity";
+		
+		public const int EntityTypeCode = 3;
+		
+		/// <summary>
+		/// Unique identifier of the account with which the opportunity is associated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("accountid")]
+		public Microsoft.Xrm.Sdk.EntityReference AccountId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("accountid");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the opportunity was closed or canceled.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("actualclosedate")]
+		public System.Nullable<System.DateTime> ActualCloseDate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("actualclosedate");
+			}
+			set
+			{
+				this.SetAttributeValue("actualclosedate", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the actual revenue amount for the opportunity for reporting and analysis of estimated versus actual sales. Field defaults to the Est. Revenue value when an opportunity is won.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("actualvalue")]
+		public Microsoft.Xrm.Sdk.Money ActualValue
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("actualvalue");
+			}
+			set
+			{
+				this.SetAttributeValue("actualvalue", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Actual Revenue field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("actualvalue_base")]
+		public Microsoft.Xrm.Sdk.Money ActualValue_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("actualvalue_base");
+			}
+		}
+		
+		/// <summary>
+		/// Type a value between 0 and 1,000,000,000,000 to indicate the lead's potential available budget.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("budgetamount")]
+		public Microsoft.Xrm.Sdk.Money BudgetAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("budgetamount");
+			}
+			set
+			{
+				this.SetAttributeValue("budgetamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the budget amount converted to the system's base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("budgetamount_base")]
+		public Microsoft.Xrm.Sdk.Money BudgetAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("budgetamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Select the likely budget status for the lead's company. This may help determine the lead rating or your sales approach.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("budgetstatus")]
+		public Microsoft.Xrm.Sdk.OptionSetValue BudgetStatus
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("budgetstatus");
+			}
+			set
+			{
+				this.SetAttributeValue("budgetstatus", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the campaign that the opportunity was created from. The ID is used for tracking the success of the campaign.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("campaignid")]
+		public Microsoft.Xrm.Sdk.EntityReference CampaignId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("campaignid");
+			}
+			set
+			{
+				this.SetAttributeValue("campaignid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose whether the proposal feedback has been captured for the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("captureproposalfeedback")]
+		public System.Nullable<bool> CaptureProposalFeedback
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("captureproposalfeedback");
+			}
+			set
+			{
+				this.SetAttributeValue("captureproposalfeedback", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a number from 0 to 100 that represents the likelihood of closing the opportunity. This can aid the sales team in their efforts to convert the opportunity in a sale.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("closeprobability")]
+		public System.Nullable<int> CloseProbability
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("closeprobability");
+			}
+			set
+			{
+				this.SetAttributeValue("closeprobability", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether a final proposal has been completed for the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("completefinalproposal")]
+		public System.Nullable<bool> CompleteFinalProposal
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("completefinalproposal");
+			}
+			set
+			{
+				this.SetAttributeValue("completefinalproposal", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether an internal review has been completed for this opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("completeinternalreview")]
+		public System.Nullable<bool> CompleteInternalReview
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("completeinternalreview");
+			}
+			set
+			{
+				this.SetAttributeValue("completeinternalreview", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the lead confirmed interest in your offerings. This helps in determining the lead quality and the probability of it turning into an opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("confirminterest")]
+		public System.Nullable<bool> ConfirmInterest
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("confirminterest");
+			}
+			set
+			{
+				this.SetAttributeValue("confirminterest", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the contact associated with the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("contactid")]
+		public Microsoft.Xrm.Sdk.EntityReference ContactId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("contactid");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who created the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was created. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who created the record on behalf of another user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Type notes about the company or organization associated with the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("currentsituation")]
+		public string CurrentSituation
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("currentsituation");
+			}
+			set
+			{
+				this.SetAttributeValue("currentsituation", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select the customer account or contact to provide a quick link to additional customer details, such as address, phone number, activities, and orders.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customerid")]
+		public Microsoft.Xrm.Sdk.EntityReference CustomerId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("customerid");
+			}
+			set
+			{
+				this.SetAttributeValue("customerid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type some notes about the customer's requirements, to help the sales team identify products and services that could meet their requirements.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customerneed")]
+		public string CustomerNeed
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("customerneed");
+			}
+			set
+			{
+				this.SetAttributeValue("customerneed", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type notes about the customer's pain points to help the sales team identify products and services that could address these pain points.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customerpainpoints")]
+		public string CustomerPainPoints
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("customerpainpoints");
+			}
+			set
+			{
+				this.SetAttributeValue("customerpainpoints", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether your notes include information about who makes the purchase decisions at the lead's company.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("decisionmaker")]
+		public System.Nullable<bool> DecisionMaker
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("decisionmaker");
+			}
+			set
+			{
+				this.SetAttributeValue("decisionmaker", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type additional information to describe the opportunity, such as possible products to sell or past purchases from the customer.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("description")]
+		public string Description
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("description");
+			}
+			set
+			{
+				this.SetAttributeValue("description", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether a proposal has been developed for the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("developproposal")]
+		public System.Nullable<bool> DevelopProposal
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("developproposal");
+			}
+			set
+			{
+				this.SetAttributeValue("developproposal", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the discount amount for the opportunity if the customer is eligible for special savings.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("discountamount")]
+		public Microsoft.Xrm.Sdk.Money DiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("discountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("discountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Opportunity Discount Amount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("discountamount_base")]
+		public Microsoft.Xrm.Sdk.Money DiscountAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("discountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Type the discount rate that should be applied to the Product Totals field to include additional savings for the customer in the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("discountpercentage")]
+		public System.Nullable<decimal> DiscountPercentage
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("discountpercentage");
+			}
+			set
+			{
+				this.SetAttributeValue("discountpercentage", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_acceptfinalproposal")]
+		public System.Nullable<bool> ed_AcceptFinalProposal
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_acceptfinalproposal");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_acceptfinalproposal", value);
+			}
+		}
+		
+		/// <summary>
+		/// Kampanjens slutdatum för Infotainment
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_campaigndateend")]
+		public System.Nullable<System.DateTime> ed_campaigndateend
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_campaigndateend");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_campaigndateend", value);
+			}
+		}
+		
+		/// <summary>
+		/// Kampanjens startdatum för Infotainment
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_campaigndatestart")]
+		public System.Nullable<System.DateTime> ed_campaigndatestart
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_campaigndatestart");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_campaigndatestart", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_contact")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_contact
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_contact");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_contact", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_customerneedcheck")]
+		public System.Nullable<bool> ed_CustomerNeedCheck
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_customerneedcheck");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_customerneedcheck", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the estimated weighted revenue amount to indicate the potential sale or value of the opportunity for revenue forecasting.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_estweightedrevenue")]
+		public Microsoft.Xrm.Sdk.Money ed_EstWeightedRevenue
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_estweightedrevenue");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_estweightedrevenue", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Est. Weighted Revenue in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_estweightedrevenue_base")]
+		public Microsoft.Xrm.Sdk.Money ed_estweightedrevenue_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_estweightedrevenue_base");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_infotainmentcustomer")]
+		public System.Nullable<bool> ed_infotainmentcustomer
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_infotainmentcustomer");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_infotainmentcustomer", value);
+			}
+		}
+		
+		/// <summary>
+		/// Indikerar om affärsmöjligheten är kopplad till en kund som är mediabyrå
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediabusiness")]
+		public System.Nullable<bool> ed_mediabusiness
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_mediabusiness");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediabusiness", value);
+			}
+		}
+		
+		/// <summary>
+		/// Totalt pris inklusive moms
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_priceinctax")]
+		public Microsoft.Xrm.Sdk.Money ed_priceinctax
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_priceinctax");
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Pris inkl. moms in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_priceinctax_base")]
+		public Microsoft.Xrm.Sdk.Money ed_priceinctax_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_priceinctax_base");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_productcategory")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ed_productcategory
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("ed_productcategory");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_productcategory", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_producttype")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ed_producttype
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("ed_producttype");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_producttype", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_proposedsolutioncheck")]
+		public System.Nullable<bool> ed_ProposedSolutionCheck
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_proposedsolutioncheck");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_proposedsolutioncheck", value);
+			}
+		}
+		
+		/// <summary>
+		/// Total moms i kronor
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_taxcalculation")]
+		public Microsoft.Xrm.Sdk.Money ed_taxcalculation
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_taxcalculation");
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Moms in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_taxcalculation_base")]
+		public Microsoft.Xrm.Sdk.Money ed_taxcalculation_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_taxcalculation_base");
+			}
+		}
+		
+		/// <summary>
+		/// Indikerar om en kund är en volymkund
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_volymcustomer")]
+		public System.Nullable<bool> ed_volymcustomer
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_volymcustomer");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_volymcustomer", value);
+			}
+		}
+		
+		/// <summary>
+		/// The primary email address for the entity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("emailaddress")]
+		public string EmailAddress
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("emailaddress");
+			}
+			set
+			{
+				this.SetAttributeValue("emailaddress", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the expected closing date of the opportunity to help make accurate revenue forecasts.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("estimatedclosedate")]
+		public System.Nullable<System.DateTime> EstimatedCloseDate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("estimatedclosedate");
+			}
+			set
+			{
+				this.SetAttributeValue("estimatedclosedate", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the estimated revenue amount to indicate the potential sale or value of the opportunity for revenue forecasting. This field can be either system-populated or editable based on the selection in the Revenue field.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("estimatedvalue")]
+		public Microsoft.Xrm.Sdk.Money EstimatedValue
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("estimatedvalue");
+			}
+			set
+			{
+				this.SetAttributeValue("estimatedvalue", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Actual Revenue field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("estimatedvalue_base")]
+		public Microsoft.Xrm.Sdk.Money EstimatedValue_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("estimatedvalue_base");
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the fit between the lead's requirements and your offerings was evaluated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("evaluatefit")]
+		public System.Nullable<bool> EvaluateFit
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("evaluatefit");
+			}
+			set
+			{
+				this.SetAttributeValue("evaluatefit", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the conversion rate of the record's currency. The exchange rate is used to convert all money fields in the record from the local currency to the system's default currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+		}
+		
+		/// <summary>
+		/// Choose whether the sales team has recorded detailed notes on the proposals and the account's responses.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("filedebrief")]
+		public System.Nullable<bool> FileDebrief
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("filedebrief");
+			}
+			set
+			{
+				this.SetAttributeValue("filedebrief", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the date and time when the final decision of the opportunity was made.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("finaldecisiondate")]
+		public System.Nullable<System.DateTime> FinalDecisionDate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("finaldecisiondate");
+			}
+			set
+			{
+				this.SetAttributeValue("finaldecisiondate", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the cost of freight or shipping for the products included in the opportunity for use in calculating the Total Amount field.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("freightamount")]
+		public Microsoft.Xrm.Sdk.Money FreightAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("freightamount");
+			}
+			set
+			{
+				this.SetAttributeValue("freightamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Freight Amount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("freightamount_base")]
+		public Microsoft.Xrm.Sdk.Money FreightAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("freightamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Select whether information about competitors is included.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("identifycompetitors")]
+		public System.Nullable<bool> IdentifyCompetitors
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("identifycompetitors");
+			}
+			set
+			{
+				this.SetAttributeValue("identifycompetitors", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the customer contacts for this opportunity have been identified.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("identifycustomercontacts")]
+		public System.Nullable<bool> IdentifyCustomerContacts
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("identifycustomercontacts");
+			}
+			set
+			{
+				this.SetAttributeValue("identifycustomercontacts", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose whether you have recorded who will pursue the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("identifypursuitteam")]
+		public System.Nullable<bool> IdentifyPursuitTeam
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("identifypursuitteam");
+			}
+			set
+			{
+				this.SetAttributeValue("identifypursuitteam", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data import or data migration that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose whether someone from the sales team contacted this lead earlier.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("initialcommunication")]
+		public Microsoft.Xrm.Sdk.OptionSetValue InitialCommunication
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("initialcommunication");
+			}
+			set
+			{
+				this.SetAttributeValue("initialcommunication", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the estimated revenue for the opportunity is calculated automatically based on the products entered or entered manually by a user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isrevenuesystemcalculated")]
+		public System.Nullable<bool> IsRevenueSystemCalculated
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isrevenuesystemcalculated");
+			}
+			set
+			{
+				this.SetAttributeValue("isrevenuesystemcalculated", value);
+			}
+		}
+		
+		/// <summary>
+		/// Contains the date time stamp of the last on hold time.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("lastonholdtime")]
+		public System.Nullable<System.DateTime> LastOnHoldTime
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("lastonholdtime");
+			}
+			set
+			{
+				this.SetAttributeValue("lastonholdtime", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows who last updated the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was last updated. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who last updated the record on behalf of another user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Type a subject or descriptive name, such as the expected order or company name, for the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("name")]
+		public string Name
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("name");
+			}
+			set
+			{
+				this.SetAttributeValue("name", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose how high the level of need is for the lead's company.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("need")]
+		public Microsoft.Xrm.Sdk.OptionSetValue Need
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("need");
+			}
+			set
+			{
+				this.SetAttributeValue("need", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the duration in minutes for which the opportunity was on hold.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("onholdtime")]
+		public System.Nullable<int> OnHoldTime
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("onholdtime");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunityid")]
+		public System.Nullable<System.Guid> OpportunityId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("opportunityid");
+			}
+			set
+			{
+				this.SetAttributeValue("opportunityid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunityid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.OpportunityId = value;
+			}
+		}
+		
+		/// <summary>
+		/// Select the expected value or priority of the opportunity based on revenue, customer status, or closing probability.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunityratingcode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue OpportunityRatingCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("opportunityratingcode");
+			}
+			set
+			{
+				this.SetAttributeValue("opportunityratingcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the lead that the opportunity was created from for reporting and analytics. The field is read-only after the opportunity is created and defaults to the correct lead when an opportunity is created from a converted lead.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("originatingleadid")]
+		public Microsoft.Xrm.Sdk.EntityReference OriginatingLeadId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("originatingleadid");
+			}
+			set
+			{
+				this.SetAttributeValue("originatingleadid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the user or team who is assigned to manage the record. This field is updated every time the record is assigned to a different user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ownerid")]
+		public Microsoft.Xrm.Sdk.EntityReference OwnerId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ownerid");
+			}
+			set
+			{
+				this.SetAttributeValue("ownerid", value);
+			}
+		}
+		
+		/// <summary>
+		/// business_unit_opportunities
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningbusinessunit")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningBusinessUnit
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningbusinessunit");
+			}
+		}
+		
+		/// <summary>
+		/// team_opportunities
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningTeam
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningteam");
+			}
+		}
+		
+		/// <summary>
+		/// opportunity_owning_user
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningUser
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owninguser");
+			}
+		}
+		
+		/// <summary>
+		/// opportunity_parent_account
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentaccountid")]
+		public Microsoft.Xrm.Sdk.EntityReference ParentAccountId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("parentaccountid");
+			}
+			set
+			{
+				this.SetAttributeValue("parentaccountid", value);
+			}
+		}
+		
+		/// <summary>
+		/// opportunity_parent_contact
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentcontactid")]
+		public Microsoft.Xrm.Sdk.EntityReference ParentContactId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("parentcontactid");
+			}
+			set
+			{
+				this.SetAttributeValue("parentcontactid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Information about whether the opportunity participates in workflow rules.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("participatesinworkflow")]
+		public System.Nullable<bool> ParticipatesInWorkflow
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("participatesinworkflow");
+			}
+			set
+			{
+				this.SetAttributeValue("participatesinworkflow", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the final proposal has been presented to the account.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("presentfinalproposal")]
+		public System.Nullable<bool> PresentFinalProposal
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("presentfinalproposal");
+			}
+			set
+			{
+				this.SetAttributeValue("presentfinalproposal", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether a proposal for the opportunity has been presented to the account.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("presentproposal")]
+		public System.Nullable<bool> PresentProposal
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("presentproposal");
+			}
+			set
+			{
+				this.SetAttributeValue("presentproposal", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the price list associated with this record to make sure the products associated with the campaign are offered at the correct prices.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pricelevelid")]
+		public Microsoft.Xrm.Sdk.EntityReference PriceLevelId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("pricelevelid");
+			}
+			set
+			{
+				this.SetAttributeValue("pricelevelid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Pricing error for the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pricingerrorcode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PricingErrorCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("pricingerrorcode");
+			}
+			set
+			{
+				this.SetAttributeValue("pricingerrorcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select the priority so that preferred customers or critical issues are handled quickly.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("prioritycode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PriorityCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("prioritycode");
+			}
+			set
+			{
+				this.SetAttributeValue("prioritycode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the process.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("processid")]
+		public System.Nullable<System.Guid> ProcessId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("processid");
+			}
+			set
+			{
+				this.SetAttributeValue("processid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type notes about the proposed solution for the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("proposedsolution")]
+		public string ProposedSolution
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("proposedsolution");
+			}
+			set
+			{
+				this.SetAttributeValue("proposedsolution", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose whether an individual or a committee will be involved in the purchase process for the lead.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("purchaseprocess")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PurchaseProcess
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("purchaseprocess");
+			}
+			set
+			{
+				this.SetAttributeValue("purchaseprocess", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose how long the lead will likely take to make the purchase.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("purchasetimeframe")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PurchaseTimeframe
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("purchasetimeframe");
+			}
+			set
+			{
+				this.SetAttributeValue("purchasetimeframe", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the decision about pursuing the opportunity has been made.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pursuitdecision")]
+		public System.Nullable<bool> PursuitDecision
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("pursuitdecision");
+			}
+			set
+			{
+				this.SetAttributeValue("pursuitdecision", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type comments about the qualification or scoring of the lead.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("qualificationcomments")]
+		public string QualificationComments
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("qualificationcomments");
+			}
+			set
+			{
+				this.SetAttributeValue("qualificationcomments", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type comments about the quotes associated with the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quotecomments")]
+		public string QuoteComments
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("quotecomments");
+			}
+			set
+			{
+				this.SetAttributeValue("quotecomments", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose whether the proposal feedback has been captured and resolved for the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("resolvefeedback")]
+		public System.Nullable<bool> ResolveFeedback
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("resolvefeedback");
+			}
+			set
+			{
+				this.SetAttributeValue("resolvefeedback", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select the sales stage of this opportunity to aid the sales team in their efforts to win this opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("salesstage")]
+		public Microsoft.Xrm.Sdk.OptionSetValue SalesStage
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("salesstage");
+			}
+			set
+			{
+				this.SetAttributeValue("salesstage", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select the sales process stage for the opportunity to indicate the probability of closing the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("salesstagecode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue SalesStageCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("salesstagecode");
+			}
+			set
+			{
+				this.SetAttributeValue("salesstagecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the date and time of the prospecting follow-up meeting with the lead.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("schedulefollowup_prospect")]
+		public System.Nullable<System.DateTime> ScheduleFollowup_Prospect
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("schedulefollowup_prospect");
+			}
+			set
+			{
+				this.SetAttributeValue("schedulefollowup_prospect", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the date and time of the qualifying follow-up meeting with the lead.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("schedulefollowup_qualify")]
+		public System.Nullable<System.DateTime> ScheduleFollowup_Qualify
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("schedulefollowup_qualify");
+			}
+			set
+			{
+				this.SetAttributeValue("schedulefollowup_qualify", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the date and time of the proposal meeting for the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("scheduleproposalmeeting")]
+		public System.Nullable<System.DateTime> ScheduleProposalMeeting
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("scheduleproposalmeeting");
+			}
+			set
+			{
+				this.SetAttributeValue("scheduleproposalmeeting", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether a thank you note has been sent to the account for considering the proposal.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("sendthankyounote")]
+		public System.Nullable<bool> SendThankYouNote
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("sendthankyounote");
+			}
+			set
+			{
+				this.SetAttributeValue("sendthankyounote", value);
+			}
+		}
+		
+		/// <summary>
+		/// Skip Price Calculation (For Internal Use)
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("skippricecalculation")]
+		public Microsoft.Xrm.Sdk.OptionSetValue SkipPriceCalculation
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("skippricecalculation");
+			}
+			set
+			{
+				this.SetAttributeValue("skippricecalculation", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the service level agreement (SLA) that you want to apply to the opportunity record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("slaid")]
+		public Microsoft.Xrm.Sdk.EntityReference SLAId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("slaid");
+			}
+			set
+			{
+				this.SetAttributeValue("slaid", value);
+			}
+		}
+		
+		/// <summary>
+		/// sla_opportunity
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("slainvokedid")]
+		public Microsoft.Xrm.Sdk.EntityReference SLAInvokedId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("slainvokedid");
+			}
+		}
+		
+		/// <summary>
+		/// processstage_opportunity
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		public System.Nullable<System.Guid> StageId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("stageid");
+			}
+			set
+			{
+				this.SetAttributeValue("stageid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows whether the opportunity is open, won, or lost. Won and lost opportunities are read-only and can't be edited until they are reactivated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.OpportunityState> StateCode
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.OpportunityState)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.OpportunityState), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("statecode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statecode", new Microsoft.Xrm.Sdk.OptionSetValue(((int)(value))));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Select the opportunity's status.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue StatusCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+			}
+			set
+			{
+				this.SetAttributeValue("statuscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the workflow step.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stepid")]
+		public System.Nullable<System.Guid> StepId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("stepid");
+			}
+			set
+			{
+				this.SetAttributeValue("stepid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the current phase in the sales pipeline for the opportunity. This is updated by a workflow.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stepname")]
+		public string StepName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("stepname");
+			}
+			set
+			{
+				this.SetAttributeValue("stepname", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select when the opportunity is likely to be closed.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timeline")]
+		public Microsoft.Xrm.Sdk.OptionSetValue TimeLine
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("timeline");
+			}
+			set
+			{
+				this.SetAttributeValue("timeline", value);
+			}
+		}
+		
+		/// <summary>
+		/// Total time spent for emails (read and write) and meetings by me in relation to the opportunity record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timespentbymeonemailandmeetings")]
+		public string TimeSpentByMeOnEmailAndMeetings
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("timespentbymeonemailandmeetings");
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timezoneruleversionnumber")]
+		public System.Nullable<int> TimeZoneRuleVersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("timezoneruleversionnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total amount due, calculated as the sum of the products, discounts, freight, and taxes for the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totalamount")]
+		public Microsoft.Xrm.Sdk.Money TotalAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totalamount");
+			}
+			set
+			{
+				this.SetAttributeValue("totalamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Total Amount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totalamount_base")]
+		public Microsoft.Xrm.Sdk.Money TotalAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totalamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total product amount for the opportunity, minus any discounts. This value is added to freight and tax amounts in the calculation for the total amount of the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totalamountlessfreight")]
+		public Microsoft.Xrm.Sdk.Money TotalAmountLessFreight
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totalamountlessfreight");
+			}
+			set
+			{
+				this.SetAttributeValue("totalamountlessfreight", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Total Pre-Freight Amount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totalamountlessfreight_base")]
+		public Microsoft.Xrm.Sdk.Money TotalAmountLessFreight_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totalamountlessfreight_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total discount amount, based on the discount price and rate entered on the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totaldiscountamount")]
+		public Microsoft.Xrm.Sdk.Money TotalDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totaldiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("totaldiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Total Discount Amount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totaldiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money TotalDiscountAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totaldiscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the sum of all existing and write-in products included on the opportunity, based on the specified price list and quantities.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totallineitemamount")]
+		public Microsoft.Xrm.Sdk.Money TotalLineItemAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totallineitemamount");
+			}
+			set
+			{
+				this.SetAttributeValue("totallineitemamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Total Detail Amount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totallineitemamount_base")]
+		public Microsoft.Xrm.Sdk.Money TotalLineItemAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totallineitemamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total of the Manual Discount amounts specified on all products included in the opportunity. This value is reflected in the Total Detail Amount field on the opportunity and is added to any discount amount or rate specified on the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totallineitemdiscountamount")]
+		public Microsoft.Xrm.Sdk.Money TotalLineItemDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totallineitemdiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("totallineitemdiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Total Line Item Discount Amount field to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totallineitemdiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money TotalLineItemDiscountAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totallineitemdiscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total of the Tax amounts specified on all products included in the opportunity, included in the Total Amount field calculation for the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totaltax")]
+		public Microsoft.Xrm.Sdk.Money TotalTax
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totaltax");
+			}
+			set
+			{
+				this.SetAttributeValue("totaltax", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Total Tax field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totaltax_base")]
+		public Microsoft.Xrm.Sdk.Money TotalTax_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totaltax_base");
+			}
+		}
+		
+		/// <summary>
+		/// Choose the local currency for the record to make sure budgets are reported in the correct currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public Microsoft.Xrm.Sdk.EntityReference TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("traversedpath")]
+		public string TraversedPath
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("traversedpath");
+			}
+			set
+			{
+				this.SetAttributeValue("traversedpath", value);
+			}
+		}
+		
+		/// <summary>
+		/// Time zone code that was in use when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("utcconversiontimezonecode")]
+		public System.Nullable<int> UTCConversionTimeZoneCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("utcconversiontimezonecode");
+			}
+			set
+			{
+				this.SetAttributeValue("utcconversiontimezonecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_opportunity_ed_slots_Opportunity
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_opportunity_ed_slots_Opportunity")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_Slots> ed_opportunity_ed_slots_Opportunity
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_opportunity_ed_slots_Opportunity", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_opportunity_ed_slots_Opportunity", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lead_qualifying_opportunity
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lead_qualifying_opportunity")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Lead> lead_qualifying_opportunity
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("lead_qualifying_opportunity", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("lead_qualifying_opportunity", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N opportunity_activity_parties
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_activity_parties")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> opportunity_activity_parties
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ActivityParty>("opportunity_activity_parties", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ActivityParty>("opportunity_activity_parties", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Opportunity_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Opportunity_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> Opportunity_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Opportunity_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Opportunity_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Opportunity_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Opportunity_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> Opportunity_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Opportunity_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Opportunity_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Opportunity_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Opportunity_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> Opportunity_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("Opportunity_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("Opportunity_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N opportunity_ed_notifymkls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_ed_notifymkls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl> opportunity_ed_notifymkls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl>("opportunity_ed_notifymkls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl>("opportunity_ed_notifymkls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N opportunity_ed_TextMessages
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_ed_TextMessages")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage> opportunity_ed_TextMessages
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage>("opportunity_ed_TextMessages", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage>("opportunity_ed_TextMessages", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Opportunity_Emails
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Opportunity_Emails")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Email> Opportunity_Emails
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("Opportunity_Emails", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("Opportunity_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Opportunity_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Opportunity_Phonecalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> Opportunity_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Opportunity_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Opportunity_Phonecalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N opportunity_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_quotes")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Quote> opportunity_quotes
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("opportunity_quotes", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("opportunity_quotes", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N opportunity_sales_orders
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_sales_orders")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.SalesOrder> opportunity_sales_orders
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SalesOrder>("opportunity_sales_orders", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SalesOrder>("opportunity_sales_orders", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N opportunity_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_Teams")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> opportunity_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("opportunity_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("opportunity_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N product_opportunities
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("product_opportunities")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct> product_opportunities
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("product_opportunities", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("product_opportunities", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 campaign_opportunities
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("campaignid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("campaign_opportunities")]
+		public Skanetrafiken.Crm.Schema.Generated.Campaign campaign_opportunities
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Campaign>("campaign_opportunities", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Campaign>("campaign_opportunities", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_contact_opportunity_contact
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_contact")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_contact_opportunity_contact")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact ed_contact_opportunity_contact
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("ed_contact_opportunity_contact", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("ed_contact_opportunity_contact", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_opportunity_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunity_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_opportunity_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_opportunity_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_opportunity_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunity_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_opportunity_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_opportunity_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_opportunitybase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunitybase_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_opportunitybase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_opportunitybase_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_opportunitybase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunitybase_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_opportunitybase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_opportunitybase_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 opportunity_customer_accounts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customerid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_customer_accounts")]
+		public Skanetrafiken.Crm.Schema.Generated.Account opportunity_customer_accounts
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("opportunity_customer_accounts", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("opportunity_customer_accounts", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 opportunity_customer_contacts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customerid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_customer_contacts")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact opportunity_customer_contacts
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("opportunity_customer_contacts", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("opportunity_customer_contacts", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 opportunity_originating_lead
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("originatingleadid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_originating_lead")]
+		public Skanetrafiken.Crm.Schema.Generated.Lead opportunity_originating_lead
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Lead>("opportunity_originating_lead", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Lead>("opportunity_originating_lead", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 opportunity_owning_user
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_owning_user")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser opportunity_owning_user
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("opportunity_owning_user", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 opportunity_parent_account
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentaccountid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_parent_account")]
+		public Skanetrafiken.Crm.Schema.Generated.Account opportunity_parent_account
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("opportunity_parent_account", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("opportunity_parent_account", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 opportunity_parent_contact
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentcontactid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_parent_contact")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact opportunity_parent_contact
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("opportunity_parent_contact", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("opportunity_parent_contact", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 price_level_opportunties
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pricelevelid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("price_level_opportunties")]
+		public Skanetrafiken.Crm.Schema.Generated.PriceLevel price_level_opportunties
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PriceLevel>("price_level_opportunties", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PriceLevel>("price_level_opportunties", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 processstage_opportunity
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_opportunity")]
+		public Skanetrafiken.Crm.Schema.Generated.ProcessStage processstage_opportunity
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_opportunity", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_opportunity", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_opportunities
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_opportunities")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_opportunities
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_opportunities", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 transactioncurrency_opportunity
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_opportunity")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_opportunity
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_opportunity", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_opportunity", null, value);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string AccountId = "accountid";
+			
+			public const string ActualCloseDate = "actualclosedate";
+			
+			public const string ActualValue = "actualvalue";
+			
+			public const string ActualValue_Base = "actualvalue_base";
+			
+			public const string BudgetAmount = "budgetamount";
+			
+			public const string BudgetAmount_Base = "budgetamount_base";
+			
+			public const string BudgetStatus = "budgetstatus";
+			
+			public const string CampaignId = "campaignid";
+			
+			public const string CaptureProposalFeedback = "captureproposalfeedback";
+			
+			public const string CloseProbability = "closeprobability";
+			
+			public const string CompleteFinalProposal = "completefinalproposal";
+			
+			public const string CompleteInternalReview = "completeinternalreview";
+			
+			public const string ConfirmInterest = "confirminterest";
+			
+			public const string ContactId = "contactid";
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string CurrentSituation = "currentsituation";
+			
+			public const string CustomerId = "customerid";
+			
+			public const string CustomerNeed = "customerneed";
+			
+			public const string CustomerPainPoints = "customerpainpoints";
+			
+			public const string DecisionMaker = "decisionmaker";
+			
+			public const string Description = "description";
+			
+			public const string DevelopProposal = "developproposal";
+			
+			public const string DiscountAmount = "discountamount";
+			
+			public const string DiscountAmount_Base = "discountamount_base";
+			
+			public const string DiscountPercentage = "discountpercentage";
+			
+			public const string ed_AcceptFinalProposal = "ed_acceptfinalproposal";
+			
+			public const string ed_campaigndateend = "ed_campaigndateend";
+			
+			public const string ed_campaigndatestart = "ed_campaigndatestart";
+			
+			public const string ed_contact = "ed_contact";
+			
+			public const string ed_CustomerNeedCheck = "ed_customerneedcheck";
+			
+			public const string ed_EstWeightedRevenue = "ed_estweightedrevenue";
+			
+			public const string ed_estweightedrevenue_Base = "ed_estweightedrevenue_base";
+			
+			public const string ed_infotainmentcustomer = "ed_infotainmentcustomer";
+			
+			public const string ed_mediabusiness = "ed_mediabusiness";
+			
+			public const string ed_priceinctax = "ed_priceinctax";
+			
+			public const string ed_priceinctax_Base = "ed_priceinctax_base";
+			
+			public const string ed_productcategory = "ed_productcategory";
+			
+			public const string ed_producttype = "ed_producttype";
+			
+			public const string ed_ProposedSolutionCheck = "ed_proposedsolutioncheck";
+			
+			public const string ed_taxcalculation = "ed_taxcalculation";
+			
+			public const string ed_taxcalculation_Base = "ed_taxcalculation_base";
+			
+			public const string ed_volymcustomer = "ed_volymcustomer";
+			
+			public const string EmailAddress = "emailaddress";
+			
+			public const string EstimatedCloseDate = "estimatedclosedate";
+			
+			public const string EstimatedValue = "estimatedvalue";
+			
+			public const string EstimatedValue_Base = "estimatedvalue_base";
+			
+			public const string EvaluateFit = "evaluatefit";
+			
+			public const string ExchangeRate = "exchangerate";
+			
+			public const string FileDebrief = "filedebrief";
+			
+			public const string FinalDecisionDate = "finaldecisiondate";
+			
+			public const string FreightAmount = "freightamount";
+			
+			public const string FreightAmount_Base = "freightamount_base";
+			
+			public const string IdentifyCompetitors = "identifycompetitors";
+			
+			public const string IdentifyCustomerContacts = "identifycustomercontacts";
+			
+			public const string IdentifyPursuitTeam = "identifypursuitteam";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string InitialCommunication = "initialcommunication";
+			
+			public const string IsRevenueSystemCalculated = "isrevenuesystemcalculated";
+			
+			public const string LastOnHoldTime = "lastonholdtime";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string Name = "name";
+			
+			public const string Need = "need";
+			
+			public const string OnHoldTime = "onholdtime";
+			
+			public const string OpportunityId = "opportunityid";
+			
+			public const string Id = "opportunityid";
+			
+			public const string OpportunityRatingCode = "opportunityratingcode";
+			
+			public const string OriginatingLeadId = "originatingleadid";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string OwnerId = "ownerid";
+			
+			public const string OwningBusinessUnit = "owningbusinessunit";
+			
+			public const string OwningTeam = "owningteam";
+			
+			public const string OwningUser = "owninguser";
+			
+			public const string ParentAccountId = "parentaccountid";
+			
+			public const string ParentContactId = "parentcontactid";
+			
+			public const string ParticipatesInWorkflow = "participatesinworkflow";
+			
+			public const string PresentFinalProposal = "presentfinalproposal";
+			
+			public const string PresentProposal = "presentproposal";
+			
+			public const string PriceLevelId = "pricelevelid";
+			
+			public const string PricingErrorCode = "pricingerrorcode";
+			
+			public const string PriorityCode = "prioritycode";
+			
+			public const string ProcessId = "processid";
+			
+			public const string ProposedSolution = "proposedsolution";
+			
+			public const string PurchaseProcess = "purchaseprocess";
+			
+			public const string PurchaseTimeframe = "purchasetimeframe";
+			
+			public const string PursuitDecision = "pursuitdecision";
+			
+			public const string QualificationComments = "qualificationcomments";
+			
+			public const string QuoteComments = "quotecomments";
+			
+			public const string ResolveFeedback = "resolvefeedback";
+			
+			public const string SalesStage = "salesstage";
+			
+			public const string SalesStageCode = "salesstagecode";
+			
+			public const string ScheduleFollowup_Prospect = "schedulefollowup_prospect";
+			
+			public const string ScheduleFollowup_Qualify = "schedulefollowup_qualify";
+			
+			public const string ScheduleProposalMeeting = "scheduleproposalmeeting";
+			
+			public const string SendThankYouNote = "sendthankyounote";
+			
+			public const string SkipPriceCalculation = "skippricecalculation";
+			
+			public const string SLAId = "slaid";
+			
+			public const string SLAInvokedId = "slainvokedid";
+			
+			public const string StageId = "stageid";
+			
+			public const string StateCode = "statecode";
+			
+			public const string StatusCode = "statuscode";
+			
+			public const string StepId = "stepid";
+			
+			public const string StepName = "stepname";
+			
+			public const string TimeLine = "timeline";
+			
+			public const string TimeSpentByMeOnEmailAndMeetings = "timespentbymeonemailandmeetings";
+			
+			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
+			
+			public const string TotalAmount = "totalamount";
+			
+			public const string TotalAmount_Base = "totalamount_base";
+			
+			public const string TotalAmountLessFreight = "totalamountlessfreight";
+			
+			public const string TotalAmountLessFreight_Base = "totalamountlessfreight_base";
+			
+			public const string TotalDiscountAmount = "totaldiscountamount";
+			
+			public const string TotalDiscountAmount_Base = "totaldiscountamount_base";
+			
+			public const string TotalLineItemAmount = "totallineitemamount";
+			
+			public const string TotalLineItemAmount_Base = "totallineitemamount_base";
+			
+			public const string TotalLineItemDiscountAmount = "totallineitemdiscountamount";
+			
+			public const string TotalLineItemDiscountAmount_Base = "totallineitemdiscountamount_base";
+			
+			public const string TotalTax = "totaltax";
+			
+			public const string TotalTax_Base = "totaltax_base";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
+			
+			public const string TraversedPath = "traversedpath";
+			
+			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
+			
+			public const string VersionNumber = "versionnumber";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int CurrentSituation = 2000;
+			
+			public const int CustomerNeed = 2000;
+			
+			public const int CustomerPainPoints = 2000;
+			
+			public const int Description = 2000;
+			
+			public const int EmailAddress = 100;
+			
+			public const int Name = 300;
+			
+			public const int ProposedSolution = 2000;
+			
+			public const int QualificationComments = 2000;
+			
+			public const int QuoteComments = 2000;
+			
+			public const int StepName = 200;
+			
+			public const int TimeSpentByMeOnEmailAndMeetings = 1250;
+			
+			public const int TraversedPath = 1250;
+		}
+	}
+	
+	/// <summary>
+	/// Association between an opportunity and a product.
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("opportunityproduct")]
+	public partial class OpportunityProduct : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public OpportunityProduct() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "opportunityproduct";
+		
+		public const int EntityTypeCode = 1083;
+		
+		/// <summary>
+		/// Shows the total price of the opportunity product, based on the price per unit, volume discount, and quantity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("baseamount")]
+		public Microsoft.Xrm.Sdk.Money BaseAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("baseamount");
+			}
+			set
+			{
+				this.SetAttributeValue("baseamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Amount field converted to the system's default base currency. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("baseamount_base")]
+		public Microsoft.Xrm.Sdk.Money BaseAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("baseamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who created the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was created. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who created the record on behalf of another user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Type additional information to describe the opportunity product, such as manufacturing details.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("description")]
+		public string Description
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("description");
+			}
+			set
+			{
+				this.SetAttributeValue("description", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_fromdate")]
+		public System.Nullable<System.DateTime> ed_Fromdate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_fromdate");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_fromdate", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_todate")]
+		public System.Nullable<System.DateTime> ed_ToDate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_todate");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_todate", value);
+			}
+		}
+		
+		/// <summary>
+		/// The default image for the entity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage")]
+		public byte[] EntityImage
+		{
+			get
+			{
+				return this.GetAttributeValue<byte[]>("entityimage");
+			}
+			set
+			{
+				this.SetAttributeValue("entityimage", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage_timestamp")]
+		public System.Nullable<long> EntityImage_Timestamp
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("entityimage_timestamp");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage_url")]
+		public string EntityImage_URL
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("entityimage_url");
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimageid")]
+		public System.Nullable<System.Guid> EntityImageId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("entityimageid");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the conversion rate of the record's currency. The exchange rate is used to convert all money fields in the record from the local currency to the system's default currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total amount due for the opportunity product, calculated on the Amount value minus the Manual Discount amount.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("extendedamount")]
+		public Microsoft.Xrm.Sdk.Money ExtendedAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("extendedamount");
+			}
+			set
+			{
+				this.SetAttributeValue("extendedamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Extended Amount field converted to the system's default base currency. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("extendedamount_base")]
+		public Microsoft.Xrm.Sdk.Money ExtendedAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("extendedamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data import or data migration that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the pricing on the opportunity product reflects an override of the product catalog pricing.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ispriceoverridden")]
+		public System.Nullable<bool> IsPriceOverridden
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ispriceoverridden");
+			}
+			set
+			{
+				this.SetAttributeValue("ispriceoverridden", value);
+			}
+		}
+		
+		/// <summary>
+		/// For system use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isproductoverridden")]
+		public System.Nullable<bool> IsProductOverridden
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isproductoverridden");
+			}
+			set
+			{
+				this.SetAttributeValue("isproductoverridden", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the line item number for the opportunity product to easily identify the product in the opportunity documents and make sure it's listed in the correct order.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("lineitemnumber")]
+		public System.Nullable<int> LineItemNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("lineitemnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("lineitemnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the manual discount amount for the opportunity product to deduct any negotiated or other savings from the product total.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("manualdiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ManualDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("manualdiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("manualdiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Manual Discount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("manualdiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ManualDiscountAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("manualdiscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who last updated the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was last updated. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who last modified the opportunityproduct.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// product_opportunities
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunityid")]
+		public Microsoft.Xrm.Sdk.EntityReference OpportunityId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("opportunityid");
+			}
+			set
+			{
+				this.SetAttributeValue("opportunityid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the opportunity product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunityproductid")]
+		public System.Nullable<System.Guid> OpportunityProductId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("opportunityproductid");
+			}
+			set
+			{
+				this.SetAttributeValue("opportunityproductid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunityproductid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.OpportunityProductId = value;
+			}
+		}
+		
+		/// <summary>
+		/// Opportunity Product Name. Added for 1:n Referential relationship
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunityproductname")]
+		public string OpportunityProductName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("opportunityproductname");
+			}
+			set
+			{
+				this.SetAttributeValue("opportunityproductname", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select the status of the opportunity product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunitystatecode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue OpportunityStateCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("opportunitystatecode");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user or team who owns the opportunity product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ownerid")]
+		public Microsoft.Xrm.Sdk.EntityReference OwnerId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ownerid");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the business unit that owns the opportunity product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningbusinessunit")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningBusinessUnit
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningbusinessunit");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for the team that owns the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningTeam
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningteam");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who owns the opportunity product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		public System.Nullable<System.Guid> OwningUser
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("owninguser");
+			}
+		}
+		
+		/// <summary>
+		/// opportunityproduct_parent_opportunityproduct
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentbundleid")]
+		public System.Nullable<System.Guid> ParentBundleId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("parentbundleid");
+			}
+			set
+			{
+				this.SetAttributeValue("parentbundleid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the parent bundle associated with this product
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentbundleidref")]
+		public Microsoft.Xrm.Sdk.EntityReference ParentBundleIdRef
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("parentbundleidref");
+			}
+			set
+			{
+				this.SetAttributeValue("parentbundleidref", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the price per unit of the opportunity product, based on the price list specified on the parent opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("priceperunit")]
+		public Microsoft.Xrm.Sdk.Money PricePerUnit
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("priceperunit");
+			}
+			set
+			{
+				this.SetAttributeValue("priceperunit", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Price Per Unit field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("priceperunit_base")]
+		public Microsoft.Xrm.Sdk.Money PricePerUnit_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("priceperunit_base");
+			}
+		}
+		
+		/// <summary>
+		/// Select the pricing error for the opportunity product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pricingerrorcode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PricingErrorCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("pricingerrorcode");
+			}
+			set
+			{
+				this.SetAttributeValue("pricingerrorcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// productAssociation_opportunity_product
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productassociationid")]
+		public System.Nullable<System.Guid> ProductAssociationId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("productassociationid");
+			}
+			set
+			{
+				this.SetAttributeValue("productassociationid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a detailed product description or additional notes about the opportunity product, such as talking points or product updates, that will assist the sales team when they discuss the product with the customer.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productdescription")]
+		public string ProductDescription
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("productdescription");
+			}
+			set
+			{
+				this.SetAttributeValue("productdescription", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the product to include on the opportunity to link the product's pricing and other information to the opportunity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productid")]
+		public Microsoft.Xrm.Sdk.EntityReference ProductId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("productid");
+			}
+			set
+			{
+				this.SetAttributeValue("productid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Calculated field that will be populated by name and description of the product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productname")]
+		public string ProductName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("productname");
+			}
+			set
+			{
+				this.SetAttributeValue("productname", value);
+			}
+		}
+		
+		/// <summary>
+		/// Product Type
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("producttypecode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ProductTypeCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("producttypecode");
+			}
+			set
+			{
+				this.SetAttributeValue("producttypecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Status of the property configuration.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("propertyconfigurationstatus")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PropertyConfigurationStatus
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("propertyconfigurationstatus");
+			}
+			set
+			{
+				this.SetAttributeValue("propertyconfigurationstatus", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the amount or quantity of the product the customer would like to purchase.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quantity")]
+		public System.Nullable<decimal> Quantity
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("quantity");
+			}
+			set
+			{
+				this.SetAttributeValue("quantity", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the data that maintains the sequence.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("sequencenumber")]
+		public System.Nullable<int> SequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("sequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("sequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Skip price calculation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("skippricecalculation")]
+		public Microsoft.Xrm.Sdk.OptionSetValue SkipPriceCalculation
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("skippricecalculation");
+			}
+			set
+			{
+				this.SetAttributeValue("skippricecalculation", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the tax amount to be applied on the opportunity product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("tax")]
+		public Microsoft.Xrm.Sdk.Money Tax
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("tax");
+			}
+			set
+			{
+				this.SetAttributeValue("tax", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Tax field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("tax_base")]
+		public Microsoft.Xrm.Sdk.Money Tax_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("tax_base");
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timezoneruleversionnumber")]
+		public System.Nullable<int> TimeZoneRuleVersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("timezoneruleversionnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the local currency for the record to make sure budgets are reported in the correct currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public Microsoft.Xrm.Sdk.EntityReference TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the unit of measurement for the base unit quantity for this purchase, such as each or dozen.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("uomid")]
+		public Microsoft.Xrm.Sdk.EntityReference UoMId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("uomid");
+			}
+			set
+			{
+				this.SetAttributeValue("uomid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Time zone code that was in use when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("utcconversiontimezonecode")]
+		public System.Nullable<int> UTCConversionTimeZoneCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("utcconversiontimezonecode");
+			}
+			set
+			{
+				this.SetAttributeValue("utcconversiontimezonecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the opportunity product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the discount amount per unit if a specified volume is purchased. Configure volume discounts in the Product Catalog in the Settings area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("volumediscountamount")]
+		public Microsoft.Xrm.Sdk.Money VolumeDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("volumediscountamount");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Volume Discount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("volumediscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money VolumeDiscountAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("volumediscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N OpportunityProduct_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("OpportunityProduct_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> OpportunityProduct_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("OpportunityProduct_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("OpportunityProduct_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N opportunityproduct_parent_opportunityproduct
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunityproduct_parent_opportunityproduct", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct> Referencedopportunityproduct_parent_opportunityproduct
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("opportunityproduct_parent_opportunityproduct", Microsoft.Xrm.Sdk.EntityRole.Referenced);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("opportunityproduct_parent_opportunityproduct", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N opportunityproduct_parentref_opportunityproduct
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunityproduct_parentref_opportunityproduct", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct> Referencedopportunityproduct_parentref_opportunityproduct
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("opportunityproduct_parentref_opportunityproduct", Microsoft.Xrm.Sdk.EntityRole.Referenced);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("opportunityproduct_parentref_opportunityproduct", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N opportunityproduct_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunityproduct_Teams")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> opportunityproduct_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("opportunityproduct_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("opportunityproduct_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_opportunityproduct_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunityproduct_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_opportunityproduct_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_opportunityproduct_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_opportunityproduct_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunityproduct_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_opportunityproduct_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_opportunityproduct_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_opportunityproductbase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunityproductbase_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_opportunityproductbase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_opportunityproductbase_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_opportunityproductbase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunityproductbase_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_opportunityproductbase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_opportunityproductbase_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 opportunity_products
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_products")]
+		public Skanetrafiken.Crm.Schema.Generated.Product opportunity_products
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Product>("opportunity_products", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Product>("opportunity_products", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 opportunityproduct_parent_opportunityproduct
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentbundleid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunityproduct_parent_opportunityproduct", Microsoft.Xrm.Sdk.EntityRole.Referencing)]
+		public Skanetrafiken.Crm.Schema.Generated.OpportunityProduct Referencingopportunityproduct_parent_opportunityproduct
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("opportunityproduct_parent_opportunityproduct", Microsoft.Xrm.Sdk.EntityRole.Referencing);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("opportunityproduct_parent_opportunityproduct", Microsoft.Xrm.Sdk.EntityRole.Referencing, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 opportunityproduct_parentref_opportunityproduct
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentbundleidref")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunityproduct_parentref_opportunityproduct", Microsoft.Xrm.Sdk.EntityRole.Referencing)]
+		public Skanetrafiken.Crm.Schema.Generated.OpportunityProduct Referencingopportunityproduct_parentref_opportunityproduct
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("opportunityproduct_parentref_opportunityproduct", Microsoft.Xrm.Sdk.EntityRole.Referencing);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("opportunityproduct_parentref_opportunityproduct", Microsoft.Xrm.Sdk.EntityRole.Referencing, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 product_opportunities
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunityid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("product_opportunities")]
+		public Skanetrafiken.Crm.Schema.Generated.Opportunity product_opportunities
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("product_opportunities", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("product_opportunities", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_opportunityproduct
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_opportunityproduct")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_opportunityproduct
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_opportunityproduct", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 transactioncurrency_opportunityproduct
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_opportunityproduct")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_opportunityproduct
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_opportunityproduct", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_opportunityproduct", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 unit_of_measurement_opportunity_products
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("uomid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("unit_of_measurement_opportunity_products")]
+		public Skanetrafiken.Crm.Schema.Generated.UoM unit_of_measurement_opportunity_products
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.UoM>("unit_of_measurement_opportunity_products", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.UoM>("unit_of_measurement_opportunity_products", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 user_opportunityproduct
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_opportunityproduct")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser user_opportunityproduct
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("user_opportunityproduct", null);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string BaseAmount = "baseamount";
+			
+			public const string BaseAmount_Base = "baseamount_base";
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string Description = "description";
+			
+			public const string ed_Fromdate = "ed_fromdate";
+			
+			public const string ed_ToDate = "ed_todate";
+			
+			public const string EntityImage = "entityimage";
+			
+			public const string EntityImage_Timestamp = "entityimage_timestamp";
+			
+			public const string EntityImage_URL = "entityimage_url";
+			
+			public const string EntityImageId = "entityimageid";
+			
+			public const string ExchangeRate = "exchangerate";
+			
+			public const string ExtendedAmount = "extendedamount";
+			
+			public const string ExtendedAmount_Base = "extendedamount_base";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string IsPriceOverridden = "ispriceoverridden";
+			
+			public const string IsProductOverridden = "isproductoverridden";
+			
+			public const string LineItemNumber = "lineitemnumber";
+			
+			public const string ManualDiscountAmount = "manualdiscountamount";
+			
+			public const string ManualDiscountAmount_Base = "manualdiscountamount_base";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string OpportunityId = "opportunityid";
+			
+			public const string OpportunityProductId = "opportunityproductid";
+			
+			public const string Id = "opportunityproductid";
+			
+			public const string OpportunityProductName = "opportunityproductname";
+			
+			public const string OpportunityStateCode = "opportunitystatecode";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string OwnerId = "ownerid";
+			
+			public const string OwningBusinessUnit = "owningbusinessunit";
+			
+			public const string OwningTeam = "owningteam";
+			
+			public const string OwningUser = "owninguser";
+			
+			public const string ParentBundleId = "parentbundleid";
+			
+			public const string ParentBundleIdRef = "parentbundleidref";
+			
+			public const string PricePerUnit = "priceperunit";
+			
+			public const string PricePerUnit_Base = "priceperunit_base";
+			
+			public const string PricingErrorCode = "pricingerrorcode";
+			
+			public const string ProductAssociationId = "productassociationid";
+			
+			public const string ProductDescription = "productdescription";
+			
+			public const string ProductId = "productid";
+			
+			public const string ProductName = "productname";
+			
+			public const string ProductTypeCode = "producttypecode";
+			
+			public const string PropertyConfigurationStatus = "propertyconfigurationstatus";
+			
+			public const string Quantity = "quantity";
+			
+			public const string SequenceNumber = "sequencenumber";
+			
+			public const string SkipPriceCalculation = "skippricecalculation";
+			
+			public const string Tax = "tax";
+			
+			public const string Tax_Base = "tax_base";
+			
+			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
+			
+			public const string UoMId = "uomid";
+			
+			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
+			
+			public const string VersionNumber = "versionnumber";
+			
+			public const string VolumeDiscountAmount = "volumediscountamount";
+			
+			public const string VolumeDiscountAmount_Base = "volumediscountamount_base";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int Description = 2000;
+			
+			public const int EntityImage_URL = 200;
+			
+			public const int OpportunityProductName = 250;
+			
+			public const int ProductDescription = 500;
+			
+			public const int ProductName = 500;
 		}
 	}
 	
@@ -80698,6 +85127,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 Opportunity_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Opportunity_Phonecalls")]
+		public Skanetrafiken.Crm.Schema.Generated.Opportunity Opportunity_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("Opportunity_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("Opportunity_Phonecalls", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 processstage_phonecalls
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
@@ -80711,6 +85157,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_phonecalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Quote_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Quote_Phonecalls")]
+		public Skanetrafiken.Crm.Schema.Generated.Quote Quote_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("Quote_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("Quote_Phonecalls", null, value);
 			}
 		}
 		
@@ -81372,6 +85835,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N price_level_opportunties
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("price_level_opportunties")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> price_level_opportunties
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("price_level_opportunties", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("price_level_opportunties", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N price_level_orders
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("price_level_orders")]
@@ -81416,6 +85895,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Product>("price_level_products", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N price_level_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("price_level_quotes")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Quote> price_level_quotes
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("price_level_quotes", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("price_level_quotes", null, value);
 			}
 		}
 		
@@ -81931,6 +86426,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N processstage_opportunity
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_opportunity")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> processstage_opportunity
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("processstage_opportunity", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("processstage_opportunity", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N processstage_phonecalls
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_phonecalls")]
@@ -81975,6 +86486,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Product>("processstage_products", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N processstage_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_quotes")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Quote> processstage_quotes
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("processstage_quotes", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("processstage_quotes", null, value);
 			}
 		}
 		
@@ -83047,6 +87574,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N opportunity_products
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_products")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct> opportunity_products
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("opportunity_products", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("opportunity_products", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N Product_Annotation
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Product_Annotation")]
@@ -83139,6 +87682,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ProductPriceLevel>("product_price_levels", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N product_quote_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("product_quote_details")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QuoteDetail> product_quote_details
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("product_quote_details", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("product_quote_details", null, value);
 			}
 		}
 		
@@ -86679,6 +91238,3868 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 	}
 	
+	public enum QuoteState
+	{
+		
+		Draft = 0,
+		
+		Active = 1,
+		
+		Won = 2,
+		
+		Closed = 3,
+	}
+	
+	/// <summary>
+	/// Formal offer for products and/or services, proposed at specific prices and related payment terms, which is sent to a prospective customer.
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("quote")]
+	public partial class Quote : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public Quote() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "quote";
+		
+		public const int EntityTypeCode = 1084;
+		
+		/// <summary>
+		/// Unique identifier of the account with which the quote is associated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("accountid")]
+		public Microsoft.Xrm.Sdk.EntityReference AccountId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("accountid");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_addressid")]
+		public System.Nullable<System.Guid> BillTo_AddressId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("billto_addressid");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_addressid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the city for the customer's billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_city")]
+		public string BillTo_City
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_city");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_city", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the complete Bill To address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_composite")]
+		public string BillTo_Composite
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_composite");
+			}
+		}
+		
+		/// <summary>
+		/// Type the primary contact name at the customer's billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_contactname")]
+		public string BillTo_ContactName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_contactname");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_contactname", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the country or region for the customer's billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_country")]
+		public string BillTo_Country
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_country");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_country", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the fax number for the customer's billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_fax")]
+		public string BillTo_Fax
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_fax");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_fax", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the first line of the customer's billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_line1")]
+		public string BillTo_Line1
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_line1");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_line1", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the second line of the customer's billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_line2")]
+		public string BillTo_Line2
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_line2");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_line2", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the third line of the billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_line3")]
+		public string BillTo_Line3
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_line3");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_line3", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a name for the customer's billing address, such as "Headquarters" or "Field office", to identify the address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_name")]
+		public string BillTo_Name
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_name");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_name", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the ZIP Code or postal code for the billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_postalcode")]
+		public string BillTo_PostalCode
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_postalcode");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_postalcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the state or province for the billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_stateorprovince")]
+		public string BillTo_StateOrProvince
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_stateorprovince");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_stateorprovince", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the phone number for the customer's billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_telephone")]
+		public string BillTo_Telephone
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_telephone");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_telephone", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the campaign that the order was created from.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("campaignid")]
+		public Microsoft.Xrm.Sdk.EntityReference CampaignId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("campaignid");
+			}
+			set
+			{
+				this.SetAttributeValue("campaignid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the date when the quote was closed to indicate the expiration, revision, or cancellation date.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("closedon")]
+		public System.Nullable<System.DateTime> ClosedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("closedon");
+			}
+			set
+			{
+				this.SetAttributeValue("closedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the contact associated with the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("contactid")]
+		public Microsoft.Xrm.Sdk.EntityReference ContactId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("contactid");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who created the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was created. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who created the record on behalf of another user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Select the customer account or contact to provide a quick link to additional customer details, such as account information, activities, and opportunities.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customerid")]
+		public Microsoft.Xrm.Sdk.EntityReference CustomerId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("customerid");
+			}
+			set
+			{
+				this.SetAttributeValue("customerid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type additional information to describe the quote, such as the products or services offered or details about the customer's product preferences.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("description")]
+		public string Description
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("description");
+			}
+			set
+			{
+				this.SetAttributeValue("description", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the discount amount for the quote if the customer is eligible for special savings.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("discountamount")]
+		public Microsoft.Xrm.Sdk.Money DiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("discountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("discountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Discount Amount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("discountamount_base")]
+		public Microsoft.Xrm.Sdk.Money DiscountAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("discountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Type the discount rate that should be applied to the Detail Amount field to include additional savings for the customer in the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("discountpercentage")]
+		public System.Nullable<decimal> DiscountPercentage
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("discountpercentage");
+			}
+			set
+			{
+				this.SetAttributeValue("discountpercentage", value);
+			}
+		}
+		
+		/// <summary>
+		/// Kampanjens slutdatum för Infotainment
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_campaigndateend")]
+		public System.Nullable<System.DateTime> ed_campaigndateend
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_campaigndateend");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_campaigndateend", value);
+			}
+		}
+		
+		/// <summary>
+		/// Kampanjens startdatum för Infotainment
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_campaigndatestart")]
+		public System.Nullable<System.DateTime> ed_campaigndatestart
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_campaigndatestart");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_campaigndatestart", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_contact")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_contact
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_contact");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_contact", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_infotainmentcustomer")]
+		public System.Nullable<bool> ed_infotainmentcustomer
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_infotainmentcustomer");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_infotainmentcustomer", value);
+			}
+		}
+		
+		/// <summary>
+		/// Indikerar om affärsmöjligheten är kopplad till en kund som är mediabyrå
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediabusiness")]
+		public System.Nullable<bool> ed_mediabusiness
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_mediabusiness");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediabusiness", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediabyrprovision")]
+		public string ed_Mediabyrprovision
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_mediabyrprovision");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediabyrprovision", value);
+			}
+		}
+		
+		/// <summary>
+		/// Totalt pris inklusive moms
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_priceinctax")]
+		public Microsoft.Xrm.Sdk.Money ed_priceinctax
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_priceinctax");
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Pris inkl. moms in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_priceinctax_base")]
+		public Microsoft.Xrm.Sdk.Money ed_priceinctax_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_priceinctax_base");
+			}
+		}
+		
+		/// <summary>
+		/// Datum för offertens giltighetstid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_quotedate")]
+		public System.Nullable<System.DateTime> ed_quotedate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_quotedate");
+			}
+		}
+		
+		/// <summary>
+		/// Total moms i kronor
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_taxcalculation")]
+		public Microsoft.Xrm.Sdk.Money ed_taxcalculation
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_taxcalculation");
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Momsuträkning in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_taxcalculation_base")]
+		public Microsoft.Xrm.Sdk.Money ed_taxcalculation_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_taxcalculation_base");
+			}
+		}
+		
+		/// <summary>
+		/// Indikerar om en kund är en volymkund
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_volymcustomer")]
+		public System.Nullable<bool> ed_volymcustomer
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_volymcustomer");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_volymcustomer", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the date when the quote pricing is effective or was first communicated to the customer.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("effectivefrom")]
+		public System.Nullable<System.DateTime> EffectiveFrom
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("effectivefrom");
+			}
+			set
+			{
+				this.SetAttributeValue("effectivefrom", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the expiration date or last day the quote pricing is effective for the customer.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("effectiveto")]
+		public System.Nullable<System.DateTime> EffectiveTo
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("effectiveto");
+			}
+			set
+			{
+				this.SetAttributeValue("effectiveto", value);
+			}
+		}
+		
+		/// <summary>
+		/// The primary email address for the entity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("emailaddress")]
+		public string EmailAddress
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("emailaddress");
+			}
+			set
+			{
+				this.SetAttributeValue("emailaddress", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the conversion rate of the record's currency. The exchange rate is used to convert all money fields in the record from the local currency to the system's default currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+		}
+		
+		/// <summary>
+		/// Enter the date a decision or order is due from the customer to indicate the expiration date of the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("expireson")]
+		public System.Nullable<System.DateTime> ExpiresOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("expireson");
+			}
+			set
+			{
+				this.SetAttributeValue("expireson", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the cost of freight or shipping for the products included in the quote for use in calculating the Total Amount field.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("freightamount")]
+		public Microsoft.Xrm.Sdk.Money FreightAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("freightamount");
+			}
+			set
+			{
+				this.SetAttributeValue("freightamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Freight Amount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("freightamount_base")]
+		public Microsoft.Xrm.Sdk.Money FreightAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("freightamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Select the freight terms to make sure shipping charges are processed correctly.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("freighttermscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue FreightTermsCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("freighttermscode");
+			}
+			set
+			{
+				this.SetAttributeValue("freighttermscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data import or data migration that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Contains the date time stamp of the last on hold time.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("lastonholdtime")]
+		public System.Nullable<System.DateTime> LastOnHoldTime
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("lastonholdtime");
+			}
+			set
+			{
+				this.SetAttributeValue("lastonholdtime", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows who last updated the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was last updated. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who last updated the record on behalf of another user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Type a descriptive name for the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("name")]
+		public string Name
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("name");
+			}
+			set
+			{
+				this.SetAttributeValue("name", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the duration in minutes for which the quote was on hold.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("onholdtime")]
+		public System.Nullable<int> OnHoldTime
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("onholdtime");
+			}
+		}
+		
+		/// <summary>
+		/// Choose the opportunity that the quote is related to for reporting and analytics.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunityid")]
+		public Microsoft.Xrm.Sdk.EntityReference OpportunityId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("opportunityid");
+			}
+			set
+			{
+				this.SetAttributeValue("opportunityid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the user or team who is assigned to manage the record. This field is updated every time the record is assigned to a different user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ownerid")]
+		public Microsoft.Xrm.Sdk.EntityReference OwnerId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ownerid");
+			}
+			set
+			{
+				this.SetAttributeValue("ownerid", value);
+			}
+		}
+		
+		/// <summary>
+		/// business_unit_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningbusinessunit")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningBusinessUnit
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningbusinessunit");
+			}
+		}
+		
+		/// <summary>
+		/// team_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningTeam
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningteam");
+			}
+		}
+		
+		/// <summary>
+		/// system_user_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningUser
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owninguser");
+			}
+		}
+		
+		/// <summary>
+		/// Select the payment terms to indicate when the customer needs to pay the total amount.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("paymenttermscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PaymentTermsCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("paymenttermscode");
+			}
+			set
+			{
+				this.SetAttributeValue("paymenttermscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the price list associated with this record to make sure the products associated with the campaign are offered at the correct prices.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pricelevelid")]
+		public Microsoft.Xrm.Sdk.EntityReference PriceLevelId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("pricelevelid");
+			}
+			set
+			{
+				this.SetAttributeValue("pricelevelid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Pricing error for the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pricingerrorcode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PricingErrorCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("pricingerrorcode");
+			}
+			set
+			{
+				this.SetAttributeValue("pricingerrorcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the process.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("processid")]
+		public System.Nullable<System.Guid> ProcessId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("processid");
+			}
+			set
+			{
+				this.SetAttributeValue("processid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quoteid")]
+		public System.Nullable<System.Guid> QuoteId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("quoteid");
+			}
+			set
+			{
+				this.SetAttributeValue("quoteid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quoteid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.QuoteId = value;
+			}
+		}
+		
+		/// <summary>
+		/// Shows the quote number for customer reference and searching capabilities. The number cannot be modified.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quotenumber")]
+		public string QuoteNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("quotenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("quotenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the delivery date requested by the customer for all products in the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("requestdeliveryby")]
+		public System.Nullable<System.DateTime> RequestDeliveryBy
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("requestdeliveryby");
+			}
+			set
+			{
+				this.SetAttributeValue("requestdeliveryby", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the version number of the quote for revision history tracking.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("revisionnumber")]
+		public System.Nullable<int> RevisionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("revisionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// Select a shipping method for deliveries sent to this address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shippingmethodcode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ShippingMethodCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("shippingmethodcode");
+			}
+			set
+			{
+				this.SetAttributeValue("shippingmethodcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_addressid")]
+		public System.Nullable<System.Guid> ShipTo_AddressId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("shipto_addressid");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_addressid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the city for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_city")]
+		public string ShipTo_City
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_city");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_city", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the complete Ship To address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_composite")]
+		public string ShipTo_Composite
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_composite");
+			}
+		}
+		
+		/// <summary>
+		/// Type the primary contact name at the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_contactname")]
+		public string ShipTo_ContactName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_contactname");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_contactname", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the country or region for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_country")]
+		public string ShipTo_Country
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_country");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_country", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the fax number for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_fax")]
+		public string ShipTo_Fax
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_fax");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_fax", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select the freight terms to make sure shipping orders are processed correctly.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_freighttermscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ShipTo_FreightTermsCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("shipto_freighttermscode");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_freighttermscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the first line of the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_line1")]
+		public string ShipTo_Line1
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_line1");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_line1", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the second line of the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_line2")]
+		public string ShipTo_Line2
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_line2");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_line2", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the third line of the shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_line3")]
+		public string ShipTo_Line3
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_line3");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_line3", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a name for the customer's shipping address, such as "Headquarters" or "Field office", to identify the address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_name")]
+		public string ShipTo_Name
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_name");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_name", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the ZIP Code or postal code for the shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_postalcode")]
+		public string ShipTo_PostalCode
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_postalcode");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_postalcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the state or province for the shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_stateorprovince")]
+		public string ShipTo_StateOrProvince
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_stateorprovince");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_stateorprovince", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the phone number for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_telephone")]
+		public string ShipTo_Telephone
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_telephone");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_telephone", value);
+			}
+		}
+		
+		/// <summary>
+		/// Skip Price Calculation (For Internal use)
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("skippricecalculation")]
+		public Microsoft.Xrm.Sdk.OptionSetValue SkipPriceCalculation
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("skippricecalculation");
+			}
+			set
+			{
+				this.SetAttributeValue("skippricecalculation", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the service level agreement (SLA) that you want to apply to the quote record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("slaid")]
+		public Microsoft.Xrm.Sdk.EntityReference SLAId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("slaid");
+			}
+			set
+			{
+				this.SetAttributeValue("slaid", value);
+			}
+		}
+		
+		/// <summary>
+		/// sla_quote
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("slainvokedid")]
+		public Microsoft.Xrm.Sdk.EntityReference SLAInvokedId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("slainvokedid");
+			}
+		}
+		
+		/// <summary>
+		/// processstage_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		public System.Nullable<System.Guid> StageId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("stageid");
+			}
+			set
+			{
+				this.SetAttributeValue("stageid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows whether the quote is draft, active, won, or closed. Only draft quotes can be edited.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.QuoteState> StateCode
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.QuoteState)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.QuoteState), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("statecode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statecode", new Microsoft.Xrm.Sdk.OptionSetValue(((int)(value))));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Select the quote's status.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue StatusCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+			}
+			set
+			{
+				this.SetAttributeValue("statuscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timezoneruleversionnumber")]
+		public System.Nullable<int> TimeZoneRuleVersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("timezoneruleversionnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total amount due, calculated as the sum of the products, discounts, freight, and taxes for the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totalamount")]
+		public Microsoft.Xrm.Sdk.Money TotalAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totalamount");
+			}
+			set
+			{
+				this.SetAttributeValue("totalamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Total Amount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totalamount_base")]
+		public Microsoft.Xrm.Sdk.Money TotalAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totalamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total product amount for the quote, minus any discounts. This value is added to freight and tax amounts in the calculation for the total amount due for the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totalamountlessfreight")]
+		public Microsoft.Xrm.Sdk.Money TotalAmountLessFreight
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totalamountlessfreight");
+			}
+			set
+			{
+				this.SetAttributeValue("totalamountlessfreight", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Pre-Freight Amount converted field to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totalamountlessfreight_base")]
+		public Microsoft.Xrm.Sdk.Money TotalAmountLessFreight_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totalamountlessfreight_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total discount amount, based on the discount price and rate entered on the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totaldiscountamount")]
+		public Microsoft.Xrm.Sdk.Money TotalDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totaldiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("totaldiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Total Discount Amount converted field to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totaldiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money TotalDiscountAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totaldiscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the sum of all existing and write-in products included on the quote, based on the specified price list and quantities.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totallineitemamount")]
+		public Microsoft.Xrm.Sdk.Money TotalLineItemAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totallineitemamount");
+			}
+			set
+			{
+				this.SetAttributeValue("totallineitemamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Detail Amount field converted to the system's default base currency. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totallineitemamount_base")]
+		public Microsoft.Xrm.Sdk.Money TotalLineItemAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totallineitemamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total of the Manual Discount amounts specified on all products included in the quote. This value is reflected in the Detail Amount field on the quote and is added to any discount amount or rate specified on the quote
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totallineitemdiscountamount")]
+		public Microsoft.Xrm.Sdk.Money TotalLineItemDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totallineitemdiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("totallineitemdiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Total Line Item Discount Amount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totallineitemdiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money TotalLineItemDiscountAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totallineitemdiscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total of the Tax amounts specified on all products included in the quote, included in the Total Amount due calculation for the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totaltax")]
+		public Microsoft.Xrm.Sdk.Money TotalTax
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totaltax");
+			}
+			set
+			{
+				this.SetAttributeValue("totaltax", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Total Tax field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totaltax_base")]
+		public Microsoft.Xrm.Sdk.Money TotalTax_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totaltax_base");
+			}
+		}
+		
+		/// <summary>
+		/// Choose the local currency for the record to make sure budgets are reported in the correct currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public Microsoft.Xrm.Sdk.EntityReference TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("traversedpath")]
+		public string TraversedPath
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("traversedpath");
+			}
+			set
+			{
+				this.SetAttributeValue("traversedpath", value);
+			}
+		}
+		
+		/// <summary>
+		/// Time zone code that was in use when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("utcconversiontimezonecode")]
+		public System.Nullable<int> UTCConversionTimeZoneCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("utcconversiontimezonecode");
+			}
+			set
+			{
+				this.SetAttributeValue("utcconversiontimezonecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the products included in the quote should be shipped to the specified address or held until the customer calls with further pick up or delivery instructions.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("willcall")]
+		public System.Nullable<bool> WillCall
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("willcall");
+			}
+			set
+			{
+				this.SetAttributeValue("willcall", value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_quote_ed_slots_Quote
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_quote_ed_slots_Quote")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_Slots> ed_quote_ed_slots_Quote
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_quote_ed_slots_Quote", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_quote_ed_slots_Quote", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N quote_activity_parties
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_activity_parties")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> quote_activity_parties
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ActivityParty>("quote_activity_parties", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ActivityParty>("quote_activity_parties", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Quote_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Quote_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> Quote_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Quote_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Quote_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Quote_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Quote_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> Quote_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Quote_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Quote_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Quote_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Quote_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> Quote_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("Quote_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("Quote_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N quote_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_details")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QuoteDetail> quote_details
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("quote_details", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("quote_details", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N quote_ed_notifymkls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_ed_notifymkls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl> quote_ed_notifymkls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl>("quote_ed_notifymkls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl>("quote_ed_notifymkls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N quote_ed_TextMessages
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_ed_TextMessages")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage> quote_ed_TextMessages
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage>("quote_ed_TextMessages", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage>("quote_ed_TextMessages", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Quote_Emails
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Quote_Emails")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Email> Quote_Emails
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("Quote_Emails", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("Quote_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N quote_orders
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_orders")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.SalesOrder> quote_orders
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SalesOrder>("quote_orders", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SalesOrder>("quote_orders", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Quote_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Quote_Phonecalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> Quote_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Quote_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Quote_Phonecalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N quote_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_Teams")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> quote_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("quote_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("quote_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:N contactquotes_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("contactquotes_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Contact> contactquotes_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Contact>("contactquotes_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Contact>("contactquotes_association", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 campaign_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("campaignid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("campaign_quotes")]
+		public Skanetrafiken.Crm.Schema.Generated.Campaign campaign_quotes
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Campaign>("campaign_quotes", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Campaign>("campaign_quotes", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_contact_quote_contact
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_contact")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_contact_quote_contact")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact ed_contact_quote_contact
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("ed_contact_quote_contact", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("ed_contact_quote_contact", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_quote_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quote_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_quote_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_quote_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_quote_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quote_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_quote_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_quote_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_quotebase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quotebase_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_quotebase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_quotebase_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_quotebase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quotebase_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_quotebase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_quotebase_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 opportunity_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunityid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_quotes")]
+		public Skanetrafiken.Crm.Schema.Generated.Opportunity opportunity_quotes
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_quotes", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_quotes", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 price_level_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pricelevelid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("price_level_quotes")]
+		public Skanetrafiken.Crm.Schema.Generated.PriceLevel price_level_quotes
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PriceLevel>("price_level_quotes", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PriceLevel>("price_level_quotes", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 processstage_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_quotes")]
+		public Skanetrafiken.Crm.Schema.Generated.ProcessStage processstage_quotes
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_quotes", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_quotes", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 quote_customer_accounts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customerid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_customer_accounts")]
+		public Skanetrafiken.Crm.Schema.Generated.Account quote_customer_accounts
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("quote_customer_accounts", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("quote_customer_accounts", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 quote_customer_contacts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customerid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_customer_contacts")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact quote_customer_contacts
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("quote_customer_contacts", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("quote_customer_contacts", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 system_user_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("system_user_quotes")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser system_user_quotes
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("system_user_quotes", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_quotes")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_quotes
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_quotes", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 transactioncurrency_quote
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_quote")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_quote
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_quote", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_quote", null, value);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string AccountId = "accountid";
+			
+			public const string BillTo_AddressId = "billto_addressid";
+			
+			public const string BillTo_City = "billto_city";
+			
+			public const string BillTo_Composite = "billto_composite";
+			
+			public const string BillTo_ContactName = "billto_contactname";
+			
+			public const string BillTo_Country = "billto_country";
+			
+			public const string BillTo_Fax = "billto_fax";
+			
+			public const string BillTo_Line1 = "billto_line1";
+			
+			public const string BillTo_Line2 = "billto_line2";
+			
+			public const string BillTo_Line3 = "billto_line3";
+			
+			public const string BillTo_Name = "billto_name";
+			
+			public const string BillTo_PostalCode = "billto_postalcode";
+			
+			public const string BillTo_StateOrProvince = "billto_stateorprovince";
+			
+			public const string BillTo_Telephone = "billto_telephone";
+			
+			public const string CampaignId = "campaignid";
+			
+			public const string ClosedOn = "closedon";
+			
+			public const string ContactId = "contactid";
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string CustomerId = "customerid";
+			
+			public const string Description = "description";
+			
+			public const string DiscountAmount = "discountamount";
+			
+			public const string DiscountAmount_Base = "discountamount_base";
+			
+			public const string DiscountPercentage = "discountpercentage";
+			
+			public const string ed_campaigndateend = "ed_campaigndateend";
+			
+			public const string ed_campaigndatestart = "ed_campaigndatestart";
+			
+			public const string ed_contact = "ed_contact";
+			
+			public const string ed_infotainmentcustomer = "ed_infotainmentcustomer";
+			
+			public const string ed_mediabusiness = "ed_mediabusiness";
+			
+			public const string ed_Mediabyrprovision = "ed_mediabyrprovision";
+			
+			public const string ed_priceinctax = "ed_priceinctax";
+			
+			public const string ed_priceinctax_Base = "ed_priceinctax_base";
+			
+			public const string ed_quotedate = "ed_quotedate";
+			
+			public const string ed_taxcalculation = "ed_taxcalculation";
+			
+			public const string ed_taxcalculation_Base = "ed_taxcalculation_base";
+			
+			public const string ed_volymcustomer = "ed_volymcustomer";
+			
+			public const string EffectiveFrom = "effectivefrom";
+			
+			public const string EffectiveTo = "effectiveto";
+			
+			public const string EmailAddress = "emailaddress";
+			
+			public const string ExchangeRate = "exchangerate";
+			
+			public const string ExpiresOn = "expireson";
+			
+			public const string FreightAmount = "freightamount";
+			
+			public const string FreightAmount_Base = "freightamount_base";
+			
+			public const string FreightTermsCode = "freighttermscode";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string LastOnHoldTime = "lastonholdtime";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string Name = "name";
+			
+			public const string OnHoldTime = "onholdtime";
+			
+			public const string OpportunityId = "opportunityid";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string OwnerId = "ownerid";
+			
+			public const string OwningBusinessUnit = "owningbusinessunit";
+			
+			public const string OwningTeam = "owningteam";
+			
+			public const string OwningUser = "owninguser";
+			
+			public const string PaymentTermsCode = "paymenttermscode";
+			
+			public const string PriceLevelId = "pricelevelid";
+			
+			public const string PricingErrorCode = "pricingerrorcode";
+			
+			public const string ProcessId = "processid";
+			
+			public const string QuoteId = "quoteid";
+			
+			public const string Id = "quoteid";
+			
+			public const string QuoteNumber = "quotenumber";
+			
+			public const string RequestDeliveryBy = "requestdeliveryby";
+			
+			public const string RevisionNumber = "revisionnumber";
+			
+			public const string ShippingMethodCode = "shippingmethodcode";
+			
+			public const string ShipTo_AddressId = "shipto_addressid";
+			
+			public const string ShipTo_City = "shipto_city";
+			
+			public const string ShipTo_Composite = "shipto_composite";
+			
+			public const string ShipTo_ContactName = "shipto_contactname";
+			
+			public const string ShipTo_Country = "shipto_country";
+			
+			public const string ShipTo_Fax = "shipto_fax";
+			
+			public const string ShipTo_FreightTermsCode = "shipto_freighttermscode";
+			
+			public const string ShipTo_Line1 = "shipto_line1";
+			
+			public const string ShipTo_Line2 = "shipto_line2";
+			
+			public const string ShipTo_Line3 = "shipto_line3";
+			
+			public const string ShipTo_Name = "shipto_name";
+			
+			public const string ShipTo_PostalCode = "shipto_postalcode";
+			
+			public const string ShipTo_StateOrProvince = "shipto_stateorprovince";
+			
+			public const string ShipTo_Telephone = "shipto_telephone";
+			
+			public const string SkipPriceCalculation = "skippricecalculation";
+			
+			public const string SLAId = "slaid";
+			
+			public const string SLAInvokedId = "slainvokedid";
+			
+			public const string StageId = "stageid";
+			
+			public const string StateCode = "statecode";
+			
+			public const string StatusCode = "statuscode";
+			
+			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
+			
+			public const string TotalAmount = "totalamount";
+			
+			public const string TotalAmount_Base = "totalamount_base";
+			
+			public const string TotalAmountLessFreight = "totalamountlessfreight";
+			
+			public const string TotalAmountLessFreight_Base = "totalamountlessfreight_base";
+			
+			public const string TotalDiscountAmount = "totaldiscountamount";
+			
+			public const string TotalDiscountAmount_Base = "totaldiscountamount_base";
+			
+			public const string TotalLineItemAmount = "totallineitemamount";
+			
+			public const string TotalLineItemAmount_Base = "totallineitemamount_base";
+			
+			public const string TotalLineItemDiscountAmount = "totallineitemdiscountamount";
+			
+			public const string TotalLineItemDiscountAmount_Base = "totallineitemdiscountamount_base";
+			
+			public const string TotalTax = "totaltax";
+			
+			public const string TotalTax_Base = "totaltax_base";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
+			
+			public const string TraversedPath = "traversedpath";
+			
+			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
+			
+			public const string VersionNumber = "versionnumber";
+			
+			public const string WillCall = "willcall";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int BillTo_City = 80;
+			
+			public const int BillTo_Composite = 1000;
+			
+			public const int BillTo_ContactName = 150;
+			
+			public const int BillTo_Country = 80;
+			
+			public const int BillTo_Fax = 50;
+			
+			public const int BillTo_Line1 = 250;
+			
+			public const int BillTo_Line2 = 250;
+			
+			public const int BillTo_Line3 = 250;
+			
+			public const int BillTo_Name = 200;
+			
+			public const int BillTo_PostalCode = 20;
+			
+			public const int BillTo_StateOrProvince = 50;
+			
+			public const int BillTo_Telephone = 50;
+			
+			public const int Description = 2000;
+			
+			public const int ed_Mediabyrprovision = 100;
+			
+			public const int EmailAddress = 100;
+			
+			public const int Name = 300;
+			
+			public const int QuoteNumber = 100;
+			
+			public const int ShipTo_City = 80;
+			
+			public const int ShipTo_Composite = 1000;
+			
+			public const int ShipTo_ContactName = 150;
+			
+			public const int ShipTo_Country = 80;
+			
+			public const int ShipTo_Fax = 50;
+			
+			public const int ShipTo_Line1 = 250;
+			
+			public const int ShipTo_Line2 = 250;
+			
+			public const int ShipTo_Line3 = 250;
+			
+			public const int ShipTo_Name = 200;
+			
+			public const int ShipTo_PostalCode = 20;
+			
+			public const int ShipTo_StateOrProvince = 50;
+			
+			public const int ShipTo_Telephone = 50;
+			
+			public const int TraversedPath = 1250;
+		}
+	}
+	
+	/// <summary>
+	/// Product line item in a quote. The details include such information as product ID, description, quantity, and cost.
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("quotedetail")]
+	public partial class QuoteDetail : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public QuoteDetail() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "quotedetail";
+		
+		public const int EntityTypeCode = 1085;
+		
+		/// <summary>
+		/// Shows the total price of the quote product, based on the price per unit, volume discount, and quantity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("baseamount")]
+		public Microsoft.Xrm.Sdk.Money BaseAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("baseamount");
+			}
+			set
+			{
+				this.SetAttributeValue("baseamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Amount field converted to the system's default base currency. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("baseamount_base")]
+		public Microsoft.Xrm.Sdk.Money BaseAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("baseamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who created the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was created. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who created the record on behalf of another user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Type additional information to describe the quote product, such as manufacturing details or acceptable substitutions.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("description")]
+		public string Description
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("description");
+			}
+			set
+			{
+				this.SetAttributeValue("description", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_fromdate")]
+		public System.Nullable<System.DateTime> ed_FromDate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_fromdate");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_fromdate", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_slotsperday")]
+		public System.Nullable<int> ed_slotsperday
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("ed_slotsperday");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_slotsperday", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_todate")]
+		public System.Nullable<System.DateTime> ed_ToDate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_todate");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_todate", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the conversion rate of the record's currency. The exchange rate is used to convert all money fields in the record from the local currency to the system's default currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total amount due for the quote product, based on the sum of the unit price, quantity, discounts ,and tax.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("extendedamount")]
+		public Microsoft.Xrm.Sdk.Money ExtendedAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("extendedamount");
+			}
+			set
+			{
+				this.SetAttributeValue("extendedamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Extended Amount field converted to the system's default base currency. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("extendedamount_base")]
+		public Microsoft.Xrm.Sdk.Money ExtendedAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("extendedamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data import or data migration that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the price per unit is fixed at the value in the specified price list or can be overridden by users who have edit rights to the quote product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ispriceoverridden")]
+		public System.Nullable<bool> IsPriceOverridden
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ispriceoverridden");
+			}
+			set
+			{
+				this.SetAttributeValue("ispriceoverridden", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the product exists in the Microsoft Dynamics CRM product catalog or is a write-in product specific to the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isproductoverridden")]
+		public System.Nullable<bool> IsProductOverridden
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isproductoverridden");
+			}
+			set
+			{
+				this.SetAttributeValue("isproductoverridden", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the line item number for the quote product to easily identify the product in the quote and make sure it's listed in the correct order.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("lineitemnumber")]
+		public System.Nullable<int> LineItemNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("lineitemnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("lineitemnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the manual discount amount for the quote product to deduct any negotiated or other savings from the product total on the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("manualdiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ManualDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("manualdiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("manualdiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Manual Discount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("manualdiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ManualDiscountAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("manualdiscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who last updated the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was last updated. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who last updated the record on behalf of another user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user or team who owns the quote detail.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ownerid")]
+		public Microsoft.Xrm.Sdk.EntityReference OwnerId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ownerid");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the business unit that owns the quote detail.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningbusinessunit")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningBusinessUnit
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningbusinessunit");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for the team that owns the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningTeam
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningteam");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who owns the quote detail.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		public System.Nullable<System.Guid> OwningUser
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("owninguser");
+			}
+		}
+		
+		/// <summary>
+		/// quotedetail_parent_quotedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentbundleid")]
+		public System.Nullable<System.Guid> ParentBundleId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("parentbundleid");
+			}
+			set
+			{
+				this.SetAttributeValue("parentbundleid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the parent bundle associated with this product
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentbundleidref")]
+		public Microsoft.Xrm.Sdk.EntityReference ParentBundleIdRef
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("parentbundleidref");
+			}
+			set
+			{
+				this.SetAttributeValue("parentbundleidref", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the price per unit of the quote product. The default is to the value in the price list specified on the quote for existing products.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("priceperunit")]
+		public Microsoft.Xrm.Sdk.Money PricePerUnit
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("priceperunit");
+			}
+			set
+			{
+				this.SetAttributeValue("priceperunit", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Price Per Unit field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("priceperunit_base")]
+		public Microsoft.Xrm.Sdk.Money PricePerUnit_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("priceperunit_base");
+			}
+		}
+		
+		/// <summary>
+		/// Select the type of pricing error, such as a missing or invalid product, or missing quantity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pricingerrorcode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PricingErrorCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("pricingerrorcode");
+			}
+			set
+			{
+				this.SetAttributeValue("pricingerrorcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// productAssociation_quote_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productassociationid")]
+		public System.Nullable<System.Guid> ProductAssociationId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("productassociationid");
+			}
+			set
+			{
+				this.SetAttributeValue("productassociationid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a name or description to identify the type of write-in product included in the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productdescription")]
+		public string ProductDescription
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("productdescription");
+			}
+			set
+			{
+				this.SetAttributeValue("productdescription", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the product to include on the quote to link the product's pricing and other information to the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productid")]
+		public Microsoft.Xrm.Sdk.EntityReference ProductId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("productid");
+			}
+			set
+			{
+				this.SetAttributeValue("productid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Calculated field that will be populated by name and description of the product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productname")]
+		public string ProductName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("productname");
+			}
+			set
+			{
+				this.SetAttributeValue("productname", value);
+			}
+		}
+		
+		/// <summary>
+		/// Product Type
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("producttypecode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ProductTypeCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("producttypecode");
+			}
+			set
+			{
+				this.SetAttributeValue("producttypecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Status of the property configuration.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("propertyconfigurationstatus")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PropertyConfigurationStatus
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("propertyconfigurationstatus");
+			}
+			set
+			{
+				this.SetAttributeValue("propertyconfigurationstatus", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the amount or quantity of the product requested by the customer.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quantity")]
+		public System.Nullable<decimal> Quantity
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("quantity");
+			}
+			set
+			{
+				this.SetAttributeValue("quantity", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the product line item in the quote.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quotedetailid")]
+		public System.Nullable<System.Guid> QuoteDetailId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("quotedetailid");
+			}
+			set
+			{
+				this.SetAttributeValue("quotedetailid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quotedetailid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.QuoteDetailId = value;
+			}
+		}
+		
+		/// <summary>
+		/// Quote Detail Name. Added for 1:n Referential relationship
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quotedetailname")]
+		public string QuoteDetailName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("quotedetailname");
+			}
+			set
+			{
+				this.SetAttributeValue("quotedetailname", value);
+			}
+		}
+		
+		/// <summary>
+		/// quote_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quoteid")]
+		public Microsoft.Xrm.Sdk.EntityReference QuoteId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("quoteid");
+			}
+			set
+			{
+				this.SetAttributeValue("quoteid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Status of the quote product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quotestatecode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue QuoteStateCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("quotestatecode");
+			}
+		}
+		
+		/// <summary>
+		/// Enter the delivery date requested by the customer for the quote product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("requestdeliveryby")]
+		public System.Nullable<System.DateTime> RequestDeliveryBy
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("requestdeliveryby");
+			}
+			set
+			{
+				this.SetAttributeValue("requestdeliveryby", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the user responsible for the sale of the quote product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("salesrepid")]
+		public Microsoft.Xrm.Sdk.EntityReference SalesRepId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("salesrepid");
+			}
+			set
+			{
+				this.SetAttributeValue("salesrepid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data that maintains the sequence.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("sequencenumber")]
+		public System.Nullable<int> SequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("sequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("sequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_addressid")]
+		public System.Nullable<System.Guid> ShipTo_AddressId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("shipto_addressid");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_addressid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the city for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_city")]
+		public string ShipTo_City
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_city");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_city", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the primary contact name at the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_contactname")]
+		public string ShipTo_ContactName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_contactname");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_contactname", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the country or region for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_country")]
+		public string ShipTo_Country
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_country");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_country", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the fax number for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_fax")]
+		public string ShipTo_Fax
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_fax");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_fax", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select the freight terms to make sure shipping orders are processed correctly.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_freighttermscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ShipTo_FreightTermsCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("shipto_freighttermscode");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_freighttermscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the first line of the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_line1")]
+		public string ShipTo_Line1
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_line1");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_line1", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the second line of the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_line2")]
+		public string ShipTo_Line2
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_line2");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_line2", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the third line of the shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_line3")]
+		public string ShipTo_Line3
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_line3");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_line3", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a name for the customer's shipping address, such as "Headquarters" or "Field office", to identify the address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_name")]
+		public string ShipTo_Name
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_name");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_name", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the ZIP Code or postal code for the shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_postalcode")]
+		public string ShipTo_PostalCode
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_postalcode");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_postalcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the state or province for the shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_stateorprovince")]
+		public string ShipTo_StateOrProvince
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_stateorprovince");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_stateorprovince", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the phone number for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_telephone")]
+		public string ShipTo_Telephone
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_telephone");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_telephone", value);
+			}
+		}
+		
+		/// <summary>
+		/// Skip the price
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("skippricecalculation")]
+		public Microsoft.Xrm.Sdk.OptionSetValue SkipPriceCalculation
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("skippricecalculation");
+			}
+			set
+			{
+				this.SetAttributeValue("skippricecalculation", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the tax amount for the quote product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("tax")]
+		public Microsoft.Xrm.Sdk.Money Tax
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("tax");
+			}
+			set
+			{
+				this.SetAttributeValue("tax", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Tax field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("tax_base")]
+		public Microsoft.Xrm.Sdk.Money Tax_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("tax_base");
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timezoneruleversionnumber")]
+		public System.Nullable<int> TimeZoneRuleVersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("timezoneruleversionnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the local currency for the record to make sure budgets are reported in the correct currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public Microsoft.Xrm.Sdk.EntityReference TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the unit of measurement for the base unit quantity for this purchase, such as each or dozen.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("uomid")]
+		public Microsoft.Xrm.Sdk.EntityReference UoMId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("uomid");
+			}
+			set
+			{
+				this.SetAttributeValue("uomid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Time zone code that was in use when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("utcconversiontimezonecode")]
+		public System.Nullable<int> UTCConversionTimeZoneCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("utcconversiontimezonecode");
+			}
+			set
+			{
+				this.SetAttributeValue("utcconversiontimezonecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the quote detail.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the quote product should be shipped to the specified address or held until the customer calls with further pick up or delivery instructions.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("willcall")]
+		public System.Nullable<bool> WillCall
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("willcall");
+			}
+			set
+			{
+				this.SetAttributeValue("willcall", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the discount amount per unit if a specified volume is purchased. Configure volume discounts in the Product Catalog in the Settings area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("volumediscountamount")]
+		public Microsoft.Xrm.Sdk.Money VolumeDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("volumediscountamount");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the discount amount per unit if a specified volume is purchased. Configure volume discounts in the Product Catalog in the Settings area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("volumediscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money VolumeDiscountAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("volumediscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_quotedetail_ed_slots_QuoteProduct
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_quotedetail_ed_slots_QuoteProduct")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_Slots> ed_quotedetail_ed_slots_QuoteProduct
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_quotedetail_ed_slots_QuoteProduct", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_quotedetail_ed_slots_QuoteProduct", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N msdyn_quotedetail_salesorderdetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("msdyn_quotedetail_salesorderdetail")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.SalesOrderDetail> msdyn_quotedetail_salesorderdetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SalesOrderDetail>("msdyn_quotedetail_salesorderdetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SalesOrderDetail>("msdyn_quotedetail_salesorderdetail", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N QuoteDetail_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("QuoteDetail_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> QuoteDetail_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("QuoteDetail_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("QuoteDetail_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N quotedetail_parent_quotedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quotedetail_parent_quotedetail", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QuoteDetail> Referencedquotedetail_parent_quotedetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("quotedetail_parent_quotedetail", Microsoft.Xrm.Sdk.EntityRole.Referenced);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("quotedetail_parent_quotedetail", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N quotedetail_parentref_quotedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quotedetail_parentref_quotedetail", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QuoteDetail> Referencedquotedetail_parentref_quotedetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("quotedetail_parentref_quotedetail", Microsoft.Xrm.Sdk.EntityRole.Referenced);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("quotedetail_parentref_quotedetail", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N quotedetail_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quotedetail_Teams")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> quotedetail_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("quotedetail_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("quotedetail_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_quotedetail_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quotedetail_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_quotedetail_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_quotedetail_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_quotedetail_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quotedetail_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_quotedetail_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_quotedetail_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_quotedetailbase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quotedetailbase_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_quotedetailbase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_quotedetailbase_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_quotedetailbase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quotedetailbase_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_quotedetailbase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_quotedetailbase_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 product_quote_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("product_quote_details")]
+		public Skanetrafiken.Crm.Schema.Generated.Product product_quote_details
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Product>("product_quote_details", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Product>("product_quote_details", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 quote_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quoteid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_details")]
+		public Skanetrafiken.Crm.Schema.Generated.Quote quote_details
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_details", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_details", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 quotedetail_parent_quotedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentbundleid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quotedetail_parent_quotedetail", Microsoft.Xrm.Sdk.EntityRole.Referencing)]
+		public Skanetrafiken.Crm.Schema.Generated.QuoteDetail Referencingquotedetail_parent_quotedetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("quotedetail_parent_quotedetail", Microsoft.Xrm.Sdk.EntityRole.Referencing);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("quotedetail_parent_quotedetail", Microsoft.Xrm.Sdk.EntityRole.Referencing, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 quotedetail_parentref_quotedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentbundleidref")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quotedetail_parentref_quotedetail", Microsoft.Xrm.Sdk.EntityRole.Referencing)]
+		public Skanetrafiken.Crm.Schema.Generated.QuoteDetail Referencingquotedetail_parentref_quotedetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("quotedetail_parentref_quotedetail", Microsoft.Xrm.Sdk.EntityRole.Referencing);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("quotedetail_parentref_quotedetail", Microsoft.Xrm.Sdk.EntityRole.Referencing, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 system_user_quotedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("salesrepid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("system_user_quotedetail")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser system_user_quotedetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("system_user_quotedetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("system_user_quotedetail", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_quotedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_quotedetail")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_quotedetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_quotedetail", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 transactioncurrency_quotedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_quotedetail")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_quotedetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_quotedetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_quotedetail", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 unit_of_measurement_quote_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("uomid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("unit_of_measurement_quote_details")]
+		public Skanetrafiken.Crm.Schema.Generated.UoM unit_of_measurement_quote_details
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.UoM>("unit_of_measurement_quote_details", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.UoM>("unit_of_measurement_quote_details", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 user_quotedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_quotedetail")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser user_quotedetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("user_quotedetail", null);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string BaseAmount = "baseamount";
+			
+			public const string BaseAmount_Base = "baseamount_base";
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string Description = "description";
+			
+			public const string ed_FromDate = "ed_fromdate";
+			
+			public const string ed_slotsperday = "ed_slotsperday";
+			
+			public const string ed_ToDate = "ed_todate";
+			
+			public const string ExchangeRate = "exchangerate";
+			
+			public const string ExtendedAmount = "extendedamount";
+			
+			public const string ExtendedAmount_Base = "extendedamount_base";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string IsPriceOverridden = "ispriceoverridden";
+			
+			public const string IsProductOverridden = "isproductoverridden";
+			
+			public const string LineItemNumber = "lineitemnumber";
+			
+			public const string ManualDiscountAmount = "manualdiscountamount";
+			
+			public const string ManualDiscountAmount_Base = "manualdiscountamount_base";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string OwnerId = "ownerid";
+			
+			public const string OwningBusinessUnit = "owningbusinessunit";
+			
+			public const string OwningTeam = "owningteam";
+			
+			public const string OwningUser = "owninguser";
+			
+			public const string ParentBundleId = "parentbundleid";
+			
+			public const string ParentBundleIdRef = "parentbundleidref";
+			
+			public const string PricePerUnit = "priceperunit";
+			
+			public const string PricePerUnit_Base = "priceperunit_base";
+			
+			public const string PricingErrorCode = "pricingerrorcode";
+			
+			public const string ProductAssociationId = "productassociationid";
+			
+			public const string ProductDescription = "productdescription";
+			
+			public const string ProductId = "productid";
+			
+			public const string ProductName = "productname";
+			
+			public const string ProductTypeCode = "producttypecode";
+			
+			public const string PropertyConfigurationStatus = "propertyconfigurationstatus";
+			
+			public const string Quantity = "quantity";
+			
+			public const string QuoteDetailId = "quotedetailid";
+			
+			public const string Id = "quotedetailid";
+			
+			public const string QuoteDetailName = "quotedetailname";
+			
+			public const string QuoteId = "quoteid";
+			
+			public const string QuoteStateCode = "quotestatecode";
+			
+			public const string RequestDeliveryBy = "requestdeliveryby";
+			
+			public const string SalesRepId = "salesrepid";
+			
+			public const string SequenceNumber = "sequencenumber";
+			
+			public const string ShipTo_AddressId = "shipto_addressid";
+			
+			public const string ShipTo_City = "shipto_city";
+			
+			public const string ShipTo_ContactName = "shipto_contactname";
+			
+			public const string ShipTo_Country = "shipto_country";
+			
+			public const string ShipTo_Fax = "shipto_fax";
+			
+			public const string ShipTo_FreightTermsCode = "shipto_freighttermscode";
+			
+			public const string ShipTo_Line1 = "shipto_line1";
+			
+			public const string ShipTo_Line2 = "shipto_line2";
+			
+			public const string ShipTo_Line3 = "shipto_line3";
+			
+			public const string ShipTo_Name = "shipto_name";
+			
+			public const string ShipTo_PostalCode = "shipto_postalcode";
+			
+			public const string ShipTo_StateOrProvince = "shipto_stateorprovince";
+			
+			public const string ShipTo_Telephone = "shipto_telephone";
+			
+			public const string SkipPriceCalculation = "skippricecalculation";
+			
+			public const string Tax = "tax";
+			
+			public const string Tax_Base = "tax_base";
+			
+			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
+			
+			public const string UoMId = "uomid";
+			
+			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
+			
+			public const string VersionNumber = "versionnumber";
+			
+			public const string WillCall = "willcall";
+			
+			public const string VolumeDiscountAmount = "volumediscountamount";
+			
+			public const string VolumeDiscountAmount_Base = "volumediscountamount_base";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int Description = 2000;
+			
+			public const int ProductDescription = 500;
+			
+			public const int ProductName = 500;
+			
+			public const int QuoteDetailName = 250;
+			
+			public const int ShipTo_City = 80;
+			
+			public const int ShipTo_ContactName = 150;
+			
+			public const int ShipTo_Country = 80;
+			
+			public const int ShipTo_Fax = 50;
+			
+			public const int ShipTo_Line1 = 250;
+			
+			public const int ShipTo_Line2 = 250;
+			
+			public const int ShipTo_Line3 = 250;
+			
+			public const int ShipTo_Name = 200;
+			
+			public const int ShipTo_PostalCode = 20;
+			
+			public const int ShipTo_StateOrProvince = 50;
+			
+			public const int ShipTo_Telephone = 50;
+		}
+	}
+	
 	/// <summary>
 	/// Grouping of security privileges. Users are assigned roles that authorize their access to the Microsoft CRM system.
 	/// </summary>
@@ -89406,6 +97827,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 opportunity_sales_orders
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunityid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_sales_orders")]
+		public Skanetrafiken.Crm.Schema.Generated.Opportunity opportunity_sales_orders
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_sales_orders", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_sales_orders", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 order_customer_accounts
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customerid")]
@@ -89470,6 +97908,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_salesorders", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 quote_orders
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quoteid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_orders")]
+		public Skanetrafiken.Crm.Schema.Generated.Quote quote_orders
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_orders", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_orders", null, value);
 			}
 		}
 		
@@ -89947,6 +98402,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_fromdate", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_slotsperday")]
+		public System.Nullable<int> ed_slotsperday
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("ed_slotsperday");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_slotsperday", value);
 			}
 		}
 		
@@ -91108,6 +99579,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 msdyn_quotedetail_salesorderdetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quotedetailid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("msdyn_quotedetail_salesorderdetail")]
+		public Skanetrafiken.Crm.Schema.Generated.QuoteDetail msdyn_quotedetail_salesorderdetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("msdyn_quotedetail_salesorderdetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("msdyn_quotedetail_salesorderdetail", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 order_details
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("salesorderid")]
@@ -91268,6 +99756,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string Description = "description";
 			
 			public const string ed_FromDate = "ed_fromdate";
+			
+			public const string ed_slotsperday = "ed_slotsperday";
 			
 			public const string ed_ToDate = "ed_todate";
 			
@@ -98122,6 +106612,134 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N lk_opportunity_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunity_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> lk_opportunity_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("lk_opportunity_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("lk_opportunity_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_opportunity_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunity_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> lk_opportunity_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("lk_opportunity_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("lk_opportunity_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_opportunitybase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunitybase_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> lk_opportunitybase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("lk_opportunitybase_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("lk_opportunitybase_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_opportunitybase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunitybase_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> lk_opportunitybase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("lk_opportunitybase_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("lk_opportunitybase_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_opportunityproduct_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunityproduct_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct> lk_opportunityproduct_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("lk_opportunityproduct_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("lk_opportunityproduct_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_opportunityproduct_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunityproduct_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct> lk_opportunityproduct_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("lk_opportunityproduct_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("lk_opportunityproduct_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_opportunityproductbase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunityproductbase_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct> lk_opportunityproductbase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("lk_opportunityproductbase_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("lk_opportunityproductbase_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_opportunityproductbase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunityproductbase_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct> lk_opportunityproductbase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("lk_opportunityproductbase_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("lk_opportunityproductbase_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N lk_phonecall_createdby
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_phonecall_createdby")]
@@ -98518,6 +107136,134 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QueueItem>("lk_queueitembase_workerid", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_quote_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quote_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Quote> lk_quote_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("lk_quote_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("lk_quote_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_quote_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quote_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Quote> lk_quote_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("lk_quote_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("lk_quote_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_quotebase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quotebase_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Quote> lk_quotebase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("lk_quotebase_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("lk_quotebase_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_quotebase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quotebase_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Quote> lk_quotebase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("lk_quotebase_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("lk_quotebase_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_quotedetail_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quotedetail_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QuoteDetail> lk_quotedetail_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("lk_quotedetail_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("lk_quotedetail_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_quotedetail_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quotedetail_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QuoteDetail> lk_quotedetail_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("lk_quotedetail_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("lk_quotedetail_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_quotedetailbase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quotedetailbase_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QuoteDetail> lk_quotedetailbase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("lk_quotedetailbase_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("lk_quotedetailbase_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_quotedetailbase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_quotedetailbase_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QuoteDetail> lk_quotedetailbase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("lk_quotedetailbase_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("lk_quotedetailbase_modifiedby", null, value);
 			}
 		}
 		
@@ -99242,6 +107988,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N opportunity_owning_user
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_owning_user")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> opportunity_owning_user
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_owning_user", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_owning_user", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N queue_primary_user
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("queue_primary_user")]
@@ -99382,6 +108144,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SalesOrder>("system_user_orders", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N system_user_quotedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("system_user_quotedetail")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QuoteDetail> system_user_quotedetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("system_user_quotedetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("system_user_quotedetail", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N system_user_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("system_user_quotes")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Quote> system_user_quotes
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("system_user_quotes", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("system_user_quotes", null, value);
 			}
 		}
 		
@@ -100010,6 +108804,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N user_opportunityproduct
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_opportunityproduct")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct> user_opportunityproduct
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("user_opportunityproduct", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("user_opportunityproduct", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N user_parent_user
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_parent_user", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
@@ -100038,6 +108848,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("user_phonecall", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N user_quotedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_quotedetail")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QuoteDetail> user_quotedetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("user_quotedetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("user_quotedetail", null, value);
 			}
 		}
 		
@@ -102014,6 +110840,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N team_opportunities
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_opportunities")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> team_opportunities
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("team_opportunities", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("team_opportunities", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_opportunityproduct
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_opportunityproduct")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct> team_opportunityproduct
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("team_opportunityproduct", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("team_opportunityproduct", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N team_orders
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_orders")]
@@ -102058,6 +110916,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QueueItem>("team_queueitembase_workerid", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_quotedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_quotedetail")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QuoteDetail> team_quotedetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("team_quotedetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("team_quotedetail", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_quotes
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_quotes")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Quote> team_quotes
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("team_quotes", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("team_quotes", null, value);
 			}
 		}
 		
@@ -102297,6 +111187,40 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 opportunity_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_Teams")]
+		public Skanetrafiken.Crm.Schema.Generated.Opportunity opportunity_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 opportunityproduct_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunityproduct_Teams")]
+		public Skanetrafiken.Crm.Schema.Generated.OpportunityProduct opportunityproduct_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("opportunityproduct_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("opportunityproduct_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 pricelevel_Teams
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -102378,6 +111302,40 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Queue>("queue_team", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 quote_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quote_Teams")]
+		public Skanetrafiken.Crm.Schema.Generated.Quote quote_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Quote>("quote_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 quotedetail_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("quotedetail_Teams")]
+		public Skanetrafiken.Crm.Schema.Generated.QuoteDetail quotedetail_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("quotedetail_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("quotedetail_Teams", null, value);
 			}
 		}
 		
@@ -104018,6 +112976,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N transactioncurrency_opportunity
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_opportunity")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Opportunity> transactioncurrency_opportunity
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("transactioncurrency_opportunity", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Opportunity>("transactioncurrency_opportunity", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N transactioncurrency_opportunityproduct
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_opportunityproduct")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct> transactioncurrency_opportunityproduct
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("transactioncurrency_opportunityproduct", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("transactioncurrency_opportunityproduct", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N TransactionCurrency_PhoneCall
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_PhoneCall")]
@@ -104110,6 +113100,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QueueItem>("TransactionCurrency_QueueItem", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N transactioncurrency_quote
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_quote")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Quote> transactioncurrency_quote
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("transactioncurrency_quote", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("transactioncurrency_quote", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N transactioncurrency_quotedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_quotedetail")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QuoteDetail> transactioncurrency_quotedetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("transactioncurrency_quotedetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("transactioncurrency_quotedetail", null, value);
 			}
 		}
 		
@@ -104657,6 +113679,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N unit_of_measurement_opportunity_products
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("unit_of_measurement_opportunity_products")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct> unit_of_measurement_opportunity_products
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("unit_of_measurement_opportunity_products", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>("unit_of_measurement_opportunity_products", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N unit_of_measurement_order_details
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("unit_of_measurement_order_details")]
@@ -104701,6 +113739,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Product>("unit_of_measurement_products", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N unit_of_measurement_quote_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("unit_of_measurement_quote_details")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.QuoteDetail> unit_of_measurement_quote_details
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("unit_of_measurement_quote_details", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>("unit_of_measurement_quote_details", null, value);
 			}
 		}
 		
@@ -107944,6 +116998,28 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.Opportunity"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.Opportunity> OpportunitySet
+		{
+			get
+			{
+				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.Opportunity>();
+			}
+		}
+		
+		/// <summary>
+		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.OpportunityProduct"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct> OpportunityProductSet
+		{
+			get
+			{
+				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.OpportunityProduct>();
+			}
+		}
+		
+		/// <summary>
 		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.PhoneCall"/> entities.
 		/// </summary>
 		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> PhoneCallSet
@@ -108017,6 +117093,28 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.QueueItem>();
+			}
+		}
+		
+		/// <summary>
+		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.Quote"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.Quote> QuoteSet
+		{
+			get
+			{
+				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.Quote>();
+			}
+		}
+		
+		/// <summary>
+		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.QuoteDetail"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.QuoteDetail> QuoteDetailSet
+		{
+			get
+			{
+				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.QuoteDetail>();
 			}
 		}
 		

@@ -1,26 +1,25 @@
 ﻿using System;
-using System.Text;
 using System.Activities;
+
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Workflow;
+
 using Endeavor.Crm;
-using Skanetrafiken.Crm.Entities;
 
-namespace Skanetrafiken.Crm.Entities
+namespace Skanetrafiken.Crm
 {
-    public class GetDateTimeDifference: CodeActivity
+    public class GetFormattedDateString: CodeActivity
     {
-
-        [Input("PlannedDate")]
+        [Input("InputDate")]
         [RequiredArgument()]
-        public InArgument<DateTime> PlannedDate { get; set; }
+        public InArgument<DateTime> InputDate { get; set; }
 
-        [Input("ActualDate")]
+        [Input("InputFormat")]
         [RequiredArgument()]
-        public InArgument<DateTime> ActualDate { get; set; }
+        public InArgument<string> InputFormat { get; set; }
 
-        [Output("TimeDiff")]
-        public OutArgument<string> TimeDiff { get; set; }
+        [Output("TimeString")]
+        public OutArgument<string> TimeString { get; set; }
 
         private Plugin.LocalPluginContext GetLocalContext(CodeActivityContext activityContext)
         {
@@ -39,27 +38,22 @@ namespace Skanetrafiken.Crm.Entities
                 Plugin.LocalPluginContext localContext = GetLocalContext(activityContext);
                 localContext.Trace($"Exexute GetTravelInformationTimeString.");
 
-                DateTime plannedDate = PlannedDate.Get(activityContext).ToLocalTime();
-                DateTime actualDate = ActualDate.Get(activityContext);
+                DateTime inputDate = InputDate.Get(activityContext);
+                string inputFormat = InputFormat.Get(activityContext);
 
-                if (plannedDate == null || actualDate == null)
-                {
-                    throw new InvalidWorkflowException("Input dates can not be empty");
-                }
+                if (inputDate == null)
+                    throw new InvalidWorkflowException("Input date can not be empty");
                 else
                 {
-                    string diff = ((int)actualDate.Subtract(plannedDate).TotalMinutes).ToString("+0;-#");
-                    
-                    TimeDiff.Set(activityContext, diff);
-
-                    localContext.Trace($"GetTravelInformationTimeString finished.");
+                    TimeString.Set(activityContext, inputDate.ToString(inputFormat));
+                    localContext.Trace($"GetFormattedDateString finished.");
                 }
             }
-            catch (InvalidWorkflowException)
+            catch (InvalidWorkflowException e)
             {
-                throw;
+                throw new InvalidWorkflowException(e.Message);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new InvalidWorkflowException(e.Message);
             }

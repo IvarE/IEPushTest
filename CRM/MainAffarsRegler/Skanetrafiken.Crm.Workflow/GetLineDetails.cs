@@ -11,7 +11,7 @@ namespace Skanetrafiken.Crm.Entities
     public class GetLineDetails : CodeActivity
     {
 
-        // TRAIN, STRADBUS or REGIONBUS
+        // TRAIN, STADSBUSS or REGIONBUS
         [Input("LineType")]
         [RequiredArgument()]
         public InArgument<string> LineType { get; set; }

@@ -48,7 +48,7 @@ namespace Endeavor.Crm.CloseCasesService
 
             ITrigger scheduleUploadTrigger = TriggerBuilder.Create()
                   .WithIdentity(CloseCases.TriggerName, CloseCases.GroupName)
-                  .WithCronSchedule(Properties.Settings.Default.FileUploadScheduleCronExpression)
+                  .WithCronSchedule(Properties.Settings.Default.CloseCaseScheduleCronExpression)
                   .WithDescription(CloseCases.TriggerDescription)
                   .ForJob(scheduleUploadJob)
                   .Build();
