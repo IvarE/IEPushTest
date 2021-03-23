@@ -54,7 +54,7 @@ namespace Skanetrafiken.Crm.Entities
             return slotsEntities;
         }
 
-        public static GenerateSlotsResponse GenerateSlots (Plugin.LocalPluginContext localContext,Guid productId, int quantityPerDay, DateTime startDate, DateTime endDate,Guid? OpportunityGuid = null, QuoteProductEntity quoteProduct = null,OrderProductEntity orderProduct = null)
+        public static GenerateSlotsResponse GenerateSlots (Plugin.LocalPluginContext localContext, Guid productId, int quantityPerDay, DateTime startDate, DateTime endDate,Guid? OpportunityGuid = null, QuoteProductEntity quoteProduct = null, OrderProductEntity orderProduct = null)
         {
             localContext.Trace("Inside GenerateSlots.");
             string productName = "";
