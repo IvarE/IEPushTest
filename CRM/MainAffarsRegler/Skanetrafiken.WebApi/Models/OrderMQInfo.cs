@@ -187,13 +187,13 @@ namespace Skanetrafiken.Crm.Models
 
         internal static OrderMQ GetOrderMQInfoFromOrderEntity(Plugin.LocalPluginContext localContext, OrderEntity orderCRM, log4net.ILog _log)
         {
-            _log.Debug($"Entered GetOrderMQInfoFromOrderEntity");
+            _log.Debug($"GetOrderMQInfoFromOrderEntity: Entered GetOrderMQInfoFromOrderEntity");
 
             DateTime now = DateTime.Now;
             string pattern = "yyyy-MM-dd";
             string dateNow = DateTime.Now.ToString(pattern);
 
-            _log.Debug("Creting OrderMQ");
+            _log.Debug("GetOrderMQInfoFromOrderEntity: Creting OrderMQ");
 
             OrderMQ orderMQ = new OrderMQ();
             orderMQ.id = orderCRM.OrderNumber;
@@ -206,12 +206,12 @@ namespace Skanetrafiken.Crm.Models
 
             if (hasFile)
             {
-                _log.Debug($"DeliveryReportCreated=True");
+                _log.Debug($"GetOrderMQInfoFromOrderEntity: DeliveryReportCreated=True");
                 orderMQ.deliveryReportCreated = true;
             }
             else
             {
-                _log.Debug($"DeliveryReportCreated=False");
+                _log.Debug($"GetOrderMQInfoFromOrderEntity: DeliveryReportCreated=False");
                 orderMQ.deliveryReportCreated = false;
             }
 
@@ -221,7 +221,7 @@ namespace Skanetrafiken.Crm.Models
 
             if (erOwner != null)
             {
-                _log.Debug($"Setting Owner");
+                _log.Debug($"GetOrderMQInfoFromOrderEntity: Setting Owner");
 
                 SystemUserEntity erUser = XrmRetrieveHelper.Retrieve<SystemUserEntity>(localContext, erOwner, new ColumnSet(SystemUserEntity.Fields.FullName, SystemUserEntity.Fields.InternalEMailAddress));
 
@@ -231,7 +231,7 @@ namespace Skanetrafiken.Crm.Models
 
                 orderMQ.user = userMQ;
 
-                _log.Debug($"Owner Email: {erUser.InternalEMailAddress}");
+                _log.Debug($"GetOrderMQInfoFromOrderEntity: Owner Email: {erUser.InternalEMailAddress}");
             }
 
             EntityReference erCustomer = orderCRM.CustomerId;
@@ -240,7 +240,7 @@ namespace Skanetrafiken.Crm.Models
             {
                 if (erCustomer != null && erCustomer.LogicalName == AccountEntity.EntityLogicalName)
                 {
-                    _log.Debug($"Setting Customer/Client");
+                    _log.Debug($"GetOrderMQInfoFromOrderEntity: Setting Customer/Client");
 
                     Client clientMQ = new Client();
                     clientMQ.name = erCustomer.Name;
@@ -252,12 +252,12 @@ namespace Skanetrafiken.Crm.Models
                     }
 
                     orderMQ.client = clientMQ;
-                    _log.Debug($"Customer/Client Name: {erCustomer.Name}");
+                    _log.Debug($"GetOrderMQInfoFromOrderEntity: Customer/Client Name: {erCustomer.Name}");
                 }
             }
             catch(Exception ex)
             {
-                _log.Debug($"Error adding ClientMQ. Ex: {ex.Message}");
+                _log.Warn($"GetOrderMQInfoFromOrderEntity: Error adding ClientMQ. Ex: {ex.Message}");
             }
 
             orderMQ.contact = null;
@@ -272,13 +272,13 @@ namespace Skanetrafiken.Crm.Models
             orderMQ.currency = "SEK";
             orderMQ.locked = 0;
 
-            _log.Debug($"Creating object Custom");
+            _log.Debug($"GetOrderMQInfoFromOrderEntity: Creating object Custom");
 
             Custom custom = new Custom();
 
             try
             {
-                _log.Debug($"CustomObject 1");
+                _log.Debug($"GetOrderMQInfoFromOrderEntity: CustomObject 1");
                 string endDate = orderCRM.ed_campaigndateend != null ? orderCRM.ed_campaigndateend.Value.ToString(pattern) : null;
                 custom.value = endDate;
                 custom.valueDate = endDate;
@@ -289,7 +289,7 @@ namespace Skanetrafiken.Crm.Models
             }
             catch(Exception ex)
             {
-                _log.Debug($"Error from custom object 1. Ex: {ex.Message}");
+                _log.Warn($"GetOrderMQInfoFromOrderEntity: Error from custom object 1. Ex: {ex.Message}");
             }
 
             custom = new Custom();
@@ -305,7 +305,7 @@ namespace Skanetrafiken.Crm.Models
             }
             catch(Exception ex)
             {
-                _log.Debug($"Error from custom object 2. Ex: {ex.Message}");
+                _log.Warn($"GetOrderMQInfoFromOrderEntity: Error from custom object 2. Ex: {ex.Message}");
             }
 
             try
@@ -320,7 +320,7 @@ namespace Skanetrafiken.Crm.Models
             }
             catch(Exception ex)
             {
-                _log.Debug($"Error from other values. Ex: {ex.Message}");
+                _log.Warn($"GetOrderMQInfoFromOrderEntity: Error from other values. Ex: {ex.Message}");
             }
 
             try
@@ -330,10 +330,10 @@ namespace Skanetrafiken.Crm.Models
             }
             catch(Exception ex)
             {
-                _log.Debug($"Error when adding OrderProducts. Ex: {ex.Message}");
+                _log.Warn($"GetOrderMQInfoFromOrderEntity: Error when adding OrderProducts. Ex: {ex.Message}");
             }
 
-            _log.Debug($"Returning OrderMQ");
+            _log.Debug($"GetOrderMQInfoFromOrderEntity: Returning OrderMQ");
             return orderMQ;
         }
     }

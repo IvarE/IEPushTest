@@ -119,7 +119,7 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 badReq.Content = new StringContent("Could not find an 'id' parameter in url");
-                _log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
                 return badReq;
             }
             // TOKEN VERIFICATION
@@ -128,7 +128,7 @@ namespace Skanetrafiken.Crm.Controllers
                 HttpResponseMessage tokenResp = TokenValidation(id);
                 if (tokenResp.StatusCode != HttpStatusCode.OK)
                 {
-                    _log.Info($"Th={threadId} - Returning statuscode = {tokenResp.StatusCode}, Content = {tokenResp.Content.ReadAsStringAsync().Result}\n");
+                    _log.Warn($"Th={threadId} - Returning statuscode = {tokenResp.StatusCode}, Content = {tokenResp.Content.ReadAsStringAsync().Result}\n");
                     return tokenResp;
                 }
             }
@@ -136,13 +136,24 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+                _log.Error($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 return rm;
             }
 
 
             HttpResponseMessage resp = CrmPlusControl.GetValueCodesWithMklId(threadId, id);
-            _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+
+            //Return Logg
+            if (resp.StatusCode != HttpStatusCode.OK)
+            {
+                _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+            }
+            else
+            {
+                _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}.\n");
+                _log.Debug($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+            }
+
             return resp;
 
         }
@@ -156,7 +167,7 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage GetMaxAmountValueCode(string q = "")
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.DebugFormat($"Th={threadId} - GET called with no parameter.");
+            _log.Info($"Th={threadId} - GetMaxAmountValueCode: GET called with no parameter.");
 
             try
             {
@@ -173,12 +184,15 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
+                    _log.Info($"Th={threadId} - GetMaxAmountValueCode: ServiceProxy and LocalContext created Successfully.");
+
                     var cgiParamSetting = CgiSettingEntity.GetSettingInt(localContext, CgiSettingEntity.Fields.ed_MaxAmountForCompensationLoss);
                     return Request.CreateResponse(HttpStatusCode.OK, cgiParamSetting);
                 }
             }
             catch (WebException ex)
             {
+                _log.Warn($"Th={threadId} - GetMaxAmountValueCode: WebException caught - {ex.Message}.");
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "ErrorMsg: " + ex);
             }
             finally
@@ -204,6 +218,7 @@ namespace Skanetrafiken.Crm.Controllers
             // 4XX or 5XX - the push request will be retried
 
             int threadId = Thread.CurrentThread.ManagedThreadId;
+            _log.Info($"Th={threadId} - Post called.");
             _log.Debug($"Th={threadId} - Post called with Payload:\n {jsonMessage}");
 
             HttpResponseMessage response;
@@ -211,17 +226,23 @@ namespace Skanetrafiken.Crm.Controllers
             try
             {
                 ValueCodeEvent valueCodeMsg = jsonMessage;// JsonConvert.DeserializeObject<ValueCodeEvent>(jsonMessage);
-                _log.Debug($"Input log: Amount: '{jsonMessage?.amount}', Created: {jsonMessage?.created}, Tag: {jsonMessage?.tag}, ValidFromDate: {jsonMessage?.validFromDate}, " +
+                _log.Debug($"Th={threadId} - POST Call Input log - Amount: '{jsonMessage?.amount}', Created: {jsonMessage?.created}, Tag: {jsonMessage?.tag}, ValidFromDate: {jsonMessage?.validFromDate}, " +
                     $"ValidToDate: {jsonMessage?.validToDate}, VoucherCode: {jsonMessage?.voucherCode}, VoucherId: {jsonMessage?.voucherId}, VoucherType: {jsonMessage?.voucherType}, " +
                     $"RemainingAmount: {jsonMessage?.remainingAmount}, Disabled: {jsonMessage?.disabled}, EanCode: {jsonMessage?.eanCode}, CouponId: {jsonMessage?.couponId}, Status: {jsonMessage?.status}");
 
                 if (string.IsNullOrWhiteSpace(jsonMessage.voucherCode))
                     return response = Request.CreateResponse(HttpStatusCode.BadRequest, "VoucherCode cannot be empty.");
 
+                if (string.IsNullOrWhiteSpace(jsonMessage.voucherCode)) 
+                {
+                    _log.Warn($"Th={threadId} - POST (ValueCodeController): VoucherCode is empty and cannot be empty.");
+                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "VoucherCode cannot be empty.");
+                }
+
                 //bool isFoundAndUpdated = 
                 valueCodeMsg.UpdateValueCodeInCRM(threadId);
 
-                _log.DebugFormat($"ValueCode found/created in SeKund. Returning OK");
+                _log.Info($"Th={threadId} - POST (ValueCodeController): ValueCode found/created in SeKund. Returning OK");
                 return response = Request.CreateResponse(HttpStatusCode.OK, "OK");
 
                 //if (isFoundAndUpdated == false)
@@ -236,10 +257,9 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 // Temporary while in Test
                 //return response = Request.CreateResponse(HttpStatusCode.OK, "OK");
+                _log.Warn($"Th={threadId} - POST (ValueCodeController): WebException caught - {ex.Message}.");
                 return response = Request.CreateResponse(HttpStatusCode.InternalServerError, "ErrorMsg: " + ex);
             }
-
-
         }
 
         /// <summary>
@@ -253,6 +273,7 @@ namespace Skanetrafiken.Crm.Controllers
             //  *** Värdekod = Presentkort (endast) ***
 
             int threadId = Thread.CurrentThread.ManagedThreadId;
+            _log.Info($"Th={threadId} - Post called.\n");
             _log.DebugFormat($"Th={threadId} - Post called with Payload:\n {CrmPlusControl.SerializeNoNull(valueCode)}");
 
             Plugin.LocalPluginContext localContext = null;
@@ -260,7 +281,7 @@ namespace Skanetrafiken.Crm.Controllers
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+                _log.DebugFormat($"Th={threadId} - CreateValueCode: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -269,13 +290,15 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
+                    _log.Info($"Th={threadId} - CreateValueCode: ServiceProxy and LocalContext created Successfully.");
+
                     // Call method to do the heavy lifting
                     return HandleCreateValueCode(localContext, valueCode, threadId);
                 }
             }
             catch (WebException ex)
             {
-                _log.Error("WebException caught from ValueCodeController: " + ex.Message);
+                _log.Error($"Th={threadId} - CreateValueCode: WebException caught - {ex.Message}");
 
                 return ReturnApiMessage(threadId,
                                 ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
@@ -283,7 +306,7 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
-                _log.Error("Exception caught from ValueCodeController: " + ex.Message);
+                _log.Error($"Th={threadId} - CreateValueCode: Exception caught - {ex.Message}");
 
                 return ReturnApiMessage(threadId,
                                 ex.Message,
@@ -320,14 +343,15 @@ namespace Skanetrafiken.Crm.Controllers
         /// <returns></returns>
         public HttpResponseMessage HandleCreateValueCode(Plugin.LocalPluginContext localContext, ValueCodeCreationGiftCard valueCode, int threadId)
         {
-            _log.Debug($"--------------Running CreateValueCode--------------");
+            _log.Info($"Th={threadId} - HandleCreateValueCode: Entered CreateValueCode.");
+
             FeatureTogglingEntity feature = XrmRetrieveHelper.RetrieveFirst<FeatureTogglingEntity>(localContext, new ColumnSet(FeatureTogglingEntity.Fields.ed_BlockTravelCardAPI));
 
             #region Argument validation
             if (valueCode == null)
             {
-                _log.Debug($"No body was sent into this api.");
                 var resp = ReturnApiMessage(threadId, Resources.IncomingDataCannotBeNull, HttpStatusCode.BadRequest);
+                _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content?.ReadAsStringAsync()?.Result}\n");
                 return resp;
             }
 
@@ -338,6 +362,7 @@ namespace Skanetrafiken.Crm.Controllers
                 var resp = ReturnApiMessage(threadId,
                     ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_AmountBelowZero),
                     HttpStatusCode.BadRequest);
+                _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content?.ReadAsStringAsync()?.Result}\n");
                 return resp;
             }
 
@@ -347,6 +372,7 @@ namespace Skanetrafiken.Crm.Controllers
                 var resp = ReturnApiMessage(threadId,
                     ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_EmailAndPhoneNumber),
                     HttpStatusCode.BadRequest);
+                _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content?.ReadAsStringAsync()?.Result}\n");
                 return resp;
             }
 
@@ -355,6 +381,7 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 var resp = ReturnApiMessage(threadId, string.Format(Resources.InvalidFormatForEmail, valueCode.Email),
                 HttpStatusCode.BadRequest);
+                _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content?.ReadAsStringAsync()?.Result}\n");
                 return resp;
             }
 
@@ -362,6 +389,7 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 var resp = ReturnApiMessage(threadId, string.Format(Resources.InvalidFormatForMobile, valueCode.Mobile),
                 HttpStatusCode.BadRequest);
+                _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content?.ReadAsStringAsync()?.Result}\n");
                 return resp;
             }
 
@@ -373,6 +401,7 @@ namespace Skanetrafiken.Crm.Controllers
                 var resp = ReturnApiMessage(threadId,
                     ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_DeliveryMethodDoesNotExist),
                     HttpStatusCode.NotFound);
+                _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content?.ReadAsStringAsync()?.Result}\n");
                 return resp;
             }
 
@@ -383,6 +412,7 @@ namespace Skanetrafiken.Crm.Controllers
                 var resp = ReturnApiMessage(threadId,
                     ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_NoInformationAboutTravelCard),
                     HttpStatusCode.BadRequest);
+                _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content?.ReadAsStringAsync()?.Result}\n");
                 return resp;
             }
             else if (string.IsNullOrWhiteSpace(valueCode.TravelCard.TravelCardNumber) || string.IsNullOrWhiteSpace(valueCode.TravelCard.CVC))
@@ -391,22 +421,24 @@ namespace Skanetrafiken.Crm.Controllers
                 var resp = ReturnApiMessage(threadId,
                     ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_TravelCardNumberAndCVC),
                     HttpStatusCode.BadRequest);
+                _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content?.ReadAsStringAsync()?.Result}\n");
                 return resp;
             }
 
-            if (valueCode.TypeOfValueCode != 2) //If type of value code wasn't specified in the call, the value automatically becomes 0.
+            if (valueCode.TypeOfValueCode != 2) //If type of value code wasn't specified in the call, the value automatically becomes 0. //CHECK THIS!!!
             {
                 _log.Debug($"This flow stopped due to type of value code is not 2=Presentkort");
                 var resp = ReturnApiMessage(threadId,
                     ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                     HttpStatusCode.BadRequest);
+                _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content?.ReadAsStringAsync()?.Result}\n");
                 return resp;
             }
 
             #endregion
 
 
-            _log.Debug($"Fetching travel card from CRM");
+            _log.Debug($"Th={threadId} - HandleCreateValueCode: Fetching travel card from CRM.");
             //Travel card is used for validation
             TravelCardEntity travelCard = TravelCardEntity.GetCardAndContactFromCardNumber(localContext,
                            valueCode.TravelCard.TravelCardNumber,
@@ -416,8 +448,8 @@ namespace Skanetrafiken.Crm.Controllers
                                            TravelCardEntity.Fields.cgi_Blocked));
 
             if (travelCard == null)
-                _log.Debug($"Travel card '{valueCode.TravelCard.TravelCardNumber}' could not be found in CRM.");
-            else _log.Debug($"Travel card '{valueCode.TravelCard.TravelCardNumber}' was found in CRM.");
+                _log.Info($"Th={threadId} - HandleCreateValueCode: Travel card '{valueCode.TravelCard.TravelCardNumber}' could not be found in CRM.");
+            else _log.Info($"Th={threadId} - HandleCreateValueCode: Travel card '{valueCode.TravelCard.TravelCardNumber}' was found in CRM.");
 
 
             //Contact is used for associating with value code and value code approval
@@ -430,10 +462,11 @@ namespace Skanetrafiken.Crm.Controllers
 
             if (valueCode.ContactId.HasValue && valueCode.ContactId.Value != Guid.Empty)
             {
-                _log.Debug($"ContactId '{valueCode?.ContactId.Value}' was passed. Meaning user is logged in.");
+                _log.Info($"Th={threadId} - HandleCreateValueCode: ContactId '{valueCode?.ContactId.Value}' was passed. Meaning user is logged in.");
+
                 try
                 {
-                    _log.Debug($"Check if given contactId exist in CRM.");
+                    _log.Debug($"Th={threadId} - HandleCreateValueCode: Checking if given contactId exist in CRM.");
                     contact = ContactEntity.GetContactById(localContext, new ColumnSet(ContactEntity.Fields.cgi_ContactNumber
                                                                                         , ContactEntity.Fields.FirstName
                                                                                         , ContactEntity.Fields.LastName
@@ -441,25 +474,26 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (contact == null)
                     {
-                        _log.Debug($"Could not find given contact id {valueCode.ContactId.Value} in CRM.\n");
+                        _log.Debug($"Th={threadId} - HandleCreateValueCode: Could not find given contact id {valueCode.ContactId.Value} in CRM.\n");
                         var resp = ReturnApiMessage(threadId, ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_ContactDoesNotExist),
                             HttpStatusCode.NotFound);
+
+                        _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
                         return resp;
                     }
                     else
                     {
                         
                         #region Validate found contact with input parameters
-                        _log.Debug($"Found contact '{valueCode?.ContactId.Value}'");
+                        _log.Info($"Th={threadId} - HandleCreateValueCode: Found Contact with Id '{valueCode?.ContactId.Value}'");
 
                         if(travelCard == null)
                         {
-                            _log.Debug($"User signed in with id '{contact.Id}' but is not associated with travel card '{valueCode.TravelCard.TravelCardNumber}' because it doesn't exist in CRM. Create a new one later in flow.");
+                            _log.Debug($"Th={threadId} - HandleCreateValueCode: User signed in with id '{contact.Id}' but is not associated with travel card '{valueCode.TravelCard.TravelCardNumber}' because it doesn't exist in CRM. Create a new one later in flow.");
                         }
-
                         else if (travelCard?.cgi_Contactid == null)
                         {
-                            _log.Debug($"Travel card '{travelCard?.cgi_travelcardnumber}' does not have an associated contact. Assign contact '{valueCode?.ContactId.Value}' to travel card '{travelCard?.cgi_travelcardnumber}'");
+                            _log.Info($"Th={threadId} - HandleCreateValueCode: Travel card '{travelCard?.cgi_travelcardnumber}' does not have an associated contact. Assign contact '{valueCode?.ContactId.Value}' to travel card '{travelCard?.cgi_travelcardnumber}'");
                             // 2DO, Why not do this prior and avoid the update?
                             var updateCard = new TravelCardEntity()
                             {
@@ -477,16 +511,14 @@ namespace Skanetrafiken.Crm.Controllers
                         }
                         else if (!travelCard.cgi_Contactid.Equals(contact.ToEntityReference()))
                         {
-                            _log.Debug($"Travel card '{travelCard.cgi_travelcardnumber}' is not associated with contact '{contact.Id}'");
+                            _log.Debug($"Th={threadId} - HandleCreateValueCode: Travel card '{travelCard.cgi_travelcardnumber}' is not associated with contact '{contact.Id}'");
                             return ReturnApiMessage(threadId,
                                 ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_ContactNotAssociatedWithTravelCard),
                                 HttpStatusCode.BadRequest);
                         }
-
-                        //Check if first/lastname matches contact
-                        else if (!DoesNameInformationMatchContact(localContext, contact, valueCode.FirstName, valueCode.LastName))
+                        else if (!DoesNameInformationMatchContact(localContext, contact, valueCode.FirstName, valueCode.LastName)) //Check if first/lastname matches contact
                         {
-                            _log.Debug($"Given contact '{contact.Id}' does not containt firstname '{valueCode.FirstName}' and lastname '{valueCode.LastName}'");
+                            _log.Warn($"Th={threadId} - HandleCreateValueCode: Given contact '{contact.Id}' does not containt firstname '{valueCode.FirstName}' and lastname '{valueCode.LastName}'");
                             //Firstname or lastname does not match with travelcard - contact
                             return ReturnApiMessage(threadId,
                                 ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_ContactinfoIsNotEqualToTravelCard),
@@ -498,7 +530,7 @@ namespace Skanetrafiken.Crm.Controllers
                 }
                 catch (Exception ex)
                 {
-                    _log.Debug($"Error when validating Contact... Ex: {ex.Message}");
+                    _log.Error($"Th={threadId} - HandleCreateValueCode: WebException caught - {ex.Message}");
                 }
             }
 
@@ -507,7 +539,7 @@ namespace Skanetrafiken.Crm.Controllers
             #region User Not Signed In
             else
             {
-                _log.Debug($"Entering check for user non-sign in.");
+                _log.Info($"Th={threadId} - HandleCreateValueCode: Entering check for user non-sign in.");
 
                 /* 
                  * A travel card exists..
@@ -519,7 +551,7 @@ namespace Skanetrafiken.Crm.Controllers
                 //Case 1: If firstname and lastname is found, then it indicates that there's a travel card that's associated with a contact
                 if (travelCard != null && travelCard.HasAliasedAttribute(ContactEntity.Fields.FirstName) && travelCard.HasAliasedAttribute(ContactEntity.Fields.LastName))
                 {
-                    _log.Debug($"Travel card has an associated contact.");
+                    _log.Info($"Th={threadId} - HandleCreateValueCode: Travel card has an associated contact.");
 
                     // tar bort kontroll efter kontakt med Per Ahrling, 190710
                     //_log.Debug($"Check if travel card information matches first/last name.");
@@ -541,14 +573,14 @@ namespace Skanetrafiken.Crm.Controllers
                     //}
 
 
-                    _log.Debug($"First/last name matches, which means user has to login.");
+                    _log.Warn($"Th={threadId} - HandleCreateValueCode: First/last name matches, which means user has to login.");
                     //User has to login.
                     return ReturnApiMessage(threadId,
                         ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_TravelCardAssociatedWithContact),
                         HttpStatusCode.BadRequest);
                 }
 
-                _log.Debug($"Creating a new contact with given information from api-request.");
+                _log.Info($"Th={threadId} - HandleCreateValueCode: Creating a new contact with given information from api-request.");
                 //Case 2 & 3: Since there is no contact associated with the travel card, create a relation. If there is no contact, create one.
 
                 // Create a customer info object to be able to use predefined method for creating contact
@@ -565,14 +597,14 @@ namespace Skanetrafiken.Crm.Controllers
                 contact = ContactEntity.CreateUnvalidatedPrivateContact(localContext, customerInfo);
 
                 //contact = ContactEntity.CreateContactWithTravelCard(localContext, travelCard, valueCode.FirstName, valueCode.LastName, valueCode.Email, valueCode.Mobile);
-                _log.Debug($"Successfully exited CreateContactWithTravelCard");
+                _log.Info($"Th={threadId} - HandleCreateValueCode: Successfully exited CreateContactWithTravelCard");
             }
             #endregion
 
 
             if (contact == null)
             {
-                _log.Debug($"No contact has been assigned.");
+                _log.Info($"Th={threadId} - HandleCreateValueCode: No contact has been assigned.");
             }
 
             if (feature == null || (feature != null && feature.ed_BlockTravelCardAPI != true))
@@ -940,7 +972,7 @@ namespace Skanetrafiken.Crm.Controllers
                     (valueCode.TravelCard.TravelCardNumber == "123456" && valueCode.TravelCard.CVC == "123") ||
                     (valueCode.TravelCard.TravelCardNumber == "987654" && valueCode.TravelCard.CVC == "987"))
                 {
-                    _log.Debug($"Called mocked travel cards.");
+                    _log.Warn($"Th={threadId} - HandleCreateValueCode: Called mocked travel cards.");
                     return new HttpResponseMessage(HttpStatusCode.OK);
                 }
 
@@ -949,7 +981,7 @@ namespace Skanetrafiken.Crm.Controllers
                 if (travelCard == null)
                 {
                     //res = new HttpResponseMessage(HttpStatusCode.NotFound);
-                    _log.Debug($"Specified travelcard '{valueCode?.TravelCard?.TravelCardNumber}' was not found in CRM. Create one in CRM.");
+                    _log.Info($"Th={threadId} - HandleCreateValueCode: Specified travelcard '{valueCode?.TravelCard?.TravelCardNumber}' was not found in CRM. Create one in CRM.");
 
                     var newTravelCard = new TravelCardEntity()
                     {
@@ -963,7 +995,7 @@ namespace Skanetrafiken.Crm.Controllers
                     newTravelCard.Id = XrmHelper.Create(localContext, newTravelCard);
                     travelCard = newTravelCard;
 
-                    _log.Debug($"Newly created travel card - Id: {newTravelCard?.Id}, " +
+                    _log.Info($"Th={threadId} - HandleCreateValueCode: Newly created travel card - Id: {newTravelCard?.Id}, " +
                         $"cgi_travelcardnumber: {newTravelCard?.cgi_travelcardnumber}, " +
                         $"cgi_TravelCardCVC: {newTravelCard?.cgi_TravelCardCVC}, " +
                         $"cgi_Blocked: {newTravelCard?.cgi_Blocked}, " +
@@ -977,96 +1009,73 @@ namespace Skanetrafiken.Crm.Controllers
                  */
 
                 //Call new GET API "Card" [Get Card]
-                //ValueCodeHandler.GetCardProperties getCardProperties = ValueCodeHandler.CallGetCardAction(localContext, valueCode.TravelCard.TravelCardNumber);
-                //if (getCardProperties == null || getCardProperties.Amount == null || string.IsNullOrWhiteSpace(getCardProperties.CardNumber))
-                //{
-                //    _log.Debug($"CallGetCardAction did not return with relevant values.");
-                //    return ReturnApiMessage(threadId,
-                //        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                //    HttpStatusCode.BadRequest);
-                //}
 
-                //ValueCodeHandler.GetCardProperties getCardProperties = TravelCardEntity.HandleGetCard(localContext, valueCode.TravelCard.TravelCardNumber);
-                //if (getCardProperties == null || getCardProperties.Amount == null || string.IsNullOrWhiteSpace(getCardProperties.CardNumber))
-                //{
-                //    _log.Debug($"CallGetCardAction did not return with relevant values.");
-                //    return ReturnApiMessage(threadId,
-                //        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                //    HttpStatusCode.BadRequest);
-                //}
                 ValueCodeHandler.GetCardProperties getCardProperties = null;
                 var jsonAnswer = GetCardWithCardNumber(localContext, valueCode.TravelCard.TravelCardNumber);
                 //Convert response to ValueCodeHandler.GetCardProperties
                 if (!string.IsNullOrEmpty(jsonAnswer) && jsonAnswer != "ERROR")
                 {
+                    _log.Info($"Th={threadId} - HandleCreateValueCode: Handling JSON response from GetCard Call.");
+                    _log.Debug($"Th={threadId} - HandleCreateValueCode: Handling JSON response from GetCard Call. Response = {jsonAnswer}.");
                     //var returnJson = new StringContent(jsonAnswer);
                     var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                     getCardProperties = (ValueCodeHandler.GetCardProperties)serializer.Deserialize(jsonAnswer, typeof(ValueCodeHandler.GetCardProperties));
                 }
+
                 if (getCardProperties == null || getCardProperties.Amount == null || string.IsNullOrWhiteSpace(getCardProperties.CardNumber))
                 {
-                    _log.Debug($"CallGetCardAction did not return with relevant values.");
+                    _log.Warn($"Th={threadId} - HandleCreateValueCode: CallGetCardAction did not return with relevant values.");
                     return ReturnApiMessage(threadId,
                         ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                     HttpStatusCode.BadRequest);
                 }
 
 
-                _log.Debug($"Fetching maximum value setting.");
+                _log.Info($"Th={threadId} - HandleCreateValueCode: Fetching maximum value setting.");
                 //Fetch setting for maximum value
                 //var maxAmount = CgiSettingEntity.GetSettingDecimal(localContext, CgiSettingEntity.Fields.ed_MaxAmountWebsiteValueCode);
                 var maxAmount = CgiSettingEntity.GetSettingDecimal(localContext, CgiSettingEntity.Fields.ed_MaxAmountForGiftCard);
                 if (maxAmount < 0M)
                 {
-                    _log.Debug($"Max amount cannot go below 0. Edit your max limit in Setting entity.");
+                    _log.Warn($"Th={threadId} - HandleCreateValueCode: Max amount cannot go below 0. Edit your max limit in Setting entity.");
                     return ReturnApiMessage(threadId,
                         "Max amount cannot be less than 0. Please contact CRM admin.",
                         HttpStatusCode.BadRequest);
                 }
 
-                _log.Debug($"Fetching valid for days setting.");
+                _log.Info($"Th={threadId} - HandleCreateValueCode: Fetching valid for days setting.");
                 //Fetch setting for number of valid days
                 var validDays = CgiSettingEntity.GetSettingInt(localContext, CgiSettingEntity.Fields.ed_ValidForDaysValueCode);
-                if (validDays < 0)
+                if (validDays < 0) 
+                {
+                    _log.Warn($"Th={threadId} - HandleCreateValueCode: Valid days cannot be less than 0. Please contact CRM admin.");
                     return ReturnApiMessage(threadId,
-                           "Valid days cannot be less than 0. Please contact CRM admin.",
-                           HttpStatusCode.BadRequest);
+                               "Valid days cannot be less than 0. Please contact CRM admin.",
+                               HttpStatusCode.BadRequest);
+                }
 
                 //If exceeds max amount, create incident
-                _log.Debug($"Step 1.");
+                _log.Info($"Th={threadId} - HandleCreateValueCode: Handling amount. Amount = {getCardProperties.Amount}");
                 //Devop Task 745 - Round decimals
-                if (getCardProperties.Amount > 0)
+                if (getCardProperties.Amount > 0) 
+                {
+                    _log.Info($"Th={threadId} - HandleCreateValueCode: Rounding decimals.");
                     getCardProperties.Amount = (decimal)Math.Round(getCardProperties.Amount, 0, MidpointRounding.AwayFromZero);
+                }
 
-                _log.Debug($"Step 2.");
+                _log.Info($"Th={threadId} - HandleCreateValueCode: If card exceeds max amount, create value code approval.");
                 //If exceeds max amount, create value code approval.
                 if (getCardProperties.Amount > maxAmount)
                 {
+                    _log.Info($"Th={threadId} - HandleCreateValueCode: Travel card balance exceeded limit. Balance: {getCardProperties.Amount} - Limit: {maxAmount}");
                     //Block Travel Card (OBS! Using Capture Order and Place Order)
 
                     //Call "Place Order API" to actually block the travel card
-                    //var placeOrderResponse = ValueCodeHandler.CallPlaceOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
-                    //if (string.IsNullOrWhiteSpace(placeOrderResponse) || placeOrderResponse != "200 - Success")
-                    //{
-                    //    _log.Debug($"CallPlaceOrderAction did not return a Success.");
-                    //    return ReturnApiMessage(threadId,
-                    //        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                    //    HttpStatusCode.BadRequest);
-                    //}
-
-                    //GetCardProperties getCardPropertiesTEST = TravelCardEntity.HandlePlaceOrder(localContext, getCardProperties.CardNumber);
-                    //if (getCardPropertiesTEST == null || getCardPropertiesTEST.IsReserved == false)
-                    //{
-                    //    _log.Debug($"CallPlaceOrderAction did not return a Success.");
-                    //    return ReturnApiMessage(threadId,
-                    //        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                    //    HttpStatusCode.BadRequest);
-                    //}
-
+                    _log.Info($"Th={threadId} - HandleCreateValueCode: Placing order with Cardnumber {getCardProperties.CardNumber}.");
                     var placeOrderResponse = PlaceOrderWithCardNumber(localContext, getCardProperties.CardNumber);
                     if (string.IsNullOrWhiteSpace(placeOrderResponse) || placeOrderResponse != "200 - Success")
                     {
-                        _log.Debug($"CallPlaceOrderAction did not return a Success.");
+                        _log.Warn($"Th={threadId} - HandleCreateValueCode: PlaceOrderWithCardNumber did not return a Success.");
                         return ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                         HttpStatusCode.BadRequest);
@@ -1076,39 +1085,23 @@ namespace Skanetrafiken.Crm.Controllers
                     //[Create a new Value Code before blocking the card through the API / Validate that Value Code has been created]
 
                     //Call "Card Order API" to start the value code creation and travel card block process (requesting a block of the card)
-                    //var captureOrderResponse = ValueCodeHandler.CallCaptureOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
-                    //if (string.IsNullOrWhiteSpace(captureOrderResponse) || captureOrderResponse != "200 - Success")
-                    //{
-                    //    _log.Debug($"CallCaptureOrderAction did not return a Success.");
-                    //    return ReturnApiMessage(threadId,
-                    //        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                    //    HttpStatusCode.BadRequest);
-                    //}
-
-                    //var captureOrderResponse = TravelCardEntity.HandleCaptureOrder(localContext, getCardProperties.CardNumber);
-                    //if (string.IsNullOrWhiteSpace(captureOrderResponse) || captureOrderResponse != "200 - Success")
-                    //{
-                    //    _log.Debug($"CallCaptureOrderAction did not return a Success.");
-                    //    return ReturnApiMessage(threadId,
-                    //        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                    //    HttpStatusCode.BadRequest);
-                    //}
 
                     var captureOrderResponse = CaptureOrderWithCardNumber(localContext, getCardProperties.CardNumber);
                     if (string.IsNullOrWhiteSpace(captureOrderResponse) || captureOrderResponse != "200 - Success")
                     {
-                        _log.Debug($"CallCaptureOrderAction did not return a Success.");
+                        _log.Warn($"Th={threadId} - HandleCreateValueCode: CaptureOrderWithCardNumber did not return a Success.");
                         return ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                         HttpStatusCode.BadRequest);
                     }
 
                     //Create Incident
-                    _log.Debug($"Travel card balance exceeded limit. Balance: {getCardProperties.Amount} - Limit: {maxAmount}");
+                    _log.Debug($"Th={threadId} - HandleCreateValueCode: Travel card balance exceeded limit. Balance: {getCardProperties.Amount} - Limit: {maxAmount}");
 
                     IncidentEntity incidentEnt = null;
 
                     //Create case (OBS! Replace "valueCode.TravelCard.TravelCardNumber" with fetched cardNumber from "Card GET" - API)
+                    _log.Info($"Th={threadId} - HandleCreateValueCode: Creating Case for travel card value code exchange.");
                     if (valueCode.deliveryMethod == 1)
                         incidentEnt = IncidentEntity.CreateCaseForTravelCardValueCodeExchange(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/, getCardProperties.Amount, contact, valueCode.Email, null, valueCode.deliveryMethod, travelCard);
                     else //Mobile - 2
@@ -1116,13 +1109,13 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (incidentEnt == null)
                     {
-                        _log.Debug($"Incident was not created for some reason.");
+                        _log.Warn($"Th={threadId} - HandleCreateValueCode: Incident was not created for some reason.");
                         return ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                         HttpStatusCode.BadRequest);
                     }
 
-                    _log.Debug($"Successfully created an incident. Exit function");
+                    _log.Info($"Th={threadId} - HandleCreateValueCode: Successfully created an incident. Exiting function.");
                     return ReturnApiMessage(threadId,
                                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_AboveMaxAmount),
                                             HttpStatusCode.OK);
@@ -1130,50 +1123,32 @@ namespace Skanetrafiken.Crm.Controllers
                 }
                 else //Not exceeding maximum amount
                 {
+                    _log.Info($"Th={threadId} - HandleCreateValueCode: Travel card balance does not exceed limit. Balance: {getCardProperties.Amount} - Limit: {maxAmount}");
                     //Block Travel Card (OBS! Using Capture Order and Place Order)
-                    _log.Debug($"Step 3.");
                     //Call "Place Order API" to actually block the travel card
-                    _log.Debug($"Step 3.1. - {getCardProperties.CardNumber}");
-                    //var placeOrderResponse = ValueCodeHandler.CallPlaceOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
-                    //if (string.IsNullOrWhiteSpace(placeOrderResponse) || placeOrderResponse != "200 - Success")
-                    //{
-                    //    _log.Debug($"CallPlaceOrderAction did not return a Success.");
-                    //    return ReturnApiMessage(threadId,
-                    //        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                    //    HttpStatusCode.BadRequest);
-                    //}
-
-                    //GetCardProperties getCardPropertiesTEST = TravelCardEntity.HandlePlaceOrder(localContext, getCardProperties.CardNumber);
-                    //if (getCardPropertiesTEST == null || getCardPropertiesTEST.IsReserved == false)
-                    //{
-                    //    _log.Debug($"CallPlaceOrderAction did not return a Success.");
-                    //    return ReturnApiMessage(threadId,
-                    //        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                    //    HttpStatusCode.BadRequest);
-                    //}
-
+                    _log.Info($"Th={threadId} - HandleCreateValueCode: Placing order with Cardnumber {getCardProperties.CardNumber}.");
                     var placeOrderResponse = PlaceOrderWithCardNumber(localContext, getCardProperties.CardNumber);
                     if (string.IsNullOrWhiteSpace(placeOrderResponse) || placeOrderResponse != "200 - Success")
                     {
-                        _log.Debug($"CallPlaceOrderAction did not return a Success.");
+                        _log.Warn($"Th={threadId} - HandleCreateValueCode: PlaceOrderWithCardNumber did not return a Success.");
                         return ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                         HttpStatusCode.BadRequest);
                     }
 
-                    _log.Debug($"Step 4.");
+                    
                     EntityReference valueCodeGeneric = null;
 
                     try
                     {
                         //Create a new Value Code before blocking the card through the API
-
+                        _log.Info($"Th={threadId} - HandleCreateValueCode: Create a new Value Code before blocking the card through the API.");
                         valueCodeGeneric = CreateGiftCardValueCode(localContext, getCardProperties.Amount, valueCode, travelCard, contact); //new version for new API
-                        _log.Debug($"Step 5.");
+
                         //Validate that Value Code has been created
                         if (valueCodeGeneric == null)
                         {
-                            _log.Debug("CreateGiftCardValueCode returned null. Throwing exception!");
+                            _log.Warn("Th={threadId} - HandleCreateValueCode: CreateGiftCardValueCode returned null. Throwing exception!");
                             throw new Exception(string.Format("Could not create Gift Card Value Code."));
                             //_log.Debug($"Value code was not created, abort process.");
                             //return ReturnApiMessage(threadId,
@@ -1185,89 +1160,34 @@ namespace Skanetrafiken.Crm.Controllers
                     {
                         //TODO: CallCancelOrder API
                         //ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-
-                        //FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
-                        //settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
-
-                        //CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI), settingFilter);
-                        //_log.Debug($"Step 5.5 Error.");
-                        //localContext.TracingService.Trace("\nJojoAPITest - Capture Order:");
-                        //string apiStatusResponse = "";
-
-                        //HttpWebRequest requestCancelOrder = (HttpWebRequest)WebRequest.Create(string.Format("{0}cancelOrder/", settingEntity.ed_JojoCardDetailsAPI));
-
-                        //#region Certificate
-
-                        //string certName = ConfigurationManager.AppSettings["SeKundFasadenCertificateName"];
-                        //requestCancelOrder.ClientCertificates.Add(Identity.GetCertToUse(certName));
-
-                        //#endregion
-
-                        //requestCancelOrder.Headers.Add("Card-Number", getCardProperties.CardNumber);
-                        //requestCancelOrder.Headers.Add("20", "*/*");
-                        //requestCancelOrder.ContentLength = 0;
-                        //requestCancelOrder.Method = "POST";
-
-                        //var cancelOrderResponse = requestCancelOrder.GetResponse() as HttpWebResponse;
-
-                        //if (cancelOrderResponse.StatusCode != HttpStatusCode.OK)
-                        //{
-                        //    //Send bad request
-                        //    apiStatusResponse = "Could not Cancel Order!";
-                        //}
-                        //else
-                        //{
-                        //    //We are done
-                        //    apiStatusResponse = "Order was canceled!";
-                        //}
-
-                        //var cancelOrderResponse = TravelCardEntity.HandleCancelOrder(localContext, getCardProperties.CardNumber);
-
+                        _log.Warn($"Th={threadId} - HandleCreateValueCode: Value code was not created, aborting process. Cancelling Order With Card Number.");
                         var cancelOrderResponse = CancelOrderWithCardNumber(localContext, getCardProperties.CardNumber);
 
-                        _log.Debug($"Value code was not created, aborting process. Card Status: " + cancelOrderResponse);
+                        _log.Debug($"Th={threadId} - HandleCreateValueCode: Value code was not created, aborting process. Card Status: " + cancelOrderResponse);
                         return ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                         HttpStatusCode.BadRequest);
                     }
 
-                    _log.Debug($"Step 6.");
                     //Call "Card Order API" to start the value code creation and travel card block process (requesting a block of the card)
-                    //var captureOrderResponse = ValueCodeHandler.CallCaptureOrderAction(localContext, getCardProperties.CardNumber/*valueCode.TravelCard.TravelCardNumber*/);
-                    //if (string.IsNullOrWhiteSpace(captureOrderResponse) || captureOrderResponse != "200 - Success")
-                    //{
-                    //    _log.Debug($"CallCaptureOrderAction did not return a Success.");
-                    //    return ReturnApiMessage(threadId,
-                    //        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                    //    HttpStatusCode.BadRequest);
-                    //}
-
-                    //var captureOrderResponse = TravelCardEntity.HandleCaptureOrder(localContext, getCardProperties.CardNumber);
-                    //if (string.IsNullOrWhiteSpace(captureOrderResponse) || captureOrderResponse != "200 - Success")
-                    //{
-                    //    _log.Debug($"CallCaptureOrderAction did not return a Success.");
-                    //    return ReturnApiMessage(threadId,
-                    //        ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                    //    HttpStatusCode.BadRequest);
-                    //}
-
+                    _log.Info($"Th={threadId} - HandleCreateValueCode: Capturing order with Cardnumber {getCardProperties.CardNumber}.");
                     var captureOrderResponse = CaptureOrderWithCardNumber(localContext, getCardProperties.CardNumber);
                     if (string.IsNullOrWhiteSpace(captureOrderResponse) || captureOrderResponse != "200 - Success")
                     {
-                        _log.Debug($"CallCaptureOrderAction did not return a Success.");
+                        _log.Warn($"Th={threadId} - HandleCreateValueCode: CaptureOrderWithCardNumber did not return a Success.");
                         return ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                         HttpStatusCode.BadRequest);
                     }
 
-                    _log.Debug($"Step 7.");
-                    _log.Debug($"Fetch travel card '{travelCard?.cgi_travelcardnumber}' from CRM.");
+                    _log.Info($"Th={threadId} - HandleCreateValueCode: Fetching travel card '{travelCard?.cgi_travelcardnumber}' from CRM.");
                     var crmTravelCard = FetchTravelCardFromCRM(localContext,
                             travelCard.cgi_travelcardnumber, new ColumnSet(TravelCardEntity.Fields.cgi_Blocked));
 
                     //Update travel card to blocked
                     if (crmTravelCard?.cgi_Blocked == true)
                     {
+                        _log.Debug($"Th={threadId} - HandleCreateValueCode: Updating travel card with Id '{crmTravelCard.Id}'.");
                         var updateTravelCard = new TravelCardEntity()
                         {
                             Id = crmTravelCard.Id,
@@ -1275,12 +1195,13 @@ namespace Skanetrafiken.Crm.Controllers
                         };
                         XrmHelper.Update(localContext, updateTravelCard);
 
-                        _log.Debug($"Update travel card ed_RequestedValueCodeForCard: {updateTravelCard?.ed_RequestedValueCodeForCard}");
+                        _log.Info($"Th={threadId} - HandleCreateValueCode: Updated travel card with Id '{crmTravelCard.Id}' ed_RequestedValueCodeForCard: {updateTravelCard?.ed_RequestedValueCodeForCard}.");
                     }
 
                     // Notify customer (send mail?) that the travel card has been blocked
+                    _log.Info($"Th={threadId} - HandleCreateValueCode: Calling SendValueCodeAction.");
                     var sendValueCode = ValueCodeHandler.CallSendValueCodeAction(localContext, valueCodeGeneric);
-                    _log.Debug($"Value code sent.");
+                    _log.Info($"Th={threadId} - HandleCreateValueCode: Value code sent.");
 
                     //Successfully created value code
                     return ReturnApiMessage(threadId, ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_OK),
@@ -1301,14 +1222,15 @@ namespace Skanetrafiken.Crm.Controllers
         {
             //  *** Endast Förlustgaranti ***
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Debug($"Th={threadId} - CreateValueCodeLossCompensation called with Payload: {CrmPlusControl.SerializeNoNull(valueCode)}");
+            _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: CreateValueCodeLossCompensation called.");
+            _log.Debug($"Th={threadId} - CreateValueCodeLossCompensation: CreateValueCodeLossCompensation called with Payload: {CrmPlusControl.SerializeNoNull(valueCode)}");
 
             Plugin.LocalPluginContext localContext = null;
 
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+                _log.DebugFormat($"Th={threadId} - CreateValueCodeLossCompensation: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -1317,11 +1239,16 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
+                    _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: ServiceProxy and LocalContext created Successfully.");
+
                     #region Argument validation
+
+                    _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: Validating Arguments.");
 
                     if (valueCode == null)
                     {
                         var resp = ReturnApiMessage(threadId, Resources.IncomingDataCannotBeNull, HttpStatusCode.BadRequest);
+                        _log.Warn($"Th={threadId} - CreateValueCodeLossCompensation: Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
                         return resp;
                     }
 
@@ -1331,6 +1258,7 @@ namespace Skanetrafiken.Crm.Controllers
                         var resp = ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_EmailOrPhoneNumber),
                             HttpStatusCode.BadRequest);
+                        _log.Warn($"Th={threadId} - CreateValueCodeLossCompensation: Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
                         return resp;
                     }
 
@@ -1341,6 +1269,7 @@ namespace Skanetrafiken.Crm.Controllers
                         {
                             var resp = ReturnApiMessage(threadId, string.Format(Resources.InvalidFormatForEmail, valueCode.Email),
                             HttpStatusCode.BadRequest);
+                            _log.Warn($"Th={threadId} - CreateValueCodeLossCompensation: Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
                             return resp;
                         }
                         valueCode.deliveryMethod = 1;
@@ -1352,6 +1281,7 @@ namespace Skanetrafiken.Crm.Controllers
                         {
                             var resp = ReturnApiMessage(threadId, string.Format(Resources.InvalidFormatForMobile, valueCode.Mobile),
                             HttpStatusCode.BadRequest);
+                            _log.Warn($"Th={threadId} - CreateValueCodeLossCompensation: Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
                             return resp;
                         }
                         valueCode.deliveryMethod = 2;
@@ -1361,29 +1291,32 @@ namespace Skanetrafiken.Crm.Controllers
                     //User has to pass information about the travel card
                     if (valueCode.TravelCard == null)
                     {
-                        _log.Debug($"TravelCard is empty.");
+                        _log.Debug($"Th={threadId} - CreateValueCodeLossCompensation: TravelCard is empty.");
 
                         //TODO: Add error message for not passing travel card information
                         var resp = ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_NoInformationAboutTravelCard),
                             HttpStatusCode.BadRequest);
+                        _log.Warn($"Th={threadId} - CreateValueCodeLossCompensation: Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
                         return resp;
                     }
                     else if (string.IsNullOrWhiteSpace(valueCode.TravelCard.TravelCardNumber) || string.IsNullOrWhiteSpace(valueCode.TravelCard.CVC))
                     {
-                        _log.Debug($"TravelCardNumber or CVC is empty.");
+                        _log.Debug($"Th={threadId} - CreateValueCodeLossCompensation: TravelCardNumber or CVC is empty.");
                         var resp = ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_TravelCardNumberAndCVC),
                             HttpStatusCode.BadRequest);
+                        _log.Warn($"Th={threadId} - CreateValueCodeLossCompensation: Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
                         return resp;
                     }
 
                     if (valueCode.TypeOfValueCode != 3) //If type of value code wasn't specified in the call, the value automatically becomes 0.
                     {
-                        _log.Debug($"This flow stopped due to type of value code is not 3=Förlustgaranti");
+                        _log.Debug($"Th={threadId} - CreateValueCodeLossCompensation: This flow stopped due to type of value code is not 3=Förlustgaranti");
                         var resp = ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_TypeofValueCodeError),
                             HttpStatusCode.BadRequest);
+                        _log.Warn($"Th={threadId} - CreateValueCodeLossCompensation: Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
                         return resp;
                     }
 
@@ -1392,18 +1325,22 @@ namespace Skanetrafiken.Crm.Controllers
                         var con = FetchContact(localContext, valueCode.ContactId.Value);
                         if (con == null)
                         {
-                            _log.Debug($"Given contact '{valueCode.ContactId.Value}' does not exist in CRM.");
-                            return ReturnApiMessage(threadId,
+                            _log.Debug($"Th={threadId} - CreateValueCodeLossCompensation: Given contact '{valueCode.ContactId.Value}' does not exist in CRM.");
+                            var resp =  ReturnApiMessage(threadId,
                                 ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_ContactDoesNotExist),
                                 HttpStatusCode.BadRequest);
+                            _log.Warn($"Th={threadId} - CreateValueCodeLossCompensation: Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+                            return resp;
                         }
                     }
                     else
                     {
-                        _log.Debug($"ContactId was not sent into body.");
-                        return ReturnApiMessage(threadId,
+                        _log.Debug($"Th={threadId} - CreateValueCodeLossCompensation: ContactId was not sent into body.");
+                        var resp = ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                             HttpStatusCode.BadRequest);
+                        _log.Warn($"Th={threadId} - CreateValueCodeLossCompensation: Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+                        return resp;
                     }
 
                     #endregion
@@ -1618,14 +1555,14 @@ namespace Skanetrafiken.Crm.Controllers
 
                     #endregion
 
-
+                    _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: Working with Create Value Code Process.");
                     // Create Value Code (voucherType (3) = Förlustgaranti)
                     #region Create Value Code
 
                     TravelCardEntity updateTravelCard = new TravelCardEntity();
                     EntityReference valueCodeCreated = null;
 
-                    _log.Debug($"Re-fetch updated travel card '{cardDetailsParsed.CardNumberField}'");
+                    _log.Debug($"Th={threadId} - CreateValueCodeLossCompensation: Re-fetch updated travel card '{cardDetailsParsed.CardNumberField}'");
                     crmTravelCard = FetchTravelCardFromCRM(localContext, valueCode.TravelCard.TravelCardNumber,
                        new ColumnSet(TravelCardEntity.Fields.cgi_Blocked, TravelCardEntity.Fields.cgi_Contactid,
                        TravelCardEntity.Fields.ed_RequestedValueCodeForCard));
@@ -1637,23 +1574,28 @@ namespace Skanetrafiken.Crm.Controllers
 
                     //Devop Task 745 - Round decimals
                     if (cardDetailsParsed.BalanceField > 0)
+                    {
+                        _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: Round decimals.");
                         cardDetailsParsed.BalanceField = (decimal)Math.Round(cardDetailsParsed.BalanceField, 0, MidpointRounding.AwayFromZero);
+                    }
 
                     if (cardDetailsParsed.BalanceField <= 0)
                     {
                         updateTravelCard.st_SaldoReskassa = 0M;
 
-                        _log.Debug($"Note: Balance from BIFF has been changed to 0.");
+                        _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: Note - Balance from BIFF has been changed to 0.");
                         cardDetailsParsed.BalanceField = 0M;
                     }
                     else
                     {
+                        _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: Balance from BIFF is not 0 or less.");
                         updateTravelCard.st_SaldoReskassa = cardDetailsParsed.BalanceField;
                     }
 
                     // make sure we have an active period
                     if (cardDetailsParsed.PeriodEndField >= DateTime.Now)
                     {
+                        _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: Making sure we have an active period.");
                         if (cardDetailsParsed.PricePaidField <= 0M)
                             updateTravelCard.ed_PeriodPricePaidAmount = 0M;
                         else updateTravelCard.ed_PeriodPricePaidAmount = cardDetailsParsed.PricePaidField;
@@ -1666,16 +1608,18 @@ namespace Skanetrafiken.Crm.Controllers
                     //Update travel card to blocked
                     if (crmTravelCard?.cgi_Blocked == true && crmTravelCard?.ed_RequestedValueCodeForCard != true)
                     {
+                        _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: Update travel card to blocked.");
                         updateTravelCard.ed_RequestedValueCodeForCard = true;
                     }
 
                     if (outstandingChargesWaiting > 0)
                     {
                         // Lägg till väntande laddning på reskassebeloppet
+                        _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: Add outstanding charges to pending TravelCard Balance.");
                         cardDetailsParsed.BalanceField += outstandingChargesWaiting;
                     }
 
-                    _log.Debug($"Updating travel card. Id: {updateTravelCard?.Id}, cgi_Blocked: {updateTravelCard?.cgi_Blocked}, ed_RequestedValueCodeForCard: {updateTravelCard?.ed_RequestedValueCodeForCard}, " +
+                    _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: Updating travel card. Id: {updateTravelCard?.Id}, cgi_Blocked: {updateTravelCard?.cgi_Blocked}, ed_RequestedValueCodeForCard: {updateTravelCard?.ed_RequestedValueCodeForCard}, " +
                         $"cgi_TravelCardCVC: {updateTravelCard?.cgi_TravelCardCVC}, st_SaldoReskassa: {updateTravelCard?.st_SaldoReskassa}, ed_PeriodPricePaidAmount: {updateTravelCard?.ed_PeriodPricePaidAmount}, " +
                         $"ed_ZonesString: {updateTravelCard?.ed_ZonesString}, cgi_ValidFrom: {updateTravelCard?.cgi_ValidFrom}, cgi_ValidTo: {updateTravelCard?.cgi_ValidTo}");
 
@@ -1686,6 +1630,7 @@ namespace Skanetrafiken.Crm.Controllers
                     if (cardDetailsParsed.PeriodEndField > DateTime.Today)
                     {
                         // 2019-08-07 - Recalculate total PricePaid depending on waiting periods
+                        _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: Recalculate total PricePaid depending on waiting periods.");
                         pricePaidCalculated = GetTotalPricePaidBasedOnPeriod(cardDetailsParsed.PeriodStartField, cardDetailsParsed.PeriodEndField, cardDetailsParsed.PricePaidField, cardDetailsParsed.CardTypePeriodField);
                     }
                     //decimal waitingAmount = GetWaitingCharges(localContext, valueCode.TravelCard.TravelCardNumber);
@@ -1693,39 +1638,43 @@ namespace Skanetrafiken.Crm.Controllers
                     //pricePaidCalculated += waitingAmount;
 
 
-                    _log.Debug($"Calling ed_CreateValueCodeGeneric workflow.");
+                    _log.Debug($"Th={threadId} - CreateValueCodeLossCompensation: Calling ed_CreateValueCodeGeneric workflow.");
                     valueCodeCreated = ValueCodeHandler.CallCreateValueCodeAction(localContext, (int)Schema.Generated.ed_valuecodetypeglobal.Forlustgaranti, cardDetailsParsed.BalanceField, pricePaidCalculated, valueCode.Mobile, valueCode.Email, null, null,
                             crmTravelCard.cgi_Contactid, null, valueCode.deliveryMethod, crmTravelCard?.ToEntityReference());
 
                     #endregion
 
                     //// Send Value Code
+                    _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: Working with Send Value Code Process.");
                     #region Send Value Code
 
                     if (valueCodeCreated != null)
                     {
-                        _log.Debug($"Calling ed_SendValueCode workflow.");
+                        _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: Calling ed_SendValueCode workflow.");
                         ValueCodeHandler.CallSendValueCodeAction(localContext, valueCodeCreated);
-                        _log.Debug($"Successfully called ed_SendValueCode.");
+                        _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: Successfully called ed_SendValueCode.");
                     }
                     else
                     {
-                        _log.Debug($"A value code was not created, therefore no value code was not sent.");
-                        return ReturnApiMessage(threadId,
+                        _log.Debug($"Th={threadId} - CreateValueCodeLossCompensation: A value code was not created, therefore no value code was not sent.");
+                        var resp =  ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                             HttpStatusCode.OK);
+                        _log.Warn($"Th={threadId} - CreateValueCodeLossCompensation: Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+                        return resp;
                     }
 
                     #endregion
 
                     //Successfully created value code   
+                    _log.Info($"Th={threadId} - CreateValueCodeLossCompensation: Successfully created value code.");
                     return ReturnApiMessage(threadId, ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_OK),
                         HttpStatusCode.OK);
                 }
             }
             catch (WebException ex)
             {
-                _log.Error("WebException caught from ValueCodeController: " + ex.Message);
+                _log.Error("Th={threadId} - CreateValueCodeLossCompensation: WebException caught from ValueCodeController: " + ex.Message);
 
                 return ReturnApiMessage(threadId,
                                 ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
@@ -1733,7 +1682,7 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
-                _log.Error("Exception caught from ValueCodeController: " + ex.Message);
+                _log.Error("Th={threadId} - CreateValueCodeLossCompensation: Exception caught from ValueCodeController: " + ex.Message);
 
                 return ReturnApiMessage(threadId,
                                 ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
@@ -2226,7 +2175,7 @@ namespace Skanetrafiken.Crm.Controllers
         public string GetCardWithCardNumber(Plugin.LocalPluginContext localContext, string cardNumber)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - GetCardWithCardNumber called with parameter: {cardNumber}");
+            _log.Info($"Th={threadId} - GetCardWithCardNumber: GetCardWithCardNumber called with parameter: {cardNumber}");
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
@@ -2238,14 +2187,14 @@ namespace Skanetrafiken.Crm.Controllers
                 //badReq.Content = new StringContent("Could not find a 'CardNumber' parameter in url");
                 //_log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
                 //return badReq;
-                _log.Info($"ERROR: GetCardWithCardNumber -> CardNumber Missing!");
+                _log.Warn($"Th={threadId} - GetCardWithCardNumber: ERROR: GetCardWithCardNumber -> CardNumber Missing!");
                 answer = "ERROR";
                 return answer;
             }
 
             try
             {
-                _log.DebugFormat($"GetCardWithCardNumber: Calling -> Get information from settings");
+                _log.Info($"Th={threadId} - GetCardWithCardNumber: Calling -> Get information from settings");
                 //Get information from settings
                 FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
                 settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
@@ -2263,24 +2212,25 @@ namespace Skanetrafiken.Crm.Controllers
                 if (settings != null)
                 {
                     applicationId = settings.ed_JojoCardDetailsApplicationId;
-                    _log.Info($"ApplicationId: {applicationId}");
+                    _log.Debug($"Th={threadId} - GetCardWithCardNumber: ApplicationId: {applicationId}");
                     tenentId = settings.ed_JojoCardDetailsTenentId;
-                    _log.Info($"TenentId: {tenentId}");
+                    _log.Debug($"Th={threadId} - GetCardWithCardNumber: TenentId: {tenentId}");
                     jojoCertificateName = settings.ed_ClientCertNameReskassa;
-                    _log.Info($"CertName: {jojoCertificateName}");
+                    _log.Debug($"Th={threadId} - GetCardWithCardNumber: CertName: {jojoCertificateName}");
                     msAuthScope = settings.ed_JojoCardDetailsScope;
-                    _log.Info($"msAuthScope: {msAuthScope}");
+                    _log.Debug($"Th={threadId} - GetCardWithCardNumber: msAuthScope: {msAuthScope}");
                 }
                 else
                 {
                     HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
                     badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (GetCardWithCardNumber)");
-                    _log.Info($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
+
+                    _log.Warn($"Th={threadId} - GetCardWithCardNumber: Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
                     answer = "ERROR - " + new StringContent("Could not find a Settings Information from CRM (GetCardWithCardNumber)");
                     return answer;
                 }
 
-                _log.DebugFormat($"GetCardWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
+                _log.Info($"Th={threadId} - GetCardWithCardNumber: GetCardWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
                 AuthenticationResult authenticationResponse = _taskFactory
                     .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default - https://skanetrafiken.se/apps/jojocardservice/.default
                     .Unwrap()
@@ -2289,7 +2239,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                 if (authenticationResponse == null)
                 {
-                    _log.DebugFormat($"ERROR: GetCardWithCardNumber: Error -> Could not aquire token for client!");
+                    _log.Warn($"Th={threadId} - GetCardWithCardNumber: ERROR: GetCardWithCardNumber: Error -> Could not aquire token for client!");
                     //HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
                     //badReq.Content = new StringContent("Error: Could not aquire token for client!");
                     //_log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
@@ -2298,14 +2248,14 @@ namespace Skanetrafiken.Crm.Controllers
                     return answer;
                 }
 
-                _log.DebugFormat($"GetCardWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
+                _log.DebugFormat($"Th={threadId} - GetCardWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
 
                 string endPoint = settings.ed_JojoCardDetailsAPI + "card/";
                 //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/card/";
                 //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/card/";
-                _log.DebugFormat($"GetCardWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
+                _log.Info($"Th={threadId} - GetCardWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
 
-                _log.DebugFormat($"GetCardWithCardNumber: Building Jojo Card GetCard GET Call...");
+                _log.DebugFormat($"Th={threadId} - GetCardWithCardNumber: Building Jojo Card GetCard GET Call...");
                 var myUri = new Uri(endPoint);
                 var myWebRequest = WebRequest.Create(myUri);
                 var myHttpWebRequest = (HttpWebRequest)myWebRequest;
@@ -2314,7 +2264,7 @@ namespace Skanetrafiken.Crm.Controllers
                 myHttpWebRequest.Headers.Add("20", "*/*");
                 myHttpWebRequest.Method = "GET";
 
-                _log.DebugFormat($"GetCardWithCardNumber: Calling Jojo Card GetCard GET...");
+                _log.Info($"Th={threadId} - GetCardWithCardNumber: Calling Jojo Card GetCard GET...");
                 var myWebResponse = myWebRequest.GetResponse();
                 var responseStream = myWebResponse.GetResponseStream();
                 if (responseStream == null) return null;
@@ -2326,7 +2276,9 @@ namespace Skanetrafiken.Crm.Controllers
                 myWebResponse.Close();
 
                 var returnJson = new StringContent(json);
-                _log.DebugFormat($"GetCardWithCardNumber: Jojo Card GET returned -> {returnJson}");
+
+                _log.Info($"Th={threadId} - GetCardWithCardNumber: Jojo Card GET returned.");
+                _log.DebugFormat($"Th={threadId} - GetCardWithCardNumber: Jojo Card GET returned -> {returnJson}");
 
                 //HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                 //resp.Content = returnJson;
@@ -2341,7 +2293,7 @@ namespace Skanetrafiken.Crm.Controllers
                 //rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 //_log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 //return rm;
-                _log.DebugFormat($"GetCardWithCardNumber: Exception cought -> {ex?.Message}, {ex?.InnerException}, {ex?.InnerException?.Message}");
+                _log.Warn($"Th={threadId} - GetCardWithCardNumber: Exception cought -> {ex?.Message}, {ex?.InnerException}, {ex?.InnerException?.Message}");
                 throw new InvalidPluginExecutionException("Error Getting Card (GetCardWithCardNumber): " + ex.Message);
             }
         }
@@ -2350,7 +2302,7 @@ namespace Skanetrafiken.Crm.Controllers
         public string PlaceOrderWithCardNumber(Plugin.LocalPluginContext localContext, string cardNumber)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - PlaceOrderWithCardNumber called with parameter: {cardNumber}");
+            _log.Info($"Th={threadId} - PlaceOrderWithCardNumber: PlaceOrderWithCardNumber called with parameter: {cardNumber}");
 
             string answer = "";
 
@@ -2362,14 +2314,14 @@ namespace Skanetrafiken.Crm.Controllers
                 //badReq.Content = new StringContent("Could not find a 'CardNumber' parameter in url");
                 //_log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
                 //return badReq;
-                _log.Info($"ERROR: PlaceOrderWithCardNumber -> CardNumber Missing!");
+                _log.Warn($"Th={threadId} - PlaceOrderWithCardNumber: ERROR: PlaceOrderWithCardNumber -> CardNumber Missing!");
                 answer = "ERROR";
                 return answer;
             }
 
             try
             {
-                _log.DebugFormat($"PlaceOrderWithCardNumber: Calling -> Get information from settings");
+                _log.Info($"Th={threadId} - PlaceOrderWithCardNumber: Calling -> Get information from settings.");
                 //Get information from settings
                 FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
                 settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
@@ -2387,20 +2339,25 @@ namespace Skanetrafiken.Crm.Controllers
                 if (settings != null)
                 {
                     applicationId = settings.ed_JojoCardDetailsApplicationId;
+                    _log.Debug($"Th={threadId} - PlaceOrderWithCardNumber: ApplicationId: {applicationId}");
                     tenentId = settings.ed_JojoCardDetailsTenentId;
+                    _log.Debug($"Th={threadId} - PlaceOrderWithCardNumber: TenentId: {tenentId}");
                     jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                    _log.Debug($"Th={threadId} - PlaceOrderWithCardNumber: CertName: {jojoCertificateName}");
                     msAuthScope = settings.ed_JojoCardDetailsScope;
+                    _log.Debug($"Th={threadId} - PlaceOrderWithCardNumber: msAuthScope: {msAuthScope}");
                 }
                 else
                 {
                     HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
                     badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (PlaceOrderWithCardNumber)");
-                    _log.Info($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
+
+                    _log.Warn($"Th={threadId} - PlaceOrderWithCardNumber: Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
                     answer = "ERROR - " + new StringContent("Could not find a Settings Information from CRM (PlaceOrderWithCardNumber)");
                     return answer;
                 }
 
-                _log.DebugFormat($"PlaceOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
+                _log.Info($"Th={threadId} - PlaceOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient.");
                 AuthenticationResult authenticationResponse = _taskFactory
                     .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default - https://skanetrafiken.se/apps/jojocardservice/.default
                     .Unwrap()
@@ -2409,7 +2366,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                 if (authenticationResponse == null)
                 {
-                    _log.DebugFormat($"ERROR: PlaceOrderWithCardNumber: Error -> Could not aquire token for client!");
+                    _log.Warn($"Th={threadId} - PlaceOrderWithCardNumber: ERROR: PlaceOrderWithCardNumber: Error -> Could not aquire token for client!");
                     //HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
                     //badReq.Content = new StringContent("Error: Could not aquire token for client!");
                     //_log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
@@ -2418,14 +2375,14 @@ namespace Skanetrafiken.Crm.Controllers
                     return answer;
                 }
 
-                _log.DebugFormat($"PlaceOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
+                _log.DebugFormat($"Th={threadId} - PlaceOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
 
                 string endPoint = settings.ed_JojoCardDetailsAPI + "placeOrder/";
                 //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/placeOrder/";
                 //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/placeOrder/";
-                _log.DebugFormat($"PlaceOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
+                _log.Info($"Th={threadId} - PlaceOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
 
-                _log.DebugFormat($"PlaceOrderWithCardNumber: Building Jojo Card PlaceOrder POST Call...");
+                _log.DebugFormat($"Th={threadId} - PlaceOrderWithCardNumber: Building Jojo Card PlaceOrder POST Call...");
                 var myUri = new Uri(endPoint);
                 var myWebRequest = WebRequest.Create(myUri);
                 var myHttpWebRequest = (HttpWebRequest)myWebRequest;
@@ -2437,7 +2394,7 @@ namespace Skanetrafiken.Crm.Controllers
                 myHttpWebRequest.ContentLength = 0;
                 myHttpWebRequest.Method = "POST";
 
-                _log.DebugFormat($"PlaceOrderWithCardNumber: Calling Jojo Card PlaceOrder POST...");
+                _log.Info($"Th={threadId} - PlaceOrderWithCardNumber: Calling Jojo Card PlaceOrder POST...");
                 var myWebResponse = myWebRequest.GetResponse();
                 var responseStream = myWebResponse.GetResponseStream();
                 if (responseStream == null) return null;
@@ -2461,7 +2418,8 @@ namespace Skanetrafiken.Crm.Controllers
                 myWebResponse.Close();
 
                 var returnJson = new StringContent(json);
-                _log.DebugFormat($"PlaceOrderWithCardNumber: Jojo Card PlaceOrder POST returned -> {returnJson}");
+                _log.Info($"Th={threadId} - PlaceOrderWithCardNumber: Jojo Card PlaceOrder POST returned.");
+                _log.DebugFormat($"Th={threadId} - PlaceOrderWithCardNumber: Jojo Card PlaceOrder POST returned -> {returnJson}.");
 
                 //HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                 //resp.Content = returnJson;
@@ -2476,6 +2434,8 @@ namespace Skanetrafiken.Crm.Controllers
                 //rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 //_log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 //return rm;
+
+                _log.Warn($"Th={threadId} - PlaceOrderWithCardNumber: Error Getting Card (PlaceOrderWithCardNumber):  {ex.Message}.");
                 throw new InvalidPluginExecutionException("Error Getting Card (PlaceOrderWithCardNumber): " + ex.Message);
             }
         }
@@ -2484,7 +2444,7 @@ namespace Skanetrafiken.Crm.Controllers
         public string CancelOrderWithCardNumber(Plugin.LocalPluginContext localContext, string cardNumber)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - CancelOrderWithCardNumber called with parameter: {cardNumber}");
+            _log.Info($"Th={threadId} - CancelOrderWithCardNumber: CancelOrderWithCardNumber called with parameter: {cardNumber}");
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
@@ -2496,14 +2456,14 @@ namespace Skanetrafiken.Crm.Controllers
                 //badReq.Content = new StringContent("Could not find a 'CardNumber' parameter in url");
                 //_log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
                 //return badReq;
-                _log.Info($"ERROR: CancelOrderWithCardNumber -> CardNumber Missing!");
+                _log.Warn($"Th={threadId} - CancelOrderWithCardNumber: ERROR: CancelOrderWithCardNumber -> CardNumber Missing!");
                 answer = "ERROR";
                 return answer;
             }
 
             try
             {
-                _log.DebugFormat($"CancelOrderWithCardNumber: Calling -> Get information from settings");
+                _log.Info($"Th={threadId} - CancelOrderWithCardNumber: CancelOrderWithCardNumber: Calling -> Get information from settings");
                 //Get information from settings
                 FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
                 settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
@@ -2521,20 +2481,25 @@ namespace Skanetrafiken.Crm.Controllers
                 if (settings != null)
                 {
                     applicationId = settings.ed_JojoCardDetailsApplicationId;
+                    _log.Debug($"Th={threadId} - CancelOrderWithCardNumber: ApplicationId: {applicationId}");
                     tenentId = settings.ed_JojoCardDetailsTenentId;
+                    _log.Debug($"Th={threadId} - CancelOrderWithCardNumber: TenentId: {tenentId}");
                     jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                    _log.Debug($"Th={threadId} - CancelOrderWithCardNumber: CertName: {jojoCertificateName}");
                     msAuthScope = settings.ed_JojoCardDetailsScope;
+                    _log.Debug($"Th={threadId} - CancelOrderWithCardNumber: msAuthScope: {msAuthScope}");
                 }
                 else
                 {
                     HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
                     badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (CancelOrderWithCardNumber)");
-                    _log.Info($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
+
+                    _log.Warn($"Th={threadId} - CancelOrderWithCardNumber: Could not find Settings Information from CRM (CancelOrderWithCardNumber).");
                     answer = "ERROR - " + new StringContent("Could not find a Settings Information from CRM (CancelOrderWithCardNumber)");
                     return answer;
                 }
 
-                _log.DebugFormat($"CancelOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
+                _log.Info($"Th={threadId} - CancelOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
                 AuthenticationResult authenticationResponse = _taskFactory
                     .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default - https://skanetrafiken.se/apps/jojocardservice/.default
                     .Unwrap()
@@ -2543,7 +2508,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                 if (authenticationResponse == null)
                 {
-                    _log.DebugFormat($"ERROR: CancelOrderWithCardNumber: Error -> Could not aquire token for client!");
+                    _log.Warn($"Th={threadId} - CancelOrderWithCardNumber: ERROR: CancelOrderWithCardNumber: Error -> Could not aquire token for client!");
                     //_log.DebugFormat($"CancelOrderWithCardNumber: Error -> Could not aquire token for client!");
                     //HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
                     //badReq.Content = new StringContent("Error: Could not aquire token for client!");
@@ -2553,14 +2518,14 @@ namespace Skanetrafiken.Crm.Controllers
                     return answer;
                 }
 
-                _log.DebugFormat($"CancelOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
+                _log.DebugFormat($"Th={threadId} - CancelOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
 
                 string endPoint = settings.ed_JojoCardDetailsAPI + "cancelOrder/";
                 //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/cancelOrder/";
                 //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/cancelOrder/";
-                _log.DebugFormat($"CancelOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
+                _log.Info($"Th={threadId} - CancelOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
 
-                _log.DebugFormat($"CancelOrderWithCardNumber: Building Jojo Card CancelOrder POST Call...");
+                _log.DebugFormat($"Th={threadId} - CancelOrderWithCardNumber: Building Jojo Card CancelOrder POST Call...");
                 var myUri = new Uri(endPoint);
                 var myWebRequest = WebRequest.Create(myUri);
                 var myHttpWebRequest = (HttpWebRequest)myWebRequest;
@@ -2571,7 +2536,7 @@ namespace Skanetrafiken.Crm.Controllers
                 myHttpWebRequest.Headers.Add("20", "*/*");
                 myHttpWebRequest.Method = "POST";
 
-                _log.DebugFormat($"CancelOrderWithCardNumber: Calling Jojo Card CancelOrder POST...");
+                _log.Info($"Th={threadId} - CancelOrderWithCardNumber: Calling Jojo Card CancelOrder POST...");
                 var myWebResponse = myWebRequest.GetResponse();
                 //Check Status and return ok or not ok
 
@@ -2597,7 +2562,8 @@ namespace Skanetrafiken.Crm.Controllers
                 myWebResponse.Close();
 
                 var returnJson = new StringContent(json);
-                _log.DebugFormat($"CancelOrderWithCardNumber: Jojo Card CancelOrder POST returned -> {returnJson}");
+                _log.Info($"Th={threadId} - CancelOrderWithCardNumber: Jojo Card CancelOrder POST returned.");
+                _log.DebugFormat($"Th={threadId} - CancelOrderWithCardNumber: Jojo Card CancelOrder POST returned -> {returnJson}.");
 
                 //HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                 //resp.Content = returnJson;
@@ -2611,6 +2577,8 @@ namespace Skanetrafiken.Crm.Controllers
                 //rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 //_log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 //return rm;
+
+                _log.Warn($"Th={threadId} - CancelOrderWithCardNumber: Error Getting Card (CancelOrderWithCardNumber) {ex.Message}.");
                 throw new InvalidPluginExecutionException("Error Getting Card (CancelOrderWithCardNumber): " + ex.Message);
             }
         }
@@ -2619,7 +2587,7 @@ namespace Skanetrafiken.Crm.Controllers
         public string CaptureOrderWithCardNumber(Plugin.LocalPluginContext localContext, string cardNumber)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - CaptureOrderWithCardNumber called with parameter: {cardNumber}");
+            _log.Info($"Th={threadId} - CaptureOrderWithCardNumber: CaptureOrderWithCardNumber called with parameter: {cardNumber}");
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
@@ -2631,14 +2599,14 @@ namespace Skanetrafiken.Crm.Controllers
                 //badReq.Content = new StringContent("Could not find a 'CardNumber' parameter in url");
                 //_log.Info($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
                 //return badReq;
-                _log.Info($"ERROR: CaptureOrderWithCardNumber -> CardNumber Missing!");
+                _log.Warn($"Th={threadId} - CaptureOrderWithCardNumber: ERROR: CaptureOrderWithCardNumber -> CardNumber Missing!");
                 answer = "ERROR";
                 return answer;
             }
 
             try
             {
-                _log.DebugFormat($"CaptureOrderWithCardNumber: Calling -> Get information from settings");
+                _log.Info($"Th={threadId} - CaptureOrderWithCardNumber: Calling -> Get information from settings.");
                 //Get information from settings
                 FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
                 settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
@@ -2656,20 +2624,25 @@ namespace Skanetrafiken.Crm.Controllers
                 if (settings != null)
                 {
                     applicationId = settings.ed_JojoCardDetailsApplicationId;
+                    _log.Debug($"Th={threadId} - CaptureOrderWithCardNumber: ApplicationId: {applicationId}");
                     tenentId = settings.ed_JojoCardDetailsTenentId;
+                    _log.Debug($"Th={threadId} - CaptureOrderWithCardNumber: TenentId: {tenentId}");
                     jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                    _log.Debug($"Th={threadId} - CaptureOrderWithCardNumber: CertName: {jojoCertificateName}");
                     msAuthScope = settings.ed_JojoCardDetailsScope;
+                    _log.Debug($"Th={threadId} - CaptureOrderWithCardNumber: msAuthScope: {msAuthScope}");
                 }
                 else
                 {
                     HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
                     badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (CaptureOrderWithCardNumber)");
-                    _log.Info($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
+
+                    _log.Warn($"Th={threadId} - CaptureOrderWithCardNumber: Could not find a Settings Information from CRM (CaptureOrderWithCardNumber).");
                     answer = "ERROR - " + new StringContent("Could not find a Settings Information from CRM (CaptureOrderWithCardNumber)");
                     return answer;
                 }
 
-                _log.DebugFormat($"CaptureOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
+                _log.DebugFormat($"Th={threadId} - CaptureOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
                 AuthenticationResult authenticationResponse = _taskFactory
                     .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default - https://skanetrafiken.se/apps/jojocardservice/.default
                     .Unwrap()
@@ -2678,7 +2651,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                 if (authenticationResponse == null)
                 {
-                    _log.DebugFormat($"ERROR: CaptureOrderWithCardNumber: Error -> Could not aquire token for client!");
+                    _log.Warn($"Th={threadId} - CaptureOrderWithCardNumber: ERROR: CaptureOrderWithCardNumber: Error -> Could not aquire token for client!");
                     //_log.DebugFormat($"CaptureOrderWithCardNumber: Error -> Could not aquire token for client!");
                     //HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
                     //badReq.Content = new StringContent("Error: Could not aquire token for client!");
@@ -2688,15 +2661,15 @@ namespace Skanetrafiken.Crm.Controllers
                     return answer;
                 }
 
-                _log.DebugFormat($"CaptureOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
+                _log.DebugFormat($"Th={threadId} - CaptureOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
 
                 //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/captureOrder/";
                 //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/captureOrder/";
                 string endPoint = settings.ed_JojoCardDetailsAPI + "captureOrder/";
 
-                _log.DebugFormat($"CaptureOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
+                _log.Info($"Th={threadId} - CaptureOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
 
-                _log.DebugFormat($"CaptureOrderWithCardNumber: Building Jojo Card CaptureOrder POST Call...");
+                _log.DebugFormat($"Th={threadId} - CaptureOrderWithCardNumber: Building Jojo Card CaptureOrder POST Call...");
                 var myUri = new Uri(endPoint);
                 var myWebRequest = WebRequest.Create(myUri);
                 var myHttpWebRequest = (HttpWebRequest)myWebRequest;
@@ -2706,7 +2679,7 @@ namespace Skanetrafiken.Crm.Controllers
                 myHttpWebRequest.ContentLength = 0;
                 myHttpWebRequest.Method = "POST";
 
-                _log.DebugFormat($"CaptureOrderWithCardNumber: Calling Jojo Card CaptureOrder POST...");
+                _log.Info($"Th={threadId} - CaptureOrderWithCardNumber: Calling Jojo Card CaptureOrder POST...");
                 var myWebResponse = myWebRequest.GetResponse();
                 //Check Status and return ok or not ok
 
@@ -2732,7 +2705,9 @@ namespace Skanetrafiken.Crm.Controllers
                 myWebResponse.Close();
 
                 var returnJson = new StringContent(json);
-                _log.DebugFormat($"CaptureOrderWithCardNumber: Jojo Card CaptureOrder POST returned -> {returnJson}");
+
+                _log.Info($"Th={threadId} - CaptureOrderWithCardNumber: Jojo Card CaptureOrder POST returned.");
+                _log.DebugFormat($"Th={threadId} - CaptureOrderWithCardNumber: Jojo Card CaptureOrder POST returned -> {returnJson}");
 
                 //HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                 //resp.Content = returnJson;
@@ -2747,6 +2722,8 @@ namespace Skanetrafiken.Crm.Controllers
                 //rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 //_log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 //return rm;
+
+                _log.Warn($"Th={threadId} - CaptureOrderWithCardNumber: Error Getting Card (CaptureOrderWithCardNumber) -> {ex.Message}.");
                 throw new InvalidPluginExecutionException("Error Getting Card (CaptureOrderWithCardNumber): " + ex.Message);
             }
         }

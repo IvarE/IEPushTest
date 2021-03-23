@@ -22,6 +22,7 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage Get()
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
+            _log.Info($"Th={threadId} - GET PingConnection called.\n");
             return CrmPlusControl.PingConnection(threadId);
         }
     }

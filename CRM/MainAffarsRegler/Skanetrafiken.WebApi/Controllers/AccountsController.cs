@@ -21,11 +21,11 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage Get()
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - Unsupported generic GET called.");
+            _log.Error($"Th={threadId} - Unsupported generic GET called.");
 
             HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.BadRequest);
             resp.Content = new StringContent(Resources.GenericGetNotSupported);
-            _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+            _log.Error($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
             return resp;
         }
 
@@ -47,7 +47,7 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage guidResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 guidResp.Content = new StringContent("Could not find an 'id' parameter in url");
-                _log.Info($"Th={threadId} - Returning statuscode = {guidResp.StatusCode}, Content = {guidResp.Content.ReadAsStringAsync().Result}\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {guidResp.StatusCode}, Content = {guidResp.Content.ReadAsStringAsync().Result}\n");
                 return guidResp;
             }
 
@@ -71,7 +71,16 @@ namespace Skanetrafiken.Crm.Controllers
             }*/
 
             HttpResponseMessage resp = CrmPlusControl.GetAccount(threadId, id);
-            _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+            //Return Logg
+            if (resp.StatusCode != HttpStatusCode.OK)
+            {
+                _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+            }
+            else {
+                _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}.\n");
+                _log.Debug($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+            }
+            
             return resp;
                         
         }
@@ -80,13 +89,14 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage Post([FromBody] AccountInfo info)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
+            _log.Info($"Th={threadId} - Post called.\n");
             _log.DebugFormat($"Th={threadId} - Post called with Payload:\n {CrmPlusControl.SerializeNoNull(info)}");
 
             if (info == null)
             {
                 HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 erm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-                _log.DebugFormat($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
                 return erm;
             }
             
@@ -107,7 +117,18 @@ namespace Skanetrafiken.Crm.Controllers
                     rm.Content = new StringContent(string.Format(Resources.InvalidSource, info.InformationSource));
                     break;
             }
-            _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+
+            //Return Logg
+            if (rm.StatusCode != HttpStatusCode.OK)
+            {
+                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+            }
+            else
+            {
+                _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
+                _log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+            }
+
             return rm;
         }
 
@@ -115,13 +136,14 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage Put([FromUri] string id, [FromBody] AccountInfo info)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
+            _log.Info($"Th={threadId} - Put called.\n");
             _log.DebugFormat($"Th={threadId} - Put called with Payload:\n {CrmPlusControl.SerializeNoNull(info)}");
 
             if (info == null)
             {
                 HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 erm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-                _log.DebugFormat($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
                 return erm;
             }
             Guid guid = Guid.Empty;
@@ -129,7 +151,7 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage verm = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 verm.Content = new StringContent(Resources.GuidNotValid);
-                _log.Info($"Th={threadId} - Returning statuscode = {verm.StatusCode}, Content = {verm.Content.ReadAsStringAsync().Result}\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {verm.StatusCode}, Content = {verm.Content.ReadAsStringAsync().Result}\n");
                 return verm;
             }
 
@@ -156,7 +178,7 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage rm1 = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 rm1.Content = new StringContent(Resources.GuidMismatchBodyAndUrl);
-                _log.Info($"Th={threadId} - Returning statuscode = {rm1.StatusCode}, Content = {rm1.Content.ReadAsStringAsync().Result}\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {rm1.StatusCode}, Content = {rm1.Content.ReadAsStringAsync().Result}\n");
                 return rm1;
             }
             
@@ -177,7 +199,18 @@ namespace Skanetrafiken.Crm.Controllers
                     rm.Content = new StringContent(string.Format(Resources.InvalidSource, info.InformationSource));
                     break;
             }
-            _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+            
+            //Return Logg
+            if (rm.StatusCode != HttpStatusCode.OK)
+            {
+                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+            }
+            else
+            {
+                _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
+                _log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+            }
+
             return rm;
 
         }

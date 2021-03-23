@@ -608,7 +608,8 @@ namespace Skanetrafiken.Crm
             if(!string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) && (!CheckPersonnummerFormat(customerInfo.SocialSecurityNumber) && !CheckDateFormat(customerInfo.SocialSecurityNumber)))
             {
                 error = true;
-                messages.Add(string.Format("Ogiltigt format på personnummer/persondatum: {0}", customerInfo.SocialSecurityNumber));
+                //messages.Add(string.Format("Ogiltigt format på personnummer/persondatum: {0}", customerInfo.SocialSecurityNumber));
+                messages.Add(string.Format("Ogiltigt format på personnummer/persondatum."));
             }
 
             ////string errorMessage;

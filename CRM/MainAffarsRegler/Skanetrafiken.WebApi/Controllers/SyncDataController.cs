@@ -81,13 +81,13 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage SyncContact([FromBody] SyncContact syncContact)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.DebugFormat($"Th={threadId} - Post called with Payload:\n {CrmPlusControl.SerializeNoNull(syncContact)}");
+            _log.Warn($"Th={threadId} - Post called with Payload:\n {CrmPlusControl.SerializeNoNull(syncContact)}");
 
             if (string.IsNullOrEmpty(syncContact.SocialSecurityNumber) || string.IsNullOrEmpty(syncContact.PortalId) || string.IsNullOrEmpty(syncContact.EmailAddress))
             {
                 HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 erm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-                _log.DebugFormat($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
                 return erm;
             }
 
@@ -110,7 +110,18 @@ namespace Skanetrafiken.Crm.Controllers
             //}
 
             HttpResponseMessage rm = CrmPlusControl.SynchronizeContactData(threadId, syncContact.SocialSecurityNumber, syncContact.PortalId, syncContact.EmailAddress);
-            _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+
+            //Return Logg
+            if (rm.StatusCode != HttpStatusCode.OK)
+            {
+                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content?.ReadAsStringAsync()?.Result}\n");
+            }
+            else
+            {
+                _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content?.ReadAsStringAsync()?.Result}\n");
+            }
+
             return rm;
         }
     }

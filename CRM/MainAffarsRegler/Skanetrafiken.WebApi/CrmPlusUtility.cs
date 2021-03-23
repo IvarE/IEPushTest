@@ -63,6 +63,7 @@ namespace Skanetrafiken.Crm
 
         public static SendEmailResponse SendConfirmationEmail(Plugin.LocalPluginContext localContext, int threadId, ContactEntity contact)
         {
+            _log.Debug($"Th={threadId} - ValidateEmail -> SendConfirmationEmail: Retrieving Email Confirmation Template.");
             string emailCofnfirmationTemplateName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_TemplateTitleEmailConfirmation);
             QueryExpression query = new QueryExpression()
             {
@@ -81,9 +82,13 @@ namespace Skanetrafiken.Crm
             if (template == null)
                 throw new Exception(string.Format(Resources.CouldNotFindEmailTemplate, emailCofnfirmationTemplateName));
 
+            _log.Debug($"Th={threadId} - ValidateEmail -> SendConfirmationEmail: Email Confirmation Template retrieved.");
+
+            _log.Debug($"Th={threadId} - ValidateEmail -> SendConfirmationEmail: Creating Email object from template.");
             EmailEntity email = EmailEntity.CreateEmailFromTemplate(localContext, template, contact.ToEntityReference());
 
             email.RegardingObjectId = contact.ToEntityReference();
+            _log.Debug($"Th={threadId} - ValidateEmail -> SendConfirmationEmail: Email object created with regarding ref.");
 
             return SetToFromAndSendEmail(localContext, threadId, contact.ToEntityReference(), email);
         }
@@ -118,6 +123,7 @@ namespace Skanetrafiken.Crm
 
         public static SendEmailResponse SendValidationEmail(Plugin.LocalPluginContext localContext, int threadId, LeadEntity to)
         {
+            _log.Debug($"Th={threadId} - CreateCustomerLead -> SendValidationEmail: Retrieving Lead Validation Template.");
             string leadValidationTemplateName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_TemplateTitleEmailValidationLead);
             QueryExpression query = new QueryExpression()
             {
@@ -136,10 +142,14 @@ namespace Skanetrafiken.Crm
             if (template == null)
                 throw new Exception(string.Format(Resources.CouldNotFindEmailTemplate, leadValidationTemplateName));
 
+            _log.Info($"Th={threadId} - CreateCustomerLead -> SendValidationEmail: Lead Validation Template retrieved.");
             CgiSettingEntity setting = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, EmailEntity.CgiSettingColumnSet);
-            EmailEntity email = EmailEntity.CreateEmailFromTemplate(localContext, template, to.ToEntityReference(), new List<Entity> { (Entity)to, (Entity)setting });
 
+            _log.Debug($"Th={threadId} - CreateCustomerLead -> SendValidationEmail: Creating Email from template.");
+            EmailEntity email = EmailEntity.CreateEmailFromTemplate(localContext, template, to.ToEntityReference(), new List<Entity> { (Entity)to, (Entity)setting });
+            
             email.RegardingObjectId = to.ToEntityReference();
+            _log.Info($"Th={threadId} - CreateCustomerLead -> SendValidationEmail: Email object created with regarding ref.");
 
             return SetToFromAndSendEmail(localContext, threadId, to.ToEntityReference(), email);
         }
@@ -194,7 +204,9 @@ namespace Skanetrafiken.Crm
 
         private static SendEmailResponse SetToFromAndSendEmail(Plugin.LocalPluginContext localContext, int threadId, EntityReference to, EmailEntity email)
         {
-            _log.Debug($"Th={threadId} - Entered function SetToFromAndSendEmail()");
+            _log.Info($"Th={threadId} - Entered function SetToFromAndSendEmail()");
+
+            _log.Debug($"Th={threadId} - SetToFromAndSendEmail: Retrieving default Queue.");
             EntityReference defaultQueue;
             try
             {
@@ -211,12 +223,14 @@ namespace Skanetrafiken.Crm
             }
 
             // Create the 'From:' activity party for the email
+            _log.Debug($"Th={threadId} - SetToFromAndSendEmail: Creating the 'From:' activity party for the email.");
             ActivityPartyEntity fromParty = new ActivityPartyEntity
             {
                 PartyId = defaultQueue
             };
 
             // Create the 'To:' activity party for the email
+            _log.Debug($"Th={threadId} - SetToFromAndSendEmail: Creating the 'To:' activity party for the email.");
             ActivityPartyEntity toParty = new ActivityPartyEntity
             {
                 PartyId = to
@@ -226,8 +240,10 @@ namespace Skanetrafiken.Crm
             email.From = new ActivityPartyEntity[] { fromParty };
 
             email.Id = localContext.OrganizationService.Create(email);
+            _log.DebugFormat($"Th={threadId} - SetToFromAndSendEmail: Email Created with Id - {email.Id.ToString()}.");
 
             // Use the SendEmail message to send an e-mail message.
+            _log.DebugFormat($"Th={threadId} - SetToFromAndSendEmail: Using the SendEmail message to send an e-mail message.");
             SendEmailRequest sendEmailreq = new SendEmailRequest
             {
                 EmailId = email.Id,
@@ -235,7 +251,9 @@ namespace Skanetrafiken.Crm
             };
 
             SendEmailResponse sendEmailresp = (SendEmailResponse)localContext.OrganizationService.Execute(sendEmailreq);
-            _log.Debug($"Th={threadId} - Email sent. Response.Subject = {sendEmailresp.Subject}");
+            _log.Info($"Th={threadId} - Email sent. Response.Subject = {sendEmailresp.Subject}");
+            _log.DebugFormat($"Th={threadId} - SetToFromAndSendEmail: Email with Id - {email.Id.ToString()} - sent.");
+
             return sendEmailresp;
         }
 

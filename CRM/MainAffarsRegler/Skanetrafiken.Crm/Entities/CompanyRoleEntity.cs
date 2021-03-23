@@ -237,52 +237,10 @@ namespace Skanetrafiken.Crm.Entities
             else if (feature.ed_SplittCompany == true) //New Logic
             {
                 // Tries to find existing Contact, otherwise creates a new Contact
-                contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo, account, feature); //Changed (06/05-20)
-            }
-            
-
-            // Check if Contact already has roles
-            IList<CompanyRoleEntity> roles = XrmRetrieveHelper.RetrieveMultiple<CompanyRoleEntity>(localContext, new ColumnSet(false),
-                        new FilterExpression()
-                        {
-                            Conditions =
-                            {
-                                new ConditionExpression(CompanyRoleEntity.Fields.ed_Account, ConditionOperator.Equal, account.AccountId),
-                                new ConditionExpression(CompanyRoleEntity.Fields.ed_Contact, ConditionOperator.Equal, contact.ContactId),
-                                new ConditionExpression(CompanyRoleEntity.Fields.ed_Role, ConditionOperator.Equal, role.CompanyRole),
-                                new ConditionExpression(CompanyRoleEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.ed_CompanyRoleState.Active)
-                            }
-                        });
-            
-            if (roles != null && roles.Count > 0)
-            {
-                resp = new HttpResponseMessage(HttpStatusCode.Conflict);
-                resp.Content = new StringContent($"Contact already have the role: {role.CompanyRole} on Account with Id: {role.PortalId}");
-                return null;
-            }
-            else
-            {
-                resp.StatusCode = HttpStatusCode.OK;
+                contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo, account, feature); //Changed (23/02-21)
             }
 
-            // If no existing Company Role was created then create a new Company Role.
-            CompanyRoleEntity newRole = new CompanyRoleEntity()
-            {
-                ed_name = GetCompanyRoleName(account, contact, customerInfo),
-                ed_Account = account.ToEntityReference(),
-                ed_Contact = contact.ToEntityReference(),
-                ed_FirstName = customerInfo.FirstName,
-                ed_LastName = customerInfo.LastName,
-                ed_EmailAddress = role.Email,
-                ed_Telephone = role.Telephone,
-                ed_Role = role.CompanyRoleSpecified ? (Crm.Schema.Generated.ed_companyrole_ed_role?)role.CompanyRole : null,
-                ed_SocialSecurityNumber = customerInfo.SocialSecurityNumber
-            };
-
-            XrmHelper.Create(localContext, newRole);
-
-
-            // Connect Contact to Accounts (level 1 and 2)
+            // Connect Contact to Accounts(level 1 and 2)
             // Create an AssociateEntities request.
 
             if (!DoesRelationshipExist(localContext, "cgi_account_contact", AccountEntity.EntityLogicalName, account.AccountId.Value, ContactEntity.EntityLogicalName, contact.ContactId.Value))
@@ -323,6 +281,49 @@ namespace Skanetrafiken.Crm.Entities
                     localContext.OrganizationService.Execute(requestOrgRel);
                 }
             }
+
+            // Check if Contact already has roles
+            IList<CompanyRoleEntity> roles = XrmRetrieveHelper.RetrieveMultiple<CompanyRoleEntity>(localContext, new ColumnSet(false),
+                        new FilterExpression()
+                        {
+                            Conditions =
+                            {
+                                new ConditionExpression(CompanyRoleEntity.Fields.ed_Account, ConditionOperator.Equal, account.AccountId),
+                                new ConditionExpression(CompanyRoleEntity.Fields.ed_Contact, ConditionOperator.Equal, contact.ContactId),
+                                new ConditionExpression(CompanyRoleEntity.Fields.ed_Role, ConditionOperator.Equal, role.CompanyRole),
+                                new ConditionExpression(CompanyRoleEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.ed_CompanyRoleState.Active)
+                            }
+                        });
+            
+            if (roles != null && roles.Count > 0)
+            {
+                resp = new HttpResponseMessage(HttpStatusCode.Conflict);
+                resp.Content = new StringContent($"Contact with id {contact.ContactId?.ToString()} already has the role: {role.CompanyRole} on Account with Id: {role.PortalId}");
+                //resp.Content = new StringContent(SerializeNoNull(contact.Id));
+                return contact.Id;
+                //Vi behöver inte skicka en 409 tillbaka.
+                //Vi vill ha tillbaka information om contact (contact ID) MISSMATCH
+            }
+            else
+            {
+                resp.StatusCode = HttpStatusCode.OK;
+            }
+
+            // If no existing Company Role was created then create a new Company Role.
+            CompanyRoleEntity newRole = new CompanyRoleEntity()
+            {
+                ed_name = GetCompanyRoleName(account, contact, customerInfo),
+                ed_Account = account.ToEntityReference(),
+                ed_Contact = contact.ToEntityReference(),
+                ed_FirstName = customerInfo.FirstName,
+                ed_LastName = customerInfo.LastName,
+                ed_EmailAddress = role.Email,
+                ed_Telephone = role.Telephone,
+                ed_Role = role.CompanyRoleSpecified ? (Crm.Schema.Generated.ed_companyrole_ed_role?)role.CompanyRole : null,
+                ed_SocialSecurityNumber = customerInfo.SocialSecurityNumber
+            };
+
+            XrmHelper.Create(localContext, newRole);
 
             return contact.Id;
         }

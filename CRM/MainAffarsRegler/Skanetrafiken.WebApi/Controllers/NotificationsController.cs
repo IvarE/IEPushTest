@@ -66,13 +66,14 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage Post([FromBody] NotificationInfo[] notificationInfos)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - PostArray called with Payload:\n {CrmPlusControl.SerializeNoNull(notificationInfos)}");
+            _log.Info($"Th={threadId} - PostArray called.\n");
+            _log.Debug($"Th={threadId} - PostArray called with Payload:\n {CrmPlusControl.SerializeNoNull(notificationInfos)}");
 
             if (notificationInfos == null || notificationInfos.Length == 0)
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 rm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-                _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 return rm;
             }
 
@@ -80,7 +81,26 @@ namespace Skanetrafiken.Crm.Controllers
 
             HttpResponseMessage nrm = CrmPlusControl.NotifyMKLsSent(threadId, notificationInfos);
             //HttpResponseMessage nrm = new HttpResponseMessage(HttpStatusCode.Accepted);
-            _log.Info($"Th={threadId} - Returning statuscode = {nrm.StatusCode}, Content = {nrm.Content.ReadAsStringAsync().Result}\n");
+
+            //Return Logg
+            if (nrm.StatusCode != HttpStatusCode.OK)
+            {
+                if (nrm.StatusCode == HttpStatusCode.Ambiguous || nrm.StatusCode == HttpStatusCode.MultipleChoices)
+                {
+                    _log.Info($"Th={threadId} - Returning statuscode = {nrm.StatusCode}.\n");
+                    _log.Debug($"Th={threadId} - Returning statuscode = {nrm.StatusCode}, Content = {nrm.Content.ReadAsStringAsync().Result}\n");
+                }
+                else 
+                {
+                    _log.Warn($"Th={threadId} - Returning statuscode = {nrm.StatusCode}, Content = {nrm.Content.ReadAsStringAsync().Result}\n");
+                }
+            }
+            else
+            {
+                _log.Info($"Th={threadId} - Returning statuscode = {nrm.StatusCode}.\n");
+                _log.Debug($"Th={threadId} - Returning statuscode = {nrm.StatusCode}, Content = {nrm.Content.ReadAsStringAsync().Result}\n");
+            }
+
             return nrm;
 
         }

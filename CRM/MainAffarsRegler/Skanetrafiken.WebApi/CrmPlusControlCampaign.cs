@@ -43,6 +43,8 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
+                    _log.Info($"Th={threadId} - RetrieveLeadInfo: ServiceProxy and LocalContext created Successfully.");
+
                     IList<LeadEntity> getLeads = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(
                       localContext,
                       new QueryExpression()
@@ -171,16 +173,18 @@ namespace Skanetrafiken.Crm.Controllers
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+                _log.DebugFormat($"Th={threadId} - QualifyLeadToUnvalidatedCustomer: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
 
-                    _log.DebugFormat($"Th={threadId} - Assembling localContext");
+                    _log.DebugFormat($"Th={threadId} - QualifyLeadToUnvalidatedCustomer: Assembling localContext");
                     Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
 
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    _log.Info($"Th={threadId} - QualifyLeadToUnvalidatedCustomer: ServiceProxy and LocalContext created Successfully.");
 
                     if (leadInfo == null)
                     {
@@ -211,11 +215,12 @@ namespace Skanetrafiken.Crm.Controllers
                     }
 
                     // Combine incoming info with existing.
+                    _log.DebugFormat($"Th={threadId} - QualifyLeadToUnvalidatedCustomer: Combine incoming info with existing.");
                     LeadInfo existingLeadInfo = existingLead.ToLeadInfo(localContext);
                     CrmPlusUtility.CombineLeadInfos(localContext, leadInfo, existingLeadInfo);
 
                     // Validate info
-                    _log.DebugFormat($"Th={threadId} - QualifyCampaignLead, validating info");
+                    _log.Info($"Th={threadId} - QualifyLeadToUnvalidatedCustomer: Validating LeadInfo.");
                     leadInfo.Source = (int)Crm.Schema.Generated.ed_informationsource.Kampanj;
                     CampaignEntity campaign = null;
                     StatusBlock validateStatus = CustomerUtility.ValidateLeadInfo(localContext, leadInfo, ref campaign);
@@ -231,6 +236,7 @@ namespace Skanetrafiken.Crm.Controllers
                     try
                     {
                         XrmHelper.Update(localContext, updateLead);
+                        _log.Debug($"Th={threadId} - QualifyLeadToUnvalidatedCustomer: Lead updated.");
                     }
                     catch (Exception ex)
                     {
@@ -250,6 +256,7 @@ namespace Skanetrafiken.Crm.Controllers
                     }
 
                     //Find existing leads using same campaign
+                    _log.Info($"Th={threadId} - QualifyLeadToUnvalidatedCustomer: Find existing leads using same campaign.");
                     IList<LeadEntity> activeLeads = LeadEntity.FindExistingCampaignLeads(localContext, leadInfo);
                     if (activeLeads.Count < 1)
                     {
@@ -284,6 +291,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (activeContact == null)
                     {
+                        _log.Debug($"Th={threadId} - QualifyLeadToUnvalidatedCustomer: Retrieving created Contact for update from created Lead.");
                         activeContact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, ContactEntity.ContactInfoBlock,
                             new FilterExpression()
                             {
@@ -304,9 +312,11 @@ namespace Skanetrafiken.Crm.Controllers
                             EMailAddress1 = null
                         };
                         XrmHelper.Update(localContext, updateContact);
+                        _log.Debug($"Th={threadId} - QualifyLeadToUnvalidatedCustomer: Updated EmailAddress1 and EmailAddress2 on retrieved Contact from created Lead.");
                     }
                     else
                     {
+                        _log.Debug($"Th={threadId} - QualifyLeadToUnvalidatedCustomer: Using found Contact from CRM for update.");
                         ContactEntity updateEntity = null;
                         if ((!string.IsNullOrWhiteSpace(activeContact.cgi_socialsecuritynumber) && activeContact.cgi_socialsecuritynumber.Equals(leadInfo.SocialSecurityNumber)) ||
                             (!string.IsNullOrWhiteSpace(activeContact.EMailAddress1) && activeContact.EMailAddress1.Equals(leadInfo.Email)))
@@ -321,10 +331,12 @@ namespace Skanetrafiken.Crm.Controllers
                         {
                             XrmHelper.Update(localContext, updateEntity);
                             activeContact.CombineAttributes(updateEntity);
+                            _log.Debug($"Th={threadId} - QualifyLeadToUnvalidatedCustomer: Found Contact from CRM updated.");
                         }
                     }
 
                     // Create Campaign Response
+                    _log.Debug($"Th={threadId} - QualifyLeadToUnvalidatedCustomer: Create Campaign Response.");
                     CampaignResponseEntity response = new CampaignResponseEntity
                     {
                         Subject = $"{activeContact.FullName} har svarat på {campaign.Name}",
@@ -339,6 +351,7 @@ namespace Skanetrafiken.Crm.Controllers
                         ReceivedOn = DateTime.Now
                     };
                     XrmHelper.Create(localContext, response);
+                    _log.Info($"Th={threadId} - QualifyLeadToUnvalidatedCustomer: Campaign Response created.");
 
                     //AddItemCampaignRequest campaignResponseReq = new AddItemCampaignRequest
                     //{
@@ -376,17 +389,21 @@ namespace Skanetrafiken.Crm.Controllers
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+                _log.DebugFormat($"Th={threadId} - PostLeadAndQualifyToContact: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
 
-                    _log.DebugFormat($"Th={threadId} - Assembling localContext");
+                    _log.DebugFormat($"Th={threadId} - PostLeadAndQualifyToContact: Assembling localContext");
                     Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
 
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    _log.Info($"Th={threadId} - PostLeadAndQualifyToContact: ServiceProxy and LocalContext created Successfully.");
+
                     // Validate Info and return error message if faulty Info
+                    _log.Info($"Th={threadId} - PostLeadAndQualifyToContact: Validating LeadInfo.");
                     CampaignEntity campaign = null;
                     StatusBlock validateLeadStatus = CustomerUtility.ValidateLeadInfo(localContext, leadInfo, ref campaign);
                     if (!validateLeadStatus.TransactionOk)
@@ -397,6 +414,7 @@ namespace Skanetrafiken.Crm.Controllers
                     }
 
                     //Find existing leads using same campaign
+                    _log.Debug($"Th={threadId} - PostLeadAndQualifyToContact: Find existing leads using same campaign.");
                     IList<LeadEntity> activeLeads = LeadEntity.FindExistingCampaignLeads(localContext, leadInfo);
                     if (activeLeads.Count > 0)
                     {
@@ -406,10 +424,12 @@ namespace Skanetrafiken.Crm.Controllers
                     }
 
                     //If lead does not exists, create a new one
+                    _log.Debug($"Th={threadId} - PostLeadAndQualifyToContact: Lead does not exists, create a new one.");
                     LeadEntity newLead = LeadEntity.CreateLead(localContext, leadInfo, campaign.ed_LeadTopic.Value.ToString(), campaign);
                     leadInfo.Guid = newLead.Id.ToString();
 
                     //Update total leads field
+                    _log.Debug($"Th={threadId} - PostLeadAndQualifyToContact: Update total leads field.");
                     IList<LeadEntity> campaignConnectedLeads = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, new ColumnSet(false), new FilterExpression
                     {
                         Conditions =
@@ -446,6 +466,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (activeContact == null)
                     {
+                        _log.Debug($"Th={threadId} - PostLeadAndQualifyToContact: Retrieving created Contact for update from created Lead.");
                         activeContact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, ContactEntity.ContactInfoBlock,
                             new FilterExpression()
                             {
@@ -465,10 +486,11 @@ namespace Skanetrafiken.Crm.Controllers
                             EMailAddress1 = null
                         };
                         XrmHelper.Update(localContext.OrganizationService, updateEntity);
-
+                        _log.Debug($"Th={threadId} - PostLeadAndQualifyToContact: Updated EmailAddress1 and EmailAddress2 on retrieved Contact from created Lead.");
                     }
                     else
                     {
+                        _log.Debug($"Th={threadId} - PostLeadAndQualifyToContact: Using found Contact from CRM for update.");
                         ContactEntity updateEntity = null;
                         if ((!string.IsNullOrWhiteSpace(activeContact.cgi_socialsecuritynumber) && activeContact.cgi_socialsecuritynumber.Equals(leadInfo.SocialSecurityNumber)) ||
                             (!string.IsNullOrWhiteSpace(activeContact.EMailAddress1) && activeContact.EMailAddress1.Equals(leadInfo.Email)))
@@ -483,6 +505,7 @@ namespace Skanetrafiken.Crm.Controllers
                         {
                             XrmHelper.Update(localContext, updateEntity);
                             activeContact.CombineAttributes(updateEntity);
+                            _log.Debug($"Th={threadId} - PostLeadAndQualifyToContact: Found Contact from CRM updated.");
                         }
                     }
 

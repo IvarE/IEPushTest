@@ -303,10 +303,10 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                 console.log("Cancel Button Clicked: Found no ValueCode Type on form!");
                 alert("Värdekoden kan inte Makuleras: Hittade inte Värdekodstyp på värdekoden.");
             }
-            else if (valueCodeType != 2 && valueCodeType != 5) {
-                console.log("Cancel Button Clicked: Värdekoden måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
-                alert("Värdekoden kan inte Makuleras: Värdekoden måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
-            }
+            //else if (valueCodeType != 2 && valueCodeType != 5) {
+            //    console.log("Cancel Button Clicked: Värdekoden måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
+            //    alert("Värdekoden kan inte Makuleras: Värdekoden måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
+            //}
             else if (vcCodeValue == null || vcCodeValue == "undefined" || vcCodeValue == 0) {
                 console.log("Cancel Button Clicked: Found no ValueCode Code-ID on form!");
                 alert("Värdekoden kan inte Makuleras: Hittade inte en kod för VärdeCoden.");
@@ -573,10 +573,10 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                             "<filter type='and'>" +
                             "<condition attribute='ed_valuecodeid' operator='eq' value='" + valueCodeIds + "' />" +
                             "<condition attribute='statecode' operator='eq' value='0' />" +
-                            "<filter type='or'>" +
-                            "<condition attribute='ed_valuecodetypeglobal' operator='eq' value='2' />" +
-                            "<condition attribute='ed_valuecodetypeglobal' operator='eq' value='5' />" +
-                            "</filter>" +
+                            //"<filter type='or'>" +
+                            //"<condition attribute='ed_valuecodetypeglobal' operator='eq' value='2' />" + //DevOps: 3888
+                            //"<condition attribute='ed_valuecodetypeglobal' operator='eq' value='5' />" +
+                            //"</filter>" +
                             "</filter>" +
                             "</entity>" +
                             "</fetch>";
@@ -669,7 +669,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                                 })
                         }
                         else {
-                            alert("Värdekoden kan inte Makuleras: Värdekoden måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
+                            alert("Värdekoden kan inte Makuleras: Värdekoden måste vara aktiv!");
                         }
                         
                     }
@@ -696,10 +696,10 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                                     "<filter type='and'>" +
                                         "<condition attribute='ed_valuecodeid' operator='eq' value='" + checkValueCode + "' />" +
                                         "<condition attribute='statecode' operator='eq' value='0' />" +
-                                        "<filter type='or'>" +
-                                            "<condition attribute='ed_valuecodetypeglobal' operator='eq' value='2' />" +
-                                            "<condition attribute='ed_valuecodetypeglobal' operator='eq' value='5' />" +
-                                        "</filter>" +
+                                        //"<filter type='or'>" +
+                                        //    "<condition attribute='ed_valuecodetypeglobal' operator='eq' value='2' />" + //DevOps: 3888
+                                        //    "<condition attribute='ed_valuecodetypeglobal' operator='eq' value='5' />" +
+                                        //"</filter>" +
                                     "</filter>" +
                                     "</entity>" +
                                 "</fetch>";
@@ -760,7 +760,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
 
                             if (invalideValidValueCodeCount > 0) {
                                 validValueCodeCount = nrOfValueCodes - invalideValidValueCodeCount;
-                                var cancelConfirmation = confirm(invalideValidValueCodeCount + " värdekod(er) av " + nrOfValueCodes + " kan inte makuleras då Värdekodstypen inte är av typ 'Inlösen Reskassa' eller 'Presentkort'. Vill du fortsätta makulera resterande " + validValueCodeCount + " värdekod(er)?");
+                                var cancelConfirmation = confirm(invalideValidValueCodeCount + " värdekod(er) av " + nrOfValueCodes + " kan inte makuleras då Värdekod(en) inte är aktiv(a). Vill du fortsätta makulera resterande " + validValueCodeCount + " värdekod(er)?");
 
                                 if (cancelConfirmation == true) {
                                     console.log("ValueCode(s): " + valueCodeIds);
@@ -861,7 +861,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                             }
                         } else {
 
-                            alert("Värdekod(erna) kan inte Makuleras: Värdekode(erna) måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
+                            alert("Värdekod(erna) kan inte Makuleras: Värdekode(erna) måste vara aktiv!");
                         }
                     }
                     else {

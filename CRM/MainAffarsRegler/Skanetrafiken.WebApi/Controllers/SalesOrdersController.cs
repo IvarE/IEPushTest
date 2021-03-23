@@ -22,11 +22,11 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage Get()
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Debug($"Th={threadId} - Unsupported generic GET called.");
+            _log.Error($"Th={threadId} - Unsupported generic GET called.");
             
             HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.BadRequest);
             resp.Content = new StringContent(Resources.GenericGetNotSupported);
-            _log.DebugFormat($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}");
+            _log.Error($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}");
             return resp;
         }
 
@@ -34,13 +34,14 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage Post([FromBody] SalesOrderInfo salesOrderInfo)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
+            _log.Info($"Th={threadId} - Post called.\n");
             _log.DebugFormat($"Th={threadId} - Post called with Payload:\n {CrmPlusControl.SerializeNoNull(salesOrderInfo)}");
 
             if (salesOrderInfo == null)
             {
                 HttpResponseMessage nrm = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 nrm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-                _log.DebugFormat($"Th={threadId} - Returning statuscode = {nrm.StatusCode}, Content = {nrm.Content.ReadAsStringAsync().Result}\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {nrm.StatusCode}, Content = {nrm.Content.ReadAsStringAsync().Result}\n");
                 return nrm;
             }
 
@@ -106,14 +107,27 @@ namespace Skanetrafiken.Crm.Controllers
                         break;
                 }
                 //if(rm.Content != null)
-                _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content?.ReadAsStringAsync()?.Result}\n");
+                //_log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content?.ReadAsStringAsync()?.Result}\n");
                 //else _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}");
+
+                //Return Logg
+                if (rm.StatusCode != HttpStatusCode.OK)
+                {
+                    _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content?.ReadAsStringAsync()?.Result}\n");
+                }
+                else
+                {
+                    _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
+                    _log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content?.ReadAsStringAsync()?.Result}\n");
+                }
+
                 return rm;
             }
             catch(Exception ex)
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                _log.Error($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content?.ReadAsStringAsync()?.Result}\n");
                 return rm;
             }
             finally
@@ -127,13 +141,14 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage Put([FromBody] SalesOrderInfo salesOrderInfo)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.DebugFormat($"Th={threadId} - Put called with Payload:\n {CrmPlusControl.SerializeNoNull(salesOrderInfo)}");
+            _log.Info($"Th={threadId} - PUT called.\n");
+            _log.DebugFormat($"Th={threadId} - PUT called with Payload:\n {CrmPlusControl.SerializeNoNull(salesOrderInfo)}");
 
             if (salesOrderInfo == null)
             {
                 HttpResponseMessage nrm = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 nrm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-                _log.DebugFormat($"Th={threadId} - Returning statuscode = {nrm.StatusCode}, Content = {nrm.Content.ReadAsStringAsync().Result}\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {nrm.StatusCode}, Content = {nrm.Content.ReadAsStringAsync().Result}\n");
                 return nrm;
             }
 
@@ -174,13 +189,25 @@ namespace Skanetrafiken.Crm.Controllers
                         rm.Content = new StringContent(string.Format(Resources.InvalidSource, salesOrderInfo.InformationSource));
                         break;
                 }
-                _log.DebugFormat($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+
+                //Return Logg
+                if (rm.StatusCode != HttpStatusCode.OK)
+                {
+                    _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content?.ReadAsStringAsync()?.Result}\n");
+                }
+                else
+                {
+                    _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
+                    _log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content?.ReadAsStringAsync()?.Result}\n");
+                }
+
                 return rm;
             }
             catch (Exception ex)
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                _log.Error($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content?.ReadAsStringAsync()?.Result}\n");
                 return rm;
             }
             finally

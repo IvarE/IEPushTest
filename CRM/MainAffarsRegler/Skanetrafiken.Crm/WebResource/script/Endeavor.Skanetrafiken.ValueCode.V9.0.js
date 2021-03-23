@@ -166,15 +166,15 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                 vcVoucherId = vcVoucherAtr.getValue();
             }
 
-            if (valueCodeType == null || valueCodeType == "undefined") {
-                console.log("Cancel Button Clicked: Found no ValueCode Type on form!");
-                alert("Värdekoden kan inte Makuleras: Hittade inte Värdekodstyp på värdekoden.");
-            }
-            else if (valueCodeType != 2 && valueCodeType != 5) {
-                console.log("Cancel Button Clicked: Värdekoden måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
-                alert("Värdekoden kan inte Makuleras: Värdekoden måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
-            }
-            else if (vcVoucherId == null || vcVoucherId == "undefined" || vcVoucherId == 0) {
+            //if (valueCodeType == null || valueCodeType == "undefined") {
+            //    console.log("Cancel Button Clicked: Found no ValueCode Type on form!");
+            //    alert("Värdekoden kan inte Makuleras: Hittade inte Värdekodstyp på värdekoden.");
+            //}
+            //else if (valueCodeType != 2 && valueCodeType != 5) {
+            //    console.log("Cancel Button Clicked: Värdekoden måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
+            //    alert("Värdekoden kan inte Makuleras: Värdekoden måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
+            //}
+            if (vcVoucherId == null || vcVoucherId == "undefined" || vcVoucherId == 0) {
                 console.log("Cancel Button Clicked: Found no ValueCode Code-ID on form!");
                 alert("Värdekoden kan inte Makuleras: Hittade inte en Voucher kod för Värdekoden.");
             }
@@ -325,7 +325,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                         //Get current valuecode and check that it is of type "Inlösen reskassa" or "Presentkort"
                         var validValueCode = false;
 
-                        validValueCode = await Endeavor.Skanetrafiken.ValueCode.checkIfValueCodeIsValidSync(valueCodeIds);
+                        validValueCode = await Endeavor.Skanetrafiken.ValueCode.checkIfValueCodeIsValidSync(valueCodeIds); //DevOps: 3888
                         debugger;
                         if (validValueCode == true && valueCodeIds != "") {
                             console.log("ValueCode(s): " + valueCodeIds);
@@ -366,7 +366,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
 
                         }
                         else {
-                            alert("Värdekoden kan inte Makuleras: Värdekoden måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
+                            alert("Värdekoden kan inte Makuleras: Värdekoden måste vara aktiv för att makuleras!");
                         }
                     }
                     else if (valueCodeArg.length > 1) {
@@ -378,11 +378,12 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                             debugger;
                             var validValueCode = false;
 
-                            //Get current valuecode and check that it is of type "Inlösen reskassa"
+                            //(OLD) Get current valuecode and check that it is of type "Inlösen reskassa" (OLD)
+                            //We only need to check that its an active ValueCode (DevOps: 3888)
                             var checkValueCode = valueCodeArg[i].Id.replace('{', '').replace('}', '');
 
                             //Async
-                            validValueCode = await Endeavor.Skanetrafiken.ValueCode.checkIfValueCodeIsValidSync(checkValueCode);
+                            validValueCode = await Endeavor.Skanetrafiken.ValueCode.checkIfValueCodeIsValidSync(checkValueCode); //DevOps: 3888
 
                             //Populate string with valid Value Code Id:s
                             if (validValueCode == true) {
@@ -399,7 +400,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                             if (invalideValidValueCodeCount > 0) {
                                 //Found invalid ValueCodes -> Provide warning before canceling
                                 validValueCodeCount = nrOfValueCodes - invalideValidValueCodeCount;
-                                var cancelConfirmation = confirm(invalideValidValueCodeCount + " värdekod(er) av " + nrOfValueCodes + " kan inte makuleras då Värdekodstypen inte är av typ 'Inlösen Reskassa' eller 'Presentkort'. Vill du fortsätta makulera resterande " + validValueCodeCount + " värdekod(er)?");
+                                var cancelConfirmation = confirm(invalideValidValueCodeCount + " värdekod(er) av " + nrOfValueCodes + " kan inte makuleras då Värdekoden inte är aktiv(a). Vill du fortsätta makulera resterande " + validValueCodeCount + " värdekod(er)?");
 
                                 if (cancelConfirmation) {
                                     console.log("ValueCode(s): " + valueCodeIds);
@@ -479,7 +480,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                             }
                         }
                         else {
-                            alert("Värdekod(erna) kan inte Makuleras: Värdekode(erna) måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
+                            alert("Värdekod(erna) kan inte Makuleras: Värdekode(erna) måste vara aktiva för att makuleras!");
                         }
                     }
                     else {
@@ -506,13 +507,15 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                 "<entity name='ed_valuecode'>",
                 "<attribute name='ed_valuecodetypeglobal' />",
                 "<attribute name='ed_valuecodeid' />",
+                "<attribute name='statuscode' />", //Makulerad, Inlöst...
+                "<attribute name='statecode' />", //Aktiv, Inactive...
                 "<filter type='and'>",
                 "<condition attribute='ed_valuecodeid' operator='eq' value='", valueCodeIds, "' />",
                 "<condition attribute='statecode' operator='eq' value='0' />",
-                "<filter type='or'>",
-                "<condition attribute='ed_valuecodetypeglobal' operator='eq' value='2' />",
-                "<condition attribute='ed_valuecodetypeglobal' operator='eq' value='5' />",
-                "</filter>",
+                //"<filter type='or'>",
+                //"<condition attribute='ed_valuecodetypeglobal' operator='eq' value='2' />", //DevOps: 3888
+                //"<condition attribute='ed_valuecodetypeglobal' operator='eq' value='5' />",
+                //"</filter>",
                 "</filter>",
                 "</entity>",
                 "</fetch>",
@@ -556,6 +559,40 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
 
                 return {
                     boundParameter: null,
+                    parameterTypes: parameterTypes,
+                    operationType: 0,
+                    operationName: actionName
+                };
+            };
+
+            if (typeof (Xrm) == "undefined")
+                Xrm = parent.Xrm;
+
+            Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
+        },
+
+        callAction: function (actionName, entityName, targetId, inputParameters, sucessCallback, errorCallback) {
+
+            var target = {};
+            target.entityType = entityName;
+            target.id = targetId;
+
+            var parameterTypes = {};
+            parameterTypes["entity"] = { "typeName": "mscrm." + entityName, "structuralProperty": 5 };
+
+            if (inputParameters != null)
+                for (var i = 0; i < inputParameters.length; i++) {
+                    var parameter = inputParameters[i];
+
+                    req[parameter.Field] = parameter.Value;
+                    parameterTypes[parameter.Field] = { "typeName": parameter.TypeName, "structuralProperty": parameter.StructuralProperty };
+                }
+
+            var req = {};
+            req.entity = target;
+            req.getMetadata = function () {
+                return {
+                    boundParameter: "entity",
                     parameterTypes: parameterTypes,
                     operationType: 0,
                     operationName: actionName

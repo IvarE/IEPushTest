@@ -21,6 +21,36 @@ if (typeof (Endeavor.Skanetrafiken) == "undefined") {
 if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
     Endeavor.Skanetrafiken.Account = {
 
+
+        onSave: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+            var seniorCustomer = formContext.getAttribute("ed_seniorcustomer");
+            var schoolCustomer = formContext.getAttribute("ed_schoolcustomer");
+            var reseller = formContext.getAttribute("ed_reseller");
+            var collaborationCustomer = formContext.getAttribute("ed_collaborationcustomer");
+            var customer = formContext.getAttribute("ed_customer");
+            var portalCustomer = formContext.getAttribute("ed_portalcustomer");
+            var agent = formContext.getAttribute("ed_agent");
+            var infotainment = formContext.getAttribute("ed_infotainmentcustomer");
+
+            if (seniorCustomer.getValue() == false && schoolCustomer.getValue() == false && reseller.getValue() == false && collaborationCustomer.getValue() == false && customer.getValue() == false && portalCustomer.getValue() == false && agent.getValue() == false && infotainment.getValue() == false) {
+                seniorCustomer.setRequiredLevel("required");
+                schoolCustomer.setRequiredLevel("required");
+                reseller.setRequiredLevel("required");
+                collaborationCustomer.setRequiredLevel("required");
+                customer.setRequiredLevel("required");
+                portalCustomer.setRequiredLevel("required");
+                agent.setRequiredLevel("required");
+                infotainment.setRequiredLevel("required");
+
+                Xrm.Navigation.openAlertDialog({ text: "Vänligen ange sammanhang innan ni sparar" });
+            }
+
+        },
+
+
         onLoad: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
@@ -38,7 +68,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                     infotainment.setRequiredLevel("required");
                 }
             }
-            else 
+            else
                 Endeavor.Skanetrafiken.Account.showInfoAccountPortal(formContext);
 
             //Hide/Show Õvrig Information
@@ -73,6 +103,55 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                     }
                 }
             }
+        },
+
+        resetRequiredLevelForAllTypes: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+            var seniorCustomer = formContext.getAttribute("ed_seniorcustomer");
+            var schoolCustomer = formContext.getAttribute("ed_schoolcustomer");
+            var reseller = formContext.getAttribute("ed_reseller");
+            var collaborationCustomer = formContext.getAttribute("ed_collaborationcustomer");
+            var customer = formContext.getAttribute("ed_customer");
+            var portalCustomer = formContext.getAttribute("ed_portalcustomer");
+            var agent = formContext.getAttribute("ed_agent");
+            var infotainment = formContext.getAttribute("ed_infotainmentcustomer");
+
+            if (seniorCustomer != null && schoolCustomer != null && reseller != null && collaborationCustomer != null && customer != null && portalCustomer != null && agent != null && infotainment != null) {
+
+                var seniorValue = seniorCustomer.getValue();
+                var schoolValue = schoolCustomer.getValue();
+                var resellerValue = reseller.getValue();
+                var collaborationValue = collaborationCustomer.getValue();
+                var customerValue = customer.getValue();
+                var portalValue = portalCustomer.getValue();
+                var agentValue = agent.getValue();
+                var infotainmentValue = infotainment.getValue();
+
+
+                if (seniorValue != false || schoolValue != false || resellerValue != false || collaborationValue != false || customerValue != false || portalValue != false || agentValue != false || infotainmentValue != false) {
+                    seniorCustomer.setRequiredLevel("none");
+                    schoolCustomer.setRequiredLevel("none");
+                    reseller.setRequiredLevel("none");
+                    collaborationCustomer.setRequiredLevel("none");
+                    customer.setRequiredLevel("none");
+                    portalCustomer.setRequiredLevel("none");
+                    agent.setRequiredLevel("none");
+                    infotainment.setRequiredLevel("none");
+                }
+                else if (seniorValue == false && schoolValue == false && resellerValue == false && collaborationValue == false && customerValue == false && portalValue == false && agentValue == false && infotainmentValue == false) {
+                    seniorCustomer.setRequiredLevel("required");
+                    schoolCustomer.setRequiredLevel("required");
+                    reseller.setRequiredLevel("required");
+                    collaborationCustomer.setRequiredLevel("required");
+                    customer.setRequiredLevel("required");
+                    portalCustomer.setRequiredLevel("required");
+                    agent.setRequiredLevel("required");
+                    infotainment.setRequiredLevel("required");
+                }
+            }
+
         },
 
         onChangeTypeOfAccount: function (executionContext) {
@@ -128,7 +207,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 // if Account Portal (Ny företagskund)
                 if (optionSetValue == null || optionSetValue == 899310001)
                     return false;
-            } else 
+            } else
                 return false;
 
             var parentAccount = formContext.getAttribute("parentaccountid").getValue();
@@ -265,7 +344,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             var isLocked = formContext.getAttribute("ed_islockedportal");
             if (isLocked != null) {
                 var isLockedBool = isLocked.getValue();
-                if (isLockedBool == true) 
+                if (isLockedBool == true)
                     formContext.ui.setFormNotification("Detta företag är låst från företagssidan", "WARNING", "2");
             }
 
@@ -284,13 +363,13 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             var msgText = "";
 
             if (parentAccount == null && blocked === false)
-                msgText = "Är du säker på att du vill spärra hela organisationen från åtkomst till hemsidan?";
+                msgText = "Är du säker på att du vill spärra hela organisationen från åtkomst till företagsportalen?";
             else if (parentAccount == null && blocked === true)
-                msgText = "Är du säker på att du vill avblockera hela organisationen och ge åtkomst till hemsidan?";
+                msgText = "Är du säker på att du vill avblockera hela organisationen och ge åtkomst till företagsportalen?";
             else if (parentAccount != null && blocked === false)
-                msgText = "Är du säker på att du vill spärra detta kostnadsställe från åtkomst till hemsidan?";
-            else 
-                msgText = "Är du säker på att du vill avblockera detta kostnadsställe och ge åtkomst till hemsidan?";
+                msgText = "Är du säker på att du vill spärra detta kostnadsställe från åtkomst till företagsportalen?";
+            else
+                msgText = "Är du säker på att du vill avblockera detta kostnadsställe och ge åtkomst till företagsportalen?";
 
             Endeavor.formscriptfunctions.ConfirmCustomDialog(msgText,
                 function () {
@@ -312,9 +391,9 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             if (formContext.getAttribute("parentaccountid").getValue()) {
 
                 var inputParameters = [{ "Field": "PortalID", "Value": portalID, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
-                                    { "Field": "ParentID", "Value": parentID, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
-                                    { "Field": "OrganizationNumber", "Value": organizationNumber, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
-                                    { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 }];
+                { "Field": "ParentID", "Value": parentID, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                { "Field": "OrganizationNumber", "Value": organizationNumber, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 }];
 
                 Endeavor.formscriptfunctions.callGlobalAction("ed_BlockAccountPortal", inputParameters,
                     function (result) {
@@ -478,7 +557,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
                     if (emailField == null)
                         return;
-                        
+
                     var emailValue = emailField.getValue();
 
                     if (emailValue && emailValue.Length !== 0 && _roleName.indexOf("Handläggare") > 0)

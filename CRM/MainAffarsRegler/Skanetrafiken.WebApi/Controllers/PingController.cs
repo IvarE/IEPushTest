@@ -37,7 +37,7 @@ namespace Skanetrafiken.Crm.Controllers
                 {
                     HttpResponseMessage guidResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
                     guidResp.Content = new StringContent("Could not find an 'id' parameter in url");
-                    _log.Info($"Th={threadId} - Returning statuscode = {guidResp.StatusCode}, Content = {guidResp.Content.ReadAsStringAsync().Result}\n");
+                    _log.Warn($"Th={threadId} - Returning statuscode = {guidResp.StatusCode}, Content = {guidResp.Content.ReadAsStringAsync().Result}\n");
                     return guidResp;
                 }
 
@@ -48,7 +48,7 @@ namespace Skanetrafiken.Crm.Controllers
                     HttpResponseMessage tokenResp = TokenValidation(id);
                     if (tokenResp.StatusCode != HttpStatusCode.OK)
                     {
-                        _log.Info($"Th={threadId} - Returning statuscode = {tokenResp.StatusCode}, Content = {tokenResp.Content.ReadAsStringAsync().Result}\n");
+                        _log.Warn($"Th={threadId} - Returning statuscode = {tokenResp.StatusCode}, Content = {tokenResp.Content.ReadAsStringAsync().Result}\n");
                         return tokenResp;
                     }
                 }
@@ -56,7 +56,7 @@ namespace Skanetrafiken.Crm.Controllers
                 {
                     HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                     rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                    _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+                    _log.Error($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                     return rm;
                 }
 
@@ -64,6 +64,17 @@ namespace Skanetrafiken.Crm.Controllers
 
                 HttpResponseMessage resp = CrmPlusControl.GetContactTroubleshooting(threadId, id);
                 //_log.DebugFormat("Returning statuscode = {0}, Content = {1}\n", resp.StatusCode, resp.Content.ReadAsStringAsync().Result);
+                //Return Logg
+                if (resp.StatusCode != HttpStatusCode.OK)
+                {
+                    _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+                }
+                else
+                {
+                    _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}.\n");
+                    _log.Debug($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+                }
+
                 return resp;
 
             }
@@ -71,7 +82,7 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage errResp = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 errResp.Content = new StringContent(e.Message);
-                _log.Info($"Th={threadId} - Returning statuscode = {errResp.StatusCode}, Content = {errResp.Content.ReadAsStringAsync().Result}\n");
+                _log.Error($"Th={threadId} - Returning statuscode = {errResp.StatusCode}, Content = {errResp.Content.ReadAsStringAsync().Result}\n");
                 return errResp;
             }
         }

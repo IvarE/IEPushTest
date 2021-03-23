@@ -23,12 +23,22 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage returnMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 returnMessage.Content = new StringContent(Resources.ParameterMissingEmail);
-                _log.Info($"Th={threadId} - Returning statuscode = {returnMessage.StatusCode}, Content = {returnMessage.Content.ReadAsStringAsync().Result}\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {returnMessage.StatusCode}, Content = {returnMessage.Content.ReadAsStringAsync().Result}\n");
                 return returnMessage;
             }
 
             HttpResponseMessage linkGuidResponse = CrmPlusControl.RetrieveContactLinkGuid(threadId, email);
-            _log.Info($"Th={threadId} - Returning statuscode = {linkGuidResponse.StatusCode}, Content = {linkGuidResponse.Content.ReadAsStringAsync().Result}\n");
+            //Return Logg
+            if (linkGuidResponse.StatusCode != HttpStatusCode.OK)
+            {
+                _log.Warn($"Th={threadId} - Returning statuscode = {linkGuidResponse.StatusCode}, Content = {linkGuidResponse.Content.ReadAsStringAsync().Result}\n");
+            }
+            else
+            {
+                _log.Info($"Th={threadId} - Returning statuscode = {linkGuidResponse.StatusCode}.\n");
+                _log.Debug($"Th={threadId} - Returning statuscode = {linkGuidResponse.StatusCode}, Content = {linkGuidResponse.Content.ReadAsStringAsync().Result}\n");
+            }
+
             return linkGuidResponse;
         }
 
@@ -36,7 +46,7 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage Get()
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - Unsupported generic GET called.");
+            _log.Error($"Th={threadId} - Unsupported generic GET called.");
 
             //System.Diagnostics.Stopwatch counter = new System.Diagnostics.Stopwatch();
             //counter.Restart();
@@ -55,7 +65,7 @@ namespace Skanetrafiken.Crm.Controllers
 
             HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.BadRequest);
             resp.Content = new StringContent(Resources.GenericGetNotSupported);
-            _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+            _log.Error($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
             return resp;
         }
 
@@ -68,12 +78,15 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage guidResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 guidResp.Content = new StringContent("Could not find an 'id' parameter in url");
-                _log.Info($"Th={threadId} - Returning statuscode = {guidResp.StatusCode}, Content = {guidResp.Content.ReadAsStringAsync().Result}\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {guidResp.StatusCode}, Content = {guidResp.Content.ReadAsStringAsync().Result}\n");
                 return guidResp;
             }
 
-            if (this.Request.Headers == null)
+            if (this.Request.Headers == null) 
+            {
+                _log.Warn($"Th={threadId} - Exception caught: {Resources.HeadersMissing}\n");
                 throw new Exception(Resources.HeadersMissing);
+            }
 
             string MKLHeaderName = ConfigurationManager.AppSettings["MKLTokenHeaderName"];
 
@@ -87,7 +100,7 @@ namespace Skanetrafiken.Crm.Controllers
                     HttpResponseMessage tokenResp = TokenValidation(id);
                     if (tokenResp.StatusCode != HttpStatusCode.OK)
                     {
-                        _log.Info($"Th={threadId} - Returning statuscode = {tokenResp.StatusCode}, Content = {tokenResp.Content.ReadAsStringAsync().Result}\n");
+                        _log.Warn($"Th={threadId} - Returning statuscode = {tokenResp.StatusCode}, Content = {tokenResp.Content.ReadAsStringAsync().Result}\n");
                         return tokenResp;
                     }
                 }
@@ -95,13 +108,24 @@ namespace Skanetrafiken.Crm.Controllers
                 {
                     HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                     rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                    _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+                    _log.Error($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                     return rm;
                 }
             }
 
-            HttpResponseMessage resp = CrmPlusControl.GetContact(threadId, id); //CHECK??
-            _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+            HttpResponseMessage resp = CrmPlusControl.GetContact(threadId, id);
+
+            //Return Logg
+            if (resp.StatusCode != HttpStatusCode.OK)
+            {
+                _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+            }
+            else
+            {
+                _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}.\n");
+                _log.Debug($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+            }
+
             return resp;
         }
         
@@ -114,13 +138,14 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage Post([FromBody] CustomerInfo info)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - POST called with Payload:\n{CrmPlusControl.SerializeNoNull(info)}");
+            _log.Info($"Th={threadId} - POST called.\n");
+            _log.DebugFormat($"Th={threadId} - POST called with Payload:\n{CrmPlusControl.SerializeNoNull(info)}");
 
             if (info == null)
             {
                 HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 erm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-                _log.Info($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
                 return erm;
             }
 
@@ -150,14 +175,18 @@ namespace Skanetrafiken.Crm.Controllers
 
             if (info.ServiceType == 1)
             {
+                _log.Info($"Th={threadId} - Setting InformationSource to KöpOchSkicka.\n");
                 info.Source = (int)Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
-                if(info != null && info.AddressBlock != null && !String.IsNullOrEmpty(info.AddressBlock.PostalCode))
+                if (info != null && info.AddressBlock != null && !String.IsNullOrEmpty(info.AddressBlock.PostalCode))
                 {
                     info.AddressBlock.PostalCode = Regex.Replace(info.AddressBlock.PostalCode, @"\s+", "");
                 }
             }
-            else if (info.ServiceType == 2)
+            else if (info.ServiceType == 2) 
+            {
+                _log.Info($"Th={threadId} - Setting InformationSource to ForetagsPortal.\n");
                 info.Source = (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
+            }
             
             // Format Customer info
             FormatCustomerInfo(ref info);
@@ -195,7 +224,18 @@ namespace Skanetrafiken.Crm.Controllers
                     rm.Content = new StringContent(string.Format(Resources.InvalidSource, info.Source));
                     break;
             }
-            _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+
+            //Return Logg
+            if (rm.StatusCode != HttpStatusCode.OK)
+            {
+                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+            }
+            else
+            {
+                _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
+                _log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+            }
+
             return rm;
         }
 
@@ -213,13 +253,14 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage Put([FromUri] string id, [FromBody] CustomerInfo info)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - PUT called for id: '{id}' with Payload:\n{CrmPlusControl.SerializeNoNull(info)}");
+            _log.Info($"Th={threadId} - PUT called.\n");
+            _log.DebugFormat($"Th={threadId} - PUT called for id: '{id}' with Payload:\n{CrmPlusControl.SerializeNoNull(info)}");
 
             if (info == null)
             {
                 HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 erm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-                _log.Info($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
                 return erm;
             }
             Guid guid = Guid.Empty;
@@ -227,12 +268,15 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage verm = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 verm.Content = new StringContent(Resources.GuidNotValid);
-                _log.Info($"Th={threadId} - Returning statuscode = {verm.StatusCode}, Content = {verm.Content.ReadAsStringAsync().Result}\n");
+                _log.Warn($"Th={threadId} - Returning statuscode = {verm.StatusCode}, Content = {verm.Content.ReadAsStringAsync().Result}\n");
                 return verm;
             }
 
-            if (this.Request.Headers == null)
+            if (this.Request.Headers == null) 
+            {
+                _log.Warn($"Th={threadId} - Header Exception caught: {Resources.HeadersMissing}\n");
                 throw new Exception(Resources.HeadersMissing);
+            }
 
             string MKLHeaderName = ConfigurationManager.AppSettings["MKLTokenHeaderName"];
 
@@ -246,7 +290,7 @@ namespace Skanetrafiken.Crm.Controllers
                     HttpResponseMessage tokenResp = TokenValidation(guid.ToString());
                     if (tokenResp.StatusCode != HttpStatusCode.OK)
                     {
-                        _log.Info($"Th={threadId} - Returning statuscode = {tokenResp.StatusCode}, Content = {tokenResp.Content.ReadAsStringAsync().Result}\n");
+                        _log.Warn($"Th={threadId} - Returning statuscode = {tokenResp.StatusCode}, Content = {tokenResp.Content.ReadAsStringAsync().Result}\n");
                         return tokenResp;
                     }
                 }
@@ -254,7 +298,7 @@ namespace Skanetrafiken.Crm.Controllers
                 {
                     HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                     erm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                    _log.Info($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
+                    _log.Error($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
                     return erm;
                 }
             }
@@ -264,7 +308,7 @@ namespace Skanetrafiken.Crm.Controllers
                 {
                     HttpResponseMessage rm1 = new HttpResponseMessage(HttpStatusCode.BadRequest);
                     rm1.Content = new StringContent(Resources.GuidMismatchBodyAndUrl);
-                    _log.Info($"Th={threadId} - Returning statuscode = {rm1.StatusCode}, Content = {rm1.Content.ReadAsStringAsync().Result}\n");
+                    _log.Warn($"Th={threadId} - Returning statuscode = {rm1.StatusCode}, Content = {rm1.Content.ReadAsStringAsync().Result}\n");
                     return rm1;
                 }
             }
@@ -274,7 +318,7 @@ namespace Skanetrafiken.Crm.Controllers
             switch (info.Source)
             {
                 case (int)Crm.Schema.Generated.ed_informationsource.UppdateraMittKonto:
-                    rm = CrmPlusControl.UpdateContact(threadId, info); //CHECK ??
+                    rm = CrmPlusControl.UpdateContact(threadId, info);
                     break;
                 case (int)Crm.Schema.Generated.ed_informationsource.BytEpost:
                     rm = CrmPlusControl.ChangeEmailAddress(threadId, info);
@@ -298,7 +342,18 @@ namespace Skanetrafiken.Crm.Controllers
                     rm.Content = new StringContent(string.Format(Resources.InvalidSource, info.Source));
                     break;
             }
-            _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+
+            //Return Logg
+            if (rm.StatusCode != HttpStatusCode.OK)
+            {
+                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+            }
+            else
+            {
+                _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
+                _log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+            }
+
             return rm;
         }
 

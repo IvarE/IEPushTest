@@ -104,7 +104,7 @@ namespace Skanetrafiken.Crm.Models
             {
                 _log.Debug($"Entering UpdateValueCodeInCRM.");
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
+                _log.DebugFormat($"Th={threadId} - UpdateValueCodeInCRM: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -113,6 +113,7 @@ namespace Skanetrafiken.Crm.Models
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
+                    _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ServiceProxy and LocalContext created Successfully.");
 
                     List<string> attributeLst = new List<string>();
                     attributeLst.Add(FeatureTogglingEntity.Fields.ed_RemoveControlForTypeOfValueCodeEnabled);
@@ -140,7 +141,8 @@ namespace Skanetrafiken.Crm.Models
                         ConditionExpression conditionState = new ConditionExpression(ValueCodeEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.ed_ValueCodeState.Active);
                         query.Criteria.AddCondition(conditionState);
                     }
-                    
+
+                    _log.Info($"Th={threadId} - UpdateValueCodeInCRM: Searching for ValueCode based on voucherCode - {this.voucherCode}.");
                     ValueCodeEntity valueCode = XrmRetrieveHelper.RetrieveFirst<ValueCodeEntity>(localContext, query);
                     DateTime? redeemed = this.disabled;
 
@@ -148,18 +150,18 @@ namespace Skanetrafiken.Crm.Models
                     if (this.amount > 0)
                     {
                         var roundedValue = (decimal)Math.Round(this.amount, 0, MidpointRounding.AwayFromZero);
-                        _log.Debug($"Th={threadId} Rounding value '{this.amount}' to {roundedValue}");
+                        _log.Info($"Th={threadId} - UpdateValueCodeInCRM: Rounding value '{this.amount}' to {roundedValue}");
                         this.amount = roundedValue;
                     }
 
                     if (featureToggling.ed_RemoveControlForTypeOfValueCodeEnabled == true)
                     {
+                        _log.Info($"Th={threadId} - UpdateValueCodeInCRM: Using ed_RemoveControlForTypeOfValueCodeEnabled FeatureToggle.");
                         if (valueCode == null)
                         {
                             #region No Value Code was found (create a new one)
 
-                            _log.Debug($"Could not find value code '{voucherCode}'");
-                            _log.Debug($"Creating a new value code. Should be type 5.");
+                            _log.Info($"Th={threadId} - UpdateValueCodeInCRM: Could not find value code '{this.voucherCode}'. Creating a new value code (Should be type 5).");
 
                             ValueCodeEntity newValueCode = new ValueCodeEntity()
                             {
@@ -193,13 +195,15 @@ namespace Skanetrafiken.Crm.Models
                             }
                             
                             newValueCode.Id = XrmHelper.Create(localContext, newValueCode);
+                            _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ValueCode created with Id - {newValueCode.Id}.");
+
                             //Bellow changed with the inclusion of ed_ValueCOdeVoucherId field 05-11-20
                             if (String.IsNullOrWhiteSpace(newValueCode.ed_name)) 
                             {
                                 newValueCode.ed_name = newValueCode.Id.ToString();
                                 XrmHelper.Update(localContext, newValueCode);
+                                _log.Debug($"Th={threadId} - UpdateValueCodeInCRM: ValueCode name updated.");
                             }
-                            
 
                             //Handle updates where ValueCode has been canceled by Voucher Service (status 4 = Canceled) 29/10-20
                             if (this.status == 4)
@@ -213,17 +217,19 @@ namespace Skanetrafiken.Crm.Models
                                 };
 
                                 UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
+                                _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ValueCode with Id - {newValueCode.Id} - Cancelled.");
                             }
                             else if (this.amount <= 0)
                             {
                                 newValueCode.ed_RedemptionDate = redeemed;
                                 UpdateValueCodeRecordAndDeactivate(localContext, newValueCode);
+                                _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ValueCode with Id - {newValueCode.Id} - Deactivated.");
                             }
                             else
                             {
                                 XrmHelper.Update(localContext.OrganizationService, newValueCode);
-                                _log.Debug($"Th={threadId} Updating value code value.");
-                                _log.Debug($"Th={threadId} New value - Amount: '{newValueCode?.ed_Amount.Value}'");
+                                _log.Debug($"Th={threadId} - UpdateValueCodeInCRM: Updating value code value.");
+                                _log.Info($"Th={threadId} - UpdateValueCodeInCRM: New ValueCode Amount - '{newValueCode?.ed_Amount.Value}'");
 
                                 // 2020-03-03 - Marcus Stenswed
                                 // Update status of value code to be "Skickad"
@@ -234,6 +240,8 @@ namespace Skanetrafiken.Crm.Models
                                     Status = new OptionSetValue((int)ValueCodeEntity.Status.Skickad)
                                 };
                                 SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
+
+                                _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ValueCode status updated to 'Skickad'.");
                             }
 
                             valueCode = newValueCode;
@@ -244,14 +252,16 @@ namespace Skanetrafiken.Crm.Models
                         {
                             #region Value Code was found in SeKund (update existing one)
 
+                            _log.Info($"Th={threadId} - UpdateValueCodeInCRM: Value Code '{this.voucherCode}' found in SeKund.");
+
                             //Handle updates where ValueCode has been canceled by Voucher Service (status 4 = Canceled) 29/10-20
                             if (this.status == 4)
                             {
                                 //Check if valuecode already has been cancled (this makes us dependent on the field being empty when when opened)
-                                _log.Debug($"Th={threadId} VoucherService sent Status = 4. Check that ValueCode is Active before attempt to Cancel.");
+                                _log.Debug($"Th={threadId} - UpdateValueCodeInCRM: VoucherService sent Status = 4. Check that ValueCode is Active before attempt to Cancel.");
                                 if (/*valueCode.ed_CanceledBy == null && */valueCode.statecode == (int)Generated.ed_ValueCodeState.Active)
                                 {
-                                    _log.Debug($"Th={threadId} ValueCode is Active -> Cancel.");
+                                    _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ValueCode is Active -> Cancel.");
                                     var updateValueCode = new ValueCodeEntity()
                                     {
                                         Id = valueCode.Id,
@@ -261,9 +271,10 @@ namespace Skanetrafiken.Crm.Models
                                     };
 
                                     UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
+                                    _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ValueCode with Id - {valueCode.Id} - Cancelled.");
                                 }
                                 else {
-                                    _log.Debug($"Th={threadId} ValueCode is Inactive -> Do not cancel.");
+                                    _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ValueCode is Inactive -> Do not cancel.");
                                 }
                             }
                             else if (this.amount <= 0)
@@ -276,6 +287,7 @@ namespace Skanetrafiken.Crm.Models
                                 };
                                 
                                 UpdateValueCodeRecordAndDeactivate(localContext, updateValueCode);
+                                _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ValueCode with Id - {valueCode.Id} - Deactivated.");
                             }
                             else
                             {
@@ -299,7 +311,7 @@ namespace Skanetrafiken.Crm.Models
                                     };
 
                                     XrmHelper.Update(localContext.OrganizationService, updateValueCode);
-                                    _log.Debug($"Th={threadId} New value (after activate - Amount: '{valueCode?.ed_Amount.Value}'");
+                                    _log.Info($"Th={threadId} - UpdateValueCodeInCRM: New value (after activate - Amount: '{valueCode?.ed_Amount.Value}'");
                                 }
                                 else
                                 {
@@ -310,8 +322,7 @@ namespace Skanetrafiken.Crm.Models
                                     };
 
                                     XrmHelper.Update(localContext.OrganizationService, updateValueCode);
-                                    _log.Debug($"Th={threadId} Updating value code value.");
-                                    _log.Debug($"Th={threadId} New value - Amount: '{valueCode?.ed_Amount.Value}'");
+                                    _log.Info($"Th={threadId} - UpdateValueCodeInCRM: Value Code amount updated. New value - Amount: '{valueCode?.ed_Amount.Value}'");
                                 }
                             }
 
@@ -326,10 +337,10 @@ namespace Skanetrafiken.Crm.Models
                     }
                     else
                     {
+                        _log.Info($"Th={threadId} - UpdateValueCodeInCRM: Not using ed_RemoveControlForTypeOfValueCodeEnabled FeatureToggle.");
                         if (valueCode == null)
                         {
-                            _log.Debug($"Could not find value code '{voucherCode}'");
-                            _log.Debug($"Creating a new value code. Should be type 5.");
+                            _log.Info($"Th={threadId} - UpdateValueCodeInCRM: Could not find value code '{this.voucherCode}'. Creating a new value code (Should be type 5).");
 
                             ValueCodeEntity newValueCode = new ValueCodeEntity()
                             {
@@ -363,11 +374,14 @@ namespace Skanetrafiken.Crm.Models
                             }
 
                             newValueCode.Id = XrmHelper.Create(localContext, newValueCode);
+                            _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ValueCode created with Id - {newValueCode.Id}.");
+
                             //Bellow changed with the inclusion of ed_ValueCOdeVoucherId field 05-11-20
                             if (String.IsNullOrWhiteSpace(newValueCode.ed_name))
                             {
                                 newValueCode.ed_name = newValueCode.Id.ToString();
                                 XrmHelper.Update(localContext, newValueCode);
+                                _log.Debug($"Th={threadId} - UpdateValueCodeInCRM: ValueCode name updated.");
                             }
 
                             //_log.Debug($"Creating value code type 5 (Presentkort) with values:");
@@ -391,23 +405,28 @@ namespace Skanetrafiken.Crm.Models
                                 };
 
                                 UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
+                                _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ValueCode with Id - {newValueCode.Id} - Cancelled.");
                             }
                             else if (this.amount <= 0)
                             {
                                 newValueCode.ed_RedemptionDate = redeemed;
                                 UpdateValueCodeRecordAndDeactivate(localContext, newValueCode);
+                                _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ValueCode with Id - {newValueCode.Id} - Deactivated.");
                             }
                             else
                             {
+                                _log.Debug($"Th={threadId} - UpdateValueCodeInCRM: Updating value code value.");
+
                                 XrmHelper.Update(localContext.OrganizationService, newValueCode);
-                                _log.Debug($"Updating value code value.");
-                                _log.Debug($"New value - Amount: '{newValueCode?.ed_Amount.Value}'");
+
+                                _log.Info($"Th={threadId} - UpdateValueCodeInCRM: New ValueCode Amount - '{newValueCode?.ed_Amount.Value}'");
                             }
 
                         }
                         // Presentkort
                         else if ((int)valueCode.ed_ValueCodeTypeGlobal.Value == 2)
                         {
+                            _log.Info($"Th={threadId} - UpdateValueCodeInCRM: Value code '{this.voucherCode}'. ValueCodeTypeGlobal == 2.");
                             //Handle updates where ValueCode has been canceled by Voucher Service (status 4 = Canceled) 29/10-20
                             if (this.status == 4)
                             {
@@ -420,6 +439,7 @@ namespace Skanetrafiken.Crm.Models
                                 };
 
                                 UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
+                                _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ValueCode with Id - {valueCode.Id} - Cancelled.");
                             }
                             else if (this.amount <= 0)
                             {
@@ -427,8 +447,9 @@ namespace Skanetrafiken.Crm.Models
                                 valueCode.ed_RedemptionDate = redeemed;
 
                                 UpdateValueCodeRecordAndDeactivate(localContext, valueCode);
+                                _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ValueCode with Id - {valueCode.Id} - Deactivated.");
 
-                                _log.Debug($"Updating value code status.");
+                                
                                 SetStateRequest req = new SetStateRequest()
                                 {
                                     EntityMoniker = valueCode.ToEntityReference(),
@@ -437,6 +458,7 @@ namespace Skanetrafiken.Crm.Models
                                 };
                                 SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
 
+                                _log.Info($"Th={threadId} - UpdateValueCodeInCRM: Updating value code status to 'Inlost'.");
                                 // TODO : Marcus Generate
                                 //_log.Debug($"New status - State: '{Generated.ed_ValueCodeState.Inactive}', Status: '{Generated.ed_valuecodes.Inlost}'");
                             }
@@ -445,14 +467,13 @@ namespace Skanetrafiken.Crm.Models
                                 valueCode.ed_Amount = new Money(this.amount);
 
                                 XrmHelper.Update(localContext.OrganizationService, valueCode);
-                                _log.Debug($"Updating value code value.");
-                                _log.Debug($"New value - Amount: '{valueCode?.ed_Amount.Value}'");
-
+                                _log.Info($"Th={threadId} - UpdateValueCodeInCRM: Updating value code value. New value - Amount: '{valueCode?.ed_Amount.Value}'");
                             }
                         }
                         // Övriga
                         else if ((int)valueCode.ed_ValueCodeTypeGlobal.Value != 2)
                         {
+                            _log.Info($"Th={threadId} - UpdateValueCodeInCRM: Value code '{this.voucherCode}'. ValueCodeTypeGlobal != 2.");
                             //DevOps Task: 3998
                             //Handle updates where ValueCode has been canceled by Voucher Service(status 4 = Canceled) 29 / 10 - 20
                             if (this.status == 4)
@@ -466,6 +487,7 @@ namespace Skanetrafiken.Crm.Models
                                 };
 
                                 UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
+                                _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ValueCode with Id - {valueCode.Id} - Cancelled.");
                             }
                             else if (this.amount > 0
                                 && (int)valueCode.ed_ValueCodeTypeGlobal.Value != 1
@@ -474,12 +496,14 @@ namespace Skanetrafiken.Crm.Models
                             {
                                 valueCode.ed_Amount = new Money(this.amount);
                                 XrmHelper.Update(localContext, valueCode);
+                                _log.Info($"Th={threadId} - UpdateValueCodeInCRM: Value Code amount updated.");
                             }
                             else
                             {
                                 valueCode.ed_Amount = new Money(0);
                                 valueCode.ed_RedemptionDate = redeemed;
                                 UpdateValueCodeRecordAndDeactivate(localContext, valueCode);
+                                _log.Info($"Th={threadId} - UpdateValueCodeInCRM: ValueCode with Id - {valueCode.Id} - Deactivated.");
                             }
                         }
 
@@ -529,6 +553,7 @@ namespace Skanetrafiken.Crm.Models
                 };
 
                 valueCodeTransaction.Id = XrmHelper.Create(localContext, valueCodeTransaction);
+                _log.Debug($"Th={threadId} ---> ValueCodeTransaction with Id - {valueCodeTransaction.Id}");
 
                 _log.Debug($"Th={threadId} <--- Exiting {nameof(CreateValueCodeTransaction)}");
                 return valueCodeTransaction;

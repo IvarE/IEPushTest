@@ -1822,24 +1822,8 @@ namespace Skanetrafiken.Crm.Entities
 
                     if (feature != null && feature.ed_SplittCompany == true) //New Logic (2020-05-06)
                     {
-                        if (account != null)
-                        {
-                            //Check if relationship existst between found contact and found account
-                            if (CompanyRoleEntity.DoesRelationshipExist(localContext, "cgi_account_contact", AccountEntity.EntityLogicalName, account.AccountId.Value, ContactEntity.EntityLogicalName, contact.ContactId.Value))
-                            {
-                                throw new BadRequestException($"Found Contact, with ID {contact.ContactId.Value}, already has a connection to account with AccountNumber {customerInfo.CompanyRole[0].PortalId}.");
-                                //throw new Exception($"Found Contact with, ID {contact.ContactId.Value}, already has a connection to account with AccountNumber {customerInfo.CompanyRole[0].PortalId}.");
-                            }
-
-                            //Skapa inte en ny kontakt utan använd samma kontakt kopplad mot nytt KST
-                            return contact;
-
-                        }
-                        else
-                        {
-                            throw new BadRequestException($"Did not find account with AccountNumber {customerInfo.CompanyRole[0].PortalId}.");
-                        }
-
+                        //Skapa inte en ny kontakt. Behöver inte kontrollera association då vi gör det senare. (2021-02-23 CK)
+                        return contact;
                     }
                 }
             }
@@ -2481,7 +2465,7 @@ namespace Skanetrafiken.Crm.Entities
                         else if (matchingContacts.Count > 1)
                         {
                             //TODO - 2020-09-04 (Christian) - Använd accountets Parentaccount. Kolla relation med contact som vi hittar. Använd den som har en relation med Org.
-                            if (account != null && account.ParentAccountId != null) 
+                            if (account != null && account.ParentAccountId != null)
                             {
                                 bool foundContact = false;
                                 for (int i = 0; i < matchingContacts.Count; i++)
@@ -2495,7 +2479,26 @@ namespace Skanetrafiken.Crm.Entities
                                 }
 
                                 //If none of the listed Contacts has an association with the Accounts Parent account - Return the first Contact.
-                                if (foundContact == false) 
+                                if (foundContact == false)
+                                {
+                                    contact = matchingContacts[0];
+                                }
+                            }
+                            else if (account != null && account.Id != null)
+                            {
+                                bool foundContact2 = false;
+                                for (int i = 0; i < matchingContacts.Count; i++)
+                                {
+                                    if (CompanyRoleEntity.DoesRelationshipExist(localContext, "cgi_account_contact", AccountEntity.EntityLogicalName, account.Id, ContactEntity.EntityLogicalName, matchingContacts[i].ContactId.Value))
+                                    {
+                                        contact = matchingContacts[i];
+                                        foundContact2 = true;
+                                        break;
+                                    }
+                                }
+
+                                //If none of the listed Contacts has an association with the Parent account - Return the first Contact.
+                                if (foundContact2 == false)
                                 {
                                     contact = matchingContacts[0];
                                 }
