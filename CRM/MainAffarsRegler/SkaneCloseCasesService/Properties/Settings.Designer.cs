@@ -40,5 +40,32 @@ namespace Endeavor.Crm.CloseCasesService.Properties {
                 return ((string)(this["CloseCaseScheduleCronExpression"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2019-02-01T00:00:00Z")]
+        public string StartDate {
+            get {
+                return ((string)(this["StartDate"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2019-02-03T00:00:00Z")]
+        public string EndDate {
+            get {
+                return ((string)(this["EndDate"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2018-01-13T00:00:00Z")]
+        public string SpecificDate {
+            get {
+                return ((string)(this["SpecificDate"]));
+            }
+        }
     }
 }

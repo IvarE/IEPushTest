@@ -8,5 +8,14 @@
     <Setting Name="CloseCaseScheduleCronExpression" Type="System.String" Scope="Application">
       <Value Profile="(Default)">0 0/1 * 1/1 * ? *</Value>
     </Setting>
+    <Setting Name="StartDate" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">2019-02-01T00:00:00Z</Value>
+    </Setting>
+    <Setting Name="EndDate" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">2019-02-03T00:00:00Z</Value>
+    </Setting>
+    <Setting Name="SpecificDate" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">2018-01-13T00:00:00Z</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
