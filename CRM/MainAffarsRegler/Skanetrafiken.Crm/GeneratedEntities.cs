@@ -59863,10 +59863,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 	public enum ed_valuecodetypeglobal
 	{
 		
-		ErsattningsarendeSaldo = 6,
-		
-		ForseningsersattningSaldo = 7,
-		
 		Forseningsersattning = 1,
 		
 		InlostReskassa = 2,
@@ -66540,6 +66536,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 	
 	public enum incident_caseorigincode
 	{
+		
+		Vardguidensetjanster = 899310000,
 		
 		Phone = 1,
 		
@@ -86806,6 +86804,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_split")]
+		public System.Nullable<int> ed_Split
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("ed_split");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_split", value);
+			}
+		}
+		
+		/// <summary>
 		/// Shows the default image for the record.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage")]
@@ -87947,6 +87961,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_slots_from = "ed_slots_from";
 			
 			public const string ed_slots_to = "ed_slots_to";
+			
+			public const string ed_Split = "ed_split";
 			
 			public const string EntityImage = "entityimage";
 			
@@ -93682,16 +93698,16 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_slotsperday")]
-		public System.Nullable<int> ed_slotsperday
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_split")]
+		public System.Nullable<int> ed_Split
 		{
 			get
 			{
-				return this.GetAttributeValue<System.Nullable<int>>("ed_slotsperday");
+				return this.GetAttributeValue<System.Nullable<int>>("ed_split");
 			}
 			set
 			{
-				this.SetAttributeValue("ed_slotsperday", value);
+				this.SetAttributeValue("ed_split", value);
 			}
 		}
 		
@@ -93708,6 +93724,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_todate", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totalslots")]
+		public System.Nullable<int> ed_totalslots
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("ed_totalslots");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_totalslots", value);
 			}
 		}
 		
@@ -94938,9 +94970,11 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_FromDate = "ed_fromdate";
 			
-			public const string ed_slotsperday = "ed_slotsperday";
+			public const string ed_Split = "ed_split";
 			
 			public const string ed_ToDate = "ed_todate";
+			
+			public const string ed_totalslots = "ed_totalslots";
 			
 			public const string ExchangeRate = "exchangerate";
 			
@@ -98408,16 +98442,16 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_slotsperday")]
-		public System.Nullable<int> ed_slotsperday
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_split")]
+		public System.Nullable<int> ed_Split
 		{
 			get
 			{
-				return this.GetAttributeValue<System.Nullable<int>>("ed_slotsperday");
+				return this.GetAttributeValue<System.Nullable<int>>("ed_split");
 			}
 			set
 			{
-				this.SetAttributeValue("ed_slotsperday", value);
+				this.SetAttributeValue("ed_split", value);
 			}
 		}
 		
@@ -98434,6 +98468,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_todate", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totalslots")]
+		public System.Nullable<int> ed_totalslots
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("ed_totalslots");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_totalslots", value);
 			}
 		}
 		
@@ -99757,9 +99807,11 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_FromDate = "ed_fromdate";
 			
-			public const string ed_slotsperday = "ed_slotsperday";
+			public const string ed_Split = "ed_split";
 			
 			public const string ed_ToDate = "ed_todate";
+			
+			public const string ed_totalslots = "ed_totalslots";
 			
 			public const string ExchangeRate = "exchangerate";
 			
@@ -101903,6 +101955,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("domainname", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_rsid")]
+		public string ed_RSID
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_rsid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_rsid", value);
 			}
 		}
 		
@@ -109216,6 +109284,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string DomainName = "domainname";
 			
+			public const string ed_RSID = "ed_rsid";
+			
 			public const string edp_SurveyURL = "edp_surveyurl";
 			
 			public const string EmailRouterAccessApproval = "emailrouteraccessapproval";
@@ -109445,6 +109515,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int DisabledReason = 500;
 			
 			public const int DomainName = 1024;
+			
+			public const int ed_RSID = 100;
 			
 			public const int edp_SurveyURL = 300;
 			
