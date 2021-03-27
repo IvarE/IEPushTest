@@ -3,20 +3,20 @@ using System.Collections;
 using Microsoft.Xrm.Sdk;
 using Endeavor.Crm;
 using Endeavor.Crm.Extensions;
-using Generated = Skanetrafiken.Crm.Schema.Generated;
 using Skanetrafiken.Crm.Entities;
-using static Endeavor.Crm.Plugin;
 
 namespace Skanetrafiken.Crm
 {
-    public class PostQuoteProductCreate : Plugin
+    public class PreQuoteProductUpdate : Plugin
     {
         /// <summary>
         /// </summary>
-        public PostQuoteProductCreate()
-            : base(typeof(PostQuoteProductCreate))
+        private readonly string preImageAlias = "preImage";
+
+        public PreQuoteProductUpdate()
+            : base(typeof(PreQuoteProductUpdate))
         {
-            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PostOperation, Plugin.SdkMessageName.Create, QuoteProductEntity.EntityLogicalName, new Action<LocalPluginContext>(PostExecuteQuoteProductCreate)));
+            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PreOperation, Plugin.SdkMessageName.Update, QuoteProductEntity.EntityLogicalName, new Action<LocalPluginContext>(Execute)));
 
             // Note : you can register for more events here if this plugin is not specific to an individual entity and message combination.
             // You may also need to update your RegisterFile.crmregister plug-in registration file to reflect any change.
@@ -37,20 +37,20 @@ namespace Skanetrafiken.Crm
         /// could execute the plug-in at the same time. All per invocation state information
         /// is stored in the context. This means that you should not use global variables in plug-ins.
         /// </remarks>
-        protected void PostExecuteQuoteProductCreate(LocalPluginContext localContext)
+        protected void Execute(LocalPluginContext localContext)
         {
             if (localContext == null)
             {
                 throw new ArgumentNullException("localContext");
             }
 
-            // Must be Post operation
-            if (localContext.PluginExecutionContext.Stage != 40)
+            // Must be Pre operation
+            if (localContext.PluginExecutionContext.Stage != (int)Plugin.SdkMessageProcessingStepStage.PreOperation)
             {
-                throw new InvalidPluginExecutionException("Plugin must run in Post-operation mode!");
+                throw new InvalidPluginExecutionException("Plugin must run in Pre-operation mode!");
             }
 
-            // INFO: (joan) Don't do anything in offline mode
+            // INFO: (Endeavor) Don't do anything in offline mode
             if (localContext.PluginExecutionContext.IsExecutingOffline)
                 return;
 
@@ -59,18 +59,28 @@ namespace Skanetrafiken.Crm
             if (localContext.PluginExecutionContext.InputParameters.Contains("Target") &&
                 localContext.PluginExecutionContext.InputParameters["Target"] is Entity)
             {
+
+                // Obtain the target entity from the input parameters.
+                QuoteProductEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<QuoteProductEntity>();
+
+                QuoteProductEntity preImage = Plugin.GetPreImage<QuoteProductEntity>(localContext, preImageAlias);
+
+                if (preImage == null)
+                    throw new InvalidPluginExecutionException("Pre-Image not registered correctly.");
+
                 try
                 {
-                    // Obtain the target entity from the input parameters.
-                    QuoteProductEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<QuoteProductEntity>();
-
-                    QuoteProductEntity.HandleQuoteProductEntityCreate(localContext, target);
+                    target.HandlePreQuoteProductUpdate(localContext, preImage);
                 }
                 catch (Exception ex)
                 {
                     throw new InvalidPluginExecutionException(ex.Message, ex);
                 }
+
+                //throw new InvalidPluginExecutionException("Debug @joan");
             }
         }
+
     }
 }
+//</snippetAccountNumberPlugin>
