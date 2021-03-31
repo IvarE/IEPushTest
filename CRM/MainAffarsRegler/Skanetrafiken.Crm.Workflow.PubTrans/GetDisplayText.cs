@@ -35,6 +35,9 @@ namespace Skanetrafiken.Crm
         [Input("Line")]
         public InArgument<string> Line { get; set; }
 
+        [Input("DirectionOfText")]
+        public InArgument<string> DirectionOfText { get; set; }
+
         [Input("Tour")]
         public InArgument<string> Tour { get; set; }
 
@@ -74,6 +77,7 @@ namespace Skanetrafiken.Crm
                 string transport = Transport.Get(activityContext);
                 string city = City.Get(activityContext);
                 string line = Line.Get(activityContext);
+                string directionOfText = DirectionOfText.Get(activityContext);
                 string tour = Tour.Get(activityContext);
                 string start = Start.Get(activityContext);
                 string stop = Stop.Get(activityContext);
@@ -84,8 +88,8 @@ namespace Skanetrafiken.Crm
                 DateTime dArrivalActual = ArrivalActual.Get(activityContext);
 
                 string sTour = GetTour(inputFormat, tour, start, stop, dStartPlanned, dStartActual, dArrivalPlanned, dArrivalActual);
-
-                string displayText = ExecuteCodeActivity(transport, city, line, sTour, contractor);
+                string sLine = line + " (" + directionOfText + ")";
+                string displayText = ExecuteCodeActivity(transport, city, sLine, sTour, contractor);
                 DisplayText.Set(activityContext, displayText);
             }
             catch (Exception ex)
@@ -154,19 +158,28 @@ namespace Skanetrafiken.Crm
             var actualStartTimes = " [X] ";
             if (startactualtime != "X" && startplannedtime != "X")
             {
-                var diferenceMinuts = GetDifferenceBetweenDates(dStartActual, dStartPlanned);
+                var diferenceMinuts = MinuteDiff(dStartActual, dStartPlanned);
                 actualStartTimes = " [" + startactualtime + " (" + diferenceMinuts + ")] ";
             }
 
             var actualArrivalTimes = " [X] ";
             if (arrivalactualtime != "X" && arrivalplannedtime != "X")
             {
-                var diferenceMinuts = GetDifferenceBetweenDates(dArrivalActual, dArrivalPlanned);
+                var diferenceMinuts = MinuteDiff(dArrivalActual, dArrivalPlanned);
                 actualArrivalTimes = " [" + arrivalactualtime + " (" + diferenceMinuts + ")] ";
             }
 
             return "Tur: [" + tour + "] " + startplannedtime + actualStartTimes + start + " - " + arrivalplannedtime + actualArrivalTimes + stop;
         }
+
+        public static string MinuteDiff(DateTime realTime, DateTime plannedDate)
+        {
+            var plannedMinutes = (int)Math.Abs(DateTime.MinValue.Subtract(plannedDate).TotalMinutes);
+            var realtimeMinutes = (int)Math.Abs(DateTime.MinValue.Subtract(realTime).TotalMinutes);
+
+            return realtimeMinutes - plannedMinutes >= 0 ? "+"+(realtimeMinutes - plannedMinutes) : ""+(realtimeMinutes - plannedMinutes);
+        }
+
         public static string GetDifferenceBetweenDates(DateTime actualDate, DateTime plannedDate)
         {
             double totalMinuts = ((double)actualDate.Subtract(plannedDate).TotalMinutes);

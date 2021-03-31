@@ -139,7 +139,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiBase.cs" />
     <Compile Include="ApiHelper.cs" />
+    <Compile Include="AzureHelper.cs" />
     <Compile Include="Entities\OpportunityEntity.cs" />
     <Compile Include="Entities\PaymentMethodEntity.cs" />
     <Compile Include="Entities\PaymentEntity.cs" />
@@ -149,6 +151,7 @@
     <Compile Include="Entities\QuoteEntity.cs" />
     <Compile Include="Entities\QuoteProductEntity.cs" />
     <Compile Include="Entities\SlotsEntity.cs" />
+    <Compile Include="JsonHelper.cs" />
     <Compile Include="PostQuoteProductCreate.cs" />
     <Compile Include="PreAccountUpdate.cs" />
     <Compile Include="PreAccountCreate.cs" />

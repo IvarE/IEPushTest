@@ -133,7 +133,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             if (departureId == "X" && arrivalId == "X")
                 return "";
 
-            var finalDeviation = "";
+            var finalDeviation = [];
 
             if (departureId != "X") {
 
@@ -155,8 +155,11 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                     if (usageTypeLongCode != "DETAILS")
                         continue;
 
-                    if (lDeparture.indexOf(isPartOfDeviationMessageId) >= 0)
-                        finalDeviation += getElementValue(lDeviationMessage[j], "Content") + "\n";
+                    if (lDeparture.indexOf(isPartOfDeviationMessageId) >= 0) {
+                        var content = getElementValue(lDeviationMessage[j], "Content");
+                        if (finalDeviation.indexOf(content) === -1)
+                            finalDeviation.push(content);
+                    }
                 }
             }
 
@@ -180,12 +183,21 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                     if (usageTypeLongCode != "DETAILS")
                         continue;
 
-                    if (lArrival.indexOf(isPartOfDeviationMessageId) >= 0)
-                        finalDeviation += getElementValue(lDeviationMessage[j], "Content") + "\n";
+                    if (lArrival.indexOf(isPartOfDeviationMessageId) >= 0) {
+                        var content = getElementValue(lDeviationMessage[j], "Content");
+                        if (finalDeviation.indexOf(content) === -1)
+                            finalDeviation.push(content);
+                    }
                 }
             }
 
-            return finalDeviation;
+            var finalStringDeviation = "";
+            if (finalDeviation.length > 0) {
+                for (var k = 0; k < finalDeviation.length; k++)
+                    finalStringDeviation += finalDeviation[k] + "\n";
+            }
+
+            return finalStringDeviation;
         },
 
         getContractorFromGid: function (gid) {
@@ -302,8 +314,23 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
         filterRelevantValues: function (childNodes, nameTag, idTag, existsFromTag, existsUpToTag, timestamp) {
             debugger;
-            var options = [];
+            // LOCAL FUNCTION
+            getElementValue = function (element, value) {
+                if (element != null) {
+                    var elements = element.getElementsByTagName(value);
+                    if (elements && elements[0] && elements[0].firstChild.nodeValue) {
+                        return elements[0].firstChild.nodeValue;
+                    }
+                    else {
+                        return "X";
+                    }
+                }
+                else {
+                    return "X";
+                }
+            }
 
+            var options = [];
             for (var i = 0; i < childNodes.length; i++) {
 
                 var child = childNodes[i];
@@ -329,12 +356,13 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 }
 
                 if (isRelevant) {
-                    var name = child.getElementsByTagName(nameTag)[0].firstChild.nodeValue;
-                    var id = child.getElementsByTagName(idTag)[0].firstChild.nodeValue;
+
+                    var name = getElementValue(child, nameTag);
+                    var id = getElementValue(child, idTag);
 
                     var option = { name: name, value: id };
                     options.push(option);
-                }               
+                }
             }
 
             return options;
@@ -420,7 +448,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             var city = Endeavor.Skanetrafiken.TravelInformation.getCity(cityid);
             var lines = city.getElementsByTagName("Lines")[0].childNodes;
 
-            var options = Endeavor.Skanetrafiken.TravelInformation.filterRelevantValues(lines, "LineDesignation", "LineGid", "LineExistsFromDate", "LineExistsUptoDate", timestamp);
+            var options = Endeavor.Skanetrafiken.TravelInformation.filterRelevantValues(lines, "LinePublicName", "LineGid", "ExistsFromDate", "ExistsUptoDate", timestamp);
 
             if (options == null || options.length < 1)
                 Endeavor.formscriptfunctions.AlertCustomDialog("Staden saknar aktiva linjer för angivet datum.");
@@ -585,8 +613,10 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 var line = lines[i];
                 var id = line.getElementsByTagName("LineGid")[0].firstChild.nodeValue;
 
-                if (id == lineid)
+                if (id == lineid) {
                     returnline = line;
+                    break;
+                }
             }
 
             return returnline;
@@ -914,7 +944,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                             "cgi_displaytext": "",
                             "cgi_transport": saveEntity.line.lineDesignation,
                             "cgi_line": saveEntity.line.lineNumber,
-                            "cgi_tour": saveEntity.line.lineNumber,
+                            "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
                             "cgi_start": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("fromlist").value),
                             "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
                             "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
@@ -969,7 +999,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                             entity = {
                                 "cgi_displaytext": "",
                                 "cgi_transport": "Regionbuss",
-                                "cgi_line": getElementValue(line, "LineNumber"), //getElementValue(saveEntity.directjourney, "LineDesignation"),
+                                "cgi_line": getElementValue(line, "LineNumber"),
                                 "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
                                 "cgi_start": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("fromlist").value),
                                 "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
@@ -1027,7 +1057,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                 "cgi_displaytext": "",
                                 "cgi_transport": "Stadsbuss",
                                 "cgi_city": Endeavor.Skanetrafiken.TravelInformation.getCityFromGid(saveEntity.city),
-                                "cgi_line": getElementValue(line, "LineNumber"), //getElementValue(saveEntity.directjourney, "LineDesignation"),
+                                "cgi_line": getElementValue(saveEntity.directjourney, "LineDesignation"),
                                 "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
                                 "cgi_start": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("fromlist").value),
                                 "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
@@ -1128,18 +1158,16 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 });
         },
 
-        getDiferenceBetWeenDates: function (dateActual, datePlanned) {
+        minuteDiff: function (dateActual, datePlanned) {
 
-            var diffSeconds = (dateActual.getTime() - datePlanned.getTime()) / 1000; // seconds
-            var diffMinuts = diffSeconds / 60; // minutes
+            var minDate = new Date('0001-01-01T12:00:00Z');
+            dateActual = dateActual.setSeconds(0, 0);
+            datePlanned = datePlanned.setSeconds(0, 0);
 
-            var diferenceMinuts = "";
-            if (diffSeconds > -60 && diffSeconds < 60)
-                diferenceMinuts = 0;
-            else
-                diferenceMinuts = diffMinuts.toFixed(1);
+            var plannedMinutes = minDate - datePlanned / 60000;
+            var realtimeMinutes = minDate - dateActual / 60000;
 
-            return Math.sign(diferenceMinuts) == 1 ? "+" + diferenceMinuts : diferenceMinuts;
+            return realtimeMinutes - plannedMinutes >= 0 ? "+" + realtimeMinutes - plannedMinutes : realtimeMinutes - plannedMinutes;
         },
 
         getTour: function (entity) {
@@ -1169,13 +1197,13 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
             var actualStartTimes = " [X] ";
             if (startactualtime != "X" && startplannedtime != "X") {
-                var diferenceMinuts = Endeavor.Skanetrafiken.TravelInformation.getDiferenceBetWeenDates(dStartActual, dStartPlanned);
+                var diferenceMinuts = Endeavor.Skanetrafiken.TravelInformation.minuteDiff(dStartActual, dStartPlanned);
                 actualStartTimes = " [" + startactualtime + " (" + diferenceMinuts + ")] ";
             }
 
             var actualArrivalTimes = " [X] ";
             if (arrivalactualtime != "X" && arrivalplannedtime != "X") {
-                var diferenceMinuts = Endeavor.Skanetrafiken.TravelInformation.getDiferenceBetWeenDates(dArrivalActual, dArrivalPlanned);
+                var diferenceMinuts = Endeavor.Skanetrafiken.TravelInformation.minuteDiff(dArrivalActual, dArrivalPlanned);
                 actualArrivalTimes = " [" + arrivalactualtime + " (" + diferenceMinuts + ")] ";
             }
 
@@ -1185,7 +1213,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
         setDisplayTextTrain: function (entity) {
 
             var trafik = "Trafikslag: " + entity.cgi_transport;
-            var line = "Linje: " + entity.cgi_line;
+            var line = "Linje: " + entity.cgi_line + " (" + entity.cgi_directiontext + ")";
             var tour = Endeavor.Skanetrafiken.TravelInformation.getTour(entity);
             var contractor = "Entreprenör: " + entity.cgi_contractor;
 
@@ -1195,7 +1223,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
         setDisplayTextRegionbus: function (entity) {
 
             var trafik = "Trafikslag: ";
-            var line = "Linje: " + entity.cgi_line;
+            var line = "Linje: " + entity.cgi_line + " (" + entity.cgi_directiontext + ")";
 
             var lineNumber = parseInt(entity.cgi_line);
             if (lineNumber > 400 && lineNumber < 430)
@@ -1213,7 +1241,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
             var trafik = "Trafikslag: " + entity.cgi_transport;
             var stad = "Stad: " + entity.cgi_city;
-            var line = "Linje: " + entity.cgi_line;
+            var line = "Linje: " + entity.cgi_line + " (" + entity.cgi_directiontext + ")";
             var tour = Endeavor.Skanetrafiken.TravelInformation.getTour(entity);
             var contractor = "Entreprenör: " + entity.cgi_contractor;
 
