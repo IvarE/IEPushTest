@@ -6,17 +6,17 @@ using Endeavor.Crm.Extensions;
 using Generated = Skanetrafiken.Crm.Schema.Generated;
 using Skanetrafiken.Crm.Entities;
 using static Endeavor.Crm.Plugin;
-
 namespace Skanetrafiken.Crm
 {
-    public class PostQuoteProductCreate : Plugin
+    public class PostQuoteProductUpdate : Plugin
     {
-        /// <summary>
-        /// </summary>
-        public PostQuoteProductCreate()
-            : base(typeof(PostQuoteProductCreate))
+
+        private readonly string preImageAlias = "preImage";
+
+        public PostQuoteProductUpdate()
+            : base(typeof(PostQuoteProductUpdate))
         {
-            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PostOperation, Plugin.SdkMessageName.Create, QuoteProductEntity.EntityLogicalName, new Action<LocalPluginContext>(PostExecuteQuoteProductCreate)));
+            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PostOperation, Plugin.SdkMessageName.Update, QuoteProductEntity.EntityLogicalName, new Action<LocalPluginContext>(Execute)));
 
             // Note : you can register for more events here if this plugin is not specific to an individual entity and message combination.
             // You may also need to update your RegisterFile.crmregister plug-in registration file to reflect any change.
@@ -37,7 +37,7 @@ namespace Skanetrafiken.Crm
         /// could execute the plug-in at the same time. All per invocation state information
         /// is stored in the context. This means that you should not use global variables in plug-ins.
         /// </remarks>
-        protected void PostExecuteQuoteProductCreate(LocalPluginContext localContext)
+        protected void Execute(LocalPluginContext localContext)
         {
             if (localContext == null)
             {
@@ -61,15 +61,22 @@ namespace Skanetrafiken.Crm
             {
                 try
                 {
+                    QuoteProductEntity preImage = Plugin.GetPreImage<QuoteProductEntity>(localContext, preImageAlias);
+
+                    if (preImage == null)
+                        throw new InvalidPluginExecutionException("Pre-Image not registered correctly.");
+
+
                     // Obtain the target entity from the input parameters.
                     QuoteProductEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<QuoteProductEntity>();
 
-                    QuoteProductEntity.HandleQuoteProductEntityCreate(localContext, target);
+                    QuoteProductEntity.HandleQuoteProductEntityUpdate(localContext, target, preImage);
                 }
                 catch (Exception ex)
                 {
                     throw new InvalidPluginExecutionException(ex.Message, ex);
                 }
+
             }
         }
     }

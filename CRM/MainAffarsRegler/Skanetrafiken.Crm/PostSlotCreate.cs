@@ -7,16 +7,17 @@ using Generated = Skanetrafiken.Crm.Schema.Generated;
 using Skanetrafiken.Crm.Entities;
 using static Endeavor.Crm.Plugin;
 
+
 namespace Skanetrafiken.Crm
 {
-    public class PostQuoteProductCreate : Plugin
+    public class PostSlotCreate : Plugin
     {
         /// <summary>
         /// </summary>
-        public PostQuoteProductCreate()
-            : base(typeof(PostQuoteProductCreate))
+        public PostSlotCreate()
+            : base(typeof(PostSlotCreate))
         {
-            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PostOperation, Plugin.SdkMessageName.Create, QuoteProductEntity.EntityLogicalName, new Action<LocalPluginContext>(PostExecuteQuoteProductCreate)));
+            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PostOperation, Plugin.SdkMessageName.Create, SlotsEntity.EntityLogicalName, new Action<LocalPluginContext>(Execute)));
 
             // Note : you can register for more events here if this plugin is not specific to an individual entity and message combination.
             // You may also need to update your RegisterFile.crmregister plug-in registration file to reflect any change.
@@ -37,7 +38,7 @@ namespace Skanetrafiken.Crm
         /// could execute the plug-in at the same time. All per invocation state information
         /// is stored in the context. This means that you should not use global variables in plug-ins.
         /// </remarks>
-        protected void PostExecuteQuoteProductCreate(LocalPluginContext localContext)
+        protected void Execute(LocalPluginContext localContext)
         {
             if (localContext == null)
             {
@@ -62,9 +63,9 @@ namespace Skanetrafiken.Crm
                 try
                 {
                     // Obtain the target entity from the input parameters.
-                    QuoteProductEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<QuoteProductEntity>();
+                    SlotsEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<SlotsEntity>();
 
-                    QuoteProductEntity.HandleQuoteProductEntityCreate(localContext, target);
+                    SlotsEntity.HandleSlotsEntityCreate(localContext, target);
                 }
                 catch (Exception ex)
                 {
