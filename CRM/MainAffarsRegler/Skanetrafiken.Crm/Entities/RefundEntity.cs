@@ -4,7 +4,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using Generated = Skanetrafiken.Crm.Schema.Generated;
-using Endeavor.Crm;
+
 using System.Runtime.Serialization;
 using System.Net;
 using System.IO;
@@ -14,13 +14,130 @@ using System.Globalization;
 using Skanetrafiken.Crm;
 using System.Linq;
 using Skanetrafiken.Crm.ValueCodes;
+using System.Collections.Generic;
+using Skanetrafiken.Crm.Schema.Generated;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Skanetrafiken.Crm.Entities
 {
+    public class IssueEventDetail
+    {​​​​​​​ 
+        public string IssueId;
+        public string IssueEventDateUtc; 
+        public List<string> SubJourneys;
+        public string Journey;
+        public string RefundForm;
+        public string RefundType;
+        public string RequestedCompensation;
+    }​​​​​​​
+
+    public class CompensationResult
+    {​​​​​​​ 
+        public string ValidationResult;
+        public decimal RefundedAmount;
+        public bool IsRefunded;
+        public string SekundNumber;
+        public IssueEventDetail IssueEventDetail;
+    }​​​​​​​
+
+    public class TicketEvent
+    {
+        public string resourceType;
+        public string ticketEventType;
+        public object data;
+        public int version;
+    }
+
     public class RefundEntity : Generated.cgi_refund
     {
         private const string MobileValueCodeReimbursementFormIdString = "98F4CC92-5EA4-E811-8276-00155D010B00";
         private const string EmailValueCodeReimbursementFormIdString = "3FA843A0-5EA4-E811-8276-00155D010B00";
+
+        public void HandlePostRefundCreateFOLog(Plugin.LocalPluginContext localContext)
+        {
+            if(this.cgi_Caseid == null)
+            {
+                localContext.Trace($"The Target 'Refund' does not have an associated 'Case'");
+                return;
+            }
+
+            ColumnSet columnSet = new ColumnSet();
+            IncidentEntity eCase = XrmRetrieveHelper.Retrieve<IncidentEntity>(localContext, this.cgi_Caseid.Id, columnSet);
+
+            if(eCase == null)
+            {
+                localContext.Trace($"The Target 'Refund' does not have an associated 'Case'");
+                return;
+            }
+
+            if(eCase.CaseOriginCode == null || eCase.CaseOriginCode.Value != incident_caseorigincode.ResegarantiOnline)
+            {
+                localContext.Trace($"The Origin of the 'Case' is null or is not an RGOL Case.");
+                return;
+            }
+
+            string ticketId = "";
+            string clientId = "";
+            string clientSecret = "";
+            string apiURL = "https://stticketmasterint.azurewebsites.net" + "/v2/tickets/" + ticketId + "/events";
+
+
+
+
+
+            var authInfo = ApiBase.GetAuth();
+            Task.Run(() => ApiBase.Authenticate(authInfo, authInfo.TicketMaster)).Wait();
+
+            CompensationResult eventData = new CompensationResult {
+
+
+            };
+
+            TicketEvent evt = new TicketEvent
+            {
+                resourceType = @"ticketEvent",
+                ticketEventType = @"travelCompensationResult",
+                data = eventData,
+                version = 2
+            };
+            //ApiBase._authResult.AccessToken
+
+
+            var response = PostRequest("/v2/tickets/" + ticketId + "/events", evt);
+
+            if (response.StatusCode == HttpStatusCode.Created)
+                return Convert.ToString(JObject.Parse(response.Content)["id"]);
+
+
+
+
+
+
+            string token = AzureHelper.GetAccessToken(apiURL, clientId, clientSecret);
+
+            var contentObject = new object();
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var httpRequest = new HttpRequestMessage(HttpMethod.Post, apiURL);
+                httpRequest.Headers.Add("Authorization", token);
+
+                string json = JsonHelper.JsonSerializer<object>(contentObject);
+                httpRequest.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = httpClient.SendAsync(httpRequest).Result;
+                string responseJSON = response.Content.ReadAsStringAsync().Result;
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //LantmannenFinanceErrorDTO fault = JsonHelper.JsonDeserialize<LantmannenFinanceErrorDTO>(responseJSON);
+                    //actionResponse.error = fault;
+                    //return actionResponse;
+                }
+            }
+        }
 
         public void HandlePostRefundCreateAsync(Plugin.LocalPluginContext localContext)
         {
@@ -65,7 +182,7 @@ namespace Skanetrafiken.Crm.Entities
             //    ValueCodeEntity valueCode = XrmRetrieveHelper.Retrieve<ValueCodeEntity>(localContext, valueCodeId, new ColumnSet(true));
             //    valueCode.SendValueCode(localContext);
 
-            //}            
+            //}
         }
 
         public static RefundEntity CreateRefundAfterOnlineRefund(Plugin.LocalPluginContext localContext, IncidentEntity incident, int deliveryMethod, Money amount)
