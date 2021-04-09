@@ -111,6 +111,7 @@
     <Compile Include="deviceidmanager.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="PluginFixtureBase.cs" />
+    <Compile Include="QuoteProductFixture.cs" />
     <Compile Include="TestDataHelper.cs" />
     <Compile Include="TestSetup.cs" />
     <Compile Include="TravelCardFixture.cs" />

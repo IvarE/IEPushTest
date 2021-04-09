@@ -94,6 +94,250 @@ namespace Endeavor.Crm.UnitTest
             #endregion
         }
 
+        //[Test, Category("Debug")]
+        //public void deleteDeltabatchQuePosts()
+        //{
+        //    #region Test Setup
+        //    // Connect to the Organization service. 
+        //    // The using statement assures that the service proxy will be properly disposed.
+        //    using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+        //    {
+        //        // This statement is required to enable early-bound type support.
+        //        _serviceProxy.EnableProxyTypes();
+
+        //        Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
+
+        //        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        //        stopwatch.Start();
+        //        #endregion
+
+        //        ColumnSet deltabatchQueueColumnSet = new ColumnSet(
+        //       DeltabatchQueueEntity.Fields.ed_ContactGuid,
+        //       DeltabatchQueueEntity.Fields.ed_ContactNumber,
+        //       DeltabatchQueueEntity.Fields.ed_DeltabatchOperation,
+        //       DeltabatchQueueEntity.Fields.ed_DeltabatchQueueId,
+        //       DeltabatchQueueEntity.Fields.ed_name,
+        //       DeltabatchQueueEntity.Fields.CreatedOn
+        //    );
+
+        //        QueryExpression batchQuery = new QueryExpression
+        //        {
+        //            EntityName = DeltabatchQueueEntity.EntityLogicalName,
+        //            ColumnSet = deltabatchQueueColumnSet,
+        //            Criteria =
+        //        {
+        //            Conditions =
+        //            {
+        //                new ConditionExpression(DeltabatchQueueEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.ed_DeltabatchQueueState.Active)
+        //            }
+        //        }
+        //            //TopCount = Properties.Settings.Default.DeltabatchQueueCount
+        //        };
+
+
+        //        IList<DeltabatchQueueEntity> currentQueues = XrmRetrieveHelper.RetrieveMultiple<DeltabatchQueueEntity>(localContext, batchQuery).Take(680000).ToList();
+
+        //        List<DeltabatchQueueEntity> list = new List<DeltabatchQueueEntity>();
+        //        foreach (DeltabatchQueueEntity dbq in currentQueues)
+        //        {
+        //            list.Add(dbq);
+        //        }
+
+
+        //        List<DeltabatchQueueEntity> distinctList = list.GroupBy(x => x.ed_ContactNumber).Select(f => f.First()).ToList();
+        //        List<DeltabatchQueueEntity> sortedList = distinctList.OrderByDescending(dbq => dbq.CreatedOn).ToList<DeltabatchQueueEntity>();
+        //        List<string> processedSocSecNumbers = new List<string>();
+
+        //        localContext.Trace($"{sortedList?.Count()}  queues.");
+
+        //        int processing = 0;
+
+
+
+        //        try
+        //        {
+        //            foreach (DeltabatchQueueEntity dbq in currentQueues)
+        //            {
+        //                processing++;
+
+        //                localContext.Trace($"{processing} of {sortedList?.Count()} processed");
+
+        //                if (dbq.ed_DeltabatchQueueId != null && !Guid.Empty.Equals(dbq.ed_DeltabatchQueueId))
+        //                {
+        //                    SetStateRequest req = new SetStateRequest
+        //                    {
+        //                        EntityMoniker = dbq.ToEntityReference(),
+        //                        State = new Microsoft.Xrm.Sdk.OptionSetValue((int)Generated.ed_DeltabatchQueueState.Inactive),
+        //                        Status = new Microsoft.Xrm.Sdk.OptionSetValue((int)Generated.ed_deltabatchqueue_statuscode.Inactive)
+        //                    };
+        //                    SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
+        //                }
+        //            }
+        //        }
+        //        catch (Exception e)
+        //        {
+
+        //            throw e;
+        //        }
+
+        //        #region Test Cleanup
+        //        localContext.TracingService.Trace("Stop Sequences, ElapsedMilliseconds: {0}.", stopwatch.ElapsedMilliseconds);
+        //    }
+        //    #endregion
+        //}
+
+
+        [Test, Category("Debug")]
+        public void GenerateFile()
+        {
+            #region Test Setup
+            // Connect to the Organization service. 
+            // The using statement assures that the service proxy will be properly disposed.
+            using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+            {
+                // This statement is required to enable early-bound type support.
+                _serviceProxy.EnableProxyTypes();
+
+                Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
+
+                System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+                stopwatch.Start();
+                #endregion
+
+                ColumnSet deltabatchQueueColumnSet = new ColumnSet(
+                    DeltabatchQueueEntity.Fields.ed_ContactGuid,
+                    DeltabatchQueueEntity.Fields.ed_ContactNumber,
+                    DeltabatchQueueEntity.Fields.ed_DeltabatchOperation,
+                    DeltabatchQueueEntity.Fields.ed_DeltabatchQueueId,
+                    DeltabatchQueueEntity.Fields.ed_name,
+                    DeltabatchQueueEntity.Fields.CreatedOn
+                );
+
+
+                QueryExpression batchQuery = new QueryExpression
+                {
+                    EntityName = DeltabatchQueueEntity.EntityLogicalName,
+                    ColumnSet = deltabatchQueueColumnSet,
+                    Criteria =
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression(DeltabatchQueueEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.ed_DeltabatchQueueState.Active)
+                    }
+                }
+                    //TopCount = Properties.Settings.Default.DeltabatchQueueCount
+                };
+
+                // Assign the pageinfo properties to the query expression.
+                batchQuery.PageInfo = new PagingInfo();
+                batchQuery.PageInfo.Count = 5000;
+                batchQuery.PageInfo.PageNumber = 1;
+
+                // The current paging cookie. When retrieving the first page, 
+                // pagingCookie should be null.
+                batchQuery.PageInfo.PagingCookie = null;
+
+                IList<DeltabatchQueueEntity> currentQueues = XrmRetrieveHelper.RetrieveMultiple<DeltabatchQueueEntity>(localContext, batchQuery).Take(680000).ToList();
+
+                //try
+                //{
+
+                //    //foreach (DeltabatchQueueEntity q in sortedList)
+                //    //{
+
+
+                //    //    processing++;
+                //    //    localContext.Trace($"{processing} of {sortedList?.Count()} processed");
+
+                //    //    // Do not add if SocSecNr already processed
+                //    //    if (processedSocSecNumbers.Contains(q.ed_ContactNumber) || !CustomerUtility.CheckPersonnummerFormat(q.ed_ContactNumber))
+                //    //        continue;
+
+                //    //    string fritext = q.ed_name.Split(":".ToCharArray())[0].Replace(" ", "").Replace("-", "");
+
+
+                //    //    plusFileBuilder.AppendLine($"{q.ed_ContactNumber};{q.ed_ContactGuid};{fritext}");
+
+                //    //    processedSocSecNumbers.Add(q.ed_ContactNumber);
+                //    //}
+
+                //    //// Write Plus File
+                //    //var plusFileName = $"C:\\AcneData\\TEST{DateTime.Now.ToShortDateString()}_{DateTime.Now.ToShortTimeString().Replace(':', '-')}.txt";
+                //    //if (File.Exists(plusFileName))
+                //    //{
+                //    //    throw new Exception($"File {plusFileName} already exists.");
+                //    //    //string plusFileDatedPath = plusFileName + "_";
+                //    //    //System.IO.File.Move(plusFileName, plusFileDatedPath);
+                //    //}
+                //    //string plusString = plusFileBuilder.ToString();
+                //    //if (string.IsNullOrWhiteSpace(plusString))
+                //    //{
+
+                //    //    ContactEntity c = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, new ColumnSet(ContactEntity.Fields.cgi_socialsecuritynumber),
+                //    //    new FilterExpression
+                //    //    {
+                //    //        Conditions =
+                //    //            {
+                //    //                new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.NotNull),
+                //    //                new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
+                //    //                new ConditionExpression(ContactEntity.Fields.ed_HasSwedishSocialSecurityNumber, ConditionOperator.Equal, true),
+                //    //                new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.NotNull)
+                //    //            }
+                //    //    });
+                //    //    plusString = $"{c.cgi_socialsecuritynumber};{c.Id.ToString()};ToAvoidEmpyFile";
+
+                //    //}
+                //    //using (System.IO.StreamWriter plusFile = new System.IO.StreamWriter(plusFileName))
+                //    //{
+                //    //    plusFile.WriteLine(plusString);
+                //    //    plusFile.Close();
+                //    //}
+
+
+
+                //}
+                //catch (Exception e)
+                //{
+                //    throw e;
+                //}
+
+
+                int processing = 0;
+
+                localContext.Trace($"{currentQueues?.Count()}  contacts.");
+
+                foreach (DeltabatchQueueEntity dbq in currentQueues)
+                {
+                    processing++;
+                   localContext.Trace($"{processing} of {currentQueues?.Count()} processed");
+
+                    if (dbq.ed_DeltabatchQueueId != null && !Guid.Empty.Equals(dbq.ed_DeltabatchQueueId))
+                    {
+                        // TODO: teo - is deprecated as of 2016. Update when SDK is updated. to 6+
+                        //DeltabatchQueueEntity updateEntity = new DeltabatchQueueEntity
+                        //{
+                        //    Id = (Guid)dbq.ed_DeltabatchQueueId,
+                        //    statuscode = Generated.ed_deltabatchqueue_statuscode.Inactive
+                        //};
+                        //XrmHelper.Update(localContext.OrganizationService, updateEntity);
+                        SetStateRequest req = new SetStateRequest
+                        {
+                            EntityMoniker = dbq.ToEntityReference(),
+                            State = new Microsoft.Xrm.Sdk.OptionSetValue((int)Generated.ed_DeltabatchQueueState.Inactive),
+                            Status = new Microsoft.Xrm.Sdk.OptionSetValue((int)Generated.ed_deltabatchqueue_statuscode.Inactive)
+                        };
+                        SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
+                    }
+                }
+                #region Test Cleanup
+                localContext.TracingService.Trace("Stop Sequences, ElapsedMilliseconds: {0}.", stopwatch.ElapsedMilliseconds);
+
+                #endregion
+
+            }
+        }
+
+
         [Test, Category("Debug")]
         public void CreateDeactiveDeleteContactCheckDelta()
         {
@@ -160,7 +404,7 @@ namespace Endeavor.Crm.UnitTest
                             Status = new OptionSetValue((int)Generated.contact_statuscode.Inactive)
                         };
                         SetStateResponse resp1 = (SetStateResponse)localContext.OrganizationService.Execute(req1);
-                        
+
                         XrmHelper.Delete(localContext.OrganizationService, contactPost.ToEntityReference());
                     }
                 }
