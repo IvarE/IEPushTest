@@ -32,22 +32,35 @@ namespace Skanetrafiken.Crm.Entities
         {
             localContext.Trace("Inside HandleQuoteProductEntityUpdate");
 
+            localContext.Trace("PreImage Info");
+            preImage.Trace(localContext.TracingService);
+            localContext.Trace("_______________");
+
+            localContext.Trace("Target Info");
+            target.Trace(localContext.TracingService);
+            localContext.Trace("_______________");
+
             if (!target.IsAttributeModified(preImage, QuoteProductEntity.Fields.UoMId))
             {
+                localContext.Trace("UoMID not modified");
                 target.UoMId = preImage.UoMId;
             }
             if (!target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ProductId))
             {
+                localContext.Trace("ProductId not modified");
                 target.ProductId = preImage.ProductId;
             }
             //validate necessary things to generateSlots
             if (target.UoMId != null && target.ProductId != null)
             {
+                localContext.Trace("UoMId and ProductId not NULL");
                 FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
                 if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
                 {
+                    localContext.Trace("ed_bookingSystem enabled");
                     if(target.IsAttributeModified(preImage,QuoteProductEntity.Fields.ed_FromDate) || target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate))
                     {
+                        localContext.Trace("ed_FromDate or ed_ToDate modified");
                         UpdateOrGenerateSlots(localContext, target, preImage);
                     }
                     
@@ -103,6 +116,8 @@ namespace Skanetrafiken.Crm.Entities
         {
             localContext.Trace("Inside UpdateOrGenerateSlots");
             bool removeAllSlots = false;
+            bool fromDateModified = false;
+            bool toDateModified = false;
             List<SlotsEntity> availableSlots = null;
             DateTime? startDate = quoteProduct.ed_FromDate;
             DateTime? endDate = quoteProduct.ed_ToDate;
@@ -114,7 +129,22 @@ namespace Skanetrafiken.Crm.Entities
             DateTime? endCreateIntervalFrom = null;
             DateTime? startCreateIntervalTo = null;
             DateTime? endCreateIntervalTo = null;
-            
+
+            if (preImage != null && !quoteProduct.IsAnyAttributeModified(preImage,QuoteProductEntity.Fields.ed_FromDate))
+            {
+                localContext.Trace("ed_FromDate not modified");
+                fromDateModified = true;
+                quoteProduct.ed_FromDate = preImage.ed_FromDate;
+            }
+
+            if (preImage != null && !quoteProduct.IsAnyAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate))
+            {
+                localContext.Trace("ed_ToDate not modified");
+                toDateModified = true;
+                quoteProduct.ed_ToDate = preImage.ed_ToDate;
+            }
+
+
             //validate and return the emptySlotsAvailable for this product on the Dates requested.
             availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, quoteProduct.ed_FromDate.Value, quoteProduct.ed_ToDate.Value);
             //validate if unit is equal to 1 day
@@ -127,13 +157,12 @@ namespace Skanetrafiken.Crm.Entities
             */
             if (DateTime.Compare(startDate.Value, endDate.Value) > 0)
             {
-                localContext.Trace("FromDate is later than EndDate");
-                return;
+                throw new InvalidPluginExecutionException("FromDate is later than EndDate");
             }
             if (preImage != null)
             {
                 localContext.Trace("PreImage not null.");
-                if (quoteProduct.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_FromDate))
+                if (fromDateModified)
                 {
                     localContext.Trace("ed_FromDate modified.");
                     startDate = quoteProduct.ed_FromDate;
@@ -164,7 +193,7 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     startDate = preImage.ed_FromDate;
                 }
-                if (quoteProduct.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate))
+                if (toDateModified)
                 {
                     endDate = quoteProduct.ed_ToDate;
                     if (preImage.ed_ToDate != null && quoteProduct.ed_ToDate != null)
