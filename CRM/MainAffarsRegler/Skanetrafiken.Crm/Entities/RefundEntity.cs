@@ -23,24 +23,24 @@ using System.Threading.Tasks;
 namespace Skanetrafiken.Crm.Entities
 {
     public class IssueEventDetail
-    {​​​​​​​ 
+    {
         public string IssueId;
-        public string IssueEventDateUtc; 
+        public string IssueEventDateUtc;
         public List<string> SubJourneys;
         public string Journey;
         public string RefundForm;
         public string RefundType;
         public string RequestedCompensation;
-    }​​​​​​​
+    }
 
     public class CompensationResult
-    {​​​​​​​ 
+    {
         public string ValidationResult;
         public decimal RefundedAmount;
         public bool IsRefunded;
         public string SekundNumber;
         public IssueEventDetail IssueEventDetail;
-    }​​​​​​​
+    }
 
     public class TicketEvent
     {
@@ -105,12 +105,13 @@ namespace Skanetrafiken.Crm.Entities
             //ApiBase._authResult.AccessToken
 
 
-            var response = PostRequest("/v2/tickets/" + ticketId + "/events", evt);
+            //var response = PostRequest("/v2/tickets/" + ticketId + "/events", evt);
 
+            /*
             if (response.StatusCode == HttpStatusCode.Created)
                 return Convert.ToString(JObject.Parse(response.Content)["id"]);
 
-
+            */
 
 
 
