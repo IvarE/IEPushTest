@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Skanetrafiken.UpSalesMigration.Properties {
+namespace Skanetrafiken.Import.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

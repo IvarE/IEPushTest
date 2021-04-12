@@ -1,5 +1,5 @@
 using Endeavor.Crm;
-using Endeavor.Crm.UpSalesMigration;
+using Endeavor.Crm.Import;
 using log4net;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
@@ -9,7 +9,7 @@ using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using Skanetrafiken.Crm.Schema.Generated;
-using Skanetrafiken.UpSalesMigration.Model;
+using Skanetrafiken.Import.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -21,7 +21,7 @@ using System.Linq;
 using System.ServiceModel.Description;
 using System.Threading;
 
-namespace Skanetrafiken.UpSalesMigration
+namespace Skanetrafiken.Import
 {
     class Program
     {

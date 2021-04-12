@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Skanetrafiken.UpSalesMigration.Model
+namespace Skanetrafiken.Import.Model
 {
     public class ImportExcelInfo
     {

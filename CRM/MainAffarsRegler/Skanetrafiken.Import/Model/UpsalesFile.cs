@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Skanetrafiken.UpSalesMigration.Model
+namespace Skanetrafiken.Import.Model
 {
     public class UpsalesFile
     {
