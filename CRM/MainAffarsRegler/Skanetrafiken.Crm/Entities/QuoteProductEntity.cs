@@ -133,15 +133,22 @@ namespace Skanetrafiken.Crm.Entities
             if (preImage != null && !quoteProduct.IsAttributeModified(preImage,QuoteProductEntity.Fields.ed_FromDate))
             {
                 localContext.Trace("ed_FromDate not modified");
-                fromDateModified = true;
+                
                 startDate = preImage.ed_FromDate;
+            }
+            else
+            {
+                fromDateModified = true;
             }
 
             if (preImage != null && !quoteProduct.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate))
             {
                 localContext.Trace("ed_ToDate not modified");
-                toDateModified = true;
                 endDate = preImage.ed_ToDate;
+            }
+            else
+            {
+                toDateModified = true;
             }
 
             if(preImage != null && !quoteProduct.IsAttributeModified(preImage,QuoteProductEntity.Fields.ProductId))

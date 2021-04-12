@@ -73,6 +73,32 @@ namespace Endeavor.Crm.UnitTest
         }
 
         [Test, Category("Debug")]
+        public void PostQuoteProductUpdate()
+        {
+            using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+            {
+                // This statement is required to enable early-bound type support.
+                _serviceProxy.EnableProxyTypes();
+
+                Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, PluginExecutionContext, new TracingService());
+
+                
+
+                QuoteProductEntity preImage = XrmRetrieveHelper.Retrieve<QuoteProductEntity>(localContext, QuoteProductEntity.EntityLogicalName,Guid.Parse("8d784969-c29b-eb11-947e-005056b6fa28"),new ColumnSet(true));
+
+                QuoteProductEntity target = new QuoteProductEntity()
+                {
+                    QuoteDetailId = new Guid("8d784969-c29b-eb11-947e-005056b6fa28"),
+                    Id = new Guid("8d784969-c29b-eb11-947e-005056b6fa28"),
+                    ed_ToDate = preImage.ed_ToDate.Value.AddDays(1)
+                };
+
+                //XrmHelper.Update(localContext,);
+
+                QuoteProductEntity.HandleQuoteProductEntityUpdate(localContext, target,preImage);
+            }
+        }
+        [Test, Category("Debug")]
         public void CreateAndSendValueCodeByEmailOnRefundCreate()
         {
             using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
