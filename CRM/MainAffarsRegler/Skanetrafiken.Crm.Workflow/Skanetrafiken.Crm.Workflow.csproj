@@ -126,8 +126,14 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Skanetrafiken.Crm\ApiBase.cs">
+      <Link>ApiBase.cs</Link>
+    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\ApiHelper.cs">
       <Link>ApiHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\AzureHelper.cs">
+      <Link>AzureHelper.cs</Link>
     </Compile>
     <Compile Include="..\Skanetrafiken.Crm\ColumnBlockSchemas\CustomerInfoBlock.cs">
       <Link>WebApiColumnBlocks\CustomerInfoBlock.cs</Link>
@@ -206,6 +212,9 @@
     </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\NotifyMKLEntity.cs">
       <Link>Entities\NotifyMKLEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\OpportunityEntity.cs">
+      <Link>Entities\OpportunityEntity.cs</Link>
     </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\OrderProductEntity.cs">
       <Link>Entities\OrderProductEntity.cs</Link>
@@ -290,6 +299,9 @@
     </Compile>
     <Compile Include="..\Skanetrafiken.Crm\IdentityContract.cs">
       <Link>IdentityContract.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\JsonHelper.cs">
+      <Link>JsonHelper.cs</Link>
     </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Properties\Resources.Designer.cs">
       <Link>Resources.Designer.cs</Link>

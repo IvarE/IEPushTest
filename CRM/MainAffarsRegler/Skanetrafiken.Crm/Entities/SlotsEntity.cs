@@ -379,7 +379,7 @@ namespace Skanetrafiken.Crm.Entities
             query.ColumnSet = new ColumnSet(false);
             FilterExpression filter = new FilterExpression();
             filter.FilterOperator = LogicalOperator.And;
-            filter.AddCondition(SlotsEntity.Fields.ed_SlotID, ConditionOperator.NotEqual, target.Id);
+            filter.AddCondition(SlotsEntity.Fields.ed_SlotsId, ConditionOperator.NotEqual, target.Id);
             if (target.ed_OrderProductID != null && target.ed_OrderProductID.Id != Guid.Empty)
             {
                 filter.AddCondition(SlotsEntity.Fields.ed_OrderProductID, ConditionOperator.Equal, target.ed_OrderProductID.Id);
@@ -401,14 +401,14 @@ namespace Skanetrafiken.Crm.Entities
             {
                 OrderProductEntity orderProductToUpdate = new OrderProductEntity();
                 orderProductToUpdate.Id = target.ed_OrderProductID.Id;
-                orderProductToUpdate.Quantity = numberSlots;
+                orderProductToUpdate.ed_totalslots = numberSlots;
                 XrmHelper.Update(localContext, orderProductToUpdate);
             }
             else if (target.ed_QuoteProductID != null && target.ed_QuoteProductID.Id != Guid.Empty)
             {
                 QuoteProductEntity quoteProductToUpdate = new QuoteProductEntity();
                 quoteProductToUpdate.Id = target.ed_QuoteProductID.Id;
-                quoteProductToUpdate.Quantity = numberSlots;
+                quoteProductToUpdate.ed_totalslots = numberSlots;
                 XrmHelper.Update(localContext, quoteProductToUpdate);
             }
         }
