@@ -43,8 +43,13 @@ namespace Skanetrafiken.Crm.Entities
         }
         public static List<SlotsEntity> AvailableSlots (Plugin.LocalPluginContext localContext,EntityReference productER,DateTime starDate,DateTime endDate)
         {
+            localContext.Trace("Inside Available Slots");
             QueryExpression queryAvailableSlots = new QueryExpression();
 
+            if(productER == null || productER.Id == Guid.Empty || starDate == null || endDate == null)
+            {
+                return null;
+            }
             queryAvailableSlots.EntityName = SlotsEntity.EntityLogicalName;
             queryAvailableSlots.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_BookingDay,SlotsEntity.Fields.ed_StandardPrice,SlotsEntity.Fields.ed_CustomPrice);
 

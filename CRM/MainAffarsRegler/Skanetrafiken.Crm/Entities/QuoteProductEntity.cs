@@ -130,20 +130,25 @@ namespace Skanetrafiken.Crm.Entities
             DateTime? startCreateIntervalTo = null;
             DateTime? endCreateIntervalTo = null;
 
-            if (preImage != null && !quoteProduct.IsAnyAttributeModified(preImage,QuoteProductEntity.Fields.ed_FromDate))
+            if (preImage != null && !quoteProduct.IsAttributeModified(preImage,QuoteProductEntity.Fields.ed_FromDate))
             {
                 localContext.Trace("ed_FromDate not modified");
                 fromDateModified = true;
                 quoteProduct.ed_FromDate = preImage.ed_FromDate;
             }
 
-            if (preImage != null && !quoteProduct.IsAnyAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate))
+            if (preImage != null && !quoteProduct.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate))
             {
                 localContext.Trace("ed_ToDate not modified");
                 toDateModified = true;
                 quoteProduct.ed_ToDate = preImage.ed_ToDate;
             }
 
+            if(preImage != null && !quoteProduct.IsAttributeModified(preImage,QuoteProductEntity.Fields.ProductId))
+            {
+                localContext.Trace("ProductId not modified");
+                quoteProduct.ProductId = preImage.ProductId;
+            }
 
             //validate and return the emptySlotsAvailable for this product on the Dates requested.
             availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, quoteProduct.ed_FromDate.Value, quoteProduct.ed_ToDate.Value);
