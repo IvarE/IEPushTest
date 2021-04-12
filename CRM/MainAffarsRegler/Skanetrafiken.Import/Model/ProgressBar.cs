@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Skanetrafiken.UpSalesMigration.Model
+namespace Skanetrafiken.Import.Model
 {
     public class ProgressBar : IDisposable, IProgress<double>
     {

@@ -8,7 +8,7 @@ using System.Globalization;
 using Microsoft.Xrm.Sdk;
 using log4net;
 
-namespace Endeavor.Crm.UpSalesMigration
+namespace Endeavor.Crm.Import
 {
     internal class TracingService : ITracingService
     {

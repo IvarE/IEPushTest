@@ -71,6 +71,39 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             else
                 Endeavor.Skanetrafiken.Account.showInfoAccountPortal(formContext);
 
+            var seniorCustomer = formContext.getAttribute("ed_seniorcustomer");
+            var schoolCustomer = formContext.getAttribute("ed_schoolcustomer");
+            var reseller = formContext.getAttribute("ed_reseller");
+            var collaborationCustomer = formContext.getAttribute("ed_collaborationcustomer");
+            var customer = formContext.getAttribute("ed_customer");
+            var portalCustomer = formContext.getAttribute("ed_portalcustomer");
+            var agent = formContext.getAttribute("ed_agent");
+            var infotainment = formContext.getAttribute("ed_infotainmentcustomer");
+
+            if ((seniorCustomer.getValue() == false || seniorCustomer.getValue() == null) && (schoolCustomer.getValue() == false || schoolCustomer.getValue() == null) && (reseller.getValue() == false || reseller.getValue() == null) && (collaborationCustomer.getValue() == false || collaborationCustomer.getValue() == null) && (customer.getValue() == false || customer.getValue() == null) && (portalCustomer.getValue() == false || portalCustomer.getValue() == null) && (agent.getValue() == false || agent.getValue() == null) && (infotainment.getValue() == false || infotainment.getValue() == null)) {
+                seniorCustomer.setRequiredLevel("required");
+                schoolCustomer.setRequiredLevel("required");
+                reseller.setRequiredLevel("required");
+                collaborationCustomer.setRequiredLevel("required");
+                customer.setRequiredLevel("required");
+                portalCustomer.setRequiredLevel("required");
+                agent.setRequiredLevel("required");
+                infotainment.setRequiredLevel("required");
+            }
+            else {
+                seniorCustomer.setRequiredLevel("none");
+                schoolCustomer.setRequiredLevel("none");
+                reseller.setRequiredLevel("none");
+                collaborationCustomer.setRequiredLevel("none");
+                customer.setRequiredLevel("none");
+                portalCustomer.setRequiredLevel("none");
+                agent.setRequiredLevel("none");
+                infotainment.setRequiredLevel("none");
+            }
+
+            
+
+
             //Hide/Show Õvrig Information
             Endeavor.Skanetrafiken.Account.showOvrigInformation(formContext);
         },
@@ -130,7 +163,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 var infotainmentValue = infotainment.getValue();
 
 
-                if (seniorValue != false || schoolValue != false || resellerValue != false || collaborationValue != false || customerValue != false || portalValue != false || agentValue != false || infotainmentValue != false) {
+                if ((seniorValue != false && seniorValue != null) || (schoolValue != false && schoolValue != null) || (resellerValue != false && resellerValue != null) || (collaborationValue != false && collaborationValue != null) || (customerValue != false && customerValue != null) || (portalValue != false && portalValue != null) || (agentValue != false && agentValue != null) || (infotainmentValue != false && infotainmentValue != null)) {
                     seniorCustomer.setRequiredLevel("none");
                     schoolCustomer.setRequiredLevel("none");
                     reseller.setRequiredLevel("none");
@@ -140,7 +173,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                     agent.setRequiredLevel("none");
                     infotainment.setRequiredLevel("none");
                 }
-                else if (seniorValue == false && schoolValue == false && resellerValue == false && collaborationValue == false && customerValue == false && portalValue == false && agentValue == false && infotainmentValue == false) {
+                else if ((seniorValue == false || seniorValue == null) && (schoolValue == false || schoolValue == null) && (resellerValue == false || resellerValue == null) && (collaborationValue == false || collaborationValue == null) && (customerValue == false || customerValue == null) && (portalValue == false || portalValue == null) && (agentValue == false || agentValue == null) && (infotainmentValue == false || infotainmentValue == null)) {
                     seniorCustomer.setRequiredLevel("required");
                     schoolCustomer.setRequiredLevel("required");
                     reseller.setRequiredLevel("required");

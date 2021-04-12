@@ -7,7 +7,7 @@ using System.Configuration;
 using System.Globalization;
 using Microsoft.Xrm.Sdk;
 
-namespace Endeavor.Crm.UpSalesMigration
+namespace Endeavor.Crm.Import
 {
     class ServiceProvider : IServiceProvider
     {

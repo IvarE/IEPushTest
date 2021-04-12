@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Skanetrafiken.UpSalesMigration.Properties {
+namespace Skanetrafiken.Import.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -137,6 +137,15 @@ namespace Skanetrafiken.UpSalesMigration.Properties {
         public string DefaultPriceList {
             get {
                 return ((string)(this["DefaultPriceList"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("test")]
+        public string MKLContacts {
+            get {
+                return ((string)(this["MKLContacts"]));
             }
         }
     }
