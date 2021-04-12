@@ -44,12 +44,15 @@ namespace Skanetrafiken.Crm.Entities
         public static List<SlotsEntity> AvailableSlots (Plugin.LocalPluginContext localContext,EntityReference productER,DateTime starDate,DateTime endDate)
         {
             localContext.Trace("Inside Available Slots");
-            QueryExpression queryAvailableSlots = new QueryExpression();
 
-            if(productER == null || productER.Id == Guid.Empty || starDate == null || endDate == null)
+            if (productER == null || productER.Id == Guid.Empty || starDate == null || endDate == null)
             {
+                localContext.Trace("required Attributes Null");
                 return null;
             }
+            QueryExpression queryAvailableSlots = new QueryExpression();
+
+            
             queryAvailableSlots.EntityName = SlotsEntity.EntityLogicalName;
             queryAvailableSlots.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_BookingDay,SlotsEntity.Fields.ed_StandardPrice,SlotsEntity.Fields.ed_CustomPrice);
 
@@ -71,6 +74,7 @@ namespace Skanetrafiken.Crm.Entities
             queryAvailableSlots.AddOrder(SlotsEntity.Fields.ed_BookingDay, OrderType.Ascending);
 
             List<SlotsEntity> slotsEntities = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, queryAvailableSlots);
+            localContext.Trace("Returning available slotsEntities");
 
             return slotsEntities;
         }

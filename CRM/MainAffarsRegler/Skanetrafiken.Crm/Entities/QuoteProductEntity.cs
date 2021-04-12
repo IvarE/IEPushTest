@@ -134,14 +134,14 @@ namespace Skanetrafiken.Crm.Entities
             {
                 localContext.Trace("ed_FromDate not modified");
                 fromDateModified = true;
-                quoteProduct.ed_FromDate = preImage.ed_FromDate;
+                startDate = preImage.ed_FromDate;
             }
 
             if (preImage != null && !quoteProduct.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate))
             {
                 localContext.Trace("ed_ToDate not modified");
                 toDateModified = true;
-                quoteProduct.ed_ToDate = preImage.ed_ToDate;
+                endDate = preImage.ed_ToDate;
             }
 
             if(preImage != null && !quoteProduct.IsAttributeModified(preImage,QuoteProductEntity.Fields.ProductId))
@@ -151,7 +151,7 @@ namespace Skanetrafiken.Crm.Entities
             }
 
             //validate and return the emptySlotsAvailable for this product on the Dates requested.
-            availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, quoteProduct.ed_FromDate.Value, quoteProduct.ed_ToDate.Value);
+            availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, startDate.Value, endDate.Value);
             //validate if unit is equal to 1 day
             /*
             if (!UnitEntity.IsOneDayUnit(localContext, quoteProduct.UoMId))
@@ -170,7 +170,6 @@ namespace Skanetrafiken.Crm.Entities
                 if (fromDateModified)
                 {
                     localContext.Trace("ed_FromDate modified.");
-                    startDate = quoteProduct.ed_FromDate;
 
                     if (preImage.ed_FromDate != null && quoteProduct.ed_FromDate != null)
                     {
@@ -200,7 +199,6 @@ namespace Skanetrafiken.Crm.Entities
                 }
                 if (toDateModified)
                 {
-                    endDate = quoteProduct.ed_ToDate;
                     if (preImage.ed_ToDate != null && quoteProduct.ed_ToDate != null)
                     {
                         var compareTo = DateTime.Compare(preImage.ed_ToDate.Value, quoteProduct.ed_ToDate.Value);
