@@ -139,5 +139,14 @@ namespace Skanetrafiken.Import.Properties {
                 return ((string)(this["DefaultPriceList"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("test")]
+        public string MKLContacts {
+            get {
+                return ((string)(this["MKLContacts"]));
+            }
+        }
     }
 }

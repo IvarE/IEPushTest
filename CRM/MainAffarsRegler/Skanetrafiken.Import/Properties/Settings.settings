@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Skanetrafiken.UpSalesMigration.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Skanetrafiken.Import.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="RelativePath" Type="System.String" Scope="Application">
@@ -40,6 +40,9 @@
     </Setting>
     <Setting Name="DefaultPriceList" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Infotainment</Value>
+    </Setting>
+    <Setting Name="MKLContacts" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">test</Value>
     </Setting>
   </Settings>
 </SettingsFile>

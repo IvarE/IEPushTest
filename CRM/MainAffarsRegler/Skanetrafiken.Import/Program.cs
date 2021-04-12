@@ -2539,7 +2539,7 @@ namespace Skanetrafiken.Import
             Console.WriteLine("Done.");
         }
 
-        public static bool MainMenu(Plugin.LocalPluginContext localContext, CrmContext crmContext, SaveChangesOptions optionsChanges, string relativeExcelPath)
+        public static bool MainMenuUpsales(Plugin.LocalPluginContext localContext, CrmContext crmContext, SaveChangesOptions optionsChanges, string relativeExcelPath)
         {
             Console.WriteLine();
             Console.WriteLine();
@@ -3254,6 +3254,140 @@ namespace Skanetrafiken.Import
                     return true;
             }
         }
+        
+        public static void ImportMKLContactsRecords(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
+        {
+            if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
+                return;
+            }
+
+            Console.Write("Creating Batch of Contacts... ");
+            using (ProgressBar progress = new ProgressBar())
+            {
+                for (int i = 0; i < importExcelInfo.lData.Count; i++)
+                {
+                    try
+                    {
+                        progress.Report((double)i / (double)importExcelInfo.lData.Count);
+
+                        Contact nContact = new Contact();
+                        List<ExcelLineData> line = importExcelInfo.lData[i];
+
+                        if (line.Count != importExcelInfo.lColumns.Count)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The line " + (i + 1) + " was not imported, because the data count is not equal to the column count.");
+                            continue;
+                        }
+
+                        for (int j = 0; j < importExcelInfo.lColumns.Count; j++)
+                        {
+                            ExcelLineData selectedData = line[j];
+
+                            if (selectedData == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
+                                continue;
+                            }
+
+                            ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
+
+                            if (selectedColumn == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
+                                continue;
+                            }
+
+                            string name = selectedColumn.name;
+                            string value = selectedData.value;
+
+                            if (value == null || string.IsNullOrEmpty(value))
+                                continue;
+
+                            switch (name)
+                            {
+                                case "Förnamn":
+                                    nContact.FirstName = value;
+                                    break;
+                                case "Efternamn":
+                                    nContact.LastName = value;
+                                    break;
+                                case "Titel":
+                                    nContact.ed_title = value;
+                                    break;
+                                case "Telefon":
+                                    nContact.Telephone1 = cleanMobileTelefon(value);
+                                    break;
+                                case "Mobiltelefon":
+                                    nContact.Telephone2 = cleanMobileTelefon(value);
+                                    break;
+                                case "Email":
+                                    nContact.EMailAddress1 = value;
+                                    break;
+
+                                default:
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
+                                    break;
+                            }
+                        }
+
+                        nContact.StateCode = ContactState.Active;
+
+                        //Prevent Plugin Errors
+                        if (nContact.FirstName == null)
+                            nContact.FirstName = ".";
+
+                        if (nContact.LastName == null)
+                            nContact.LastName = ".";
+
+                        crmContext.AddObject(nContact);
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Import Contacts Exception. Details: " + e.Message);
+                    }
+                }
+            }
+            Console.WriteLine("Done.");
+        }
+
+        public static void ImportContactsMKLId(Plugin.LocalPluginContext localContext, CrmContext crmContext, SaveChangesOptions optionsChanges, string relativeExcelPath)
+        {
+            try
+            {
+                crmContext.ClearChanges();
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload MKL Contacts--------------");
+
+                string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.MKLContacts);
+                ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
+
+                bool isParsingOk = GetParsingStatus(importExcelInfo);
+
+                if (isParsingOk)
+                {
+                    ImportMKLContactsRecords(localContext, crmContext, importExcelInfo);
+
+                    Console.WriteLine("Sending Batch of Contacts to Sekund...");
+
+                    SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                    LogCrmContextMultipleResponses(localContext, responses);
+
+                    Console.WriteLine("Batch Sent. Please check logs.");
+                }
+                else
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
+
+
+                _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload MKL Contacts--------------");
+            }
+            catch (Exception e)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Contact Records. Details: " + e.Message);
+                throw;
+            }
+
+        }
 
         static void Main(string[] args)
         {
@@ -3261,7 +3395,7 @@ namespace Skanetrafiken.Import
             string passWord = string.Empty;
             string urlOrganization = string.Empty;
 
-            Console.WriteLine("Perform the Upsales Migration in? [tst]/[uat]/[prod]");
+            Console.WriteLine("Perform the Import in? [tst]/[uat]/[prod]");
             string input = Console.ReadLine();
 
             string relativeExcelPath = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.RelativePath);
@@ -3326,11 +3460,13 @@ namespace Skanetrafiken.Import
                 return;
             }
 
-            bool showMenu = true;
-            while (showMenu)
-            {
-                showMenu = MainMenu(localContext, crmContext, optionsChanges, relativeExcelPath);
-            }
+            ImportContactsMKLId(localContext, crmContext, optionsChanges, relativeExcelPath);
+
+            //bool showMenu = true;
+            //while (showMenu)
+            //{
+            //    showMenu = MainMenuUpsales(localContext, crmContext, optionsChanges, relativeExcelPath);
+            //}
         }
     }
 }
