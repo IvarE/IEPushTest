@@ -521,14 +521,23 @@ namespace Skanetrafiken.Crm.Entities
                 totalSlots = 0;
                 QuoteProductEntity quoteProductToAdd = XrmRetrieveHelper.Retrieve<QuoteProductEntity>(localContext, target.ed_QuoteProductID, new ColumnSet(QuoteProductEntity.Fields.ed_totalslots));
 
-                localContext.Trace("quoteProductToAdd");
-                quoteProductToAdd.Trace(localContext.TracingService);
-                localContext.Trace("_________________");
+                QueryExpression querySlotsProductsQuoteAdd = new QueryExpression();
+                querySlotsProductsQuoteAdd.EntityName = SlotsEntity.EntityLogicalName;
+                querySlotsProductsQuoteAdd.ColumnSet = new ColumnSet(false);
 
-                if (quoteProductToAdd != null && quoteProductToAdd.ed_totalslots != null && quoteProductToAdd.ed_totalslots.Value > 0)
+                FilterExpression filterSlotsProductsQuoteAdd = new FilterExpression();
+                filterSlotsProductsQuoteAdd.FilterOperator = LogicalOperator.And;
+                filterSlotsProductsQuoteAdd.AddCondition(SlotsEntity.Fields.ed_QuoteProductID, ConditionOperator.Equal, preImage.ed_QuoteProductID.Id);
+                filterSlotsProductsQuoteAdd.AddCondition(SlotsEntity.Fields.Id, ConditionOperator.NotEqual, target.Id);
+
+                querySlotsProductsQuoteAdd.Criteria.AddFilter(filterSlotsProductsQuoteAdd);
+
+                List<SlotsEntity> slotsProductsQuoteAdd = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlotsProductsQuoteAdd);
+
+                if (slotsProductsQuoteAdd != null && slotsProductsQuoteAdd.Count > 0)
                 {
-                    localContext.Trace("quoteProductToAdd and ed_totalslots not null and greater than 0");
-                    totalSlots = quoteProductToAdd.ed_totalslots.Value + 1;
+                    localContext.Trace("slotsProductsQuoteAdd not null and greater than 0");
+                    totalSlots = slotsProductsQuoteAdd.Count + 1;
                 }
                 else
                 {
@@ -544,18 +553,29 @@ namespace Skanetrafiken.Crm.Entities
             if(removeCurrentRecordQuotePreImage)
             {
                 localContext.Trace("removeCurrentRecordQuotePreImage");
+
                 totalSlots = 0;
-                QuoteProductEntity quoteProductToRemove = XrmRetrieveHelper.Retrieve<QuoteProductEntity>(localContext, preImage.ed_QuoteProductID, new ColumnSet(QuoteProductEntity.Fields.ed_totalslots));
 
-                localContext.Trace("quoteProductToRemove");
-                quoteProductToRemove.Trace(localContext.TracingService);
-                localContext.Trace("_________________");
+                QueryExpression querySlotsProductsQuoteRemove = new QueryExpression();
+                querySlotsProductsQuoteRemove.EntityName = SlotsEntity.EntityLogicalName;
+                querySlotsProductsQuoteRemove.ColumnSet = new ColumnSet(false);
 
-                if (quoteProductToRemove != null && quoteProductToRemove.ed_totalslots != null && quoteProductToRemove.ed_totalslots.Value > 0)
+                FilterExpression filterSlotsProductsQuoteRemove = new FilterExpression();
+                filterSlotsProductsQuoteRemove.FilterOperator = LogicalOperator.And;
+                filterSlotsProductsQuoteRemove.AddCondition(SlotsEntity.Fields.ed_QuoteProductID, ConditionOperator.Equal, preImage.ed_QuoteProductID.Id);
+                filterSlotsProductsQuoteRemove.AddCondition(SlotsEntity.Fields.Id, ConditionOperator.NotEqual, target.Id);
+
+                querySlotsProductsQuoteRemove.Criteria.AddFilter(filterSlotsProductsQuoteRemove);
+
+                List<SlotsEntity> slotsProductsQuoteRemove = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlotsProductsQuoteRemove);
+
+                if (slotsProductsQuoteRemove != null && slotsProductsQuoteRemove.Count > 0)
                 {
-                    localContext.Trace("quoteProductToRemove and ed_totalslots not null and greater than 0");
-                    totalSlots = quoteProductToRemove.ed_totalslots.Value - 1;
+                    localContext.Trace("slotsProductsQuoteRemove not null and greater than 0");
+
+                    totalSlots = slotsProductsQuoteRemove.Count;
                 }
+
                 QuoteProductEntity quoteProductToRemoveUpdate = new QuoteProductEntity();
                 quoteProductToRemoveUpdate.Id = preImage.ed_QuoteProductID.Id;
                 quoteProductToRemoveUpdate.ed_totalslots = totalSlots;
@@ -568,18 +588,25 @@ namespace Skanetrafiken.Crm.Entities
 
 
                 totalSlots = 0;
-                OrderProductEntity orderProductToAdd = XrmRetrieveHelper.Retrieve<OrderProductEntity>(localContext, target.ed_OrderProductID, new ColumnSet(OrderProductEntity.Fields.ed_totalslots));
 
+                QueryExpression querySlotsProductsOrderAdd = new QueryExpression();
+                querySlotsProductsOrderAdd.EntityName = SlotsEntity.EntityLogicalName;
+                querySlotsProductsOrderAdd.ColumnSet = new ColumnSet(false);
 
-                localContext.Trace("orderProductToAdd");
-                orderProductToAdd.Trace(localContext.TracingService);
-                localContext.Trace("_________________");
+                FilterExpression filterSlotsProductsOrderAdd = new FilterExpression();
+                filterSlotsProductsOrderAdd.FilterOperator = LogicalOperator.And;
+                filterSlotsProductsOrderAdd.AddCondition(SlotsEntity.Fields.ed_OrderProductID, ConditionOperator.Equal, target.ed_OrderProductID.Id);
+                filterSlotsProductsOrderAdd.AddCondition(SlotsEntity.Fields.Id, ConditionOperator.NotEqual, target.Id);
 
-                if (orderProductToAdd != null && orderProductToAdd.ed_totalslots != null && orderProductToAdd.ed_totalslots.Value > 0)
+                querySlotsProductsOrderAdd.Criteria.AddFilter(filterSlotsProductsOrderAdd);
+
+                List<SlotsEntity> slotsProductsOrderAdd = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlotsProductsOrderAdd);
+                
+                if (slotsProductsOrderAdd != null && slotsProductsOrderAdd.Count > 0)
                 {
-                    localContext.Trace("orderProductToAdd and ed_totalslots not null and greater than 0");
+                    localContext.Trace("slotsProductsOrderAdd not null and greater than 0");
 
-                    totalSlots = orderProductToAdd.ed_totalslots.Value + 1;
+                    totalSlots = slotsProductsOrderAdd.Count + 1;
                 }
                 else
                 {
@@ -597,17 +624,25 @@ namespace Skanetrafiken.Crm.Entities
                 localContext.Trace("removeCurrentRecordOrderPreImage");
 
                 totalSlots = 0;
-                OrderProductEntity orderProductToRemove = XrmRetrieveHelper.Retrieve<OrderProductEntity>(localContext, preImage.ed_OrderProductID, new ColumnSet(OrderProductEntity.Fields.ed_totalslots));
 
-                localContext.Trace("orderProductToRemove");
-                orderProductToRemove.Trace(localContext.TracingService);
-                localContext.Trace("_________________");
+                QueryExpression querySlotsProductsOrderRemove = new QueryExpression();
+                querySlotsProductsOrderRemove.EntityName = SlotsEntity.EntityLogicalName;
+                querySlotsProductsOrderRemove.ColumnSet = new ColumnSet(false);
 
-                if (orderProductToRemove != null && orderProductToRemove.ed_totalslots != null && orderProductToRemove.ed_totalslots.Value > 0)
+                FilterExpression filterSlotsProductsOrderRemove = new FilterExpression();
+                filterSlotsProductsOrderRemove.FilterOperator = LogicalOperator.And;
+                filterSlotsProductsOrderRemove.AddCondition(SlotsEntity.Fields.ed_OrderProductID, ConditionOperator.Equal, preImage.ed_OrderProductID.Id);
+                filterSlotsProductsOrderRemove.AddCondition(SlotsEntity.Fields.Id, ConditionOperator.NotEqual, target.Id);
+
+                querySlotsProductsOrderRemove.Criteria.AddFilter(filterSlotsProductsOrderRemove);
+
+                List<SlotsEntity> slotsProductsOrderRemove = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlotsProductsOrderRemove);
+                
+
+                if (slotsProductsOrderRemove != null && slotsProductsOrderRemove.Count > 0)
                 {
-                    localContext.Trace("orderProductToRemove and ed_totalslots not null and greater than 0");
-
-                    totalSlots = orderProductToRemove.ed_totalslots.Value -1;
+                    localContext.Trace("slotsProductsOrderRemove not null and greater than 0");
+                    totalSlots = slotsProductsOrderRemove.Count;
                 }
                 OrderProductEntity orderProductToRemoveUpdate = new OrderProductEntity();
                 orderProductToRemoveUpdate.Id = preImage.ed_OrderProductID.Id;

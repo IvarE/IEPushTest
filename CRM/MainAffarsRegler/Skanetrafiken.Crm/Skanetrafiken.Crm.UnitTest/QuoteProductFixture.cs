@@ -90,7 +90,7 @@ namespace Endeavor.Crm.UnitTest
                 {
                     QuoteDetailId = new Guid("8d784969-c29b-eb11-947e-005056b6fa28"),
                     Id = new Guid("8d784969-c29b-eb11-947e-005056b6fa28"),
-                    ed_ToDate = preImage.ed_ToDate.Value.AddDays(1)
+                    ed_ToDate = preImage.ed_ToDate.Value.AddDays(-1)
                 };
 
                 //XrmHelper.Update(localContext,);
