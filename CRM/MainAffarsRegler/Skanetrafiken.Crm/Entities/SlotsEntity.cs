@@ -446,6 +446,16 @@ namespace Skanetrafiken.Crm.Entities
         }
         public static void SlotsEntityUpdateQuantity(Plugin.LocalPluginContext localContext, SlotsEntity target, SlotsEntity preImage)
         {
+            localContext.Trace("Inside SlotsEntityUpdateQuantity.");
+
+            localContext.Trace("PreImage Slot");
+            preImage.Trace(localContext.TracingService);
+            localContext.Trace("_____________");
+
+            localContext.Trace("Target Slot");
+            target.Trace(localContext.TracingService);
+            localContext.Trace("_____________");
+
             var totalSlots = 0;
             bool removeCurrentRecordQuotePreImage = false;
 
@@ -453,11 +463,14 @@ namespace Skanetrafiken.Crm.Entities
 
             bool addCurrentRecordQuote = false;
             bool addCurrentRecordOrder = false;
+
             //Update Quantity in OrderProduct
             if (target.IsAttributeModified(preImage, SlotsEntity.Fields.ed_QuoteProductID))
             {
+                localContext.Trace("QuoteProduct Modified.");
                 if (preImage.ed_QuoteProductID != null && target.ed_QuoteProductID != null)
                 {
+                    localContext.Trace("ed_QuoteProductID not null on PreImage and Target");
                     //need To Increase Number of Slots On Quote Product target
                     //need To Decrease Number of Slots On Quote Product preImage
                     addCurrentRecordQuote = true;
@@ -465,11 +478,13 @@ namespace Skanetrafiken.Crm.Entities
                 }
                 else if (preImage.ed_QuoteProductID != null && target.ed_QuoteProductID == null)
                 {
+                    localContext.Trace("ed_QuoteProductID not null on PreImage but null on Target");
                     //need To Decrease Number of Slots On Quote Product preImage
                     removeCurrentRecordQuotePreImage = true;
                 }
                 else if (preImage.ed_QuoteProductID == null && target.ed_QuoteProductID != null)
                 {
+                    localContext.Trace("ed_QuoteProductID null on PreImage but not null on Target");
                     //need To Increase Number of Slots On Quote Product target
                     addCurrentRecordQuote = true;
                 }
@@ -477,8 +492,10 @@ namespace Skanetrafiken.Crm.Entities
 
             if (target.IsAttributeModified(preImage, SlotsEntity.Fields.ed_OrderProductID))
             {
+                localContext.Trace("OrderProduct Modified.");
                 if (preImage.ed_OrderProductID != null && target.ed_OrderProductID != null)
                 {
+                    localContext.Trace("ed_OrderProductID not null on PreImage and Target");
                     //need To Increase Number of Slots On Order Product target
                     //need To Decrease Number of Slots On Order Product preImage
                     addCurrentRecordOrder = true;
@@ -486,11 +503,13 @@ namespace Skanetrafiken.Crm.Entities
                 }
                 else if(preImage.ed_OrderProductID != null && target.ed_OrderProductID == null)
                 {
+                    localContext.Trace("ed_OrderProductID not null on PreImage but null on Target");
                     //need To Decrease Number of Slots On Order Product preImage
                     removeCurrentRecordOrderPreImage = true;
                 }
                 else if(preImage.ed_OrderProductID == null && target.ed_OrderProductID != null)
                 {
+                    localContext.Trace("ed_OrderProductID null on PreImage but not null on Target");
                     //need To Increase Number of Slots On Order Product target
                     addCurrentRecordOrder = true;
                 }
@@ -498,10 +517,17 @@ namespace Skanetrafiken.Crm.Entities
             
             if(addCurrentRecordQuote)
             {
+                localContext.Trace("addCurrentRecordQuote");
                 totalSlots = 0;
                 QuoteProductEntity quoteProductToAdd = XrmRetrieveHelper.Retrieve<QuoteProductEntity>(localContext, target.ed_QuoteProductID, new ColumnSet(QuoteProductEntity.Fields.ed_totalslots));
-                if(quoteProductToAdd != null && quoteProductToAdd.ed_totalslots != null && quoteProductToAdd.ed_totalslots.Value > 0)
+
+                localContext.Trace("quoteProductToAdd");
+                quoteProductToAdd.Trace(localContext.TracingService);
+                localContext.Trace("_________________");
+
+                if (quoteProductToAdd != null && quoteProductToAdd.ed_totalslots != null && quoteProductToAdd.ed_totalslots.Value > 0)
                 {
+                    localContext.Trace("quoteProductToAdd and ed_totalslots not null and greater than 0");
                     totalSlots = quoteProductToAdd.ed_totalslots.Value + 1;
                 }
                 else
@@ -517,11 +543,18 @@ namespace Skanetrafiken.Crm.Entities
 
             if(removeCurrentRecordQuotePreImage)
             {
+                localContext.Trace("removeCurrentRecordQuotePreImage");
                 totalSlots = 0;
                 QuoteProductEntity quoteProductToRemove = XrmRetrieveHelper.Retrieve<QuoteProductEntity>(localContext, preImage.ed_QuoteProductID, new ColumnSet(QuoteProductEntity.Fields.ed_totalslots));
+
+                localContext.Trace("quoteProductToRemove");
+                quoteProductToRemove.Trace(localContext.TracingService);
+                localContext.Trace("_________________");
+
                 if (quoteProductToRemove != null && quoteProductToRemove.ed_totalslots != null && quoteProductToRemove.ed_totalslots.Value > 0)
                 {
-                    totalSlots = quoteProductToRemove.ed_totalslots.Value;
+                    localContext.Trace("quoteProductToRemove and ed_totalslots not null and greater than 0");
+                    totalSlots = quoteProductToRemove.ed_totalslots.Value - 1;
                 }
                 QuoteProductEntity quoteProductToRemoveUpdate = new QuoteProductEntity();
                 quoteProductToRemoveUpdate.Id = target.ed_QuoteProductID.Id;
@@ -531,10 +564,21 @@ namespace Skanetrafiken.Crm.Entities
 
             if (addCurrentRecordOrder)
             {
+                localContext.Trace("addCurrentRecordOrder");
+
+
                 totalSlots = 0;
                 OrderProductEntity orderProductToAdd = XrmRetrieveHelper.Retrieve<OrderProductEntity>(localContext, target.ed_OrderProductID, new ColumnSet(OrderProductEntity.Fields.ed_totalslots));
+
+
+                localContext.Trace("orderProductToAdd");
+                orderProductToAdd.Trace(localContext.TracingService);
+                localContext.Trace("_________________");
+
                 if (orderProductToAdd != null && orderProductToAdd.ed_totalslots != null && orderProductToAdd.ed_totalslots.Value > 0)
                 {
+                    localContext.Trace("orderProductToAdd and ed_totalslots not null and greater than 0");
+
                     totalSlots = orderProductToAdd.ed_totalslots.Value + 1;
                 }
                 else
@@ -548,16 +592,25 @@ namespace Skanetrafiken.Crm.Entities
                 XrmHelper.Update(localContext, orderProductToAddUpdate);
             }
 
-            if (removeCurrentRecordQuotePreImage)
+            if (removeCurrentRecordOrderPreImage)
             {
+                localContext.Trace("removeCurrentRecordOrderPreImage");
+
                 totalSlots = 0;
                 OrderProductEntity orderProductToRemove = XrmRetrieveHelper.Retrieve<OrderProductEntity>(localContext, preImage.ed_OrderProductID, new ColumnSet(OrderProductEntity.Fields.ed_totalslots));
+
+                localContext.Trace("orderProductToRemove");
+                orderProductToRemove.Trace(localContext.TracingService);
+                localContext.Trace("_________________");
+
                 if (orderProductToRemove != null && orderProductToRemove.ed_totalslots != null && orderProductToRemove.ed_totalslots.Value > 0)
                 {
-                    totalSlots = orderProductToRemove.ed_totalslots.Value;
+                    localContext.Trace("orderProductToRemove and ed_totalslots not null and greater than 0");
+
+                    totalSlots = orderProductToRemove.ed_totalslots.Value -1;
                 }
                 OrderProductEntity orderProductToRemoveUpdate = new OrderProductEntity();
-                orderProductToRemoveUpdate.Id = target.ed_QuoteProductID.Id;
+                orderProductToRemoveUpdate.Id = preImage.ed_OrderProductID.Id;
                 orderProductToRemoveUpdate.ed_totalslots = totalSlots;
                 XrmHelper.Update(localContext, orderProductToRemoveUpdate);
             }
