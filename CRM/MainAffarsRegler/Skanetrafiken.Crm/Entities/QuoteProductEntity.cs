@@ -130,6 +130,31 @@ namespace Skanetrafiken.Crm.Entities
             DateTime? startCreateIntervalTo = null;
             DateTime? endCreateIntervalTo = null;
 
+            Guid? opportunityId = null;
+
+            if (quoteProduct.QuoteId != null && quoteProduct.QuoteId.Id != Guid.Empty)
+            {
+                QuoteEntity quote = XrmRetrieveHelper.Retrieve<QuoteEntity>(localContext, quoteProduct.QuoteId, new ColumnSet(QuoteEntity.Fields.OpportunityId));
+
+                if (quote != null && quote.OpportunityId != null && quote.OpportunityId.Id != Guid.Empty)
+                {
+                    opportunityId = quote.OpportunityId.Id;
+                }
+            }
+            else
+            {
+                if(preImage != null && !quoteProduct.IsAttributeModified(preImage,QuoteProductEntity.Fields.QuoteId) && preImage.QuoteId != null
+                    && preImage.QuoteId.Id != Guid.Empty)
+                {
+                    QuoteEntity quote = XrmRetrieveHelper.Retrieve<QuoteEntity>(localContext, preImage.QuoteId, new ColumnSet(QuoteEntity.Fields.OpportunityId));
+
+                    if (quote != null && quote.OpportunityId != null && quote.OpportunityId.Id != Guid.Empty)
+                    {
+                        opportunityId = quote.OpportunityId.Id;
+                    }
+                }
+            }
+
             if (preImage != null && !quoteProduct.IsAttributeModified(preImage,QuoteProductEntity.Fields.ed_FromDate))
             {
                 localContext.Trace("ed_FromDate not modified");
@@ -239,6 +264,10 @@ namespace Skanetrafiken.Crm.Entities
                 }
                 else
                 {
+                    if(!quoteProduct.IsAttributeModified(preImage,QuoteProductEntity.Fields.Id))
+                    {
+                        quoteProduct.Id = preImage.Id;
+                    }
                     if (startRemoveIntervalFrom != null && endRemoveIntervalFrom != null)
                     {
                         SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, startRemoveIntervalFrom, endRemoveIntervalFrom);
@@ -247,20 +276,21 @@ namespace Skanetrafiken.Crm.Entities
                     {
                         SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, startRemoveIntervalTo, endRemoveIntervalTo);
                     }
+                    
                     if (startCreateIntervalFrom != null && endCreateIntervalFrom != null)
                     {
-                        availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, startCreateIntervalFrom.Value, endCreateIntervalFrom.Value, availableSlots, null, quoteProduct);
+                        availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, startCreateIntervalFrom.Value, endCreateIntervalFrom.Value, availableSlots, opportunityId, quoteProduct);
                     }
                     if (startCreateIntervalTo != null && endCreateIntervalTo != null)
                     {
-                        availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, startCreateIntervalTo.Value, endCreateIntervalTo.Value, availableSlots, null, quoteProduct);
+                        availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, startCreateIntervalTo.Value, endCreateIntervalTo.Value, availableSlots, opportunityId, quoteProduct);
                     }
                 }
                 //availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, startDate.Value, endDate.Value, availableSlots, null, quoteProduct);
             }
             else
             {
-                availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, startDate.Value, endDate.Value, availableSlots, null, quoteProduct);
+                availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, startDate.Value, endDate.Value, availableSlots, opportunityId, quoteProduct);
             }
         }
     }

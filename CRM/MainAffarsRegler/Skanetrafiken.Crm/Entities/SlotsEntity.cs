@@ -258,15 +258,26 @@ namespace Skanetrafiken.Crm.Entities
                         slot.Id = filteredSlots[0].Id;
                         if (quoteProduct != null)
                         {
-                            slot.ed_QuoteProductID = quoteProduct.ToEntityReference();
                             if (quoteProduct.QuoteId != null && quoteProduct.QuoteId.Id != Guid.Empty)
                             {
                                 slot.ed_Quote = quoteProduct.QuoteId;
                             }
+
+                            if (quoteProduct.Id != null && quoteProduct.Id != Guid.Empty)
+                            {
+                                slot.ed_QuoteProductID = quoteProduct.ToEntityReference();
+                            }
                         }
                         if (orderProduct != null)
                         {
-                            slot.ed_OrderProductID = orderProduct.ToEntityReference();
+                            if(orderProduct.SalesOrderId != null && orderProduct.SalesOrderId.Id != Guid.Empty)
+                            {
+                                slot.ed_Order = orderProduct.SalesOrderId;
+                            }
+                            if(orderProduct.Id != null && orderProduct.Id != Guid.Empty)
+                            {
+                                slot.ed_OrderProductID = orderProduct.ToEntityReference();
+                            }
                         }
                         if (OpportunityGuid != null)
                         {
@@ -284,17 +295,29 @@ namespace Skanetrafiken.Crm.Entities
                         slot.ed_BookingDay = startDate;
                         slot.ed_StandardPrice = priceProduct;
                         slot.ed_ProductID = new EntityReference(ProductEntity.EntityLogicalName, productId);
+                        
                         if (quoteProduct != null)
                         {
-                            slot.ed_QuoteProductID = quoteProduct.ToEntityReference();
                             if (quoteProduct.QuoteId != null && quoteProduct.QuoteId.Id != Guid.Empty)
                             {
                                 slot.ed_Quote = quoteProduct.QuoteId;
                             }
+
+                            if (quoteProduct.Id != null && quoteProduct.Id != Guid.Empty)
+                            {
+                                slot.ed_QuoteProductID = quoteProduct.ToEntityReference();
+                            }
                         }
                         if (orderProduct != null)
                         {
-                            slot.ed_OrderProductID = orderProduct.ToEntityReference();
+                            if (orderProduct.SalesOrderId != null && orderProduct.SalesOrderId.Id != Guid.Empty)
+                            {
+                                slot.ed_Order = orderProduct.SalesOrderId;
+                            }
+                            if (orderProduct.Id != null && orderProduct.Id != Guid.Empty)
+                            {
+                                slot.ed_OrderProductID = orderProduct.ToEntityReference();
+                            }
                         }
                         if (OpportunityGuid != null)
                         {
