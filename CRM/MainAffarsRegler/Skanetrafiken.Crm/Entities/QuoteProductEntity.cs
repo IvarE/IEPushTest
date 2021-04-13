@@ -152,6 +152,8 @@ namespace Skanetrafiken.Crm.Entities
                     {
                         opportunityId = quote.OpportunityId.Id;
                     }
+
+                    quoteProduct.QuoteId = preImage.QuoteId;
                 }
             }
 
