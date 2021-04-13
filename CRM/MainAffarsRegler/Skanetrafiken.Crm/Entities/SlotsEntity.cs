@@ -557,7 +557,7 @@ namespace Skanetrafiken.Crm.Entities
                     totalSlots = quoteProductToRemove.ed_totalslots.Value - 1;
                 }
                 QuoteProductEntity quoteProductToRemoveUpdate = new QuoteProductEntity();
-                quoteProductToRemoveUpdate.Id = target.ed_QuoteProductID.Id;
+                quoteProductToRemoveUpdate.Id = preImage.ed_QuoteProductID.Id;
                 quoteProductToRemoveUpdate.ed_totalslots = totalSlots;
                 XrmHelper.Update(localContext, quoteProductToRemoveUpdate);
             }
