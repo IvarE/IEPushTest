@@ -142,10 +142,19 @@ namespace Skanetrafiken.Import.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("test")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Exempelfil.csv")]
         public string MKLContacts {
             get {
                 return ((string)(this["MKLContacts"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\Endeavor\\Skanetrafiken.Import.Credential.xml")]
+        public string CredentialsFilePath {
+            get {
+                return ((string)(this["CredentialsFilePath"]));
             }
         }
     }

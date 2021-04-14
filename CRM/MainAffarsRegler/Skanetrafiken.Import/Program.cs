@@ -135,6 +135,26 @@ namespace Skanetrafiken.Import
             return selectedData.value;
         }
 
+        public static List<ExcelLineData> GetColumnData(ImportExcelInfo importExcelInfo, string labelCsv)
+        {
+            ExcelColumn column = GetSelectedExcelColumnByName(importExcelInfo.lColumns, labelCsv);
+
+            if (column == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
+                return null;
+            }
+
+            List<ExcelLineData> excelLineData = new List<ExcelLineData>();
+
+            foreach (List<ExcelLineData> lineData in importExcelInfo.lData)
+                foreach (ExcelLineData item in lineData)
+                    if (item.index == column.index)
+                        excelLineData.Add(item);
+
+            return excelLineData;
+        }
+
         public static List<UpsalesFile> GetFileList(string path, string filter)
         {
             try
@@ -3263,6 +3283,23 @@ namespace Skanetrafiken.Import
                 return;
             }
 
+            string uniqueLabel = "Contact Number";
+            List<ExcelLineData> lColumnData = GetColumnData(importExcelInfo, uniqueLabel);
+
+            QueryExpression queryContacts = new QueryExpression(Contact.EntityLogicalName);
+            queryContacts.NoLock = true;
+            queryContacts.ColumnSet = new ColumnSet(Contact.Fields.cgi_ContactNumber);
+
+            FilterExpression queryCriteria = new FilterExpression();
+            queryContacts.Criteria.AddFilter(queryCriteria);
+
+            queryCriteria.FilterOperator = LogicalOperator.Or;
+
+            foreach (ExcelLineData item in lColumnData)
+                queryCriteria.AddCondition(Contact.Fields.cgi_ContactNumber, ConditionOperator.Equal, item.value);
+
+            List<Contact> lContacts = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts);
+
             Console.Write("Creating Batch of Contacts... ");
             using (ProgressBar progress = new ProgressBar())
             {
@@ -3272,7 +3309,8 @@ namespace Skanetrafiken.Import
                     {
                         progress.Report((double)i / (double)importExcelInfo.lData.Count);
 
-                        Contact nContact = new Contact();
+                        string uniqueValue = lColumnData[i].value;
+                        Contact uContact = lContacts.Where(x => x.cgi_ContactNumber == uniqueValue).FirstOrDefault();
                         List<ExcelLineData> line = importExcelInfo.lData[i];
 
                         if (line.Count != importExcelInfo.lColumns.Count)
@@ -3307,23 +3345,14 @@ namespace Skanetrafiken.Import
 
                             switch (name)
                             {
-                                case "Förnamn":
-                                    nContact.FirstName = value;
+                                case "Analysdata 1":
+                                    uContact.ed_analysdata1 = value;
                                     break;
-                                case "Efternamn":
-                                    nContact.LastName = value;
+                                case "Analysdata 2":
+                                    uContact.ed_analysdata2 = value;
                                     break;
-                                case "Titel":
-                                    nContact.ed_title = value;
-                                    break;
-                                case "Telefon":
-                                    nContact.Telephone1 = cleanMobileTelefon(value);
-                                    break;
-                                case "Mobiltelefon":
-                                    nContact.Telephone2 = cleanMobileTelefon(value);
-                                    break;
-                                case "Email":
-                                    nContact.EMailAddress1 = value;
+                                case "Analysdata 3":
+                                    uContact.ed_analysdata3 = value;
                                     break;
 
                                 default:
@@ -3332,16 +3361,9 @@ namespace Skanetrafiken.Import
                             }
                         }
 
-                        nContact.StateCode = ContactState.Active;
-
-                        //Prevent Plugin Errors
-                        if (nContact.FirstName == null)
-                            nContact.FirstName = ".";
-
-                        if (nContact.LastName == null)
-                            nContact.LastName = ".";
-
-                        crmContext.AddObject(nContact);
+                        uContact.StateCode = ContactState.Active;
+                        crmContext.Attach(uContact);
+                        crmContext.UpdateObject(uContact);
                     }
                     catch (Exception e)
                     {
@@ -3389,8 +3411,55 @@ namespace Skanetrafiken.Import
 
         }
 
-        static void Main(string[] args)
+        // INFO: (hest) The entropy should be unique for each application. DON'T COPY THIS VALUE INTO A NEW PROJECT!!!!
+        internal static byte[] Entropy = System.Text.Encoding.Unicode.GetBytes("SkanetrafikenImport");
+
+        internal static string CredentialFilePath
         {
+            get
+            {
+                return Environment.ExpandEnvironmentVariables(Properties.Settings.Default.CredentialsFilePath);
+            }
+        }
+
+        public static Plugin.LocalPluginContext GenerateLocalContext()
+        {
+            // Connect to the CRM web service using a connection string.
+            CrmServiceClient conn = new CrmServiceClient(CrmConnection.GetCrmConnectionString(CredentialFilePath, Entropy));
+
+            // Cast the proxy client to the IOrganizationService interface.
+            IOrganizationService serviceProxy = (IOrganizationService)conn.OrganizationWebProxyClient != null ? (IOrganizationService)conn.OrganizationWebProxyClient : (IOrganizationService)conn.OrganizationServiceProxy;
+
+            Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+            return localContext;
+        }
+
+        static void Main()
+        {
+
+#if DEBUG
+            _log.Debug("Main Started");
+
+            string passwordArgument = "uSEme2!nstal1";
+
+            if (!string.IsNullOrEmpty(passwordArgument))
+            {
+                _log.DebugFormat(CultureInfo.InvariantCulture, "Credentials parsed from command line.");
+                string password = passwordArgument.Substring(passwordArgument.IndexOf(":") + 1);
+
+                CrmConnection.SaveCredentials(CredentialFilePath, password, Entropy);
+            }
+#endif
+
+            Plugin.LocalPluginContext localContext = GenerateLocalContext();
+
+            if (localContext == null)
+            {
+                _log.Error($"Connection to CRM was not possible.\n LocalContext is null.\n\n");
+                return;
+            }
+
             string domainUser = string.Empty;
             string passWord = string.Empty;
             string urlOrganization = string.Empty;
@@ -3407,7 +3476,7 @@ namespace Skanetrafiken.Import
                 domainUser = ConfigurationManager.AppSettings["domainUserTST"];
                 urlOrganization = ConfigurationManager.AppSettings["urlOrganizationTST"];
 
-                relativeExcelPath = @"C:\Users\Pedro\OneDrive\Ambiente de Trabalho\Skanetrafiken\Upsales Migration\";
+                relativeExcelPath = @"C:\Users\Pedro\Downloads";
             }
             else if(input == "uat")
             {
@@ -3416,7 +3485,7 @@ namespace Skanetrafiken.Import
                 domainUser = ConfigurationManager.AppSettings["domainUserUAT"];
                 urlOrganization = ConfigurationManager.AppSettings["urlOrganizationUAT"];
 
-                relativeExcelPath = @"C:\Users\Pedro\OneDrive\Ambiente de Trabalho\Skanetrafiken\Upsales Migration\";
+                relativeExcelPath = @"C:\Users\Pedro\Downloads";
             }
             else if (input == "prod")
             {
@@ -3448,19 +3517,19 @@ namespace Skanetrafiken.Import
             _log.InfoFormat(CultureInfo.InvariantCulture, $"The CRM Service is not null.");
             Console.WriteLine("The CRM Service is not null.");
 
-            Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _service, null, new TracingService());
-            CrmContext crmContext = new CrmContext(_service);
-            SaveChangesOptions optionsChanges = SaveChangesOptions.ContinueOnError;
+            //Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _service, null, new TracingService());
+            //CrmContext crmContext = new CrmContext(_service);
+            //SaveChangesOptions optionsChanges = SaveChangesOptions.ContinueOnError;
 
-            if(localContext == null || crmContext == null)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The CRM localContext or the CRM EarlyBound Context is null.");
-                Console.WriteLine("The CRM localContext or the CRM EarlyBound Context is null.");
-                Console.ReadLine();
-                return;
-            }
+            //if(localContext == null || crmContext == null)
+            //{
+            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The CRM localContext or the CRM EarlyBound Context is null.");
+            //    Console.WriteLine("The CRM localContext or the CRM EarlyBound Context is null.");
+            //    Console.ReadLine();
+            //    return;
+            //}
 
-            ImportContactsMKLId(localContext, crmContext, optionsChanges, relativeExcelPath);
+            //ImportContactsMKLId(localContext, crmContext, optionsChanges, relativeExcelPath);
 
             //bool showMenu = true;
             //while (showMenu)
