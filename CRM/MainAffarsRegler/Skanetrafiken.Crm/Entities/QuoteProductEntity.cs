@@ -264,6 +264,11 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, true);
                 }
+                else if(DateTime.Compare(postFromDate.Value,preToDate.Value) > 0 || DateTime.Compare(preFromDate.Value, postToDate.Value) > 0)
+                {
+                    SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, preFromDate, preToDate, 1);
+                    availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, postFromDate.Value, postToDate.Value, availableSlots,opportunityId,quoteProduct);
+                }
                 else
                 {
                     var compareFrom = DateTime.Compare(preFromDate.Value, postFromDate.Value);
@@ -283,7 +288,7 @@ namespace Skanetrafiken.Crm.Entities
                     }
                     else if(compareFrom > 0)
                     {
-                        SlotsEntity.ReleaseSlots(localContext, quoteProduct.ProductId.Id, false, postToDate.Value.AddDays(-1), preToDate.Value, 1);
+                        SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, postToDate.Value.AddDays(-1), preToDate.Value, 1);
                     }
                 }
                 /*
