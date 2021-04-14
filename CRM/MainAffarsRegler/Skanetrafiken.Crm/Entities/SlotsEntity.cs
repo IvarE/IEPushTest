@@ -192,7 +192,7 @@ namespace Skanetrafiken.Crm.Entities
             response.Message = "Slots created.";
             return response;
         }
-        public static List<SlotsEntity> GenerateSlotsInternal(Plugin.LocalPluginContext localContext, Guid productId, int quantityPerDay, DateTime startDate, DateTime endDate, List<SlotsEntity> availableSlots = null, Guid? OpportunityGuid = null, QuoteProductEntity quoteProduct = null, OrderProductEntity orderProduct = null)
+        public static void GenerateSlotsInternal(Plugin.LocalPluginContext localContext, Guid productId, int quantityPerDay, DateTime startDate, DateTime endDate, List<SlotsEntity> availableSlots = null, Guid? OpportunityGuid = null, QuoteProductEntity quoteProduct = null, OrderProductEntity orderProduct = null)
         {
             localContext.Trace("Inside GenerateSlotsInternal");
             string productName = "";
@@ -200,7 +200,7 @@ namespace Skanetrafiken.Crm.Entities
             if (endDate < startDate)
             {
                 localContext.Trace("Start date is higher than the End date.");
-                return availableSlots;
+                //return availableSlots;
             }
             ColumnSet productColumns = new ColumnSet(false);
             productColumns.AddColumn(ProductEntity.Fields.Name);
@@ -209,7 +209,8 @@ namespace Skanetrafiken.Crm.Entities
             if (product == null)
             {
                 localContext.Trace("Product not found.");
-                return availableSlots;
+                return;
+                //return availableSlots;
             }
             else
             {
@@ -240,7 +241,8 @@ namespace Skanetrafiken.Crm.Entities
             else
             {
                 localContext.Trace("Product not found or price not defined.");
-                return availableSlots;
+                //return availableSlots;
+                return;
             }
             do
             {
@@ -332,7 +334,7 @@ namespace Skanetrafiken.Crm.Entities
                 startDate = startDate.AddDays(1);
             }
             while (DateTime.Compare(startDate, endDate) <= 0);
-            return availableSlots;
+//return availableSlots;
         }
 
         public static void UpdateSlotsInternal(Plugin.LocalPluginContext localContext, Guid productId)

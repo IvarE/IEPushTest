@@ -254,11 +254,12 @@ namespace Skanetrafiken.Crm.Entities
                 }
 
 
-                availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, postFromDate.Value, postToDate.Value);
+                //availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, postFromDate.Value, postToDate.Value);
 
                 if (preFromDate == null && preToDate == null)
                 {
-                    availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, postFromDate.Value, postToDate.Value, availableSlots, opportunityId, quoteProduct);
+                    availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, postFromDate.Value, postToDate.Value);
+                    SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, postFromDate.Value, postToDate.Value, availableSlots, opportunityId, quoteProduct);
                 }
                 else if(postFromDate == null && postToDate == null)
                 {
@@ -267,14 +268,16 @@ namespace Skanetrafiken.Crm.Entities
                 else if(DateTime.Compare(postFromDate.Value,preToDate.Value) > 0 || DateTime.Compare(preFromDate.Value, postToDate.Value) > 0)
                 {
                     SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, preFromDate, preToDate, 1);
-                    availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, postFromDate.Value, postToDate.Value, availableSlots,opportunityId,quoteProduct);
+                    availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, postFromDate.Value, postToDate.Value);
+                    SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, postFromDate.Value, postToDate.Value, availableSlots,opportunityId,quoteProduct);
                 }
                 else
                 {
                     var compareFrom = DateTime.Compare(preFromDate.Value, postFromDate.Value);
                     if (compareFrom > 0)
                     {
-                        availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, postFromDate.Value, preFromDate.Value.AddDays(-1), availableSlots, opportunityId, quoteProduct);
+                        availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, postFromDate.Value, preFromDate.Value.AddDays(-1));
+                        SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, postFromDate.Value, preFromDate.Value.AddDays(-1), availableSlots, opportunityId, quoteProduct);
                     }
                     else if (compareFrom < 0)
                     {
@@ -284,9 +287,10 @@ namespace Skanetrafiken.Crm.Entities
                     var compareTo = DateTime.Compare(preToDate.Value, postToDate.Value);
                     if(compareTo < 0)
                     {
-                        availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, preToDate.Value.AddDays(-1), postToDate.Value, availableSlots, opportunityId, quoteProduct);
+                        availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, preToDate.Value.AddDays(-1), postToDate.Value);
+                        SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, preToDate.Value.AddDays(-1), postToDate.Value, availableSlots, opportunityId, quoteProduct);
                     }
-                    else if(compareFrom > 0)
+                    else if(compareTo > 0)
                     {
                         SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, postToDate.Value.AddDays(-1), preToDate.Value, 1);
                     }
@@ -404,7 +408,8 @@ namespace Skanetrafiken.Crm.Entities
                 }
                 else
                 {
-                    availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, quoteProduct.ed_FromDate.Value, quoteProduct.ed_ToDate.Value, availableSlots, opportunityId, quoteProduct);
+                    availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, quoteProduct.ed_FromDate.Value, quoteProduct.ed_ToDate.Value);
+                    SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, quoteProduct.ed_FromDate.Value, quoteProduct.ed_ToDate.Value, availableSlots, opportunityId, quoteProduct);
                 }
                 
                 
