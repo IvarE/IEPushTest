@@ -285,8 +285,10 @@ namespace Skanetrafiken.Crm.Entities
                         }
                         slot.ed_BookingStatus = new OptionSetValue(899310001);
                         XrmHelper.Update(localContext, slot);
-                        filteredSlots.Remove(filteredSlots[0]);
-                        availableSlots.Remove(filteredSlots[0]);
+
+                        var objectToRemove = filteredSlots[0];
+                        filteredSlots.Remove(objectToRemove);
+                        availableSlots.Remove(objectToRemove);
                     }
                     else
                     {
