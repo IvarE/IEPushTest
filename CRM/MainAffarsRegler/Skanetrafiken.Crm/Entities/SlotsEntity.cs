@@ -519,7 +519,6 @@ namespace Skanetrafiken.Crm.Entities
             {
                 localContext.Trace("addCurrentRecordQuote");
                 totalSlots = 0;
-                QuoteProductEntity quoteProductToAdd = XrmRetrieveHelper.Retrieve<QuoteProductEntity>(localContext, target.ed_QuoteProductID, new ColumnSet(QuoteProductEntity.Fields.ed_totalslots));
 
                 QueryExpression querySlotsProductsQuoteAdd = new QueryExpression();
                 querySlotsProductsQuoteAdd.EntityName = SlotsEntity.EntityLogicalName;
@@ -527,7 +526,7 @@ namespace Skanetrafiken.Crm.Entities
 
                 FilterExpression filterSlotsProductsQuoteAdd = new FilterExpression();
                 filterSlotsProductsQuoteAdd.FilterOperator = LogicalOperator.And;
-                filterSlotsProductsQuoteAdd.AddCondition(SlotsEntity.Fields.ed_QuoteProductID, ConditionOperator.Equal, preImage.ed_QuoteProductID.Id);
+                filterSlotsProductsQuoteAdd.AddCondition(SlotsEntity.Fields.ed_QuoteProductID, ConditionOperator.Equal, target.ed_QuoteProductID.Id);
                 filterSlotsProductsQuoteAdd.AddCondition(SlotsEntity.Fields.Id, ConditionOperator.NotEqual, target.Id);
 
                 querySlotsProductsQuoteAdd.Criteria.AddFilter(filterSlotsProductsQuoteAdd);

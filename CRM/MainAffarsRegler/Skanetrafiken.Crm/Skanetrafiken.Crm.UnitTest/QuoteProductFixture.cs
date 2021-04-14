@@ -60,7 +60,7 @@ namespace Endeavor.Crm.UnitTest
                     ExtendedAmount = new Money(5860),
                     ProductTypeCode = new OptionSetValue(1),
                     PricingErrorCode = new OptionSetValue(0),
-                    ProductId = new EntityReference(ProductEntity.EntityLogicalName, new Guid("1bffd424-a196-ea11-80f8-005056b61fff"))
+                    ProductId = new EntityReference(ProductEntity.EntityLogicalName, new Guid("a4fa5f5f-86a1-ea11-80f9-005056b61fff"))
                 };
 
                 Guid quoteProductId = XrmHelper.Create(localContext, quoteProduct);
