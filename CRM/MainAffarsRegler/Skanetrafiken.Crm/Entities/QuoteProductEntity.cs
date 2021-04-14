@@ -272,11 +272,11 @@ namespace Skanetrafiken.Crm.Entities
                     }
                     if (startRemoveIntervalFrom != null && endRemoveIntervalFrom != null)
                     {
-                        SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, startRemoveIntervalFrom, endRemoveIntervalFrom);
+                        SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, startRemoveIntervalFrom, endRemoveIntervalFrom,1);
                     }
                     if (startRemoveIntervalTo != null && endRemoveIntervalTo != null)
                     {
-                        SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, startRemoveIntervalTo, endRemoveIntervalTo);
+                        SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, startRemoveIntervalTo, endRemoveIntervalTo,1);
                     }
                     
                     if (startCreateIntervalFrom != null && endCreateIntervalFrom != null)

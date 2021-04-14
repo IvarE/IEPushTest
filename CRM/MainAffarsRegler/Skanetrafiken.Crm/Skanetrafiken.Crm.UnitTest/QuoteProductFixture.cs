@@ -84,12 +84,12 @@ namespace Endeavor.Crm.UnitTest
 
                 
 
-                QuoteProductEntity preImage = XrmRetrieveHelper.Retrieve<QuoteProductEntity>(localContext, QuoteProductEntity.EntityLogicalName,Guid.Parse("8d784969-c29b-eb11-947e-005056b6fa28"),new ColumnSet(true));
+                QuoteProductEntity preImage = XrmRetrieveHelper.Retrieve<QuoteProductEntity>(localContext, QuoteProductEntity.EntityLogicalName,Guid.Parse("d7f330f0-109d-eb11-947e-005056b6fa28"),new ColumnSet(true));
 
                 QuoteProductEntity target = new QuoteProductEntity()
                 {
-                    QuoteDetailId = new Guid("8d784969-c29b-eb11-947e-005056b6fa28"),
-                    Id = new Guid("8d784969-c29b-eb11-947e-005056b6fa28"),
+                    QuoteDetailId = new Guid("d7f330f0-109d-eb11-947e-005056b6fa28"),
+                    Id = new Guid("d7f330f0-109d-eb11-947e-005056b6fa28"),
                     ed_ToDate = preImage.ed_ToDate.Value.AddDays(-1)
                 };
 
