@@ -115,20 +115,21 @@ namespace Skanetrafiken.Crm.Entities
         public static void UpdateOrGenerateSlots(Plugin.LocalPluginContext localContext, QuoteProductEntity quoteProduct, QuoteProductEntity preImage = null)
         {
             localContext.Trace("Inside UpdateOrGenerateSlots");
-            bool removeAllSlots = false;
-            bool fromDateModified = false;
-            bool toDateModified = false;
+            //bool removeAllSlots = false;
+            //bool fromDateModified = false;
+            //bool toDateModified = false;
             List<SlotsEntity> availableSlots = null;
-            DateTime? startDate = quoteProduct.ed_FromDate;
-            DateTime? endDate = quoteProduct.ed_ToDate;
-            DateTime? startRemoveIntervalFrom = null; //used if after Update the preImage.ed_FromDate is before the quoteProduct.ed_FromDate
-            DateTime? endRemoveIntervalFrom = null; //used if after Update the preImage.ed_FromDate is before the quoteProduct.ed_FromDate
-            DateTime? startRemoveIntervalTo = null; //used if after Update the preImage.ed_ToDate is after the quoteProduct.ed_ToDate
-            DateTime? endRemoveIntervalTo = null; //used if after Update the preImage.ed_ToDate is after the quoteProduct.ed_ToDate
-            DateTime? startCreateIntervalFrom = null;
-            DateTime? endCreateIntervalFrom = null;
-            DateTime? startCreateIntervalTo = null;
-            DateTime? endCreateIntervalTo = null;
+            //DateTime? startDate = quoteProduct.ed_FromDate;
+            //DateTime? endDate = quoteProduct.ed_ToDate;
+
+            //DateTime? startRemoveIntervalFrom = null; //used if after Update the preImage.ed_FromDate is before the quoteProduct.ed_FromDate
+            //DateTime? endRemoveIntervalFrom = null; //used if after Update the preImage.ed_FromDate is before the quoteProduct.ed_FromDate
+            //DateTime? startRemoveIntervalTo = null; //used if after Update the preImage.ed_ToDate is after the quoteProduct.ed_ToDate
+            //DateTime? endRemoveIntervalTo = null; //used if after Update the preImage.ed_ToDate is after the quoteProduct.ed_ToDate
+            //DateTime? startCreateIntervalFrom = null;
+            //DateTime? endCreateIntervalFrom = null;
+            //DateTime? startCreateIntervalTo = null;
+            //DateTime? endCreateIntervalTo = null;
 
             Guid? opportunityId = null;
 
@@ -156,7 +157,7 @@ namespace Skanetrafiken.Crm.Entities
                     quoteProduct.QuoteId = preImage.QuoteId;
                 }
             }
-
+            /* OLD
             if (preImage != null && !quoteProduct.IsAttributeModified(preImage,QuoteProductEntity.Fields.ed_FromDate))
             {
                 localContext.Trace("ed_FromDate not modified");
@@ -183,9 +184,10 @@ namespace Skanetrafiken.Crm.Entities
                 localContext.Trace("ProductId not modified");
                 quoteProduct.ProductId = preImage.ProductId;
             }
+            */
 
             //validate and return the emptySlotsAvailable for this product on the Dates requested.
-            availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, startDate.Value, endDate.Value);
+
             //validate if unit is equal to 1 day
             /*
             if (!UnitEntity.IsOneDayUnit(localContext, quoteProduct.UoMId))
@@ -194,13 +196,104 @@ namespace Skanetrafiken.Crm.Entities
                 return;
             }
             */
-            if (DateTime.Compare(startDate.Value, endDate.Value) > 0)
-            {
-                throw new InvalidPluginExecutionException("FromDate is later than EndDate");
-            }
+
             if (preImage != null)
             {
+
                 localContext.Trace("PreImage not null.");
+                DateTime? preFromDate = null;
+                DateTime? preToDate = null;
+                DateTime? postFromDate = null;
+                DateTime? postToDate = null;
+
+                if (preImage.ed_FromDate != null)
+                {
+                    preFromDate = preImage.ed_FromDate.Value;
+                }
+
+                if(preImage.ed_ToDate != null)
+                {
+                    preToDate = preImage.ed_ToDate.Value;
+                }
+
+                if(quoteProduct.ed_FromDate != null)
+                {
+                    postFromDate = quoteProduct.ed_FromDate.Value;
+                }
+                else
+                {
+                    if(!quoteProduct.IsAttributeModified(preImage,QuoteProductEntity.Fields.ed_FromDate) && preImage.ed_FromDate != null)
+                    {
+                        postFromDate = preImage.ed_FromDate.Value;
+                    }
+                }
+
+                if (quoteProduct.ed_ToDate != null)
+                {
+                    postToDate = quoteProduct.ed_ToDate.Value;
+                }
+                else
+                {
+                    if (!quoteProduct.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate) && preImage.ed_ToDate != null)
+                    {
+                        postToDate = preImage.ed_ToDate.Value;
+                    }
+                }
+                if (postFromDate == null && postToDate != null)
+                {
+                    throw new InvalidPluginExecutionException("FromDate cannot be empty if ToDate is set");
+                }
+                else if(postFromDate != null && postToDate == null)
+                {
+                    throw new InvalidPluginExecutionException("ToDate cannot be empty if FromDate is set");
+                }
+
+                if (postFromDate != null && postToDate != null && postFromDate > postToDate)
+                {
+                    throw new InvalidPluginExecutionException("FromDate cannot be after ToDate");
+                }
+
+
+                availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, postFromDate.Value, postToDate.Value);
+
+                if (preFromDate == null && preToDate == null)
+                {
+                    availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, postFromDate.Value, postToDate.Value, availableSlots, opportunityId, quoteProduct);
+                }
+                else if(postFromDate == null && postToDate == null)
+                {
+                    SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, true);
+                }
+                else if(DateTime.Compare(postFromDate.Value,preToDate.Value) > 0 || DateTime.Compare(preFromDate.Value, postToDate.Value) > 0)
+                {
+                    SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, preFromDate, preToDate, 1);
+                    availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, postFromDate.Value, postToDate.Value, availableSlots,opportunityId,quoteProduct);
+                }
+                else
+                {
+                    var compareFrom = DateTime.Compare(preFromDate.Value, postFromDate.Value);
+                    if (compareFrom > 0)
+                    {
+                        availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, postFromDate.Value, preFromDate.Value.AddDays(-1), availableSlots, opportunityId, quoteProduct);
+                    }
+                    else if (compareFrom < 0)
+                    {
+                        SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, preFromDate.Value, postFromDate.Value.AddDays(-1), 1);
+                    }
+
+                    var compareTo = DateTime.Compare(preToDate.Value, postToDate.Value);
+                    if(compareTo < 0)
+                    {
+                        availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, preToDate.Value.AddDays(-1), postToDate.Value, availableSlots, opportunityId, quoteProduct);
+                    }
+                    else if(compareFrom > 0)
+                    {
+                        SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, postToDate.Value.AddDays(-1), preToDate.Value, 1);
+                    }
+                }
+                /*
+                 * 
+                 * OLD METHOD
                 if (fromDateModified)
                 {
                     localContext.Trace("ed_FromDate modified.");
@@ -288,11 +381,33 @@ namespace Skanetrafiken.Crm.Entities
                         availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, startCreateIntervalTo.Value, endCreateIntervalTo.Value, availableSlots, opportunityId, quoteProduct);
                     }
                 }
+                */
                 //availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, startDate.Value, endDate.Value, availableSlots, null, quoteProduct);
             }
             else
             {
-                availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, startDate.Value, endDate.Value, availableSlots, opportunityId, quoteProduct);
+                if (quoteProduct.ed_FromDate == null && quoteProduct.ed_ToDate == null)
+                {
+                    return;
+                }
+                else if (quoteProduct.ed_FromDate == null && quoteProduct.ed_ToDate != null)
+                {
+                    throw new InvalidPluginExecutionException("FromDate cannot be empty if ToDate is set");
+                }
+                else if (quoteProduct.ed_FromDate != null && quoteProduct.ed_ToDate == null)
+                {
+                    throw new InvalidPluginExecutionException("ToDate cannot be empty if FromDate is set");
+                }
+                else if(DateTime.Compare(quoteProduct.ed_FromDate.Value,quoteProduct.ed_ToDate.Value) > 0)
+                {
+                    throw new InvalidPluginExecutionException("FromDate cannot be after ToDate");
+                }
+                else
+                {
+                    availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, quoteProduct.ed_FromDate.Value, quoteProduct.ed_ToDate.Value, availableSlots, opportunityId, quoteProduct);
+                }
+                
+                
             }
         }
     }
