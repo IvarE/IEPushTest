@@ -43,8 +43,16 @@ namespace Skanetrafiken.Crm.Entities
         }
         public static List<SlotsEntity> AvailableSlots (Plugin.LocalPluginContext localContext,EntityReference productER,DateTime starDate,DateTime endDate)
         {
+            localContext.Trace("Inside Available Slots");
+
+            if (productER == null || productER.Id == Guid.Empty || starDate == null || endDate == null)
+            {
+                localContext.Trace("required Attributes Null");
+                return null;
+            }
             QueryExpression queryAvailableSlots = new QueryExpression();
 
+            
             queryAvailableSlots.EntityName = SlotsEntity.EntityLogicalName;
             queryAvailableSlots.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_BookingDay,SlotsEntity.Fields.ed_StandardPrice,SlotsEntity.Fields.ed_CustomPrice);
 
@@ -66,6 +74,7 @@ namespace Skanetrafiken.Crm.Entities
             queryAvailableSlots.AddOrder(SlotsEntity.Fields.ed_BookingDay, OrderType.Ascending);
 
             List<SlotsEntity> slotsEntities = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, queryAvailableSlots);
+            localContext.Trace("Returning available slotsEntities");
 
             return slotsEntities;
         }
@@ -249,15 +258,26 @@ namespace Skanetrafiken.Crm.Entities
                         slot.Id = filteredSlots[0].Id;
                         if (quoteProduct != null)
                         {
-                            slot.ed_QuoteProductID = quoteProduct.ToEntityReference();
                             if (quoteProduct.QuoteId != null && quoteProduct.QuoteId.Id != Guid.Empty)
                             {
                                 slot.ed_Quote = quoteProduct.QuoteId;
                             }
+
+                            if (quoteProduct.Id != null && quoteProduct.Id != Guid.Empty)
+                            {
+                                slot.ed_QuoteProductID = quoteProduct.ToEntityReference();
+                            }
                         }
                         if (orderProduct != null)
                         {
-                            slot.ed_OrderProductID = orderProduct.ToEntityReference();
+                            if(orderProduct.SalesOrderId != null && orderProduct.SalesOrderId.Id != Guid.Empty)
+                            {
+                                slot.ed_Order = orderProduct.SalesOrderId;
+                            }
+                            if(orderProduct.Id != null && orderProduct.Id != Guid.Empty)
+                            {
+                                slot.ed_OrderProductID = orderProduct.ToEntityReference();
+                            }
                         }
                         if (OpportunityGuid != null)
                         {
@@ -265,8 +285,10 @@ namespace Skanetrafiken.Crm.Entities
                         }
                         slot.ed_BookingStatus = new OptionSetValue(899310001);
                         XrmHelper.Update(localContext, slot);
-                        filteredSlots.Remove(filteredSlots[0]);
-                        availableSlots.Remove(filteredSlots[0]);
+
+                        var objectToRemove = filteredSlots[0];
+                        filteredSlots.Remove(objectToRemove);
+                        availableSlots.Remove(objectToRemove);
                     }
                     else
                     {
@@ -275,17 +297,29 @@ namespace Skanetrafiken.Crm.Entities
                         slot.ed_BookingDay = startDate;
                         slot.ed_StandardPrice = priceProduct;
                         slot.ed_ProductID = new EntityReference(ProductEntity.EntityLogicalName, productId);
+                        
                         if (quoteProduct != null)
                         {
-                            slot.ed_QuoteProductID = quoteProduct.ToEntityReference();
                             if (quoteProduct.QuoteId != null && quoteProduct.QuoteId.Id != Guid.Empty)
                             {
                                 slot.ed_Quote = quoteProduct.QuoteId;
                             }
+
+                            if (quoteProduct.Id != null && quoteProduct.Id != Guid.Empty)
+                            {
+                                slot.ed_QuoteProductID = quoteProduct.ToEntityReference();
+                            }
                         }
                         if (orderProduct != null)
                         {
-                            slot.ed_OrderProductID = orderProduct.ToEntityReference();
+                            if (orderProduct.SalesOrderId != null && orderProduct.SalesOrderId.Id != Guid.Empty)
+                            {
+                                slot.ed_Order = orderProduct.SalesOrderId;
+                            }
+                            if (orderProduct.Id != null && orderProduct.Id != Guid.Empty)
+                            {
+                                slot.ed_OrderProductID = orderProduct.ToEntityReference();
+                            }
                         }
                         if (OpportunityGuid != null)
                         {
@@ -414,6 +448,16 @@ namespace Skanetrafiken.Crm.Entities
         }
         public static void SlotsEntityUpdateQuantity(Plugin.LocalPluginContext localContext, SlotsEntity target, SlotsEntity preImage)
         {
+            localContext.Trace("Inside SlotsEntityUpdateQuantity.");
+
+            localContext.Trace("PreImage Slot");
+            preImage.Trace(localContext.TracingService);
+            localContext.Trace("_____________");
+
+            localContext.Trace("Target Slot");
+            target.Trace(localContext.TracingService);
+            localContext.Trace("_____________");
+
             var totalSlots = 0;
             bool removeCurrentRecordQuotePreImage = false;
 
@@ -421,11 +465,14 @@ namespace Skanetrafiken.Crm.Entities
 
             bool addCurrentRecordQuote = false;
             bool addCurrentRecordOrder = false;
+
             //Update Quantity in OrderProduct
             if (target.IsAttributeModified(preImage, SlotsEntity.Fields.ed_QuoteProductID))
             {
+                localContext.Trace("QuoteProduct Modified.");
                 if (preImage.ed_QuoteProductID != null && target.ed_QuoteProductID != null)
                 {
+                    localContext.Trace("ed_QuoteProductID not null on PreImage and Target");
                     //need To Increase Number of Slots On Quote Product target
                     //need To Decrease Number of Slots On Quote Product preImage
                     addCurrentRecordQuote = true;
@@ -433,11 +480,13 @@ namespace Skanetrafiken.Crm.Entities
                 }
                 else if (preImage.ed_QuoteProductID != null && target.ed_QuoteProductID == null)
                 {
+                    localContext.Trace("ed_QuoteProductID not null on PreImage but null on Target");
                     //need To Decrease Number of Slots On Quote Product preImage
                     removeCurrentRecordQuotePreImage = true;
                 }
                 else if (preImage.ed_QuoteProductID == null && target.ed_QuoteProductID != null)
                 {
+                    localContext.Trace("ed_QuoteProductID null on PreImage but not null on Target");
                     //need To Increase Number of Slots On Quote Product target
                     addCurrentRecordQuote = true;
                 }
@@ -445,8 +494,10 @@ namespace Skanetrafiken.Crm.Entities
 
             if (target.IsAttributeModified(preImage, SlotsEntity.Fields.ed_OrderProductID))
             {
+                localContext.Trace("OrderProduct Modified.");
                 if (preImage.ed_OrderProductID != null && target.ed_OrderProductID != null)
                 {
+                    localContext.Trace("ed_OrderProductID not null on PreImage and Target");
                     //need To Increase Number of Slots On Order Product target
                     //need To Decrease Number of Slots On Order Product preImage
                     addCurrentRecordOrder = true;
@@ -454,11 +505,13 @@ namespace Skanetrafiken.Crm.Entities
                 }
                 else if(preImage.ed_OrderProductID != null && target.ed_OrderProductID == null)
                 {
+                    localContext.Trace("ed_OrderProductID not null on PreImage but null on Target");
                     //need To Decrease Number of Slots On Order Product preImage
                     removeCurrentRecordOrderPreImage = true;
                 }
                 else if(preImage.ed_OrderProductID == null && target.ed_OrderProductID != null)
                 {
+                    localContext.Trace("ed_OrderProductID null on PreImage but not null on Target");
                     //need To Increase Number of Slots On Order Product target
                     addCurrentRecordOrder = true;
                 }
@@ -466,11 +519,26 @@ namespace Skanetrafiken.Crm.Entities
             
             if(addCurrentRecordQuote)
             {
+                localContext.Trace("addCurrentRecordQuote");
                 totalSlots = 0;
-                QuoteProductEntity quoteProductToAdd = XrmRetrieveHelper.Retrieve<QuoteProductEntity>(localContext, target.ed_QuoteProductID, new ColumnSet(QuoteProductEntity.Fields.ed_totalslots));
-                if(quoteProductToAdd != null && quoteProductToAdd.ed_totalslots != null && quoteProductToAdd.ed_totalslots.Value > 0)
+
+                QueryExpression querySlotsProductsQuoteAdd = new QueryExpression();
+                querySlotsProductsQuoteAdd.EntityName = SlotsEntity.EntityLogicalName;
+                querySlotsProductsQuoteAdd.ColumnSet = new ColumnSet(false);
+
+                FilterExpression filterSlotsProductsQuoteAdd = new FilterExpression();
+                filterSlotsProductsQuoteAdd.FilterOperator = LogicalOperator.And;
+                filterSlotsProductsQuoteAdd.AddCondition(SlotsEntity.Fields.ed_QuoteProductID, ConditionOperator.Equal, target.ed_QuoteProductID.Id);
+                filterSlotsProductsQuoteAdd.AddCondition(SlotsEntity.Fields.Id, ConditionOperator.NotEqual, target.Id);
+
+                querySlotsProductsQuoteAdd.Criteria.AddFilter(filterSlotsProductsQuoteAdd);
+
+                List<SlotsEntity> slotsProductsQuoteAdd = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlotsProductsQuoteAdd);
+
+                if (slotsProductsQuoteAdd != null && slotsProductsQuoteAdd.Count > 0)
                 {
-                    totalSlots = quoteProductToAdd.ed_totalslots.Value + 1;
+                    localContext.Trace("slotsProductsQuoteAdd not null and greater than 0");
+                    totalSlots = slotsProductsQuoteAdd.Count + 1;
                 }
                 else
                 {
@@ -485,25 +553,61 @@ namespace Skanetrafiken.Crm.Entities
 
             if(removeCurrentRecordQuotePreImage)
             {
+                localContext.Trace("removeCurrentRecordQuotePreImage");
+
                 totalSlots = 0;
-                QuoteProductEntity quoteProductToRemove = XrmRetrieveHelper.Retrieve<QuoteProductEntity>(localContext, preImage.ed_QuoteProductID, new ColumnSet(QuoteProductEntity.Fields.ed_totalslots));
-                if (quoteProductToRemove != null && quoteProductToRemove.ed_totalslots != null && quoteProductToRemove.ed_totalslots.Value > 0)
+
+                QueryExpression querySlotsProductsQuoteRemove = new QueryExpression();
+                querySlotsProductsQuoteRemove.EntityName = SlotsEntity.EntityLogicalName;
+                querySlotsProductsQuoteRemove.ColumnSet = new ColumnSet(false);
+
+                FilterExpression filterSlotsProductsQuoteRemove = new FilterExpression();
+                filterSlotsProductsQuoteRemove.FilterOperator = LogicalOperator.And;
+                filterSlotsProductsQuoteRemove.AddCondition(SlotsEntity.Fields.ed_QuoteProductID, ConditionOperator.Equal, preImage.ed_QuoteProductID.Id);
+                filterSlotsProductsQuoteRemove.AddCondition(SlotsEntity.Fields.Id, ConditionOperator.NotEqual, target.Id);
+
+                querySlotsProductsQuoteRemove.Criteria.AddFilter(filterSlotsProductsQuoteRemove);
+
+                List<SlotsEntity> slotsProductsQuoteRemove = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlotsProductsQuoteRemove);
+
+                if (slotsProductsQuoteRemove != null && slotsProductsQuoteRemove.Count > 0)
                 {
-                    totalSlots = quoteProductToRemove.ed_totalslots.Value;
+                    localContext.Trace("slotsProductsQuoteRemove not null and greater than 0");
+
+                    totalSlots = slotsProductsQuoteRemove.Count;
                 }
+
                 QuoteProductEntity quoteProductToRemoveUpdate = new QuoteProductEntity();
-                quoteProductToRemoveUpdate.Id = target.ed_QuoteProductID.Id;
+                quoteProductToRemoveUpdate.Id = preImage.ed_QuoteProductID.Id;
                 quoteProductToRemoveUpdate.ed_totalslots = totalSlots;
                 XrmHelper.Update(localContext, quoteProductToRemoveUpdate);
             }
 
             if (addCurrentRecordOrder)
             {
+                localContext.Trace("addCurrentRecordOrder");
+
+
                 totalSlots = 0;
-                OrderProductEntity orderProductToAdd = XrmRetrieveHelper.Retrieve<OrderProductEntity>(localContext, target.ed_OrderProductID, new ColumnSet(OrderProductEntity.Fields.ed_totalslots));
-                if (orderProductToAdd != null && orderProductToAdd.ed_totalslots != null && orderProductToAdd.ed_totalslots.Value > 0)
+
+                QueryExpression querySlotsProductsOrderAdd = new QueryExpression();
+                querySlotsProductsOrderAdd.EntityName = SlotsEntity.EntityLogicalName;
+                querySlotsProductsOrderAdd.ColumnSet = new ColumnSet(false);
+
+                FilterExpression filterSlotsProductsOrderAdd = new FilterExpression();
+                filterSlotsProductsOrderAdd.FilterOperator = LogicalOperator.And;
+                filterSlotsProductsOrderAdd.AddCondition(SlotsEntity.Fields.ed_OrderProductID, ConditionOperator.Equal, target.ed_OrderProductID.Id);
+                filterSlotsProductsOrderAdd.AddCondition(SlotsEntity.Fields.Id, ConditionOperator.NotEqual, target.Id);
+
+                querySlotsProductsOrderAdd.Criteria.AddFilter(filterSlotsProductsOrderAdd);
+
+                List<SlotsEntity> slotsProductsOrderAdd = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlotsProductsOrderAdd);
+                
+                if (slotsProductsOrderAdd != null && slotsProductsOrderAdd.Count > 0)
                 {
-                    totalSlots = orderProductToAdd.ed_totalslots.Value + 1;
+                    localContext.Trace("slotsProductsOrderAdd not null and greater than 0");
+
+                    totalSlots = slotsProductsOrderAdd.Count + 1;
                 }
                 else
                 {
@@ -516,16 +620,33 @@ namespace Skanetrafiken.Crm.Entities
                 XrmHelper.Update(localContext, orderProductToAddUpdate);
             }
 
-            if (removeCurrentRecordQuotePreImage)
+            if (removeCurrentRecordOrderPreImage)
             {
+                localContext.Trace("removeCurrentRecordOrderPreImage");
+
                 totalSlots = 0;
-                OrderProductEntity orderProductToRemove = XrmRetrieveHelper.Retrieve<OrderProductEntity>(localContext, preImage.ed_OrderProductID, new ColumnSet(OrderProductEntity.Fields.ed_totalslots));
-                if (orderProductToRemove != null && orderProductToRemove.ed_totalslots != null && orderProductToRemove.ed_totalslots.Value > 0)
+
+                QueryExpression querySlotsProductsOrderRemove = new QueryExpression();
+                querySlotsProductsOrderRemove.EntityName = SlotsEntity.EntityLogicalName;
+                querySlotsProductsOrderRemove.ColumnSet = new ColumnSet(false);
+
+                FilterExpression filterSlotsProductsOrderRemove = new FilterExpression();
+                filterSlotsProductsOrderRemove.FilterOperator = LogicalOperator.And;
+                filterSlotsProductsOrderRemove.AddCondition(SlotsEntity.Fields.ed_OrderProductID, ConditionOperator.Equal, preImage.ed_OrderProductID.Id);
+                filterSlotsProductsOrderRemove.AddCondition(SlotsEntity.Fields.Id, ConditionOperator.NotEqual, target.Id);
+
+                querySlotsProductsOrderRemove.Criteria.AddFilter(filterSlotsProductsOrderRemove);
+
+                List<SlotsEntity> slotsProductsOrderRemove = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlotsProductsOrderRemove);
+                
+
+                if (slotsProductsOrderRemove != null && slotsProductsOrderRemove.Count > 0)
                 {
-                    totalSlots = orderProductToRemove.ed_totalslots.Value;
+                    localContext.Trace("slotsProductsOrderRemove not null and greater than 0");
+                    totalSlots = slotsProductsOrderRemove.Count;
                 }
                 OrderProductEntity orderProductToRemoveUpdate = new OrderProductEntity();
-                orderProductToRemoveUpdate.Id = target.ed_QuoteProductID.Id;
+                orderProductToRemoveUpdate.Id = preImage.ed_OrderProductID.Id;
                 orderProductToRemoveUpdate.ed_totalslots = totalSlots;
                 XrmHelper.Update(localContext, orderProductToRemoveUpdate);
             }

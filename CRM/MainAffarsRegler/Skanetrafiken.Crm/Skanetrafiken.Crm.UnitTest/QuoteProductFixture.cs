@@ -60,7 +60,7 @@ namespace Endeavor.Crm.UnitTest
                     ExtendedAmount = new Money(5860),
                     ProductTypeCode = new OptionSetValue(1),
                     PricingErrorCode = new OptionSetValue(0),
-                    ProductId = new EntityReference(ProductEntity.EntityLogicalName, new Guid("1bffd424-a196-ea11-80f8-005056b61fff"))
+                    ProductId = new EntityReference(ProductEntity.EntityLogicalName, new Guid("a4fa5f5f-86a1-ea11-80f9-005056b61fff"))
                 };
 
                 Guid quoteProductId = XrmHelper.Create(localContext, quoteProduct);
@@ -72,6 +72,32 @@ namespace Endeavor.Crm.UnitTest
             }
         }
 
+        [Test, Category("Debug")]
+        public void PostQuoteProductUpdate()
+        {
+            using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+            {
+                // This statement is required to enable early-bound type support.
+                _serviceProxy.EnableProxyTypes();
+
+                Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, PluginExecutionContext, new TracingService());
+
+                
+
+                QuoteProductEntity preImage = XrmRetrieveHelper.Retrieve<QuoteProductEntity>(localContext, QuoteProductEntity.EntityLogicalName,Guid.Parse("d7f330f0-109d-eb11-947e-005056b6fa28"),new ColumnSet(true));
+
+                QuoteProductEntity target = new QuoteProductEntity()
+                {
+                    QuoteDetailId = new Guid("d7f330f0-109d-eb11-947e-005056b6fa28"),
+                    Id = new Guid("d7f330f0-109d-eb11-947e-005056b6fa28"),
+                    ed_FromDate = preImage.ed_FromDate.Value.AddDays(1)
+                };
+
+                //XrmHelper.Update(localContext,);
+
+                QuoteProductEntity.HandleQuoteProductEntityUpdate(localContext, target,preImage);
+            }
+        }
         [Test, Category("Debug")]
         public void CreateAndSendValueCodeByEmailOnRefundCreate()
         {

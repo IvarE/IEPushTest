@@ -60,7 +60,33 @@ namespace Endeavor.Crm.UnitTest
                 SlotsEntity.HandleSlotsEntityCreate(localContext, slot);
             }
         }
-        
+
+        [Test, Category("Debug")]
+        public void UpdateSlot()
+        {
+            using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+            {
+                // This statement is required to enable early-bound type support.
+                _serviceProxy.EnableProxyTypes();
+
+                Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, PluginExecutionContext, new TracingService());
+
+                SlotsEntity slot = XrmRetrieveHelper.Retrieve<SlotsEntity>(localContext, new EntityReference(SlotsEntity.EntityLogicalName, Guid.Parse("1e3fcb1d-5f9c-eb11-947e-005056b6fa28")), new ColumnSet(true));
+
+                SlotsEntity updateSlot = new SlotsEntity()
+                {
+                    //CaseOriginCode = new OptionSetValue(3),
+                    Id = slot.Id,
+                    ed_SlotsId = slot.Id,
+                    ed_Opportunity = new EntityReference(OpportunityEntity.EntityLogicalName, Guid.Parse("0a1c7dd8-13e9-e911-80f0-005056b61fff")),
+                    ed_Quote = new EntityReference(QuoteEntity.EntityLogicalName, Guid.Parse("06d8b0ef-af6a-eb11-9479-005056b6fa28")),
+                    ed_QuoteProductID = new EntityReference(QuoteProductEntity.EntityLogicalName, Guid.Parse("4d4bdc3c-709c-eb11-947e-005056b6fa28")),
+                    ed_BookingStatus = new OptionSetValue(899310001)
+                };
+                
+                SlotsEntity.HandleSlotsEntityUpdate(localContext, updateSlot, slot);
+            }
+        }
         internal ServerConnection ServerConnection
         {
             get
