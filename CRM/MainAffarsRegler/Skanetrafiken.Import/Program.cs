@@ -3441,7 +3441,7 @@ namespace Skanetrafiken.Import
 #if DEBUG
             _log.Debug("Main Started");
 
-            string passwordArgument = "uSEme2!nstal1";
+            string passwordArgument = null;
 
             if (!string.IsNullOrEmpty(passwordArgument))
             {
@@ -3456,80 +3456,24 @@ namespace Skanetrafiken.Import
 
             if (localContext == null)
             {
-                _log.Error($"Connection to CRM was not possible.\n LocalContext is null.\n\n");
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Connection to CRM was not possible.\n LocalContext is null.\n\n");
                 return;
             }
-
-            string domainUser = string.Empty;
-            string passWord = string.Empty;
-            string urlOrganization = string.Empty;
-
-            Console.WriteLine("Perform the Import in? [tst]/[uat]/[prod]");
-            string input = Console.ReadLine();
 
             string relativeExcelPath = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.RelativePath);
 
-            if (input == "tst")
-            {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"TEST Enviroment Selected.");
-                Console.WriteLine("TEST Enviroment Selected.");
-                domainUser = ConfigurationManager.AppSettings["domainUserTST"];
-                urlOrganization = ConfigurationManager.AppSettings["urlOrganizationTST"];
+            CrmContext crmContext = new CrmContext(localContext.OrganizationService);
+            SaveChangesOptions optionsChanges = SaveChangesOptions.ContinueOnError;
 
-                relativeExcelPath = @"C:\Users\Pedro\Downloads";
-            }
-            else if(input == "uat")
+            if (localContext == null || crmContext == null)
             {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"UAT Enviroment Selected.");
-                Console.WriteLine("UAT Enviroment Selected.");
-                domainUser = ConfigurationManager.AppSettings["domainUserUAT"];
-                urlOrganization = ConfigurationManager.AppSettings["urlOrganizationUAT"];
-
-                relativeExcelPath = @"C:\Users\Pedro\Downloads";
-            }
-            else if (input == "prod")
-            {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"PROD Enviroment Selected.");
-                Console.WriteLine("PROD Enviroment Selected.");
-                domainUser = ConfigurationManager.AppSettings["domainUserPROD"];
-                urlOrganization = ConfigurationManager.AppSettings["urlOrganizationPROD"];
-            }
-            else
-            {
-                _log.InfoFormat(CultureInfo.InvariantCulture, $"No Enviroment Selected. No Changes were made.");
-                Console.WriteLine("ERROR: No Enviroment Selected.");
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The CRM localContext or the CRM EarlyBound Context is null.");
+                Console.WriteLine("The CRM localContext or the CRM EarlyBound Context is null.");
                 Console.ReadLine();
                 return;
             }
 
-            Console.WriteLine("Please introduce the password: ");
-            passWord = Console.ReadLine();
-
-            IOrganizationService _service = ConnectToMSCRM(domainUser, passWord, urlOrganization);
-            if (_service == null)
-            {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The CRM Service is null.");
-                Console.WriteLine("ERROR: The CRM Service is null.");
-                Console.ReadLine();
-                return;
-            }
-
-            _log.InfoFormat(CultureInfo.InvariantCulture, $"The CRM Service is not null.");
-            Console.WriteLine("The CRM Service is not null.");
-
-            //Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _service, null, new TracingService());
-            //CrmContext crmContext = new CrmContext(_service);
-            //SaveChangesOptions optionsChanges = SaveChangesOptions.ContinueOnError;
-
-            //if(localContext == null || crmContext == null)
-            //{
-            //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The CRM localContext or the CRM EarlyBound Context is null.");
-            //    Console.WriteLine("The CRM localContext or the CRM EarlyBound Context is null.");
-            //    Console.ReadLine();
-            //    return;
-            //}
-
-            //ImportContactsMKLId(localContext, crmContext, optionsChanges, relativeExcelPath);
+            ImportContactsMKLId(localContext, crmContext, optionsChanges, relativeExcelPath);
 
             //bool showMenu = true;
             //while (showMenu)
