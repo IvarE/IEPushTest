@@ -12,6 +12,7 @@ using Generated = Skanetrafiken.Crm.Schema.Generated;
 using Endeavor.Crm;
 using System.Text.RegularExpressions;
 using Skanetrafiken.Crm.ValueCodes;
+using System.Linq;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -112,7 +113,9 @@ namespace Skanetrafiken.Crm.Entities
             incident.CaseTypeCode = Generated.incident_casetypecode.ViewpointRequests;
             incident.CaseOriginCode = Generated.incident_caseorigincode.WebSkanetrafikense;
             incident.cgi_ActionDate = DateTime.Now;
-            incident.cgi_UnregisterdTravelCard = travelCardNumber;
+
+            string travelCardNumbers = string.Concat(travelCardNumber.Where(char.IsDigit));
+            incident.cgi_UnregisterdTravelCard = travelCardNumbers;
             if (travelCard != null)
                 incident.cgi_TravelCardid = travelCard.ToEntityReference();
 
