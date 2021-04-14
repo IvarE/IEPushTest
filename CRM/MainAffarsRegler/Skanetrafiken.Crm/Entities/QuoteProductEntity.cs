@@ -211,7 +211,7 @@ namespace Skanetrafiken.Crm.Entities
                         if (compareFrom < 0)
                         {
                             startRemoveIntervalFrom = preImage.ed_FromDate;
-                            endRemoveIntervalFrom = endRemoveIntervalFrom.Value.AddDays(-1);
+                            endRemoveIntervalFrom = quoteProduct.ed_FromDate.Value.AddDays(-1);
                         }
                         else
                         {
