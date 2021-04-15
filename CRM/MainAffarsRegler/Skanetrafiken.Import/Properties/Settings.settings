@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="RelativePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">D:\Endeavor\Upsales Data\</Value>
+      <Value Profile="(Default)">C:\SeKunddata\</Value>
     </Setting>
     <Setting Name="Bucket1Accounts" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Accounts\Spann 1 - unika 2020-05-27.csv</Value>
@@ -42,10 +42,10 @@
       <Value Profile="(Default)">Infotainment</Value>
     </Setting>
     <Setting Name="MKLContacts" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Exempelfil.csv</Value>
+      <Value Profile="(Default)">Import analysdata.csv</Value>
     </Setting>
     <Setting Name="CredentialsFilePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">%APPDATA%\Endeavor\Skanetrafiken.Import.Credential.xml</Value>
+      <Value Profile="(Default)">C:\SeKunddata\Skanetrafiken.Import.Credential.xml</Value>
     </Setting>
   </Settings>
 </SettingsFile>

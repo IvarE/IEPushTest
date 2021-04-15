@@ -3361,7 +3361,6 @@ namespace Skanetrafiken.Import
                             }
                         }
 
-                        uContact.StateCode = ContactState.Active;
                         crmContext.Attach(uContact);
                         crmContext.UpdateObject(uContact);
                     }
