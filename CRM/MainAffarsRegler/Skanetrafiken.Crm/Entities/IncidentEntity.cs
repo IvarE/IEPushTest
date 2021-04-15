@@ -113,9 +113,7 @@ namespace Skanetrafiken.Crm.Entities
             incident.CaseTypeCode = Generated.incident_casetypecode.ViewpointRequests;
             incident.CaseOriginCode = Generated.incident_caseorigincode.WebSkanetrafikense;
             incident.cgi_ActionDate = DateTime.Now;
-
-            string travelCardNumbers = string.Concat(travelCardNumber.Where(char.IsDigit));
-            incident.cgi_UnregisterdTravelCard = travelCardNumbers;
+            incident.cgi_UnregisterdTravelCard = travelCardNumber;
             if (travelCard != null)
                 incident.cgi_TravelCardid = travelCard.ToEntityReference();
 
