@@ -74,6 +74,8 @@ namespace Skanetrafiken.Crm.Entities
             queryAvailableSlots.AddOrder(SlotsEntity.Fields.ed_BookingDay, OrderType.Ascending);
 
             List<SlotsEntity> slotsEntities = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, queryAvailableSlots);
+            slotsEntities.GroupBy(x => x.ed_BookingDay).Select(g => g.OrderBy(x => x.ed_BookingDay).First());
+
             localContext.Trace("Returning available slotsEntities");
 
             return slotsEntities;
