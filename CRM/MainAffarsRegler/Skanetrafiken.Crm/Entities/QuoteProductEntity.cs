@@ -288,11 +288,11 @@ namespace Skanetrafiken.Crm.Entities
                     if(compareTo < 0)
                     {
                         availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, preToDate.Value.AddDays(-1), postToDate.Value);
-                        SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, preToDate.Value.AddDays(-1), postToDate.Value, availableSlots, opportunityId, quoteProduct);
+                        SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, preToDate.Value.AddDays(1), postToDate.Value, availableSlots, opportunityId, quoteProduct);
                     }
                     else if(compareTo > 0)
                     {
-                        SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, postToDate.Value.AddDays(-1), preToDate.Value, 1);
+                        SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, postToDate.Value.AddDays(1), preToDate.Value, 1);
                     }
                 }
                 /*
