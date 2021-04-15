@@ -43,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.Crm.Workflow.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.Reports", "..\Skanetrafiken.Reports\Skanetrafiken.Reports.csproj", "{AF3BC81A-5A6A-4AEA-96B3-9547E4233C7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkaneCloseCasesService", "..\SkaneCloseCasesService\SkaneCloseCasesService.csproj", "{95F53F66-084A-4DCD-995F-30ACA00A533F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkaneCleanRecordsService", "..\SkaneCleanRecordsService\SkaneCleanRecordsService.csproj", "{95F53F66-084A-4DCD-995F-30ACA00A533F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
