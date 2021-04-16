@@ -54361,6 +54361,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 	}
 	
+	public enum ed_slots_ed_bookingstatus
+	{
+		
+		Open = 899310000,
+		
+		Extended = 899310003,
+		
+		Preliminary = 899310001,
+		
+		Booked = 899310002,
+	}
+	
 	public enum ed_SlotsState
 	{
 		
@@ -54444,15 +54456,30 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// 
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_bookingstatus")]
-		public Microsoft.Xrm.Sdk.OptionSetValue ed_BookingStatus
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.ed_slots_ed_bookingstatus> ed_BookingStatus
 		{
 			get
 			{
-				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("ed_bookingstatus");
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("ed_bookingstatus");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.ed_slots_ed_bookingstatus)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.ed_slots_ed_bookingstatus), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
 			}
 			set
 			{
-				this.SetAttributeValue("ed_bookingstatus", value);
+				if ((value == null))
+				{
+					this.SetAttributeValue("ed_bookingstatus", null);
+				}
+				else
+				{
+					this.SetAttributeValue("ed_bookingstatus", new Microsoft.Xrm.Sdk.OptionSetValue((int)value));
+				}
 			}
 		}
 		

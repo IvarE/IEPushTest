@@ -234,6 +234,9 @@
     <Compile Include="..\Skanetrafiken.Crm\Entities\ProductPriceLevelEntity.cs">
       <Link>Entities\ProductPriceLevelEntity.cs</Link>
     </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\QuoteEntity.cs">
+      <Link>Entities\QuoteEntity.cs</Link>
+    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\QuoteProductEntity.cs">
       <Link>Entities\QuoteProductEntity.cs</Link>
     </Compile>

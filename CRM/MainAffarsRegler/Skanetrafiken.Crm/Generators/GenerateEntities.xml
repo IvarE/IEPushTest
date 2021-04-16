@@ -170,5 +170,6 @@
     <optionset>ed_valuecodetypeglobal</optionset>
     <optionset>ed_valuecodedeliverytypeglobal</optionset>
 
+    <optionset>ed_slots_ed_bookingstatus</optionset>
   </optionsets>
 </filter>
