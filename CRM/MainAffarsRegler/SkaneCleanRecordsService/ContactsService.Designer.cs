@@ -1,6 +1,6 @@
 ﻿namespace Endeavor.Crm.CleanRecordsService
 {
-    partial class CasesService
+    partial class ContactsService
     {
         /// <summary>
         /// Required designer variable.

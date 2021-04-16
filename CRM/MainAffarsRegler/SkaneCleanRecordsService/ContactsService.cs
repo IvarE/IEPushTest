@@ -17,39 +17,39 @@ using System.Threading.Tasks;
 
 namespace Endeavor.Crm.CleanRecordsService
 {
-    public partial class CasesService : ServiceBase
+    public partial class ContactsService : ServiceBase
     {
         private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IScheduler _quartzScheduler;
 
         // INFO: (hest) The entropy should be unique for each application. DON'T COPY THIS VALUE INTO A NEW PROJECT!!!!
-        internal static byte[] Entropy = System.Text.Encoding.Unicode.GetBytes("CasesService");
+        internal static byte[] Entropy = System.Text.Encoding.Unicode.GetBytes("ContactsService");
 
         internal static string CredentialFilePath
         {
             get
             {
-                return Environment.ExpandEnvironmentVariables(Properties.Settings.Default.CredentialsFilePathCases);
+                return Environment.ExpandEnvironmentVariables(Properties.Settings.Default.CredentialsFilePathContacts);
             }
         }
 
         public static void InitializeScheduler(IScheduler scheduler)
         {
             JobDataMap jobDataMap = new JobDataMap();
-            jobDataMap[CloseCases.DataMapModifiedAfter] = DateTime.Now;
+            jobDataMap[InactivateContacts.DataMapModifiedAfter] = DateTime.Now;
 
             _log.Info($"Scheduling UploadJob");
 
-            IJobDetail scheduleUploadJob = JobBuilder.Create<CloseCases>()
-            .WithIdentity(CloseCases.JobName, CloseCases.GroupName)
+            IJobDetail scheduleUploadJob = JobBuilder.Create<InactivateContacts>()
+            .WithIdentity(InactivateContacts.JobName, InactivateContacts.GroupName)
             .UsingJobData(jobDataMap)
-            .WithDescription(CloseCases.JobDescription)
+            .WithDescription(InactivateContacts.JobDescription)
             .Build();
 
             ITrigger scheduleUploadTrigger = TriggerBuilder.Create()
-                  .WithIdentity(CloseCases.TriggerName, CloseCases.GroupName)
+                  .WithIdentity(InactivateContacts.TriggerName, InactivateContacts.GroupName)
                   .WithCronSchedule(Properties.Settings.Default.CloseCaseScheduleCronExpression)
-                  .WithDescription(CloseCases.TriggerDescription)
+                  .WithDescription(InactivateContacts.TriggerDescription)
                   .ForJob(scheduleUploadJob)
                   .Build();
 
@@ -134,12 +134,12 @@ namespace Endeavor.Crm.CleanRecordsService
             }
         }
 
-        public CasesService()
+        public ContactsService()
         {
             InitializeComponent();
         }
 
-        public CasesService(IContainer container)
+        public ContactsService(IContainer container)
         {
             container.Add(this);
 

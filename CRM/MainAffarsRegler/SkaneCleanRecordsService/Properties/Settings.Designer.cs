@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Endeavor.Crm.CloseCasesService.Properties {
+namespace Endeavor.Crm.CleanRecordsService.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -26,9 +26,9 @@ namespace Endeavor.Crm.CloseCasesService.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\Endeavor\\CloseCasesService.Credential.xml")]
-        public string CredentialsFilePath {
+        public string CredentialsFilePathCases {
             get {
-                return ((string)(this["CredentialsFilePath"]));
+                return ((string)(this["CredentialsFilePathCases"]));
             }
         }
         
@@ -65,6 +65,18 @@ namespace Endeavor.Crm.CloseCasesService.Properties {
         public string SpecificDate {
             get {
                 return ((string)(this["SpecificDate"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\Endeavor\\InactivateContactsService.Credential.xml")]
+        public string CredentialsFilePathContacts {
+            get {
+                return ((string)(this["CredentialsFilePathContacts"]));
+            }
+            set {
+                this["CredentialsFilePathContacts"] = value;
             }
         }
     }
