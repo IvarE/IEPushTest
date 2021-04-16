@@ -287,7 +287,7 @@ namespace Skanetrafiken.Crm.Entities
                     var compareTo = DateTime.Compare(preToDate.Value, postToDate.Value);
                     if(compareTo < 0)
                     {
-                        availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, preToDate.Value.AddDays(-1), postToDate.Value);
+                        availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, preToDate.Value.AddDays(1), postToDate.Value);
                         SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, preToDate.Value.AddDays(1), postToDate.Value, availableSlots, opportunityId, quoteProduct);
                     }
                     else if(compareTo > 0)

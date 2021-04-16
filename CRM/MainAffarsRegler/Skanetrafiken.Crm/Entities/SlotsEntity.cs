@@ -270,6 +270,7 @@ namespace Skanetrafiken.Crm.Entities
                             if (quoteProduct.Id != null && quoteProduct.Id != Guid.Empty)
                             {
                                 slot.ed_QuoteProductID = quoteProduct.ToEntityReference();
+                                slot.ed_BookingStatus = new OptionSetValue(899310001);
                             }
                         }
                         if (orderProduct != null)
@@ -281,13 +282,14 @@ namespace Skanetrafiken.Crm.Entities
                             if(orderProduct.Id != null && orderProduct.Id != Guid.Empty)
                             {
                                 slot.ed_OrderProductID = orderProduct.ToEntityReference();
+                                slot.ed_BookingStatus = new OptionSetValue(899310001);
                             }
                         }
                         if (OpportunityGuid != null)
                         {
                             slot.ed_Opportunity = new EntityReference(OpportunityEntity.EntityLogicalName, OpportunityGuid.Value);
                         }
-                        slot.ed_BookingStatus = new OptionSetValue(899310001);
+                        
                         XrmHelper.Update(localContext, slot);
 
                         var objectToRemove = filteredSlots[0];
@@ -312,6 +314,7 @@ namespace Skanetrafiken.Crm.Entities
                             if (quoteProduct.Id != null && quoteProduct.Id != Guid.Empty)
                             {
                                 slot.ed_QuoteProductID = quoteProduct.ToEntityReference();
+                                slot.ed_BookingStatus = new OptionSetValue(899310001);
                             }
                         }
                         if (orderProduct != null)
@@ -323,6 +326,7 @@ namespace Skanetrafiken.Crm.Entities
                             if (orderProduct.Id != null && orderProduct.Id != Guid.Empty)
                             {
                                 slot.ed_OrderProductID = orderProduct.ToEntityReference();
+                                slot.ed_BookingStatus = new OptionSetValue(899310001);
                             }
                         }
                         if (OpportunityGuid != null)
@@ -377,6 +381,9 @@ namespace Skanetrafiken.Crm.Entities
                         slotToRelease.ed_OrderProductID = null;
                         slotToRelease.ed_Order = null;
                         slotToRelease.ed_Opportunity = null;
+                        //Validate generatedFromProduct bool or defaultBookingStatus
+
+                        slotToRelease.ed_BookingStatus = null;
                         XrmHelper.Update(localContext, slotToRelease);
                         localContext.Trace("Released Slot Booked for: " + slot.ed_BookingDay.Value.ToString("g", CultureInfo.GetCultureInfo("sv-SE")));
                     }
@@ -398,6 +405,10 @@ namespace Skanetrafiken.Crm.Entities
                             slotToRelease.ed_OrderProductID = null;
                             slotToRelease.ed_Order = null;
                             slotToRelease.ed_Opportunity = null;
+
+                            //Validate generatedFromProduct bool or defaultBookingStatus
+
+                            slotToRelease.ed_BookingStatus = null;
                             XrmHelper.Update(localContext, slotToRelease);
                             localContext.Trace("Released Slot Booked for: " + slot.ed_BookingDay.Value.ToString("g", CultureInfo.GetCultureInfo("sv-SE")));
                             releasedQuantity++;
