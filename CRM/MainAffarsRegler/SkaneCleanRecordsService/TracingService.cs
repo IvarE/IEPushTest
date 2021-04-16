@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.Xrm.Sdk;
 
-namespace Endeavor.Crm.CloseCasesService
+namespace Endeavor.Crm.CleanRecordsService
 {
     internal class TracingService : ITracingService
     {

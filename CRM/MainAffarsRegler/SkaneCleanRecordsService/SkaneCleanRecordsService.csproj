@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{95F53F66-084A-4DCD-995F-30ACA00A533F}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Endeavor.Crm.CloseCasesService</RootNamespace>
-    <AssemblyName>SkaneCloseCasesService</AssemblyName>
+    <RootNamespace>Endeavor.Crm.CleanRecordsService</RootNamespace>
+    <AssemblyName>SkaneCleanRecordsService</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -115,7 +115,15 @@
       <DependentUpon>CasesService.cs</DependentUpon>
     </Compile>
     <Compile Include="CloseCases.cs" />
+    <Compile Include="ContactsService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ContactsService.Designer.cs">
+      <DependentUpon>ContactsService.cs</DependentUpon>
+    </Compile>
     <Compile Include="CrmConnection.cs" />
+    <Compile Include="Helper.cs" />
+    <Compile Include="InactivateContacts.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>

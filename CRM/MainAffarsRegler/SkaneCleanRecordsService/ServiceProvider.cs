@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xrm.Sdk;
 
-namespace Endeavor.Crm.CloseCasesService
+namespace Endeavor.Crm.CleanRecordsService
 {
     class ServiceProvider : IServiceProvider
     {
