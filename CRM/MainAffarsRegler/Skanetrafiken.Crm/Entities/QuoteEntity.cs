@@ -42,19 +42,13 @@ namespace Skanetrafiken.Crm.Entities
         {
             decimal? discountPercentage = null;
             decimal? discountAmount = null;
-            if(quote.IsAttributeModified(preImage, QuoteEntity.Fields.DiscountPercentage))
+            if(quote.IsAttributeModified(preImage, QuoteEntity.Fields.DiscountPercentage) && quote.DiscountPercentage != null && quote.DiscountPercentage > 0)
             {
-                if(quote.DiscountPercentage != null && quote.DiscountPercentage > 0)
-                {
-                    discountPercentage = quote.DiscountPercentage.Value;
-                }
+                discountPercentage = quote.DiscountPercentage.Value;
             }
-            else
+            else if(quote.IsAttributeModified(preImage, QuoteEntity.Fields.DiscountAmount) && quote.DiscountAmount != null && quote.DiscountAmount.Value > 0)
             {
-                if(quote.DiscountAmount != null && quote.DiscountAmount.Value > 0)
-                {
-                    discountAmount = quote.DiscountAmount.Value;
-                }
+                discountAmount = quote.DiscountAmount.Value;
             }
 
             QueryExpression querySlots = new QueryExpression();
