@@ -216,6 +216,9 @@
     <Compile Include="..\Skanetrafiken.Crm\Entities\OpportunityEntity.cs">
       <Link>Entities\OpportunityEntity.cs</Link>
     </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\OrderEntity.cs">
+      <Link>Entities\OrderEntity.cs</Link>
+    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\OrderProductEntity.cs">
       <Link>Entities\OrderProductEntity.cs</Link>
     </Compile>
