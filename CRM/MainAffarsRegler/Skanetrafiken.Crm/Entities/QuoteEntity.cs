@@ -52,7 +52,7 @@ namespace Skanetrafiken.Crm.Entities
 
                     FilterExpression filterSlots = new FilterExpression();
                     filterSlots.FilterOperator = LogicalOperator.And;
-                    filterSlots.AddCondition(QuoteProductEntity.Fields.QuoteDetailId, ConditionOperator.Equal, quoteP.Id);
+                    filterSlots.AddCondition(SlotsEntity.Fields.ed_QuoteProductID, ConditionOperator.Equal, quoteP.Id);
 
                     querySlots.Criteria.AddFilter(filterSlots);
 
