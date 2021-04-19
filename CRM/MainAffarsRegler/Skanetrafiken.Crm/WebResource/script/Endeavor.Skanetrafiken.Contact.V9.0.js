@@ -748,10 +748,45 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         formContext.data.refresh();
                     },
                     function (error) {
-                        if (blocked)
-                            Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte avblockera kund. Var god försök igen senare.");
-                        else
-                            Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte spärra kund. Var god försök igen senare.");
+
+                        //Handle error message
+                        var errorMessage = "";
+                        var devider = "Message: ";
+                        var parsedMessage = "";
+                        var printMessageAvblockera = "";
+                        var printMessageSparra = "";
+
+                        if (error.innerError)
+                        {
+                            if (error.innerError.message)
+                            {
+                                errorMessage = error.innerError.message;
+                            }
+                        }
+
+                        if (errorMessage != "")
+                        {
+                            parsedMessage = errorMessage.split(devider).pop();
+                        }
+
+                        if (blocked) {
+                            if (parsedMessage != "") {
+                                printMessageAvblockera = "Kunde inte avblockera kund. Var god försök igen senare. (Fel => " + parsedMessage + ").";
+                                Endeavor.formscriptfunctions.AlertCustomDialog(printMessageAvblockera);
+                            }
+                            else {
+                                Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte avblockera kund. Var god försök igen senare.");
+                            }
+                        }
+                        else {
+                            if (parsedMessage != "") {
+                                printMessageSparra = "Kunde inte spärra kund. Var god försök igen senare. (Fel => " + parsedMessage + ").";
+                                Endeavor.formscriptfunctions.AlertCustomDialog(printMessageSparra);
+                            }
+                            else {
+                                Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte spärra kund. Var god försök igen senare.");
+                            }
+                        }
 
                         formContext.data.refresh();
                     });
