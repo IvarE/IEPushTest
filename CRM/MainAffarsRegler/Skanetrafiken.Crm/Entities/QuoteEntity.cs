@@ -19,9 +19,13 @@ namespace Skanetrafiken.Crm.Entities
 {
     public class QuoteEntity : Generated.Quote
     {
-        public static void HandleQuoteEntityLost(Plugin.LocalPluginContext localContext, QuoteEntity quote)
+        public static void HandleQuoteEntityUpdate(Plugin.LocalPluginContext localContext, QuoteEntity quote)
         {
-            QuoteEntity.UpdateSlotsInfo(localContext, quote);
+            if(quote != null && quote.StateCode != null && quote.StateCode == Generated.QuoteState.Closed)
+            {
+                QuoteEntity.UpdateSlotsInfo(localContext, quote);
+            }
+            
         }
 
         public static void UpdateSlotsInfo(Plugin.LocalPluginContext localContext, QuoteEntity quote)

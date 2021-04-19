@@ -50,6 +50,7 @@ namespace Skanetrafiken.Crm.Entities
                 localContext.Trace("ProductId not modified");
                 target.ProductId = preImage.ProductId;
             }
+            
             //validate necessary things to generateSlots
             if (target.UoMId != null && target.ProductId != null)
             {
