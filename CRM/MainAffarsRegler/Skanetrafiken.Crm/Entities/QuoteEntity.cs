@@ -21,15 +21,19 @@ namespace Skanetrafiken.Crm.Entities
     {
         public static void HandleQuoteEntityUpdate(Plugin.LocalPluginContext localContext, QuoteEntity quote, QuoteEntity preImage)
         {
-            if(quote != null && quote.StateCode != null && quote.StateCode == Generated.QuoteState.Closed)
+            FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
+            if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
             {
-                
-                QuoteEntity.UpdateSlotsInfo(localContext, quote);
-            }
+                if (quote != null && quote.StateCode != null && quote.StateCode == Generated.QuoteState.Closed)
+                {
 
-            if(quote.IsAttributeModified(preImage,QuoteEntity.Fields.DiscountPercentage) || quote.IsAttributeModified(preImage,QuoteEntity.Fields.DiscountAmount))
-            {
-                QuoteEntity.UpdateSlotsCustomPrice(localContext, quote, preImage);
+                    QuoteEntity.UpdateSlotsInfo(localContext, quote);
+                }
+
+                if (quote.IsAttributeModified(preImage, QuoteEntity.Fields.DiscountPercentage) || quote.IsAttributeModified(preImage, QuoteEntity.Fields.DiscountAmount))
+                {
+                    QuoteEntity.UpdateSlotsCustomPrice(localContext, quote, preImage);
+                }
             }
             
         }

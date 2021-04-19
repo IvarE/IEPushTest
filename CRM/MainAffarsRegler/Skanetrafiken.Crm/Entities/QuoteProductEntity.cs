@@ -71,13 +71,22 @@ namespace Skanetrafiken.Crm.Entities
 
         public void HandlePreQuoteProductUpdate(Plugin.LocalPluginContext localContext, QuoteProductEntity preImage)
         {
-            if(this.IsAttributeModified(preImage,QuoteProductEntity.Fields.ed_totalslots) || this.IsAttributeModified(preImage, QuoteProductEntity.Fields.PricePerUnit))
+            FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
+            if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
+            {
+                updatePriceQuoteProduct(localContext, preImage);
+            }
+        }
+
+        public void updatePriceQuoteProduct(Plugin.LocalPluginContext localContext, QuoteProductEntity preImage)
+        {
+            if (this.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_totalslots) || this.IsAttributeModified(preImage, QuoteProductEntity.Fields.PricePerUnit))
             {
                 decimal price = 0;
                 int quantity = 0;
                 int totalSlots = 0;
 
-                if(!this.IsAttributeModified(preImage,QuoteProductEntity.Fields.PricePerUnit))
+                if (!this.IsAttributeModified(preImage, QuoteProductEntity.Fields.PricePerUnit))
                 {
                     price = preImage.PricePerUnit.Value;
                 }
@@ -86,7 +95,7 @@ namespace Skanetrafiken.Crm.Entities
                     price = this.PricePerUnit.Value;
                 }
 
-                if(!this.IsAttributeModified(preImage,QuoteProductEntity.Fields.Quantity))
+                if (!this.IsAttributeModified(preImage, QuoteProductEntity.Fields.Quantity))
                 {
                     quantity = (int)preImage.Quantity.Value;
                 }
@@ -94,7 +103,7 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     quantity = (int)this.Quantity.Value;
                 }
-                if(!this.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_totalslots))
+                if (!this.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_totalslots))
                 {
                     totalSlots = preImage.ed_totalslots.Value;
                 }

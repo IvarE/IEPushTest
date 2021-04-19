@@ -29,16 +29,24 @@ namespace Skanetrafiken.Crm.Entities
 
         public static void HandleSlotsEntityCreate(Plugin.LocalPluginContext localContext, SlotsEntity target)
         {
-            if (target.ed_OrderProductID != null || target.ed_QuoteProductID != null)
+            FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
+            if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
             {
-                SlotsEntity.SlotsEntityUpdateQuantity(localContext, target);
+                if (target.ed_OrderProductID != null || target.ed_QuoteProductID != null)
+                {
+                    SlotsEntity.SlotsEntityUpdateQuantity(localContext, target);
+                }
             }
         }
         public static void HandleSlotsEntityUpdate(Plugin.LocalPluginContext localContext, SlotsEntity target, SlotsEntity preImage)
         {
-            if (target.IsAttributeModified(preImage, SlotsEntity.Fields.ed_OrderProductID) || target.IsAttributeModified(preImage, SlotsEntity.Fields.ed_QuoteProductID))
+            FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
+            if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
             {
-                SlotsEntity.SlotsEntityUpdateQuantity(localContext, target, preImage);
+                if (target.IsAttributeModified(preImage, SlotsEntity.Fields.ed_OrderProductID) || target.IsAttributeModified(preImage, SlotsEntity.Fields.ed_QuoteProductID))
+                {
+                    SlotsEntity.SlotsEntityUpdateQuantity(localContext, target, preImage);
+                }
             }
         }
         public static List<SlotsEntity> AvailableSlots (Plugin.LocalPluginContext localContext,EntityReference productER,DateTime starDate,DateTime endDate)
