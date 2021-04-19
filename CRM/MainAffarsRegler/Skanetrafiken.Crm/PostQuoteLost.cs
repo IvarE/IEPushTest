@@ -17,7 +17,7 @@ namespace Skanetrafiken.Crm
         public PostQuoteLost()
             : base(typeof(PostQuoteLost))
         {
-            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PostOperation, "Lost", QuoteEntity.EntityLogicalName, new Action<LocalPluginContext>(PostExecuteQuoteLost)));
+            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PostOperation, "Lose", QuoteEntity.EntityLogicalName, new Action<LocalPluginContext>(PostExecuteQuoteLost)));
 
             // Note : you can register for more events here if this plugin is not specific to an individual entity and message combination.
             // You may also need to update your RegisterFile.crmregister plug-in registration file to reflect any change.
