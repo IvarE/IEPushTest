@@ -165,6 +165,7 @@ namespace Skanetrafiken.Crm.Entities
                     slot.ed_BookingDay = startDate;
                     slot.ed_StandardPrice = priceProduct;
                     slot.ed_Extended = false;
+                    slot.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.Open;
                     slot.ed_ProductID = new EntityReference(ProductEntity.EntityLogicalName, productId);
 
                     if(quoteProduct != null)
