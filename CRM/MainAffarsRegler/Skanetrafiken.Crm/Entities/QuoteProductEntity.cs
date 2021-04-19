@@ -262,10 +262,7 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     throw new InvalidPluginExecutionException("FromDate cannot be after ToDate");
                 }
-
-
-                //availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, postFromDate.Value, postToDate.Value);
-
+                
                 if (preFromDate == null && preToDate == null)
                 {
                     availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, postFromDate.Value, postToDate.Value);
@@ -305,98 +302,6 @@ namespace Skanetrafiken.Crm.Entities
                         SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, postToDate.Value.AddDays(1), preToDate.Value, 1);
                     }
                 }
-                /*
-                 * 
-                 * OLD METHOD
-                if (fromDateModified)
-                {
-                    localContext.Trace("ed_FromDate modified.");
-
-                    if (preImage.ed_FromDate != null && quoteProduct.ed_FromDate != null)
-                    {
-                        var compareFrom = DateTime.Compare(preImage.ed_FromDate.Value, quoteProduct.ed_FromDate.Value);
-                        if (compareFrom < 0)
-                        {
-                            startRemoveIntervalFrom = preImage.ed_FromDate;
-                            endRemoveIntervalFrom = quoteProduct.ed_FromDate.Value.AddDays(-1);
-                        }
-                        else
-                        {
-                            startCreateIntervalFrom = quoteProduct.ed_FromDate;
-                            endCreateIntervalFrom = quoteProduct.ed_FromDate.Value.AddDays(-1);
-                        }
-                    }
-                    else
-                    {
-                        if (quoteProduct.ed_FromDate == null)
-                        {
-                            removeAllSlots = true;
-                        }
-                    }
-                }
-                else
-                {
-                    startDate = preImage.ed_FromDate;
-                }
-                if (toDateModified)
-                {
-                    if (preImage.ed_ToDate != null && quoteProduct.ed_ToDate != null)
-                    {
-                        var compareTo = DateTime.Compare(preImage.ed_ToDate.Value, quoteProduct.ed_ToDate.Value);
-                        if (compareTo < 0)
-                        {
-                            startCreateIntervalTo = preImage.ed_ToDate.Value.AddDays(1);
-                            endCreateIntervalTo = quoteProduct.ed_ToDate.Value;
-                        }
-                        else
-                        {
-                            startRemoveIntervalTo = quoteProduct.ed_ToDate.Value.AddDays(1);
-                            endRemoveIntervalTo = preImage.ed_ToDate;
-                        }
-                    }
-                    else
-                    {
-                        if (quoteProduct.ed_ToDate == null)
-                        {
-                            removeAllSlots = true;
-                        }
-                    }
-                }
-                else
-                {
-                    endDate = preImage.ed_ToDate;
-                }
-                if (removeAllSlots == true)
-                {
-                    SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, true);
-                    return;
-                }
-                else
-                {
-                    if(!quoteProduct.IsAttributeModified(preImage,QuoteProductEntity.Fields.Id))
-                    {
-                        quoteProduct.Id = preImage.Id;
-                    }
-                    if (startRemoveIntervalFrom != null && endRemoveIntervalFrom != null)
-                    {
-                        SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, startRemoveIntervalFrom, endRemoveIntervalFrom,1);
-                    }
-                    if (startRemoveIntervalTo != null && endRemoveIntervalTo != null)
-                    {
-                        SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, startRemoveIntervalTo, endRemoveIntervalTo,1);
-                    }
-                    
-                    if (startCreateIntervalFrom != null && endCreateIntervalFrom != null)
-                    {
-                        availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, startCreateIntervalFrom.Value, endCreateIntervalFrom.Value, availableSlots, opportunityId, quoteProduct);
-                    }
-                    if (startCreateIntervalTo != null && endCreateIntervalTo != null)
-                    {
-                        availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, startCreateIntervalTo.Value, endCreateIntervalTo.Value, availableSlots, opportunityId, quoteProduct);
-                    }
-                }
-                */
-                //availableSlots = SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, startDate.Value, endDate.Value, availableSlots, null, quoteProduct);
             }
             else
             {
