@@ -152,6 +152,7 @@
     <Compile Include="Entities\QuoteProductEntity.cs" />
     <Compile Include="Entities\SlotsEntity.cs" />
     <Compile Include="JsonHelper.cs" />
+    <Compile Include="PostQuoteLost.cs" />
     <Compile Include="PostQuoteProductCreate.cs" />
     <Compile Include="PostQuoteProductUpdate.cs" />
     <Compile Include="PostSlotCreate.cs" />
