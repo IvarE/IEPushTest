@@ -12,6 +12,8 @@ namespace Skanetrafiken.Crm
 {
     public class PostQuoteUpdate : Plugin
     {
+        private readonly string preImageAlias = "preImage";
+
         /// <summary>
         /// </summary>
         public PostQuoteUpdate()
@@ -65,7 +67,12 @@ namespace Skanetrafiken.Crm
                     // Obtain the target entity from the input parameters.
                     QuoteEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<QuoteEntity>();
 
-                    QuoteEntity.HandleQuoteEntityUpdate(localContext, target);
+                    QuoteEntity preImage = Plugin.GetPreImage<QuoteEntity>(localContext, preImageAlias);
+
+                    if (preImage == null)
+                        throw new InvalidPluginExecutionException("Pre-Image not registered correctly.");
+
+                    QuoteEntity.HandleQuoteEntityUpdate(localContext, target,preImage);
                 }
                 catch (Exception ex)
                 {

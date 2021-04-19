@@ -2677,6 +2677,96 @@ namespace Endeavor.Crm.UnitTest
             }
         }
 
+        [Test, Category("Debug")]
+        public void SyncDataTest()
+        {
+            // Connect to the Organization service. 
+            // The using statement assures that the service proxy will be properly disposed.
+            using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+            {
+                // This statement is required to enable early-bound type support.
+                _serviceProxy.EnableProxyTypes();
+
+                Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
+
+                try
+                {
+                    SyncContact syncContact = new SyncContact();
+                    syncContact.SocialSecurityNumber = "196704204533";
+                    syncContact.PortalId = "1990938";
+                    syncContact.EmailAddress = "robert.verkerk@trafikverket.se";
+
+                    var threadId = 1;
+
+                    QueryExpression contactQuery = new QueryExpression()
+                    {
+                        EntityName = ContactEntity.EntityLogicalName,
+                        ColumnSet = new ColumnSet(ContactEntity.Fields.ContactId, ContactEntity.Fields.EMailAddress1),
+                        Criteria =
+                        {
+                            Conditions =
+                            {
+                                new ConditionExpression(ContactEntity.Fields.ed_SocialSecurityNumberBlock, ConditionOperator.Equal, syncContact.SocialSecurityNumber),
+                                new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
+                                new ConditionExpression(ContactEntity.Fields.ed_BusinessContact, ConditionOperator.Equal, true)
+                            }
+                        },
+                        LinkEntities =
+                        {
+                            new LinkEntity()
+                            {
+                                LinkFromEntityName = ContactEntity.EntityLogicalName,
+                                LinkToEntityName = CompanyRoleEntity.EntityLogicalName,
+                                LinkFromAttributeName = ContactEntity.Fields.ContactId,
+                                LinkToAttributeName = CompanyRoleEntity.Fields.ed_Contact,
+                                EntityAlias = CompanyRoleEntity.EntityLogicalName,
+                                JoinOperator = JoinOperator.Inner,
+                                LinkCriteria =
+                                {
+                                    Conditions =
+                                    {
+                                        new ConditionExpression(CompanyRoleEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.ed_CompanyRoleState.Active)
+                                    }
+                                },
+
+                                LinkEntities =
+                                {
+                                    new LinkEntity()
+                                    {
+                                        LinkFromEntityName = CompanyRoleEntity.EntityLogicalName,
+                                        LinkToEntityName = AccountEntity.EntityLogicalName,
+                                        LinkFromAttributeName = CompanyRoleEntity.Fields.ed_Account,
+                                        LinkToAttributeName = AccountEntity.Fields.AccountId,
+                                        EntityAlias = AccountEntity.EntityLogicalName,
+                                        JoinOperator = JoinOperator.Inner,
+                                        LinkCriteria =
+                                        {
+                                            Conditions =
+                                            {
+                                                new ConditionExpression(AccountEntity.Fields.AccountNumber, ConditionOperator.Equal, syncContact.PortalId),
+                                                new ConditionExpression(AccountEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.AccountState.Active)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    };
+
+                    List<ContactEntity> contacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactQuery);
+
+                    if (contacts != null && contacts.Count > 1)
+                    {
+                        var thi = "2323";
+                    }
+                    //var testResponse = CrmPlusControl.SynchronizeContactData(threadId, syncContact.SocialSecurityNumber, syncContact.PortalId, syncContact.EmailAddress);
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+        }
+
         //private static void AssignTokenForTest(HttpWebRequest httpWebRequest, string manualToken)
         //{
         //    httpWebRequest.Headers["X-CRMPlusToken"] = manualToken;
@@ -2738,7 +2828,6 @@ namespace Endeavor.Crm.UnitTest
 
         //    }
         //}
-
         [Test, Category("Debug")]
         public void CreateContactRGOLPost()
         {
