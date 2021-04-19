@@ -81,7 +81,7 @@ namespace Endeavor.Crm.UnitTest
                     ed_Opportunity = new EntityReference(OpportunityEntity.EntityLogicalName, Guid.Parse("0a1c7dd8-13e9-e911-80f0-005056b61fff")),
                     ed_Quote = new EntityReference(QuoteEntity.EntityLogicalName, Guid.Parse("06d8b0ef-af6a-eb11-9479-005056b6fa28")),
                     ed_QuoteProductID = new EntityReference(QuoteProductEntity.EntityLogicalName, Guid.Parse("4d4bdc3c-709c-eb11-947e-005056b6fa28")),
-                    ed_BookingStatus = new OptionSetValue(899310001)
+                    ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.Preliminary//new OptionSetValue(899310001)
                 };
                 
                 SlotsEntity.HandleSlotsEntityUpdate(localContext, updateSlot, slot);
