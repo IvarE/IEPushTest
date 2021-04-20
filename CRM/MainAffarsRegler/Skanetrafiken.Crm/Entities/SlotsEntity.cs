@@ -996,20 +996,9 @@ namespace Skanetrafiken.Crm.Entities
                         currentSlot.Id = target.Id;
 
                         decimal standardPrice = 0;
-
-                        if (!target.IsAttributeModified(preImage, SlotsEntity.Fields.ed_StandardPrice))
+                        if (target.ed_StandardPrice != null && target.ed_StandardPrice.Value > 0)
                         {
-                            if (preImage.ed_StandardPrice != null && preImage.ed_StandardPrice.Value > 0)
-                            {
-                                standardPrice = preImage.ed_StandardPrice.Value;
-                            }
-                        }
-                        else
-                        {
-                            if (target.ed_StandardPrice != null && target.ed_StandardPrice.Value > 0)
-                            {
                                 standardPrice = target.ed_StandardPrice.Value;
-                            }
                         }
                         currentSlot.ed_CustomPrice = new Money(standardPrice - discountPerSlotTargetQuote);
 
@@ -1022,21 +1011,12 @@ namespace Skanetrafiken.Crm.Entities
                     currentSlot.Id = target.Id;
 
                     decimal standardPrice = 0;
+                    
+                    if (target.ed_StandardPrice != null && target.ed_StandardPrice.Value > 0)
+                    {
+                        standardPrice = target.ed_StandardPrice.Value;
+                    }
 
-                    if (!target.IsAttributeModified(preImage, SlotsEntity.Fields.ed_StandardPrice))
-                    {
-                        if (preImage.ed_StandardPrice != null && preImage.ed_StandardPrice.Value > 0)
-                        {
-                            standardPrice = preImage.ed_StandardPrice.Value;
-                        }
-                    }
-                    else
-                    {
-                        if (target.ed_StandardPrice != null && target.ed_StandardPrice.Value > 0)
-                        {
-                            standardPrice = target.ed_StandardPrice.Value;
-                        }
-                    }
                     currentSlot.ed_CustomPrice = new Money(standardPrice * (quote.DiscountPercentage.Value / 100));
 
                     XrmHelper.Update(localContext, currentSlot);
