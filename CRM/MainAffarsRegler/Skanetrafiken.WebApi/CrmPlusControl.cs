@@ -4084,6 +4084,8 @@ namespace Skanetrafiken.Crm.Controllers
                     var currentTime = DateTime.UtcNow;
                     var dateToUse = currentTime.Day.ToString() + currentTime.Month.ToString();
 
+                    string maskedSSN = socialSecurityNumber.Remove(2, 8).Insert(2, "********");
+
                     //Get Contact
                     FilterExpression getContactFilter = new FilterExpression(LogicalOperator.And);
                     getContactFilter.AddCondition(ContactEntity.Fields.ed_SocialSecurityNumberBlock, ConditionOperator.Equal, socialSecurityNumber);
@@ -4185,7 +4187,7 @@ namespace Skanetrafiken.Crm.Controllers
                         //HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.BadRequest);
                         HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.NotFound);
                         rmNoContactFound.Content = new StringContent(string.Format(Resources.UnexpectedException,
-                            $"Found no matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}"));
+                            $"Found no matching contact for PortalId: {portalId} and SSN: {maskedSSN}"));
                         return rmNoContactFound;
                     }
                     else if (contacts != null && contacts.Count > 1)
@@ -4193,7 +4195,7 @@ namespace Skanetrafiken.Crm.Controllers
                         _log.Info($"Th={threadId} - SynchronizeContactData: Found multiple matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}. Returning 409 - Conflict!");
                         HttpResponseMessage multipleContactFound = new HttpResponseMessage(HttpStatusCode.Conflict);
                         multipleContactFound.Content = new StringContent(string.Format(Resources.UnexpectedException,
-                            $"Found multiple matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}"));
+                            $"Found multiple matching contact for PortalId: {portalId} and SSN: {maskedSSN}"));
                         return multipleContactFound;
                     }
 
