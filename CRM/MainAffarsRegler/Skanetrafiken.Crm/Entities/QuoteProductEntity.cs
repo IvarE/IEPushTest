@@ -18,6 +18,21 @@ namespace Skanetrafiken.Crm.Entities
         {
             localContext.Trace("Inside HandleQuoteProductEntityCreate");
             //validate necessary things to generateSlots
+            if(quoteProduct.Id != null)
+            {
+                QuoteProductEntity updateQuoteProduct = new QuoteProductEntity();
+                updateQuoteProduct.Id = quoteProduct.Id;
+
+                var idString = quoteProduct.Id.ToString();
+
+                idString = idString.Replace("{", "");
+                idString = idString.Replace("}", "");
+
+                updateQuoteProduct.ed_QuoteProductIDTXT = idString;
+
+                XrmHelper.Update(localContext, updateQuoteProduct);
+
+            }
             if (quoteProduct.UoMId != null && quoteProduct.ProductId != null && quoteProduct.ed_FromDate != null && quoteProduct.ed_ToDate != null)
             {
                 FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
