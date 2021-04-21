@@ -363,11 +363,7 @@ namespace Skanetrafiken.Crm.Entities
             while (DateTime.Compare(startDate, endDate) <= 0);
 //return availableSlots;
         }
-
-        public static void UpdateSlotsInternal(Plugin.LocalPluginContext localContext, Guid productId)
-        {
-            // Will be used when the order is created to update the slots with Order and OrderProduct info
-        }
+        
         public static void ReleaseSlots(Plugin.LocalPluginContext localContext, Guid quoteProduct, bool deleteAll, DateTime? startDate = null, DateTime? endDate = null, int? quantity = null)
         {
             localContext.Trace("Inside ReleaseSlots");
