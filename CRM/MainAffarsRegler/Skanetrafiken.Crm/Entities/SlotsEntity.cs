@@ -322,6 +322,7 @@ namespace Skanetrafiken.Crm.Entities
                         slot.ed_name = productName + " - " + date;
                         slot.ed_BookingDay = startDate;
                         slot.ed_StandardPrice = priceProduct;
+                        slot.ed_Extended = true;
                         slot.ed_ProductID = new EntityReference(ProductEntity.EntityLogicalName, productId);
                         
                         if (quoteProduct != null)

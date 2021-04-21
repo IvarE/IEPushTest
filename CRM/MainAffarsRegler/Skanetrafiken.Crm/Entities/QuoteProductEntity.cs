@@ -23,7 +23,17 @@ namespace Skanetrafiken.Crm.Entities
                 FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
                 if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
                 {
-                    UpdateOrGenerateSlots(localContext, quoteProduct);
+                    bool isSlotProduct = false;
+
+                    if(quoteProduct.ProductId != null && quoteProduct.ProductId.Id != Guid.Empty)
+                    {
+                        isSlotProduct = ProductEntity.IsSlotProduct(localContext, quoteProduct.ProductId);
+                    }
+
+                    if(isSlotProduct)
+                    {
+                        UpdateOrGenerateSlots(localContext, quoteProduct);
+                    }
                 }
             }
         }
@@ -59,12 +69,20 @@ namespace Skanetrafiken.Crm.Entities
                 if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
                 {
                     localContext.Trace("ed_bookingSystem enabled");
-                    if(target.IsAttributeModified(preImage,QuoteProductEntity.Fields.ed_FromDate) || target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate))
+                    bool isSlotProduct = false;
+                    //check if the Product on this QuoteProduct has non extended slots already created (method to see if this Product is a slot Product)
+                    if(target.ProductId != null && target.ProductId.Id != Guid.Empty)
                     {
-                        localContext.Trace("ed_FromDate or ed_ToDate modified");
-                        UpdateOrGenerateSlots(localContext, target, preImage);
+                        isSlotProduct = ProductEntity.IsSlotProduct(localContext, target.ProductId);
                     }
-                    
+                    if(isSlotProduct)
+                    {
+                        if (target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_FromDate) || target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate))
+                        {
+                            localContext.Trace("ed_FromDate or ed_ToDate modified");
+                            UpdateOrGenerateSlots(localContext, target, preImage);
+                        }
+                    }
                 }
             }
         }
@@ -167,45 +185,6 @@ namespace Skanetrafiken.Crm.Entities
                     quoteProduct.QuoteId = preImage.QuoteId;
                 }
             }
-            /* OLD
-            if (preImage != null && !quoteProduct.IsAttributeModified(preImage,QuoteProductEntity.Fields.ed_FromDate))
-            {
-                localContext.Trace("ed_FromDate not modified");
-                
-                startDate = preImage.ed_FromDate;
-            }
-            else
-            {
-                fromDateModified = true;
-            }
-
-            if (preImage != null && !quoteProduct.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate))
-            {
-                localContext.Trace("ed_ToDate not modified");
-                endDate = preImage.ed_ToDate;
-            }
-            else
-            {
-                toDateModified = true;
-            }
-
-            if(preImage != null && !quoteProduct.IsAttributeModified(preImage,QuoteProductEntity.Fields.ProductId))
-            {
-                localContext.Trace("ProductId not modified");
-                quoteProduct.ProductId = preImage.ProductId;
-            }
-            */
-
-            //validate and return the emptySlotsAvailable for this product on the Dates requested.
-
-            //validate if unit is equal to 1 day
-            /*
-            if (!UnitEntity.IsOneDayUnit(localContext, quoteProduct.UoMId))
-            {
-                localContext.Trace("Not 1 day Unit.");
-                return;
-            }
-            */
 
             if (preImage != null)
             {

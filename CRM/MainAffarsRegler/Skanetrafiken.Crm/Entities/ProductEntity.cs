@@ -84,5 +84,37 @@ namespace Skanetrafiken.Crm.Entities
                 }
             }
         }
+
+        /* IsSlotProduct: check if Product is a Slot Product
+         */
+        public static bool IsSlotProduct(Plugin.LocalPluginContext localContext, EntityReference refProduct)
+        {
+            bool slotProduct = false;
+
+            if(refProduct != null && refProduct.Id != Guid.Empty)
+            {
+                QueryExpression query = new QueryExpression();
+                query.EntityName = SlotsEntity.EntityLogicalName;
+                query.ColumnSet = new ColumnSet(false);
+                query.TopCount = 1;
+
+                FilterExpression filter = new FilterExpression();
+                filter.FilterOperator = LogicalOperator.And;
+                filter.AddCondition(SlotsEntity.Fields.ed_ProductID, ConditionOperator.Equal, refProduct.Id);
+                filter.AddCondition(SlotsEntity.Fields.ed_Extended, ConditionOperator.NotEqual, true);
+
+                query.Criteria.AddFilter(filter);
+
+                List<SlotsEntity> slots = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, query);
+
+                if(slots != null && slots.Count > 0)
+                {
+                    slotProduct = true;
+                }
+            }
+
+            return slotProduct;
+        }
     }   
 }
+ 
