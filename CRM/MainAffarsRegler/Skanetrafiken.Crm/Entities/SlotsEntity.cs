@@ -364,16 +364,30 @@ namespace Skanetrafiken.Crm.Entities
 //return availableSlots;
         }
         
-        public static void ReleaseSlots(Plugin.LocalPluginContext localContext, Guid quoteProduct, bool deleteAll, DateTime? startDate = null, DateTime? endDate = null, int? quantity = null)
+        public static void ReleaseSlots(Plugin.LocalPluginContext localContext, bool deleteAll, Guid? quoteProduct = null, Guid? orderProduct = null, DateTime ? startDate = null, DateTime ? endDate = null, int? quantity = null)
         {
             localContext.Trace("Inside ReleaseSlots");
+
+            if(quoteProduct == null && orderProduct == null)
+            {
+                localContext.Trace("quoteProduct and orderProduct null.");
+                return;
+            }
 
             QueryExpression query = new QueryExpression();
             query.EntityName = SlotsEntity.EntityLogicalName;
             query.ColumnSet.AddColumns(SlotsEntity.Fields.ed_BookingDay,SlotsEntity.Fields.ed_Extended);
             FilterExpression filter = new FilterExpression();
             filter.FilterOperator = LogicalOperator.And;
-            filter.AddCondition(SlotsEntity.Fields.ed_QuoteProductID, ConditionOperator.Equal, quoteProduct);
+            if(quoteProduct != null && quoteProduct.Value != Guid.Empty)
+            {
+                filter.AddCondition(SlotsEntity.Fields.ed_QuoteProductID, ConditionOperator.Equal, quoteProduct.Value);
+            }
+            else if(orderProduct != null && orderProduct.Value != Guid.Empty)
+            {
+                filter.AddCondition(SlotsEntity.Fields.ed_OrderProductID, ConditionOperator.Equal, orderProduct.Value);
+            }
+            
             if (startDate != null && endDate != null && DateTime.Compare(startDate.Value, endDate.Value) <= 0)
             {
                 filter.AddCondition(SlotsEntity.Fields.ed_BookingDay, ConditionOperator.OnOrAfter, startDate.Value);
@@ -450,7 +464,7 @@ namespace Skanetrafiken.Crm.Entities
                 }
             }
         }
-
+        
         public static void SlotsEntityUpdateQuantity(Plugin.LocalPluginContext localContext, SlotsEntity target)
         {
             var numberSlots = 0;

@@ -264,11 +264,11 @@ namespace Skanetrafiken.Crm.Entities
                 }
                 else if(postFromDate == null && postToDate == null)
                 {
-                    SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, true);
+                    SlotsEntity.ReleaseSlots(localContext, true, quoteProduct.Id);
                 }
                 else if(DateTime.Compare(postFromDate.Value,preToDate.Value) > 0 || DateTime.Compare(preFromDate.Value, postToDate.Value) > 0)
                 {
-                    SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, preFromDate, preToDate, 1);
+                    SlotsEntity.ReleaseSlots(localContext, false, quoteProduct.Id, null, preFromDate, preToDate, 1);
                     availableSlots = SlotsEntity.AvailableSlots(localContext, quoteProduct.ProductId, postFromDate.Value, postToDate.Value);
                     SlotsEntity.GenerateSlotsInternal(localContext, quoteProduct.ProductId.Id, 1, postFromDate.Value, postToDate.Value, availableSlots,opportunityId,quoteProduct);
                 }
@@ -282,7 +282,7 @@ namespace Skanetrafiken.Crm.Entities
                     }
                     else if (compareFrom < 0)
                     {
-                        SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, preFromDate.Value, postFromDate.Value.AddDays(-1), 1);
+                        SlotsEntity.ReleaseSlots(localContext, false, quoteProduct.Id, null, preFromDate.Value, postFromDate.Value.AddDays(-1), 1);
                     }
 
                     var compareTo = DateTime.Compare(preToDate.Value, postToDate.Value);
@@ -293,7 +293,7 @@ namespace Skanetrafiken.Crm.Entities
                     }
                     else if(compareTo > 0)
                     {
-                        SlotsEntity.ReleaseSlots(localContext, quoteProduct.Id, false, postToDate.Value.AddDays(1), preToDate.Value, 1);
+                        SlotsEntity.ReleaseSlots(localContext, false, quoteProduct.Id, null, postToDate.Value.AddDays(1), preToDate.Value, 1);
                     }
                 }
             }

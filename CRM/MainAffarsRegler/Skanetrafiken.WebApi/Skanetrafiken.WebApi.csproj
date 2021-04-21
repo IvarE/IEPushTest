@@ -256,6 +256,15 @@
     <Compile Include="..\Skanetrafiken.Crm\Entities\ProductEntity.cs">
       <Link>Entities\ProductEntity.cs</Link>
     </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\ProductPriceLevelEntity.cs">
+      <Link>ProductPriceLevelEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\QuoteEntity.cs">
+      <Link>QuoteEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\QuoteProductEntity.cs">
+      <Link>QuoteProductEntity.cs</Link>
+    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\RefundAccountEntity.cs">
       <Link>Entities\RefundAccountEntity.cs</Link>
     </Compile>
@@ -294,6 +303,9 @@
     </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\SkaKortEntity.cs">
       <Link>Entities\SkaKortEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\SlotsEntity.cs">
+      <Link>Entities\SlotsEntity.cs</Link>
     </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\SystemUserEntity.cs">
       <Link>Entities\SystemUserEntity.cs</Link>

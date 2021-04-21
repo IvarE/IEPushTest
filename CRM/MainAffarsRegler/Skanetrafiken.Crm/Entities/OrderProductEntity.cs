@@ -16,7 +16,236 @@ namespace Skanetrafiken.Crm.Entities
     {
         public static void HandleOrderProductEntityCreate (Plugin.LocalPluginContext localContext, OrderProductEntity orderProduct)
         {
+                FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
+                if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
+                {
+                if (!string.IsNullOrEmpty(orderProduct.ed_QuoteProductIDTXT))
+                {
+                    //This means that the OrderProduct was created from the QuoteProduct Won
+                    Guid quoteProductId = new Guid(orderProduct.ed_QuoteProductIDTXT);
 
+                    if (quoteProductId != null && quoteProductId != Guid.Empty)
+                    {
+                        UpdateExistingSlots(localContext, quoteProductId, orderProduct.ToEntityReference());
+                    }
+                }
+                else
+                {
+                    if (orderProduct.UoMId != null && orderProduct.ProductId != null && orderProduct.ed_FromDate != null && orderProduct.ed_ToDate != null)
+                    {
+                        bool isSlotProduct = false;
+
+                        if (orderProduct.ProductId != null && orderProduct.ProductId.Id != Guid.Empty)
+                        {
+                            isSlotProduct = ProductEntity.IsSlotProduct(localContext, orderProduct.ProductId);
+                        }
+
+                        if (isSlotProduct)
+                        {
+                            UpdateOrGenerateSlots(localContext, orderProduct);
+                        }
+                    }
+                }
+            }
+
+            
+        }
+
+        public static void UpdateExistingSlots(Plugin.LocalPluginContext localContext, Guid guidQuoteProduct, EntityReference refOrderProduct)
+        {
+            QueryExpression query = new QueryExpression();
+            query.EntityName = SlotsEntity.EntityLogicalName;
+            query.ColumnSet = new ColumnSet(false);
+
+            FilterExpression filter = new FilterExpression();
+            filter.FilterOperator = LogicalOperator.And;
+            filter.AddCondition(SlotsEntity.Fields.ed_QuoteProductID, ConditionOperator.Equal, guidQuoteProduct);
+
+            query.Criteria.AddFilter(filter);
+
+            List<SlotsEntity> slots = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, query);
+
+            if(slots != null && slots.Count > 0)
+            {
+                foreach(SlotsEntity slot in slots)
+                {
+                    SlotsEntity slotToUpdate = new SlotsEntity();
+                    slotToUpdate.Id = slot.Id;
+                    slotToUpdate.ed_OrderProductID = refOrderProduct;
+
+                    XrmHelper.Update(localContext,slotToUpdate);
+                }
+            }
+        }
+
+        public static void UpdateOrGenerateSlots(Plugin.LocalPluginContext localContext, OrderProductEntity orderProduct, OrderProductEntity preImage = null)
+        {
+            localContext.Trace("Inside UpdateOrGenerateSlots");
+            //bool removeAllSlots = false;
+            //bool fromDateModified = false;
+            //bool toDateModified = false;
+            List<SlotsEntity> availableSlots = null;
+            //DateTime? startDate = quoteProduct.ed_FromDate;
+            //DateTime? endDate = quoteProduct.ed_ToDate;
+
+            //DateTime? startRemoveIntervalFrom = null; //used if after Update the preImage.ed_FromDate is before the quoteProduct.ed_FromDate
+            //DateTime? endRemoveIntervalFrom = null; //used if after Update the preImage.ed_FromDate is before the quoteProduct.ed_FromDate
+            //DateTime? startRemoveIntervalTo = null; //used if after Update the preImage.ed_ToDate is after the quoteProduct.ed_ToDate
+            //DateTime? endRemoveIntervalTo = null; //used if after Update the preImage.ed_ToDate is after the quoteProduct.ed_ToDate
+            //DateTime? startCreateIntervalFrom = null;
+            //DateTime? endCreateIntervalFrom = null;
+            //DateTime? startCreateIntervalTo = null;
+            //DateTime? endCreateIntervalTo = null;
+
+            Guid? opportunityId = null;
+
+            if (orderProduct.SalesOrderId != null && orderProduct.SalesOrderId.Id != Guid.Empty)
+            {
+                OrderEntity order = XrmRetrieveHelper.Retrieve<OrderEntity>(localContext, orderProduct.SalesOrderId, new ColumnSet(OrderEntity.Fields.OpportunityId));
+
+                if (order != null && order.OpportunityId != null && order.OpportunityId.Id != Guid.Empty)
+                {
+                    opportunityId = order.OpportunityId.Id;
+                }
+            }
+            else
+            {
+                if (preImage != null && !orderProduct.IsAttributeModified(preImage, OrderProductEntity.Fields.SalesOrderId) && preImage.SalesOrderId != null
+                    && preImage.SalesOrderId.Id != Guid.Empty)
+                {
+                    OrderEntity order = XrmRetrieveHelper.Retrieve<OrderEntity>(localContext, preImage.SalesOrderId, new ColumnSet(OrderEntity.Fields.OpportunityId));
+
+                    if (order != null && order.OpportunityId != null && order.OpportunityId.Id != Guid.Empty)
+                    {
+                        opportunityId = order.OpportunityId.Id;
+                    }
+
+                    orderProduct.SalesOrderId = preImage.SalesOrderId;
+                }
+            }
+
+            if (preImage != null)
+            {
+
+                localContext.Trace("PreImage not null.");
+                DateTime? preFromDate = null;
+                DateTime? preToDate = null;
+                DateTime? postFromDate = null;
+                DateTime? postToDate = null;
+
+                if (preImage.ed_FromDate != null)
+                {
+                    preFromDate = preImage.ed_FromDate.Value;
+                }
+
+                if (preImage.ed_ToDate != null)
+                {
+                    preToDate = preImage.ed_ToDate.Value;
+                }
+
+                if (orderProduct.ed_FromDate != null)
+                {
+                    postFromDate = orderProduct.ed_FromDate.Value;
+                }
+                else
+                {
+                    if (!orderProduct.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_FromDate) && preImage.ed_FromDate != null)
+                    {
+                        postFromDate = preImage.ed_FromDate.Value;
+                    }
+                }
+
+                if (orderProduct.ed_ToDate != null)
+                {
+                    postToDate = orderProduct.ed_ToDate.Value;
+                }
+                else
+                {
+                    if (!orderProduct.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_ToDate) && preImage.ed_ToDate != null)
+                    {
+                        postToDate = preImage.ed_ToDate.Value;
+                    }
+                }
+                if (postFromDate == null && postToDate != null)
+                {
+                    throw new InvalidPluginExecutionException("FromDate cannot be empty if ToDate is set");
+                }
+                else if (postFromDate != null && postToDate == null)
+                {
+                    throw new InvalidPluginExecutionException("ToDate cannot be empty if FromDate is set");
+                }
+
+                if (postFromDate != null && postToDate != null && postFromDate > postToDate)
+                {
+                    throw new InvalidPluginExecutionException("FromDate cannot be after ToDate");
+                }
+
+                if (preFromDate == null && preToDate == null)
+                {
+                    availableSlots = SlotsEntity.AvailableSlots(localContext, orderProduct.ProductId, postFromDate.Value, postToDate.Value);
+                    SlotsEntity.GenerateSlotsInternal(localContext, orderProduct.ProductId.Id, 1, postFromDate.Value, postToDate.Value, availableSlots, opportunityId, null,orderProduct);
+                }
+                else if (postFromDate == null && postToDate == null)
+                {
+                    SlotsEntity.ReleaseSlots(localContext, true, null,orderProduct.Id);
+                }
+                else if (DateTime.Compare(postFromDate.Value, preToDate.Value) > 0 || DateTime.Compare(preFromDate.Value, postToDate.Value) > 0)
+                {
+                    SlotsEntity.ReleaseSlots(localContext, false, null, orderProduct.Id, preFromDate, preToDate, 1);
+                    availableSlots = SlotsEntity.AvailableSlots(localContext, orderProduct.ProductId, postFromDate.Value, postToDate.Value);
+                    SlotsEntity.GenerateSlotsInternal(localContext, orderProduct.ProductId.Id, 1, postFromDate.Value, postToDate.Value, availableSlots, opportunityId, null,orderProduct);
+                }
+                else
+                {
+                    var compareFrom = DateTime.Compare(preFromDate.Value, postFromDate.Value);
+                    if (compareFrom > 0)
+                    {
+                        availableSlots = SlotsEntity.AvailableSlots(localContext, orderProduct.ProductId, postFromDate.Value, preFromDate.Value.AddDays(-1));
+                        SlotsEntity.GenerateSlotsInternal(localContext, orderProduct.ProductId.Id, 1, postFromDate.Value, preFromDate.Value.AddDays(-1), availableSlots, opportunityId, null,orderProduct);
+                    }
+                    else if (compareFrom < 0)
+                    {
+                        SlotsEntity.ReleaseSlots(localContext, false, null, orderProduct.Id, preFromDate.Value, postFromDate.Value.AddDays(-1), 1);
+                    }
+
+                    var compareTo = DateTime.Compare(preToDate.Value, postToDate.Value);
+                    if (compareTo < 0)
+                    {
+                        availableSlots = SlotsEntity.AvailableSlots(localContext, orderProduct.ProductId, preToDate.Value.AddDays(1), postToDate.Value);
+                        SlotsEntity.GenerateSlotsInternal(localContext, orderProduct.ProductId.Id, 1, preToDate.Value.AddDays(1), postToDate.Value, availableSlots, opportunityId, null, orderProduct);
+                    }
+                    else if (compareTo > 0)
+                    {
+                        SlotsEntity.ReleaseSlots(localContext, false, null, orderProduct.Id, postToDate.Value.AddDays(1), preToDate.Value, 1);
+                    }
+                }
+            }
+            else
+            {
+                if (orderProduct.ed_FromDate == null && orderProduct.ed_ToDate == null)
+                {
+                    return;
+                }
+                else if (orderProduct.ed_FromDate == null && orderProduct.ed_ToDate != null)
+                {
+                    throw new InvalidPluginExecutionException("FromDate cannot be empty if ToDate is set");
+                }
+                else if (orderProduct.ed_FromDate != null && orderProduct.ed_ToDate == null)
+                {
+                    throw new InvalidPluginExecutionException("ToDate cannot be empty if FromDate is set");
+                }
+                else if (DateTime.Compare(orderProduct.ed_FromDate.Value, orderProduct.ed_ToDate.Value) > 0)
+                {
+                    throw new InvalidPluginExecutionException("FromDate cannot be after ToDate");
+                }
+                else
+                {
+                    availableSlots = SlotsEntity.AvailableSlots(localContext, orderProduct.ProductId, orderProduct.ed_FromDate.Value, orderProduct.ed_ToDate.Value);
+                    SlotsEntity.GenerateSlotsInternal(localContext, orderProduct.ProductId.Id, 1, orderProduct.ed_FromDate.Value, orderProduct.ed_ToDate.Value, availableSlots, opportunityId, null,orderProduct);
+                }
+
+
+            }
         }
     }
 }

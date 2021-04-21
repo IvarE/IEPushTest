@@ -154,7 +154,7 @@ namespace Skanetrafiken.Crm.Entities
 
                     if(slots != null && slots.Count > 0)
                     {
-                        SlotsEntity.ReleaseSlots(localContext, quoteP.Id, true);
+                        SlotsEntity.ReleaseSlots(localContext, true,quoteP.Id, null);
                     }
                 }
                 
