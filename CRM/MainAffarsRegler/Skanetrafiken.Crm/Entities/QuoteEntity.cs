@@ -26,7 +26,6 @@ namespace Skanetrafiken.Crm.Entities
             {
                 if (quote != null && quote.StateCode != null && quote.StateCode == Generated.QuoteState.Closed)
                 {
-
                     QuoteEntity.UpdateSlotsInfo(localContext, quote);
                 }
 

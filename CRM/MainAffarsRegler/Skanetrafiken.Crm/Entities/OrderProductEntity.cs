@@ -26,7 +26,7 @@ namespace Skanetrafiken.Crm.Entities
 
                     if (quoteProductId != null && quoteProductId != Guid.Empty)
                     {
-                        UpdateExistingSlots(localContext, quoteProductId, orderProduct.ToEntityReference());
+                        UpdateExistingSlots(localContext, quoteProductId, orderProduct.ToEntityReference(),orderProduct.SalesOrderId);
                     }
                 }
                 else
@@ -51,7 +51,55 @@ namespace Skanetrafiken.Crm.Entities
             
         }
 
-        public static void UpdateExistingSlots(Plugin.LocalPluginContext localContext, Guid guidQuoteProduct, EntityReference refOrderProduct)
+        public static void HandleOrderProductEntityUpdate(Plugin.LocalPluginContext localContext, OrderProductEntity target,OrderProductEntity preImage)
+        {
+            localContext.Trace("Inside HandleOrderProductEntityUpdate");
+
+            localContext.Trace("PreImage Info");
+            preImage.Trace(localContext.TracingService);
+            localContext.Trace("_______________");
+
+            localContext.Trace("Target Info");
+            target.Trace(localContext.TracingService);
+            localContext.Trace("_______________");
+
+            if (!target.IsAttributeModified(preImage, OrderProductEntity.Fields.UoMId))
+            {
+                localContext.Trace("UoMID not modified");
+                target.UoMId = preImage.UoMId;
+            }
+            if (!target.IsAttributeModified(preImage, OrderProductEntity.Fields.ProductId))
+            {
+                localContext.Trace("ProductId not modified");
+                target.ProductId = preImage.ProductId;
+            }
+
+            //validate necessary things to generateSlots
+            if (target.UoMId != null && target.ProductId != null)
+            {
+                localContext.Trace("UoMId and ProductId not NULL");
+                FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
+                if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
+                {
+                    localContext.Trace("ed_bookingSystem enabled");
+                    bool isSlotProduct = false;
+                    //check if the Product on this QuoteProduct has non extended slots already created (method to see if this Product is a slot Product)
+                    if (target.ProductId != null && target.ProductId.Id != Guid.Empty)
+                    {
+                        isSlotProduct = ProductEntity.IsSlotProduct(localContext, target.ProductId);
+                    }
+                    if (isSlotProduct)
+                    {
+                        if (target.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_FromDate) || target.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_ToDate))
+                        {
+                            localContext.Trace("ed_FromDate or ed_ToDate modified");
+                            UpdateOrGenerateSlots(localContext, target, preImage);
+                        }
+                    }
+                }
+            }
+        }
+        public static void UpdateExistingSlots(Plugin.LocalPluginContext localContext, Guid guidQuoteProduct, EntityReference refOrderProduct, EntityReference refOrder)
         {
             QueryExpression query = new QueryExpression();
             query.EntityName = SlotsEntity.EntityLogicalName;
@@ -72,7 +120,7 @@ namespace Skanetrafiken.Crm.Entities
                     SlotsEntity slotToUpdate = new SlotsEntity();
                     slotToUpdate.Id = slot.Id;
                     slotToUpdate.ed_OrderProductID = refOrderProduct;
-
+                    slotToUpdate.ed_Order = refOrder;
                     XrmHelper.Update(localContext,slotToUpdate);
                 }
             }
