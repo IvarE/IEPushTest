@@ -111,6 +111,7 @@
     <Compile Include="deviceidmanager.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="PluginFixtureBase.cs" />
+    <Compile Include="QuoteFixture.cs" />
     <Compile Include="QuoteProductFixture.cs" />
     <Compile Include="SlotFixture.cs" />
     <Compile Include="TestDataHelper.cs" />

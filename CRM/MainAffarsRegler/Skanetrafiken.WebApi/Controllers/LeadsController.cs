@@ -220,7 +220,16 @@ namespace Skanetrafiken.Crm.Controllers
             //Return Logg
             if (rm.StatusCode != HttpStatusCode.OK)
             {
-                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+                //_log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+
+                if (rm.StatusCode == HttpStatusCode.Created || rm.StatusCode == HttpStatusCode.Accepted)
+                {
+                    _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode} ({(int)rm.StatusCode}).\n");
+                }
+                else {
+                    // Controller loggingn too much information when status returns "Created"
+                    _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode} ({(int)rm.StatusCode}), Content = {rm.Content.ReadAsStringAsync().Result}\n");
+                }
             }
             else
             {
@@ -370,14 +379,22 @@ namespace Skanetrafiken.Crm.Controllers
             }
 
             //Return Logg
-            if (rm.StatusCode != HttpStatusCode.OK && rm.StatusCode != HttpStatusCode.Created)
+            if (rm.StatusCode != HttpStatusCode.OK)
             {
-                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+                if (rm.StatusCode == HttpStatusCode.Created || rm.StatusCode == HttpStatusCode.Accepted)
+                {
+                    _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode} ({(int)rm.StatusCode}).\n");
+                }
+                
+                if (rm.StatusCode == HttpStatusCode.BadRequest || rm.StatusCode == HttpStatusCode.InternalServerError || rm.StatusCode == HttpStatusCode.NotFound) {
+                    // Controller loggingn too much information when status returns "Created"
+                    _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode} ({(int)rm.StatusCode}), Content = {rm.Content.ReadAsStringAsync().Result}\n");
+                }
             }
             else
             {
-                _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
-                _log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+                _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode} ({(int)rm.StatusCode}).\n");
+                _log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode} ({(int)rm.StatusCode}), Content = {rm.Content.ReadAsStringAsync().Result}\n");
             }
 
             return rm;

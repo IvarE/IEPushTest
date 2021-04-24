@@ -4077,12 +4077,14 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Warn($"Th={threadId} - SynchronizeContactData: ServiceProxy and LocalContext created Successfully.");
+                    _log.Info($"Th={threadId} - SynchronizeContactData: ServiceProxy and LocalContext created Successfully.");
 
                     //Handle update of records to indicate that these have been handled
                     //Get current time
                     var currentTime = DateTime.UtcNow;
                     var dateToUse = currentTime.Day.ToString() + currentTime.Month.ToString();
+
+                    string maskedSSN = socialSecurityNumber.Remove(2, 8).Insert(2, "********");
 
                     //Get Contact
                     FilterExpression getContactFilter = new FilterExpression(LogicalOperator.And);
@@ -4094,7 +4096,7 @@ namespace Skanetrafiken.Crm.Controllers
                     List<ContactEntity> contactToUpdate = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, new ColumnSet(ContactEntity.Fields.Id, ContactEntity.Fields.Address2_UPSZone), getContactFilter).ToList();
                     if (contactToUpdate != null && contactToUpdate.Count > 0) 
                     {
-                        _log.Warn($"Th={threadId} - SynchronizeContactData: Uppdating {contactToUpdate.Count} Contacts.");
+                        _log.Info($"Th={threadId} - SynchronizeContactData: Uppdating {contactToUpdate.Count} Contacts.");
                         foreach (ContactEntity contactInList in contactToUpdate)
                         {
                             //Update the field on the contact with SyncData - Date
@@ -4113,33 +4115,14 @@ namespace Skanetrafiken.Crm.Controllers
                     AccountEntity accountToUpdate = XrmRetrieveHelper.RetrieveFirst<AccountEntity>(localContext, new ColumnSet(AccountEntity.Fields.Id, AccountEntity.Fields.Address2_UPSZone), getAccountFilter);
                     if (accountToUpdate != null) 
                     {
-                        _log.Warn($"Th={threadId} - SynchronizeContactData: Uppdating Account with Id {accountToUpdate.Id}.");
+                        _log.Info($"Th={threadId} - SynchronizeContactData: Uppdating Account with Id {accountToUpdate.Id}.");
                         AccountEntity updateAccount = new AccountEntity();
                         updateAccount.Id = accountToUpdate.Id;
                         updateAccount.Address2_UPSZone = dateToUse;
                         XrmHelper.Update(localContext, updateAccount);
                     }
 
-                    //if (contactToUpdate != null && accountToUpdate != null) 
-                    //{
-                    //    //Get Compant Role
-                    //    FilterExpression getCompanyRoleFilter = new FilterExpression(LogicalOperator.And);
-                    //    getCompanyRoleFilter.AddCondition(CompanyRoleEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.ed_CompanyRoleState.Active);
-                    //    getCompanyRoleFilter.AddCondition(CompanyRoleEntity.Fields.ed_Contact, ConditionOperator.Equal, contactToUpdate);
-                    //    getCompanyRoleFilter.AddCondition(CompanyRoleEntity.Fields.ed_Account, ConditionOperator.Equal, accountToUpdate);
-
-                    //    CompanyRoleEntity companyRoleToUpdate = XrmRetrieveHelper.RetrieveFirst<CompanyRoleEntity>(localContext, new ColumnSet(CompanyRoleEntity.Fields.Id, CompanyRoleEntity.Fields.ModifiedOn), getCompanyRoleFilter);
-
-                    //    if (companyRoleToUpdate != null) 
-                    //    {
-                    //        CompanyRoleEntity updateCompanyRole = new CompanyRoleEntity();
-                    //        updateCompanyRole.Id = companyRoleToUpdate.Id;
-                    //        //updateCompanyRole.ModifiedOn = (DateTime?)currentTime;
-                    //        XrmHelper.Update(localContext, updateCompanyRole);
-                    //    }
-                    //}
-
-                    _log.Warn($"Th={threadId} - SynchronizeContactData: Searching for Company Role!");
+                    _log.Info($"Th={threadId} - SynchronizeContactData: Searching for Company Role!");
                     // Get Contact(-s)
                     QueryExpression contactQuery = new QueryExpression()
                     {
@@ -4197,33 +4180,33 @@ namespace Skanetrafiken.Crm.Controllers
                     };
 
                     List<ContactEntity> contacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactQuery);
-                    _log.Warn($"Th={threadId} - SynchronizeContactData: Checking search result for Company Role!");
+                    _log.Info($"Th={threadId} - SynchronizeContactData: Checking search result for Company Role!");
                     if (contacts == null || contacts.Count == 0 /*|| contacts.Count > 1*/)
                     {
-                        _log.Warn($"Th={threadId} - SynchronizeContactData: Found no matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}. Returning 404 - Not Found!");
+                        _log.Info($"Th={threadId} - SynchronizeContactData: Found no matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}. Returning 404 - Not Found!");
                         //HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.BadRequest);
                         HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.NotFound);
                         rmNoContactFound.Content = new StringContent(string.Format(Resources.UnexpectedException,
-                            $"Found no matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}"));
+                            $"Found no matching contact for PortalId: {portalId} and SSN: {maskedSSN}"));
                         return rmNoContactFound;
                     }
                     else if (contacts != null && contacts.Count > 1)
                     {
-                        _log.Warn($"Th={threadId} - SynchronizeContactData: Found multiple matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}. Returning 409 - Conflict!");
+                        _log.Info($"Th={threadId} - SynchronizeContactData: Found multiple matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}. Returning 409 - Conflict!");
                         HttpResponseMessage multipleContactFound = new HttpResponseMessage(HttpStatusCode.Conflict);
                         multipleContactFound.Content = new StringContent(string.Format(Resources.UnexpectedException,
-                            $"Found multiple matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}"));
+                            $"Found multiple matching contact for PortalId: {portalId} and SSN: {maskedSSN}"));
                         return multipleContactFound;
                     }
 
                     
                     ContactEntity contact = contacts.First();
-                    _log.Warn($"Th={threadId} - SynchronizeContactData: Fetched single found Contact with Id {contact.ContactId}");
+                    _log.Info($"Th={threadId} - SynchronizeContactData: Fetched single found Contact with Id {contact.ContactId}");
 
                     // Update Contact with new email
                     if (contact.EMailAddress1.ToLower() != emailAddress.ToLower())
                     {
-                        _log.Warn($"Th={threadId} - SynchronizeContactData: Updating Contact with Id {contact.ContactId}");
+                        _log.Info($"Th={threadId} - SynchronizeContactData: Updating Contact with Id {contact.ContactId}");
                         contact.EMailAddress1 = emailAddress;
                         contact.ed_InformationSource = Generated.ed_informationsource.ForetagsPortal;
                         XrmHelper.Update(localContext, contact);

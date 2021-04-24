@@ -436,10 +436,42 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                             Endeavor.formscriptfunctions.AlertCustomDialog("Företag spärrat!");
                     },
                     function (error) {
-                        if (blocked)
-                            Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte avblockera företag. Var god försök igen senare.");
-                        else
-                            Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte spärra företag. Var god försök igen senare.");
+
+                        //Handle error message
+                        var errorMessage = "";
+                        var devider = "Message: ";
+                        var parsedMessage = "";
+                        var printMessageAvblockera = "";
+                        var printMessageSparra = "";
+
+                        if (error.innerError) {
+                            if (error.innerError.message) {
+                                errorMessage = error.innerError.message;
+                            }
+                        }
+
+                        if (errorMessage != "") {
+                            parsedMessage = errorMessage.split(devider).pop();
+                        }
+
+                        if (blocked) {
+                            if (parsedMessage != "") {
+                                printMessageAvblockera = "Kunde inte avblockera företag. Var god försök igen senare. (Fel => " + parsedMessage + ").";
+                                Endeavor.formscriptfunctions.AlertCustomDialog(printMessageAvblockera);
+                            }
+                            else {
+                                Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte avblockera företag. Var god försök igen senare.");
+                            }
+                        }
+                        else {
+                            if (parsedMessage != "") {
+                                printMessageSparra = "Kunde inte spärra företag. Var god försök igen senare. (Fel => " + parsedMessage + ").";
+                                Endeavor.formscriptfunctions.AlertCustomDialog(printMessageSparra);
+                            }
+                            else {
+                                Endeavor.formscriptfunctions.AlertCustomDialog("Kunde inte spärra företag. Var god försök igen senare.");
+                            }
+                        }
                     });
             }
             else {
@@ -471,10 +503,44 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                                                 Endeavor.formscriptfunctions.AlertCustomDialog("Företag spärrat.");
                                         },
                                         function (error) {
-                                            if (blocked)
-                                                Endeavor.formscriptfunctions.AlertCustomDialog("Avblockering av kostnadsställe(n) misslyckades" + account.accountnumber);
-                                            else
-                                                Endeavor.formscriptfunctions.AlertCustomDialog("Spärr av kostnadsställe(n) misslyckades" + account.accountnumber);
+
+                                            //Handle error message
+                                            var errorMessage = "";
+                                            var devider = "Message: ";
+                                            var parsedMessage = "";
+                                            var printMessageAvblockera = "";
+                                            var printMessageSparra = "";
+
+                                            if (error.innerError) {
+                                                if (error.innerError.message) {
+                                                    errorMessage = error.innerError.message;
+                                                }
+                                            }
+
+                                            if (errorMessage != "") {
+                                                parsedMessage = errorMessage.split(devider).pop();
+                                            }
+
+                                            if (blocked) {
+                                                if (parsedMessage != "") {
+                                                    //printMessageAvblockera = "Kunde inte avblockera företag. Var god försök igen senare. (Fel => " + parsedMessage + ").";
+                                                    printMessageAvblockera = "Avblockering av kostnadsställe(n) misslyckades " + account.accountnumber + " (Fel => " + parsedMessage + ").";
+                                                    Endeavor.formscriptfunctions.AlertCustomDialog(printMessageAvblockera);
+                                                }
+                                                else {
+                                                    Endeavor.formscriptfunctions.AlertCustomDialog("Avblockering av kostnadsställe(n) misslyckades " + account.accountnumber);
+                                                }
+                                            }
+                                            else {
+                                                if (parsedMessage != "") {
+                                                    //printMessageSparra = "Kunde inte spärra företag. Var god försök igen senare. (Fel => " + parsedMessage + ").";
+                                                    printMessageSparra = "Spärr av kostnadsställe(n) misslyckades " + account.accountnumber + " (Fel => " + parsedMessage + ").";
+                                                    Endeavor.formscriptfunctions.AlertCustomDialog(printMessageSparra);
+                                                }
+                                                else {
+                                                    Endeavor.formscriptfunctions.AlertCustomDialog("Spärr av kostnadsställe(n) misslyckades " + account.accountnumber);
+                                                }
+                                            }
                                         });
                                 }
                                 catch (e) {
