@@ -3379,6 +3379,7 @@ namespace Skanetrafiken.Import
             {
                 crmContext.ClearChanges();
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload MKL Contacts--------------");
+                Console.WriteLine("--------------Starting to Upload MKL Contacts--------------");
 
                 string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.MKLContacts);
                 ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
@@ -3453,9 +3454,10 @@ namespace Skanetrafiken.Import
 
             Plugin.LocalPluginContext localContext = GenerateLocalContext();
 
-            if (localContext == null)
+            if (localContext == null || localContext.OrganizationService == null)
             {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Connection to CRM was not possible.\n LocalContext is null.\n\n");
+                Console.WriteLine("Connection to CRM was not possible.\n LocalContext/OrganizationService is null.");
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Connection to CRM was not possible.\n LocalContext/OrganizationService is null.\n\n");
                 return;
             }
 
@@ -3464,21 +3466,29 @@ namespace Skanetrafiken.Import
             CrmContext crmContext = new CrmContext(localContext.OrganizationService);
             SaveChangesOptions optionsChanges = SaveChangesOptions.ContinueOnError;
 
-            if (localContext == null || crmContext == null)
+            if (crmContext == null)
             {
-                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The CRM localContext or the CRM EarlyBound Context is null.");
-                Console.WriteLine("The CRM localContext or the CRM EarlyBound Context is null.");
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The CRM EarlyBound Context is null.");
+                Console.WriteLine("The CRM EarlyBound Context is null.");
                 Console.ReadLine();
                 return;
             }
+            string runUpdateContacts = ConfigurationManager.AppSettings["runUpdateContacts"];
 
-            ImportContactsMKLId(localContext, crmContext, optionsChanges, relativeExcelPath);
-
-            //bool showMenu = true;
-            //while (showMenu)
-            //{
-            //    showMenu = MainMenuUpsales(localContext, crmContext, optionsChanges, relativeExcelPath);
-            //}
+            if(runUpdateContacts == "true")
+            {
+                Console.WriteLine("Run Update Contacts selected... from file Import analysdata.csv.");
+                ImportContactsMKLId(localContext, crmContext, optionsChanges, relativeExcelPath);
+            }
+            else
+            {
+                Console.WriteLine("Run Updales import selected...");
+                bool showMenu = true;
+                while (showMenu)
+                {
+                    showMenu = MainMenuUpsales(localContext, crmContext, optionsChanges, relativeExcelPath);
+                }
+            }
         }
     }
 }
