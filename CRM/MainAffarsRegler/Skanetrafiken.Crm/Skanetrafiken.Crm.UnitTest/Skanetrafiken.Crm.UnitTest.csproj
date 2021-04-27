@@ -110,6 +110,7 @@
     <Compile Include="crmservicehelpers.cs" />
     <Compile Include="deviceidmanager.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="OrderProductFixture.cs" />
     <Compile Include="PluginFixtureBase.cs" />
     <Compile Include="QuoteFixture.cs" />
     <Compile Include="QuoteProductFixture.cs" />

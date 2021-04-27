@@ -295,5 +295,54 @@ namespace Skanetrafiken.Crm.Entities
 
             }
         }
+
+        public void HandlePreOrderProductUpdate(Plugin.LocalPluginContext localContext, OrderProductEntity preImage)
+        {
+            FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
+            if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
+            {
+                updatePriceOrderProduct(localContext, preImage);
+            }
+        }
+
+        public void updatePriceOrderProduct(Plugin.LocalPluginContext localContext, OrderProductEntity preImage)
+        {
+            if (this.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_totalslots) || this.IsAttributeModified(preImage, OrderProductEntity.Fields.PricePerUnit))
+            {
+                decimal price = 0;
+                int quantity = 0;
+                int totalSlots = 0;
+
+                if (!this.IsAttributeModified(preImage, OrderProductEntity.Fields.PricePerUnit))
+                {
+                    price = preImage.PricePerUnit.Value;
+                }
+                else
+                {
+                    price = this.PricePerUnit.Value;
+                }
+
+                if (!this.IsAttributeModified(preImage, OrderProductEntity.Fields.Quantity))
+                {
+                    quantity = (int)preImage.Quantity.Value;
+                }
+                else
+                {
+                    quantity = (int)this.Quantity.Value;
+                }
+                if (!this.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_totalslots))
+                {
+                    totalSlots = preImage.ed_totalslots.Value;
+                }
+                else
+                {
+                    totalSlots = this.ed_totalslots.Value;
+                }
+
+
+                this.Tax = new Money((totalSlots - quantity) * price);
+            }
+        }
+
     }
 }
