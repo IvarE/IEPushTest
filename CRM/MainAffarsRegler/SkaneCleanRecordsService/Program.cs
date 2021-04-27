@@ -51,12 +51,14 @@ namespace Endeavor.Crm.CleanRecordsService
                 //Workaround to make it possible to debug a service.
                 if (runCloseCases == "true")
                 {
+                    _log.Info($"Running Cases Service...");
                     CasesService service = new CasesService();
                     service.Execute();
                 }
 
                 if (runInactivateContacts == "true")
                 {
+                    _log.Info($"Running Contacts Service...");
                     ContactsService service = new ContactsService();
                     service.Execute();
                 }
@@ -65,11 +67,17 @@ namespace Endeavor.Crm.CleanRecordsService
 #else
                 List<ServiceBase> servicesToRun = new List<ServiceBase>();
 
-                if(runCloseCases == "true")
+                if (runCloseCases == "true")
+                {
+                    _log.Info($"Running Cases Service...");
                     servicesToRun.Add(new CasesService());
+                }
 
                 if (runInactivateContacts == "true")
-                    servicesToRun.Add(new CasesService());
+                {
+                    _log.Info($"Running Contacts Service...");
+                    servicesToRun.Add(new ContactsService());
+                }
 
                 ServiceBase.Run(servicesToRun.ToArray());
 #endif

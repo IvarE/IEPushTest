@@ -62,6 +62,7 @@ namespace Endeavor.Crm.CleanRecordsService
 
             try
             {
+                _log.Info($"Starting Inactivate Contacts Job....");
                 localContext = GenerateLocalContext();
 
                 if (localContext == null)
@@ -70,11 +71,16 @@ namespace Endeavor.Crm.CleanRecordsService
                     return;
                 }
 
+                _log.Info($"Local Context is not null....");
                 string runFullData = ConfigurationManager.AppSettings["runFullData"];
                 
-                if(runFullData == null || runFullData != "true" || runFullData != "false")
+                if(runFullData == null || (runFullData != "true" && runFullData != "false"))
+                {
                     _log.Debug($"The App Setting 'runFullData' is neither 'true' or 'false'.");
+                    return;
+                }
 
+                _log.Info($"runFullData Flag is {runFullData}");
                 bool bRunFullData = runFullData == "true" ? true : false;
                 ExecuteMultipleResponse responseWithResults = RunInactivateContacts(localContext, bRunFullData);
 
@@ -160,7 +166,10 @@ namespace Endeavor.Crm.CleanRecordsService
             av.EntityAlias = "av";
 
             if (!bRunFullData)
+            {
+                _log.Info($"Contacts filtered by Created On: {testSpecificDate}");
                 queryContacts.Criteria.AddCondition(Contact.Fields.CreatedOn, ConditionOperator.On, testSpecificDate);
+            }
 
             return queryContacts;
         }

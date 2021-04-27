@@ -38,9 +38,9 @@
             // 
             // serviceInstaller1
             // 
-            this.serviceInstaller1.Description = "Close Cases";
-            this.serviceInstaller1.DisplayName = "CloseCasesService";
-            this.serviceInstaller1.ServiceName = "CloseCasesService";
+            this.serviceInstaller1.Description = "Clean Records";
+            this.serviceInstaller1.DisplayName = "Clean Records Service";
+            this.serviceInstaller1.ServiceName = "CleanRecordsService";
             this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller

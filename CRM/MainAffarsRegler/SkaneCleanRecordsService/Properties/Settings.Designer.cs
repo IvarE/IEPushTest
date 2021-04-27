@@ -61,22 +61,28 @@ namespace Endeavor.Crm.CleanRecordsService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2018-01-13T00:00:00Z")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2018-01-16T00:00:00Z")]
         public string SpecificDate {
             get {
                 return ((string)(this["SpecificDate"]));
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\Endeavor\\InactivateContactsService.Credential.xml")]
         public string CredentialsFilePathContacts {
             get {
                 return ((string)(this["CredentialsFilePathContacts"]));
             }
-            set {
-                this["CredentialsFilePathContacts"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0/1 * 1/1 * ? *")]
+        public string InactivateContactsScheduleCronExpression {
+            get {
+                return ((string)(this["InactivateContactsScheduleCronExpression"]));
             }
         }
     }
