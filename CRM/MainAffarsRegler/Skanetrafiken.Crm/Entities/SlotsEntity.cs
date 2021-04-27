@@ -37,9 +37,13 @@ namespace Skanetrafiken.Crm.Entities
                     SlotsEntity.SlotsEntityUpdateQuantity(localContext, target);
                 }
 
-                if (target.ed_Quote != null || target.ed_Order != null)
+                if (target.ed_Quote != null)
                 {
                     SlotsEntity.SlotsEntityUpdateCustomPrice(localContext, target, null);
+                }
+                else if(target.ed_Order != null)
+                {
+                    //Do Discount depending on Order Product
                 }
             }
         }
@@ -53,9 +57,13 @@ namespace Skanetrafiken.Crm.Entities
                     SlotsEntity.SlotsEntityUpdateQuantity(localContext, target, preImage);
                 }
 
-                if(target.IsAttributeModified(preImage,SlotsEntity.Fields.ed_Quote) || target.IsAttributeModified(preImage, SlotsEntity.Fields.ed_Order))
+                if(target.IsAttributeModified(preImage,SlotsEntity.Fields.ed_Quote))
                 {
                     SlotsEntity.SlotsEntityUpdateCustomPrice(localContext, target, preImage);
+                }
+                else if (target.IsAttributeModified(preImage, SlotsEntity.Fields.ed_Order))
+                {
+                    //Do discount for slots depending on OrderProduct
                 }
             }
         }

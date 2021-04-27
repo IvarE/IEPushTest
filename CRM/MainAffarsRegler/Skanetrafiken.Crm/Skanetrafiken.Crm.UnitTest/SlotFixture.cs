@@ -45,11 +45,19 @@ namespace Endeavor.Crm.UnitTest
                 {
                     //CaseOriginCode = new OptionSetValue(3),
                     ed_BookingDay = new DateTime(2021, 04, 11),
-                    ed_Quote = new EntityReference(QuoteEntity.EntityLogicalName, Guid.Parse("06d8b0ef-af6a-eb11-9479-005056b6fa28")),
-                    ed_QuoteProductID = new EntityReference(QuoteProductEntity.EntityLogicalName, Guid.Parse("dad69739-3f99-eb11-947e-005056b6fa28")),
-                    ed_ProductID = new EntityReference(ProductEntity.EntityLogicalName, Guid.Parse("a4fa5f5f-86a1-ea11-80f9-005056b61fff")),
                     ed_name = "Test UnitTest | DT: " + DateTime.Now.ToString(),
-                    ed_StandardPrice = new Money(215)
+                    ed_Extended = true,
+                    ed_StandardPrice = new Money(4000),
+                    ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.Preliminary,
+                    //ed_Quote = new EntityReference(QuoteEntity.EntityLogicalName, Guid.Parse("06d8b0ef-af6a-eb11-9479-005056b6fa28")),
+                    //ed_QuoteProductID = new EntityReference(QuoteProductEntity.EntityLogicalName, Guid.Parse("dad69739-3f99-eb11-947e-005056b6fa28")),
+
+                    ed_ProductID = new EntityReference(ProductEntity.EntityLogicalName, Guid.Parse("19ffd424-a196-ea11-80f8-005056b61fff")),
+                    ed_Order = new EntityReference(OrderEntity.EntityLogicalName, Guid.Parse("13164f39-2ba7-eb11-9480-005056b6fa28")),
+                    ed_OrderProductID = new EntityReference(OrderProductEntity.EntityLogicalName, Guid.Parse("1a164f39-2ba7-eb11-9480-005056b6fa28")),
+                    ed_Opportunity = new EntityReference(OpportunityEntity.EntityLogicalName, Guid.Parse("0a1c7dd8-13e9-e911-80f0-005056b61fff")),
+
+                    
                 };
 
                 Guid slotId = XrmHelper.Create(localContext, slot);
