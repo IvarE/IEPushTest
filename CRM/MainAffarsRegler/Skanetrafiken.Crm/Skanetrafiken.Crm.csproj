@@ -231,6 +231,7 @@
     <Compile Include="PreCampaignResponseUpdate.cs" />
     <Compile Include="PreContactMerge.cs" />
     <Compile Include="PreKBArticleUpdate_Sync.cs" />
+    <Compile Include="PreOrderProductUpdate.cs" />
     <Compile Include="PreQualifyLead.cs" />
     <Compile Include="PreLeadSetState.cs" />
     <Compile Include="PostLeadSetState_Async.cs" />
