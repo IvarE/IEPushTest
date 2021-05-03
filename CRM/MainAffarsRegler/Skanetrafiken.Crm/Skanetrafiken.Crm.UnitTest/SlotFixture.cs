@@ -95,6 +95,22 @@ namespace Endeavor.Crm.UnitTest
                 SlotsEntity.HandleSlotsEntityUpdate(localContext, updateSlot, slot);
             }
         }
+
+        [Test, Category("Debug")]
+        public void UpdateSlotNumber()
+        {
+            using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+            {
+                // This statement is required to enable early-bound type support.
+                _serviceProxy.EnableProxyTypes();
+
+                Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, PluginExecutionContext, new TracingService());
+
+                SlotsEntity slot = XrmRetrieveHelper.Retrieve<SlotsEntity>(localContext, new EntityReference(SlotsEntity.EntityLogicalName, Guid.Parse("836061cf-2aac-eb11-9480-005056b6fa28")), new ColumnSet(true));
+
+                SlotsEntity.updateNumberSlot(localContext, slot);
+            }
+        }
         internal ServerConnection ServerConnection
         {
             get

@@ -54640,18 +54640,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// 
+		/// Auto Generator Slot ID
 		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_slotid")]
-		public string ed_SlotID
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_slotidentifier")]
+		public string ed_SlotIdentifier
 		{
 			get
 			{
-				return this.GetAttributeValue<string>("ed_slotid");
+				return this.GetAttributeValue<string>("ed_slotidentifier");
 			}
 			set
 			{
-				this.SetAttributeValue("ed_slotid", value);
+				this.SetAttributeValue("ed_slotidentifier", value);
 			}
 		}
 		
@@ -55221,7 +55221,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_QuoteProductID = "ed_quoteproductid";
 			
-			public const string ed_SlotID = "ed_slotid";
+			public const string ed_SlotIdentifier = "ed_slotidentifier";
 			
 			public const string ed_SlotNumber = "ed_slotnumber";
 			
@@ -55271,7 +55271,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const int ed_name = 100;
 			
-			public const int ed_SlotID = 100;
+			public const int ed_SlotIdentifier = 100;
 		}
 	}
 	
