@@ -45,7 +45,44 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     //Do Discount depending on Order Product
                 }
+
+                if(target.ed_ProductID != null)
+                {
+                    updateNumberSlot(localContext, target);
+                }
             }
+        }
+
+        public static void updateNumberSlot(Plugin.LocalPluginContext localContext,SlotsEntity target)
+        {
+            QueryExpression querySlotsNumber = new QueryExpression();
+            querySlotsNumber.EntityName = SlotsEntity.EntityLogicalName;
+            querySlotsNumber.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_SlotNumber);
+            querySlotsNumber.TopCount = 1;
+
+            FilterExpression filter = new FilterExpression();
+            filter.FilterOperator = LogicalOperator.And;
+            filter.AddCondition(SlotsEntity.Fields.ed_ProductID, ConditionOperator.Equal, target.ed_ProductID.Id);
+            filter.AddCondition(SlotsEntity.Fields.ed_SlotID, ConditionOperator.NotEqual, target.Id);
+
+            querySlotsNumber.Criteria.AddFilter(filter);
+            querySlotsNumber.AddOrder(SlotsEntity.Fields.ed_SlotNumber, OrderType.Descending);
+
+            List<SlotsEntity> slotsFiltered = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlotsNumber);
+
+            var slotNumber = 1;
+            if (slotsFiltered != null && slotsFiltered.Count > 0)
+            {
+                if (slotsFiltered[0].ed_SlotNumber != null && slotsFiltered[0].ed_SlotNumber.Value > 0)
+                {
+                    slotNumber = slotsFiltered[0].ed_SlotNumber.Value + 1;
+                }
+            }
+            SlotsEntity slotToUpdate = new SlotsEntity();
+            slotToUpdate.Id = target.Id;
+            slotToUpdate.ed_SlotNumber = slotNumber;
+
+            XrmHelper.Update(localContext, slotToUpdate);
         }
         public static void HandleSlotsEntityUpdate(Plugin.LocalPluginContext localContext, SlotsEntity target, SlotsEntity preImage)
         {
