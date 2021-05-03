@@ -29,6 +29,8 @@ namespace Skanetrafiken.Crm.Entities
 
         public static void HandleSlotsEntityCreate(Plugin.LocalPluginContext localContext, SlotsEntity target)
         {
+            localContext.Trace("Inside HandleSlotsEntityCreate");
+
             FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
             if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
             {
@@ -55,6 +57,7 @@ namespace Skanetrafiken.Crm.Entities
 
         public static void updateNumberSlot(Plugin.LocalPluginContext localContext,SlotsEntity target)
         {
+            localContext.Trace("Inside updateNumberSlot");
             QueryExpression querySlotsNumber = new QueryExpression();
             querySlotsNumber.EntityName = SlotsEntity.EntityLogicalName;
             querySlotsNumber.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_SlotNumber);
@@ -73,11 +76,14 @@ namespace Skanetrafiken.Crm.Entities
             var slotNumber = 1;
             if (slotsFiltered != null && slotsFiltered.Count > 0)
             {
+                localContext.Trace("SlotsFiltered not null and greater than 0");
                 if (slotsFiltered[0].ed_SlotNumber != null && slotsFiltered[0].ed_SlotNumber.Value > 0)
                 {
+                    localContext.Trace("SlotNumber not null and greater than 0");
                     slotNumber = slotsFiltered[0].ed_SlotNumber.Value + 1;
                 }
             }
+            localContext.Trace("SlotToUpdate Number Value: " + slotNumber);
             SlotsEntity slotToUpdate = new SlotsEntity();
             slotToUpdate.Id = target.Id;
             slotToUpdate.ed_SlotNumber = slotNumber;
