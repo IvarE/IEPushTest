@@ -159,7 +159,6 @@
     <Compile Include="PostQuoteProductCreate.cs" />
     <Compile Include="PostQuoteProductUpdate.cs" />
     <Compile Include="PostSlotCreate.cs" />
-    <Compile Include="PostSlotCreate_Async.cs" />
     <Compile Include="PostSlotUpdate.cs" />
     <Compile Include="PreAccountUpdate.cs" />
     <Compile Include="PreAccountCreate.cs" />
