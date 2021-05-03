@@ -70,7 +70,6 @@ namespace Skanetrafiken.Crm.Entities
             QueryExpression querySlotsNumber = new QueryExpression();
             querySlotsNumber.EntityName = SlotsEntity.EntityLogicalName;
             querySlotsNumber.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_SlotNumber);
-            querySlotsNumber.TopCount = 1;
 
             FilterExpression filter = new FilterExpression();
             filter.FilterOperator = LogicalOperator.And;
@@ -80,19 +79,19 @@ namespace Skanetrafiken.Crm.Entities
             querySlotsNumber.Criteria.AddFilter(filter);
             querySlotsNumber.AddOrder(SlotsEntity.Fields.ed_SlotNumber, OrderType.Descending);
 
-            List<SlotsEntity> slotsFiltered = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlotsNumber);
+            SlotsEntity lastSlot = XrmRetrieveHelper.RetrieveFirst<SlotsEntity>(localContext, querySlotsNumber);
 
             var slotNumber = 1;
-            if (slotsFiltered != null && slotsFiltered.Count > 0)
+            if (lastSlot != null)
             {
-                localContext.Trace("SlotsFiltered not null and greater than 0");
-                if (slotsFiltered[0].ed_SlotNumber != null && slotsFiltered[0].ed_SlotNumber.Value > 0)
+                localContext.Trace("lastSlot not null");
+                if (lastSlot.ed_SlotNumber != null && lastSlot.ed_SlotNumber.Value > 0)
                 {
                     localContext.Trace("SlotNumber not null and greater than 0");
-                    slotNumber = slotsFiltered[0].ed_SlotNumber.Value + 1;
+                    slotNumber = lastSlot.ed_SlotNumber.Value + 1;
                 }
             }
-            localContext.Trace("SlotToUpdate Number Value: " + slotNumber);
+            localContext.Trace("lastSlot Number Value: " + slotNumber);
             SlotsEntity slotToUpdate = new SlotsEntity();
             slotToUpdate.Id = target.Id;
             slotToUpdate.ed_SlotNumber = slotNumber;
