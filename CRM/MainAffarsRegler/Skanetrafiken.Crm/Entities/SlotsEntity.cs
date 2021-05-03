@@ -47,14 +47,23 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     //Do Discount depending on Order Product
                 }
+                
+            }
+        }
 
-                if(target.ed_ProductID != null)
+        public static void HandleSlotsEntityCreateAsync(Plugin.LocalPluginContext localContext,SlotsEntity target)
+        {
+            localContext.Trace("Inside HandleSlotsEntityCreate");
+
+            FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
+            if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
+            {
+                if (target.ed_ProductID != null)
                 {
                     updateNumberSlot(localContext, target);
                 }
             }
         }
-
         public static void updateNumberSlot(Plugin.LocalPluginContext localContext,SlotsEntity target)
         {
             localContext.Trace("Inside updateNumberSlot");
