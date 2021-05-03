@@ -19,35 +19,16 @@ using Skanetrafiken.Crm.Schema.Generated;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Http.Headers;
 
 namespace Skanetrafiken.Crm.Entities
 {
-    public class IssueEventDetail
+    public class EventSingapore
     {
-        public string IssueId;
-        public string IssueEventDateUtc;
-        public List<string> SubJourneys;
-        public string Journey;
-        public string RefundForm;
-        public string RefundType;
-        public string RequestedCompensation;
-    }
-
-    public class CompensationResult
-    {
-        public string ValidationResult;
-        public decimal RefundedAmount;
-        public bool IsRefunded;
-        public string SekundNumber;
-        public IssueEventDetail IssueEventDetail;
-    }
-
-    public class TicketEvent
-    {
-        public string resourceType;
-        public string ticketEventType;
-        public object data;
-        public int version;
+        public string RgolIssueId { get; set; }
+        public decimal Amount { get; set; }
+        public string RefundType { get; set; }
+        public string CompensationForm { get; set; }
     }
 
     public class RefundEntity : Generated.cgi_refund
@@ -63,7 +44,7 @@ namespace Skanetrafiken.Crm.Entities
                 return;
             }
 
-            ColumnSet columnSet = new ColumnSet();
+            ColumnSet columnSet = new ColumnSet(IncidentEntity.Fields.cgi_RGOLIssueId);
             IncidentEntity eCase = XrmRetrieveHelper.Retrieve<IncidentEntity>(localContext, this.cgi_Caseid.Id, columnSet);
 
             if(eCase == null)
@@ -72,72 +53,62 @@ namespace Skanetrafiken.Crm.Entities
                 return;
             }
 
-            if(eCase.CaseOriginCode == null || eCase.CaseOriginCode.Value != incident_caseorigincode.ResegarantiOnline)
+            if(string.IsNullOrEmpty(eCase.cgi_RGOLIssueId))
             {
                 localContext.Trace($"The Origin of the 'Case' is null or is not an RGOL Case.");
                 return;
             }
 
+            EventSingapore evSingapore = new EventSingapore();
+            evSingapore.RgolIssueId = eCase.cgi_RGOLIssueId;
+            evSingapore.Amount = this.cgi_Amount != null ? this.cgi_Amount.Value : 0.0M;
+            evSingapore.CompensationForm = this.cgi_ReimbursementFormid != null ? this.cgi_ReimbursementFormid.Name : string.Empty;
+            evSingapore.RefundType = this.cgi_RefundTypeid != null ? this.cgi_RefundTypeid.Name : string.Empty;
+
+            string jsonEvent = JsonHelper.JsonSerializer<EventSingapore>(evSingapore);
+
             string ticketId = "";
             string clientId = "";
             string clientSecret = "";
-            string apiURL = "https://stticketmasterint.azurewebsites.net" + "/v2/tickets/" + ticketId + "/events";
+            string webApiURl = "https://stticketmasterint.azurewebsites.net" + "/v2/tickets/" + ticketId + "/events";
+            string token = AzureHelper.GetAccessToken(webApiURl, clientId, clientSecret);
 
-
-
-
-
-            var authInfo = ApiBase.GetAuth();
-            Task.Run(() => ApiBase.Authenticate(authInfo, authInfo.TicketMaster)).Wait();
-
-            CompensationResult eventData = new CompensationResult {
-
-
-            };
-
-            TicketEvent evt = new TicketEvent
-            {
-                resourceType = @"ticketEvent",
-                ticketEventType = @"travelCompensationResult",
-                data = eventData,
-                version = 2
-            };
-            //ApiBase._authResult.AccessToken
-
-
-            //var response = PostRequest("/v2/tickets/" + ticketId + "/events", evt);
-
-            /*
-            if (response.StatusCode == HttpStatusCode.Created)
-                return Convert.ToString(JObject.Parse(response.Content)["id"]);
-
-            */
-
-
-
-
-            string token = AzureHelper.GetAccessToken(apiURL, clientId, clientSecret);
-
-            var contentObject = new object();
+            //TODO TASK 6988
 
             using (HttpClient httpClient = new HttpClient())
             {
-                var httpRequest = new HttpRequestMessage(HttpMethod.Post, apiURL);
+                HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, webApiURl);
                 httpRequest.Headers.Add("Authorization", token);
 
-                string json = JsonHelper.JsonSerializer<object>(contentObject);
-                httpRequest.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                httpRequest.Content = new StringContent(jsonEvent, Encoding.UTF8, "application/json");
 
                 var response = httpClient.SendAsync(httpRequest).Result;
                 string responseJSON = response.Content.ReadAsStringAsync().Result;
 
                 if (!response.IsSuccessStatusCode)
                 {
+                    //error
                     //LantmannenFinanceErrorDTO fault = JsonHelper.JsonDeserialize<LantmannenFinanceErrorDTO>(responseJSON);
                     //actionResponse.error = fault;
                     //return actionResponse;
                 }
+                else
+                {
+                    //sucess
+                }
             }
+
+
+            var authInfo = ApiBase.GetAuth();
+            Task.Run(() => ApiBase.Authenticate(authInfo, authInfo.TicketMaster)).Wait();
+
+
+            //ApiBase._authResult.AccessToken
+
+
+
+
+
         }
 
         public void HandlePostRefundCreateAsync(Plugin.LocalPluginContext localContext)
