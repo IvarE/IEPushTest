@@ -74,7 +74,7 @@ namespace Skanetrafiken.Crm.Entities
             FilterExpression filter = new FilterExpression();
             filter.FilterOperator = LogicalOperator.And;
             filter.AddCondition(SlotsEntity.Fields.ed_ProductID, ConditionOperator.Equal, target.ed_ProductID.Id);
-            filter.AddCondition(SlotsEntity.Fields.ed_SlotID, ConditionOperator.NotEqual, target.Id);
+            filter.AddCondition(SlotsEntity.Fields.ed_SlotsId, ConditionOperator.NotEqual, target.Id);
 
             querySlotsNumber.Criteria.AddFilter(filter);
             querySlotsNumber.AddOrder(SlotsEntity.Fields.ed_SlotNumber, OrderType.Descending);
