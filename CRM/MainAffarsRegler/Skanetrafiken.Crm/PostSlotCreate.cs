@@ -65,6 +65,8 @@ namespace Skanetrafiken.Crm
                     // Obtain the target entity from the input parameters.
                     SlotsEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<SlotsEntity>();
 
+                    target.Trace(localContext.TracingService);
+
                     SlotsEntity.HandleSlotsEntityCreate(localContext, target);
                 }
                 catch (Exception ex)

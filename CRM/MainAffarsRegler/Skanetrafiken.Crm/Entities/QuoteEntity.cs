@@ -32,6 +32,7 @@ namespace Skanetrafiken.Crm.Entities
                 if (quote.IsAttributeModified(preImage, QuoteEntity.Fields.DiscountPercentage) || quote.IsAttributeModified(preImage, QuoteEntity.Fields.DiscountAmount))
                 {
                     //Note Change logic (maybe remove this call) after using orderProduct and quoteProduct discounts instead
+                    //Quote discount % - remove if Skåne wants. 
                     QuoteEntity.UpdateSlotsCustomPrice(localContext, quote, preImage);
                 }
             }

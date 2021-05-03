@@ -29,6 +29,8 @@ namespace Skanetrafiken.Crm.Entities
 
         public static void HandleSlotsEntityCreate(Plugin.LocalPluginContext localContext, SlotsEntity target)
         {
+            localContext.Trace("Inside HandleSlotsEntityCreate");
+
             FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
             if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
             {
@@ -45,7 +47,47 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     //Do Discount depending on Order Product
                 }
+
+                if (target.ed_ProductID != null)
+                {
+                    updateNumberSlot(localContext, target);
+                }
             }
+        }
+        
+        public static void updateNumberSlot(Plugin.LocalPluginContext localContext,SlotsEntity target)
+        {
+            localContext.Trace("Inside updateNumberSlot");
+            QueryExpression querySlotsNumber = new QueryExpression();
+            querySlotsNumber.EntityName = SlotsEntity.EntityLogicalName;
+            querySlotsNumber.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_SlotNumber);
+
+            FilterExpression filter = new FilterExpression();
+            filter.FilterOperator = LogicalOperator.And;
+            filter.AddCondition(SlotsEntity.Fields.ed_ProductID, ConditionOperator.Equal, target.ed_ProductID.Id);
+            filter.AddCondition(SlotsEntity.Fields.ed_SlotsId, ConditionOperator.NotEqual, target.Id);
+
+            querySlotsNumber.Criteria.AddFilter(filter);
+            querySlotsNumber.AddOrder(SlotsEntity.Fields.ed_SlotNumber, OrderType.Descending);
+
+            SlotsEntity lastSlot = XrmRetrieveHelper.RetrieveFirst<SlotsEntity>(localContext, querySlotsNumber);
+
+            var slotNumber = 1;
+            if (lastSlot != null)
+            {
+                localContext.Trace("lastSlot not null");
+                if (lastSlot.ed_SlotNumber != null && lastSlot.ed_SlotNumber.Value > 0)
+                {
+                    localContext.Trace("SlotNumber not null and greater than 0");
+                    slotNumber = lastSlot.ed_SlotNumber.Value + 1;
+                }
+            }
+            localContext.Trace("lastSlot Number Value: " + slotNumber);
+            SlotsEntity slotToUpdate = new SlotsEntity();
+            slotToUpdate.Id = target.Id;
+            slotToUpdate.ed_SlotNumber = slotNumber;
+
+            XrmHelper.Update(localContext, slotToUpdate);
         }
         public static void HandleSlotsEntityUpdate(Plugin.LocalPluginContext localContext, SlotsEntity target, SlotsEntity preImage)
         {
