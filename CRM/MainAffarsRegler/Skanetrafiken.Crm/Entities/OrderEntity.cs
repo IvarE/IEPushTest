@@ -19,12 +19,12 @@ namespace Skanetrafiken.Crm.Entities
             FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
             if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
             {
-                if (order != null && order.StateCode != null && order.StatusCode == Generated.salesorder_statuscode.NoMoney)
+                if (order != null && order.StateCode != null && order.StateCode == Generated.SalesOrderState.Canceled)
                 {
 
                     OrderEntity.UpdateSlotsInfo(localContext, order);
                 }
-                else if (order != null && order.StatusCode != null && order.StatusCode == Generated.salesorder_statuscode.Invoiced)
+                else if (order != null && order.StateCode != null && order.StateCode == Generated.SalesOrderState.Fulfilled)
                 {
                     OrderEntity.UpdateSlotsInfo(localContext, order,true);
                 }
