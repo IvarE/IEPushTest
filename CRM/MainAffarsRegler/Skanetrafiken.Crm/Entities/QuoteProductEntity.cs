@@ -93,13 +93,10 @@ namespace Skanetrafiken.Crm.Entities
                     }
                     if(isSlotProduct)
                     {
-                        if (target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_FromDate) || target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate))
+                        if (target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_FromDate) || target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate) || target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ManualDiscountAmount))
                         {
                             localContext.Trace("ed_FromDate or ed_ToDate modified");
                             UpdateOrGenerateSlots(localContext, target, preImage);
-                        }
-                        if(target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ManualDiscountAmount))
-                        {
                             UpdateSlotsCustomPriceFromQuoteProduct(localContext, target);
                         }
                     }
@@ -330,7 +327,7 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
-        public static void UpdateSlotsCustomPriceFromQuoteProduct(Plugin.LocalPluginContext localContext, QuoteProductEntity quoteProduct) // do we need preImage?  QuoteProductEntity preImage
+        public static void UpdateSlotsCustomPriceFromQuoteProduct(Plugin.LocalPluginContext localContext, QuoteProductEntity quoteProduct) 
         { 
             decimal? discountAmount = null;
 
@@ -366,7 +363,7 @@ namespace Skanetrafiken.Crm.Entities
                             slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - discountPerSlot);
                             XrmHelper.Update(localContext, slotToUpdate);
 
-                            //get all slots conected to this quote
+                            //get all slots conected to this quoteproduct
                             //divide the discount amount by the number of slots
                             // subtract the result to the customPrice
                             //update all slots
@@ -385,7 +382,7 @@ namespace Skanetrafiken.Crm.Entities
                             slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value);
                             XrmHelper.Update(localContext, slotToUpdate);
 
-                            //get all slots conected to this quote
+                            //get all slots conected to this quoteproduct
                             //divide the discount amount by the number of slots
                             // subtract the result to the customPrice
                             //update all slots
