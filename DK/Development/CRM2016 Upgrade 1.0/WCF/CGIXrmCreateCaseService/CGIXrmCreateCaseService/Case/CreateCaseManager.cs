@@ -1504,7 +1504,6 @@ namespace CGIXrmCreateCaseService.Case
                 {"caseorigincode", new OptionSetValue(3)}
             };
 
-
             if (!string.IsNullOrEmpty(request.CustomersCategory))
                 _incidentEntity.Attributes.Add("cgi_customers_category", request.CustomersCategory);
 
@@ -1520,6 +1519,9 @@ namespace CGIXrmCreateCaseService.Case
             if (!string.IsNullOrWhiteSpace(request.Title))
                 titleText = request.Title;
 
+            if (titleText.Contains("JoJo") && titleText.Contains("kort") && titleText.Contains("och") && titleText.Contains("priser"))
+                titleText = "Kort, appar, biljetter och priser";
+
             #region SM17479954 - Kontrollavgiffter: Kontrollavgnr i rubrik
             /* OLD code
             if (sendtoqueue == 285050008) 
@@ -1529,14 +1531,9 @@ namespace CGIXrmCreateCaseService.Case
             if (sendtoqueue == 285050008)
             {
                 if (!string.IsNullOrEmpty(request.ControlFeeNumber))
-                {
                     titleText = "" + request.ControlFeeNumber + "";
-                }
                 else
-                {
                     titleText = "Bestridan kontrollavgift";
-                }
-
             }
 
             #endregion
@@ -1550,9 +1547,7 @@ namespace CGIXrmCreateCaseService.Case
                 descriptionText = $"{request.Description}{Environment.NewLine}";
 
             if (customer.AccountName == "CGI_DEFAULT")
-            {
                 _incidentEntity.Attributes.Add("customerid", new EntityReference("account", customer.AccountId));
-            }
             else
             {
                 if (request.CustomerType == CustomerType.Organisation)
@@ -1583,6 +1578,11 @@ namespace CGIXrmCreateCaseService.Case
             if (!string.IsNullOrEmpty(request.CardNumber))
             {
                 _incidentEntity.Attributes.Add("cgi_unregisterdtravelcard", request.CardNumber);
+
+                if(request.CardNumber.All(char.IsDigit))
+                    _incidentEntity.Attributes.Add("ed_unregisterdskacard", request.CardNumber);
+                else
+                    _incidentEntity.Attributes.Add("cgi_ticketnumber1", request.CardNumber);
             }
 
             if (!string.IsNullOrEmpty(request.WayOfTravel))
@@ -1627,9 +1627,7 @@ namespace CGIXrmCreateCaseService.Case
                 _incidentEntity.Attributes.Add("cgi_emailcount", customer.RecordCount.ToString());
 
             if (request.ActionDate != null)
-            {
                 _incidentEntity.Attributes.Add("cgi_actiondate", request.ActionDate.Value);
-            }
 
             _incidentEntity.Attributes.Add("description", descriptionText);
 
@@ -2696,12 +2694,9 @@ namespace CGIXrmCreateCaseService.Case
                 {
                     if (request.ContactCustomer)
                     {
-
                         // If a contact, call Fasad.
                         if (request.CustomerType == CustomerType.Private)
                         {
-                            //LogMessage(@"C:\Temp\createcase.txt", "Calling GetOrCreateContactCase()");
-
                             //Create private customer (contact) from firstname, lastname and emailaddress
                             account = new Account();
                             Guid contactGuid = GetOrCreateContactCase(request.FirstName, request.LastName, request.EmailAddress, request.MobilePhoneNumber);
@@ -2736,7 +2731,6 @@ namespace CGIXrmCreateCaseService.Case
                                 }
                                 else
                                 {
-
                                     var setting = GetDefaultCustomer();
 
                                     if (setting != null)
@@ -2749,15 +2743,11 @@ namespace CGIXrmCreateCaseService.Case
                                         };
                                     }
                                     else
-                                    {
                                         throw new Exception("Det finns ingen default kund definierad!");
-                                    }
                                 }
                             }
                             else
                             {
-                                //LogMessage(@"C:\Temp\createcase.txt", "Calling GetOrCreateContactCase()");
-
                                 //Create private customer (contact) from firstname, lastname and emailaddress
                                 account = new Account();
                                 Guid contactGuid = GetOrCreateContactCase(request.FirstName, request.LastName, request.EmailAddress, request.MobilePhoneNumber);
@@ -2833,13 +2823,11 @@ namespace CGIXrmCreateCaseService.Case
             //_log.Debug(string.Format("============================================"));
             _log.Debug(string.Format("Entered RequestCreateAutoRgCase"));
 
-
             var response = new AutoRgCaseResponse()
             {
                 Success = false,
                 ErrorMessage = string.Empty
             };
-
 
             //dublettkontroll, finns redan ett ärende för detta RGOLIssueID?
             QueryBase query = CreateQueryAttribute("incident", new string[] { "incidentid", "ticketnumber" }, new string[] { "cgi_rgolissueid" }, new object[] { request.RGOLIssueID });
