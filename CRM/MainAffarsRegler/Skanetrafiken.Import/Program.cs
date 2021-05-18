@@ -1538,6 +1538,128 @@ namespace Skanetrafiken.Import
             Console.WriteLine("Done.");
         }
 
+        public static void Import2AccountRecords(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
+        {
+            if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
+                return;
+            }
+
+            Console.Write("Creating Batch of Accounts... ");
+            using (ProgressBar progress = new ProgressBar())
+            {
+                for (int i = 0; i < importExcelInfo.lData.Count; i++)
+                {
+                    OptionMetadataCollection colOpCompanyTrade = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_companytrade);
+
+                    try
+                    {
+                        progress.Report((double)i / (double)importExcelInfo.lData.Count);
+                        Account nAccount = new Account();
+                        List<ExcelLineData> line = importExcelInfo.lData[i];
+
+                        if (line.Count != importExcelInfo.lColumns.Count)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The line " + (i + 1) + " was not imported, because the data count is not equal to the column count.");
+                            continue;
+                        }
+
+                        for (int j = 0; j < importExcelInfo.lColumns.Count; j++)
+                        {
+                            ExcelLineData selectedData = line[j];
+
+                            if (selectedData == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
+                                continue;
+                            }
+
+                            ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
+
+                            if (selectedColumn == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
+                                continue;
+                            }
+
+                            string name = selectedColumn.name;
+                            string value = selectedData.value;
+
+                            if (value == null || string.IsNullOrEmpty(value))
+                                continue;
+
+                            switch (name)
+                            {
+                                case "Företagsnamn":
+                                    nAccount.Name = value;
+                                    break;
+                                case "Organisationsnummer":
+                                    nAccount.cgi_organizational_number = value;
+                                    break;
+                                case "Besöksadress - Gatuadress":
+                                    nAccount.Address1_Line2 = value;
+                                    break;
+                                case "Besöksadress - Postnummer":
+                                    nAccount.Address1_PostalCode = value;
+                                    break;
+                                case "Besöksadress - Ort":
+                                    nAccount.Address1_City = value;
+                                    break;
+                                case "Besöksadress - Land":
+                                    nAccount.Address1_Country = value;
+                                    break;
+                                case "CS datum för senast adressändring":
+                                    nAccount.ed_CSDateforlastaddressChange = value;
+                                    break;
+                                case "E-post":
+                                case "epost":
+                                    nAccount.EMailAddress1 = value;
+                                    break;
+                                case "Mobil":
+                                case "Telefon":
+                                    nAccount.Telephone1 = cleanMobileTelefon(value);
+                                    break;
+                                case "Webbplats":
+                                    nAccount.WebSiteURL = value;
+                                    break;
+                                case "Branchid":
+                                    nAccount.ed_IndustryCodeId = value;
+                                    break;
+                                case "Branch ":
+
+                                    int? optionSetCT = GetOptionSetValueByName(colOpCompanyTrade, value);
+
+                                    if (optionSetCT == null)
+                                    {
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM. By default it will be created into Skund.");
+                                        optionSetCT = InsertGlobalOptionSetOption(localContext, "ed_companytrade", value, 1053);
+                                    }
+
+                                    if (optionSetCT != null)
+                                        nAccount.ed_companytrade = new OptionSetValue((int)optionSetCT);
+
+                                    break;
+
+                                default:
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
+                                    break;
+                            }
+                        }
+
+                        nAccount.StateCode = AccountState.Active;
+
+                        crmContext.AddObject(nAccount);
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Import 2Accounts Exception. Details: " + e.Message);
+                    }
+                }
+            }
+            Console.WriteLine("Done.");
+        }
+
         public static void ImportSubAccountsRecords(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
         {
             if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
@@ -3260,6 +3382,47 @@ namespace Skanetrafiken.Import
                     catch (Exception e)
                     {
                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Order Records. Details: " + e.Message);
+                        throw;
+                    }
+
+                    #endregion
+
+                    return true;
+
+                case "15":
+
+                    #region Add New Options to Local OptionSet and Import Accounts
+
+                    try
+                    {
+                        crmContext.ClearChanges();
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Add New Options to Local OptionSet and Import Accounts--------------");
+
+                        string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.Orders);
+                        ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
+
+                        bool isParsingOk = GetParsingStatus(importExcelInfo);
+
+                        if (isParsingOk)
+                        {
+                            Import2AccountRecords(localContext, crmContext, importExcelInfo);
+
+                            Console.WriteLine("Sending Batch of Orders to Sekund...");
+
+                            SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                            LogCrmContextMultipleResponses(localContext, responses);
+
+                            Console.WriteLine("Batch Sent. Please check logs.");
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
+
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Add New Options to Local OptionSet and Import Accounts--------------");
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
                         throw;
                     }
 
