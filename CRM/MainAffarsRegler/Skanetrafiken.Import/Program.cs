@@ -2569,14 +2569,14 @@ namespace Skanetrafiken.Import
                 return;
             }
 
+            OptionMetadataCollection colOpCompanyTrade = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_companytrade);
+            OptionMetadataCollection colOpBusinessType = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_BusinessType);
+
             Console.Write("Creating Batch of Accounts... ");
             using (ProgressBar progress = new ProgressBar())
             {
                 for (int i = 0; i < importExcelInfo.lData.Count; i++)
                 {
-                    OptionMetadataCollection colOpCompanyTrade = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_companytrade);
-                    OptionMetadataCollection colOpBusinessType = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_BusinessType);
-
                     try
                     {
                         progress.Report((double)i / (double)importExcelInfo.lData.Count);
@@ -2615,12 +2615,12 @@ namespace Skanetrafiken.Import
 
                             switch (name)
                             {
-                                /*case "Företagsnamn":
+                                case "Företagsnamn":
                                     nAccount.Name = value;
                                     break;
                                 case "Orgnr":
                                     nAccount.cgi_organizational_number = value;
-                                    break;*/
+                                    break;
                                 case "Bolagsform text":
 
                                     int? optionSetBT = GetOptionSetValueByName(colOpBusinessType, value);
@@ -2649,38 +2649,29 @@ namespace Skanetrafiken.Import
                                         nAccount.ed_companytrade = new OptionSetValue((int)optionSetCT);
 
                                     break;
-
-
-                                /*case "Besöksadress - Gatuadress":
-                                    nAccount.Address1_Line2 = value;
-                                    break;
-                                case "Besöksadress - Postnummer":
-                                    nAccount.Address1_PostalCode = value;
-                                    break;
-                                case "Besöksadress - Ort":
-                                    nAccount.Address1_City = value;
-                                    break;
-                                case "Besöksadress - Land":
-                                    nAccount.Address1_Country = value;
-                                    break;
-                                case "CS datum för senast adressändring":
-                                    nAccount.ed_CSDateforlastaddressChange = value;
-                                    break;
-                                case "E-post":
-                                case "epost":
-                                    nAccount.EMailAddress1 = value;
-                                    break;
-                                case "Mobil":
                                 case "Telefon":
                                     nAccount.Telephone1 = cleanMobileTelefon(value);
                                     break;
-                                case "Webbplats":
-                                    nAccount.WebSiteURL = value;
-                                    break;
-                                case "Branchid":
-                                    nAccount.ed_IndustryCodeId = value;
-                                    break;*/
 
+                                case "Bes.adress":
+                                    nAccount.Address1_Line2 = value;
+                                    break;
+                                case "Bes.postnr":
+                                    nAccount.Address1_PostalCode = value;
+                                    break;
+                                case "Bes.postort":
+                                    nAccount.Address1_City = value;
+                                    break;
+
+                                case "Utd.adress":
+                                    nAccount.Address2_Line2 = value;
+                                    break;
+                                case "Postnr":
+                                    nAccount.Address2_PostalCode = value;
+                                    break;
+                                case "Postort":
+                                    nAccount.Address2_City = value;
+                                    break;
 
                                 default:
                                     _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
@@ -2709,11 +2700,12 @@ namespace Skanetrafiken.Import
                 return;
             }
 
-            List<string> lAddGlobalOptionSets = new List<string>();
+            List<string> lAddCompanyTrade = new List<string>();
+            List<string> lAddBusinessType = new List<string>();
             OptionMetadataCollection colOpCompanyTrade = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_companytrade);
             OptionMetadataCollection colOpBusinessType = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_BusinessType);
 
-            Console.Write("Creating Batch of ... ");
+            Console.Write("Creating Batch of OptionSets Values... ");
             using (ProgressBar progress = new ProgressBar())
             {
                 for (int i = 0; i < importExcelInfo.lData.Count; i++)
@@ -2758,29 +2750,25 @@ namespace Skanetrafiken.Import
                                 case "Bolagsform text":
 
                                     int? optionSetBT = GetOptionSetValueByName(colOpBusinessType, value);
-                                    bool exists = lAddGlobalOptionSets.Any(x => x == value);
-                                    if (optionSetBT == null && !exists)
+                                    bool existsB = lAddBusinessType.Any(x => x == value);
+                                    if (optionSetBT == null && !existsB)
                                     {
                                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM. By default it will be created into Skund.");
-                                        lAddGlobalOptionSets.Add(value);
+                                        lAddBusinessType.Add(value);
                                     }
 
                                     break;
-                                /*case "Branschtext":
+                                case "Branschtext":
 
                                     int? optionSetCT = GetOptionSetValueByName(colOpCompanyTrade, value);
+                                    bool existsC = lAddCompanyTrade.Any(x => x == value);
 
-                                    if (optionSetCT == null)
+                                    if (optionSetCT == null && !existsC)
                                     {
                                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM. By default it will be created into Skund.");
-                                        optionSetCT = InsertGlobalOptionSetOption(localContext, "ed_companytrade", value, 1053);
+                                        lAddCompanyTrade.Add(value);
                                     }
-
-                                    if (optionSetCT != null)
-                                        nAccount.ed_companytrade = new OptionSetValue((int)optionSetCT);
-
-                                    break;*/
-
+                                    break;
 
                                 default:
                                     _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
@@ -2795,10 +2783,11 @@ namespace Skanetrafiken.Import
                 }
             }
 
-            foreach (string option in lAddGlobalOptionSets)
-            {
+            foreach (string option in lAddBusinessType)
                 InsertGlobalOptionSetOption(localContext, "ed_businesstype", option, 1053);
-            }
+
+            foreach (string option in lAddCompanyTrade)
+            InsertGlobalOptionSetOption(localContext, "ed_companytrade", option, 1053);
 
             Console.WriteLine("Done.");
         }
