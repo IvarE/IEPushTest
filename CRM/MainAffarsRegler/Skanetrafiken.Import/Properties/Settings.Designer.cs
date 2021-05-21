@@ -25,7 +25,7 @@ namespace Skanetrafiken.Import.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\SeKunddata\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\SeKunddata\\Pedro")]
         public string RelativePath {
             get {
                 return ((string)(this["RelativePath"]));
@@ -155,6 +155,18 @@ namespace Skanetrafiken.Import.Properties {
         public string CredentialsFilePath {
             get {
                 return ((string)(this["CredentialsFilePath"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("FöretagSkåne.csv")]
+        public string BucketNewAccounts {
+            get {
+                return ((string)(this["BucketNewAccounts"]));
+            }
+            set {
+                this["BucketNewAccounts"] = value;
             }
         }
     }

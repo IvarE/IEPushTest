@@ -85,5 +85,23 @@ namespace Endeavor.Crm.CleanRecordsService.Properties {
                 return ((string)(this["InactivateContactsScheduleCronExpression"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0/1 * 1/1 * ? *")]
+        public string DeleteAuditScheduleCronExpression {
+            get {
+                return ((string)(this["DeleteAuditScheduleCronExpression"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\Endeavor\\DeleteAuditsService.Credential.xml")]
+        public string CredentialsFilePathAudits {
+            get {
+                return ((string)(this["CredentialsFilePathAudits"]));
+            }
+        }
     }
 }

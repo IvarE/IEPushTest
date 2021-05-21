@@ -78,13 +78,13 @@ namespace Endeavor.Crm.CleanRecordsService
                 DeleteAuditDataRequest deleteRequest = new DeleteAuditDataRequest();
                 deleteRequest.EndDate = DateTime.MinValue; // new DateTime(2000, 1, 1);
 
-                DateTime dt6MonthsAgo = DateTime.Now.AddMonths(-6);
+                DateTime dtMonthsAgo = DateTime.Now.AddMonths(-6);
 
                 // Check if partitions are not supported as is the case with SQL Server Standard edition.
                 if (partitions.IsLogicalCollection)
                 {
                     // Delete all audit records created up until now.
-                    deleteRequest.EndDate = dt6MonthsAgo;
+                    deleteRequest.EndDate = dtMonthsAgo;
                 }
 
                 // Otherwise, delete all partitions that are older than the current partition.
@@ -94,7 +94,7 @@ namespace Endeavor.Crm.CleanRecordsService
                 {
                     for (int n = partitions.Count - 1; n >= 0; --n)
                     {
-                        if (partitions[n].EndDate < dt6MonthsAgo && partitions[n].EndDate > deleteRequest.EndDate)
+                        if (partitions[n].EndDate < dtMonthsAgo && partitions[n].EndDate > deleteRequest.EndDate)
                         {
                             deleteRequest.EndDate = (DateTime)partitions[n].EndDate;
                             break;
