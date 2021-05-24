@@ -2680,6 +2680,7 @@ namespace Skanetrafiken.Import
                         }
 
                         nAccount.StateCode = AccountState.Active;
+                        nAccount.ed_customer = true;
 
                         crmContext.AddObject(nAccount);
                     }

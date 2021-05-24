@@ -752,16 +752,25 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                 datestring = datestring.replace("T", " ");
 
-                if (datestring.length > 10)
+                if (datestring != null && datestring.length > 10)
                     return datestring.substring(0, 16);
                 else
                     return "X";
             }
 
+            // LOCAL FUNCTIOn
+            removeTimeZone = function (datetime) {
+                //The used CRM field is Universal Time and cannot be changed because of all dependencies.
+                if (datetime == null || datetime == "X")
+                    return null;
+
+                return new Date(datetime).toISOString();
+            }
+
             // LOCAL FUNCTION
             getTime = function (datestring) {
 
-                if (datestring.length > 10)
+                if (datestring != null && datestring.length > 10)
                     return datestring.substring(11, 16);
                 else
                     return "X";
@@ -805,16 +814,16 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 cell.appendChild(savebutton);
 
                 cell = journeyrow.insertCell();
-                cell.innerHTML = getFormattedDate(getElementValue(directjourney, "PlannedDepartureDateTime"));
+                cell.innerHTML = getFormattedDate(removeTimeZone(getElementValue(directjourney, "PlannedDepartureDateTime")));
 
                 cell = journeyrow.insertCell();
-                cell.innerHTML = getTime(getElementValue(directjourney, "ObservedDepartureDateTime"));
+                cell.innerHTML = getTime(removeTimeZone(getElementValue(directjourney, "ObservedDepartureDateTime")));
 
                 cell = journeyrow.insertCell();
-                cell.innerHTML = getFormattedDate(getElementValue(directjourney, "PlannedArrivalDateTime"));
+                cell.innerHTML = getFormattedDate(removeTimeZone(getElementValue(directjourney, "PlannedArrivalDateTime")));
 
                 cell = journeyrow.insertCell();
-                cell.innerHTML = getTime(getElementValue(directjourney, "ObservedArrivalDateTime"));
+                cell.innerHTML = getTime(removeTimeZone(getElementValue(directjourney, "ObservedArrivalDateTime")));
 
                 cell = journeyrow.insertCell();
                 var contractorGid = getElementValue(directjourney, "ContractorGid");
@@ -943,14 +952,18 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                         entity = {
                             "cgi_displaytext": "",
                             "cgi_transport": saveEntity.line.lineDesignation,
+                            "cgi_travelinformation": travelinformation,
+                            "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
+
                             "cgi_line": saveEntity.line.lineNumber,
                             "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
-                            "cgi_start": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("fromlist").value),
-                            "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
-                            "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
-                            "cgi_travelinformation": travelinformation,
+                            "cgi_trainnumber": getElementValue(saveEntity.directjourney, "JourneyNumber"),
                             "cgi_journeynumber": getElementValue(saveEntity.directjourney, "JourneyNumber"),
                             "cgi_linedesignation": getElementValue(saveEntity.directjourney, "PrimaryDestinationName"),
+
+                            "cgi_start": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("fromlist").value),
+                            "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
+
                             "cgi_directiontext": getElementValue(saveEntity.directjourney, "DirectionOfLineDescription"),
                             "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
                             "cgi_deviationmessage": saveEntity.deviationMessage,//getElementValue(saveEntity.directjourney, "Details"),
@@ -999,13 +1012,16 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                             entity = {
                                 "cgi_displaytext": "",
                                 "cgi_transport": "Regionbuss",
+                                "cgi_travelinformation": travelinformation,
+                                "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
+
                                 "cgi_line": getElementValue(line, "LineNumber"),
                                 "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
+                                "cgi_linedesignation": getElementValue(saveEntity.directjourney, "PrimaryDestinationName"),
+
                                 "cgi_start": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("fromlist").value),
                                 "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
-                                "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
-                                "cgi_travelinformation": travelinformation,
-                                "cgi_linedesignation": getElementValue(saveEntity.directjourney, "PrimaryDestinationName"),
+
                                 "cgi_directiontext": getElementValue(saveEntity.directjourney, "DirectionOfLineDescription"),
                                 "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
                                 "cgi_deviationmessage": saveEntity.deviationMessage,//getElementValue(saveEntity.directjourney, "Details"),
@@ -1031,19 +1047,18 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                             entity = {
                                 "cgi_displaytext": "",
                                 "cgi_transport": "Stadsbuss",
-                                "cgi_city": Endeavor.Skanetrafiken.TravelInformation.getCityFromGid(saveEntity.city),
+                                "cgi_travelinformation": travelinformation,
+                                "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
                                 "cgi_line": getElementValue(Endeavor.Skanetrafiken.TravelInformation.getLine(saveEntity.city, saveEntity.line), "LineNumber"),
                                 "cgi_tour": "",
-                                "cgi_start": "",
-                                "cgi_stop": "",
-                                "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
-                                "cgi_travelinformation": travelinformation,
                                 "cgi_journeynumber": "",
                                 "cgi_linedesignation": "",
+                                "cgi_city": Endeavor.Skanetrafiken.TravelInformation.getCityFromGid(saveEntity.city),
+                                "cgi_start": "",
+                                "cgi_stop": "",
                                 "cgi_directiontext": "",
-                                "cgi_contractor": saveEntity.contractorName, // NUMERICAL
                                 "cgi_deviationmessage": "",
-
+                                "cgi_contractor": saveEntity.contractorName, // NUMERICAL
                                 "cgi_startactual": "",
                                 "cgi_arivalactual": "",
                                 "cgi_arivalplanned": new Date(1999),
@@ -1056,18 +1071,20 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                             entity = {
                                 "cgi_displaytext": "",
                                 "cgi_transport": "Stadsbuss",
-                                "cgi_city": Endeavor.Skanetrafiken.TravelInformation.getCityFromGid(saveEntity.city),
-                                "cgi_line": getElementValue(saveEntity.directjourney, "LineDesignation"),
+                                "cgi_travelinformation": travelinformation,
+                                "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
+
+                                "cgi_line": getElementValue(line, "LineNumber"),  //Rebusnummer
                                 "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
+                                "cgi_linedesignation": getElementValue(line, "LineDesignation"), //Publikt linjenummer
+
+                                "cgi_city": Endeavor.Skanetrafiken.TravelInformation.getCityFromGid(saveEntity.city),
                                 "cgi_start": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("fromlist").value),
                                 "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
-                                "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
-                                "cgi_travelinformation": travelinformation,
-                                "cgi_journeynumber": getElementValue(saveEntity.directjourney, "JourneyNumber"),
-                                "cgi_linedesignation": getElementValue(saveEntity.directjourney, "PrimaryDestinationName"),
+
                                 "cgi_directiontext": getElementValue(saveEntity.directjourney, "DirectionOfLineDescription"),
-                                "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
                                 "cgi_deviationmessage": saveEntity.deviationMessage, //getElementValue(saveEntity.directjourney, "Details"),
+                                "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
 
                                 "cgi_startplanned": getISOStringDate(getElementValue(saveEntity.directjourney, "PlannedDepartureDateTime")),
                                 "cgi_startactual": getISOStringDate(getElementValue(saveEntity.directjourney, 'ObservedDepartureDateTime')), //ActualDepartureTime
@@ -1241,7 +1258,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
             var trafik = "Trafikslag: " + entity.cgi_transport;
             var stad = "Stad: " + entity.cgi_city;
-            var line = "Linje: " + entity.cgi_line + " (" + entity.cgi_directiontext + ")";
+            var line = "Linje: " + entity.cgi_linedesignation + " (" + entity.cgi_directiontext + ")";
             var tour = Endeavor.Skanetrafiken.TravelInformation.getTour(entity);
             var contractor = "Entreprenör: " + entity.cgi_contractor;
 
