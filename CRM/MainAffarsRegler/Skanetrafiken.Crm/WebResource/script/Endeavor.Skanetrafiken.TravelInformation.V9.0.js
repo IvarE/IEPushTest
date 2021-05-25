@@ -73,7 +73,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             }
 
             var date = new Date(time);
-            date.setHours(date.getHours() + 1)
+            date.setHours(date.getHours() + 2)
 
             var validDate = false;
             if (!isNaN(date.getTime())) {
