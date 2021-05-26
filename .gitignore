@@ -23,3 +23,7 @@ bin
 *.tf1
 *.vspscc
 /DK/Development/Main/UpgradeLog2.htm
+/CRM/MainAffarsRegler/Skanetrafiken.Crm/UpgradeLog3.htm
+/CRM/MainAffarsRegler/SkaneCleanRecordsService/AuditsService.cs
+/CRM/MainAffarsRegler/SkaneCleanRecordsService/AuditsService.Designer.cs
+/CRM/MainAffarsRegler/SkaneCleanRecordsService

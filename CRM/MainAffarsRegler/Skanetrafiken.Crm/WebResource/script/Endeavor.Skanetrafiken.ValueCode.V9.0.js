@@ -154,11 +154,11 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
             var fromForm = true;
 
             //Kontrollera attt värdekoden är av typen "Inlösen Reskassa/Presentkort"
-            var valueCodeTypeAtr = formContext.getAttribute("ed_valuecodetypeglobal");
-            var valueCodeType = 0;
-            if (valueCodeTypeAtr != null && valueCodeTypeAtr != "undefined") {
-                valueCodeType = valueCodeTypeAtr.getValue();
-            }
+            //var valueCodeTypeAtr = formContext.getAttribute("ed_valuecodetypeglobal");
+            //var valueCodeType = 0;
+            //if (valueCodeTypeAtr != null && valueCodeTypeAtr != "undefined") {
+            //    valueCodeType = valueCodeTypeAtr.getValue();
+            //}
 
             var vcVoucherAtr = formContext.getAttribute("ed_valuecodevoucherid");
             var vcVoucherId = "";
@@ -323,11 +323,23 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                         console.log("ValueCode(s): " + valueCodeIds);
 
                         //Get current valuecode and check that it is of type "Inlösen reskassa" or "Presentkort"
-                        var validValueCode = false;
+                        //var validValueCode = false;
+                        var validValueCode = "";
 
                         validValueCode = await Endeavor.Skanetrafiken.ValueCode.checkIfValueCodeIsValidSync(valueCodeIds); //DevOps: 3888
                         debugger;
-                        if (validValueCode == true && valueCodeIds != "") {
+
+                        if (validValueCode == "NO-inactive") {
+                            //Meddela att den är inaktive
+                            alert("Värdekoden kan inte Makuleras: Värdekoden måste vara aktiv för att makuleras!");
+                        }
+                        else if (validValueCode == "NO-voucherid")
+                        {
+                            //Meddela att den inte har en Vouchercode Id
+                            console.log("Cancel Button Clicked: Found no VoucherCode-ID");
+                            alert("Värdekoden kan inte Makuleras: Hittade inte en Voucher kod för Värdekoden.");
+                        }
+                        else if (validValueCode == "YES" && valueCodeIds != "") {
                             console.log("ValueCode(s): " + valueCodeIds);
                             valueCodeIds += ";";
                             console.log("Changed ValueCode(s): " + valueCodeIds);
@@ -358,7 +370,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                                 },
                                 function (e) {
                                     // Error
-                                    alert("Någonting gick fel: " + e);
+                                    alert("Någonting gick fel: " + e.message);
                                     // Write the trace log to the dev console
                                     if (window.console && console.error)
                                         console.error(e.message + "\n" + t);
@@ -366,17 +378,20 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
 
                         }
                         else {
-                            alert("Värdekoden kan inte Makuleras: Värdekoden måste vara aktiv för att makuleras!");
+                            alert("Värdekoden kan inte Makuleras: Värdekoden måste vara aktiv samt innehålla en VoucherCodeId för att makuleras!");
                         }
                     }
                     else if (valueCodeArg.length > 1) {
                         var nrOfValueCodes = valueCodeArg.length;
                         var invalideValidValueCodeCount = 0;
+                        var inactiveValueCodeCount = 0;
+                        var noVouchercodeValuecodeCount = 0;
                         var validValueCodeCount = 0;
+                        var warningMessage = "";
 
                         for (var i = 0; i < nrOfValueCodes; i++) {
                             debugger;
-                            var validValueCode = false;
+                            var validValueCode = "";
 
                             //(OLD) Get current valuecode and check that it is of type "Inlösen reskassa" (OLD)
                             //We only need to check that its an active ValueCode (DevOps: 3888)
@@ -386,11 +401,19 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                             validValueCode = await Endeavor.Skanetrafiken.ValueCode.checkIfValueCodeIsValidSync(checkValueCode); //DevOps: 3888
 
                             //Populate string with valid Value Code Id:s
-                            if (validValueCode == true) {
+                            if (validValueCode == "YES") {
                                 valueCodeIds += checkValueCode + ";";
                             }
                             else {
                                 invalideValidValueCodeCount++;
+                                if (validValueCode == "NO-inactive")
+                                {
+                                    inactiveValueCodeCount++;
+                                }
+                                else if (validValueCode == "NO-voucherid")
+                                {
+                                    noVouchercodeValuecodeCount++;
+                                }
                             }
                         }
 
@@ -399,8 +422,23 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
 
                             if (invalideValidValueCodeCount > 0) {
                                 //Found invalid ValueCodes -> Provide warning before canceling
+                                debugger;
                                 validValueCodeCount = nrOfValueCodes - invalideValidValueCodeCount;
-                                var cancelConfirmation = confirm(invalideValidValueCodeCount + " värdekod(er) av " + nrOfValueCodes + " kan inte makuleras då Värdekoden inte är aktiv(a). Vill du fortsätta makulera resterande " + validValueCodeCount + " värdekod(er)?");
+                                if (inactiveValueCodeCount > 0 && noVouchercodeValuecodeCount > 0) {
+                                    //Message for both.
+                                    warningMessage = invalideValidValueCodeCount + " värdekod(er) av " + nrOfValueCodes + " kan inte makuleras. " + inactiveValueCodeCount + " värdekod(er) är inte aktiv(a) och " + noVouchercodeValuecodeCount + " saknar Voucher kod. Vill du fortsätta makulera resterande " + validValueCodeCount + " värdekod(er)?";
+                                }
+                                else if (inactiveValueCodeCount > 0) {
+                                    //Message for inactive.
+                                    warningMessage = invalideValidValueCodeCount + " värdekod(er) av " + nrOfValueCodes + " kan inte makuleras då Värdekoden inte är aktiv(a). Vill du fortsätta makulera resterande " + validValueCodeCount + " värdekod(er)?";
+                                }
+                                else if (noVouchercodeValuecodeCount > 0)
+                                {
+                                    //Message for VoucherCode.
+                                    warningMessage = invalideValidValueCodeCount + " värdekod(er) av " + nrOfValueCodes + " kan inte makuleras då Värdekoden saknar Voucher kod. Vill du fortsätta makulera resterande " + validValueCodeCount + " värdekod(er)?";
+                                }
+                                
+                                var cancelConfirmation = confirm(warningMessage);
 
                                 if (cancelConfirmation) {
                                     console.log("ValueCode(s): " + valueCodeIds);
@@ -472,7 +510,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                                     },
                                     function (e) {
                                         // Error
-                                        alert("Någonting gick fel: " + e);
+                                        alert("Någonting gick fel: " + e.message);
                                         // Write the trace log to the dev console
                                         if (window.console && console.error)
                                             console.error(e.message + "\n" + t);
@@ -480,7 +518,7 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                             }
                         }
                         else {
-                            alert("Värdekod(erna) kan inte Makuleras: Värdekode(erna) måste vara aktiva för att makuleras!");
+                            alert("Värdekod(erna) kan inte Makuleras: Värdekod(erna) måste vara aktiv(a) samt innehålla en Voucher Kod för att makuleras (" + inactiveValueCodeCount + " är inaktiv(a) och " + noVouchercodeValuecodeCount + " saknar Voucher Kod)!");
                         }
                     }
                     else {
@@ -500,13 +538,16 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
 
             console.log("Executing: retrieveMultipleRecordsFunction1!");
             debugger;
-            var validValueCode = false;
+            //var validValueCode = false;
+            var hasVoucherId = "";
+            var isValidValueCode = "";
 
             var fetchXml = [
                 "<fetch mapping='logical'>",
                 "<entity name='ed_valuecode'>",
                 "<attribute name='ed_valuecodetypeglobal' />",
                 "<attribute name='ed_valuecodeid' />",
+                "<attribute name='ed_valuecodevoucherid' />",
                 "<attribute name='statuscode' />", //Makulerad, Inlöst...
                 "<attribute name='statecode' />", //Aktiv, Inactive...
                 "<filter type='and'>",
@@ -529,13 +570,25 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                     if (apiResult.entities.length != null && apiResult.entities.length != "undefined") {
                         var count = apiResult.entities.length;
                         if (count > 0) {
-                            validValueCode = true;
+                            //validValueCode = true;
+                            //Check that the entity has a VoucherID
+                            hasVoucherId = apiResult.entities[0].ed_valuecodevoucherid;
+                            if (hasVoucherId != "" && hasVoucherId != "undefined" && hasVoucherId != null) {
+                                isValidValueCode = "YES";
+                            }
+                            else {
+                                isValidValueCode = "NO-voucherid";
+                            }
+                        }
+                        else {
+                            //Check that the entity has a VoucherID
+                            isValidValueCode = "NO-inactive";
                         }
                     }
                 }
             }
 
-            return validValueCode;
+            return isValidValueCode;
         },
 
         hideCancelValueCodeButton: function () {

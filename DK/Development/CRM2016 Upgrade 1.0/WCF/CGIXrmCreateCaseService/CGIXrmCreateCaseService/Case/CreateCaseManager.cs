@@ -1097,11 +1097,20 @@ namespace CGIXrmCreateCaseService.Case
                     _fx += "<entity name='account'>";
                     _fx += "<attribute name='accountid' />";
                     _fx += "<filter type='and'>";
-                    _fx += "<condition attribute='emailaddress1' operator='eq' value='" + emailAddress + "' />";
+                    _fx += "<filter type='or'>";
+                    _fx += "<condition attribute='emailaddress1' operator='eq' value= '" + emailAddress + "' />";
+                    _fx += "<condition attribute='emailaddress2' operator='eq' value= '" + emailAddress + "' />";
+                    _fx += "</filter>";
                     _fx += "<condition attribute='statecode' operator='eq' value='0' />";
                     _fx += "</filter>";
                     _fx += "</entity>";
                     _fx += "</fetch>";
+
+                    //_fx += "<filter type='and'>";
+                    //_fx += "<condition attribute='emailaddress1' operator='eq' value='" + emailAddress + "' />";
+                    //_fx += "<condition attribute='statecode' operator='eq' value='0' />";
+                    //_fx += "</filter>";
+
                 }
                 else if (customerType == CustomerType.Private)
                 {
@@ -1109,11 +1118,19 @@ namespace CGIXrmCreateCaseService.Case
                     _fx += "<entity name='contact'>";
                     _fx += "<attribute name='contactid' />";
                     _fx += "<filter type='and'>";
-                    _fx += "<condition attribute='emailaddress1' operator='eq' value='" + emailAddress + "' />";
+                    _fx += "<filter type='or'>";
+                    _fx += "<condition attribute='emailaddress1' operator='eq' value= '" + emailAddress + "' />";
+                    _fx += "<condition attribute='emailaddress2' operator='eq' value= '" + emailAddress + "' />";
+                    _fx += "</filter>";
                     _fx += "<condition attribute='statecode' operator='eq' value='0' />";
                     _fx += "</filter>";
                     _fx += "</entity>";
                     _fx += "</fetch>";
+
+                    //_fx += "<filter type='and'>";
+                    //_fx += "<condition attribute='emailaddress1' operator='eq' value='" + emailAddress + "' />";
+                    //_fx += "<condition attribute='statecode' operator='eq' value='0' />";
+                    //_fx += "</filter>";
                 }
 
                 EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
@@ -1504,7 +1521,6 @@ namespace CGIXrmCreateCaseService.Case
                 {"caseorigincode", new OptionSetValue(3)}
             };
 
-
             if (!string.IsNullOrEmpty(request.CustomersCategory))
                 _incidentEntity.Attributes.Add("cgi_customers_category", request.CustomersCategory);
 
@@ -1520,6 +1536,9 @@ namespace CGIXrmCreateCaseService.Case
             if (!string.IsNullOrWhiteSpace(request.Title))
                 titleText = request.Title;
 
+            if (titleText.Contains("JoJo") && titleText.Contains("kort") && titleText.Contains("och") && titleText.Contains("priser"))
+                titleText = "Kort, appar, biljetter och priser";
+
             #region SM17479954 - Kontrollavgiffter: Kontrollavgnr i rubrik
             /* OLD code
             if (sendtoqueue == 285050008) 
@@ -1529,14 +1548,9 @@ namespace CGIXrmCreateCaseService.Case
             if (sendtoqueue == 285050008)
             {
                 if (!string.IsNullOrEmpty(request.ControlFeeNumber))
-                {
                     titleText = "" + request.ControlFeeNumber + "";
-                }
                 else
-                {
                     titleText = "Bestridan kontrollavgift";
-                }
-
             }
 
             #endregion
@@ -1550,9 +1564,7 @@ namespace CGIXrmCreateCaseService.Case
                 descriptionText = $"{request.Description}{Environment.NewLine}";
 
             if (customer.AccountName == "CGI_DEFAULT")
-            {
                 _incidentEntity.Attributes.Add("customerid", new EntityReference("account", customer.AccountId));
-            }
             else
             {
                 if (request.CustomerType == CustomerType.Organisation)
@@ -1583,6 +1595,11 @@ namespace CGIXrmCreateCaseService.Case
             if (!string.IsNullOrEmpty(request.CardNumber))
             {
                 _incidentEntity.Attributes.Add("cgi_unregisterdtravelcard", request.CardNumber);
+
+                if(request.CardNumber.All(char.IsDigit))
+                    _incidentEntity.Attributes.Add("ed_unregisterdskacard", request.CardNumber);
+                else
+                    _incidentEntity.Attributes.Add("cgi_ticketnumber1", request.CardNumber);
             }
 
             if (!string.IsNullOrEmpty(request.WayOfTravel))
@@ -1627,9 +1644,7 @@ namespace CGIXrmCreateCaseService.Case
                 _incidentEntity.Attributes.Add("cgi_emailcount", customer.RecordCount.ToString());
 
             if (request.ActionDate != null)
-            {
                 _incidentEntity.Attributes.Add("cgi_actiondate", request.ActionDate.Value);
-            }
 
             _incidentEntity.Attributes.Add("description", descriptionText);
 
@@ -2154,6 +2169,290 @@ namespace CGIXrmCreateCaseService.Case
             return returnValue;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        private void CreateLogFileAutoRGCase(AutoRgCaseRequest request)
+        {
+            if (request == null) return;
+            var sw = new StreamWriter("E:\\Logs\\CRM\\CGIXrmCreateCaseService\\RequestCreateCase_Log\\CreateLogFile_Log.txt", true);
+            sw.WriteLine("======================================================================================================================");
+            sw.WriteLine(DateTime.Now.ToString(CultureInfo.InvariantCulture));
+
+            if (!string.IsNullOrEmpty(request.CustomersCategory))
+                sw.WriteLine("CustomersCategory : " + request.CustomersCategory);
+            else
+                sw.WriteLine("CustomersCategory is missing");
+
+            if (!string.IsNullOrEmpty(request.CustomersSubcategory))
+                sw.WriteLine("CustomersSubcategory : " + request.CustomersSubcategory);
+            else
+                sw.WriteLine("CustomersSubcategory is missing");
+
+            if (!string.IsNullOrEmpty(request.Title))
+                sw.WriteLine("Title : " + request.Title);
+            else
+                sw.WriteLine("Title is missing");
+
+            if (!string.IsNullOrEmpty(request.Description))
+                sw.WriteLine("Description : " + request.Description);
+            else
+                sw.WriteLine("Description is missing");
+
+            if (!string.IsNullOrEmpty(request.RGOLExtendedDescription))
+                sw.WriteLine("RGOLExtendedDescription : " + request.RGOLExtendedDescription);
+            else
+                sw.WriteLine("RGOLExtendedDescription is missing");
+
+            if (!string.IsNullOrEmpty(request.QueueId))
+                sw.WriteLine("QueueId : " + request.QueueId);
+            else
+                sw.WriteLine("QueueId is missing");
+
+            if (request.CustomerId != null )
+                sw.WriteLine("CustomerId : " + request.CustomerId);
+            else
+                sw.WriteLine("CustomerId is missing");
+
+            switch (request.CustomerType)
+            {
+                case 0:// CustomerType.Private:
+                    sw.WriteLine("Customer : Private");
+                    break;
+                case 1: // CustomerType.Organisation:
+                    sw.WriteLine("Customer : Organisation");
+                    break;
+                default:
+                    sw.WriteLine("Customer is missing");
+                    break;
+            }
+
+            if (!string.IsNullOrEmpty(request.CardNumber))
+                sw.WriteLine("CardNumber : " + request.CardNumber);
+            else
+                sw.WriteLine("CardNumber is missing");
+
+            if (!string.IsNullOrEmpty(request.SKACardNumber))
+                sw.WriteLine("SKACardNumber : " + request.SKACardNumber);
+            else
+                sw.WriteLine("SKACardNumber is missing");
+
+            if (!string.IsNullOrEmpty(request.WayOfTravel))
+                sw.WriteLine("WayOfTravel : " + request.WayOfTravel);
+            else
+                sw.WriteLine("WayOfTravel is missing");
+
+            if (!string.IsNullOrEmpty(request.Line))
+                sw.WriteLine("Line : " + request.Line);
+            else
+                sw.WriteLine("Line is missing");
+
+            if (!string.IsNullOrEmpty(request.DriverId))
+                sw.WriteLine("DriverId : " + request.DriverId);
+            else
+                sw.WriteLine("DriverId is missing");
+
+            if (!string.IsNullOrEmpty(request.FirstName))
+                sw.WriteLine("FirstName : " + request.FirstName);
+            else
+                sw.WriteLine("FirstName is missing");
+
+            if (!string.IsNullOrEmpty(request.LastName))
+                sw.WriteLine("LastName : " + request.LastName);
+            else
+                sw.WriteLine("LastName is missing");
+
+            if (!string.IsNullOrEmpty(request.EmailAddress))
+                sw.WriteLine("EmailAddress : " + request.EmailAddress);
+            else
+                sw.WriteLine("EmailAddress is missing");
+
+            if (!string.IsNullOrEmpty(request.DeliveryEmailAddress))
+                sw.WriteLine("DeliveryEmailAddress : " + request.DeliveryEmailAddress);
+            else
+                sw.WriteLine("DeliveryEmailAddress is missing");
+
+            if (!string.IsNullOrEmpty(request.MobileNo))
+                sw.WriteLine("MobileNo : " + request.MobileNo);
+            else
+                sw.WriteLine("MobileNo is missing");
+
+            if (!string.IsNullOrEmpty(request.RGOLIssueID))
+                sw.WriteLine("RGOLIssueID : " + request.RGOLIssueID);
+            else
+                sw.WriteLine("RGOLIssueID is missing");
+
+            if (request.DepartureDateTime == null)
+                sw.WriteLine("DepartureDateTime : " + request.DepartureDateTime);
+            else
+                sw.WriteLine("DepartureDateTime is missing");
+
+            if (!string.IsNullOrEmpty(request.ExperiencedDelay))
+                sw.WriteLine("ExperiencedDelay : " + request.ExperiencedDelay);
+            else
+                sw.WriteLine("ExperiencedDelay is missing");
+
+            if (!string.IsNullOrEmpty(request.SocialSecurityNumber))
+                sw.WriteLine("SocialSecurityNumber : " + request.SocialSecurityNumber);
+            else
+                sw.WriteLine("SocialSecurityNumber is missing");
+
+            if (!string.IsNullOrEmpty(request.Address_Line1))
+                sw.WriteLine("Address_Line1 : " + request.Address_Line1);
+            else
+                sw.WriteLine("Address_Line1 is missing");
+
+            if (!string.IsNullOrEmpty(request.Address_Line2))
+                sw.WriteLine("Address_Line2 : " + request.Address_Line2);
+            else
+                sw.WriteLine("Address_Line2 is missing");
+
+            if (!string.IsNullOrEmpty(request.Address_PostalCode))
+                sw.WriteLine("Address_PostalCode : " + request.Address_PostalCode);
+            else
+                sw.WriteLine("Address_PostalCode is missing");
+
+            if (!string.IsNullOrEmpty(request.Address_City))
+                sw.WriteLine("Address_City : " + request.Address_City);
+            else
+                sw.WriteLine("Address_City is missing");
+
+            if (!string.IsNullOrEmpty(request.Address_Country))
+                sw.WriteLine("Address_Country : " + request.Address_Country);
+            else
+                sw.WriteLine("Address_Country is missing");
+
+            if (!string.IsNullOrEmpty(request.TicketType1))
+                sw.WriteLine("TicketType1 : " + request.TicketType1);
+            else
+                sw.WriteLine("TicketType1 is missing");
+
+            if (!string.IsNullOrEmpty(request.TicketNumber1))
+                sw.WriteLine("TicketNumber1 : " + request.TicketNumber1);
+            else
+                sw.WriteLine("TicketNumber1 is missing");
+
+            if (!string.IsNullOrEmpty(request.TicketType2))
+                sw.WriteLine("TicketType2 : " + request.TicketType2);
+            else
+                sw.WriteLine("TicketType2 is missing");
+
+            if (!string.IsNullOrEmpty(request.TicketNumber2))
+                sw.WriteLine("TicketNumber2 : " + request.TicketNumber2);
+            else
+                sw.WriteLine("TicketNumber2 is missing");
+
+            if (!string.IsNullOrEmpty(request.MileageFrom))
+                sw.WriteLine("MileageFrom : " + request.MileageFrom);
+            else
+                sw.WriteLine("MileageFrom is missing");
+
+            if (!string.IsNullOrEmpty(request.MileageTo))
+                sw.WriteLine("MileageTo : " + request.MileageTo);
+            else
+                sw.WriteLine("MileageTo is missing");
+
+            if (!string.IsNullOrEmpty(request.MileageKilometers))
+                sw.WriteLine("MileageKilometers : " + request.MileageKilometers);
+            else
+                sw.WriteLine("MileageKilometers is missing");
+
+            if (!string.IsNullOrEmpty(request.MileageLicencePlateNumber))
+                sw.WriteLine("MileageLicencePlateNumber : " + request.MileageLicencePlateNumber);
+            else
+                sw.WriteLine("MileageLicencePlateNumber is missing");
+
+
+            if (!string.IsNullOrEmpty(request.TaxiFrom))
+                sw.WriteLine("TaxiFrom : " + request.TaxiFrom);
+            else
+                sw.WriteLine("TaxiFrom is missing");
+
+            if (!string.IsNullOrEmpty(request.TaxiTo))
+                sw.WriteLine("TaxiTo : " + request.TaxiTo);
+            else
+                sw.WriteLine("TaxiTo is missing");
+
+            sw.WriteLine("TaxiClaimedAmount : " + request.TaxiClaimedAmount);
+
+            if (request.FileLinks != null && request.FileLinks.Length > 0)
+            {
+                foreach (var link in request.FileLinks)
+                {
+                    if (link.Url != null && link.Url != "")
+                        sw.WriteLine("FileLink.Url : " + link.Url);
+                    else if (link.Url == null)
+                        sw.WriteLine("FileLink.Url is null");
+                    else
+                        sw.WriteLine("FileLink.Url is empty");
+                }
+            }
+            else if (request.FileLinks == null)
+                sw.WriteLine("FileLinks list is null");
+            else if (request.FileLinks.Length <= 0)
+                sw.WriteLine("FileLinks.Length <= 0");
+            else
+                sw.WriteLine("Unexpected value in FileLinks");
+
+            if (!string.IsNullOrEmpty(request.Iban))
+                sw.WriteLine("Iban : " + request.Iban);
+            else
+                sw.WriteLine("Iban is missing");
+
+            if (!string.IsNullOrEmpty(request.Bic))
+                sw.WriteLine("Bic : " + request.Bic);
+            else
+                sw.WriteLine("Bic is missing");
+
+            if (!string.IsNullOrEmpty(request.CustomerSocialSecurityNumber))
+                sw.WriteLine("CustomerSocialSecurityNumber : " + request.CustomerSocialSecurityNumber);
+            else
+                sw.WriteLine("CustomerSocialSecurityNumber is missing");
+
+            if (!string.IsNullOrEmpty(request.CustomerAddress1Line1))
+                sw.WriteLine("CustomerAddress1Line1 : " + request.CustomerAddress1Line1);
+            else
+                sw.WriteLine("CustomerAddress1Line1 is missing");
+
+            if (!string.IsNullOrEmpty(request.CustomerAddress1Line2))
+                sw.WriteLine("CustomerAddress1Line2 : " + request.CustomerAddress1Line2);
+            else
+                sw.WriteLine("CustomerAddress1Line2 is missing");
+
+            if (!string.IsNullOrEmpty(request.CustomerAddress1Postalcode))
+                sw.WriteLine("CustomerAddress1Postalcode : " + request.CustomerAddress1Postalcode);
+            else
+                sw.WriteLine("CustomerAddress1Postalcode is missing");
+
+            if (!string.IsNullOrEmpty(request.CustomerAddress1City))
+                sw.WriteLine("CustomerAddress1City : " + request.CustomerAddress1City);
+            else
+                sw.WriteLine("CustomerAddress1City is missing");
+
+            if (!string.IsNullOrEmpty(request.CustomerAddress1Country))
+                sw.WriteLine("CustomerAddress1Country : " + request.CustomerAddress1Country);
+            else
+                sw.WriteLine("CustomerAddress1Country is missing");
+
+            if (!string.IsNullOrEmpty(request.CustomerTelephonenumber))
+                sw.WriteLine("CustomerTelephonenumber : " + request.CustomerTelephonenumber);
+            else
+                sw.WriteLine("CustomerTelephonenumber is missing");
+
+            if (!string.IsNullOrEmpty(request.CustomerFirstName))
+                sw.WriteLine("CustomerFirstName : " + request.CustomerFirstName);
+            else
+                sw.WriteLine("CustomerFirstName is missing");
+
+            if (!string.IsNullOrEmpty(request.CustomerLastName))
+                sw.WriteLine("CustomerLastName : " + request.CustomerLastName);
+            else
+                sw.WriteLine("CustomerLastName is missing");
+
+            sw.Flush();
+            sw.Close();
+        }
 
         /// <summary>
         /// 
@@ -2696,12 +2995,9 @@ namespace CGIXrmCreateCaseService.Case
                 {
                     if (request.ContactCustomer)
                     {
-
                         // If a contact, call Fasad.
                         if (request.CustomerType == CustomerType.Private)
                         {
-                            //LogMessage(@"C:\Temp\createcase.txt", "Calling GetOrCreateContactCase()");
-
                             //Create private customer (contact) from firstname, lastname and emailaddress
                             account = new Account();
                             Guid contactGuid = GetOrCreateContactCase(request.FirstName, request.LastName, request.EmailAddress, request.MobilePhoneNumber);
@@ -2736,7 +3032,6 @@ namespace CGIXrmCreateCaseService.Case
                                 }
                                 else
                                 {
-
                                     var setting = GetDefaultCustomer();
 
                                     if (setting != null)
@@ -2749,15 +3044,11 @@ namespace CGIXrmCreateCaseService.Case
                                         };
                                     }
                                     else
-                                    {
                                         throw new Exception("Det finns ingen default kund definierad!");
-                                    }
                                 }
                             }
                             else
                             {
-                                //LogMessage(@"C:\Temp\createcase.txt", "Calling GetOrCreateContactCase()");
-
                                 //Create private customer (contact) from firstname, lastname and emailaddress
                                 account = new Account();
                                 Guid contactGuid = GetOrCreateContactCase(request.FirstName, request.LastName, request.EmailAddress, request.MobilePhoneNumber);
@@ -2827,19 +3118,17 @@ namespace CGIXrmCreateCaseService.Case
         /// <returns></returns>
         internal AutoRgCaseResponse RequestCreateAutoRgCase(AutoRgCaseRequest request)
         {
-
             // Do debug-tracing. Johan Endeavor
+            CreateLogFileAutoRGCase(request);
 
             //_log.Debug(string.Format("============================================"));
             _log.Debug(string.Format("Entered RequestCreateAutoRgCase"));
-
 
             var response = new AutoRgCaseResponse()
             {
                 Success = false,
                 ErrorMessage = string.Empty
             };
-
 
             //dublettkontroll, finns redan ett ärende för detta RGOLIssueID?
             QueryBase query = CreateQueryAttribute("incident", new string[] { "incidentid", "ticketnumber" }, new string[] { "cgi_rgolissueid" }, new object[] { request.RGOLIssueID });

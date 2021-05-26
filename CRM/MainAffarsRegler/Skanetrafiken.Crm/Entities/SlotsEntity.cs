@@ -232,6 +232,7 @@ namespace Skanetrafiken.Crm.Entities
                     slot.ed_name = productName + " - " + date;
                     slot.ed_BookingDay = startDate;
                     slot.ed_StandardPrice = priceProduct;
+                    slot.ed_CustomPrice = priceProduct;
                     slot.ed_Extended = false;
                     slot.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.Open;
                     slot.ed_ProductID = new EntityReference(ProductEntity.EntityLogicalName, productId);
@@ -878,6 +879,7 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
+        //Below to be removed, should probably only work from QuoteProduct/OrderProduct
         public static void SlotsEntityUpdateCustomPrice(Plugin.LocalPluginContext localContext, SlotsEntity target, SlotsEntity preImage)
         {
             if(preImage != null)
