@@ -247,6 +247,8 @@
     <Compile Include="PreLeadCreate.cs" />
     <Compile Include="PreContactSetState.cs" />
     <Compile Include="PreQuoteProductUpdate.cs" />
+    <Compile Include="PreSlotCreate.cs" />
+    <Compile Include="PreSlotUpdate.cs" />
     <Compile Include="PreTemplateDelete.cs" />
     <Compile Include="PreValidationContactDelete.cs" />
     <Compile Include="PreValueCodeApprovalCreate.cs" />

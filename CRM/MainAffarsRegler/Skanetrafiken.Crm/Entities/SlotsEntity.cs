@@ -27,6 +27,42 @@ namespace Skanetrafiken.Crm.Entities
             public string Message { get; set; }
         }
 
+        public void HandlePreSlotsEntityCreate(Plugin.LocalPluginContext localContext)
+        {
+            if(this.ed_Opportunity != null && this.ed_Opportunity.Id != Guid.Empty)
+            {
+                OpportunityEntity opportunity = XrmRetrieveHelper.Retrieve<OpportunityEntity>(localContext, this.ed_Opportunity, new ColumnSet(OpportunityEntity.Fields.ParentAccountId));
+
+                if(opportunity != null && opportunity.ParentAccountId != null && opportunity.ParentAccountId.Id != Guid.Empty)
+                {
+                    this.ed_Account = new EntityReference(AccountEntity.EntityLogicalName, opportunity.ParentAccountId.Id);
+                }
+            }
+        }
+
+        public void HandlePreSlotsEntityUpdate(Plugin.LocalPluginContext localContext,  SlotsEntity preImage)
+        {
+            if(this.IsAttributeModified(preImage,SlotsEntity.Fields.ed_Opportunity))
+            {
+                if(this.ed_Opportunity != null && this.ed_Opportunity.Id != Guid.Empty)
+                {
+                    OpportunityEntity opportunity = XrmRetrieveHelper.Retrieve<OpportunityEntity>(localContext, this.ed_Opportunity, new ColumnSet(OpportunityEntity.Fields.ParentAccountId));
+
+                    if (opportunity != null && opportunity.ParentAccountId != null && opportunity.ParentAccountId.Id != Guid.Empty)
+                    {
+                        this.ed_Account = new EntityReference(AccountEntity.EntityLogicalName, opportunity.ParentAccountId.Id);
+                    }
+                    else
+                    {
+                        this.ed_Account = null;
+                    }
+                }
+                else
+                {
+                    this.ed_Account = null;
+                }
+            }
+        }
         public static void HandleSlotsEntityCreate(Plugin.LocalPluginContext localContext, SlotsEntity target)
         {
             localContext.Trace("Inside HandleSlotsEntityCreate");
@@ -86,7 +122,7 @@ namespace Skanetrafiken.Crm.Entities
             SlotsEntity slotToUpdate = new SlotsEntity();
             slotToUpdate.Id = target.Id;
             slotToUpdate.ed_SlotNumber = slotNumber;
-
+            slotToUpdate.ed_name = target.ed_name + " - " + slotNumber;
             XrmHelper.Update(localContext, slotToUpdate);
         }
         public static void HandleSlotsEntityUpdate(Plugin.LocalPluginContext localContext, SlotsEntity target, SlotsEntity preImage)
