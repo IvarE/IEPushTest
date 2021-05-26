@@ -19,6 +19,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.ServiceModel.Description;
+using System.Text;
 using System.Threading;
 
 namespace Skanetrafiken.Import
@@ -225,7 +226,7 @@ namespace Skanetrafiken.Import
                 List<ExcelColumn> lColumns = new List<ExcelColumn>();
                 List<List<ExcelLineData>> lData = new List<List<ExcelLineData>>();
 
-                using (var reader = new StreamReader(relativeExcelPath + "\\" + fileName))
+                using (var reader = new StreamReader(relativeExcelPath + "\\" + fileName, Encoding.GetEncoding("iso-8859-1")))
                 {
                     while (!reader.EndOfStream)
                     {
@@ -2559,6 +2560,239 @@ namespace Skanetrafiken.Import
             Console.WriteLine("Done.");
         }
 
+
+        public static void Import2AccountRecords(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
+        {
+            if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
+                return;
+            }
+
+            OptionMetadataCollection colOpCompanyTrade = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_companytrade);
+            OptionMetadataCollection colOpBusinessType = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_BusinessType);
+
+            Console.Write("Creating Batch of Accounts... ");
+            using (ProgressBar progress = new ProgressBar())
+            {
+                for (int i = 0; i < importExcelInfo.lData.Count; i++)
+                {
+                    try
+                    {
+                        progress.Report((double)i / (double)importExcelInfo.lData.Count);
+                        Account nAccount = new Account();
+                        List<ExcelLineData> line = importExcelInfo.lData[i];
+
+                        if (line.Count != importExcelInfo.lColumns.Count)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The line " + (i + 1) + " was not imported, because the data count is not equal to the column count.");
+                            continue;
+                        }
+
+                        for (int j = 0; j < importExcelInfo.lColumns.Count; j++)
+                        {
+                            ExcelLineData selectedData = line[j];
+
+                            if (selectedData == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
+                                continue;
+                            }
+
+                            ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
+
+                            if (selectedColumn == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
+                                continue;
+                            }
+
+                            string name = selectedColumn.name;
+                            string value = selectedData.value;
+
+                            if (value == null || string.IsNullOrEmpty(value))
+                                continue;
+
+                            switch (name)
+                            {
+                                case "Företagsnamn":
+                                    nAccount.Name = value;
+                                    break;
+                                case "Orgnr":
+                                    nAccount.cgi_organizational_number = value;
+                                    break;
+                                case "Bolagsform text":
+
+                                    int? optionSetBT = GetOptionSetValueByName(colOpBusinessType, value);
+
+                                    if (optionSetBT == null)
+                                    {
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM. By default it will be created into Skund.");
+                                        optionSetBT = InsertGlobalOptionSetOption(localContext, "ed_businesstype", value, 1053);
+                                    }
+
+                                    if (optionSetBT != null)
+                                        nAccount.ed_BusinessType = new OptionSetValue((int)optionSetBT);
+
+                                    break;
+                                case "Branschtext":
+
+                                    int? optionSetCT = GetOptionSetValueByName(colOpCompanyTrade, value);
+
+                                    if (optionSetCT == null)
+                                    {
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM. By default it will be created into Skund.");
+                                        optionSetCT = InsertGlobalOptionSetOption(localContext, "ed_companytrade", value, 1053);
+                                    }
+
+                                    if (optionSetCT != null)
+                                        nAccount.ed_companytrade = new OptionSetValue((int)optionSetCT);
+
+                                    break;
+                                case "Telefon":
+                                    nAccount.Telephone1 = cleanMobileTelefon(value);
+                                    break;
+
+                                case "Bes.adress":
+                                    nAccount.Address1_Line2 = value;
+                                    break;
+                                case "Bes.postnr":
+                                    nAccount.Address1_PostalCode = value;
+                                    break;
+                                case "Bes.postort":
+                                    nAccount.Address1_City = value;
+                                    break;
+
+                                case "Utd.adress":
+                                    nAccount.Address2_Line2 = value;
+                                    break;
+                                case "Postnr":
+                                    nAccount.Address2_PostalCode = value;
+                                    break;
+                                case "Postort":
+                                    nAccount.Address2_City = value;
+                                    break;
+
+                                default:
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
+                                    break;
+                            }
+                        }
+
+                        nAccount.StateCode = AccountState.Active;
+                        nAccount.ed_customer = true;
+
+                        crmContext.AddObject(nAccount);
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Import 2Accounts Exception. Details: " + e.Message);
+                    }
+                }
+            }
+            Console.WriteLine("Done.");
+        }
+
+        public static void RefreshGlobalOptionSets(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
+        {
+            if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
+                return;
+            }
+
+            List<string> lAddCompanyTrade = new List<string>();
+            List<string> lAddBusinessType = new List<string>();
+            OptionMetadataCollection colOpCompanyTrade = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_companytrade);
+            OptionMetadataCollection colOpBusinessType = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_BusinessType);
+
+            Console.Write("Creating Batch of OptionSets Values... ");
+            using (ProgressBar progress = new ProgressBar())
+            {
+                for (int i = 0; i < importExcelInfo.lData.Count; i++)
+                {
+                    try
+                    {
+                        progress.Report((double)i / (double)importExcelInfo.lData.Count);
+                        List<ExcelLineData> line = importExcelInfo.lData[i];
+
+                        if (line.Count != importExcelInfo.lColumns.Count)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The line " + (i + 1) + " was not imported, because the data count is not equal to the column count.");
+                            continue;
+                        }
+
+                        for (int j = 0; j < importExcelInfo.lColumns.Count; j++)
+                        {
+                            ExcelLineData selectedData = line[j];
+
+                            if (selectedData == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
+                                continue;
+                            }
+
+                            ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
+
+                            if (selectedColumn == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
+                                continue;
+                            }
+
+                            string name = selectedColumn.name;
+                            string value = selectedData.value;
+
+                            if (value == null || string.IsNullOrEmpty(value))
+                                continue;
+
+                            switch (name)
+                            {
+                                case "Bolagsform text":
+
+                                    int? optionSetBT = GetOptionSetValueByName(colOpBusinessType, value);
+                                    bool existsB = lAddBusinessType.Any(x => x == value);
+                                    if (optionSetBT == null && !existsB)
+                                    {
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM. By default it will be created into Skund.");
+                                        lAddBusinessType.Add(value);
+                                    }
+
+                                    break;
+                                case "Branschtext":
+
+                                    int? optionSetCT = GetOptionSetValueByName(colOpCompanyTrade, value);
+                                    bool existsC = lAddCompanyTrade.Any(x => x == value);
+
+                                    if (optionSetCT == null && !existsC)
+                                    {
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM. By default it will be created into Skund.");
+                                        lAddCompanyTrade.Add(value);
+                                    }
+                                    break;
+
+                                default:
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
+                                    break;
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Import 2Accounts Exception. Details: " + e.Message);
+                    }
+                }
+            }
+
+            foreach (string option in lAddBusinessType)
+                InsertGlobalOptionSetOption(localContext, "ed_businesstype", option, 1053);
+
+            foreach (string option in lAddCompanyTrade)
+            InsertGlobalOptionSetOption(localContext, "ed_companytrade", option, 1053);
+
+            Console.WriteLine("Done.");
+        }
+
         public static bool MainMenuUpsales(Plugin.LocalPluginContext localContext, CrmContext crmContext, SaveChangesOptions optionsChanges, string relativeExcelPath)
         {
             Console.WriteLine();
@@ -2580,6 +2814,9 @@ namespace Skanetrafiken.Import
             Console.WriteLine("12) Fix: Update SubAccounts Records");
             Console.WriteLine("13) Fix: Update Price List on Orders");
             Console.WriteLine("14) Fix: Update Total Amount on Orders");
+
+            Console.WriteLine("15) Fix:  Import Accounts May 2021");
+            Console.WriteLine("16) Fix: Refresh Global OptionSets(ed_BusinessType/ed_companytrade)");
 
 
             Console.WriteLine("0) Exit");
@@ -3260,6 +3497,88 @@ namespace Skanetrafiken.Import
                     catch (Exception e)
                     {
                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Order Records. Details: " + e.Message);
+                        throw;
+                    }
+
+                    #endregion
+
+                    return true;
+
+                case "15":
+
+                    #region Add New Options to Local OptionSet and Import Accounts
+
+                    try
+                    {
+                        crmContext.ClearChanges();
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Add New Options to Local OptionSet and Import Accounts--------------");
+
+                        string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.BucketNewAccounts);
+                        ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
+
+                        bool isParsingOk = GetParsingStatus(importExcelInfo);
+
+                        if (isParsingOk)
+                        {
+                            Import2AccountRecords(localContext, crmContext, importExcelInfo);
+
+                            Console.WriteLine("Sending Batch of Orders to Sekund...");
+
+                            SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                            LogCrmContextMultipleResponses(localContext, responses);
+
+                            Console.WriteLine("Batch Sent. Please check logs.");
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
+
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Add New Options to Local OptionSet and Import Accounts--------------");
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
+                        throw;
+                    }
+
+                    #endregion
+
+                    return true;
+
+                case "16":
+
+                    #region Refresh OptionSets
+
+                    try
+                    {
+                        crmContext.ClearChanges();
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Refresh OptionSets--------------");
+
+                        string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.BucketNewAccounts);
+                        ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
+
+                        bool isParsingOk = GetParsingStatus(importExcelInfo);
+
+                        if (isParsingOk)
+                        {
+                            RefreshGlobalOptionSets(localContext, crmContext, importExcelInfo);
+
+                            Console.WriteLine("Sending Batch of OptionSets to Sekund...");
+
+                            SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                            LogCrmContextMultipleResponses(localContext, responses);
+
+                            Console.WriteLine("Batch Sent. Please check logs.");
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
+
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Refresh OptionSets--------------");
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
                         throw;
                     }
 

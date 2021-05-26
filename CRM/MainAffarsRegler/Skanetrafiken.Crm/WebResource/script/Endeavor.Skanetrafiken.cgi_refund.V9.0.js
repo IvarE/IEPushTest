@@ -2218,7 +2218,8 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
         //Set valid date for compensation
         SetDateValidField: function (formContext) {
             try {
-                var futureDate = Endeavor.Skanetrafiken.cgi_refund.getFutureDateByAddingMonths(12);
+                //Changed to add 24 moths instead of 12 (DevOps - 8059)
+                var futureDate = Endeavor.Skanetrafiken.cgi_refund.getFutureDateByAddingMonths(24);
                 Endeavor.formscriptfunctions.SetValue("cgi_last_valid", futureDate, formContext);
             }
             catch (e) {

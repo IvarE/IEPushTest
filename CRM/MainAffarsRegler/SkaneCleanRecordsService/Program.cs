@@ -20,6 +20,7 @@ namespace Endeavor.Crm.CleanRecordsService
                 _log.Debug("Main Started");
                 string runCloseCases = ConfigurationManager.AppSettings["runCloseCases"];
                 string runInactivateContacts = ConfigurationManager.AppSettings["runInactivateContacts"];
+                string runDeleteAudits = ConfigurationManager.AppSettings["runDeleteAudits"];
 
                 string passwordArgument = "uSEme2!nstal1";
 
@@ -47,6 +48,14 @@ namespace Endeavor.Crm.CleanRecordsService
                     CrmConnection.SaveCredentials(ContactsService.CredentialFilePath, password, ContactsService.Entropy);
                 }
 
+                if (!string.IsNullOrEmpty(passwordArgument) && runDeleteAudits == "true")
+                {
+                    _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
+                    string password = passwordArgument.Substring(passwordArgument.IndexOf(":") + 1);
+
+                    CrmConnection.SaveCredentials(AuditsService.CredentialFilePath, password, AuditsService.Entropy);
+                }
+
 #if DEBUG
                 //Workaround to make it possible to debug a service.
                 if (runCloseCases == "true")
@@ -60,6 +69,13 @@ namespace Endeavor.Crm.CleanRecordsService
                 {
                     _log.Info($"Running Contacts Service...");
                     ContactsService service = new ContactsService();
+                    service.Execute();
+                }
+
+                if (runDeleteAudits == "true")
+                {
+                    _log.Info($"Running Audits Service...");
+                    AuditsService service = new AuditsService();
                     service.Execute();
                 }
 
@@ -77,6 +93,12 @@ namespace Endeavor.Crm.CleanRecordsService
                 {
                     _log.Info($"Running Contacts Service...");
                     servicesToRun.Add(new ContactsService());
+                }
+
+                if (runDeleteAudits == "true")
+                {
+                    _log.Info($"Running Audits Service...");
+                    servicesToRun.Add(new AuditsService());
                 }
 
                 ServiceBase.Run(servicesToRun.ToArray());

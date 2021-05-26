@@ -108,6 +108,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuditsService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AuditsService.Designer.cs">
+      <DependentUpon>AuditsService.cs</DependentUpon>
+    </Compile>
     <Compile Include="CasesService.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -122,6 +128,7 @@
       <DependentUpon>ContactsService.cs</DependentUpon>
     </Compile>
     <Compile Include="CrmConnection.cs" />
+    <Compile Include="DeleteAudits.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="InactivateContacts.cs" />
     <Compile Include="Program.cs" />

@@ -35,6 +35,9 @@ namespace Skanetrafiken.Crm
         [Input("Line")]
         public InArgument<string> Line { get; set; }
 
+        [Input("LineDesignation")]
+        public InArgument<string> LineDesignation { get; set; }
+
         [Input("DirectionOfText")]
         public InArgument<string> DirectionOfText { get; set; }
 
@@ -77,6 +80,7 @@ namespace Skanetrafiken.Crm
                 string transport = Transport.Get(activityContext);
                 string city = City.Get(activityContext);
                 string line = Line.Get(activityContext);
+                string linedesignation = LineDesignation.Get(activityContext);
                 string directionOfText = DirectionOfText.Get(activityContext);
                 string tour = Tour.Get(activityContext);
                 string start = Start.Get(activityContext);
@@ -88,8 +92,7 @@ namespace Skanetrafiken.Crm
                 DateTime dArrivalActual = ArrivalActual.Get(activityContext);
 
                 string sTour = GetTour(inputFormat, tour, start, stop, dStartPlanned, dStartActual, dArrivalPlanned, dArrivalActual);
-                string sLine = line + " (" + directionOfText + ")";
-                string displayText = ExecuteCodeActivity(transport, city, sLine, sTour, contractor);
+                string displayText = ExecuteCodeActivity(transport, city, line, linedesignation, directionOfText, sTour, contractor);
                 DisplayText.Set(activityContext, displayText);
             }
             catch (Exception ex)
@@ -101,16 +104,18 @@ namespace Skanetrafiken.Crm
             localContext.Trace($"GetDisplayText finished.");
         }
 
-        public static string ExecuteCodeActivity(string transport, string city, string line, string tour, string contractor)
+        public static string ExecuteCodeActivity(string transport, string city, string line, string linedesignation, string directionOfText, string tour, string contractor)
         {
             string displayText = string.Empty;
+            string sLine = line + " (" + directionOfText + ")";
+            string sLineDesignation = linedesignation + " (" + directionOfText + ")";
 
-            if (transport.ToUpper() == "REGIONBUS" || transport == "SkåneExpressen")
-                displayText = SetDisplayTextRegionbus(transport, line, tour, contractor);
-            else if (transport.ToUpper() == "STADSBUSS")
-                displayText = SetDisplayTextCitybus(transport, city, line, tour, contractor);
+            if (city != null)
+                displayText = SetDisplayTextCitybus(transport, city, sLineDesignation, tour, contractor);
+            else if (transport.ToUpper() == "REGIONBUS" || transport == "SkåneExpressen")
+                displayText = SetDisplayTextRegionbus(transport, sLine, tour, contractor);
             else
-                displayText = SetDisplayTextTrain(transport, line, tour, contractor);
+                displayText = SetDisplayTextTrain(transport, sLine, tour, contractor);
 
             return displayText;
         }
@@ -131,9 +136,9 @@ namespace Skanetrafiken.Crm
 
             return trafik + " Linje: " + line + " " + tour + " Entreprenör: " + contractor;
         }
-        public static string SetDisplayTextCitybus(string transport, string city, string line, string tour, string contractor)
+        public static string SetDisplayTextCitybus(string transport, string city, string linedesignation, string tour, string contractor)
         {
-            return "Trafikslag: " + transport + " Stad: " + city + " Linje: " + line + " " + tour + " Entreprenör: " + contractor;
+            return "Trafikslag: " + transport + " Stad: " + city + " Linje: " + linedesignation + " " + tour + " Entreprenör: " + contractor;
         }
         public static string GetTour(string inputFormat, string tour, string start, string stop, DateTime dStartPlanned, DateTime dStartActual, DateTime dArrivalPlanned, DateTime dArrivalActual)
         {
@@ -171,7 +176,6 @@ namespace Skanetrafiken.Crm
 
             return "Tur: [" + tour + "] " + startplannedtime + actualStartTimes + start + " - " + arrivalplannedtime + actualArrivalTimes + stop;
         }
-
         public static string MinuteDiff(DateTime realTime, DateTime plannedDate)
         {
             var plannedMinutes = (int)Math.Abs(DateTime.MinValue.Subtract(plannedDate).TotalMinutes);
