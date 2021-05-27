@@ -218,6 +218,31 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             return "X";
         },
 
+        getContractorFromLine: function (cityGid, lineGid) {
+
+            var organisationsdoc = Endeavor.Skanetrafiken.TravelInformation.organisations;
+            var line = Endeavor.Skanetrafiken.TravelInformation.getLine(cityGid, lineGid);
+
+            if (line && line.getElementsByTagName("ContractorName") && line.getElementsByTagName("ContractorName")[0])
+                return line.getElementsByTagName("ContractorName")[0].firstChild.nodeValue;
+            else {
+                var lineOpCode = line.getElementsByTagName("ContractorCode")[0].firstChild.nodeValue;
+
+                if (organisationsdoc && organisationsdoc.firstChild && organisationsdoc.firstChild.childNodes && organisationsdoc.firstChild.childNodes.length > 0) {
+
+                    for (var i = 0; i < organisationsdoc.firstChild.childNodes.length; i++) {
+
+                        var organisation = organisationsdoc.firstChild.childNodes[i];
+
+                        if (lineOpCode == organisation.getAttribute("Code"))
+                            return organisation != "" ? organisation.getAttribute("Name") : "";
+                    }
+                }
+            }
+
+            return "";
+        },
+
         getOrganisationFromLine: function (cityGid, lineGid) {
 
             var responsedoc = Endeavor.Skanetrafiken.TravelInformation.response;
@@ -692,9 +717,8 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 }
             }
 
-            var organisation = Endeavor.Skanetrafiken.TravelInformation.getOrganisationFromLine(city, line);
-            var contractor = organisation != "" ? organisation.getAttribute("Name") : "";
-            if (organisation == "" || organisation == null)
+            var contractor = Endeavor.Skanetrafiken.TravelInformation.getContractorFromLine(city, line);
+            if (contractor == "" || contractor == null)
                 return;
 
             var contractorrow = travelinformationbody.insertRow();
