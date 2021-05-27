@@ -1672,6 +1672,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_accesskey")]
+		public string ed_Accesskey
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_accesskey");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_accesskey", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_accountdescription")]
 		public string ed_AccountDescription
 		{
@@ -3966,18 +3982,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Version number of the account.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
-		public System.Nullable<long> VersionNumber
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
-			}
-		}
-		
-		/// <summary>
 		/// Type the account's website URL to get quick details about the company profile.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("websiteurl")]
@@ -3990,6 +3994,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("websiteurl", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the account.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
 			}
 		}
 		
@@ -4422,6 +4438,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_SKAkort>("ed_account_ed_skakort_Account", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_account_ed_slots_Account
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_account_ed_slots_Account")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_Slots> ed_account_ed_slots_Account
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_account_ed_slots_Account", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_account_ed_slots_Account", null, value);
 			}
 		}
 		
@@ -5034,6 +5066,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string DoNotSendMM = "donotsendmm";
 			
+			public const string ed_Accesskey = "ed_accesskey";
+			
 			public const string ed_AccountDescription = "ed_accountdescription";
 			
 			public const string ed_AccountRefNumber = "ed_accountrefnumber";
@@ -5328,9 +5362,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
 			
-			public const string VersionNumber = "versionnumber";
-			
 			public const string WebSiteURL = "websiteurl";
+			
+			public const string VersionNumber = "versionnumber";
 			
 			public const string YomiName = "yominame";
 		}
@@ -5429,6 +5463,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int cgi_SocialSecurityNumber = 100;
 			
 			public const int Description = 2000;
+			
+			public const int ed_Accesskey = 100;
 			
 			public const int ed_AccountDescription = 2000;
 			
@@ -33944,18 +33980,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Version number of the contact.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
-		public System.Nullable<long> VersionNumber
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
-			}
-		}
-		
-		/// <summary>
 		/// Type the contact's professional or personal website or blog URL.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("websiteurl")]
@@ -33968,6 +33992,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("websiteurl", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the contact.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
 			}
 		}
 		
@@ -35793,9 +35829,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
 			
-			public const string VersionNumber = "versionnumber";
-			
 			public const string WebSiteUrl = "websiteurl";
+			
+			public const string VersionNumber = "versionnumber";
 			
 			public const string YomiFirstName = "yomifirstname";
 			
@@ -54439,6 +54475,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_account")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_Account
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_account");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_account", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_bookingday")]
 		public System.Nullable<System.DateTime> ed_BookingDay
 		{
@@ -54992,6 +55044,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 ed_account_ed_slots_Account
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_account")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_account_ed_slots_Account")]
+		public Skanetrafiken.Crm.Schema.Generated.Account ed_account_ed_slots_Account
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("ed_account_ed_slots_Account", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("ed_account_ed_slots_Account", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 ed_opportunity_ed_slots_Opportunity
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_opportunity")]
@@ -55196,6 +55265,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string CreatedOn = "createdon";
 			
 			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string ed_Account = "ed_account";
 			
 			public const string ed_BookingDay = "ed_bookingday";
 			
@@ -78425,18 +78496,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Version number of the lead.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
-		public System.Nullable<long> VersionNumber
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
-			}
-		}
-		
-		/// <summary>
 		/// Type the website URL for the company associated with this lead.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("websiteurl")]
@@ -78449,6 +78508,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("websiteurl", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the lead.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
 			}
 		}
 		
@@ -79598,9 +79669,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
 			
-			public const string VersionNumber = "versionnumber";
-			
 			public const string WebSiteUrl = "websiteurl";
+			
+			public const string VersionNumber = "versionnumber";
 			
 			public const string YomiCompanyName = "yomicompanyname";
 			
@@ -87473,22 +87544,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Stock volume of the product.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stockvolume")]
-		public System.Nullable<decimal> StockVolume
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<decimal>>("stockvolume");
-			}
-			set
-			{
-				this.SetAttributeValue("stockvolume", value);
-			}
-		}
-		
-		/// <summary>
 		/// Stock weight of the product.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stockweight")]
@@ -87501,6 +87556,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("stockweight", value);
+			}
+		}
+		
+		/// <summary>
+		/// Stock volume of the product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stockvolume")]
+		public System.Nullable<decimal> StockVolume
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("stockvolume");
+			}
+			set
+			{
+				this.SetAttributeValue("stockvolume", value);
 			}
 		}
 		
@@ -88157,9 +88228,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string StatusCode = "statuscode";
 			
-			public const string StockVolume = "stockvolume";
-			
 			public const string StockWeight = "stockweight";
+			
+			public const string StockVolume = "stockvolume";
 			
 			public const string SubjectId = "subjectid";
 			
@@ -94760,6 +94831,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Select whether the quote product should be shipped to the specified address or held until the customer calls with further pick up or delivery instructions.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("willcall")]
+		public System.Nullable<bool> WillCall
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("willcall");
+			}
+			set
+			{
+				this.SetAttributeValue("willcall", value);
+			}
+		}
+		
+		/// <summary>
 		/// Shows the discount amount per unit if a specified volume is purchased. Configure volume discounts in the Product Catalog in the Settings area.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("volumediscountamount")]
@@ -94780,22 +94867,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("volumediscountamount_base");
-			}
-		}
-		
-		/// <summary>
-		/// Select whether the quote product should be shipped to the specified address or held until the customer calls with further pick up or delivery instructions.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("willcall")]
-		public System.Nullable<bool> WillCall
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<bool>>("willcall");
-			}
-			set
-			{
-				this.SetAttributeValue("willcall", value);
 			}
 		}
 		
@@ -95233,11 +95304,11 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string VersionNumber = "versionnumber";
 			
+			public const string WillCall = "willcall";
+			
 			public const string VolumeDiscountAmount = "volumediscountamount";
 			
 			public const string VolumeDiscountAmount_Base = "volumediscountamount_base";
-			
-			public const string WillCall = "willcall";
 		}
 		
 		public struct FieldLengths
@@ -99616,6 +99687,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Select whether the order product should be shipped to the specified address or held until the customer calls with further pick up or delivery instructions.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("willcall")]
+		public System.Nullable<bool> WillCall
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("willcall");
+			}
+			set
+			{
+				this.SetAttributeValue("willcall", value);
+			}
+		}
+		
+		/// <summary>
 		/// Shows the discount amount per unit if a specified volume is purchased. Configure volume discounts in the Product Catalog in the Settings area.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("volumediscountamount")]
@@ -99636,22 +99723,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("volumediscountamount_base");
-			}
-		}
-		
-		/// <summary>
-		/// Select whether the order product should be shipped to the specified address or held until the customer calls with further pick up or delivery instructions.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("willcall")]
-		public System.Nullable<bool> WillCall
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<bool>>("willcall");
-			}
-			set
-			{
-				this.SetAttributeValue("willcall", value);
 			}
 		}
 		
@@ -100102,11 +100173,11 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string VersionNumber = "versionnumber";
 			
+			public const string WillCall = "willcall";
+			
 			public const string VolumeDiscountAmount = "volumediscountamount";
 			
 			public const string VolumeDiscountAmount_Base = "volumediscountamount_base";
-			
-			public const string WillCall = "willcall";
 		}
 		
 		public struct FieldLengths
