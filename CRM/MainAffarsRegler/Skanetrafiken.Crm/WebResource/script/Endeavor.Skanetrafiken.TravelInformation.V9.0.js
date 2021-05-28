@@ -691,11 +691,6 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
         populateContractorInformation: function (transporttype, city, line) {
 
-            if ((city == null || city == "") && line) {
-                alert("Denna typ av sökning är förnärvarande inte funktionell.")
-                return;
-            }
-
             var document = Endeavor.Skanetrafiken.TravelInformation.document;
 
             var travelinformationbody = document.getElementById("travelinformationbody");
@@ -718,8 +713,8 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             }
 
             var contractor = Endeavor.Skanetrafiken.TravelInformation.getContractorFromLine(city, line);
-            if (contractor == "" || contractor == null)
-                return;
+            if (contractor == null)
+                contractor = "";
 
             var contractorrow = travelinformationbody.insertRow();
             var cell = contractorrow.insertCell();
