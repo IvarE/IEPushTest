@@ -151,6 +151,7 @@
     <Compile Include="Entities\QuoteEntity.cs" />
     <Compile Include="Entities\QuoteProductEntity.cs" />
     <Compile Include="Entities\SlotsEntity.cs" />
+    <Compile Include="Entities\TicketInfoEntity.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="PostOrderProductCreate.cs" />
     <Compile Include="PostOrderProductUpdate.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="PostQuoteProductUpdate.cs" />
     <Compile Include="PostSlotCreate.cs" />
     <Compile Include="PostSlotUpdate.cs" />
+    <Compile Include="PostTicketInfoCreate_Async.cs" />
     <Compile Include="PreAccountUpdate.cs" />
     <Compile Include="PreAccountCreate.cs" />
     <Compile Include="CountryUtility.cs" />
