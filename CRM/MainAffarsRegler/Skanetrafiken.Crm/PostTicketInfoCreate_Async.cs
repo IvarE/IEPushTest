@@ -58,7 +58,7 @@ namespace Skanetrafiken.Crm
 
                 try
                 {
-                    target.HandlePostTicketInfoCreateAsync(localContext);
+                    //target.HandlePostTicketInfoCreateAsync(localContext);
                 }
                 catch (Exception ex)
                 {
