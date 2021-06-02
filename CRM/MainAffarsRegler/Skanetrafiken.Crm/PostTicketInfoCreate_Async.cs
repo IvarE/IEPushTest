@@ -14,7 +14,7 @@ namespace Skanetrafiken.Crm
         public PostTicketInfoCreate_Async()
             : base(typeof(PostTicketInfoCreate_Async))
         {
-            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PostOperation, Plugin.SdkMessageName.Create, ContactEntity.EntityLogicalName, new Action<LocalPluginContext>(PostExecuteContactUpdateAsync)));
+            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PostOperation, Plugin.SdkMessageName.Create, TicketInfoEntity.EntityLogicalName, new Action<LocalPluginContext>(PostExecuteTicketInfoCreateAsync)));
 
             // Note : you can register for more events here if this plugin is not specific to an individual entity and message combination.
             // You may also need to update your RegisterFile.crmregister plug-in registration file to reflect any change.
@@ -35,7 +35,7 @@ namespace Skanetrafiken.Crm
         /// could execute the plug-in at the same time. All per invocation state information
         /// is stored in the context. This means that you should not use global variables in plug-ins.
         /// </remarks>
-        protected void PostExecuteContactUpdateAsync(LocalPluginContext localContext)
+        protected void PostExecuteTicketInfoCreateAsync(LocalPluginContext localContext)
         {
             if (localContext == null)
                 throw new ArgumentNullException("localContext");
@@ -58,7 +58,7 @@ namespace Skanetrafiken.Crm
 
                 try
                 {
-                    //target.HandlePostTicketInfoCreateAsync(localContext);
+                    target.HandlePostTicketInfoCreateAsync(localContext);
                 }
                 catch (Exception ex)
                 {
