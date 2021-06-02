@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package"
   DTS:PackageType="5"
-  DTS:VersionBuild="8"
-  DTS:VersionGUID="{9344DD42-C748-4F64-8C63-0A8EF1B7F838}">
+  DTS:VersionBuild="9"
+  DTS:VersionGUID="{80BE0774-41C7-4BA1-8CF7-DFCE76115F28}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAAE4DgELe61B0JA2QoUNfGAAAAAASAAACgAAAAEAAAABkHLQYAQ0GJylJ45AOQWSAgAAAAECWVIE7qSepfACo6RHxlXMB4OdobOT667WJ7Q99WTgQUAAAAsHDnHS24wQBejPb4mS4Wty5Rr80</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACK4fZiHE80kAfQopio1GCMAAAAAASAAACgAAAAEAAAALab+Us8OUgGF/v97gGHmj0gAAAA7R+YiIL7q61a3qeQ+HMV9RKKun5MWQRrU+jdzEP6clcUAAAAdEtxKDezM93+UWtrAK6/PvO5Ry8</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -53,7 +53,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="cgi_contactnumber"
-              DTS:DTSID="{0E8BC98D-8B0A-4964-A025-6241EF379EDD}"
+              DTS:DTSID="{35EF6051-7CDE-4CE4-8CEF-271C2C1ECA33}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -61,7 +61,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="MkId"
-              DTS:DTSID="{7A1B86F7-0BB1-4378-9B9F-AA7B8D58249A}"
+              DTS:DTSID="{56610DF7-875C-488A-BD07-AD07E56117B6}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -70,7 +70,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="OfferName"
-              DTS:DTSID="{A9C77DEB-B05F-4489-9E53-C8492FF15D46}"
+              DTS:DTSID="{FC6EA594-DE42-416A-8355-542866ADB38E}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -78,7 +78,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="NumberOfTickets"
-              DTS:DTSID="{93FFB46A-5872-44A1-A83D-451B6AD29A08}"
+              DTS:DTSID="{B932B927-FECE-4330-8AD0-C4988B8DA777}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -88,7 +88,7 @@
               DTS:DataScale="5"
               DTS:TextQualified="True"
               DTS:ObjectName="TotalSumTicketOffer"
-              DTS:DTSID="{CC8FE827-0D62-403B-B3A2-C9842B8DBA07}"
+              DTS:DTSID="{C94DA198-1C5E-4D7B-9BED-4418B81610E1}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -96,7 +96,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorCode"
-              DTS:DTSID="{27CE5148-407D-4CC8-B8E8-ED322756DCC5}"
+              DTS:DTSID="{E230342D-67ED-4858-906C-6BAB77FD870E}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -104,7 +104,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorColumn"
-              DTS:DTSID="{98F8B70E-3124-4FE5-A5F9-6E374D2EA047}"
+              DTS:DTSID="{F4BDA49A-478F-4DC0-BEDE-E394509C660D}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -113,7 +113,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorMessage"
-              DTS:DTSID="{A4101BC6-8883-4F1F-8D56-F4A7362783C1}"
+              DTS:DTSID="{9490464B-1C2D-46F7-B826-B931B4F88C4C}"
               DTS:CreationName="" />
           </DTS:FlatFileColumns>
         </DTS:ConnectionManager>
@@ -346,7 +346,7 @@
                   description="Specifies what action will be taken when multiple matches are found with Upsert action."
                   expressionType="Notify"
                   name="HandlingOfMultipleMatches"
-                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">0</property>
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">0</property>
                 <property
                   dataType="System.Int32"
                   description="Specify whether to use optimizations when there are duplicate records form the source system."
@@ -755,7 +755,7 @@
                   dataType="System.Int32"
                   description="Specifies the mode used to access the database."
                   name="AccessMode"
-                  typeConverter="AccessMode">2</property>
+                  typeConverter="AccessMode">0</property>
                 <property
                   dataType="System.String"
                   description="The mappings between the parameters in the SQL command and variables."
@@ -945,13 +945,13 @@
       <GraphLayout
         Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
-          Size="194,42"
-          Id="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases"
-          TopLeft="367,155" />
-        <NodeLayout
           Size="163,42"
           Id="Package\CRM Insert Ticket Purchases\Ticket Purchases"
           TopLeft="182,40" />
+        <NodeLayout
+          Size="194,42"
+          Id="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases"
+          TopLeft="367,155" />
         <NodeLayout
           Size="176,42"
           Id="Package\CRM Insert Ticket Purchases\Flat File Destination"
