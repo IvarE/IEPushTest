@@ -16,10 +16,25 @@ namespace Skanetrafiken.Crm.Entities
         {
             try
             {
+                bool sendUpdateRequest = false;
+                //This can't be done on the Pre Event because SSIS is running to import these records
+                //It can't be syncronos
+                TicketInfoEntity eTicketInfo = new TicketInfoEntity();
+                eTicketInfo.Id = this.Id;
+
+                string name = this.ed_name;
+
+                if (string.IsNullOrEmpty(name))
+                {
+                    eTicketInfo.ed_name = "Ticket Info";
+                    sendUpdateRequest = true;
+                }
+
                 string contactNumber = this.ed_CRMNumber;
-                localContext.Trace(contactNumber);
+
                 if (!string.IsNullOrEmpty(contactNumber))
                 {
+                    localContext.Trace(contactNumber);
                     QueryExpression queryContacts = new QueryExpression(ContactEntity.EntityLogicalName);
                     queryContacts.NoLock = true;
                     queryContacts.ColumnSet = new ColumnSet(ContactEntity.Fields.ContactId);
@@ -33,15 +48,13 @@ namespace Skanetrafiken.Crm.Entities
                         var eContact = lContacts.FirstOrDefault();
                         var erContact = new EntityReference(eContact.LogicalName, eContact.Id);
 
-                        //This can't be done on the Pre Event because SSIS is running to import these records
-                        //It can't be syncronos
-                        TicketInfoEntity eTicketInfo = new TicketInfoEntity();
-                        eTicketInfo.Id = this.Id;
                         eTicketInfo.ed_Contact = erContact;
-
-                        XrmHelper.Update(localContext, eTicketInfo);
+                        sendUpdateRequest = true;
                     }
                 }
+
+                if(sendUpdateRequest)
+                    XrmHelper.Update(localContext, eTicketInfo);
             }
             catch (Exception e)
             {
