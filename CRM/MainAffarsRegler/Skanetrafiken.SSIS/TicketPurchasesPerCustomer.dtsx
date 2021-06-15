@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package"
   DTS:PackageType="5"
-  DTS:VersionBuild="13"
-  DTS:VersionGUID="{31A7B0D2-6677-41C5-A3E7-633106EBCB4E}">
+  DTS:VersionBuild="17"
+  DTS:VersionGUID="{C5FC4E3B-800E-47C3-BD37-009EF56E7CA3}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAd12cOV7E3YX5SCMK6kwlbAAAAAASAAACgAAAAEAAAAGNzlZAG9sSmS0D5ZwtQuUMgAAAADT4VombMMe+lT23x89+7m/1P+9qtfgJTLMzMoHVSPEQUAAAAz5YdkR04OUBuX9epCkisL/ygw3g</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACbmUjlgK4JPcbnTP6n92mOAAAAAASAAACgAAAAEAAAAKpYeiOONKTqichEx0uS4GwgAAAAQqQ2pWyVn+EfQIgTi5ZfI92hSamybZev1mlRvXIQrcgUAAAASGsU70JRyQKS69n9kNcII+W2dkY</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -346,7 +346,7 @@
                   description="Specifies what action will be taken when multiple matches are found with Upsert action."
                   expressionType="Notify"
                   name="HandlingOfMultipleMatches"
-                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">1</property>
+                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">1</property>
                 <property
                   dataType="System.Int32"
                   description="Specify whether to use optimizations when there are duplicate records form the source system."
@@ -835,12 +835,13 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT TOP (1000) [cgi_contactnumber]
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT TOP (10) [cgi_contactnumber]
       ,[MkId]
       ,[OfferName]
       ,[NumberOfTickets]
       ,[TotalSumTicketOffer]
-  FROM [STDW].[dbo].[GetTicketPurchasesPerCustomerView]</property>
+  FROM [STDW].[dbo].[GetTicketPurchasesPerCustomerView]
+ORDER BY MkId</property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
@@ -857,7 +858,7 @@
                   dataType="System.Int32"
                   description="Specifies the mode used to access the database."
                   name="AccessMode"
-                  typeConverter="AccessMode">2</property>
+                  typeConverter="AccessMode">0</property>
                 <property
                   dataType="System.String"
                   description="The mappings between the parameters in the SQL command and variables."
