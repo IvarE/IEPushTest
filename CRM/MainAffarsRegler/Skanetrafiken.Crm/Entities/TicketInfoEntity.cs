@@ -38,7 +38,7 @@ namespace Skanetrafiken.Crm.Entities
                     QueryExpression queryContacts = new QueryExpression(ContactEntity.EntityLogicalName);
                     queryContacts.NoLock = true;
                     queryContacts.ColumnSet = new ColumnSet(ContactEntity.Fields.ContactId);
-                    queryContacts.Criteria.AddCondition(ContactEntity.Fields.cgi_ContactNumber, ConditionOperator.Equal, contactNumber);
+                    queryContacts.Criteria.AddCondition(ContactEntity.Fields.ed_MklId, ConditionOperator.Equal, contactNumber);
 
                     var lContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, queryContacts);
 
