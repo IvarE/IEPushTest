@@ -9,13 +9,43 @@
   DTS:ExecutableType="Microsoft.Package"
   DTS:LastModifiedProductVersion="15.0.2000.166"
   DTS:LocaleID="1053"
-  DTS:ObjectName="Package"
+  DTS:ObjectName="Package Ticket Purchases"
   DTS:PackageType="5"
-  DTS:VersionBuild="17"
-  DTS:VersionGUID="{C5FC4E3B-800E-47C3-BD37-009EF56E7CA3}">
+  DTS:VersionBuild="28"
+  DTS:VersionGUID="{9FCE2794-4BE3-4CB9-B363-C3D82695E6C5}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Dynamics CRM Sekund ACC]"
+      DTS:CreationName="DynamicsCRM"
+      DTS:DTSID="{CAFFFA2B-8C82-4716-B0A4-EACB06EB3D8F}"
+      DTS:ObjectName="Dynamics CRM Sekund ACC">
+      <DTS:ObjectData>
+        <CrmConnectionManager
+          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekundacc.skanetrafiken.se/DKCRMACC;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=True;IgnoreCertificateErrors=False"
+          ConnectByProxy="False">
+          <Password
+            Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAgHYIvjhYyhGg7OHUk/ExQAAAAAASAAACgAAAAEAAAAByo1cVEwFlw9tZdXVosHp0gAAAATUGaGI3dnj4ZzVn1b3mOLLgtUbhTYQ8SmtSzEHFjq/0UAAAArzLg42vhquf194IqjmtG5cG2Fps</Password>
+        </CrmConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Dynamics CRM Sekund PROD]"
+      DTS:CreationName="DynamicsCRM"
+      DTS:DTSID="{E9FA1CC4-DB38-4490-B8F1-8657BF32B151}"
+      DTS:ObjectName="Dynamics CRM Sekund PROD">
+      <DTS:ObjectData>
+        <CrmConnectionManager
+          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekund.skanetrafiken.se/DKCRM;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=True;IgnoreCertificateErrors=False"
+          ConnectByProxy="False">
+          <Password
+            Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABCxmPYy/1qH9O8zNA/KZSgAAAAAASAAACgAAAAEAAAABQr2BZt5I444VSiCVfOxNwgAAAAYIXUuKCjEZqzmkdvo2hV7drjA5X5zCbx7bwthBz5snkUAAAAcXsRHdS+vaXgP0hO974H+KStjGo</Password>
+        </CrmConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
     <DTS:ConnectionManager
       DTS:refId="Package.ConnectionManagers[Dynamics CRM Sekund TST]"
       DTS:CreationName="DynamicsCRM"
@@ -27,7 +57,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACbmUjlgK4JPcbnTP6n92mOAAAAAASAAACgAAAAEAAAAKpYeiOONKTqichEx0uS4GwgAAAAQqQ2pWyVn+EfQIgTi5ZfI92hSamybZev1mlRvXIQrcgUAAAASGsU70JRyQKS69n9kNcII+W2dkY</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAC78hR9k81Q8PeXSJdOEPg4AAAAAASAAACgAAAAEAAAAGVujSf+QM7H5SoI5FmoTuQgAAAApKPTIHTon1q+t1GJNOwxWm89jDgjax9u1XHF3+B0XvYUAAAAv1iVMSPO4sJMy8G9JVTpweNWQRc</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -135,13 +165,13 @@
   <DTS:Variables />
   <DTS:Executables>
     <DTS:Executable
-      DTS:refId="Package\CRM Insert Ticket Purchases"
+      DTS:refId="Package\Upsert Ticket Purchases Dynamics"
       DTS:CreationName="Microsoft.Pipeline"
       DTS:Description="Data Flow Task"
       DTS:DTSID="{D49E0963-052D-4FA3-82CB-2873FEA0A14E}"
       DTS:ExecutableType="Microsoft.Pipeline"
       DTS:LocaleID="-1"
-      DTS:ObjectName="CRM Insert Ticket Purchases"
+      DTS:ObjectName="Upsert Ticket Purchases Dynamics"
       DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
       <DTS:Variables />
       <DTS:ObjectData>
@@ -149,7 +179,7 @@
           version="1">
           <components>
             <component
-              refId="Package\CRM Insert Ticket Purchases\Flat File Destination"
+              refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination"
               componentClassID="Microsoft.FlatFileDestination"
               contactInfo="Flat File Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
               description="Flat File Destination"
@@ -173,107 +203,107 @@
               </properties>
               <connections>
                 <connection
-                  refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Connections[FlatFileConnection]"
+                  refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Connections[FlatFileConnection]"
                   connectionManagerID="Package.ConnectionManagers[Flat File Connection Manager]"
                   connectionManagerRefId="Package.ConnectionManagers[Flat File Connection Manager]"
                   name="FlatFileConnection" />
               </connections>
               <inputs>
                 <input
-                  refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input]"
+                  refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input]"
                   hasSideEffects="true"
                   name="Flat File Destination Input">
                   <inputColumns>
                     <inputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].Columns[cgi_contactnumber]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[cgi_contactnumber]"
                       cachedDataType="wstr"
                       cachedLength="100"
                       cachedName="cgi_contactnumber"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[cgi_contactnumber]"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[cgi_contactnumber]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
                     <inputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].Columns[MkId]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[MkId]"
                       cachedDataType="i4"
                       cachedName="MkId"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[MkId]"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[MkId]" />
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[MkId]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[MkId]" />
                     <inputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].Columns[OfferName]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[OfferName]"
                       cachedDataType="wstr"
                       cachedLength="50"
                       cachedName="OfferName"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[OfferName]"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[OfferName]" />
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[OfferName]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[OfferName]" />
                     <inputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].Columns[NumberOfTickets]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[NumberOfTickets]"
                       cachedDataType="i4"
                       cachedName="NumberOfTickets"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[NumberOfTickets]"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[NumberOfTickets]" />
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[NumberOfTickets]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[NumberOfTickets]" />
                     <inputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].Columns[TotalSumTicketOffer]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[TotalSumTicketOffer]"
                       cachedDataType="numeric"
                       cachedName="TotalSumTicketOffer"
                       cachedPrecision="38"
                       cachedScale="5"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[TotalSumTicketOffer]"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[TotalSumTicketOffer]" />
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[TotalSumTicketOffer]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[TotalSumTicketOffer]" />
                     <inputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].Columns[ErrorCode]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[ErrorCode]"
                       cachedDataType="i4"
                       cachedName="ErrorCode"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorCode]"
-                      lineageId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Error Output].Columns[ErrorCode]" />
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorCode]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Error Output].Columns[ErrorCode]" />
                     <inputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].Columns[ErrorColumn]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[ErrorColumn]"
                       cachedDataType="i4"
                       cachedName="ErrorColumn"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorColumn]"
-                      lineageId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Error Output].Columns[ErrorColumn]" />
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorColumn]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Error Output].Columns[ErrorColumn]" />
                     <inputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].Columns[ErrorMessage]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[ErrorMessage]"
                       cachedDataType="wstr"
                       cachedLength="2048"
                       cachedName="ErrorMessage"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorMessage]"
-                      lineageId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Error Output].Columns[ErrorMessage]" />
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorMessage]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Error Output].Columns[ErrorMessage]" />
                   </inputColumns>
                   <externalMetadataColumns
                     isUsed="True">
                     <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[cgi_contactnumber]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[cgi_contactnumber]"
                       dataType="wstr"
                       length="100"
                       name="cgi_contactnumber" />
                     <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[MkId]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[MkId]"
                       dataType="i4"
                       name="MkId" />
                     <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[OfferName]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[OfferName]"
                       dataType="wstr"
                       length="50"
                       name="OfferName" />
                     <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[NumberOfTickets]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[NumberOfTickets]"
                       dataType="i4"
                       name="NumberOfTickets" />
                     <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[TotalSumTicketOffer]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[TotalSumTicketOffer]"
                       dataType="numeric"
                       name="TotalSumTicketOffer"
                       precision="38"
                       scale="5" />
                     <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorCode]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorCode]"
                       dataType="i4"
                       name="ErrorCode" />
                     <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorColumn]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorColumn]"
                       dataType="i4"
                       name="ErrorColumn" />
                     <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorMessage]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorMessage]"
                       dataType="wstr"
                       length="2048"
                       name="ErrorMessage" />
@@ -282,536 +312,7 @@
               </inputs>
             </component>
             <component
-              refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases"
-              componentClassID="Microsoft.ManagedComponentHost"
-              contactInfo="KingswaySoft Inc.; http://www.kingswaysoft.com; support@kingswaysoft.com; Copyright (c) 2020 KingswaySoft Inc."
-              description="Populate data into Microsoft Dynamics 365 CE/CRM."
-              name="Insert Ticket Purchases"
-              usesDispositions="true"
-              version="4">
-              <properties>
-                <property
-                  dataType="System.String"
-                  description="Destination entity to write data."
-                  expressionType="Notify"
-                  name="DestinationEntity">ed_ticketinfo</property>
-                <property
-                  dataType="System.Int32"
-                  description="Specifies how data is written to CDS/Dynamics CRM server."
-                  name="ActionType"
-                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.DestinationActionType">5</property>
-                <property
-                  dataType="System.Boolean"
-                  description="Specifies whether the values of CDS/CRM lookup fields should be removed if the reference records cannot be found. "
-                  expressionType="Notify"
-                  name="RemoveUnresolvableReferences">false</property>
-                <property
-                  dataType="System.Boolean"
-                  description="Specifies whether duplicate detection should be enabled when creating or updating CDS/CRM records. Duplicate records are determined by the duplicate detection rules and settings defined in CDS or Microsoft Dynamics CRM server."
-                  expressionType="Notify"
-                  name="EnableSystemDuplicateDetection">false</property>
-                <property
-                  dataType="System.Int32"
-                  description="Specify the matching criteria to be used when performing an update or upsert. "
-                  expressionType="Notify"
-                  name="RecordMatchingCriteria"
-                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.RecordMatchingCriteria">3</property>
-                <property
-                  dataType="System.String"
-                  description="Specify the key fields to be used to determine the matching records that exist in CDS/CRM for either Upsert/Update action or source duplicate optimization."
-                  expressionType="Notify"
-                  name="RecordMatchingKeyFields">ed_crmnumber;ed_offername</property>
-                <property
-                  dataType="System.Boolean"
-                  description="Specifies whether to ignore those NULL-valued fields."
-                  expressionType="Notify"
-                  name="IgnoreNullValuedFields">true</property>
-                <property
-                  dataType="System.Boolean"
-                  description="Specifies whether to ignore those fields that have no value changes in the target system. "
-                  expressionType="Notify"
-                  name="IgnoreUnchangedFields">false</property>
-                <property
-                  dataType="System.Boolean"
-                  description="Specify whether to remove those invalid characters before writing to CDS/CRM."
-                  expressionType="Notify"
-                  name="RemoveInvalidCharacters">false</property>
-                <property
-                  dataType="System.String"
-                  description="Specify the flag field(s) that are used to track the source of changes. The field(s) will not posted to CDS/CRM server unless there are changes to other fields if specified. &quot;Ignore Unchange Fields&quot; option is required in order for the specified flag field(s) to work. "
-                  expressionType="Notify"
-                  name="ChangeFlagFields"></property>
-                <property
-                  dataType="System.Int32"
-                  description="Specifies what action will be taken when multiple matches are found with Upsert action."
-                  expressionType="Notify"
-                  name="HandlingOfMultipleMatches"
-                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">1</property>
-                <property
-                  dataType="System.Int32"
-                  description="Specify whether to use optimizations when there are duplicate records form the source system."
-                  expressionType="Notify"
-                  name="OptimizationOnSourceDuplicates"
-                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.OptimizationOnSourceDuplicates">0</property>
-                <property
-                  dataType="System.String"
-                  description="Workflow or action to be executed."
-                  expressionType="Notify"
-                  name="WorkflowAction"></property>
-                <property
-                  dataType="System.Int32"
-                  description="Specifies the number of records to be sent to CDS/Dynamics CRM server in each service call."
-                  expressionType="Notify"
-                  name="BatchSize">500</property>
-                <property
-                  dataType="System.Int32"
-                  description="Specify the total number or concurrent threads to write to CDS/CRM server simultaneously. "
-                  expressionType="Notify"
-                  name="ConcurrentWritingThreadsInTotal">20</property>
-                <property
-                  dataType="System.Boolean"
-                  description="Specifies whether datetime values should be sent to CDS/CRM server in UTC format."
-                  expressionType="Notify"
-                  name="SendDateTimeInUtcFormat">true</property>
-                <property
-                  dataType="System.String"
-                  name="UserComponentTypeName">KingswaySoft.IntegrationToolkit.DynamicsCrm.CrmDestinationComponent</property>
-                <property
-                  dataType="System.String"
-                  description="Alternate Key to be used for Upsert or Update action."
-                  expressionType="Notify"
-                  name="AlternateKey"></property>
-              </properties>
-              <connections>
-                <connection
-                  refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Connections[DynamicsCRM]"
-                  connectionManagerID="Package.ConnectionManagers[Dynamics CRM Sekund TST]"
-                  connectionManagerRefId="Package.ConnectionManagers[Dynamics CRM Sekund TST]"
-                  description="Dynamics CRM Connection Manager"
-                  name="DynamicsCRM" />
-              </connections>
-              <inputs>
-                <input
-                  refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input]"
-                  errorOrTruncationOperation="Insert"
-                  errorRowDisposition="RedirectRow"
-                  hasSideEffects="true"
-                  name="Input">
-                  <inputColumns>
-                    <inputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].Columns[NumberOfTickets]"
-                      cachedDataType="i4"
-                      cachedName="NumberOfTickets"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[ed_numberoftickets]"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[NumberOfTickets]" />
-                    <inputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].Columns[OfferName]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="OfferName"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[ed_offername]"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[OfferName]" />
-                    <inputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].Columns[TotalSumTicketOffer]"
-                      cachedDataType="numeric"
-                      cachedName="TotalSumTicketOffer"
-                      cachedPrecision="38"
-                      cachedScale="5"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[ed_totalsum]"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[TotalSumTicketOffer]" />
-                    <inputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].Columns[cgi_contactnumber]"
-                      cachedDataType="wstr"
-                      cachedLength="100"
-                      cachedName="cgi_contactnumber"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[ed_crmnumber]"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
-                  </inputColumns>
-                  <externalMetadataColumns
-                    isUsed="True">
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[createdby]"
-                      dataType="guid"
-                      name="createdby">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Lookup</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes">systemuser</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">false</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[ed_contact]"
-                      dataType="guid"
-                      name="ed_contact">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Lookup</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes">contact</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[ed_crmnumber]"
-                      dataType="wstr"
-                      length="100"
-                      name="ed_crmnumber">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">String</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[ed_name]"
-                      dataType="wstr"
-                      length="100"
-                      name="ed_name">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">String</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[ed_numberoftickets]"
-                      dataType="i4"
-                      name="ed_numberoftickets">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Integer</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[ed_offername]"
-                      dataType="i4"
-                      name="ed_offername">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Picklist</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[ed_ticketinfoid]"
-                      dataType="guid"
-                      name="ed_ticketinfoid">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Uniqueidentifier</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[ed_totalsum]"
-                      dataType="numeric"
-                      name="ed_totalsum"
-                      precision="38"
-                      scale="4">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Money</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[importsequencenumber]"
-                      dataType="i4"
-                      name="importsequencenumber">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Integer</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">false</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[overriddencreatedon]"
-                      dataType="dbTimeStamp"
-                      name="overriddencreatedon">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">DateTime</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">false</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[ownerid]"
-                      dataType="guid"
-                      name="ownerid">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Owner</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes">systemuser;team</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[owneridtype]"
-                      dataType="wstr"
-                      length="64"
-                      name="owneridtype">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">EntityName</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[statecode]"
-                      dataType="i4"
-                      name="statecode">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">State</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[statuscode]"
-                      dataType="i4"
-                      name="statuscode">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Status</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[timezoneruleversionnumber]"
-                      dataType="i4"
-                      name="timezoneruleversionnumber">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Integer</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[transactioncurrencyid]"
-                      dataType="guid"
-                      name="transactioncurrencyid">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Lookup</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes">transactioncurrency</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input].ExternalColumns[utcconversiontimezonecode]"
-                      dataType="i4"
-                      name="utcconversiontimezonecode">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Integer</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                  </externalMetadataColumns>
-                </input>
-              </inputs>
-              <outputs>
-                <output
-                  refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Default Output]"
-                  exclusionGroup="1"
-                  name="Default Output"
-                  synchronousInputId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input]">
-                  <outputColumns>
-                    <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Default Output].Columns[SavedRecordId]"
-                      dataType="guid"
-                      lineageId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Default Output].Columns[SavedRecordId]"
-                      name="SavedRecordId" />
-                    <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Default Output].Columns[IsNew]"
-                      dataType="bool"
-                      lineageId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Default Output].Columns[IsNew]"
-                      name="IsNew" />
-                  </outputColumns>
-                  <externalMetadataColumns />
-                </output>
-                <output
-                  refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Error Output]"
-                  exclusionGroup="1"
-                  isErrorOut="true"
-                  name="Error Output"
-                  synchronousInputId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input]">
-                  <outputColumns>
-                    <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Error Output].Columns[ErrorCode]"
-                      dataType="i4"
-                      lineageId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Error Output].Columns[ErrorCode]"
-                      name="ErrorCode"
-                      specialFlags="1" />
-                    <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Error Output].Columns[ErrorColumn]"
-                      dataType="i4"
-                      lineageId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Error Output].Columns[ErrorColumn]"
-                      name="ErrorColumn"
-                      specialFlags="2" />
-                    <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Error Output].Columns[ErrorMessage]"
-                      dataType="wstr"
-                      length="2048"
-                      lineageId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Error Output].Columns[ErrorMessage]"
-                      name="ErrorMessage" />
-                  </outputColumns>
-                  <externalMetadataColumns />
-                </output>
-              </outputs>
-            </component>
-            <component
-              refId="Package\CRM Insert Ticket Purchases\Ticket Purchases"
+              refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases"
               componentClassID="Microsoft.OLEDBSource"
               contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
               description="OLE DB Source"
@@ -866,7 +367,7 @@ ORDER BY MkId</property>
               </properties>
               <connections>
                 <connection
-                  refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Connections[OleDbConnection]"
+                  refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Connections[OleDbConnection]"
                   connectionManagerID="Package.ConnectionManagers[V-DWSQL.STDW]"
                   connectionManagerRefId="Package.ConnectionManagers[V-DWSQL.STDW]"
                   description="The OLE DB runtime connection used to access the database."
@@ -874,54 +375,54 @@ ORDER BY MkId</property>
               </connections>
               <outputs>
                 <output
-                  refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output]"
+                  refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output]"
                   name="OLE DB Source Output">
                   <outputColumns>
                     <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
                       dataType="wstr"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[cgi_contactnumber]"
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[cgi_contactnumber]"
                       length="100"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
                       name="cgi_contactnumber"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[MkId]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[MkId]"
                       dataType="i4"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[MkId]"
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[MkId]"
                       name="MkId"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[OfferName]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[OfferName]"
                       dataType="wstr"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[OfferName]"
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[OfferName]"
                       length="50"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[OfferName]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[OfferName]"
                       name="OfferName"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[NumberOfTickets]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[NumberOfTickets]"
                       dataType="i4"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[NumberOfTickets]"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[NumberOfTickets]"
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[NumberOfTickets]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[NumberOfTickets]"
                       name="NumberOfTickets"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[TotalSumTicketOffer]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[TotalSumTicketOffer]"
                       dataType="numeric"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[TotalSumTicketOffer]"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].Columns[TotalSumTicketOffer]"
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[TotalSumTicketOffer]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[TotalSumTicketOffer]"
                       name="TotalSumTicketOffer"
                       precision="38"
                       scale="5"
@@ -930,25 +431,25 @@ ORDER BY MkId</property>
                   <externalMetadataColumns
                     isUsed="True">
                     <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[cgi_contactnumber]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[cgi_contactnumber]"
                       dataType="wstr"
                       length="100"
                       name="cgi_contactnumber" />
                     <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
                       dataType="i4"
                       name="MkId" />
                     <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[OfferName]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[OfferName]"
                       dataType="wstr"
                       length="50"
                       name="OfferName" />
                     <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[NumberOfTickets]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[NumberOfTickets]"
                       dataType="i4"
                       name="NumberOfTickets" />
                     <externalMetadataColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[TotalSumTicketOffer]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].ExternalColumns[TotalSumTicketOffer]"
                       dataType="numeric"
                       name="TotalSumTicketOffer"
                       precision="38"
@@ -956,51 +457,580 @@ ORDER BY MkId</property>
                   </externalMetadataColumns>
                 </output>
                 <output
-                  refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Error Output]"
+                  refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Error Output]"
                   isErrorOut="true"
                   name="OLE DB Source Error Output">
                   <outputColumns>
                     <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[cgi_contactnumber]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[cgi_contactnumber]"
                       dataType="wstr"
                       length="100"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[cgi_contactnumber]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[cgi_contactnumber]"
                       name="cgi_contactnumber" />
                     <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[MkId]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[MkId]"
                       dataType="i4"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[MkId]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[MkId]"
                       name="MkId" />
                     <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[OfferName]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[OfferName]"
                       dataType="wstr"
                       length="50"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[OfferName]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[OfferName]"
                       name="OfferName" />
                     <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[NumberOfTickets]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[NumberOfTickets]"
                       dataType="i4"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[NumberOfTickets]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[NumberOfTickets]"
                       name="NumberOfTickets" />
                     <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[TotalSumTicketOffer]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[TotalSumTicketOffer]"
                       dataType="numeric"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[TotalSumTicketOffer]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[TotalSumTicketOffer]"
                       name="TotalSumTicketOffer"
                       precision="38"
                       scale="5" />
                     <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
                       dataType="i4"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
                       name="ErrorCode"
                       specialFlags="1" />
                     <outputColumn
-                      refId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      refId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
                       dataType="i4"
-                      lineageId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
                       name="ErrorColumn"
                       specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases"
+              componentClassID="Microsoft.ManagedComponentHost"
+              contactInfo="KingswaySoft Inc.; http://www.kingswaysoft.com; support@kingswaysoft.com; Copyright (c) 2020 KingswaySoft Inc."
+              description="Populate data into Microsoft Dynamics 365 CE/CRM."
+              name="Upsert Ticket Purchases"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Destination entity to write data."
+                  expressionType="Notify"
+                  name="DestinationEntity">ed_ticketinfo</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how data is written to CDS/Dynamics CRM server."
+                  name="ActionType"
+                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.DestinationActionType">5</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether the values of CDS/CRM lookup fields should be removed if the reference records cannot be found. "
+                  expressionType="Notify"
+                  name="RemoveUnresolvableReferences">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether duplicate detection should be enabled when creating or updating CDS/CRM records. Duplicate records are determined by the duplicate detection rules and settings defined in CDS or Microsoft Dynamics CRM server."
+                  expressionType="Notify"
+                  name="EnableSystemDuplicateDetection">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify the matching criteria to be used when performing an update or upsert. "
+                  expressionType="Notify"
+                  name="RecordMatchingCriteria"
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.RecordMatchingCriteria">3</property>
+                <property
+                  dataType="System.String"
+                  description="Specify the key fields to be used to determine the matching records that exist in CDS/CRM for either Upsert/Update action or source duplicate optimization."
+                  expressionType="Notify"
+                  name="RecordMatchingKeyFields">ed_crmnumber;ed_offername</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether to ignore those NULL-valued fields."
+                  expressionType="Notify"
+                  name="IgnoreNullValuedFields">true</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether to ignore those fields that have no value changes in the target system. "
+                  expressionType="Notify"
+                  name="IgnoreUnchangedFields">true</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specify whether to remove those invalid characters before writing to CDS/CRM."
+                  expressionType="Notify"
+                  name="RemoveInvalidCharacters">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specify the flag field(s) that are used to track the source of changes. The field(s) will not posted to CDS/CRM server unless there are changes to other fields if specified. &quot;Ignore Unchange Fields&quot; option is required in order for the specified flag field(s) to work. "
+                  expressionType="Notify"
+                  name="ChangeFlagFields"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies what action will be taken when multiple matches are found with Upsert action."
+                  expressionType="Notify"
+                  name="HandlingOfMultipleMatches"
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify whether to use optimizations when there are duplicate records form the source system."
+                  expressionType="Notify"
+                  name="OptimizationOnSourceDuplicates"
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.OptimizationOnSourceDuplicates">0</property>
+                <property
+                  dataType="System.String"
+                  description="Workflow or action to be executed."
+                  expressionType="Notify"
+                  name="WorkflowAction"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the number of records to be sent to CDS/Dynamics CRM server in each service call."
+                  expressionType="Notify"
+                  name="BatchSize">500</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify the total number or concurrent threads to write to CDS/CRM server simultaneously. "
+                  expressionType="Notify"
+                  name="ConcurrentWritingThreadsInTotal">20</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether datetime values should be sent to CDS/CRM server in UTC format."
+                  expressionType="Notify"
+                  name="SendDateTimeInUtcFormat">true</property>
+                <property
+                  dataType="System.String"
+                  name="UserComponentTypeName">KingswaySoft.IntegrationToolkit.DynamicsCrm.CrmDestinationComponent</property>
+                <property
+                  dataType="System.String"
+                  description="Alternate Key to be used for Upsert or Update action."
+                  expressionType="Notify"
+                  name="AlternateKey"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Connections[DynamicsCRM]"
+                  connectionManagerID="Package.ConnectionManagers[Dynamics CRM Sekund TST]"
+                  connectionManagerRefId="Package.ConnectionManagers[Dynamics CRM Sekund TST]"
+                  description="Dynamics CRM Connection Manager"
+                  name="DynamicsCRM" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="RedirectRow"
+                  hasSideEffects="true"
+                  name="Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].Columns[NumberOfTickets]"
+                      cachedDataType="i4"
+                      cachedName="NumberOfTickets"
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_numberoftickets]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[NumberOfTickets]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].Columns[OfferName]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="OfferName"
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_offername]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[OfferName]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].Columns[TotalSumTicketOffer]"
+                      cachedDataType="numeric"
+                      cachedName="TotalSumTicketOffer"
+                      cachedPrecision="38"
+                      cachedScale="5"
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_totalsum]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[TotalSumTicketOffer]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].Columns[cgi_contactnumber]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="cgi_contactnumber"
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_crmnumber]"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[createdby]"
+                      dataType="guid"
+                      name="createdby">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">systemuser</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">false</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_contact]"
+                      dataType="guid"
+                      name="ed_contact">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">contact</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_crmnumber]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_crmnumber">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_name]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_name">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_numberoftickets]"
+                      dataType="i4"
+                      name="ed_numberoftickets">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Integer</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_offername]"
+                      dataType="i4"
+                      name="ed_offername">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Picklist</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_ticketinfoid]"
+                      dataType="guid"
+                      name="ed_ticketinfoid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Uniqueidentifier</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_totalsum]"
+                      dataType="numeric"
+                      name="ed_totalsum"
+                      precision="38"
+                      scale="4">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Money</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[importsequencenumber]"
+                      dataType="i4"
+                      name="importsequencenumber">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Integer</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">false</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[overriddencreatedon]"
+                      dataType="dbTimeStamp"
+                      name="overriddencreatedon">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">false</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ownerid]"
+                      dataType="guid"
+                      name="ownerid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Owner</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">systemuser;team</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[owneridtype]"
+                      dataType="wstr"
+                      length="64"
+                      name="owneridtype">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">EntityName</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[statecode]"
+                      dataType="i4"
+                      name="statecode">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">State</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[statuscode]"
+                      dataType="i4"
+                      name="statuscode">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Status</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[timezoneruleversionnumber]"
+                      dataType="i4"
+                      name="timezoneruleversionnumber">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Integer</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[transactioncurrencyid]"
+                      dataType="guid"
+                      name="transactioncurrencyid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">transactioncurrency</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[utcconversiontimezonecode]"
+                      dataType="i4"
+                      name="utcconversiontimezonecode">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Integer</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Default Output]"
+                  exclusionGroup="1"
+                  name="Default Output"
+                  synchronousInputId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Default Output].Columns[SavedRecordId]"
+                      dataType="guid"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Default Output].Columns[SavedRecordId]"
+                      name="SavedRecordId" />
+                    <outputColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Default Output].Columns[IsNew]"
+                      dataType="bool"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Default Output].Columns[IsNew]"
+                      name="IsNew" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Error Output"
+                  synchronousInputId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                    <outputColumn
+                      refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Error Output].Columns[ErrorMessage]"
+                      dataType="wstr"
+                      length="2048"
+                      lineageId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Error Output].Columns[ErrorMessage]"
+                      name="ErrorMessage" />
                   </outputColumns>
                   <externalMetadataColumns />
                 </output>
@@ -1009,15 +1039,15 @@ ORDER BY MkId</property>
           </components>
           <paths>
             <path
-              refId="Package\CRM Insert Ticket Purchases.Paths[Error Output]"
-              endId="Package\CRM Insert Ticket Purchases\Flat File Destination.Inputs[Flat File Destination Input]"
+              refId="Package\Upsert Ticket Purchases Dynamics.Paths[Error Output]"
+              endId="Package\Upsert Ticket Purchases Dynamics\Flat File Destination.Inputs[Flat File Destination Input]"
               name="Error Output"
-              startId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Outputs[Error Output]" />
+              startId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Outputs[Error Output]" />
             <path
-              refId="Package\CRM Insert Ticket Purchases.Paths[OLE DB Source Output]"
-              endId="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases.Inputs[Input]"
+              refId="Package\Upsert Ticket Purchases Dynamics.Paths[OLE DB Source Output]"
+              endId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Inputs[Input]"
               name="OLE DB Source Output"
-              startId="Package\CRM Insert Ticket Purchases\Ticket Purchases.Outputs[OLE DB Source Output]" />
+              startId="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases.Outputs[OLE DB Source Output]" />
           </paths>
         </pipeline>
       </DTS:ObjectData>
@@ -1036,38 +1066,38 @@ ORDER BY MkId</property>
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
         <NodeLayout
-          Size="222,42"
-          Id="Package\CRM Insert Ticket Purchases"
+          Size="250,42"
+          Id="Package\Upsert Ticket Purchases Dynamics"
           TopLeft="155,93" />
       </GraphLayout>
     </LayoutInfo>
   </Package>
   <TaskHost
-    design-time-name="Package\CRM Insert Ticket Purchases">
+    design-time-name="Package\Upsert Ticket Purchases Dynamics">
     <LayoutInfo>
       <GraphLayout
         Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
-          Size="194,42"
-          Id="Package\CRM Insert Ticket Purchases\Insert Ticket Purchases"
+          Size="199,42"
+          Id="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases"
           TopLeft="367,155" />
         <NodeLayout
-          Size="176,42"
-          Id="Package\CRM Insert Ticket Purchases\Flat File Destination"
-          TopLeft="587,304" />
-        <NodeLayout
           Size="163,42"
-          Id="Package\CRM Insert Ticket Purchases\Ticket Purchases"
+          Id="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases"
           TopLeft="182,40" />
+        <NodeLayout
+          Size="176,42"
+          Id="Package\Upsert Ticket Purchases Dynamics\Flat File Destination"
+          TopLeft="587,304" />
         <EdgeLayout
-          Id="Package\CRM Insert Ticket Purchases.Paths[OLE DB Source Output]"
+          Id="Package\Upsert Ticket Purchases Dynamics.Paths[OLE DB Source Output]"
           TopLeft="263.5,82">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="200.5,73"
+              EndConnector="203,73"
               Start="0,0"
-              End="200.5,65.5">
+              End="203,65.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
@@ -1078,32 +1108,32 @@ ORDER BY MkId</property>
                     Point2="0,36.5"
                     Point3="4,36.5" />
                   <mssgle:LineSegment
-                    End="196.5,36.5" />
+                    End="199,36.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="196.5,36.5"
-                    Point2="200.5,36.5"
-                    Point3="200.5,40.5" />
+                    Point1="199,36.5"
+                    Point2="203,36.5"
+                    Point3="203,40.5" />
                   <mssgle:LineSegment
-                    End="200.5,65.5" />
+                    End="203,65.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="92.25,41.5,16,16"
+              BoundingBox="93.5,41.5,16,16"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
-          Id="Package\CRM Insert Ticket Purchases.Paths[Error Output]"
-          TopLeft="464,197">
+          Id="Package\Upsert Ticket Purchases Dynamics.Paths[Error Output]"
+          TopLeft="466.5,197">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="211,107"
+              EndConnector="208.5,107"
               Start="0,0"
-              End="211,99.5">
+              End="208.5,99.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
@@ -1114,20 +1144,20 @@ ORDER BY MkId</property>
                     Point2="0,53.5"
                     Point3="4,53.5" />
                   <mssgle:LineSegment
-                    End="207,53.5" />
+                    End="204.5,53.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="207,53.5"
-                    Point2="211,53.5"
-                    Point3="211,57.5" />
+                    Point1="204.5,53.5"
+                    Point2="208.5,53.5"
+                    Point3="208.5,57.5" />
                   <mssgle:LineSegment
-                    End="211,99.5" />
+                    End="208.5,99.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="68.2949609375,58.5,74.410078125,16"
+              BoundingBox="67.0449609375,58.5,74.410078125,16"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
@@ -1135,7 +1165,7 @@ ORDER BY MkId</property>
     </LayoutInfo>
   </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\CRM Insert Ticket Purchases\Ticket Purchases">
+    design-time-name="Package\Upsert Ticket Purchases Dynamics\Ticket Purchases">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
