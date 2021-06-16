@@ -139,9 +139,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiBase.cs" />
     <Compile Include="ApiHelper.cs" />
-    <Compile Include="AzureHelper.cs" />
     <Compile Include="Entities\OpportunityEntity.cs" />
     <Compile Include="Entities\PaymentMethodEntity.cs" />
     <Compile Include="Entities\PaymentEntity.cs" />
