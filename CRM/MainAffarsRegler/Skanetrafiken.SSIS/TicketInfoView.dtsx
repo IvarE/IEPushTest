@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package Ticket Info"
   DTS:PackageType="5"
-  DTS:VersionBuild="25"
-  DTS:VersionGUID="{2E7FBAEC-7A36-4B68-B9D1-E4BD05C38ACA}">
+  DTS:VersionBuild="27"
+  DTS:VersionGUID="{F82A6050-C6C6-4268-ADC5-B558251B67C5}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADj4n02P7A3wKV3VQAJb4UzAAAAAASAAACgAAAAEAAAAN8JrRpcm4jFpUpmnczZBKsgAAAADXzE/uuG/2TGw07jKfYEd3dCu7SpXOorRRvAGw64uIcUAAAAWJwzd9hF1CdwCq538sCApOPdgkU</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABsJx+QxOz+1UR+wiHeZKRlAAAAAASAAACgAAAAEAAAABs5d3dN5aZaAjybCux4LWUgAAAAwIwI82NuWMKSUe52qjelaDb3RZRcfqo4g8LHsVJo4NUUAAAAEFg2mV7pLoKpehF5yqu5cglvrt8</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -42,7 +42,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABfV1oC5rZDUQqkmWgoVJLLAAAAAASAAACgAAAAEAAAADs0OhRztNtITQugDVfVC3UgAAAAw+fzENAmUkvtWob/AQtL2D7dtxEnSdHkm5sFeodX14cUAAAAN4Q6SFkJzw9M+z0y+Nuq2KcPqh8</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAC2fVyjwQVrL5LBQAvS6R0fAAAAAASAAACgAAAAEAAAAAXA3DpnVdg79mI2anxtJnQgAAAATpyCElz5//XRgH0wpCJ9L6sUgrrp4R9+gNFrWhKzLJIUAAAA1idcdYtvV/lJ7cQj5HiZDtSDr7w</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -57,7 +57,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADFqM1s1oS4LSac/5btOIQdAAAAAASAAACgAAAAEAAAAPdtyufe1mkQv6+yxKgp3aQgAAAAVVs+IqwjuVrtIkavb5a1kG0V5wNDKb0JtRiDhdW/b24UAAAA9/XuaItcROPjmT0DRM9iHj4KeB4</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADDyL2mgWA+FzcPNBVr8Se5AAAAAASAAACgAAAAEAAAAJMkmU2LBekPupWfeB0va8AgAAAA27T67K4xmGB89aWY4Jw1mqMmcp6agW8BK6HvPH4VzyQUAAAA90wkS2qnle3eIEwq2IlehJ4s7zQ</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -1281,7 +1281,7 @@
                   dataType="System.String"
                   description="Destination entity to write data."
                   expressionType="Notify"
-                  name="DestinationEntity">ed_ticketinfo</property>
+                  name="DestinationEntity">st_singaporeticket</property>
                 <property
                   dataType="System.Int32"
                   description="Specifies how data is written to CDS/Dynamics CRM server."
@@ -1379,30 +1379,6 @@
                   errorRowDisposition="RedirectRow"
                   hasSideEffects="true"
                   name="Input">
-                  <inputColumns>
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].Columns[OfferName]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="OfferName"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_offername]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[OfferName]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].Columns[TicketAmount]"
-                      cachedDataType="numeric"
-                      cachedName="TicketAmount"
-                      cachedPrecision="13"
-                      cachedScale="5"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_totalsum]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[TicketAmount]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].Columns[cgi_contactnumber]"
-                      cachedDataType="wstr"
-                      cachedLength="100"
-                      cachedName="cgi_contactnumber"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_crmnumber]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
-                  </inputColumns>
                   <externalMetadataColumns
                     isUsed="True">
                     <externalMetadataColumn
@@ -1419,98 +1395,29 @@
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_contact]"
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_skakort]"
                       dataType="guid"
-                      name="ed_contact">
+                      name="ed_skakort">
                       <properties>
                         <property
                           dataType="System.String"
                           name="FieldType">Lookup</property>
                         <property
                           dataType="System.String"
-                          name="LookupTypes">contact</property>
+                          name="LookupTypes">ed_skakort</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_crmnumber]"
-                      dataType="wstr"
-                      length="100"
-                      name="ed_crmnumber">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">String</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_name]"
-                      dataType="wstr"
-                      length="100"
-                      name="ed_name">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">String</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_numberoftickets]"
-                      dataType="i4"
-                      name="ed_numberoftickets">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Integer</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_offername]"
-                      dataType="i4"
-                      name="ed_offername">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Picklist</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_ticketinfoid]"
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_travelcardid]"
                       dataType="guid"
-                      name="ed_ticketinfoid">
+                      name="ed_travelcardid">
                       <properties>
                         <property
                           dataType="System.String"
-                          name="FieldType">Uniqueidentifier</property>
+                          name="FieldType">Lookup</property>
                         <property
                           dataType="System.String"
-                          name="LookupTypes"></property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_totalsum]"
-                      dataType="numeric"
-                      name="ed_totalsum"
-                      precision="38"
-                      scale="4">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Money</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
+                          name="LookupTypes">cgi_travelcard</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1561,6 +1468,196 @@
                         <property
                           dataType="System.String"
                           name="FieldType">EntityName</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[st_contactid]"
+                      dataType="guid"
+                      name="st_contactid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">contact</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[st_name]"
+                      dataType="wstr"
+                      length="100"
+                      name="st_name">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[st_pricemodel]"
+                      dataType="wstr"
+                      length="25"
+                      name="st_pricemodel">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[st_pricemodelprice]"
+                      dataType="wstr"
+                      length="100"
+                      name="st_pricemodelprice">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[st_singaporeticketid]"
+                      dataType="guid"
+                      name="st_singaporeticketid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Uniqueidentifier</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[st_singtickettype]"
+                      dataType="i4"
+                      name="st_singtickettype">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Picklist</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[st_ticketactivated]"
+                      dataType="i4"
+                      name="st_ticketactivated">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Picklist</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[st_ticketcreated]"
+                      dataType="dbTimeStamp"
+                      name="st_ticketcreated">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[st_ticketguid]"
+                      dataType="wstr"
+                      length="30"
+                      name="st_ticketguid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[st_ticketid]"
+                      dataType="wstr"
+                      length="10"
+                      name="st_ticketid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[st_ticketprice]"
+                      dataType="numeric"
+                      name="st_ticketprice"
+                      precision="38"
+                      scale="4">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Money</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[st_tickettype]"
+                      dataType="wstr"
+                      length="25"
+                      name="st_tickettype">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[st_validfrom]"
+                      dataType="dbTimeStamp"
+                      name="st_validfrom">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[st_validto]"
+                      dataType="dbTimeStamp"
+                      name="st_validto">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
@@ -1730,49 +1827,13 @@
           Id="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info"
           TopLeft="274,150" />
         <NodeLayout
-          Size="176,42"
-          Id="Package\Upsert Ticket Info Dynamics\Flat File Destination"
-          TopLeft="512,260" />
-        <EdgeLayout
-          Id="Package\Upsert Ticket Info Dynamics.Paths[Error Output]"
-          TopLeft="356.5,192">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="243.5,68"
-              Start="0,0"
-              End="243.5,60.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,30" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,30"
-                    Point2="0,34"
-                    Point3="4,34" />
-                  <mssgle:LineSegment
-                    End="239.5,34" />
-                  <mssgle:CubicBezierSegment
-                    Point1="239.5,34"
-                    Point2="243.5,34"
-                    Point3="243.5,38" />
-                  <mssgle:LineSegment
-                    End="243.5,60.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="84.5449609375,39,74.410078125,16"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
           Size="130,42"
           Id="Package\Upsert Ticket Info Dynamics\Ticket Info"
           TopLeft="127,35" />
+        <NodeLayout
+          Size="176,42"
+          Id="Package\Upsert Ticket Info Dynamics\Flat File Destination"
+          TopLeft="512,260" />
         <EdgeLayout
           Id="Package\Upsert Ticket Info Dynamics.Paths[OLE DB Source Output]"
           TopLeft="192,77">
@@ -1806,6 +1867,42 @@
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
               BoundingBox="74.25,41.5,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Upsert Ticket Info Dynamics.Paths[Error Output]"
+          TopLeft="356.5,192">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="243.5,68"
+              Start="0,0"
+              End="243.5,60.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,30" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,30"
+                    Point2="0,34"
+                    Point3="4,34" />
+                  <mssgle:LineSegment
+                    End="239.5,34" />
+                  <mssgle:CubicBezierSegment
+                    Point1="239.5,34"
+                    Point2="243.5,34"
+                    Point3="243.5,38" />
+                  <mssgle:LineSegment
+                    End="243.5,60.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="84.5449609375,39,74.410078125,16"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
