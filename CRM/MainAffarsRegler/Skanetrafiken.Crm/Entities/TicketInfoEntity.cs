@@ -16,21 +16,16 @@ namespace Skanetrafiken.Crm.Entities
         {
             try
             {
-                bool sendUpdateRequest = false;
                 //This can't be done on the Pre Event because SSIS is running to import these records
                 //It can't be syncronos
                 TicketInfoEntity eTicketInfo = new TicketInfoEntity();
                 eTicketInfo.Id = this.Id;
 
                 string name = this.ed_name;
-
-                if (string.IsNullOrEmpty(name))
-                {
-                    eTicketInfo.ed_name = "Ticket Info";
-                    sendUpdateRequest = true;
-                }
-
                 string contactNumber = this.ed_CRMNumber;
+                string offerName = this.FormattedValues["ed_offername"];
+
+                eTicketInfo.ed_name = contactNumber + "_" + offerName;
 
                 if (!string.IsNullOrEmpty(contactNumber))
                 {
@@ -49,12 +44,10 @@ namespace Skanetrafiken.Crm.Entities
                         var erContact = new EntityReference(eContact.LogicalName, eContact.Id);
 
                         eTicketInfo.ed_Contact = erContact;
-                        sendUpdateRequest = true;
                     }
                 }
 
-                if(sendUpdateRequest)
-                    XrmHelper.Update(localContext, eTicketInfo);
+                XrmHelper.Update(localContext, eTicketInfo);
             }
             catch (Exception e)
             {

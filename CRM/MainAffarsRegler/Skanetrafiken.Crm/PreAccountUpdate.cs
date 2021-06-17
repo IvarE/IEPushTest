@@ -17,7 +17,11 @@ namespace Skanetrafiken.Crm
         public PreAccountUpdate()
             : base(typeof(PreAccountUpdate))
         {
-            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>(20, "Update", AccountEntity.EntityLogicalName, new Action<LocalPluginContext>(PreExecuteAccountUpdate)));
+            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>(
+                (int)Plugin.SdkMessageProcessingStepStage.PreOperation,
+                Plugin.SdkMessageName.Update,
+                AccountEntity.EntityLogicalName, 
+                new Action<LocalPluginContext>(PreExecuteAccountUpdate)));
 
             // Note : you can register for more events here if this plugin is not specific to an individual entity and message combination.
             // You may also need to update your RegisterFile.crmregister plug-in registration file to reflect any change.

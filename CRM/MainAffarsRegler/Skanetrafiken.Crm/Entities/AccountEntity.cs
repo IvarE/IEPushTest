@@ -386,6 +386,11 @@ namespace Skanetrafiken.Crm.Entities
             localContext.Trace($"Entered HandlePreAccountCreate() OrgNumber value: {orgNumber}");
             if (!string.IsNullOrWhiteSpace(orgNumber))
             {
+                bool isUnique = CheckOrgNumberisUnique(localContext, orgNumber);
+
+                if (!isUnique)
+                    throw new InvalidPluginExecutionException("Detta organisationsnummer finns redan.");
+
                 EntityReference erParentAccount = this.ParentAccountId;
                 bool isAllowed = CheckParentAccountOrganizationNumber(localContext, erParentAccount);
 
@@ -403,6 +408,11 @@ namespace Skanetrafiken.Crm.Entities
             localContext.Trace($"Entered HandlePreAccountUpdate() OrgNumber value: {orgNumber}");
             if (!string.IsNullOrWhiteSpace(orgNumber))
             {
+                bool isUnique = CheckOrgNumberisUnique(localContext, orgNumber);
+
+                if (!isUnique)
+                    throw new InvalidPluginExecutionException("Detta organisationsnummer finns redan.");
+
                 EntityReference erParentAccount = preImage.ParentAccountId;
                 bool isAllowed = CheckParentAccountOrganizationNumber(localContext, erParentAccount);
 
@@ -433,6 +443,26 @@ namespace Skanetrafiken.Crm.Entities
             }
             localContext.Trace($"Leaving CheckParentAccountOrganizationNumber.");
             return isAllowed;
+        }
+
+        private static bool CheckOrgNumberisUnique(Plugin.LocalPluginContext localContext, string orgNumber)
+        {
+            localContext.Trace($"Entered CheckOrgNumberisUnique.");
+            bool isUnique = true;
+
+            QueryExpression queryAccounts = new QueryExpression(AccountEntity.EntityLogicalName);
+            queryAccounts.NoLock = true;
+            queryAccounts.ColumnSet = new ColumnSet(AccountEntity.Fields.cgi_organizational_number);
+            queryAccounts.Criteria.AddCondition(AccountEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.AccountState.Active);
+            queryAccounts.Criteria.AddCondition(AccountEntity.Fields.cgi_organizational_number, ConditionOperator.Equal, orgNumber);
+
+            var lAccounts = XrmRetrieveHelper.RetrieveMultiple<AccountEntity>(localContext, queryAccounts);
+
+            if (lAccounts.Count > 0)
+                isUnique = false;
+
+            localContext.Trace($"Leaving CheckOrgNumberisUnique.");
+            return isUnique;
         }
 
         private static string FormatOrgNumber(Plugin.LocalPluginContext localContext, string orgNumber)
