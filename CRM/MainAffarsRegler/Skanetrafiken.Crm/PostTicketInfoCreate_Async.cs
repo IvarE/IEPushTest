@@ -3,25 +3,18 @@ using System.Collections;
 using Microsoft.Xrm.Sdk;
 using Endeavor.Crm;
 using Endeavor.Crm.Extensions;
+using Generated = Skanetrafiken.Crm.Schema.Generated;
 using Skanetrafiken.Crm.Entities;
-
 
 namespace Skanetrafiken.Crm
 {
-    public class PreAccountUpdate : Plugin
+    public class PostTicketInfoCreate_Async : Plugin
     {
-        /// <summary>
-        /// </summary>
-        private readonly string preImageAlias = "preImage";
 
-        public PreAccountUpdate()
-            : base(typeof(PreAccountUpdate))
+        public PostTicketInfoCreate_Async()
+            : base(typeof(PostTicketInfoCreate_Async))
         {
-            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>(
-                (int)Plugin.SdkMessageProcessingStepStage.PreOperation,
-                Plugin.SdkMessageName.Update,
-                AccountEntity.EntityLogicalName, 
-                new Action<LocalPluginContext>(PreExecuteAccountUpdate)));
+            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PostOperation, Plugin.SdkMessageName.Create, TicketInfoEntity.EntityLogicalName, new Action<LocalPluginContext>(PostExecuteTicketInfoCreateAsync)));
 
             // Note : you can register for more events here if this plugin is not specific to an individual entity and message combination.
             // You may also need to update your RegisterFile.crmregister plug-in registration file to reflect any change.
@@ -42,18 +35,14 @@ namespace Skanetrafiken.Crm
         /// could execute the plug-in at the same time. All per invocation state information
         /// is stored in the context. This means that you should not use global variables in plug-ins.
         /// </remarks>
-        protected void PreExecuteAccountUpdate(LocalPluginContext localContext)
+        protected void PostExecuteTicketInfoCreateAsync(LocalPluginContext localContext)
         {
             if (localContext == null)
-            {
                 throw new ArgumentNullException("localContext");
-            }
 
-            // Must be Pre operation
-            if (localContext.PluginExecutionContext.Stage != 20)
-            {
-                throw new InvalidPluginExecutionException("Plugin must run in Pre-operation mode!");
-            }
+            // Must be Post operation
+            if (localContext.PluginExecutionContext.Stage != (int)Plugin.SdkMessageProcessingStepStage.PostOperation)
+                throw new InvalidPluginExecutionException("Plugin must run in Post-operation mode!");
 
             // INFO: (Endeavor) Don't do anything in offline mode
             if (localContext.PluginExecutionContext.IsExecutingOffline)
@@ -64,28 +53,18 @@ namespace Skanetrafiken.Crm
             if (localContext.PluginExecutionContext.InputParameters.Contains("Target") &&
                 localContext.PluginExecutionContext.InputParameters["Target"] is Entity)
             {
-
                 // Obtain the target entity from the input parameters.
-                AccountEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<AccountEntity>();
-
-                AccountEntity preImage = Plugin.GetPreImage<AccountEntity>(localContext, preImageAlias);
-
-                if (preImage == null)
-                    throw new InvalidPluginExecutionException("Pre-Image not registered correctly.");
+                TicketInfoEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<TicketInfoEntity>();
 
                 try
                 {
-                    target.HandlePreAccountUpdate(localContext, preImage);
+                    target.HandlePostTicketInfoCreateAsync(localContext);
                 }
                 catch (Exception ex)
                 {
                     throw new InvalidPluginExecutionException(ex.Message, ex);
                 }
-
-                //throw new InvalidPluginExecutionException("Debug @joan");
             }
         }
-
     }
 }
-//</snippetAccountNumberPlugin>

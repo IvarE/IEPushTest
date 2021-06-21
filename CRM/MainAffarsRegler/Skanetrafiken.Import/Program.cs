@@ -2621,6 +2621,10 @@ namespace Skanetrafiken.Import
                                 case "Orgnr":
                                     nAccount.cgi_organizational_number = value;
                                     break;
+                                case "Bolagsform":
+                                    nAccount.ed_BusinessTypeId = value;
+                                    nAccount.edp_LegalClassification = value;
+                                    break;
                                 case "Bolagsform text":
 
                                     int? optionSetBT = GetOptionSetValueByName(colOpBusinessType, value);
@@ -2649,30 +2653,31 @@ namespace Skanetrafiken.Import
                                         nAccount.ed_companytrade = new OptionSetValue((int)optionSetCT);
 
                                     break;
+                                case "Branschkod":
+                                    nAccount.ed_IndustryCodeId = value;
+                                    break;
+                                case "Faxnr":
+                                    nAccount.Fax = value;
+                                    break;
                                 case "Telefon":
                                     nAccount.Telephone1 = cleanMobileTelefon(value);
                                     break;
-
-                                case "Bes.adress":
+                                case "Utd.adress":
                                     nAccount.Address1_Line2 = value;
                                     break;
-                                case "Bes.postnr":
+                                case "Postnr":
                                     nAccount.Address1_PostalCode = value;
                                     break;
-                                case "Bes.postort":
+                                case "Postort":
                                     nAccount.Address1_City = value;
                                     break;
+                                case "Ant. anst. AB":
 
-                                case "Utd.adress":
-                                    nAccount.Address2_Line2 = value;
-                                    break;
-                                case "Postnr":
-                                    nAccount.Address2_PostalCode = value;
-                                    break;
-                                case "Postort":
-                                    nAccount.Address2_City = value;
-                                    break;
+                                    int numberOfEmplyees = 0;
+                                    if (int.TryParse(value, out numberOfEmplyees))
+                                        nAccount.NumberOfEmployees = numberOfEmplyees;
 
+                                    break;
                                 default:
                                     _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
                                     break;

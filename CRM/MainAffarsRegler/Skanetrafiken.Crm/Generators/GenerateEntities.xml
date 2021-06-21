@@ -77,6 +77,7 @@
     <entity>ed_senttextmessage</entity>
     <entity>ed_textmessage</entity>
     <entity>ed_textmessagetemplate</entity>
+    <entity>ed_ticketinfo</entity>
     <entity>ed_valuecode</entity>
     <entity>ed_valuecodetemplate</entity>
     <entity>ed_valuecodeapproval</entity>
