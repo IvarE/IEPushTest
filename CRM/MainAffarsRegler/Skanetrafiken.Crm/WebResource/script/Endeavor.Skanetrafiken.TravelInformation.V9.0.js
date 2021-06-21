@@ -69,16 +69,17 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
             var time = timestamp.value;
             if (time && time.length == 16) {
-                time = time.substring(0, 16).replace(" ", "T");
+                time = time.substring(0, 16).replace(" ", "T") + "Z";
             }
 
             var date = new Date(time);
-            date.setHours(date.getHours() + 2)
+            //date.setHours(date.getHours() + 2)
 
-            var validDate = false;
-            if (!isNaN(date.getTime())) {
+            if (!isNaN(date.getTime()))
                 time = date.toISOString();
-                validDate = true;
+            else {
+                Endeavor.formscriptfunctions.AlertCustomDialog("Timestamp är inte giltigt");
+                return;
             }
 
             var fromlist = document.getElementById("fromlist");
@@ -783,6 +784,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 if (datetime == null || datetime == "X")
                     return null;
 
+                datetime = datetime.split('+')[0] + "Z";
                 return new Date(datetime).toISOString();
             }
 
@@ -1015,17 +1017,17 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                 "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
                                 "cgi_travelinformation": travelinformation,
                                 "cgi_journeynumber": "",
-                                "cgi_linedesignation": "",
+                                "cgi_linedesignation": getElementValue(line, "LineDesignation"),
                                 "cgi_directiontext": "",
-                                "cgi_contractor": saveEntity.contractorName, // NUMERICAL
+                                "cgi_contractor": saveEntity.contractorName,
                                 "cgi_deviationmessage": "",
 
                                 "cgi_startactual": "",
                                 "cgi_arivalactual": "",
-                                "cgi_startplanned": new Date(1999),
-                                "cgi_arivalplanned": new Date(1999),
-                                "cgi_startactualdatetime": new Date(1999),
-                                "cgi_arrivalactualdatetime": new Date(1999)
+                                "cgi_startplanned": null,
+                                "cgi_arivalplanned": null,
+                                "cgi_startactualdatetime": null,
+                                "cgi_arrivalactualdatetime": null
                             }
                         } else {
                             entity = {
@@ -1071,19 +1073,19 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                 "cgi_line": getElementValue(Endeavor.Skanetrafiken.TravelInformation.getLine(saveEntity.city, saveEntity.line), "LineNumber"),
                                 "cgi_tour": "",
                                 "cgi_journeynumber": "",
-                                "cgi_linedesignation": "",
+                                "cgi_linedesignation": getElementValue(line, "LineDesignation"),
                                 "cgi_city": Endeavor.Skanetrafiken.TravelInformation.getCityFromGid(saveEntity.city),
                                 "cgi_start": "",
                                 "cgi_stop": "",
                                 "cgi_directiontext": "",
                                 "cgi_deviationmessage": "",
-                                "cgi_contractor": saveEntity.contractorName, // NUMERICAL
+                                "cgi_contractor": saveEntity.contractorName,
                                 "cgi_startactual": "",
                                 "cgi_arivalactual": "",
-                                "cgi_arivalplanned": new Date(1999),
-                                "cgi_startplanned": new Date(1999),
-                                "cgi_startactualdatetime": new Date(1999),
-                                "cgi_arrivalactualdatetime": new Date(1999)
+                                "cgi_arivalplanned": null,
+                                "cgi_startplanned": null,
+                                "cgi_startactualdatetime": null,
+                                "cgi_arrivalactualdatetime": null
                             }
 
                         } else {
@@ -1208,17 +1210,20 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
         getTour: function (entity) {
 
+            if (entity.cgi_start === "" && entity.cgi_stop === "")
+                return "";
+
             var timeFormat = "HH:mm";
             var isInvalidDate = "Invalid Date";
 
             var dStartPlanned = new Date(entity.cgi_startplanned);
             var startplannedtime = "X";
-            if (dStartPlanned.toString() != isInvalidDate)
+            if (entity.cgi_startplanned != null && dStartPlanned.toString() != isInvalidDate)
                 startplannedtime = dStartPlanned.format(timeFormat);
 
             var dArrivalPlanned = new Date(entity.cgi_arivalplanned);
             var arrivalplannedtime = "X";
-            if (dArrivalPlanned.toString() != isInvalidDate)
+            if (entity.cgi_arivalplanned != null && dArrivalPlanned.toString() != isInvalidDate)
                 arrivalplannedtime = dArrivalPlanned.format(timeFormat);
 
             var dStartActual = new Date(entity.cgi_startactual);
