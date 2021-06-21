@@ -130,7 +130,7 @@ namespace Skanetrafiken.Crm.Entities
             FilterExpression filterSlotDayProduct = new FilterExpression();
             filterSlotDayProduct.FilterOperator = LogicalOperator.And;
             filterSlotDayProduct.AddCondition(SlotsEntity.Fields.ed_BookingDay, ConditionOperator.Equal, target.ed_BookingDay.Value);
-            filterSlotDayProduct.AddCondition(SlotsEntity.Fields.ed_ProductID, ConditionOperator.Equal, target.ed_ProductID);
+            filterSlotDayProduct.AddCondition(SlotsEntity.Fields.ed_ProductID, ConditionOperator.Equal, target.ed_ProductID.Id);
 
             querySlotDayProduct.Criteria.AddFilter(filterSlotDayProduct);
 
