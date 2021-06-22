@@ -112,7 +112,7 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
-        public static void HandleQuoteProductEntityDelete(Plugin.LocalPluginContext localContext, QuoteProductEntity target)
+        public static void HandlePreQuoteProductEntityDelete(Plugin.LocalPluginContext localContext, QuoteProductEntity target)
         {
             if(target != null && target.Id != Guid.Empty)
             {

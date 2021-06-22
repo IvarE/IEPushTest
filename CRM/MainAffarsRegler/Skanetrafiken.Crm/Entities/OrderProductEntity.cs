@@ -103,7 +103,7 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
-        public static void HandleOrderProductEntityDelete(Plugin.LocalPluginContext localContext, OrderProductEntity target)
+        public static void HandlePreOrderProductEntityDelete(Plugin.LocalPluginContext localContext, OrderProductEntity target)
         {
             if(target != null && target.Id != Guid.Empty)
             {

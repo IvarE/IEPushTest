@@ -9,15 +9,15 @@ using static Endeavor.Crm.Plugin;
 
 namespace Skanetrafiken.Crm
 {
-    public class PostOrderProductDelete : Plugin
+    public class PreOrderProductDelete : Plugin
     {
         
         /// <summary>
         /// </summary>
-        public PostOrderProductDelete()
-            : base(typeof(PostOrderProductUpdate))
+        public PreOrderProductDelete()
+            : base(typeof(PreOrderProductDelete))
         {
-            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PostOperation, Plugin.SdkMessageName.Delete, OrderProductEntity.EntityLogicalName, new Action<LocalPluginContext>(PostExecuteOrderProductUpdate)));
+            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PreOperation, Plugin.SdkMessageName.Delete, OrderProductEntity.EntityLogicalName, new Action<LocalPluginContext>(Execute)));
 
             // Note : you can register for more events here if this plugin is not specific to an individual entity and message combination.
             // You may also need to update your RegisterFile.crmregister plug-in registration file to reflect any change.
@@ -38,7 +38,7 @@ namespace Skanetrafiken.Crm
         /// could execute the plug-in at the same time. All per invocation state information
         /// is stored in the context. This means that you should not use global variables in plug-ins.
         /// </remarks>
-        protected void PostExecuteOrderProductUpdate(LocalPluginContext localContext)
+        protected void Execute(LocalPluginContext localContext)
         {
             if (localContext == null)
             {
@@ -66,7 +66,7 @@ namespace Skanetrafiken.Crm
                     // Obtain the target entity from the input parameters.
                     OrderProductEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<OrderProductEntity>();
 
-                    OrderProductEntity.HandleOrderProductEntityDelete(localContext, target);
+                    OrderProductEntity.HandlePreOrderProductEntityDelete(localContext, target);
                 }
                 catch (Exception ex)
                 {

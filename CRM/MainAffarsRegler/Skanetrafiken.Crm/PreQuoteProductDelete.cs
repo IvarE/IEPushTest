@@ -9,14 +9,14 @@ using static Endeavor.Crm.Plugin;
 
 namespace Skanetrafiken.Crm
 {
-    public class PostQuoteProductDelete : Plugin
+    public class PreQuoteProductDelete : Plugin
     {
         private readonly string preImageAlias = "preImage";
 
-        public PostQuoteProductDelete()
-            : base(typeof(PostQuoteProductDelete))
+        public PreQuoteProductDelete()
+            : base(typeof(PreQuoteProductDelete))
         {
-            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PostOperation, Plugin.SdkMessageName.Delete, QuoteProductEntity.EntityLogicalName, new Action<LocalPluginContext>(Execute)));
+            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PreOperation, Plugin.SdkMessageName.Delete, QuoteProductEntity.EntityLogicalName, new Action<LocalPluginContext>(Execute)));
 
             // Note : you can register for more events here if this plugin is not specific to an individual entity and message combination.
             // You may also need to update your RegisterFile.crmregister plug-in registration file to reflect any change.
@@ -71,7 +71,7 @@ namespace Skanetrafiken.Crm
                     // Obtain the target entity from the input parameters.
                     QuoteProductEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<QuoteProductEntity>();
 
-                    QuoteProductEntity.HandleQuoteProductEntityDelete(localContext, target);
+                    QuoteProductEntity.HandlePreQuoteProductEntityDelete(localContext, target);
                 }
                 catch (Exception ex)
                 {
