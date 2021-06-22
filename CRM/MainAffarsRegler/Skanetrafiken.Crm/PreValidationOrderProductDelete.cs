@@ -9,14 +9,15 @@ using static Endeavor.Crm.Plugin;
 
 namespace Skanetrafiken.Crm
 {
-    public class PreQuoteProductDelete : Plugin
+    public class PreValidationOrderProductDelete : Plugin
     {
-        private readonly string preImageAlias = "preImage";
-
-        public PreQuoteProductDelete()
-            : base(typeof(PreQuoteProductDelete))
+        
+        /// <summary>
+        /// </summary>
+        public PreValidationOrderProductDelete()
+            : base(typeof(PreValidationOrderProductDelete))
         {
-            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PreOperation, Plugin.SdkMessageName.Delete, QuoteProductEntity.EntityLogicalName, new Action<LocalPluginContext>(Execute)));
+            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PreValidation, Plugin.SdkMessageName.Delete, OrderProductEntity.EntityLogicalName, new Action<LocalPluginContext>(Execute)));
 
             // Note : you can register for more events here if this plugin is not specific to an individual entity and message combination.
             // You may also need to update your RegisterFile.crmregister plug-in registration file to reflect any change.
@@ -45,9 +46,9 @@ namespace Skanetrafiken.Crm
             }
 
             // Must be Post operation
-            if (localContext.PluginExecutionContext.Stage != (int)Plugin.SdkMessageProcessingStepStage.PreOperation)
+            if (localContext.PluginExecutionContext.Stage != (int)Plugin.SdkMessageProcessingStepStage.PreValidation)
             {
-                throw new InvalidPluginExecutionException("Plugin must run in Pre-operation mode!");
+                throw new InvalidPluginExecutionException("Plugin must run in Pre-validation mode!");
             }
 
             // INFO: (joan) Don't do anything in offline mode
@@ -61,23 +62,16 @@ namespace Skanetrafiken.Crm
             {
                 try
                 {
-                    /*
-                    QuoteProductEntity preImage = Plugin.GetPreImage<QuoteProductEntity>(localContext, preImageAlias);
-
-                    if (preImage == null)
-                        throw new InvalidPluginExecutionException("Pre-Image not registered correctly.");
-
-                    */
+                    
                     // Obtain the target entity from the input parameters.
-                    QuoteProductEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<QuoteProductEntity>();
+                    OrderProductEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<OrderProductEntity>();
 
-                    QuoteProductEntity.HandlePreQuoteProductEntityDelete(localContext, target);
+                    OrderProductEntity.HandlePreValidationOrderProductEntityDelete(localContext, target);
                 }
                 catch (Exception ex)
                 {
                     throw new InvalidPluginExecutionException(ex.Message, ex);
                 }
-
             }
         }
     }
