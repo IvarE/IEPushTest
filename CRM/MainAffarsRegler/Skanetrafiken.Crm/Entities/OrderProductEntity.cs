@@ -132,7 +132,7 @@ namespace Skanetrafiken.Crm.Entities
                     slotToUpdate.Id = slot.Id;
                     slotToUpdate.ed_OrderProductID = refOrderProduct;
                     slotToUpdate.ed_Order = refOrder;
-                    slotToUpdate.ed_CustomPrice = slotToUpdate.ed_StandardPrice;
+                    //slotToUpdate.ed_CustomPrice = slotToUpdate.ed_StandardPrice;
                     XrmHelper.Update(localContext,slotToUpdate);
                 }
             }
