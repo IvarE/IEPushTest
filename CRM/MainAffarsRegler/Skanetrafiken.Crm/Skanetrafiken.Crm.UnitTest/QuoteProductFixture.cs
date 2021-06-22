@@ -99,6 +99,26 @@ namespace Endeavor.Crm.UnitTest
                 QuoteProductEntity.HandleQuoteProductEntityUpdate(localContext, target,preImage);
             }
         }
+
+        [Test,Category("Debug")]
+        public void PreQuoteProductDelete()
+        {
+            using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+            {
+                // This statement is required to enable early-bound type support.
+                _serviceProxy.EnableProxyTypes();
+
+                Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, PluginExecutionContext, new TracingService());
+                
+                QuoteProductEntity target = new QuoteProductEntity()
+                {
+                    QuoteDetailId = new Guid("d8e20a4f-e7c9-eb11-9481-005056b6fa28"),
+                    Id = new Guid("d8e20a4f-e7c9-eb11-9481-005056b6fa28"),
+                };
+                
+                QuoteProductEntity.HandlePreQuoteProductEntityDelete(localContext, target);
+            }
+        }
         [Test, Category("Debug")]
         public void CreateAndSendValueCodeByEmailOnRefundCreate()
         {
