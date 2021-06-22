@@ -102,6 +102,14 @@ namespace Skanetrafiken.Crm.Entities
                 }
             }
         }
+
+        public static void HandlePreValidationOrderProductEntityDelete(Plugin.LocalPluginContext localContext, OrderProductEntity target)
+        {
+            if(target != null && target.Id != Guid.Empty)
+            {
+                SlotsEntity.ReleaseSlots(localContext, true, null, target.Id);
+            }
+        }
         public static void UpdateExistingSlots(Plugin.LocalPluginContext localContext, Guid guidQuoteProduct, EntityReference refOrderProduct, EntityReference refOrder)
         {
             QueryExpression query = new QueryExpression();
@@ -124,7 +132,7 @@ namespace Skanetrafiken.Crm.Entities
                     slotToUpdate.Id = slot.Id;
                     slotToUpdate.ed_OrderProductID = refOrderProduct;
                     slotToUpdate.ed_Order = refOrder;
-                    slotToUpdate.ed_CustomPrice = slotToUpdate.ed_StandardPrice;
+                    //slotToUpdate.ed_CustomPrice = slotToUpdate.ed_StandardPrice;
                     XrmHelper.Update(localContext,slotToUpdate);
                 }
             }

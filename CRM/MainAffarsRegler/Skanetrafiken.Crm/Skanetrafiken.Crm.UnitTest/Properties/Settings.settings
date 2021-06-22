@@ -27,7 +27,7 @@
       <Value Profile="(Default)">DKCRM</Value>
     </Setting>
     <Setting Name="OrganizationUri" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://sekundtst.skanetrafiken.se/DKCRM/XRMServices/2011/Organization.svc</Value>
+      <Value Profile="(Default)">https://sekundtst.skanetrafiken.se/DKCRMTST/XRMServices/2011/Organization.svc</Value>
     </Setting>
     <Setting Name="UseDefaultCredentials" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
