@@ -102,6 +102,14 @@ namespace Skanetrafiken.Crm.Entities
                 }
             }
         }
+
+        public static void HandleOrderProductEntityDelete(Plugin.LocalPluginContext localContext, OrderProductEntity target)
+        {
+            if(target != null && target.Id != Guid.Empty)
+            {
+                SlotsEntity.ReleaseSlots(localContext, true, null, target.Id);
+            }
+        }
         public static void UpdateExistingSlots(Plugin.LocalPluginContext localContext, Guid guidQuoteProduct, EntityReference refOrderProduct, EntityReference refOrder)
         {
             QueryExpression query = new QueryExpression();

@@ -478,7 +478,7 @@ namespace Skanetrafiken.Crm.Entities
 //return availableSlots;
         }
         
-        public static void ReleaseSlots(Plugin.LocalPluginContext localContext, bool deleteAll, Guid? quoteProduct = null, Guid? orderProduct = null, DateTime ? startDate = null, DateTime ? endDate = null, int? quantity = null)
+        public static void ReleaseSlots(Plugin.LocalPluginContext localContext, bool releaseAll, Guid? quoteProduct = null, Guid? orderProduct = null, DateTime ? startDate = null, DateTime ? endDate = null, int? quantity = null)
         {
             localContext.Trace("Inside ReleaseSlots");
 
@@ -519,7 +519,7 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     SlotsEntity slotToRelease = new SlotsEntity();
                     slotToRelease.Id = slot.Id;
-                    if (deleteAll)
+                    if (releaseAll)
                     {
                         slotToRelease.ed_QuoteProductID = null;
                         slotToRelease.ed_Quote = null;
