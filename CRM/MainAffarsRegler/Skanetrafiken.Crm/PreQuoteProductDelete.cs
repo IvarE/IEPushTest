@@ -45,9 +45,9 @@ namespace Skanetrafiken.Crm
             }
 
             // Must be Post operation
-            if (localContext.PluginExecutionContext.Stage != 40)
+            if (localContext.PluginExecutionContext.Stage != (int)Plugin.SdkMessageProcessingStepStage.PreOperation)
             {
-                throw new InvalidPluginExecutionException("Plugin must run in Post-operation mode!");
+                throw new InvalidPluginExecutionException("Plugin must run in Pre-operation mode!");
             }
 
             // INFO: (joan) Don't do anything in offline mode
