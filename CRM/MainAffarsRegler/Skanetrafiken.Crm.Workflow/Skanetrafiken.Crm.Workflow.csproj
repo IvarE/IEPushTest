@@ -126,14 +126,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Skanetrafiken.Crm\ApiBase.cs">
-      <Link>ApiBase.cs</Link>
-    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\ApiHelper.cs">
       <Link>ApiHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Skanetrafiken.Crm\AzureHelper.cs">
-      <Link>AzureHelper.cs</Link>
     </Compile>
     <Compile Include="..\Skanetrafiken.Crm\ColumnBlockSchemas\CustomerInfoBlock.cs">
       <Link>WebApiColumnBlocks\CustomerInfoBlock.cs</Link>
