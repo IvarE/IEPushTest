@@ -27,7 +27,7 @@ namespace Skanetrafiken.Crm.Entities
                     if (quoteProductId != null && quoteProductId != Guid.Empty)
                     {
                         UpdateExistingSlots(localContext, quoteProductId, orderProduct.ToEntityReference(),orderProduct.SalesOrderId);
-                        UpdateSlotsCustomPriceFromOrderProduct(localContext, orderProduct);
+                        //UpdateSlotsCustomPriceFromOrderProduct(localContext, orderProduct);
                     }
                 }
                 else
