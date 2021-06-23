@@ -112,11 +112,11 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
-        public static void HandlePreValidationQuoteProductEntityDelete(Plugin.LocalPluginContext localContext, QuoteProductEntity target)
+        public static void HandlePreValidationQuoteProductEntityDelete(Plugin.LocalPluginContext localContext, EntityReference targetER)
         {
-            if(target != null && target.Id != Guid.Empty)
+            if(targetER != null && targetER.Id != Guid.Empty)
             {
-                SlotsEntity.ReleaseSlots(localContext, true, target.Id);
+                SlotsEntity.ReleaseSlots(localContext, true, targetER.Id);
             }
         }
         public void updatePriceQuoteProduct(Plugin.LocalPluginContext localContext, QuoteProductEntity preImage)
