@@ -59,7 +59,8 @@ namespace CGIXrmRainDanceExport
                 _totalsum = 0;
 
                 //get all refunds to export.
-                ObservableCollection<refund> refunds = _xrmManager.Get<refund>(_getxmlPendingRefunds());
+                //ObservableCollection<refund> refunds = _xrmManager.Get<refund>(_getxmlPendingRefunds());
+                ObservableCollection<refund> refunds = _xrmManager.Get<refund>(_getTestPendingRegunds());
                 foreach (refund refund in refunds)
                 {
                     try
@@ -168,7 +169,7 @@ namespace CGIXrmRainDanceExport
             string line1 = "02";
             string line2 = _formatSocNumber(_formatString(refund.Soc_sec_number), _formatString(refund.Foreign_payment)).SetToFixedLengthPadRight(15);
             string line3 = string.Format("{0} {1}", _formatString(contact.Lastname), _formatString(contact.Firstname)).SetToFixedLengthPadRight(30);
-            string line4 = contact.Address1_line1.SetToFixedLengthPadRight(30);
+            string line4 = contact.Address1_line2.SetToFixedLengthPadRight(30);
             string line5 = string.Format("{0}  {1}", _formatString(contact.Address1_postalcode), _formatString(contact.Address1_city)).SetToFixedLengthPadRight(30);
             string line6 = "1500".SetToFixedLengthPadRight(6);
             string line7 = refund.Iban.Substring(0, refund.Iban.Length >= 2 ? 2 : refund.Iban.Length).SetToFixedLengthPadRight(2);
@@ -184,7 +185,6 @@ namespace CGIXrmRainDanceExport
                 line4 = incident.RgolAddressLine2.SetToFixedLengthPadRight(30);
                 line5 = string.Format("{0}  {1}", _formatString(incident.RgolAddress1Postalcode).SetMaxLength(6), _formatString(incident.RgolAddress1City)).SetToFixedLengthPadRight(30);
             }
-
 
             string line = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}", line1, line2, line3, line4, line5, line6, line7, line8, line9, line10, line11);
             return line;
@@ -667,6 +667,59 @@ namespace CGIXrmRainDanceExport
             return xml;
         }
 
+        private string _getTestPendingRegunds()
+        {
+            string xml = "";
+
+            xml += "<fetch version='1.0' mapping='logical' distinct='false'>";
+            xml += "   <entity name='cgi_refund'>";
+            xml += "       <attribute name='cgi_refundid' />";
+            xml += "       <attribute name='cgi_refundnumber' />";
+            xml += "       <attribute name='createdon' />";
+            xml += "       <attribute name='createdby' />";
+            xml += "       <attribute name='cgi_vat_code' />";
+            xml += "       <attribute name='cgi_value_code' />";
+            xml += "       <attribute name='cgi_travelcard_number' />";
+            xml += "       <attribute name='cgi_transportcompanyid' />";
+            xml += "       <attribute name='cgi_taxi_company' />";
+            xml += "       <attribute name='cgi_swift' />";
+            xml += "       <attribute name='cgi_soc_sec_number' />";
+            xml += "       <attribute name='cgi_responsibleid' />";
+            xml += "       <attribute name='cgi_reinvoicing' />";
+            xml += "       <attribute name='cgi_reimbursementformid' />";
+            xml += "       <attribute name='cgi_car_reg' />";
+            xml += "       <attribute name='cgi_refundtypeid' />";
+            xml += "       <attribute name='cgi_reference' />";
+            xml += "       <attribute name='overriddencreatedon' />";
+            xml += "       <attribute name='cgi_quantity' />";
+            xml += "       <attribute name='cgi_productid' />";
+            xml += "       <attribute name='cgi_milage_compensation' />";
+            xml += "       <attribute name='cgi_milage' />";
+            xml += "       <attribute name='cgi_last_valid' />";
+            xml += "       <attribute name='cgi_invoicerecipient' />";
+            xml += "       <attribute name='cgi_iban' />";
+            xml += "       <attribute name='cgi_foreign_payment' />";
+            xml += "       <attribute name='cgi_exportedraindance' />";
+            xml += "       <attribute name='transactioncurrencyid' />";
+            xml += "       <attribute name='cgi_contactid' />";
+            xml += "       <attribute name='cgi_comments' />";
+            xml += "       <attribute name='cgi_caseid' />";
+            xml += "       <attribute name='cgi_attestation' />";
+            xml += "       <attribute name='cgi_amountwithtax_base' />";
+            xml += "       <attribute name='cgi_amountwithtax' />";
+            xml += "       <attribute name='cgi_amount_base' />";
+            xml += "       <attribute name='cgi_amount' />";
+            xml += "       <attribute name='cgi_accountno' />";
+            xml += "       <attribute name='cgi_accountid' />";
+            xml += "       <order attribute='cgi_refundnumber' descending='false' />";
+            xml += "       <filter type='and'>";
+            xml += "                <condition attribute='cgi_refundid' operator='eq' value='{0E5E7101-85BD-EB11-947E-00505684F96A}' />";
+            xml += "       </filter>";
+            xml += "   </entity>";
+            xml += "</fetch>";
+
+            return xml;
+        }
         private string _xmlContact(string contactid)
         {
             string xml = "";

@@ -20,7 +20,7 @@ namespace CGIXrmRainDanceExport.Classes
 
         //<attribute name='address1_line1' />";
         [Xrm("address1_line2")]
-        public string Address1_line1 { get; set; }
+        public string Address1_line2 { get; set; }
 
         //<attribute name='address1_city' />";
         [Xrm("address1_city")]

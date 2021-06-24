@@ -169,7 +169,7 @@ namespace CGIXrmRainDanceExport
             string line1 = "02";
             string line2 = _formatSocNumber(_formatString(refund.Soc_sec_number), _formatString(refund.Foreign_payment)).SetToFixedLengthPadRight(15);
             string line3 = string.Format("{0} {1}", _formatString(contact.Lastname), _formatString(contact.Firstname)).SetToFixedLengthPadRight(30);
-            string line4 = contact.Address1_line1.SetToFixedLengthPadRight(30);
+            string line4 = contact.Address1_line2.SetToFixedLengthPadRight(30);
             string line5 = string.Format("{0}  {1}", _formatString(contact.Address1_postalcode).SetMaxLength(6), _formatString(contact.Address1_city)).SetToFixedLengthPadRight(30);
             string line6 = "1500".SetToFixedLengthPadRight(12);
             string line7 = "".SetToFixedLengthPadRight(16);         // "99".PadLeft(16, '0');
