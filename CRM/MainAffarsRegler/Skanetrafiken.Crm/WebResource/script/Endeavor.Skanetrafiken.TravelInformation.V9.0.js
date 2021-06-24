@@ -339,7 +339,6 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
         },
 
         filterRelevantValues: function (childNodes, nameTag, idTag, existsFromTag, existsUpToTag, timestamp) {
-            debugger;
             // LOCAL FUNCTION
             getElementValue = function (element, value) {
                 if (element != null) {
@@ -1324,6 +1323,35 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
         },
 
         getCaseEventDate: function (timestamp_label) {
+            try {
+
+                var formType = Endeavor.Skanetrafiken.TravelInformation.formContext.ui.getFormType();
+                if (formType == 1)
+                    return;
+
+                var actionDateAttr = Endeavor.Skanetrafiken.TravelInformation.formContext.getAttribute("cgi_actiondate");
+                var arrivalDateAttr = Endeavor.Skanetrafiken.TravelInformation.formContext.getAttribute("cgi_arrival_date");
+                var createdOnAttr = Endeavor.Skanetrafiken.TravelInformation.formContext.getAttribute("createdon");
+
+                if (actionDateAttr && actionDateAttr.getValue()) {
+                    timestamp_label.value = actionDateAttr.getValue();
+                    return;
+                }
+                else if (arrivalDateAttr && arrivalDateAttr.getValue()) {
+                    timestamp_label.value = arrivalDateAttr.getValue();
+                    return;
+                }
+                else if (createdOnAttr && createdOnAttr.getValue()) {
+                    timestamp_label.value = createdOnAttr.getValue();
+                    return;
+                }
+
+            } catch (e) {
+                Endeavor.formscriptfunctions.AlertCustomDialog("Exception caught in Endeavor.Skanetrafiken.TravelInformation.getCaseEventDate. Error: " + e.message);
+            }
+        },
+
+        getCaseEventDateOldFunction: function (timestamp_label) {
             try {
 
                 var formType = Endeavor.Skanetrafiken.TravelInformation.formContext.ui.getFormType();

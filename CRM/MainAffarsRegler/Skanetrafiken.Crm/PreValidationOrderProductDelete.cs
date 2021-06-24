@@ -58,21 +58,26 @@ namespace Skanetrafiken.Crm
             localContext.TracingService.Trace("{0} {1} {2} {3}", localContext.PluginExecutionContext.Stage, localContext.PluginExecutionContext.MessageName, localContext.PluginExecutionContext.PrimaryEntityName, localContext.PluginExecutionContext.Depth);
 
             if (localContext.PluginExecutionContext.InputParameters.Contains("Target") &&
-                localContext.PluginExecutionContext.InputParameters["Target"] is Entity)
+                localContext.PluginExecutionContext.InputParameters["Target"] is EntityReference)
             {
                 try
                 {
                     
                     // Obtain the target entity from the input parameters.
-                    OrderProductEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<OrderProductEntity>();
+                    EntityReference targetER = ((EntityReference)localContext.PluginExecutionContext.InputParameters["Target"]);
 
-                    OrderProductEntity.HandlePreValidationOrderProductEntityDelete(localContext, target);
+                    OrderProductEntity.HandlePreValidationOrderProductEntityDelete(localContext,targetER);
                 }
                 catch (Exception ex)
                 {
                     throw new InvalidPluginExecutionException(ex.Message, ex);
                 }
             }
+            else
+            {
+                throw new InvalidPluginExecutionException("Error Validating Target or Target is not EntityReference Type.");
+            }
+            
         }
     }
 }
