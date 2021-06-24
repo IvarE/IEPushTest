@@ -59,8 +59,7 @@ namespace CGIXrmRainDanceExport
                 _totalsum = 0;
 
                 //get all refunds to export.
-                //ObservableCollection<refund> refunds = _xrmManager.Get<refund>(_getxmlPendingRefunds());
-                ObservableCollection<refund> refunds = _xrmManager.Get<refund>(_getTestPendingRegunds());
+                ObservableCollection<refund> refunds = _xrmManager.Get<refund>(_getxmlPendingRefunds());
                 foreach (refund refund in refunds)
                 {
                     try
@@ -667,59 +666,6 @@ namespace CGIXrmRainDanceExport
             return xml;
         }
 
-        private string _getTestPendingRegunds()
-        {
-            string xml = "";
-
-            xml += "<fetch version='1.0' mapping='logical' distinct='false'>";
-            xml += "   <entity name='cgi_refund'>";
-            xml += "       <attribute name='cgi_refundid' />";
-            xml += "       <attribute name='cgi_refundnumber' />";
-            xml += "       <attribute name='createdon' />";
-            xml += "       <attribute name='createdby' />";
-            xml += "       <attribute name='cgi_vat_code' />";
-            xml += "       <attribute name='cgi_value_code' />";
-            xml += "       <attribute name='cgi_travelcard_number' />";
-            xml += "       <attribute name='cgi_transportcompanyid' />";
-            xml += "       <attribute name='cgi_taxi_company' />";
-            xml += "       <attribute name='cgi_swift' />";
-            xml += "       <attribute name='cgi_soc_sec_number' />";
-            xml += "       <attribute name='cgi_responsibleid' />";
-            xml += "       <attribute name='cgi_reinvoicing' />";
-            xml += "       <attribute name='cgi_reimbursementformid' />";
-            xml += "       <attribute name='cgi_car_reg' />";
-            xml += "       <attribute name='cgi_refundtypeid' />";
-            xml += "       <attribute name='cgi_reference' />";
-            xml += "       <attribute name='overriddencreatedon' />";
-            xml += "       <attribute name='cgi_quantity' />";
-            xml += "       <attribute name='cgi_productid' />";
-            xml += "       <attribute name='cgi_milage_compensation' />";
-            xml += "       <attribute name='cgi_milage' />";
-            xml += "       <attribute name='cgi_last_valid' />";
-            xml += "       <attribute name='cgi_invoicerecipient' />";
-            xml += "       <attribute name='cgi_iban' />";
-            xml += "       <attribute name='cgi_foreign_payment' />";
-            xml += "       <attribute name='cgi_exportedraindance' />";
-            xml += "       <attribute name='transactioncurrencyid' />";
-            xml += "       <attribute name='cgi_contactid' />";
-            xml += "       <attribute name='cgi_comments' />";
-            xml += "       <attribute name='cgi_caseid' />";
-            xml += "       <attribute name='cgi_attestation' />";
-            xml += "       <attribute name='cgi_amountwithtax_base' />";
-            xml += "       <attribute name='cgi_amountwithtax' />";
-            xml += "       <attribute name='cgi_amount_base' />";
-            xml += "       <attribute name='cgi_amount' />";
-            xml += "       <attribute name='cgi_accountno' />";
-            xml += "       <attribute name='cgi_accountid' />";
-            xml += "       <order attribute='cgi_refundnumber' descending='false' />";
-            xml += "       <filter type='and'>";
-            xml += "                <condition attribute='cgi_refundid' operator='eq' value='{0E5E7101-85BD-EB11-947E-00505684F96A}' />";
-            xml += "       </filter>";
-            xml += "   </entity>";
-            xml += "</fetch>";
-
-            return xml;
-        }
         private string _xmlContact(string contactid)
         {
             string xml = "";
