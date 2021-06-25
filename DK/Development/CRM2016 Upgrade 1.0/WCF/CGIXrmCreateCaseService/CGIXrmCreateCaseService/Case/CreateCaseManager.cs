@@ -35,7 +35,7 @@ namespace CGIXrmCreateCaseService.Case
         private const string CgiTravelInformation = "cgi_travelinformation";
         private const string CgiBiffTransaction = "cgi_travelcardtransaction";
         private string _tokenCertName = "";
-        private string _logLocation = @"C:\Temp\createcase.log";
+        private string _logLocation = @"E:\Logs\CRM\CGIXrmCreateCaseService\createcase.log";
         private bool useFetchXml = true;
         private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         #endregion
@@ -210,24 +210,18 @@ namespace CGIXrmCreateCaseService.Case
                 string msg = ex.Response.Content.ContentToString();
 
                 _log.Error(string.Format("Exception catched in GetOrCreateContactRGOLCase:{0}. Country:{1}", msg, request.CustomerAddress1Country));
-                //LogMessage(_logLocation, string.Format("Exception catched in GetOrCreateContactRGOLCase:{0}. Country:{1}", msg, request.CustomerAddress1Country));
                 if (ex.Message != null)
-                {
                     _log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
-                    //LogMessage(@"C:\Temp\createcase.log", string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
-                }
+
                 throw new Exception(string.Format("Kan inte skapa kund i SeKund. Orsak:{0}", msg), ex.InnerException);
             }
             // Catch any serialization exeptions
             catch (System.Runtime.Serialization.SerializationException ex)
             {
                 _log.Error(string.Format("Kunde inte omvandla resultat från CRMPlus till ett objekt. Detaljerat fel:{0}, inner:{1}", ex.Message, ex.InnerException));
-                //LogMessage(_logLocation, string.Format("Kunde inte omvandla resultat från CRMPlus till ett objekt. Detaljerat fel:{0}, inner:{1}", ex.Message, ex.InnerException));
                 if (ex.Message != null)
-                {
                     _log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
-                    //LogMessage(@"C:\Temp\createcase.log", string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
-                }
+
                 throw new Exception(string.Format("Kunde inte omvandla resultat från CRMPlus till ett objekt. Detaljerat fel:{0}", ex.Message), ex.InnerException);
             }
         }
@@ -307,11 +301,8 @@ namespace CGIXrmCreateCaseService.Case
                 string fullMessage = string.Format("Kan inte skapa kund i SeKund. Orsak:{0}", msg);
                 _log.Error(fullMessage);
                 if (ex.Message != null)
-                {
                     _log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
-                    //LogMessage(@"C:\Temp\createcase.log", string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
-                }
-                //LogMessage(_logLocation, fullMessage);
+
                 throw new Exception(fullMessage, ex.InnerException);
             }
             // Catch any serialization exeptions
@@ -320,11 +311,8 @@ namespace CGIXrmCreateCaseService.Case
                 string fullMessage = string.Format("Kunde inte omvandla resultat från CRMPlus till ett objekt. Detaljerat fel:{0}", ex.Message);
                 _log.Error(fullMessage);
                 if (ex.Message != null)
-                {
                     _log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
-                    //LogMessage(@"C:\Temp\createcase.log", string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
-                }
-                //LogMessage(_logLocation, fullMessage);
+
                 throw new Exception(fullMessage, ex.InnerException);
             }
         }
@@ -3103,10 +3091,8 @@ namespace CGIXrmCreateCaseService.Case
             catch (Exception ex)
             {
                 if (ex.Message != null)
-                {
                     _log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
-                    //LogMessage(@"C:\Temp\createcase.log", string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
-                }
+
                 throw ex;
             }
         }
@@ -3205,10 +3191,7 @@ namespace CGIXrmCreateCaseService.Case
                 //}
                 _log.Debug(string.Format("Fel vid skapande av contact: " + faultex.Message));
                 if (faultex.Message != null)
-                {
                     _log.Error(string.Format("Exception {0}, inner:{1}", faultex.Message, faultex.InnerException.Message));
-                    //LogMessage(@"C:\Temp\createcase.log", string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
-                }
 
                 response.CaseId = Guid.Empty;
                 response.ErrorMessage = faultex.Message;
@@ -3216,10 +3199,8 @@ namespace CGIXrmCreateCaseService.Case
             catch (Exception ex)
             {
                 if (ex.Message != null)
-                {
                     _log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
-                    //LogMessage(@"C:\Temp\createcase.log", string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
-                }
+
                 response.CaseId = Guid.Empty;
                 response.ErrorMessage = ex.Message;
             }

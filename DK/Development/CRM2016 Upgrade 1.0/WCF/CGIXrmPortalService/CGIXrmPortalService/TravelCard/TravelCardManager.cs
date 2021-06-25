@@ -311,7 +311,7 @@ namespace CGICRMPortalService.TravelCard
             int retry = 0;
             bool keepRetry = true;
 
-            string path = "C:\\Temp\\";
+            string path = "E:\\Logs\\CRM\\CGIXrmPortalService";
             if (!Directory.Exists(path))
             {
                 try
@@ -365,7 +365,6 @@ namespace CGICRMPortalService.TravelCard
                 NullReferenceException nullReferenceException = new NullReferenceException(errorMsg);
                 string exceptionMsg = "The application terminated with an error. Timestamp: " + DateTime.Now.ToUniversalTime() + "Message: " + errorMsg;
                 _log.Error("ExceptionsMsg: " + exceptionMsg+ ". NullException: " + nullReferenceException + ". Portal Web Service");
-                //_log2Crm.Exception(exceptionMsg, "NullException", nullReferenceException, "Portal Web Service");
                 
                 //_createLogfile(nullReferenceException.Message);
                 throw nullReferenceException;
