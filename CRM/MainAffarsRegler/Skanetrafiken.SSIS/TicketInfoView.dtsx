@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package Ticket Info"
   DTS:PackageType="5"
-  DTS:VersionBuild="33"
-  DTS:VersionGUID="{FD290DB6-1537-4B14-AD4F-9450C569154C}">
+  DTS:VersionBuild="36"
+  DTS:VersionGUID="{F2DFEDE7-5AEC-4A69-BE5A-92BC74999F90}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAD9XEQfhdxMEaEcPSYvK0hrAAAAAASAAACgAAAAEAAAALWVrmhv/dcV4D13fOnn2T4gAAAAWUT88TOfSN3nW5pMZJB2ey0gPrpeIWzwOpsp67VDXcAUAAAAELDxSySPnEUzdUXFzWGwOV+wzd8</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABXZxUSeFMplOOFVbY+n9BuAAAAAASAAACgAAAAEAAAANo/08KlIWgocqC/+QdtBksgAAAABc7wmaOiqE4O7aBmEdvlwSGp1ifC4a8Sk0/oP6iTTq4UAAAA3MfPTLRMj+xNxD/A27EadYxq14E</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -42,7 +42,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABOHqZdq8yJPB55hM4eQ7P8AAAAAASAAACgAAAAEAAAAJj1+HofwM6UQ3zp+9Mpag8gAAAAZnKMjug11Lr4y7RQpSnD4P1lAXBxWtq9OyJjp6ZCoIwUAAAAspxcRngojUXblzVx+Shk9wco4xI</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADECdB5hch3PIR834QyYBxUAAAAAASAAACgAAAAEAAAAI+HX3/wpIUNZH+KTzh8ifUgAAAAzdPBZdYQEszm1u6FsuEQiVNxV/FPiuVbxl4GP/E+wHQUAAAAVrw5OgA4S3+/CRVK8JAxGG0o0JA</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -57,7 +57,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADMaehopI4TEqxrZUumSBBaAAAAAASAAACgAAAAEAAAAIpzVDjWybjd2o/671UswKogAAAA9Ya0gQ7/es3apY3q18xRarN29fQmnktLQqyNFBHVJSQUAAAA/T6af0wNPrX+aFrZ0i7hkMElvS0</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAA9ZOmbzKUmLgLY+/K4MmcgAAAAAASAAACgAAAAEAAAAPxcKjTv6zbRCZvj+PC3EoMgAAAAseaV6rVDbStXYCJCIEui//BbC7K9sz6oAiKf7RQuePsUAAAAOpdYeaXYhhAx/GptyIYgCxuFyhM</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -350,7 +350,7 @@
                 <property
                   dataType="System.Boolean"
                   description="Specifies whether the data will overwrite or append to the destination file."
-                  name="Overwrite">false</property>
+                  name="Overwrite">true</property>
                 <property
                   dataType="System.Null"
                   description="Specifies the text to write to the destination file before any data is written."
@@ -477,20 +477,6 @@
                       cachedName="HasRefund"
                       externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[HasRefund]"
                       lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[HasRefund]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[MaxValidationDateTime]"
-                      cachedDataType="dbTimeStampOffset"
-                      cachedName="MaxValidationDateTime"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[MaxValidationDateTime]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[MaxValidationDateTime]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[SecondMaxValidationDateTime]"
-                      cachedDataType="dbTimeStampOffset"
-                      cachedName="SecondMaxValidationDateTime"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[SecondMaxValidationDateTime]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[SecondMaxValidationDateTime]" />
                     <inputColumn
                       refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[MkId]"
                       cachedDataType="i4"
@@ -699,7 +685,7 @@
                 <property
                   dataType="System.String"
                   description="Specifies the name of the database object used to open a rowset."
-                  name="OpenRowset"></property>
+                  name="OpenRowset">[dbo].[GetTicketInfoViewWithoutValidations]</property>
                 <property
                   dataType="System.String"
                   description="Specifies the variable that contains the name of the database object used to open a rowset."
@@ -748,7 +734,7 @@
                   dataType="System.Int32"
                   description="Specifies the mode used to access the database."
                   name="AccessMode"
-                  typeConverter="AccessMode">2</property>
+                  typeConverter="AccessMode">0</property>
                 <property
                   dataType="System.String"
                   description="The mappings between the parameters in the SQL command and variables."
@@ -916,26 +902,6 @@
                       name="HasRefund"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[MaxValidationDateTime]"
-                      dataType="dbTimeStampOffset"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[MaxValidationDateTime]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[MaxValidationDateTime]"
-                      name="MaxValidationDateTime"
-                      scale="7"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[SecondMaxValidationDateTime]"
-                      dataType="dbTimeStampOffset"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[SecondMaxValidationDateTime]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[SecondMaxValidationDateTime]"
-                      name="SecondMaxValidationDateTime"
-                      scale="7"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
                       refId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[MkId]"
                       dataType="i4"
                       errorOrTruncationOperation="Conversion"
@@ -1071,16 +1037,6 @@
                       dataType="i4"
                       name="HasRefund" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[MaxValidationDateTime]"
-                      dataType="dbTimeStampOffset"
-                      name="MaxValidationDateTime"
-                      scale="7" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[SecondMaxValidationDateTime]"
-                      dataType="dbTimeStampOffset"
-                      name="SecondMaxValidationDateTime"
-                      scale="7" />
-                    <externalMetadataColumn
                       refId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
                       dataType="i4"
                       name="MkId" />
@@ -1205,18 +1161,6 @@
                       lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Error Output].Columns[HasRefund]"
                       name="HasRefund" />
                     <outputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Error Output].Columns[MaxValidationDateTime]"
-                      dataType="dbTimeStampOffset"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Error Output].Columns[MaxValidationDateTime]"
-                      name="MaxValidationDateTime"
-                      scale="7" />
-                    <outputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Error Output].Columns[SecondMaxValidationDateTime]"
-                      dataType="dbTimeStampOffset"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Error Output].Columns[SecondMaxValidationDateTime]"
-                      name="SecondMaxValidationDateTime"
-                      scale="7" />
-                    <outputColumn
                       refId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Error Output].Columns[MkId]"
                       dataType="i4"
                       lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Error Output].Columns[MkId]"
@@ -1286,7 +1230,7 @@
                   dataType="System.Int32"
                   description="Specifies how data is written to CDS/Dynamics CRM server."
                   name="ActionType"
-                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.DestinationActionType">1</property>
+                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.DestinationActionType">5</property>
                 <property
                   dataType="System.Boolean"
                   description="Specifies whether the values of CDS/CRM lookup fields should be removed if the reference records cannot be found. "
@@ -1302,12 +1246,12 @@
                   description="Specify the matching criteria to be used when performing an update or upsert. "
                   expressionType="Notify"
                   name="RecordMatchingCriteria"
-                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.RecordMatchingCriteria">0</property>
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.RecordMatchingCriteria">3</property>
                 <property
                   dataType="System.String"
                   description="Specify the key fields to be used to determine the matching records that exist in CDS/CRM for either Upsert/Update action or source duplicate optimization."
                   expressionType="Notify"
-                  name="RecordMatchingKeyFields"></property>
+                  name="RecordMatchingKeyFields">ed_crmnummer;st_ticketid</property>
                 <property
                   dataType="System.Boolean"
                   description="Specifies whether to ignore those NULL-valued fields."
@@ -1333,7 +1277,7 @@
                   description="Specifies what action will be taken when multiple matches are found with Upsert action."
                   expressionType="Notify"
                   name="HandlingOfMultipleMatches"
-                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">0</property>
+                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">3</property>
                 <property
                   dataType="System.Int32"
                   description="Specify whether to use optimizations when there are duplicate records form the source system."
@@ -1436,13 +1380,6 @@
                       externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_lastupdated]"
                       lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[LastUpdated]" />
                     <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].Columns[MaxValidationDateTime]"
-                      cachedDataType="dbTimeStampOffset"
-                      cachedName="MaxValidationDateTime"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_maxvalidationdatetime]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[MaxValidationDateTime]" />
-                    <inputColumn
                       refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].Columns[OfferNameDetailed]"
                       cachedDataType="wstr"
                       cachedLength="255"
@@ -1512,13 +1449,6 @@
                       externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[st_ticketcreated]"
                       lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[DataCreatedDate]" />
                     <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].Columns[SecondMaxValidationDateTime]"
-                      cachedDataType="dbTimeStampOffset"
-                      cachedName="SecondMaxValidationDateTime"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_secondmaxvalidationdatetime]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[SecondMaxValidationDateTime]" />
-                    <inputColumn
                       refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].Columns[activationinterval_from]"
                       cachedDataType="dbTimeStamp2"
                       cachedName="activationinterval_from"
@@ -1546,6 +1476,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">systemuser</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">false</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1559,6 +1495,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">ed_skakort</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1572,6 +1514,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">cgi_travelcard</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1585,6 +1533,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">false</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1598,6 +1552,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">false</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1611,6 +1571,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">systemuser;team</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1625,6 +1591,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1638,6 +1610,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">contact</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1652,6 +1630,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1666,6 +1650,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1680,6 +1670,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1693,6 +1689,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1706,6 +1708,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1719,6 +1727,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1732,6 +1746,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1746,6 +1766,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1761,6 +1787,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1774,6 +1806,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1787,6 +1825,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1800,6 +1844,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1813,6 +1863,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1826,6 +1882,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1839,6 +1901,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">transactioncurrency</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1852,6 +1920,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1866,6 +1940,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1879,6 +1959,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1893,6 +1979,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1906,6 +1998,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1919,6 +2017,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1932,19 +2036,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_maxvalidationdatetime]"
-                      dataType="dbTimeStamp"
-                      name="ed_maxvalidationdatetime">
-                      <properties>
                         <property
-                          dataType="System.String"
-                          name="FieldType">DateTime</property>
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
                         <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1959,6 +2056,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1973,6 +2076,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1986,6 +2095,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1999,6 +2114,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -2012,6 +2133,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -2025,19 +2152,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_secondmaxvalidationdatetime]"
-                      dataType="dbTimeStamp"
-                      name="ed_secondmaxvalidationdatetime">
-                      <properties>
                         <property
-                          dataType="System.String"
-                          name="FieldType">DateTime</property>
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
                         <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -2051,6 +2171,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -2064,6 +2190,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                   </externalMetadataColumns>
@@ -2168,10 +2300,6 @@
           Size="130,42"
           Id="Package\Upsert Ticket Info Dynamics\Ticket Info"
           TopLeft="127,35" />
-        <NodeLayout
-          Size="176,42"
-          Id="Package\Upsert Ticket Info Dynamics\Flat File Destination"
-          TopLeft="512,260" />
         <EdgeLayout
           Id="Package\Upsert Ticket Info Dynamics.Paths[OLE DB Source Output]"
           TopLeft="192,77">
@@ -2208,39 +2336,43 @@
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="176,42"
+          Id="Package\Upsert Ticket Info Dynamics\Flat File Destination"
+          TopLeft="503,242" />
         <EdgeLayout
           Id="Package\Upsert Ticket Info Dynamics.Paths[Error Output]"
           TopLeft="356.5,192">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="243.5,68"
+              EndConnector="234.5,50"
               Start="0,0"
-              End="243.5,60.5">
+              End="234.5,42.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,30" />
+                    End="0,21" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,30"
-                    Point2="0,34"
-                    Point3="4,34" />
+                    Point1="0,21"
+                    Point2="0,25"
+                    Point3="4,25" />
                   <mssgle:LineSegment
-                    End="239.5,34" />
+                    End="230.5,25" />
                   <mssgle:CubicBezierSegment
-                    Point1="239.5,34"
-                    Point2="243.5,34"
-                    Point3="243.5,38" />
+                    Point1="230.5,25"
+                    Point2="234.5,25"
+                    Point3="234.5,29" />
                   <mssgle:LineSegment
-                    End="243.5,60.5" />
+                    End="234.5,42.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="84.5449609375,39,74.410078125,16"
+              BoundingBox="80.0449609375,30,74.410078125,16"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
@@ -2252,6 +2384,11 @@
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">View</Value>
       </Property>
     </Properties>
   </PipelineComponentMetadata>
