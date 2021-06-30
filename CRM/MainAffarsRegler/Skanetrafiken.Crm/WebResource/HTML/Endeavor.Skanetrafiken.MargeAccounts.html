@@ -5,31 +5,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Account Merger</title>
-	<style type="text/css">
-	h3 {
-	margin-top: 100px;
-	margin-bottom: auto;
-	margin-right: 150px;
-	margin-left: 150px;
-	text-align: center
-	}
+    <style type="text/css">
+        h3 {
+            margin-top: 100px;
+            margin-bottom: auto;
+            margin-right: 150px;
+            margin-left: 150px;
+            text-align: center
+        }
 
-	#accountInput {
-		display: inline-block;
-	}
+        #accountInput {
+            display: inline-block;
+        }
 
-	#inputForm {
-	text-align: center;
-	}
+        #inputForm {
+            text-align: center;
+        }
 
-	#statusText {
-	color: red;
-	}
+        #statusText {
+            color: red;
+        }
 
-	#mergeBtn {
-	margin: 0px 0px 0px 20px;
-	}
-	</style>
+        #mergeBtn {
+            margin: 0px 0px 0px 20px;
+        }
+    </style>
 
     <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
 
@@ -38,45 +38,35 @@
             var mergeButton = document.getElementById('mergeBtn');
             var oldAccInput = document.getElementById('oldAccountInput');
             var newAccInput = document.getElementById('newAccountInput');
+
             if (!isInputEmpty(oldAccInput, newAccInput))
                 return;
 
-            
-			var data = {
-                "oldAccountNumber": oldAccInput.value.replace(/ /g, ''),
-                "newAccountNumber_KST": newAccInput.value.replace(/ /g, '')
-			};
-			
             showHideElements(mergeButton, oldAccInput, newAccInput);
 
-            var organizationUrl = Xrm.Page.context.getClientUrl();
-            var req = new XMLHttpRequest();
-            req.open("POST", organizationUrl + "/api/data/v8.1/" + "ed_MergeAccountsPortalen", false);
-            req.setRequestHeader("Accept", "application/json");
-            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            req.setRequestHeader("OData-MaxVersion", "4.0");
-            req.setRequestHeader("OData-Version", "4.0");
-            req.onreadystatechange = function () {
-                if (this.readyState == 4) {
-                    req.onreadystatechange = null;
-                    if (this.status == 200 || this.status == 204) {
-                        var res = JSON.parse(this.response);
-                        var migrationStatusLabel = document.getElementById('statusText');
-                        if (res.MergeResponse == null || res.MergeResponse != "") {
-                            migrationStatusLabel.innerHTML = "Något fel inträffade. Vänligen kontakta administratör. \n\nFel: " + res.MergeResponse;
-                        } else {
-                            migrationStatusLabel.style.color = "green";
-                            migrationStatusLabel.innerHTML = "OK!";
-                        }
-                    } else {
-						var error = JSON.parse(this.response);
-						alert("Error in Action: "+error.message);
+            var inputParameters = [{ "Field": "oldAccountNumber", "Value": oldAccInput.value.replace(/ /g, ''), "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                                { "Field": "MaxTransactions", "Value": newAccInput.value.replace(/ /g, ''), "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 }];
+
+            Endeavor.formscriptfunctions.callGlobalAction("ed_MergeAccountsPortalen", inputParameters,
+                function (result) {
+
+                    var migrationStatusLabel = document.getElementById('statusText');
+                    if (result.MergeResponse == null || result.MergeResponse != "")
+                        migrationStatusLabel.innerHTML = "Något fel inträffade. Vänligen kontakta administratör. \n\nFel: " + result.MergeResponse;
+                    else {
+                        migrationStatusLabel.style.color = "green";
+                        migrationStatusLabel.innerHTML = "OK!";
                     }
 
                     showHideElements(mergeButton, oldAccInput, newAccInput);
-                }
-            };
-            req.send(JSON.stringify(data));
+                },
+                function (error) {
+                    var errorMessage = "Error in  Merge Action: " + error.message;
+                    console.log(errorMessage);
+                    Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
+
+                    showHideElements(mergeButton, oldAccInput, newAccInput);
+                });
         }
 
         function showHideElements(btn, oldAccInput, newAccInput) {

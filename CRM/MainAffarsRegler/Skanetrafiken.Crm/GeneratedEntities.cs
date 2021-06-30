@@ -101068,6 +101068,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_activationintervalfrom")]
+		public System.Nullable<System.DateTime> ed_ActivationIntervalFrom
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_activationintervalfrom");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_activationintervalfrom", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_activationintervalto")]
+		public System.Nullable<System.DateTime> ed_ActivationIntervalTo
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_activationintervalto");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_activationintervalto", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_bearercategory")]
 		public string ed_BearerCategory
 		{
@@ -101094,6 +101126,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_blockeddate", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_crmnummer")]
+		public string ed_CRMNummer
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_crmnummer");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_crmnummer", value);
 			}
 		}
 		
@@ -101238,6 +101286,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_travellerscount", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_travelvalidityintervalfrom")]
+		public System.Nullable<System.DateTime> ed_TravelValidityIntervalFrom
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_travelvalidityintervalfrom");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_travelvalidityintervalfrom", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_travelvalidityintervalto")]
+		public System.Nullable<System.DateTime> ed_TravelValidityIntervalTo
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_travelvalidityintervalto");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_travelvalidityintervalto", value);
 			}
 		}
 		
@@ -101972,9 +102052,15 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string CreatedOnBehalfBy = "createdonbehalfby";
 			
+			public const string ed_ActivationIntervalFrom = "ed_activationintervalfrom";
+			
+			public const string ed_ActivationIntervalTo = "ed_activationintervalto";
+			
 			public const string ed_BearerCategory = "ed_bearercategory";
 			
 			public const string ed_BlockedDate = "ed_blockeddate";
+			
+			public const string ed_CRMNummer = "ed_crmnummer";
 			
 			public const string ed_HasGroupDiscount = "ed_hasgroupdiscount";
 			
@@ -101993,6 +102079,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_TravelCardId = "ed_travelcardid";
 			
 			public const string ed_TravellersCount = "ed_travellerscount";
+			
+			public const string ed_TravelValidityIntervalFrom = "ed_travelvalidityintervalfrom";
+			
+			public const string ed_TravelValidityIntervalTo = "ed_travelvalidityintervalto";
 			
 			public const string ExchangeRate = "exchangerate";
 			
@@ -102059,6 +102149,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		{
 			
 			public const int ed_BearerCategory = 20;
+			
+			public const int ed_CRMNummer = 50;
 			
 			public const int ed_OfferNameDetailed = 100;
 			

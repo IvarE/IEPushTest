@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package Ticket Purchases"
   DTS:PackageType="5"
-  DTS:VersionBuild="28"
-  DTS:VersionGUID="{9FCE2794-4BE3-4CB9-B363-C3D82695E6C5}">
+  DTS:VersionBuild="30"
+  DTS:VersionGUID="{B404B7D5-13AF-4AB1-92F4-A140DA0A0595}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAgHYIvjhYyhGg7OHUk/ExQAAAAAASAAACgAAAAEAAAAByo1cVEwFlw9tZdXVosHp0gAAAATUGaGI3dnj4ZzVn1b3mOLLgtUbhTYQ8SmtSzEHFjq/0UAAAArzLg42vhquf194IqjmtG5cG2Fps</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAsmZofZRTd8Cp/nXGfufzjAAAAAASAAACgAAAAEAAAAFYAJlthJUfz7vtJ0b82P4kgAAAAkjZuFMZ9kJWOmO7mhkQ3rnjUkAyp7y/TivAkXIPuWYEUAAAAh2fXGzacvv7CWkOeq61C4e7hntQ</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -42,7 +42,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABCxmPYy/1qH9O8zNA/KZSgAAAAAASAAACgAAAAEAAAABQr2BZt5I444VSiCVfOxNwgAAAAYIXUuKCjEZqzmkdvo2hV7drjA5X5zCbx7bwthBz5snkUAAAAcXsRHdS+vaXgP0hO974H+KStjGo</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABt+WjCO/1d4hjM2Rlsgkn/AAAAAASAAACgAAAAEAAAAHL4K4Ughpxrm2OGnp3HWKogAAAAvHWHRP0FovYNW+hx+QEMkeSvMNGikr2ikA81WJe5VZQUAAAAlqZ8i28Jjd5qLecHNzEBqRUCSQ0</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -57,7 +57,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAC78hR9k81Q8PeXSJdOEPg4AAAAAASAAACgAAAAEAAAAGVujSf+QM7H5SoI5FmoTuQgAAAApKPTIHTon1q+t1GJNOwxWm89jDgjax9u1XHF3+B0XvYUAAAAv1iVMSPO4sJMy8G9JVTpweNWQRc</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACr0OCydeEL76lI5WMF85WrAAAAAASAAACgAAAAEAAAAMhc3KrF/vlhE/AvdrjT8+YgAAAAxK4aTlV5FddumCrLnYPOor/jRVAsuHU6r+GaqIlVaQUUAAAABKOFxzIWsXK2cMcicHMe95coitA</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -561,7 +561,7 @@ ORDER BY MkId</property>
                   dataType="System.Boolean"
                   description="Specify whether to remove those invalid characters before writing to CDS/CRM."
                   expressionType="Notify"
-                  name="RemoveInvalidCharacters">false</property>
+                  name="RemoveInvalidCharacters">true</property>
                 <property
                   dataType="System.String"
                   description="Specify the flag field(s) that are used to track the source of changes. The field(s) will not posted to CDS/CRM server unless there are changes to other fields if specified. &quot;Ignore Unchange Fields&quot; option is required in order for the specified flag field(s) to work. "
@@ -572,7 +572,7 @@ ORDER BY MkId</property>
                   description="Specifies what action will be taken when multiple matches are found with Upsert action."
                   expressionType="Notify"
                   name="HandlingOfMultipleMatches"
-                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">1</property>
+                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">3</property>
                 <property
                   dataType="System.Int32"
                   description="Specify whether to use optimizations when there are duplicate records form the source system."

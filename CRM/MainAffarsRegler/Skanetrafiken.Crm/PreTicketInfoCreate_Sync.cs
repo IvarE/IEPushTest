@@ -8,13 +8,13 @@ using Skanetrafiken.Crm.Entities;
 
 namespace Skanetrafiken.Crm
 {
-    public class PostTicketInfoCreate_Async : Plugin
+    public class PreTicketInfoCreate_Sync : Plugin
     {
 
-        public PostTicketInfoCreate_Async()
-            : base(typeof(PostTicketInfoCreate_Async))
+        public PreTicketInfoCreate_Sync()
+            : base(typeof(PreTicketInfoCreate_Sync))
         {
-            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PostOperation, Plugin.SdkMessageName.Create, TicketInfoEntity.EntityLogicalName, new Action<LocalPluginContext>(PostExecuteTicketInfoCreateAsync)));
+            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PreOperation, Plugin.SdkMessageName.Create, TicketInfoEntity.EntityLogicalName, new Action<LocalPluginContext>(PreExecuteTicketInfoCreateSync)));
 
             // Note : you can register for more events here if this plugin is not specific to an individual entity and message combination.
             // You may also need to update your RegisterFile.crmregister plug-in registration file to reflect any change.
@@ -35,14 +35,14 @@ namespace Skanetrafiken.Crm
         /// could execute the plug-in at the same time. All per invocation state information
         /// is stored in the context. This means that you should not use global variables in plug-ins.
         /// </remarks>
-        protected void PostExecuteTicketInfoCreateAsync(LocalPluginContext localContext)
+        protected void PreExecuteTicketInfoCreateSync(LocalPluginContext localContext)
         {
             if (localContext == null)
                 throw new ArgumentNullException("localContext");
 
             // Must be Post operation
-            if (localContext.PluginExecutionContext.Stage != (int)Plugin.SdkMessageProcessingStepStage.PostOperation)
-                throw new InvalidPluginExecutionException("Plugin must run in Post-operation mode!");
+            if (localContext.PluginExecutionContext.Stage != (int)Plugin.SdkMessageProcessingStepStage.PreOperation)
+                throw new InvalidPluginExecutionException("Plugin must run in Pre-operation mode!");
 
             // INFO: (Endeavor) Don't do anything in offline mode
             if (localContext.PluginExecutionContext.IsExecutingOffline)
@@ -58,7 +58,7 @@ namespace Skanetrafiken.Crm
 
                 try
                 {
-                    target.HandlePostTicketInfoCreateAsync(localContext);
+                    target.HandlePreTicketInfoCreateSync(localContext);
                 }
                 catch (Exception ex)
                 {

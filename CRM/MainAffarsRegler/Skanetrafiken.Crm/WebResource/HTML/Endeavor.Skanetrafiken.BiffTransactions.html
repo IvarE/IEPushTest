@@ -1,18 +1,19 @@
-<html>
+ï»¿<html>
 <head>
     <link href="../css/Endeavor.Skanetrafiken.BiffTransactions.css" rel="stylesheet" type="text/css" />
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
 
     <script>
-        function onLoad(document) {
 
+        function onLoad(document) {
+            debugger;
             var datefrom = new Date();
             datefrom.setDate(datefrom.getDate() - 45);
             document.getElementById('datefrom').value = datefrom.toISOString().substring(0, 10);
             document.getElementById('dateto').value = (new Date()).toISOString().substring(0, 10);
 
-            if (parent != null && parent.Xrm != null && parent.Xrm.Page != null && parent.Xrm.Page.getAttribute("cgi_travelcardnumber") != null) {
-                document.getElementById('cardnr').value = parent.Xrm.Page.getAttribute("cgi_travelcardnumber").getValue();
-            }
+            if (Xrm.Page != null && Xrm.Page.getAttribute("cgi_travelcardnumber") != null)
+                document.getElementById('cardnr').value = Xrm.Page.getAttribute("cgi_travelcardnumber").getValue();
 
             setDocument();
         }
@@ -35,7 +36,6 @@
             }
 
             alert("BiffTransactions service is unavailable. Please contact your systems administrator.")
-
             return null;
         }
 
@@ -81,16 +81,16 @@
                 }
             }
         }
-        
+
     </script>
 
 </head>
 
 <body onload="onLoad(document);">
     <form class="search">
-        <b>Sök kort:</b>
+        <b>SÃ¶k kort:</b>
         <input type="text" id="cardnr" value="">
-        <input type="button" value="Sök" onclick="getDetailsAndTransactions(document)">
+        <input type="button" value="SÃ¶k" onclick="getDetailsAndTransactions(document)">
     </form>
     <table>
         <tr>
@@ -98,7 +98,7 @@
                 <table>
                     <tr class="headingrow">
                         <td class="heading" colspan=1>CRM</td>
-                        <td class="heading" colspan=1>Spärr</td>
+                        <td class="heading" colspan=1>SpÃ¤rr</td>
                         <td class="heading" colspan=1>Reskassa</td>
                         <td class="heading" colspan=1>Period</td>
                     </tr>
@@ -117,7 +117,7 @@
                     <tr>
                         <td class="type" colspan=1>Kortnamn:</td>
                         <td class="type" colspan=1>Orsak:</td>
-                        <td class="type" colspan=1>Värde:</td>
+                        <td class="type" colspan=1>VÃ¤rde:</td>
                         <td class="type" colspan=1>Startdatum:</td>
                     </tr>
                     <tr>
@@ -128,8 +128,8 @@
                     </tr>
                     <tr>
                         <td class="type" colspan=1>Autoladda:</td>
-                        <td class="type" colspan=1>Periodkort spärrat:</td>
-                        <td class="type" colspan=1>Outhämtad laddning:</td>
+                        <td class="type" colspan=1>Periodkort spÃ¤rrat:</td>
+                        <td class="type" colspan=1>OuthÃ¤mtad laddning:</td>
                         <td class="type" colspan=1>Slutdatum:</td>
                     </tr>
                     <tr>
@@ -140,7 +140,7 @@
                     </tr>
                     <tr>
                         <td class="type" colspan=1>Anslutningsdatum:</td>
-                        <td class="type" colspan=1>Reskassa spärrad:</td>
+                        <td class="type" colspan=1>Reskassa spÃ¤rrad:</td>
                         <td class="type" colspan=1>
                             <input type="button" id="reloadbutton" disabled value="Ladda om" onclick="reload()">
                         </td>
@@ -156,7 +156,7 @@
                         <td class="type" colspan=1>Slutdatum autoladda:</td>
                         <td class="type" colspan=1>&nbsp;</td>
                         <td class="type" colspan=1>&nbsp;</td>
-                        <td class="type" colspan=1>Väntande perioder:</td>
+                        <td class="type" colspan=1>VÃ¤ntande perioder:</td>
                     </tr>
                     <tr>
                         <td class="value" id="autoloadenddate" colspan=1>&nbsp;</td>
@@ -174,7 +174,7 @@
                         <td class="value" id="creditcardnr" colspan=1>&nbsp;</td>
                         <td class="value" colspan=1>&nbsp;</td>
                         <td class="value" colspan=1>&nbsp;</td>
-                        <td class="value" id="activatedautoload"colspan=1>&nbsp;</td>
+                        <td class="value" id="activatedautoload" colspan=1>&nbsp;</td>
                     </tr>
                     <tr>
                         <td class="type" colspan=1>Misslyckade dragningar:</td>
@@ -210,11 +210,11 @@
         </tr>
     </table>
     <form class="search">
-        <b>Sök från:</b>
+        <b>SÃ¶k frÃ¥n:</b>
         <input type="text" id="datefrom" value="">
         <b> till:</b>
         <input type="text" id="dateto" value="">
-        <input type="button" value="Sök" onclick="transactionSearch()">
+        <input type="button" value="SÃ¶k" onclick="transactionSearch()">
     </form>
     <table id="transactionstable">
         <thead>
@@ -253,7 +253,7 @@
             </tr>
         </thead>
         <tbody id="savedtransactionsbody" class="transactionsbody">
-            <tr  class="blankrow"></tr>
+            <tr class="blankrow"></tr>
         </tbody>
     </table>
 </body>

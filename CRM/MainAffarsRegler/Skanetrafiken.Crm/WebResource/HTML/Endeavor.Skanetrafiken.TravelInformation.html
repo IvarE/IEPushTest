@@ -11,7 +11,7 @@
             getDate();
 
             setHours(0);
-            
+
             setDocument();
 
             populateSavedTravelInformationTable();
@@ -38,11 +38,9 @@
                 var timestamp_label = document.getElementById('timestamp');
                 formContext.Endeavor.Skanetrafiken.TravelInformation.getCaseEventDate(timestamp_label);
             }
-                
 
             //var datestring = (new Date()).toISOString().substring(0, 16);
             //datestring = datestring.replace("T", " ");
-       
             //document.getElementById('timestamp').value = datestring;
         }
 
@@ -74,7 +72,6 @@
             if (hrs != 0) {
                 searchTravels();
             }
-            
         }
 
         function getFormContext() {
@@ -179,7 +176,7 @@
                     <option value="" selected disabled hidden>Välj</option>
                     <option value="TRAIN">Tåg</option>
                     <option value="REGIONBUS">Regionbuss</option>
-                    <option value="STRADBUS">Stadsbuss</option>
+                    <option value="STADSBUSS">Stadsbuss</option>
                 </select>
             </td>
             <td>
@@ -222,6 +219,7 @@
                 <th>Aktuell (Ankomst)</th>
                 <th>Operatör</th>
                 <th>Tur</th>
+                <th style="width: 45%;">Avvikelse</th>
             </tr>
         </thead>
         <tbody id="travelinformationbody"></tbody>
