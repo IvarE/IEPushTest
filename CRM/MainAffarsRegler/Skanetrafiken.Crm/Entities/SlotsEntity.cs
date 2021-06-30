@@ -63,6 +63,39 @@ namespace Skanetrafiken.Crm.Entities
                     this.ed_Account = null;
                 }
             }
+
+            EntityReference QuoteProductER = null;
+            EntityReference OrderProductER = null;
+            Money standardPrice = new Money(0);
+            if(!this.IsAttributeModified(preImage,SlotsEntity.Fields.ed_QuoteProductID))
+            {
+                QuoteProductER = preImage.ed_QuoteProductID;
+            }
+            else
+            {
+                QuoteProductER = this.ed_QuoteProductID;
+            }
+
+            if(!this.IsAttributeModified(preImage, SlotsEntity.Fields.ed_QuoteProductID))
+            {
+                OrderProductER = preImage.ed_OrderProductID;
+            }
+            else
+            {
+                OrderProductER = this.ed_OrderProductID;
+            }
+
+            if(QuoteProductER == null && OrderProductER == null)
+            {
+                if(!this.IsAttributeModified(preImage,SlotsEntity.Fields.ed_StandardPrice))
+                {
+                    standardPrice = preImage.ed_StandardPrice;
+                }
+                else
+                {
+                    standardPrice = this.ed_StandardPrice;
+                }
+            }
         }
         public static void HandleSlotsEntityCreate(Plugin.LocalPluginContext localContext, SlotsEntity target)
         {

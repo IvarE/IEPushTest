@@ -56,7 +56,9 @@ namespace Skanetrafiken.Crm.Entities
                     if(isSlotProduct)
                     {
                         UpdateOrGenerateSlots(localContext, quoteProduct);
+                        /*
                         UpdateSlotsCustomPriceFromQuoteProduct(localContext, quoteProduct);
+                        */
                     }
                 }
             }
@@ -105,7 +107,10 @@ namespace Skanetrafiken.Crm.Entities
                         {
                             localContext.Trace("ed_FromDate or ed_ToDate modified");
                             UpdateOrGenerateSlots(localContext, target, preImage);
+
+                            /*
                             UpdateSlotsCustomPriceFromQuoteProduct(localContext, target);
+                            */
                         }
                     }
                 }
@@ -337,10 +342,12 @@ namespace Skanetrafiken.Crm.Entities
         { 
             decimal? discountAmount = null;
 
+            
             if (quoteProduct.ManualDiscountAmount != null && quoteProduct.ManualDiscountAmount.Value > 0)
             {
                 discountAmount = quoteProduct.ManualDiscountAmount.Value;
             }
+            
 
             QueryExpression querySlots = new QueryExpression();
             querySlots.EntityName = SlotsEntity.EntityLogicalName;
@@ -358,6 +365,7 @@ namespace Skanetrafiken.Crm.Entities
             {
                 if (discountAmount != null && discountAmount.Value > 0)
                 {
+                    
                     decimal discountPerSlot = discountAmount.Value / slots.Count;
 
                     foreach (SlotsEntity slot in slots)
