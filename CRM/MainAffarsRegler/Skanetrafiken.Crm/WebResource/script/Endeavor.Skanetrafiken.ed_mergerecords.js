@@ -14,10 +14,13 @@ if (typeof (Endeavor.Skanetrafiken) == "undefined") {
 if (typeof (Endeavor.Skanetrafiken.Merge) == "undefined") {
     Endeavor.Skanetrafiken.Merge = {
 
-
         startMergeWindow: function () {
             try {
-                var url = SDK.REST._getServerUrl() + "/WebResources/ed_/html/MergeRecordsStarter.html";
+
+                var globalContext = Xrm.Utility.getGlobalContext();
+                var clientURL = globalContext.getClientUrl();
+
+                var url = clientURL + "/WebResources/ed_/html/MergeRecordsStarter.html";
 
                 var left = (screen.width - 300) / 2;
                 var top = (screen.height - 150) / 2;
@@ -27,9 +30,7 @@ if (typeof (Endeavor.Skanetrafiken.Merge) == "undefined") {
             catch (error) {
                 alert(error.message);
             }
-
         },
-
 
         closeWindow: function () {
             window.close();
@@ -42,13 +43,10 @@ if (typeof (Endeavor.Skanetrafiken.Merge) == "undefined") {
                 recordsProcessed = 0;
 
                 $("#spinnerDiv").text("Starting merge");
-
-                setTimeout( Endeavor.Skanetrafiken.Merge.runRecursive()
-                            , 50);
-
+                setTimeout(Endeavor.Skanetrafiken.Merge.runRecursive(), 50);
             }
             catch (error) {
-                alert("Exception caught in startMerge().\r\n\r\n" + error);
+                alert("Exception caught in startMerge().\r\n\r\n" + error.message);
             }
             finally {
             }
@@ -56,21 +54,32 @@ if (typeof (Endeavor.Skanetrafiken.Merge) == "undefined") {
 
         runRecursive: function () {
             try {
-                var request = new Sdk.ed_MergeRecordsActionWorkflowRequest();
-                var Response = Sdk.Sync.execute(request);
 
-                recordsProcessed++;
-                $("#spinnerDiv").text("Merged " + recordsProcessed.toString() + " batches");
+                Endeavor.formscriptfunctions.callGlobalAction("ed_MergeRecordsActionWorkflow", null,
+                    function (result) {
 
-                var remaining = Response.getRemainingRecords();
-                if (remaining == 0) {
-                    $("#spinnerDiv").text("Done!");
-                    abortProcess = true;
-                    Endeavor.Skanetrafiken.Merge.closeWindow();
-                }
+                        debugger;
+                        recordsProcessed++;
+                        $("#spinnerDiv").text("Merged " + recordsProcessed.toString() + " batches");
 
-                if (abortProcess == false)
-                    setTimeout(Endeavor.Skanetrafiken.Merge.runRecursive(),50);
+                        var remaining = result.RemainingRecords;
+                        if (remaining == 0) {
+                            $("#spinnerDiv").text("Done!");
+                            abortProcess = true;
+                            Endeavor.Skanetrafiken.Merge.closeWindow();
+                        }
+
+                        if (!abortProcess)
+                            setTimeout(Endeavor.Skanetrafiken.Merge.runRecursive(), 50);
+
+                    },
+                    function (error) {
+                        var errorMessage = "Exception caught in startMerge_inner(). Details: " + error.message;
+                        console.log(errorMessage);
+                        Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
+                        $("body").removeClass("wait");
+                        abortProcess = true;
+                    });                
             }
             catch (error) {
                 alert("Exception caught in startMerge_inner().\r\n\r\n" + error);
@@ -79,10 +88,6 @@ if (typeof (Endeavor.Skanetrafiken.Merge) == "undefined") {
             }
             finally {
             }
-
         },
-
     };
 };
-
-

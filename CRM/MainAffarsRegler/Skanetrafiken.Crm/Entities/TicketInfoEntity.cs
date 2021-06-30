@@ -12,20 +12,14 @@ namespace Skanetrafiken.Crm.Entities
 {
     public class TicketInfoEntity : Generated.ed_ticketinfo
     {
-        internal void HandlePostTicketInfoCreateAsync(Plugin.LocalPluginContext localContext)
+        internal void HandlePreTicketInfoCreateSync(Plugin.LocalPluginContext localContext)
         {
             try
             {
-                //This can't be done on the Pre Event because SSIS is running to import these records
-                //It can't be syncronos
-                TicketInfoEntity eTicketInfo = new TicketInfoEntity();
-                eTicketInfo.Id = this.Id;
-
-                string name = this.ed_name;
                 string contactNumber = this.ed_CRMNumber;
                 string offerName = this.FormattedValues["ed_offername"];
 
-                eTicketInfo.ed_name = contactNumber + "_" + offerName;
+                this.ed_name = contactNumber + "_" + offerName;
 
                 if (!string.IsNullOrEmpty(contactNumber))
                 {
@@ -37,21 +31,19 @@ namespace Skanetrafiken.Crm.Entities
 
                     var lContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, queryContacts);
 
-                    localContext.Trace($"Found {lContacts.Count} Contacts with cgi_ContactNumber {contactNumber}");
+                    localContext.Trace($"Found {lContacts.Count} Contacts with ed_MklId {contactNumber}");
                     if (lContacts.Count == 1)
                     {
                         var eContact = lContacts.FirstOrDefault();
                         var erContact = new EntityReference(eContact.LogicalName, eContact.Id);
 
-                        eTicketInfo.ed_Contact = erContact;
+                        this.ed_Contact = erContact;
                     }
                 }
-
-                XrmHelper.Update(localContext, eTicketInfo);
             }
             catch (Exception e)
             {
-                localContext.Trace($"HandlePostTicketInfoCreateAsync threw an unexpected exception: {e.Message}");
+                localContext.Trace($"HandlePreTicketInfoCreateSync threw an unexpected exception: {e.Message}");
                 throw e;
             }
         }

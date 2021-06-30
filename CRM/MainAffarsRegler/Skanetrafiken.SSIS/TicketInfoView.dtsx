@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package Ticket Info"
   DTS:PackageType="5"
-  DTS:VersionBuild="36"
-  DTS:VersionGUID="{F2DFEDE7-5AEC-4A69-BE5A-92BC74999F90}">
+  DTS:VersionBuild="46"
+  DTS:VersionGUID="{B22F3F2E-5A14-40D0-8695-63AB00D2ACF2}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABXZxUSeFMplOOFVbY+n9BuAAAAAASAAACgAAAAEAAAANo/08KlIWgocqC/+QdtBksgAAAABc7wmaOiqE4O7aBmEdvlwSGp1ifC4a8Sk0/oP6iTTq4UAAAA3MfPTLRMj+xNxD/A27EadYxq14E</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABOTs7quOZ57qFnMdSA1Rs3AAAAAASAAACgAAAAEAAAAF7nC5TQbyeJ90vFSFLtOcAgAAAARnSGT+zQzwSkiwBesWJ0h70YUvqVuMYpqriFDiRdaKAUAAAAp+ZXWT37zEGkTeuNylU9O9kPGqk</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -42,7 +42,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADECdB5hch3PIR834QyYBxUAAAAAASAAACgAAAAEAAAAI+HX3/wpIUNZH+KTzh8ifUgAAAAzdPBZdYQEszm1u6FsuEQiVNxV/FPiuVbxl4GP/E+wHQUAAAAVrw5OgA4S3+/CRVK8JAxGG0o0JA</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAALhIm2CbQkV4l2hbm02mzNAAAAAASAAACgAAAAEAAAAB50j0gyzVwjlMK+jOUAMBUgAAAA/PRUbopB0Pcl+aMprgf68jBfzJSQ2JUkoDVGVkxQ4EQUAAAAHDA3O33XoNidpkSC25au7s/6QHE</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -57,7 +57,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAA9ZOmbzKUmLgLY+/K4MmcgAAAAAASAAACgAAAAEAAAAPxcKjTv6zbRCZvj+PC3EoMgAAAAseaV6rVDbStXYCJCIEui//BbC7K9sz6oAiKf7RQuePsUAAAAOpdYeaXYhhAx/GptyIYgCxuFyhM</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABXJtKkN6A9ZGBJKGIoDlCDAAAAAASAAACgAAAAEAAAAER9UBrVZeVCTv08kK7ZYCAgAAAA0YDVQt/5CwW8COQat0zitApoiRVasEZ09Qjbwk832ssUAAAA0pAf8w5EOpZXxaHkcZowRw8takw</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -375,149 +375,12 @@
                   name="Flat File Destination Input">
                   <inputColumns>
                     <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[LastUpdated]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="LastUpdated"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[LastUpdated]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[LastUpdated]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[TicketId]"
-                      cachedDataType="wstr"
-                      cachedLength="7"
-                      cachedName="TicketId"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[TicketId]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[TicketId]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[PriceModel]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="PriceModel"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[PriceModel]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[PriceModel]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[PriceModelPriceId]"
-                      cachedDataType="wstr"
-                      cachedLength="30"
-                      cachedName="PriceModelPriceId"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[PriceModelPriceId]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[DataCreatedDate]"
-                      cachedDataType="dbTimeStampOffset"
-                      cachedName="DataCreatedDate"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[DataCreatedDate]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[DataCreatedDate]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[activatedDate]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="activatedDate"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[activatedDate]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[activatedDate]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[blockedDate]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="blockedDate"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[blockedDate]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[blockedDate]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[OfferName]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="OfferName"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[OfferName]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[OfferName]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[OfferNameDetailed]"
-                      cachedDataType="wstr"
-                      cachedLength="255"
-                      cachedName="OfferNameDetailed"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[OfferNameDetailed]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[TicketAmount]"
-                      cachedDataType="numeric"
-                      cachedName="TicketAmount"
-                      cachedPrecision="13"
-                      cachedScale="5"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[TicketAmount]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[TicketAmount]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[SalesChannelId]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="SalesChannelId"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[SalesChannelId]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[SalesChannelId]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[BearerCategory]"
-                      cachedDataType="wstr"
-                      cachedLength="100"
-                      cachedName="BearerCategory"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[BearerCategory]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[BearerCategory]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[HasGroupDiscount]"
-                      cachedDataType="i4"
-                      cachedName="HasGroupDiscount"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[HasGroupDiscount]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[TravellersCount]"
-                      cachedDataType="i4"
-                      cachedName="TravellersCount"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[TravellersCount]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[TravellersCount]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[HasRefund]"
-                      cachedDataType="i4"
-                      cachedName="HasRefund"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[HasRefund]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[HasRefund]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[MkId]"
-                      cachedDataType="i4"
-                      cachedName="MkId"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[MkId]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[MkId]" />
-                    <inputColumn
                       refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[cgi_contactnumber]"
                       cachedDataType="wstr"
                       cachedLength="100"
                       cachedName="cgi_contactnumber"
                       externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[cgi_contactnumber]"
                       lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[activationinterval_from]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="activationinterval_from"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[activationinterval_from]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[activationinterval_from]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[activationinterval_to]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="activationinterval_to"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[activationinterval_to]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[activationinterval_to]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[travelvalidityinterval_from]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="travelvalidityinterval_from"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[travelvalidityinterval_from]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_from]" />
-                    <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[travelvalidityinterval_to]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="travelvalidityinterval_to"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[travelvalidityinterval_to]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_to]" />
                     <inputColumn
                       refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[ErrorCode]"
                       cachedDataType="i4"
@@ -537,6 +400,137 @@
                       cachedName="ErrorMessage"
                       externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorMessage]"
                       lineageId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Outputs[Error Output].Columns[ErrorMessage]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[TicketAmount]"
+                      cachedDataType="numeric"
+                      cachedName="TicketAmount"
+                      cachedPrecision="13"
+                      cachedScale="5"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[TicketAmount]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[TicketAmount]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[BearerCategory]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="BearerCategory"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[BearerCategory]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[BearerCategory]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[blockedDate]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="blockedDate"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[blockedDate]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[blockedDate]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[activatedDate]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="activatedDate"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[activatedDate]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[activatedDate]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[HasGroupDiscount]"
+                      cachedDataType="i4"
+                      cachedName="HasGroupDiscount"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[HasGroupDiscount]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[HasRefund]"
+                      cachedDataType="i4"
+                      cachedName="HasRefund"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[HasRefund]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[HasRefund]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[LastUpdated]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="LastUpdated"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[LastUpdated]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[LastUpdated]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[OfferNameDetailed]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="OfferNameDetailed"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[OfferNameDetailed]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[SalesChannelId]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="SalesChannelId"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[SalesChannelId]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[SalesChannelId]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[TravellersCount]"
+                      cachedDataType="i4"
+                      cachedName="TravellersCount"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[TravellersCount]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[TravellersCount]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[travelvalidityinterval_from]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="travelvalidityinterval_from"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[travelvalidityinterval_from]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_from]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[travelvalidityinterval_to]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="travelvalidityinterval_to"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[travelvalidityinterval_to]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_to]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[PriceModel]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="PriceModel"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[PriceModel]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[PriceModel]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[PriceModelPriceId]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="PriceModelPriceId"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[PriceModelPriceId]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[OfferName]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="OfferName"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[OfferName]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[OfferName]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[TicketId]"
+                      cachedDataType="wstr"
+                      cachedLength="7"
+                      cachedName="TicketId"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[TicketId]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[TicketId]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[DataCreatedDate]"
+                      cachedDataType="dbTimeStampOffset"
+                      cachedName="DataCreatedDate"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[DataCreatedDate]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[DataCreatedDate]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[activationinterval_from]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="activationinterval_from"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[activationinterval_from]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[activationinterval_from]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].Columns[activationinterval_to]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="activationinterval_to"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[activationinterval_to]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[activationinterval_to]" />
                   </inputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -694,8 +688,9 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT TOP (10) [LastUpdated]
-      ,[TicketId]
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT top 1[TicketId]
+,[cgi_contactnumber]
+		,[LastUpdated]
       ,[PriceModel]
       ,[PriceModelPriceId]
       ,[DataCreatedDate]
@@ -709,15 +704,13 @@
       ,[HasGroupDiscount]
       ,[TravellersCount]
       ,[HasRefund]
-      ,[MaxValidationDateTime]
-      ,[SecondMaxValidationDateTime]
       ,[MkId]
-      ,[cgi_contactnumber]
       ,[activationinterval_from]
       ,[activationinterval_to]
       ,[travelvalidityinterval_from]
       ,[travelvalidityinterval_to]
-  FROM [STDW].[dbo].[GetTicketInfoView]</property>
+  FROM [STDW].[dbo].[GetTicketInfoViewWithoutValidations]
+  order by cgi_contactnumber, ticketid</property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
@@ -1261,7 +1254,7 @@
                   dataType="System.Boolean"
                   description="Specifies whether to ignore those fields that have no value changes in the target system. "
                   expressionType="Notify"
-                  name="IgnoreUnchangedFields">false</property>
+                  name="IgnoreUnchangedFields">true</property>
                 <property
                   dataType="System.Boolean"
                   description="Specify whether to remove those invalid characters before writing to CDS/CRM."
@@ -1277,7 +1270,7 @@
                   description="Specifies what action will be taken when multiple matches are found with Upsert action."
                   expressionType="Notify"
                   name="HandlingOfMultipleMatches"
-                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">3</property>
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">3</property>
                 <property
                   dataType="System.Int32"
                   description="Specify whether to use optimizations when there are duplicate records form the source system."
@@ -1616,6 +1609,9 @@
                         <property
                           dataType="System.Boolean"
                           name="Updateable">true</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupSettings"></property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -2295,84 +2291,84 @@
         <NodeLayout
           Size="165,42"
           Id="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info"
-          TopLeft="274,150" />
-        <NodeLayout
-          Size="130,42"
-          Id="Package\Upsert Ticket Info Dynamics\Ticket Info"
-          TopLeft="127,35" />
-        <EdgeLayout
-          Id="Package\Upsert Ticket Info Dynamics.Paths[OLE DB Source Output]"
-          TopLeft="192,77">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="164.5,73"
-              Start="0,0"
-              End="164.5,65.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,32.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,32.5"
-                    Point2="0,36.5"
-                    Point3="4,36.5" />
-                  <mssgle:LineSegment
-                    End="160.5,36.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="160.5,36.5"
-                    Point2="164.5,36.5"
-                    Point3="164.5,40.5" />
-                  <mssgle:LineSegment
-                    End="164.5,65.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="74.25,41.5,16,16"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
+          TopLeft="314,162" />
         <NodeLayout
           Size="176,42"
           Id="Package\Upsert Ticket Info Dynamics\Flat File Destination"
-          TopLeft="503,242" />
+          TopLeft="534,264" />
+        <NodeLayout
+          Size="130,42"
+          Id="Package\Upsert Ticket Info Dynamics\Ticket Info"
+          TopLeft="118,50" />
         <EdgeLayout
-          Id="Package\Upsert Ticket Info Dynamics.Paths[Error Output]"
-          TopLeft="356.5,192">
+          Id="Package\Upsert Ticket Info Dynamics.Paths[OLE DB Source Output]"
+          TopLeft="183,92">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="234.5,50"
+              EndConnector="213.5,70"
               Start="0,0"
-              End="234.5,42.5">
+              End="213.5,62.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,21" />
+                    End="0,31" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,21"
-                    Point2="0,25"
-                    Point3="4,25" />
+                    Point1="0,31"
+                    Point2="0,35"
+                    Point3="4,35" />
                   <mssgle:LineSegment
-                    End="230.5,25" />
+                    End="209.5,35" />
                   <mssgle:CubicBezierSegment
-                    Point1="230.5,25"
-                    Point2="234.5,25"
-                    Point3="234.5,29" />
+                    Point1="209.5,35"
+                    Point2="213.5,35"
+                    Point3="213.5,39" />
                   <mssgle:LineSegment
-                    End="234.5,42.5" />
+                    End="213.5,62.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="80.0449609375,30,74.410078125,16"
+              BoundingBox="98.75,40,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Upsert Ticket Info Dynamics.Paths[Error Output]"
+          TopLeft="396.5,204">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="225.5,60"
+              Start="0,0"
+              End="225.5,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26"
+                    Point2="0,30"
+                    Point3="4,30" />
+                  <mssgle:LineSegment
+                    End="221.5,30" />
+                  <mssgle:CubicBezierSegment
+                    Point1="221.5,30"
+                    Point2="225.5,30"
+                    Point3="225.5,34" />
+                  <mssgle:LineSegment
+                    End="225.5,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="75.5449609375,35,74.410078125,16"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
