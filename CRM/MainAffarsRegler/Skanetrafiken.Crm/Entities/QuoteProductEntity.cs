@@ -14,6 +14,14 @@ namespace Skanetrafiken.Crm.Entities
 {
     public class QuoteProductEntity : Generated.QuoteDetail
     {
+        public void HandlePreQuoteProductUpdate(Plugin.LocalPluginContext localContext, QuoteProductEntity preImage)
+        {
+            FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
+            if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
+            {
+                updatePriceQuoteProduct(localContext, preImage);
+            }
+        }
         public static void HandleQuoteProductEntityCreate(Plugin.LocalPluginContext localContext, QuoteProductEntity quoteProduct)
         {
             localContext.Trace("Inside HandleQuoteProductEntityCreate");
@@ -48,7 +56,9 @@ namespace Skanetrafiken.Crm.Entities
                     if(isSlotProduct)
                     {
                         UpdateOrGenerateSlots(localContext, quoteProduct);
+                        /*
                         UpdateSlotsCustomPriceFromQuoteProduct(localContext, quoteProduct);
+                        */
                     }
                 }
             }
@@ -97,22 +107,23 @@ namespace Skanetrafiken.Crm.Entities
                         {
                             localContext.Trace("ed_FromDate or ed_ToDate modified");
                             UpdateOrGenerateSlots(localContext, target, preImage);
+
+                            /*
                             UpdateSlotsCustomPriceFromQuoteProduct(localContext, target);
+                            */
                         }
                     }
                 }
             }
         }
 
-        public void HandlePreQuoteProductUpdate(Plugin.LocalPluginContext localContext, QuoteProductEntity preImage)
+        public static void HandlePreValidationQuoteProductEntityDelete(Plugin.LocalPluginContext localContext, EntityReference targetER)
         {
-            FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
-            if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
+            if(targetER != null && targetER.Id != Guid.Empty)
             {
-                updatePriceQuoteProduct(localContext, preImage);
+                SlotsEntity.ReleaseSlots(localContext, true, targetER.Id);
             }
         }
-
         public void updatePriceQuoteProduct(Plugin.LocalPluginContext localContext, QuoteProductEntity preImage)
         {
             if (this.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_totalslots) || this.IsAttributeModified(preImage, QuoteProductEntity.Fields.PricePerUnit))
@@ -331,10 +342,12 @@ namespace Skanetrafiken.Crm.Entities
         { 
             decimal? discountAmount = null;
 
+            
             if (quoteProduct.ManualDiscountAmount != null && quoteProduct.ManualDiscountAmount.Value > 0)
             {
                 discountAmount = quoteProduct.ManualDiscountAmount.Value;
             }
+            
 
             QueryExpression querySlots = new QueryExpression();
             querySlots.EntityName = SlotsEntity.EntityLogicalName;
@@ -352,6 +365,7 @@ namespace Skanetrafiken.Crm.Entities
             {
                 if (discountAmount != null && discountAmount.Value > 0)
                 {
+                    
                     decimal discountPerSlot = discountAmount.Value / slots.Count;
 
                     foreach (SlotsEntity slot in slots)

@@ -86,12 +86,16 @@ namespace Skanetrafiken.Crm
                 string start = Start.Get(activityContext);
                 string stop = Stop.Get(activityContext);
                 string contractor = Contractor.Get(activityContext);
+
                 DateTime dStartPlanned = StartPlanned.Get(activityContext).ToLocalTime();
                 DateTime dStartActual = StartActual.Get(activityContext);
                 DateTime dArrivalPlanned = ArrivalPlanned.Get(activityContext).ToLocalTime();
                 DateTime dArrivalActual = ArrivalActual.Get(activityContext);
 
-                string sTour = GetTour(inputFormat, tour, start, stop, dStartPlanned, dStartActual, dArrivalPlanned, dArrivalActual);
+                string sTour = "";
+                if (start != null || stop != null)
+                    sTour = GetTour(inputFormat, tour, start, stop, dStartPlanned, dStartActual, dArrivalPlanned, dArrivalActual);
+
                 string displayText = ExecuteCodeActivity(transport, city, line, linedesignation, directionOfText, sTour, contractor);
                 DisplayText.Set(activityContext, displayText);
             }
@@ -107,8 +111,15 @@ namespace Skanetrafiken.Crm
         public static string ExecuteCodeActivity(string transport, string city, string line, string linedesignation, string directionOfText, string tour, string contractor)
         {
             string displayText = string.Empty;
-            string sLine = line + " (" + directionOfText + ")";
-            string sLineDesignation = linedesignation + " (" + directionOfText + ")";
+
+            string sLine = line;
+            string sLineDesignation = linedesignation;
+            if (directionOfText != null && !string.IsNullOrEmpty(directionOfText))
+            {
+                sLine = line + " (" + directionOfText + ")";
+                sLineDesignation = linedesignation + " (" + directionOfText + ")";
+            }
+
 
             if (city != null)
                 displayText = SetDisplayTextCitybus(transport, city, sLineDesignation, tour, contractor);

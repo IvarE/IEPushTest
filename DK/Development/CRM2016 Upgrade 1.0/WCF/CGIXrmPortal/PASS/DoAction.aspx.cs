@@ -36,8 +36,6 @@ public partial class PASS_DoAction : System.Web.UI.Page
             if (Request.QueryString.HasKeys())
             {
                 _passHandler = new PASSHandler();
-                //_passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "***********************************************************************************************");
-                //_passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Start");
 
                 _log.Debug("***********************************************************************************************");
                 _log.Debug("Start");
@@ -46,7 +44,6 @@ public partial class PASS_DoAction : System.Web.UI.Page
                 foreach (String key in Request.QueryString.AllKeys)
                 {
                     _log.Debug("Key: " + key + " Value: " + Request.QueryString[key]);
-                    //_passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Key: " + key + " Value: " + Request.QueryString[key]);
                 }
 
                 CGIXrmHandler.CrmClasses.Incident incident = new CGIXrmHandler.CrmClasses.Incident
@@ -81,24 +78,19 @@ public partial class PASS_DoAction : System.Web.UI.Page
 
                 // AJ: Henrics code, uncomment when changeset 3716 should be in production
 
-
-                //_passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Find customer");
-
                 _log.Debug("Find customer");
 
                 ObservableCollection<Contact> contacts = _passHandler.FetchContacts(incident);     //(incident.sSSN, incident.sEM);
 
                 if (contacts.Count == 1)
                 {
-                    Contact contact = contacts.FirstOrDefault();
-                    //_passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Found 1 customer : " + contact.ContactId);
+                    Contact contact = contacts[0]; //.FirstOrDefault();
                     _log.Debug("Found 1 customer : " + contact.ContactId);
                     incident.DefaultCustomer = new EntityReference(contact.LogicalName, contact.ContactId);
                     incident.Contact = new EntityReference(contact.LogicalName, contact.ContactId);
                 }
                 else
                 {
-                    //_passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Anonymous customer");
                     if (DateTime.Today < new DateTime(2017, 11, 25))
                         _log.Debug("Anonymous customer");
                     EntityReference anonymousCustomer = _passHandler.GetAnonymousCustomer();
@@ -112,7 +104,6 @@ public partial class PASS_DoAction : System.Web.UI.Page
                 PASSTravelInformation passTravelInformation = new PASSTravelInformation();
 
                 _log.Debug("Find travelinformation");
-                //_passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Find travelinformation");
 
                 if (incident.iDC >= 1)
                 {
@@ -165,9 +156,7 @@ public partial class PASS_DoAction : System.Web.UI.Page
                     }
                 }
                 _log.Debug("Enter DoAction");
-                //_passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Enter DoAction");
                 DoAction(incident, passTravelInformations);
-
             }
         }
     }
@@ -208,39 +197,25 @@ public partial class PASS_DoAction : System.Web.UI.Page
             _log.Debug("Logtrace");
             _log.Debug("Entering Do Action Method. PASS.DoAction. CGIXrmPortal");
             _log.Debug("Enter ExecutePASSRequest");
-            //_passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Logtrace");
-            //_log2Crm.Trace("Entering Do Action Method", "PASS.DoAction", "CGIXrmPortal");
-            //_passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Enter ExecutePASSRequest");
             Guid guid = _passHandler.ExecutePASSRequest(incident, passTravelInformations);
             //string URL = "http://v-dkcrm-utv/Skanetrafiken/main.aspx?etc=112&extraqs=&id=%7b{0}%7d&newWindow=true&pagetype=entityrecord";
 
             _log.Debug("Redirect to guid = " + guid);
-
-            //_passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Redirect to guid = " + guid);
             Response.Redirect(GenerateUrl(guid));
-
 
             _log.Debug("Stop");
             _log.Debug("***********************************************************************************************");
-            //_passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Stop");
-            //_passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "***********************************************************************************************");
         }
         catch (Exception ex)
         {
             _log.Error("Error Processing Request with Error Message :" + ex.Message + ". PASS.DoAction. Ex" + ex + ". CGIXrmPortal");
-            //_log2Crm.Exception("Error Processing Request with Error Message :" + ex.Message, "PASS.DoAction", ex, "CGIXrmPortal");
         }
     }
 
     private string GenerateUrl(Guid recordId)
     {
-
         _log.Debug("Find BaseUrl");
-        //_passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "Find BaseUrl");
         string baseUrl = ConfigurationManager.AppSettings["BaseUrl"].ToString();
-        //_passHandler.LogMessage("C:\\Temp\\PASSLog.txt", "BaseUrl = " + baseUrl);
-
-
         _log.Debug("BaseUrl = " + baseUrl);
 
         string objectTypeCode = "112";

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.168
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGIXrmHandlers", "Others\CGIXrmHandler\CGIXrmHandlers.csproj", "{4E72E000-A6D4-472E-A15F-A90640B3A99D}"
 EndProject
@@ -530,8 +530,8 @@ Global
 		{6E9F5363-7C40-473C-A1E0-4CAC5BD256B9}.Acceptance|x86.ActiveCfg = Release|Any CPU
 		{6E9F5363-7C40-473C-A1E0-4CAC5BD256B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6E9F5363-7C40-473C-A1E0-4CAC5BD256B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6E9F5363-7C40-473C-A1E0-4CAC5BD256B9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{6E9F5363-7C40-473C-A1E0-4CAC5BD256B9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6E9F5363-7C40-473C-A1E0-4CAC5BD256B9}.Debug|Mixed Platforms.ActiveCfg = Production|Any CPU
+		{6E9F5363-7C40-473C-A1E0-4CAC5BD256B9}.Debug|Mixed Platforms.Build.0 = Production|Any CPU
 		{6E9F5363-7C40-473C-A1E0-4CAC5BD256B9}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{6E9F5363-7C40-473C-A1E0-4CAC5BD256B9}.Development|Any CPU.ActiveCfg = Debug|Any CPU
 		{6E9F5363-7C40-473C-A1E0-4CAC5BD256B9}.Development|Any CPU.Build.0 = Debug|Any CPU

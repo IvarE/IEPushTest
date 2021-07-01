@@ -27,7 +27,7 @@ namespace Skanetrafiken.Crm.Entities
                     if (quoteProductId != null && quoteProductId != Guid.Empty)
                     {
                         UpdateExistingSlots(localContext, quoteProductId, orderProduct.ToEntityReference(),orderProduct.SalesOrderId);
-                        UpdateSlotsCustomPriceFromOrderProduct(localContext, orderProduct);
+                        //UpdateSlotsCustomPriceFromOrderProduct(localContext, orderProduct);
                     }
                 }
                 else
@@ -102,6 +102,14 @@ namespace Skanetrafiken.Crm.Entities
                 }
             }
         }
+
+        public static void HandlePreValidationOrderProductEntityDelete(Plugin.LocalPluginContext localContext, EntityReference targetER)
+        {
+            if(targetER != null && targetER.Id != Guid.Empty)
+            {
+                SlotsEntity.ReleaseSlots(localContext, true, null, targetER.Id);
+            }
+        }
         public static void UpdateExistingSlots(Plugin.LocalPluginContext localContext, Guid guidQuoteProduct, EntityReference refOrderProduct, EntityReference refOrder)
         {
             QueryExpression query = new QueryExpression();
@@ -124,7 +132,7 @@ namespace Skanetrafiken.Crm.Entities
                     slotToUpdate.Id = slot.Id;
                     slotToUpdate.ed_OrderProductID = refOrderProduct;
                     slotToUpdate.ed_Order = refOrder;
-                    slotToUpdate.ed_CustomPrice = slotToUpdate.ed_StandardPrice;
+                    //slotToUpdate.ed_CustomPrice = slotToUpdate.ed_StandardPrice;
                     XrmHelper.Update(localContext,slotToUpdate);
                 }
             }

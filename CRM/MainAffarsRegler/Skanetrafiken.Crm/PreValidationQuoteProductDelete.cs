@@ -3,25 +3,20 @@ using System.Collections;
 using Microsoft.Xrm.Sdk;
 using Endeavor.Crm;
 using Endeavor.Crm.Extensions;
+using Generated = Skanetrafiken.Crm.Schema.Generated;
 using Skanetrafiken.Crm.Entities;
-
+using static Endeavor.Crm.Plugin;
 
 namespace Skanetrafiken.Crm
 {
-    public class PreAccountUpdate : Plugin
+    public class PreValidationQuoteProductDelete : Plugin
     {
-        /// <summary>
-        /// </summary>
         private readonly string preImageAlias = "preImage";
 
-        public PreAccountUpdate()
-            : base(typeof(PreAccountUpdate))
+        public PreValidationQuoteProductDelete()
+            : base(typeof(PreValidationQuoteProductDelete))
         {
-            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>(
-                (int)Plugin.SdkMessageProcessingStepStage.PreOperation,
-                Plugin.SdkMessageName.Update,
-                AccountEntity.EntityLogicalName, 
-                new Action<LocalPluginContext>(PreExecuteAccountUpdate)));
+            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PreValidation, Plugin.SdkMessageName.Delete, QuoteProductEntity.EntityLogicalName, new Action<LocalPluginContext>(Execute)));
 
             // Note : you can register for more events here if this plugin is not specific to an individual entity and message combination.
             // You may also need to update your RegisterFile.crmregister plug-in registration file to reflect any change.
@@ -42,50 +37,52 @@ namespace Skanetrafiken.Crm
         /// could execute the plug-in at the same time. All per invocation state information
         /// is stored in the context. This means that you should not use global variables in plug-ins.
         /// </remarks>
-        protected void PreExecuteAccountUpdate(LocalPluginContext localContext)
+        protected void Execute(LocalPluginContext localContext)
         {
             if (localContext == null)
             {
                 throw new ArgumentNullException("localContext");
             }
 
-            // Must be Pre operation
-            if (localContext.PluginExecutionContext.Stage != 20)
+            // Must be Post operation
+            if (localContext.PluginExecutionContext.Stage != (int)Plugin.SdkMessageProcessingStepStage.PreValidation)
             {
-                throw new InvalidPluginExecutionException("Plugin must run in Pre-operation mode!");
+                throw new InvalidPluginExecutionException("Plugin must run in Pre-Validation mode!");
             }
 
-            // INFO: (Endeavor) Don't do anything in offline mode
+            // INFO: (joan) Don't do anything in offline mode
             if (localContext.PluginExecutionContext.IsExecutingOffline)
                 return;
 
             localContext.TracingService.Trace("{0} {1} {2} {3}", localContext.PluginExecutionContext.Stage, localContext.PluginExecutionContext.MessageName, localContext.PluginExecutionContext.PrimaryEntityName, localContext.PluginExecutionContext.Depth);
 
             if (localContext.PluginExecutionContext.InputParameters.Contains("Target") &&
-                localContext.PluginExecutionContext.InputParameters["Target"] is Entity)
+                localContext.PluginExecutionContext.InputParameters["Target"] is EntityReference)
             {
-
-                // Obtain the target entity from the input parameters.
-                AccountEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<AccountEntity>();
-
-                AccountEntity preImage = Plugin.GetPreImage<AccountEntity>(localContext, preImageAlias);
-
-                if (preImage == null)
-                    throw new InvalidPluginExecutionException("Pre-Image not registered correctly.");
-
                 try
                 {
-                    target.HandlePreAccountUpdate(localContext, preImage);
+                    /*
+                    QuoteProductEntity preImage = Plugin.GetPreImage<QuoteProductEntity>(localContext, preImageAlias);
+
+                    if (preImage == null)
+                        throw new InvalidPluginExecutionException("Pre-Image not registered correctly.");
+
+                    */
+                    // Obtain the target entity from the input parameters.
+                    EntityReference targetER = ((EntityReference)localContext.PluginExecutionContext.InputParameters["Target"]);
+
+                    QuoteProductEntity.HandlePreValidationQuoteProductEntityDelete(localContext, targetER);
                 }
                 catch (Exception ex)
                 {
                     throw new InvalidPluginExecutionException(ex.Message, ex);
                 }
 
-                //throw new InvalidPluginExecutionException("Debug @joan");
+            }
+            else
+            {
+                throw new InvalidPluginExecutionException("Error Validating Target or Target is not EntityReference Type.");
             }
         }
-
     }
 }
-//</snippetAccountNumberPlugin>

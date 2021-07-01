@@ -21,9 +21,6 @@ public partial class doaction : System.Web.UI.Page
         {
             if(Request.QueryString.HasKeys())
             {
-                //LogURL("C:\\Temp\\CallGuide.txt", Request.RawUrl);
-                //LogURL("C:\\Temp\\CallGuide.txt", Server.HtmlEncode(Request.RawUrl));
-
                 _log.Debug("Request.RawUrl: " + Request.RawUrl);
                 _log.Debug("Server.HtmlEncode: " + Server.HtmlEncode(Request.RawUrl));
 

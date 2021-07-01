@@ -12,25 +12,14 @@ namespace Skanetrafiken.Crm.Entities
 {
     public class TicketInfoEntity : Generated.ed_ticketinfo
     {
-        internal void HandlePostTicketInfoCreateAsync(Plugin.LocalPluginContext localContext)
+        internal void HandlePreTicketInfoCreateSync(Plugin.LocalPluginContext localContext)
         {
             try
             {
-                bool sendUpdateRequest = false;
-                //This can't be done on the Pre Event because SSIS is running to import these records
-                //It can't be syncronos
-                TicketInfoEntity eTicketInfo = new TicketInfoEntity();
-                eTicketInfo.Id = this.Id;
-
-                string name = this.ed_name;
-
-                if (string.IsNullOrEmpty(name))
-                {
-                    eTicketInfo.ed_name = "Ticket Info";
-                    sendUpdateRequest = true;
-                }
-
                 string contactNumber = this.ed_CRMNumber;
+                string offerName = this.FormattedValues["ed_offername"];
+
+                this.ed_name = contactNumber + "_" + offerName;
 
                 if (!string.IsNullOrEmpty(contactNumber))
                 {
@@ -38,27 +27,23 @@ namespace Skanetrafiken.Crm.Entities
                     QueryExpression queryContacts = new QueryExpression(ContactEntity.EntityLogicalName);
                     queryContacts.NoLock = true;
                     queryContacts.ColumnSet = new ColumnSet(ContactEntity.Fields.ContactId);
-                    queryContacts.Criteria.AddCondition(ContactEntity.Fields.cgi_ContactNumber, ConditionOperator.Equal, contactNumber);
+                    queryContacts.Criteria.AddCondition(ContactEntity.Fields.ed_MklId, ConditionOperator.Equal, contactNumber);
 
                     var lContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, queryContacts);
 
-                    localContext.Trace($"Found {lContacts.Count} Contacts with cgi_ContactNumber {contactNumber}");
+                    localContext.Trace($"Found {lContacts.Count} Contacts with ed_MklId {contactNumber}");
                     if (lContacts.Count == 1)
                     {
                         var eContact = lContacts.FirstOrDefault();
                         var erContact = new EntityReference(eContact.LogicalName, eContact.Id);
 
-                        eTicketInfo.ed_Contact = erContact;
-                        sendUpdateRequest = true;
+                        this.ed_Contact = erContact;
                     }
                 }
-
-                if(sendUpdateRequest)
-                    XrmHelper.Update(localContext, eTicketInfo);
             }
             catch (Exception e)
             {
-                localContext.Trace($"HandlePostTicketInfoCreateAsync threw an unexpected exception: {e.Message}");
+                localContext.Trace($"HandlePreTicketInfoCreateSync threw an unexpected exception: {e.Message}");
                 throw e;
             }
         }

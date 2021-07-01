@@ -4,6 +4,7 @@
     <link href="../CSS/Endeavor.Skanetrafiken.getOrders.css" rel="stylesheet" type="text/css" />
 
     <script type="text/javascript">
+
         function onLoad() {
 
             var formContext = getFormContext();
@@ -14,7 +15,6 @@
             var startdate = new Date();
             startdate.setDate(startdate.getDate() - 45);
             document.getElementById('startDate').value = startdate.toISOString().substring(0, 10);
-            
             document.getElementById('endDate').value = (new Date()).toISOString().substring(0, 10);
         }
 
@@ -38,7 +38,7 @@
             return null;
         }
 
-        function callOrderSearch(document) {
+        function callOrderSearch() {
             var formContext = getFormContext();
             if (formContext) {
                 formContext.Endeavor.Skanetrafiken.getOrders.orderSearch(document);
@@ -61,7 +61,7 @@
             <th><input type="text" id="startDate" size="8"></th>
             <th>Datum till</th>
             <th><input type="text" id="endDate" size="8"></th>
-            <th><button onclick="callOrderSearch(document)" id="searchButton" style="margin-left:20px;">Sök</button></th>
+            <th><button onclick="callOrderSearch()" id="searchButton" style="margin-left:20px;">Sök</button></th>
         </tr>
     </table>
     <table>

@@ -40,6 +40,7 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
+
         public void HandlePreSlotsEntityUpdate(Plugin.LocalPluginContext localContext,  SlotsEntity preImage)
         {
             if(this.IsAttributeModified(preImage,SlotsEntity.Fields.ed_Opportunity))
@@ -60,6 +61,39 @@ namespace Skanetrafiken.Crm.Entities
                 else
                 {
                     this.ed_Account = null;
+                }
+            }
+
+            EntityReference QuoteProductER = null;
+            EntityReference OrderProductER = null;
+            Money standardPrice = new Money(0);
+            if(!this.IsAttributeModified(preImage,SlotsEntity.Fields.ed_QuoteProductID))
+            {
+                QuoteProductER = preImage.ed_QuoteProductID;
+            }
+            else
+            {
+                QuoteProductER = this.ed_QuoteProductID;
+            }
+
+            if(!this.IsAttributeModified(preImage, SlotsEntity.Fields.ed_QuoteProductID))
+            {
+                OrderProductER = preImage.ed_OrderProductID;
+            }
+            else
+            {
+                OrderProductER = this.ed_OrderProductID;
+            }
+
+            if(QuoteProductER == null && OrderProductER == null)
+            {
+                if(!this.IsAttributeModified(preImage,SlotsEntity.Fields.ed_StandardPrice))
+                {
+                    standardPrice = preImage.ed_StandardPrice;
+                }
+                else
+                {
+                    standardPrice = this.ed_StandardPrice;
                 }
             }
         }
@@ -109,6 +143,7 @@ namespace Skanetrafiken.Crm.Entities
             SlotsEntity lastSlot = XrmRetrieveHelper.RetrieveFirst<SlotsEntity>(localContext, querySlotsNumber);
 
             var slotNumber = 1;
+            var slotDayProductNumber = 1;
             if (lastSlot != null)
             {
                 localContext.Trace("lastSlot not null");
@@ -119,10 +154,35 @@ namespace Skanetrafiken.Crm.Entities
                 }
             }
             localContext.Trace("lastSlot Number Value: " + slotNumber);
+
+            QueryExpression querySlotDayProduct = new QueryExpression();
+            querySlotDayProduct.TopCount = 1;
+            querySlotDayProduct.EntityName = SlotsEntity.EntityLogicalName;
+            querySlotDayProduct.ColumnSet.AddColumn(SlotsEntity.Fields.ed_IDSlotPerDayProduct);
+
+            FilterExpression filterSlotDayProduct = new FilterExpression();
+            filterSlotDayProduct.FilterOperator = LogicalOperator.And;
+            filterSlotDayProduct.AddCondition(SlotsEntity.Fields.ed_BookingDay, ConditionOperator.Equal, target.ed_BookingDay.Value);
+            filterSlotDayProduct.AddCondition(SlotsEntity.Fields.ed_ProductID, ConditionOperator.Equal, target.ed_ProductID.Id);
+
+            querySlotDayProduct.Criteria.AddFilter(filterSlotDayProduct);
+
+            querySlotDayProduct.AddOrder(SlotsEntity.Fields.ed_IDSlotPerDayProduct, OrderType.Descending);
+
+            List<SlotsEntity> slotsList = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlotDayProduct);
+            if (slotsList != null && slotsList.Count > 0)
+            {
+                if (slotsList[0].ed_IDSlotPerDayProduct != null && slotsList[0].ed_IDSlotPerDayProduct.Value > 0)
+                {
+                    slotDayProductNumber = slotsList[0].ed_IDSlotPerDayProduct.Value + 1;
+                }
+            }
+
             SlotsEntity slotToUpdate = new SlotsEntity();
             slotToUpdate.Id = target.Id;
             slotToUpdate.ed_SlotNumber = slotNumber;
-            slotToUpdate.ed_name = target.ed_name + " - " + slotNumber;
+            slotToUpdate.ed_IDSlotPerDayProduct = slotDayProductNumber;
+            slotToUpdate.ed_name = target.ed_name + " - " + slotDayProductNumber;
             XrmHelper.Update(localContext, slotToUpdate);
         }
         public static void HandleSlotsEntityUpdate(Plugin.LocalPluginContext localContext, SlotsEntity target, SlotsEntity preImage)
@@ -451,7 +511,7 @@ namespace Skanetrafiken.Crm.Entities
 //return availableSlots;
         }
         
-        public static void ReleaseSlots(Plugin.LocalPluginContext localContext, bool deleteAll, Guid? quoteProduct = null, Guid? orderProduct = null, DateTime ? startDate = null, DateTime ? endDate = null, int? quantity = null)
+        public static void ReleaseSlots(Plugin.LocalPluginContext localContext, bool releaseAll, Guid? quoteProduct = null, Guid? orderProduct = null, DateTime ? startDate = null, DateTime ? endDate = null, int? quantity = null)
         {
             localContext.Trace("Inside ReleaseSlots");
 
@@ -492,7 +552,7 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     SlotsEntity slotToRelease = new SlotsEntity();
                     slotToRelease.Id = slot.Id;
-                    if (deleteAll)
+                    if (releaseAll)
                     {
                         slotToRelease.ed_QuoteProductID = null;
                         slotToRelease.ed_Quote = null;

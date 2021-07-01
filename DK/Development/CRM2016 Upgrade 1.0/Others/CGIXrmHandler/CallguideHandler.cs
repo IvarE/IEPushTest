@@ -533,7 +533,7 @@ namespace CGIXrmHandler
 
             Guid returnValue = Guid.Empty;
 
-            LogString("C:\\Temp\\CallGuide.txt", "Enter ExecuteManualRequest");
+            LogString("E:\\Logs\\CGIXrmHandlers\\CallGuide.txt", "Enter ExecuteManualRequest");
             Guid callguideInfoId = _xrmHelper.GetId(callguideRequest.CallGuideSessionId, "cgi_callguidesessionid", "cgi_callguideinfo", _xrmManager);
             if (callguideInfoId == Guid.Empty)
             {
@@ -555,9 +555,11 @@ namespace CGIXrmHandler
                 {
                     callguideRequest.CustomerType = AccountCategoryCode.Private;
                 }
-                LogString("C:\\Temp\\CallGuide.txt", "Before Create Incident");
+
+                LogString("E:\\Logs\\CGIXrmHandlers\\CallGuide.txt", "Before Create Incident");
                 Guid incidentId = CreateIncident(callguideRequest, accountId, callguideInfoId);
-                LogString("C:\\Temp\\CallGuide.txt", "After Create Incident");
+                LogString("E:\\Logs\\CGIXrmHandlers\\CallGuide.txt", "After Create Incident");
+
                 returnValue = incidentId;
             }
             return returnValue;

@@ -168,7 +168,7 @@ namespace CGIXrmRainDanceExport
             string line1 = "02";
             string line2 = _formatSocNumber(_formatString(refund.Soc_sec_number), _formatString(refund.Foreign_payment)).SetToFixedLengthPadRight(15);
             string line3 = string.Format("{0} {1}", _formatString(contact.Lastname), _formatString(contact.Firstname)).SetToFixedLengthPadRight(30);
-            string line4 = contact.Address1_line1.SetToFixedLengthPadRight(30);
+            string line4 = contact.Address1_line2.SetToFixedLengthPadRight(30);
             string line5 = string.Format("{0}  {1}", _formatString(contact.Address1_postalcode), _formatString(contact.Address1_city)).SetToFixedLengthPadRight(30);
             string line6 = "1500".SetToFixedLengthPadRight(6);
             string line7 = refund.Iban.Substring(0, refund.Iban.Length >= 2 ? 2 : refund.Iban.Length).SetToFixedLengthPadRight(2);
@@ -184,7 +184,6 @@ namespace CGIXrmRainDanceExport
                 line4 = incident.RgolAddressLine2.SetToFixedLengthPadRight(30);
                 line5 = string.Format("{0}  {1}", _formatString(incident.RgolAddress1Postalcode).SetMaxLength(6), _formatString(incident.RgolAddress1City)).SetToFixedLengthPadRight(30);
             }
-
 
             string line = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}", line1, line2, line3, line4, line5, line6, line7, line8, line9, line10, line11);
             return line;

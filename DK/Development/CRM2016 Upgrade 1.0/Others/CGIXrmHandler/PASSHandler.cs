@@ -352,7 +352,7 @@ namespace CGIXrmHandler
                     Target = new EntityReference(entity.LogicalName, entity.Id)
                 };
                 _xrmManager.Service.Execute(assign);
-                LogMessage("C:\\Temp\\PASSLog.txt", "Assign to team.");
+                LogMessage("E:\\Logs\\CGIXrmHandlers\\PASSLog.txt", "Assign to team.");
             }
 
             return new EntityReference(entity.LogicalName, entity.Id);
@@ -360,7 +360,7 @@ namespace CGIXrmHandler
 
         private Guid CreatePASSTravelInformation(PASSTravelInformation passTravelInformation, EntityReference IncidentReference)
         {
-            LogMessage("C:\\Temp\\PASSLog.txt", "CreatePASSTravelInformation");
+            LogMessage("E:\\Logs\\CGIXrmHandlers\\PASSLog.txt", "CreatePASSTravelInformation");
             passTravelInformation.Case = IncidentReference;
             Entity entity = _xrmManager.Create<PASSTravelInformation>(passTravelInformation);
             return entity.Id;
@@ -453,7 +453,7 @@ namespace CGIXrmHandler
 
         public Guid ExecutePASSRequest(Incident incident, PASSTravelInformation[] passTravelInformations)
         {
-            LogMessage("C:\\Temp\\PASSLog.txt", "Create incident");
+            LogMessage("E:\\Logs\\CGIXrmHandlers\\PASSLog.txt", "Create incident");
             EntityReference incidentReference = CreateIncident(incident);
 
             foreach (PASSTravelInformation passTravelInformation in passTravelInformations)
@@ -469,36 +469,35 @@ namespace CGIXrmHandler
             ObservableCollection<Contact> contacts;
             try
             {
-                LogMessage("C:\\Temp\\PASSLog.txt", "Fetch contact 1");
+                LogMessage("E:\\Logs\\CGIXrmHandlers\\PASSLog.txt", "Fetch contact");
 
                 Guid g = GetOrCreateContactPASSIncident(incident);
-                LogMessage("C:\\Temp\\PASSLog.txt", "Fetch contact 3");
+
                 if (g != Guid.Empty)
                 {
-                    LogMessage("C:\\Temp\\PASSLog.txt", "Fetch contact 4");
+                    LogMessage("E:\\Logs\\CGIXrmHandlers\\PASSLog.txt", "Fetch incident is not empty");
                     contacts = _xrmManager.Get<Contact>(new FetchExpression(FetchContactsXML(incident.sSSN, incident.sEM)));
-                    LogMessage("C:\\Temp\\PASSLog.txt", "Fetch contact 5");
+                    LogMessage("E:\\Logs\\CGIXrmHandlers\\PASSLog.txt", "Fetch contact finished");
                     return contacts;
                 }
 
                 //contacts = _xrmManager.Get<Contact>(new FetchExpression(FetchContactsXML(incident.sSSN, incident.sEM)));
                 //if (contacts == null || !contacts.Any())
                 //{
-                //    LogMessage("C:\\Temp\\PASSLog.txt", "Fetch contact 2");
+                //    LogMessage("E:\\Logs\\CGIXrmHandlers\\PASSLog.txt", "Fetch contact 2");
                 //    Guid g = _createContact(incident);
-                //    LogMessage("C:\\Temp\\PASSLog.txt", "Fetch contact 3");
+                //    LogMessage("E:\\Logs\\CGIXrmHandlers\\PASSLog.txt", "Fetch contact 3");
                 //    if (g != Guid.Empty)
                 //    {
-                //        LogMessage("C:\\Temp\\PASSLog.txt", "Fetch contact 4");
+                //        LogMessage("E:\\Logs\\CGIXrmHandlers\\PASSLog.txt", "Fetch contact 4");
                 //        contacts = _xrmManager.Get<Contact>(new FetchExpression(FetchContactsXML(incident.sSSN, incident.sEM)));
-                //        LogMessage("C:\\Temp\\PASSLog.txt", "Fetch contact 5");
+                //        LogMessage("E:\\Logs\\CGIXrmHandlers\\PASSLog.txt", "Fetch contact 5");
                 //    }
                 //}
             }
             catch (Exception ex)
             {
-                LogMessage("C:\\Temp\\PASSLog.txt", "Fetch contact 6");
-                LogMessage("C:\\Temp\\PASSLog.txt", ex.Message);
+                LogMessage("E:\\Logs\\CGIXrmHandlers\\PASSLog.txt", ex.Message);
                 throw new Exception(ex.Message);
             }
 
