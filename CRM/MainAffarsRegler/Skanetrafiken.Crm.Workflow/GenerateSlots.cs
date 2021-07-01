@@ -63,36 +63,6 @@ namespace Skanetrafiken.Crm
                 DateTime startDate = StartDate.Get(activityContext).AddDays(1);
                 DateTime endDate = EndDate.Get(activityContext).AddDays(1);
 
-                bool test = true;
-
-
-                //Updates account with name: "Viggo test Org" 
-                if (test)
-                {
-                    var account = XrmRetrieveHelper.RetrieveFirst<AccountEntity>(localContext,
-                        new QueryExpression()
-                        {
-                            EntityName = AccountEntity.EntityLogicalName,
-                            ColumnSet = new ColumnSet(
-                                AccountEntity.Fields.EMailAddress1,
-                                AccountEntity.Fields.EMailAddress2
-                                ),
-                            Criteria =
-                                {
-                            Conditions =
-                            {
-                            new ConditionExpression(AccountEntity.Fields.AccountId, ConditionOperator.Equal, "60b2726b-85ee-ea11-80fa-005056b61fff")
-                            }
-                                },
-                        });
-
-
-                    account.EMailAddress1 = $"StartDate: {startDate.ToString()}";
-                    account.EMailAddress2 = $"EndDate: {endDate.ToString()}";
-
-                    XrmHelper.Update(localContext, account);
-                }
-
                 if (string.IsNullOrEmpty(product))
                 {
                     OK.Set(activityContext, false);
