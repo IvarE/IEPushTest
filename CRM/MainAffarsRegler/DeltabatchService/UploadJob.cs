@@ -269,9 +269,9 @@ namespace Endeavor.Crm.DeltabatchService
                 sftp.Connect();
                 if (!sftp.Connected)
                     throw new Exception($"Unable to connect to sftp-server");
-                sftp.Put(plusFileName, "/Infile");
-                sftp.Put(minusFileName, "/Infile");
-                //ArrayList fileList = sftp.GetFileList("/Infile");
+                sftp.Put(plusFileName, "/INFILE");
+                sftp.Put(minusFileName, "/INFILE");
+                //ArrayList fileList = sftp.GetFileList("/INFILE");
                 sftp.Close();
 
                 File.Move(plusFileName, plusFileName.Insert(plusFileName.IndexOf(Properties.Settings.Default.PlusFileName), "History\\"));
