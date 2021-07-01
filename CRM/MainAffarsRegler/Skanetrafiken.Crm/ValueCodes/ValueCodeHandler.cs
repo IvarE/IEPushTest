@@ -78,6 +78,9 @@ namespace Skanetrafiken.Crm.ValueCodes
 
             localContext.TracingService.Trace($"---> Entering {nameof(CreateValueCodeGeneric)}.");
 
+            string nPhoneNumber = PhoneNumberUtility.CheckPhoneFormatCreateValueCodeGeneric(localContext, phoneNumber);
+
+            #region old code 8042
             if (phoneNumber != null && phoneNumber != "")
             {
                 if (phoneNumber.StartsWith("0046"))
@@ -101,6 +104,7 @@ namespace Skanetrafiken.Crm.ValueCodes
                     phoneNumber = "+46" + phoneNumber.Substring(1);
                 }
             }
+            #endregion
 
             string apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_CreateValueCodeVoucher);
             localContext.Trace($"(CreateValueCodeGeneric) API: {apiUrl}");
@@ -127,7 +131,7 @@ namespace Skanetrafiken.Crm.ValueCodes
 
             // Call to Voucher Service
             localContext.Trace($"(CreateValueCodeGeneric) Create input JSON for Voucher Service");
-            localContext.Trace($"(CreateValueCodeGeneric) validTo: {validTo}, voucherType: {template.ed_TemplateId}, amount: {amount}, phoneNumber: {phoneNumber}, email: {email}");
+            localContext.Trace($"(CreateValueCodeGeneric) validTo: {validTo}, voucherType: {template.ed_TemplateId}, amount: {amount}, phoneNumber: {nPhoneNumber}, email: {email}");
 
 
             /* ONLY FOR STATISTICS - Marcus Stenswed 2019-10-03 */
@@ -175,7 +179,7 @@ namespace Skanetrafiken.Crm.ValueCodes
             /* ------------------------------------------------ */
 
             InputJSON = CreateInputJSONVoucherServiceGeneric(localContext, validTo, (int)template.ed_TemplateId, amount, periodPrice,
-                phoneNumber, email, travelCard, refund);
+                nPhoneNumber, email, travelCard, refund);
 
             localContext.Trace($"(CreateValueCodeGeneric) Created input JSON: {InputJSON}");
 
@@ -220,7 +224,7 @@ namespace Skanetrafiken.Crm.ValueCodes
                 // Create ValueCode from Voucher Service
                 localContext.Trace($"(CreateValueCodeGeneric) Entering CreateValueCodeFromVoucherServiceResponseGeneric...");
                 Guid valueCodeGuid = CreateValueCodeFromVoucherServiceResponseGeneric(localContext, responseService, deliveryType, template,
-                    contact, lead, type, email, phoneNumber, refund, valueCodeApproval, voucherType, travelCard, amount, totalAmountSentToVoucherService, originalPeriodPrice, originalReskassa);
+                    contact, lead, type, email, nPhoneNumber, refund, valueCodeApproval, voucherType, travelCard, amount, totalAmountSentToVoucherService, originalPeriodPrice, originalReskassa);
 
                 if (valueCodeGuid == null)
                     throw new InvalidPluginExecutionException("Kunde inte skapa värde kod i CRM.");

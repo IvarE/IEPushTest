@@ -60,37 +60,43 @@ namespace Skanetrafiken.Crm.Entities
                 return;
             }
 
-            //Add settings TODO
             localContext.Trace($"All checks were passed...");
 
+            string key = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_RGOLIntegrationKey);
+            string rgolUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_RGOLIntegrationURL);
+
+            if(string.IsNullOrEmpty(key) || string.IsNullOrEmpty(rgolUrl))
+                throw new InvalidPluginExecutionException("The RGOL Key or the RGOL Integration URL is empty on the Settings entity.");
+
+            EntityReference erReimbursementForm = this.cgi_ReimbursementFormid;
+            EntityReference erRefundType = this.cgi_RefundTypeid;
+
+            if (erReimbursementForm == null || erRefundType == null)
+                throw new InvalidPluginExecutionException("The Reimbursement Form or the Refund Type is null.");
+
+            RefundTypeEntity eRefundType = XrmRetrieveHelper.Retrieve<RefundTypeEntity>(localContext, erRefundType, new ColumnSet(RefundTypeEntity.Fields.cgi_refundtypename));
+            ReimbursementFormEntity eReimbursementForm = XrmRetrieveHelper.Retrieve<ReimbursementFormEntity>(localContext, erReimbursementForm, new ColumnSet(ReimbursementFormEntity.Fields.cgi_reimbursementname));
+
             EventSingapore evSingapore = new EventSingapore();
-            evSingapore.Key = "129ec1a8-d1f5-4d41-9866-8c540b41f0f2";
+            evSingapore.Key = key;
             evSingapore.RgolIssueId = eCase.cgi_RGOLIssueId;
             evSingapore.Amount = this.cgi_Amount != null ? this.cgi_Amount.Value : 0.0M;
-            evSingapore.CompensationForm = this.cgi_ReimbursementFormid != null ? this.cgi_ReimbursementFormid.Name : string.Empty;
-            evSingapore.RefundType = this.cgi_RefundTypeid != null ? this.cgi_RefundTypeid.Name : string.Empty;
+            evSingapore.CompensationForm = eReimbursementForm.cgi_reimbursementname;
+            evSingapore.RefundType = eRefundType.cgi_refundtypename;
 
             string jsonEvent = JsonHelper.JsonSerializer<EventSingapore>(evSingapore);
             localContext.Trace(jsonEvent);
 
             using (HttpClient httpClient = new HttpClient())
             {
-                HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, "https://rgolapi.skanetrafiken.se/ticketevent");
+                HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, rgolUrl);
                 httpRequest.Content = new StringContent(jsonEvent, Encoding.UTF8, "application/json");
 
                 var response = httpClient.SendAsync(httpRequest).Result;
                 string responseJSON = response.Content.ReadAsStringAsync().Result;
 
                 if (!response.IsSuccessStatusCode)
-                {
-                    //error
-                    throw new InvalidPluginExecutionException("error message: " + responseJSON);
-                }
-                else
-                {
-                    //sucess
-                    throw new InvalidPluginExecutionException("sucess message: " + responseJSON);
-                }
+                    throw new InvalidPluginExecutionException("Error HandlePostRefundCreateFOLog: " + responseJSON);
             }
         }
 

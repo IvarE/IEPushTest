@@ -150,6 +150,7 @@
     <Compile Include="Entities\QuoteProductEntity.cs" />
     <Compile Include="Entities\SlotsEntity.cs" />
     <Compile Include="Entities\TicketInfoEntity.cs" />
+    <Compile Include="Helper\PhoneNumberUtility.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="PostOrderProductCreate.cs" />
     <Compile Include="PreSingaporeTicketCreate_Sync.cs" />

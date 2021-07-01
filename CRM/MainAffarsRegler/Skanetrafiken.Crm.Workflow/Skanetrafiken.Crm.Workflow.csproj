@@ -294,6 +294,9 @@
     <Compile Include="..\Skanetrafiken.Crm\GeneratedEntities.cs">
       <Link>GeneratedEntities.cs</Link>
     </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Helper\PhoneNumberUtility.cs">
+      <Link>Helper\PhoneNumberUtility.cs</Link>
+    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Identity.cs">
       <Link>Identity.cs</Link>
     </Compile>
