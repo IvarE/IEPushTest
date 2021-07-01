@@ -61,7 +61,7 @@ namespace Endeavor.Crm.DeltabatchService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("95.129.189.18")]
+        [global::System.Configuration.DefaultSettingValueAttribute("mft.filegateway.creditsafe.com")]
         public string CreditsafeIP {
             get {
                 return ((string)(this["CreditsafeIP"]));
@@ -133,7 +133,7 @@ namespace Endeavor.Crm.DeltabatchService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("S359294")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5343362")]
         public string CreditsafeLoginUsername {
             get {
                 return ((string)(this["CreditsafeLoginUsername"]));

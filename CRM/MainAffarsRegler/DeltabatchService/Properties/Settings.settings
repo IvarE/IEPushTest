@@ -15,7 +15,7 @@
       <Value Profile="(Default)">Minus_Skanetrafiken_</Value>
     </Setting>
     <Setting Name="CreditsafeIP" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">95.129.189.18</Value>
+      <Value Profile="(Default)">mft.filegateway.creditsafe.com</Value>
     </Setting>
     <Setting Name="DeltabatchRetrievedFileLocation" Type="System.String" Scope="Application">
       <Value Profile="(Default)">E:\DeltabatchFiles\Retrieved</Value>
@@ -39,7 +39,7 @@
       <Value Profile="(Default)">0 0 2,4,6 1/1 * ? *</Value>
     </Setting>
     <Setting Name="CreditsafeLoginUsername" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">S359294</Value>
+      <Value Profile="(Default)">5343362</Value>
     </Setting>
     <Setting Name="DeltabatchQueueCount" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">80000</Value>

@@ -6,6 +6,7 @@ using Microsoft.Xrm.Sdk.Workflow;
 using Endeavor.Crm;
 using System.Runtime.Serialization;
 using Skanetrafiken.Crm.Entities;
+using Microsoft.Xrm.Sdk.Query;
 
 namespace Skanetrafiken.Crm
 {
@@ -59,12 +60,10 @@ namespace Skanetrafiken.Crm
                 //GET VALUE(S)
                 string product = ProductId.Get(activityContext);
                 int quantityPerDay = QuantityPerDay.Get(activityContext);
-                DateTime startDate = StartDate.Get(activityContext);
-                DateTime endDate = EndDate.Get(activityContext);
-                
+                DateTime startDate = StartDate.Get(activityContext).AddDays(1);
+                DateTime endDate = EndDate.Get(activityContext).AddDays(1);
 
-
-                if(string.IsNullOrEmpty(product))
+                if (string.IsNullOrEmpty(product))
                 {
                     OK.Set(activityContext, false);
                     Message.Set(activityContext, "No Product selected.");

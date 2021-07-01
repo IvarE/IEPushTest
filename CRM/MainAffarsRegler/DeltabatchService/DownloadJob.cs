@@ -858,21 +858,21 @@ namespace Endeavor.Crm.DeltabatchService
                 sftp.Connect(Properties.Settings.Default.CreditsafeFtpPort);
                 if (!sftp.Connected)
                     throw new Exception($"Unable to connect to sftp-server");
-                ArrayList fileList = sftp.GetFileList("/Outfile");
+                ArrayList fileList = sftp.GetFileList("/OUTFILE");
                 if (fileList.Count > 1)
                 {
                     if ("History".Equals(fileList[0].ToString()))
                     {
                         if (fileList[1].ToString().StartsWith(Properties.Settings.Default.OutputFileNameStart) && fileList[1].ToString().EndsWith(".txt"))
                         {
-                            sftp.Get($"/Outfile/{fileList[1].ToString()}", Properties.Settings.Default.DeltabatchRetrievedFileLocation);
+                            sftp.Get($"/OUTFILE/{fileList[1].ToString()}", Properties.Settings.Default.DeltabatchRetrievedFileLocation);
                             _currentOutputFileName = fileList[1].ToString();
-                            sftp.Put($"{Properties.Settings.Default.DeltabatchRetrievedFileLocation}/{fileList[1].ToString()}", $"/Outfile/History/{fileList[1].ToString()}");
+                            sftp.Put($"{Properties.Settings.Default.DeltabatchRetrievedFileLocation}/{fileList[1].ToString()}", $"/OUTFILE/History/{fileList[1].ToString()}");
 
                             var prop = sftp.GetType().GetProperty("SftpChannel", BindingFlags.NonPublic | BindingFlags.Instance);
                             var methodInfo = prop.GetGetMethod(true);
                             var sftpChannel = methodInfo.Invoke(sftp, null);
-                            ((ChannelSftp)sftpChannel).rm($"/Outfile/{fileList[1].ToString()}");
+                            ((ChannelSftp)sftpChannel).rm($"/OUTFILE/{fileList[1].ToString()}");
                         }
                         else
                             throw new Exception($"Invalid file/folder structure in /Output folder in Creditsafe ftp-server.\nSecond item expected to be '{Properties.Settings.Default.OutputFileNameStart}*...*.txt', but was in fact '{fileList[1].ToString()}'");
@@ -885,9 +885,9 @@ namespace Endeavor.Crm.DeltabatchService
                     switch (fileList.Count)
                     {
                         case 0:
-                            throw new Exception("No Content found in /Outfile folder in Creditsafe ftp-server");
+                            throw new Exception("No Content found in /OUTFILE folder in Creditsafe ftp-server");
                         default:
-                            throw new Exception($"Found only {fileList[0].ToString()} in /Outfile folder in Creditsafe ftp-server");
+                            throw new Exception($"Found only {fileList[0].ToString()} in /OUTFILE folder in Creditsafe ftp-server");
                     }
                 }
                 sftp.Close();
