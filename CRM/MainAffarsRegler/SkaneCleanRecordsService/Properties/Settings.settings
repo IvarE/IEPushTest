@@ -15,7 +15,7 @@
       <Value Profile="(Default)">2019-02-03T00:00:00Z</Value>
     </Setting>
     <Setting Name="SpecificDate" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">2018-01-16T00:00:00Z</Value>
+      <Value Profile="(Default)">2021-06-01T00:00:00Z</Value>
     </Setting>
     <Setting Name="CredentialsFilePathContacts" Type="System.String" Scope="Application">
       <Value Profile="(Default)">%APPDATA%\Endeavor\InactivateContactsService.Credential.xml</Value>
