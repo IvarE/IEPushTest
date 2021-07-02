@@ -1103,55 +1103,55 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
         },
 
         SetEmailVisibilityAndRequirement: function (result, formContext) {
+            debugger;
+            var _emailRequiredAndVisible = result.entities[0].cgi_couponemail;
+            var _phoneRequired = result.entities[0].cgi_couponsms;
+            //var _reimbursementName = result.entities[0].cgi_reimbursementname;
 
-            var _emailRequiredAndVisible = false;
-            var _phoneRequired = false;
-            var _reimbursementName = result.entities[0].cgi_reimbursementname;
-
-            switch (_reimbursementName) {
-                case "Laddning reskassa":
-                case "Rabattkod Jojo Online": //The record's name in UTV
-                case "Rabattkod e-handel": //The record's name in PROD
-                //case "Värdekod - E-post":
-                case "Värdekod E-post - Försening":
-                    _emailRequiredAndVisible = true;
-                    break;
-                case "Värdekod E-post - Försening (Saldo)":
-                    _emailRequiredAndVisible = true;
-                    break;
-                //case "Värdekod - E-post (ersättning)":
-                case "Värdekod E-post - Ersättning":
-                    _emailRequiredAndVisible = true;
-                    break;
-                case "Värdekod E-post - Ersättning (Saldo)":
-                    _emailRequiredAndVisible = true;
-                    break;
-                //case "Värdekod - E-post (byta reskassa)":
-                case "Värdekod E-post - Saldo":
-                    _emailRequiredAndVisible = true;
-                    break;
-                case "Värdekod SMS - Försening":
-                    _phoneRequired = true;
-                    break;
-                case "Värdekod SMS - Försening (Saldo)":
-                    _phoneRequired = true;
-                    break;
-                case "Värdekod SMS - Ersättning":
-                    _phoneRequired = true;
-                    break;
-                case "Värdekod SMS - Ersättning (Saldo)":
-                    _phoneRequired = true;
-                    break;
-                case "Värdekod SMS - Saldo":
-                    _phoneRequired = true;
-                    break;
-                case "Värdebevis - SMS":
-                case "Värdebevis - e-post":
-                    _emailRequiredAndVisible = true;
-                    break;
-                default:
-                    _emailRequiredAndVisible = false;
-            }
+            //switch (_reimbursementName) {
+            //    case "Laddning reskassa":
+            //    case "Rabattkod Jojo Online": //The record's name in UTV
+            //    case "Rabattkod e-handel": //The record's name in PROD
+            //    //case "Värdekod - E-post":
+            //    case "Värdekod E-post - Försening":
+            //        _emailRequiredAndVisible = true;
+            //        break;
+            //    case "Värdekod E-post - Försening (Saldo)":
+            //        _emailRequiredAndVisible = true;
+            //        break;
+            //    //case "Värdekod - E-post (ersättning)":
+            //    case "Värdekod E-post - Ersättning":
+            //        _emailRequiredAndVisible = true;
+            //        break;
+            //    case "Värdekod E-post - Ersättning (Saldo)":
+            //        _emailRequiredAndVisible = true;
+            //        break;
+            //    //case "Värdekod - E-post (byta reskassa)":
+            //    case "Värdekod E-post - Saldo":
+            //        _emailRequiredAndVisible = true;
+            //        break;
+            //    case "Värdekod SMS - Försening":
+            //        _phoneRequired = true;
+            //        break;
+            //    case "Värdekod SMS - Försening (Saldo)":
+            //        _phoneRequired = true;
+            //        break;
+            //    case "Värdekod SMS - Ersättning":
+            //        _phoneRequired = true;
+            //        break;
+            //    case "Värdekod SMS - Ersättning (Saldo)":
+            //        _phoneRequired = true;
+            //        break;
+            //    case "Värdekod SMS - Saldo":
+            //        _phoneRequired = true;
+            //        break;
+            //    case "Värdebevis - SMS":
+            //    case "Värdebevis - e-post":
+            //        _emailRequiredAndVisible = true;
+            //        break;
+            //    default:
+            //        _emailRequiredAndVisible = false;
+            //}
 
             var _sendtostralfors = result.entities[0].cgi_sendtostralfors;
 

@@ -365,7 +365,7 @@ Endeavor.OData_Querys = {
 
     GetReimbursementForm: function (reimbursementid, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_reimbursementform", "?$select=cgi_attestation,cgi_couponsms,cgi_giftcard,cgi_loadcard,cgi_payment,cgi_payment_abroad,cgi_reimbursementformid,cgi_reimbursementname,cgi_reinvoicing,cgi_sendtostralfors,cgi_time_valid,cgi_useaccount,cgi_useproduct,cgi_useresponsible&$filter=statecode eq 0 and cgi_reimbursementformid eq " + reimbursementid).then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_reimbursementform", "?$select=cgi_attestation,cgi_couponsms,cgi_couponemail,cgi_giftcard,cgi_loadcard,cgi_payment,cgi_payment_abroad,cgi_reimbursementformid,cgi_reimbursementname,cgi_reinvoicing,cgi_sendtostralfors,cgi_time_valid,cgi_useaccount,cgi_useproduct,cgi_useresponsible&$filter=statecode eq 0 and cgi_reimbursementformid eq " + reimbursementid).then(
                 function success(result) {
                     Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnChange_callback(result, formContext);
                 },
@@ -509,7 +509,7 @@ Endeavor.OData_Querys = {
     // *** Start Queries used for entity email
     GetDefaultUserFromSetting: function (nowdate, formContext) {
         try {
-            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=_cgi_userid_value&$filter=statecode eq 0 and cgi_validfrom le " + nowdate + "Z and (cgi_validto ge '" + nowdate + "Z or cgi_validto eq null)").then(
+            Xrm.WebApi.retrieveMultipleRecords("cgi_setting", "?$select=_cgi_userid_value&$filter=statecode eq 0 and cgi_validfrom le " + nowdate + "Z and (cgi_validto ge " + nowdate + "Z or cgi_validto eq null)").then(
                 function success(result) {
                     Endeavor.Skanetrafiken.Email.SetSenderEmailNoReply_callback(result, formContext);
                 },
