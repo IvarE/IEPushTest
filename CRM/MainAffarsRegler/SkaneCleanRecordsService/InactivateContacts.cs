@@ -106,67 +106,69 @@ namespace Endeavor.Crm.CleanRecordsService
         {
             string testSpecificDate = Properties.Settings.Default.SpecificDate;
 
-            QueryExpression queryContacts = new QueryExpression(ContactEntity.EntityLogicalName);
+            var queryContacts = new QueryExpression(ContactEntity.EntityLogicalName);
             queryContacts.Distinct = true;
             queryContacts.NoLock = true;
             queryContacts.ColumnSet.AddColumns(ContactEntity.Fields.ContactId, ContactEntity.Fields.FirstName, Contact.Fields.LastName);
 
-            FilterExpression queryFilter0 = new FilterExpression();
+            var queryFilter0 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter0);
             queryFilter0.AddCondition(ContactEntity.Fields.ed_MklId, ConditionOperator.Null);
             queryFilter0.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
             queryFilter0.AddCondition(Contact.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true);
 
-            FilterExpression queryFilter1 = new FilterExpression();
+            var queryFilter1 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter1);
             queryFilter1.AddCondition("ap", IncidentEntity.Fields.cgi_Contactid, ConditionOperator.Null);
 
-            FilterExpression queryFilter2 = new FilterExpression();
+            var queryFilter2 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter2);
             queryFilter2.AddCondition("aq", IncidentEntity.Fields.PrimaryContactId, ConditionOperator.Null);
 
-            FilterExpression queryFilter3 = new FilterExpression();
+            var queryFilter3 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter3);
             queryFilter3.AddCondition("ar", IncidentEntity.Fields.CustomerId, ConditionOperator.Null);
 
-            FilterExpression queryFilter4 = new FilterExpression();
+            var queryFilter4 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter4);
             queryFilter4.AddCondition("as", SalesOrderEntity.Fields.ed_ContactId, ConditionOperator.Null);
 
-            FilterExpression queryFilter5 = new FilterExpression();
+            var queryFilter5 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter5);
             queryFilter5.AddCondition("at", SingaporeTicketEntity.Fields.st_ContactID, ConditionOperator.Null);
 
-            FilterExpression queryFilter6 = new FilterExpression();
+            var queryFilter6 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter6);
             queryFilter6.AddCondition("au", TravelCardEntity.Fields.cgi_Contactid, ConditionOperator.Null);
 
-            FilterExpression queryFilter7 = new FilterExpression();
+            var queryFilter7 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter7);
             queryFilter7.AddCondition("av", SkaKortEntity.Fields.ed_Contact, ConditionOperator.Null);
 
-            LinkEntity ap = queryContacts.AddLink(IncidentEntity.EntityLogicalName, ContactEntity.Fields.ContactId, IncidentEntity.Fields.cgi_Contactid, JoinOperator.LeftOuter);
+            var al = queryContacts.AddLink(ValueCodeEntity.EntityLogicalName, Contact.Fields.ContactId, ValueCodeEntity.Fields.ed_Contact);
+            al.EntityAlias = "al";
+            al.LinkCriteria.AddCondition(ValueCodeEntity.Fields.statecode, ConditionOperator.Equal, (int)ed_ValueCodeState.Inactive);
+
+            var ap = queryContacts.AddLink(IncidentEntity.EntityLogicalName, ContactEntity.Fields.ContactId, IncidentEntity.Fields.cgi_Contactid, JoinOperator.LeftOuter);
             ap.EntityAlias = "ap";
 
-            LinkEntity aq = queryContacts.AddLink(IncidentEntity.EntityLogicalName, ContactEntity.Fields.ContactId, IncidentEntity.Fields.PrimaryContactId, JoinOperator.LeftOuter);
+            var aq = queryContacts.AddLink(IncidentEntity.EntityLogicalName, ContactEntity.Fields.ContactId, IncidentEntity.Fields.PrimaryContactId, JoinOperator.LeftOuter);
             aq.EntityAlias = "aq";
 
-            LinkEntity ar = queryContacts.AddLink(IncidentEntity.EntityLogicalName, ContactEntity.Fields.ContactId, IncidentEntity.Fields.CustomerId, JoinOperator.LeftOuter);
+            var ar = queryContacts.AddLink(IncidentEntity.EntityLogicalName, ContactEntity.Fields.ContactId, IncidentEntity.Fields.CustomerId, JoinOperator.LeftOuter);
             ar.EntityAlias = "ar";
 
-            LinkEntity _as = queryContacts.AddLink(SalesOrderEntity.EntityLogicalName, ContactEntity.Fields.ContactId, SalesOrderEntity.Fields.ed_ContactId, JoinOperator.LeftOuter);
+            var _as = queryContacts.AddLink(SalesOrderEntity.EntityLogicalName, ContactEntity.Fields.ContactId, SalesOrderEntity.Fields.ed_ContactId, JoinOperator.LeftOuter);
             _as.EntityAlias = "as";
 
-            LinkEntity at = queryContacts.AddLink(SingaporeTicketEntity.EntityLogicalName, ContactEntity.Fields.ContactId, SingaporeTicketEntity.Fields.st_ContactID, JoinOperator.LeftOuter);
+            var at = queryContacts.AddLink(SingaporeTicketEntity.EntityLogicalName, ContactEntity.Fields.ContactId, SingaporeTicketEntity.Fields.st_ContactID, JoinOperator.LeftOuter);
             at.EntityAlias = "at";
 
-            LinkEntity au = queryContacts.AddLink(TravelCardEntity.EntityLogicalName, ContactEntity.Fields.ContactId, TravelCardEntity.Fields.cgi_Contactid, JoinOperator.LeftOuter);
+            var au = queryContacts.AddLink(TravelCardEntity.EntityLogicalName, ContactEntity.Fields.ContactId, TravelCardEntity.Fields.cgi_Contactid, JoinOperator.LeftOuter);
             au.EntityAlias = "au";
 
-            LinkEntity av = queryContacts.AddLink(SkaKortEntity.EntityLogicalName, ContactEntity.Fields.ContactId, SkaKortEntity.Fields.ed_Contact, JoinOperator.LeftOuter);
+            var av = queryContacts.AddLink(SkaKortEntity.EntityLogicalName, ContactEntity.Fields.ContactId, SkaKortEntity.Fields.ed_Contact, JoinOperator.LeftOuter);
             av.EntityAlias = "av";
-
-
 
             if (!bRunFullData)
             {
@@ -191,11 +193,11 @@ namespace Endeavor.Crm.CleanRecordsService
             {
                 try
                 {
-                    ////Check for emails 
-                    //bool isRelevant = CheckIfCOntainsEmail();
+                    //Check for emails 
+                    bool isRelevant = CheckIfContainsEmail();
 
-                    //if (isRelevant)
-                    //    continue;
+                    if (isRelevant)
+                        continue;
 
                     ContactEntity nContact = new ContactEntity();
                     nContact.Id = contact.Id;
@@ -216,8 +218,6 @@ namespace Endeavor.Crm.CleanRecordsService
                     _log.Error($"Exception caught in Inactivate Contact {contact.FirstName} {contact.LastName}\n{e.Message}\n\n");
                 }
             }
-
-
 
             return Helper.ExecuteMultipleRequests(localContext, requestsLst, true, true);
         }
