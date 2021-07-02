@@ -150,7 +150,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="ServiceProvider.cs" />
-    <Compile Include="Settings.cs" />
     <Compile Include="TracingService.cs" />
   </ItemGroup>
   <ItemGroup>
