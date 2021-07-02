@@ -61,7 +61,7 @@ namespace Endeavor.Crm.CleanRecordsService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2021-07-01T00:00:00Z")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2021-07-02T00:00:00Z")]
         public string SpecificDate {
             get {
                 return ((string)(this["SpecificDate"]));
