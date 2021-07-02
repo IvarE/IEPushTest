@@ -75,7 +75,7 @@
     </Reference>
     <Reference Include="Skanetrafiken.Crm, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e2c407508c1fd5c9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Skanetrafiken.Crm\bin\Test\Skanetrafiken.Crm.dll</HintPath>
+      <HintPath>..\Skanetrafiken.Crm\bin\Dev\Skanetrafiken.Crm.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
