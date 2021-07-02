@@ -165,6 +165,8 @@ namespace Endeavor.Crm.CleanRecordsService
             LinkEntity av = queryContacts.AddLink(SkaKortEntity.EntityLogicalName, ContactEntity.Fields.ContactId, SkaKortEntity.Fields.ed_Contact, JoinOperator.LeftOuter);
             av.EntityAlias = "av";
 
+
+
             if (!bRunFullData)
             {
                 _log.Info($"Contacts filtered by Created On: {testSpecificDate}");
@@ -176,6 +178,7 @@ namespace Endeavor.Crm.CleanRecordsService
 
         public static ExecuteMultipleResponse RunInactivateContacts(Plugin.LocalPluginContext localContext, bool bRunFullData)
         {
+            //Run everyday
             _log.Info($"'RunFullData': {bRunFullData}");
             QueryExpression queryContacts = GetQueryInactivateContacts(bRunFullData);
             List<ContactEntity> lContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, queryContacts);
@@ -187,6 +190,12 @@ namespace Endeavor.Crm.CleanRecordsService
             {
                 try
                 {
+                    //Check for emails 
+                    bool isRelevant = CheckIfCOntainsEmail();
+
+                    if (isRelevant)
+                        continue;
+
                     ContactEntity nContact = new ContactEntity();
                     nContact.Id = contact.Id;
                     nContact.StateCode = ContactState.Inactive;
@@ -206,6 +215,8 @@ namespace Endeavor.Crm.CleanRecordsService
                     _log.Error($"Exception caught in Inactivate Contact {contact.FirstName} {contact.LastName}\n{e.Message}\n\n");
                 }
             }
+
+
 
             return Helper.ExecuteMultipleRequests(localContext, requestsLst, true, true);
         }
