@@ -191,11 +191,11 @@ namespace Endeavor.Crm.CleanRecordsService
             {
                 try
                 {
-                    //Check for emails 
-                    bool isRelevant = CheckIfCOntainsEmail();
+                    ////Check for emails 
+                    //bool isRelevant = CheckIfCOntainsEmail();
 
-                    if (isRelevant)
-                        continue;
+                    //if (isRelevant)
+                    //    continue;
 
                     ContactEntity nContact = new ContactEntity();
                     nContact.Id = contact.Id;
