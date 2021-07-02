@@ -115,6 +115,7 @@ namespace Endeavor.Crm.CleanRecordsService
             queryContacts.Criteria.AddFilter(queryFilter0);
             queryFilter0.AddCondition(ContactEntity.Fields.ed_MklId, ConditionOperator.Null);
             queryFilter0.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
+            queryFilter0.AddCondition(Contact.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true);
 
             FilterExpression queryFilter1 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter1);

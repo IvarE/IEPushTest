@@ -22,7 +22,7 @@ namespace Endeavor.Crm.CleanRecordsService
                 string runInactivateContacts = ConfigurationManager.AppSettings["runInactivateContacts"];
                 string runDeleteAudits = ConfigurationManager.AppSettings["runDeleteAudits"];
 
-                string passwordArgument = null; //passwordplace holder
+                string passwordArgument = "uSEme2!nstal1"; //passwordplace holder
 
                 string[] args = Environment.GetCommandLineArgs();
                 if (args != null)
