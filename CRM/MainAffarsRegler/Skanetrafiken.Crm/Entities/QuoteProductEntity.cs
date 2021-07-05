@@ -76,6 +76,7 @@ namespace Skanetrafiken.Crm.Entities
             target.Trace(localContext.TracingService);
             localContext.Trace("_______________");
 
+            bool removeSlotsConnectedPreProduct = false;
             if (!target.IsAttributeModified(preImage, QuoteProductEntity.Fields.UoMId))
             {
                 localContext.Trace("UoMID not modified");
@@ -86,31 +87,47 @@ namespace Skanetrafiken.Crm.Entities
                 localContext.Trace("ProductId not modified");
                 target.ProductId = preImage.ProductId;
             }
-
-            //validate necessary things to generateSlots
-            if (target.UoMId != null && target.ProductId != null)
+            else
             {
-                localContext.Trace("UoMId and ProductId not NULL");
-                FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
-                if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
+                if(preImage.ProductId != null && preImage.ProductId.Id != Guid.Empty)
                 {
-                    localContext.Trace("ed_bookingSystem enabled");
-                    bool isSlotProduct = false;
-                    //check if the Product on this QuoteProduct has non extended slots already created (method to see if this Product is a slot Product)
-                    if(target.ProductId != null && target.ProductId.Id != Guid.Empty)
-                    {
-                        isSlotProduct = ProductEntity.IsSlotProduct(localContext, target.ProductId);
-                    }
-                    if(isSlotProduct)
-                    {
-                        if (target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_FromDate) || target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate) || target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ManualDiscountAmount))
-                        {
-                            localContext.Trace("ed_FromDate or ed_ToDate modified");
-                            UpdateOrGenerateSlots(localContext, target, preImage);
+                    removeSlotsConnectedPreProduct = true;
+                }
+            }
+            FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
+            if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
+            {
+                if (removeSlotsConnectedPreProduct)
+                {
+                    //relese all slots connect to the QuoteProduct
 
-                            /*
-                            UpdateSlotsCustomPriceFromQuoteProduct(localContext, target);
-                            */
+                    //Generate Slots for new product
+                }
+                else
+                {
+                    //validate necessary things to generateSlots
+                    if (target.UoMId != null && target.ProductId != null)
+                    {
+                        localContext.Trace("UoMId and ProductId not NULL");
+
+                        localContext.Trace("ed_bookingSystem enabled");
+                        bool isSlotProduct = false;
+                        //check if the Product on this QuoteProduct has non extended slots already created (method to see if this Product is a slot Product)
+                        if (target.ProductId != null && target.ProductId.Id != Guid.Empty)
+                        {
+                            isSlotProduct = ProductEntity.IsSlotProduct(localContext, target.ProductId);
+                        }
+                        if (isSlotProduct)
+                        {
+                            if (target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_FromDate) || target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate) || target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ManualDiscountAmount))
+                            {
+                                localContext.Trace("ed_FromDate or ed_ToDate modified");
+                                UpdateOrGenerateSlots(localContext, target, preImage);
+
+                                /*
+                                UpdateSlotsCustomPriceFromQuoteProduct(localContext, target);
+                                */
+                            }
                         }
                     }
                 }
