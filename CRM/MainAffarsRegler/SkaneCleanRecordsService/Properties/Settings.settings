@@ -6,7 +6,7 @@
       <Value Profile="(Default)">%APPDATA%\Endeavor\CloseCasesService.Credential.xml</Value>
     </Setting>
     <Setting Name="CloseCaseScheduleCronExpression" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">0 0/1 * 1/1 * ? *</Value>
+      <Value Profile="(Default)">0 0 20 ? * FRI *</Value>
     </Setting>
     <Setting Name="StartDate" Type="System.String" Scope="Application">
       <Value Profile="(Default)">2019-02-01T00:00:00Z</Value>
@@ -15,16 +15,16 @@
       <Value Profile="(Default)">2019-02-03T00:00:00Z</Value>
     </Setting>
     <Setting Name="SpecificDate" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">2021-07-01T00:00:00Z</Value>
+      <Value Profile="(Default)">2021-07-02T00:00:00Z</Value>
     </Setting>
     <Setting Name="CredentialsFilePathContacts" Type="System.String" Scope="Application">
       <Value Profile="(Default)">%APPDATA%\Endeavor\InactivateContactsService.Credential.xml</Value>
     </Setting>
     <Setting Name="InactivateContactsScheduleCronExpression" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">0 0/1 * 1/1 * ? *</Value>
+      <Value Profile="(Default)">0 0 20 ? * FRI *</Value>
     </Setting>
     <Setting Name="DeleteAuditScheduleCronExpression" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">0 0/1 * 1/1 * ? *</Value>
+      <Value Profile="(Default)">0 0 20 ? * FRI *</Value>
     </Setting>
     <Setting Name="CredentialsFilePathAudits" Type="System.String" Scope="Application">
       <Value Profile="(Default)">%APPDATA%\Endeavor\DeleteAuditsService.Credential.xml</Value>
