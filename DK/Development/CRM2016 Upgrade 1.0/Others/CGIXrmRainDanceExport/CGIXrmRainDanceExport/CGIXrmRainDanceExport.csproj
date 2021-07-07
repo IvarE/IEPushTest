@@ -218,9 +218,12 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="CGIXrmRainDanceExport_TemporaryKey.pfx" />
-    <None Include="connections.config" />
+    <None Include="connections.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="log4net.config">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
