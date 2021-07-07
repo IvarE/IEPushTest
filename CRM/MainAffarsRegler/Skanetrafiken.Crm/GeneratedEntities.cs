@@ -33067,18 +33067,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_contact_age")]
-		public System.Nullable<int> st_Contact_Age
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<int>>("st_contact_age");
-			}
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_deltabatch_lookup")]
 		public Microsoft.Xrm.Sdk.EntityReference st_DeltaBatch_Lookup
 		{
@@ -35835,8 +35823,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string SpousesName = "spousesname";
 			
 			public const string st_CampaignLink = "st_campaignlink";
-			
-			public const string st_Contact_Age = "st_contact_age";
 			
 			public const string st_DeltaBatch_Lookup = "st_deltabatch_lookup";
 			
@@ -77857,6 +77843,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_kampanjvalideringepost")]
+		public System.Nullable<bool> ed_Kampanjvalideringepost
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_kampanjvalideringepost");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_kampanjvalideringepost", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_latestlinkguid")]
 		public string ed_LatestLinkGuid
 		{
@@ -80293,6 +80295,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_IndustryCodeId = "ed_industrycodeid";
 			
 			public const string ed_InformationSource = "ed_informationsource";
+			
+			public const string ed_Kampanjvalideringepost = "ed_kampanjvalideringepost";
 			
 			public const string ed_LatestLinkGuid = "ed_latestlinkguid";
 			

@@ -38,7 +38,7 @@ namespace Endeavor.Crm.CleanRecordsService
             JobDataMap jobDataMap = new JobDataMap();
             jobDataMap[DeleteAudits.DataMapModifiedAfter] = DateTime.Now;
 
-            _log.Info($"Scheduling UploadJob");
+            _log.Info($"Scheduling Delete Audits Job");
 
             IJobDetail scheduleUploadJob = JobBuilder.Create<DeleteAudits>()
             .WithIdentity(DeleteAudits.JobName, DeleteAudits.GroupName)
