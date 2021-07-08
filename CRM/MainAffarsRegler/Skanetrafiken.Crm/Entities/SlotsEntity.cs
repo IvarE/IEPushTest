@@ -218,7 +218,7 @@ namespace Skanetrafiken.Crm.Entities
 
             
             queryAvailableSlots.EntityName = SlotsEntity.EntityLogicalName;
-            queryAvailableSlots.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_BookingDay,SlotsEntity.Fields.ed_StandardPrice,SlotsEntity.Fields.ed_CustomPrice);
+            queryAvailableSlots.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_BookingDay,SlotsEntity.Fields.ed_StandardPrice,SlotsEntity.Fields.ed_CustomPrice,SlotsEntity.Fields.ed_Extended);
 
             FilterExpression filterExpression = new FilterExpression();
             filterExpression.FilterOperator = LogicalOperator.And;
@@ -437,7 +437,16 @@ namespace Skanetrafiken.Crm.Entities
                             if (quoteProduct.Id != null && quoteProduct.Id != Guid.Empty)
                             {
                                 slot.ed_QuoteProductID = quoteProduct.ToEntityReference();
-                                slot.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.Preliminary;
+
+                                if(filteredSlots[0].ed_Extended.Value == true)
+                                {
+                                    slot.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.ExtendedPreliminiary;
+                                }
+                                else
+                                {
+                                    slot.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.Preliminary;
+                                }
+                                
                             }
                         }
                         if (orderProduct != null)
@@ -449,7 +458,16 @@ namespace Skanetrafiken.Crm.Entities
                             if(orderProduct.Id != null && orderProduct.Id != Guid.Empty)
                             {
                                 slot.ed_OrderProductID = orderProduct.ToEntityReference();
-                                slot.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.Preliminary;
+                                
+                                if (filteredSlots[0].ed_Extended.Value == true)
+                                {
+                                    slot.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.ExtendedPreliminiary;
+                                }
+                                else
+                                {
+                                    slot.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.Preliminary;
+                                }
+
                             }
                         }
                         if (OpportunityGuid != null)
@@ -482,7 +500,7 @@ namespace Skanetrafiken.Crm.Entities
                             if (quoteProduct.Id != null && quoteProduct.Id != Guid.Empty)
                             {
                                 slot.ed_QuoteProductID = quoteProduct.ToEntityReference();
-                                slot.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.Preliminary;
+                                slot.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.ExtendedPreliminiary;
                             }
                         }
                         if (orderProduct != null)
@@ -494,7 +512,7 @@ namespace Skanetrafiken.Crm.Entities
                             if (orderProduct.Id != null && orderProduct.Id != Guid.Empty)
                             {
                                 slot.ed_OrderProductID = orderProduct.ToEntityReference();
-                                slot.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.Preliminary;
+                                slot.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.ExtendedPreliminiary;
                             }
                         }
                         if (OpportunityGuid != null)
@@ -523,7 +541,7 @@ namespace Skanetrafiken.Crm.Entities
 
             QueryExpression query = new QueryExpression();
             query.EntityName = SlotsEntity.EntityLogicalName;
-            query.ColumnSet.AddColumns(SlotsEntity.Fields.ed_BookingDay,SlotsEntity.Fields.ed_Extended);
+            query.ColumnSet.AddColumns(SlotsEntity.Fields.ed_BookingDay,SlotsEntity.Fields.ed_Extended,SlotsEntity.Fields.ed_StandardPrice);
             FilterExpression filter = new FilterExpression();
             filter.FilterOperator = LogicalOperator.And;
             if(quoteProduct != null && quoteProduct.Value != Guid.Empty)
@@ -559,10 +577,11 @@ namespace Skanetrafiken.Crm.Entities
                         slotToRelease.ed_OrderProductID = null;
                         slotToRelease.ed_Order = null;
                         slotToRelease.ed_Opportunity = null;
+                        slotToRelease.ed_CustomPrice = slot.ed_StandardPrice;
                         //Validate generatedFromProduct bool or defaultBookingStatus
-                        if(slot.ed_Extended != null && slot.ed_Extended.Value == true)
+                        if (slot.ed_Extended != null && slot.ed_Extended.Value == true)
                         {
-                            slotToRelease.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.Extended;
+                            slotToRelease.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.ExtendedOpen;
                         }
                         else
                         {
@@ -590,12 +609,12 @@ namespace Skanetrafiken.Crm.Entities
                             slotToRelease.ed_OrderProductID = null;
                             slotToRelease.ed_Order = null;
                             slotToRelease.ed_Opportunity = null;
-
+                            slotToRelease.ed_CustomPrice = slot.ed_StandardPrice;
                             //Validate generatedFromProduct bool or defaultBookingStatus
 
                             if (slot.ed_Extended != null && slot.ed_Extended.Value == true)
                             {
-                                slotToRelease.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.Extended;
+                                slotToRelease.ed_BookingStatus = Generated.ed_slots_ed_bookingstatus.ExtendedOpen;
                             }
                             else
                             {

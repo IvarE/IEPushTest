@@ -33,10 +33,90 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     //Note Change logic (maybe remove this call) after using orderProduct and quoteProduct discounts instead
 
-                    //OrderEntity.UpdateSlotsCustomPrice(localContext, order, preImage);
+                    OrderEntity.UpdateSlotsCustomPrice(localContext, order, preImage);
                 }
             }
 
+        }
+
+        public static void UpdateSlotsCustomPrice(Plugin.LocalPluginContext localContext, OrderEntity order, OrderEntity preImage)
+        {
+            decimal? discountPercentage = null;
+            decimal? discountAmount = null;
+            if (order.IsAttributeModified(preImage, OrderEntity.Fields.DiscountPercentage) && order.DiscountPercentage != null && order.DiscountPercentage > 0)
+            {
+                discountPercentage = order.DiscountPercentage.Value;
+            }
+            else if (order.IsAttributeModified(preImage, QuoteEntity.Fields.DiscountAmount) && order.DiscountAmount != null && order.DiscountAmount.Value > 0)
+            {
+                discountAmount = order.DiscountAmount.Value;
+            }
+
+            QueryExpression querySlots = new QueryExpression();
+            querySlots.EntityName = SlotsEntity.EntityLogicalName;
+            querySlots.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_StandardPrice, SlotsEntity.Fields.ed_CustomPrice);
+
+            FilterExpression filterSlots = new FilterExpression();
+            filterSlots.FilterOperator = LogicalOperator.And;
+            filterSlots.AddCondition(SlotsEntity.Fields.ed_Order, ConditionOperator.Equal, order.Id);
+
+            querySlots.Criteria.AddFilter(filterSlots);
+
+            List<SlotsEntity> slots = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlots);
+
+            if (slots != null && slots.Count > 0)
+            {
+                if (discountPercentage != null && discountPercentage.Value > 0)
+                {
+                    //update all customPrice slots with this percentage
+                    foreach (SlotsEntity slot in slots)
+                    {
+                        if (slot.ed_StandardPrice != null && slot.ed_StandardPrice.Value > 0)
+                        {
+                            SlotsEntity slotToUpdate = new SlotsEntity();
+                            slotToUpdate.Id = slot.Id;
+                            slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - (slot.ed_StandardPrice.Value * (discountPercentage.Value / 100)));
+
+                            XrmHelper.Update(localContext, slotToUpdate);
+                        }
+                    }
+                }
+                else if (discountAmount != null && discountAmount.Value > 0)
+                {
+                    decimal discountPerSlot = discountAmount.Value / slots.Count;
+
+                    foreach (SlotsEntity slot in slots)
+                    {
+                        if (slot.ed_StandardPrice != null && slot.ed_StandardPrice.Value > 0)
+                        {
+                            SlotsEntity slotToUpdate = new SlotsEntity();
+                            slotToUpdate.Id = slot.Id;
+                            slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - discountPerSlot);
+                            XrmHelper.Update(localContext, slotToUpdate);
+
+                            //get all slots conected to this quote
+                            //divide the discount amount by the number of slots
+                            // subtract the result to the customPrice
+                            //update all slots
+                        }
+                    }
+                }
+                else
+                {
+                    //update customprice of all slots with their defaultPriceValue
+                    foreach (SlotsEntity slot in slots)
+                    {
+                        if (slot.ed_StandardPrice != null && slot.ed_StandardPrice.Value > 0)
+                        {
+                            SlotsEntity slotToUpdate = new SlotsEntity();
+                            slotToUpdate.Id = slot.Id;
+                            slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value);
+                            XrmHelper.Update(localContext, slotToUpdate);
+
+                        }
+                    }
+                }
+            }
         }
 
         public static void UpdateSlotsInfo(Plugin.LocalPluginContext localContext, OrderEntity order, bool won = false)
