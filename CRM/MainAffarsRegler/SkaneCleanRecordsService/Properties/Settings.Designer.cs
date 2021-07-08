@@ -34,7 +34,7 @@ namespace Endeavor.Crm.CleanRecordsService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0 0/1 * 1/1 * ? *")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0 20 ? * FRI *")]
         public string CloseCaseScheduleCronExpression {
             get {
                 return ((string)(this["CloseCaseScheduleCronExpression"]));
@@ -61,7 +61,7 @@ namespace Endeavor.Crm.CleanRecordsService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2021-07-01T00:00:00Z")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2021-07-02T00:00:00Z")]
         public string SpecificDate {
             get {
                 return ((string)(this["SpecificDate"]));
@@ -79,7 +79,7 @@ namespace Endeavor.Crm.CleanRecordsService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0 0/1 * 1/1 * ? *")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0 20 ? * FRI *")]
         public string InactivateContactsScheduleCronExpression {
             get {
                 return ((string)(this["InactivateContactsScheduleCronExpression"]));
@@ -88,7 +88,7 @@ namespace Endeavor.Crm.CleanRecordsService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0 0/1 * 1/1 * ? *")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0 20 ? * FRI *")]
         public string DeleteAuditScheduleCronExpression {
             get {
                 return ((string)(this["DeleteAuditScheduleCronExpression"]));

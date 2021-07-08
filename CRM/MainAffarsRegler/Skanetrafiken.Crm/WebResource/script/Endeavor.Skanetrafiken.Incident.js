@@ -158,7 +158,6 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
             if (_cgi_contactid != null)
                 Endeavor.Skanetrafiken.Incident.setCustomerFromContact(formContext);
-
         },
 
         onLoadHideShowTypeOfContactFields: function (executionContext) {

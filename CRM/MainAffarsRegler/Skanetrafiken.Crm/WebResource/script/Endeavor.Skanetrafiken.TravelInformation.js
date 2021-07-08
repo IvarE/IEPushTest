@@ -32,6 +32,13 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 Endeavor.Skanetrafiken.TravelInformation.formContext = executionContext.getFormContext();
                 Endeavor.Skanetrafiken.TravelInformation.getContractors();
                 Endeavor.Skanetrafiken.TravelInformation.getOrganisationalUnits();
+
+                debugger;
+                if (Endeavor.Skanetrafiken.TravelInformation.document != null) {
+                    var timestamp_label = Endeavor.Skanetrafiken.TravelInformation.document.getElementById('timestamp');
+                    Endeavor.Skanetrafiken.TravelInformation.getCaseEventDate(timestamp_label);
+                }
+                
             } catch (e) {
                 Endeavor.formscriptfunctions.AlertCustomDialog(e.message);
             }
@@ -130,7 +137,6 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                     return "X";
             }
 
-            debugger;
             if (departureId == "X" && arrivalId == "X")
                 return "";
 
@@ -1324,7 +1330,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
         getCaseEventDate: function (timestamp_label) {
             try {
-
+                debugger;
                 var formType = Endeavor.Skanetrafiken.TravelInformation.formContext.ui.getFormType();
                 if (formType == 1)
                     return;
@@ -1334,16 +1340,29 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 var createdOnAttr = Endeavor.Skanetrafiken.TravelInformation.formContext.getAttribute("createdon");
 
                 if (actionDateAttr && actionDateAttr.getValue()) {
-                    timestamp_label.value = actionDateAttr.getValue();
-                    return;
+                    var actionDateValue = actionDateAttr.getValue();
+                    var month = (actionDateValue.getMonth() + 1) < 10 ? "0" + (actionDateValue.getMonth() + 1) : (actionDateValue.getMonth() + 1);
+                    var day = actionDateValue.getDate() < 10 ? "0" + actionDateValue.getDate() : actionDateValue.getDate();
+                    var hours = actionDateValue.getHours() < 10 ? "0" + actionDateValue.getHours() : actionDateValue.getHours();
+                    var minuts = actionDateValue.getMinutes() < 10 ? "0" + actionDateValue.getMinutes() : actionDateValue.getMinutes();
+                    timestamp_label.value = actionDateValue.getFullYear() + "-" + month + "-" + day + " " + hours + ":" + minuts;
                 }
                 else if (arrivalDateAttr && arrivalDateAttr.getValue()) {
-                    timestamp_label.value = arrivalDateAttr.getValue();
-                    return;
+
+                    var arrivalDateValue = arrivalDateAttr.getValue();
+                    var month = (arrivalDateValue.getMonth() + 1) < 10 ? "0" + (arrivalDateValue.getMonth() + 1) : (arrivalDateValue.getMonth() + 1);
+                    var day = arrivalDateValue.getDate() < 10 ? "0" + arrivalDateValue.getDate() : arrivalDateValue.getDate();
+                    var hours = arrivalDateValue.getHours() < 10 ? "0" + arrivalDateValue.getHours() : arrivalDateValue.getHours();
+                    var minuts = arrivalDateValue.getMinutes() < 10 ? "0" + arrivalDateValue.getMinutes() : arrivalDateValue.getMinutes();
+                    timestamp_label.value = arrivalDateValue.getFullYear() + "-" + month + "-" + day + " " + hours + ":" + minuts;
                 }
                 else if (createdOnAttr && createdOnAttr.getValue()) {
-                    timestamp_label.value = createdOnAttr.getValue();
-                    return;
+                    var createdOnValue = createdOnAttr.getValue();
+                    var month = (createdOnValue.getMonth() + 1) < 10 ? "0" + (createdOnValue.getMonth() + 1) : (createdOnValue.getMonth() + 1);
+                    var day = createdOnValue.getDate() < 10 ? "0" + createdOnValue.getDate() : createdOnValue.getDate();
+                    var hours = createdOnValue.getHours() < 10 ? "0" + createdOnValue.getHours() : createdOnValue.getHours();
+                    var minuts = createdOnValue.getMinutes() < 10 ? "0" + createdOnValue.getMinutes() : createdOnValue.getMinutes();
+                    timestamp_label.value = createdOnValue.getFullYear() + "-" + month + "-" + day + " " + hours + ":" + minuts;
                 }
 
             } catch (e) {

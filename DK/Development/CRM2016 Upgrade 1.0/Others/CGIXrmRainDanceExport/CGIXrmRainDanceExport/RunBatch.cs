@@ -2,22 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CGIXrmWin;
 using Microsoft.Xrm.Sdk;
 using System.Configuration;
 using System.Collections.ObjectModel;
 using System.IO;
 using CGIXrmRainDanceExport.Classes;
+using Endeavor.Crm;
+using Microsoft.Xrm.Tooling.Connector;
+using Generated = Skanetrafiken.Crm.Schema.Generated;
+using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Xrm.Sdk.Messages;
+using Microsoft.Xrm.Sdk.Metadata;
 
 namespace CGIXrmRainDanceExport
 {
     public class RunBatch
     {
         #region Declarations
-        readonly XrmManager _xrmManager;
-        string _fileName = ""; 
+        string _fileName = "";
         int _countInvoince;
         decimal _totalsum;
+        Plugin.LocalPluginContext localContext = null;
+        OptionMetadataCollection optionsMetadata = null;
+        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        // INFO: (hest) The entropy should be unique for each application. DON'T COPY THIS VALUE INTO A NEW PROJECT!!!!
+        internal static byte[] Entropy = System.Text.Encoding.Unicode.GetBytes("RainDanceExport");
+
+        internal static string CredentialFilePath
+        {
+            get
+            {
+                return Environment.ExpandEnvironmentVariables(Properties.Settings.Default.CredentialsFilePath);
+            }
+        }
         #endregion
 
         #region Constructors
@@ -25,7 +43,8 @@ namespace CGIXrmRainDanceExport
         {
             try
             {
-                _xrmManager = _initManager();
+                localContext = GenerateLocalContext();
+                optionsMetadata = RetrieveOptionSetMetadata(RefundEntity.EntityLogicalName, RefundEntity.Fields.cgi_vat_code);
             }
             catch (Exception ex)
             {
@@ -51,40 +70,52 @@ namespace CGIXrmRainDanceExport
                 string now = string.Format("{0}{1}{2}{3}{4}{5}", year, month, day, hour, minute, second);
 
                 _fileName = string.Format("{0}\\DK_utbet_inland_{1}", exportdir, now + ".txt");
-                Console.WriteLine("_fileName:" + _fileName);
+                _log.Debug("_fileName:" + _fileName);
+
                 ObservableCollection<ExportData> lines = new ObservableCollection<ExportData>();
                 int count = 0;
                 _countInvoince = 0;
                 _totalsum = 0;
 
                 //get all refunds to export.
-                ObservableCollection<refund> refunds = _xrmManager.Get<refund>(_getxmlPendingRefunds());
-                foreach (refund refund in refunds)
+                List<RefundEntity> lRefunds = _getPendingRefunds();
+                _log.Debug("Number of refunds to process: " + lRefunds.Count);
+
+                foreach (RefundEntity refund in lRefunds)
                 {
                     try
                     {
-                        Console.WriteLine("Processing refundnumber: {0} | CaseId: {1}", _formatString(refund.Refundnumber), _formatString(refund.Caseid.ToString()));
-
-                        if (refund.Caseid != null)
+                        if (refund.cgi_Caseid != null)
                         {
-                            incident incident = _getCurrentIncident(refund.Caseid.ToString());
-                            contact contact = _getCurrentContact(incident.Contactid.ToString());
-                            responsible responsible = _getCurrentResponsible(refund.Responsibleid.ToString());
-                            refundproduct refundproduct = _getCurrentRefundProduct(refund.Productid.ToString());
-                            user user = _getUser(refund.CreatedBy.Id.ToString());
-                            refundaccount refundaccount = _getRefundAccount(refund.Accountid.ToString());
+                            _log.Debug(string.Format("Processing refundnumber: {0} | CaseId: {1}", _formatString(refund.cgi_refundnumber), _formatString(refund.cgi_Caseid.Id.ToString())));
+
+                            IncidentEntity incident = _getCurrentIncident(refund.cgi_Caseid.Id);
+                            ContactEntity contact = _getCurrentContact(incident.cgi_Contactid != null ? incident.cgi_Contactid.Id : Guid.Empty);
+                            RefundResponsibleEntity responsible = _getCurrentResponsible(refund.cgi_responsibleId != null ? refund.cgi_responsibleId.Id : Guid.Empty);
+                            RefundProductEntity refundproduct = _getCurrentRefundProduct(refund.cgi_Productid != null ? refund.cgi_Productid.Id : Guid.Empty);
+                            UserEntity user = _getUser(refund.CreatedBy.Id);
+                            RefundAccountEntity refundaccount = _getRefundAccount(refund.cgi_Accountid != null ? refund.cgi_Accountid.Id : Guid.Empty);
+
+                            _log.Debug("Creating Customer/Invoice/Information/Accounting Record");
 
                             if (contact != null)
                             {
+                                _log.Debug("Contact is not null");
                                 if (incident != null)
                                 {
+                                    _log.Debug("Incident is not null");
                                     string custinfo = _createCustomerRecord(refund, contact, incident);
+                                    _log.Debug("Customer Info: " + custinfo);
                                     string inviceinfo = _createInvoiceRecord(refund);
+                                    _log.Debug("Invoice Info: " + inviceinfo);
                                     string inforecord = _createInformationRecord(refund, incident);
+                                    _log.Debug("Information Info: " + inforecord);
                                     string accountrecord = _createAcountingRecord(refund, contact, incident, responsible, refundproduct, user, refundaccount);
+                                    _log.Debug("Account Info: " + accountrecord);
 
-                                    _setRecordToExported(refund.Refundid);
-                                    Console.WriteLine("Refund exported: {0} | CaseId: {1}", _formatString(refund.Refundnumber), _formatString(refund.Caseid.ToString()));
+                                    _log.Debug("Setting Refund Record to Exported");
+                                    _setRecordToExported((Guid)refund.cgi_refundId);
+                                    _log.Debug(string.Format("Refund exported: {0} | CaseId: {1}", _formatString(refund.cgi_refundnumber), _formatString(refund.cgi_Caseid.Id.ToString())));
 
                                     ExportData exportdata = new ExportData
                                     {
@@ -119,28 +150,23 @@ namespace CGIXrmRainDanceExport
                                     count++;
                                 }
                                 else
-                                {
-                                    _logErrorOnRefund(refund.Refundid, "Ingen ärende koppling hittas på ersättningsposten.");
-                                }
+                                    _logErrorOnRefund((Guid)refund.cgi_refundId, "Ingen ärende koppling hittas på ersättningsposten.");
                             }
                             else
-                            {
-                                _logErrorOnRefund(refund.Refundid, "Ingen kontakt hittas på ärendet.");
-                            }
+                                _logErrorOnRefund((Guid)refund.cgi_refundId, "Ingen kontakt hittas på ärendet.");
                         }
                         else
-                        {
-                            _logErrorOnRefund(refund.Refundid, "Ingen ärende koppling hittas på ersättningsposten.");
-                        }
+                            _logErrorOnRefund((Guid)refund.cgi_refundId, "Ingen ärende koppling hittas på ersättningsposten.");
                     }
                     catch (Exception ex)
                     {
-                        _logErrorOnRefund(refund.Refundid, ex.Message);
-                        Console.WriteLine(ex.ToString());
+                        _logErrorOnRefund((Guid)refund.cgi_refundId, ex.Message);
+                        _log.Error("Exception Caught: " + ex.Message);
                     }
                 }
-
+                //_log.Debug("Creating File...");
                 _createFile(_fileName, lines);
+                //_log.Debug("File Created.");
             }
             catch (Exception ex)
             {
@@ -152,6 +178,7 @@ namespace CGIXrmRainDanceExport
         #endregion
 
         #region Private Methods
+
         //Buntpost
         private string _createHeader()
         {
@@ -163,25 +190,23 @@ namespace CGIXrmRainDanceExport
         }
 
         //Kundpost
-        private string _createCustomerRecord(refund refund, contact contact, incident incident)
+        private string _createCustomerRecord(RefundEntity refund, ContactEntity contact, IncidentEntity incident)
         {
-
             string line1 = "02";
-            string line2 = _formatSocNumber(_formatString(refund.Soc_sec_number), _formatString(refund.Foreign_payment)).SetToFixedLengthPadRight(15);
-            string line3 = string.Format("{0} {1}", _formatString(contact.Lastname), _formatString(contact.Firstname)).SetToFixedLengthPadRight(30);
-            string line4 = contact.Address1_line2.SetToFixedLengthPadRight(30);
-            string line5 = string.Format("{0}  {1}", _formatString(contact.Address1_postalcode).SetMaxLength(6), _formatString(contact.Address1_city)).SetToFixedLengthPadRight(30);
+            string line2 = _formatSocNumber(_formatString(refund.cgi_soc_sec_number), _formatString(refund.cgi_foreign_payment)).SetToFixedLengthPadRight(15);
+            string line3 = string.Format("{0} {1}", _formatString(contact.LastName), _formatString(contact.FirstName)).SetToFixedLengthPadRight(30);
+            string line4 = contact.Address1_Line1.SetToFixedLengthPadRight(30);
+            string line5 = string.Format("{0}  {1}", _formatString(contact.Address1_PostalCode).SetMaxLength(6), _formatString(contact.Address1_City)).SetToFixedLengthPadRight(30);
             string line6 = "1500".SetToFixedLengthPadRight(12);
             string line7 = "".SetToFixedLengthPadRight(16);         // "99".PadLeft(16, '0');
 
             //Special handling of adresses for RGOL cases
-            if (!string.IsNullOrWhiteSpace(incident.RgolFullname))//if (incident.Caseorigincode == 285050007)
+            if (!string.IsNullOrWhiteSpace(incident.cgi_rgol_fullname))//if (incident.Caseorigincode == 285050007)
             {
-                line3 = incident.RgolFullname.SetToFixedLengthPadRight(30);
-                line4 = incident.RgolAddressLine2.SetToFixedLengthPadRight(30);
-                line5 = string.Format("{0}  {1}", _formatString(incident.RgolAddress1Postalcode).SetMaxLength(6), _formatString(incident.RgolAddress1City)).SetToFixedLengthPadRight(30);
+                line3 = incident.cgi_rgol_fullname.SetToFixedLengthPadRight(30);
+                line4 = incident.cgi_rgol_address1_line2.SetToFixedLengthPadRight(30);
+                line5 = string.Format("{0}  {1}", _formatString(incident.cgi_rgol_address1_postalcode).SetMaxLength(6), _formatString(incident.cgi_rgol_address1_city)).SetToFixedLengthPadRight(30);
             }
-
 
             string line = string.Format("{0}{1}{2}{3}{4}{5}{6}", line1, line2, line3, line4, line5, line6, line7);
             return line;
@@ -189,79 +214,124 @@ namespace CGIXrmRainDanceExport
 
         //Fakturauppgifter
         //TODO : contract never used
-        private string _createInvoiceRecord(refund refund)
+        private string _createInvoiceRecord(RefundEntity refund)
         {
             string line1 = "03";
-            string line2 = _formatSocNumber(_formatString(refund.Soc_sec_number), _formatString(refund.Foreign_payment)).SetToFixedLengthPadRight(15);
+            string line2 = _formatSocNumber(_formatString(refund.cgi_soc_sec_number), _formatString(refund.cgi_foreign_payment)).SetToFixedLengthPadRight(15);
             string line3 = _formatCreateDate(refund.CreatedOn).SetToFixedLengthPadRight(8);
             string line4 = _formatCreateDate(refund.CreatedOn).SetToFixedLengthPadRight(8);
             string line5 = _formatCreateDate(refund.CreatedOn).SetToFixedLengthPadRight(8);
             string line6 = "".SetToFixedLengthPadRight(8);
-            string line7 = _calculatenetamount(refund.Amount, refund.Vat_code_name).SetToFixedLengthPadRight(16); //ex moms
 
             //Calculate totalsum of all invoivcerows..
-            _totalsum = _totalsum + refund.Amount.Value;
+            _totalsum = _totalsum + refund.cgi_Amount.Value;
 
-            string line8 = _calculateVatAmount(refund.Amount, refund.Vat_code_name).SetToFixedLengthPadRight(16);
-            string line9 = _formatVatCode(refund.Vat_code_name).SetToFixedLengthPadRight(2);
+            int vatCode = refund.cgi_vat_code != null ? (int)refund.cgi_vat_code : int.MinValue;
+
+            string line7 = "";
+            string line8 = "";
+            string line9 = "";
+            if (vatCode == int.MinValue)
+            {
+                line7 = _calculatenetamount(refund.cgi_Amount, null).SetToFixedLengthPadRight(16); //ex moms
+                line8 = _calculateVatAmount(refund.cgi_Amount, null).SetToFixedLengthPadRight(16);
+                line9 = _formatVatCode(null).SetToFixedLengthPadRight(2);
+            }
+            else
+            {
+                string vatName = getlabelFromValueOptionSet(vatCode); //Enum.GetName(typeof(Generated.cgi_refund_cgi_vat_code), vatCode.Value);
+                line7 = _calculatenetamount(refund.cgi_Amount, vatName).SetToFixedLengthPadRight(16); //ex moms
+                line8 = _calculateVatAmount(refund.cgi_Amount, vatName).SetToFixedLengthPadRight(16);
+                line9 = _formatVatCode(vatName).SetToFixedLengthPadRight(2);
+            }
+
             string line = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}", line1, line2, line3, line4, line5, line6, line7, line8, line9);
             _countInvoince++;
+
             return line;
         }
 
         //Meddelandeuppgifter
         //TODO : contract never used
-        private string _createInformationRecord(refund refund, incident incident)
+        private string _createInformationRecord(RefundEntity refund, IncidentEntity incident)
         {
-            string line1 = "04";
-            string line2 = _formatString(incident.Ticketnumber).SetToFixedLengthPadRight(50);
-            string line3 = _calculatenetamount(refund.Amount, refund.Vat_code_name).SetToFixedLengthPadRight(16); //ex moms
-            string line4 = _formatVatCode(refund.Vat_code_name).SetToFixedLengthPadRight(2);
-            string line = string.Format("{0}{1}{2}{3}", line1, line2, line3, line4);
+            int vatCode = refund.cgi_vat_code != null ? (int)refund.cgi_vat_code : int.MinValue;
 
+            string line1 = "04";
+            string line2 = _formatString(incident.TicketNumber).SetToFixedLengthPadRight(50);
+
+            string line3 = "";
+            string line4 = "";
+
+            if (vatCode == int.MinValue)
+            {
+                line3 = _calculatenetamount(refund.cgi_Amount, null).SetToFixedLengthPadRight(16); //ex moms
+                line4 = _formatVatCode(null).SetToFixedLengthPadRight(2);
+            }
+            else
+            {
+                string vatName = getlabelFromValueOptionSet(vatCode);
+                line3 = _calculatenetamount(refund.cgi_Amount, vatName).SetToFixedLengthPadRight(16); //ex moms
+                line4 = _formatVatCode(vatName).SetToFixedLengthPadRight(2);
+            }
+
+            string line = string.Format("{0}{1}{2}{3}", line1, line2, line3, line4);
             return line;
         }
 
         //Konteringspost
-        private string _createAcountingRecord(refund refund, contact contact, incident incident, responsible responsible, refundproduct refundproduct, user user, refundaccount refundaccount)
+        private string _createAcountingRecord(RefundEntity refund, ContactEntity contact, IncidentEntity incident, RefundResponsibleEntity responsible, RefundProductEntity refundproduct, UserEntity user, RefundAccountEntity refundaccount)
         {
             string _line1 = "05";
 
             string account = "";
             if (refundaccount != null)
-                account = refundaccount.Account;
+                account = refundaccount.cgi_Account;
 
             string line2 = _formatString(account).SetToFixedLengthPadRight(10);
 
             string line3;
             if (responsible != null)
-                line3 = _formatString(responsible.Responsible).SetToFixedLengthPadRight(10);
+                line3 = _formatString(responsible.cgi_responsible).SetToFixedLengthPadRight(10);
             else
                 line3 = _formatString("").SetToFixedLengthPadRight(10);
-            
+
             string line4 = "1500".SetToFixedLengthPadRight(10);
             string line5 = "".SetToFixedLengthPadRight(10);
 
             string line6;
             if (refundproduct != null)
-                line6 = _formatString(refundproduct.Account).SetToFixedLengthPadRight(10);
+                line6 = _formatString(refundproduct.cgi_Account).SetToFixedLengthPadRight(10);
             else
                 line6 = _formatString("").SetToFixedLengthPadRight(10);
-            
 
             string line7 = "".SetToFixedLengthPadRight(10);
-            string line8 = _formatVatCode(refund.Vat_code_name).SetToFixedLengthPadRight(10);
-            string line9 = _checkLenght(string.Format("{0} {1} {2}", _formatString(incident.Ticketnumber), _formatString(contact.Lastname), _formatString(contact.Firstname)).SetToFixedLengthPadRight(30));
-            string line10 = _calculatenetamount(refund.Amount, refund.Vat_code_name).SetToFixedLengthPadRight(16); //ex moms
-            string line11 = (!string.IsNullOrEmpty(user.RsId)) ? user.RsId.SetToFixedLengthPadRight(10) : "".SetToFixedLengthPadRight(10);   // "".SetToFixedLength(10); //RSID
+            string line8 = "";
+            string line9 = "";
+            string line10 = "";
+
+            int vatCode = refund.cgi_vat_code != null ? (int)refund.cgi_vat_code : int.MinValue;
+
+            if (vatCode == int.MinValue)
+            {
+                line8 = _formatVatCode(null).SetToFixedLengthPadRight(10);
+                line10 = _calculatenetamount(refund.cgi_Amount, null).SetToFixedLengthPadRight(16); //ex moms
+            }
+            else
+            {
+                string vatName = getlabelFromValueOptionSet(vatCode);
+                line8 = _formatVatCode(vatName).SetToFixedLengthPadRight(10);
+                line10 = _calculatenetamount(refund.cgi_Amount, vatName).SetToFixedLengthPadRight(16); //ex moms
+            }
+
+            string line11 = (!string.IsNullOrEmpty(user.cgi_RSID)) ? user.cgi_RSID.SetToFixedLengthPadRight(10) : "".SetToFixedLengthPadRight(10);   // "".SetToFixedLength(10); //RSID
             string line12 = "".SetToFixedLengthPadRight(10);
 
             //Special handling of adresses for RGOL cases
-            if (!string.IsNullOrWhiteSpace(incident.RgolFullname))//if (incident.Caseorigincode == 285050007)
-            {
-                line9 = _checkLenght(string.Format("{0} {1}", _formatString(incident.Ticketnumber), _formatString(incident.RgolFullname)).SetToFixedLengthPadRight(30));
-            }
-
+            if (!string.IsNullOrWhiteSpace(incident.cgi_rgol_fullname))//if (incident.Caseorigincode == 285050007)
+                line9 = _checkLenght(string.Format("{0} {1}", _formatString(incident.TicketNumber), _formatString(incident.cgi_rgol_fullname)).SetToFixedLengthPadRight(30));
+            else
+                line9 = _checkLenght(string.Format("{0} {1} {2}", _formatString(incident.TicketNumber), _formatString(contact.LastName), _formatString(contact.FirstName)).SetToFixedLengthPadRight(30));
 
             string line = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}", _line1, line2, line3, line4, line5, line6, line7, line8, line9, line10, line11, line12);
             return line;
@@ -278,10 +348,10 @@ namespace CGIXrmRainDanceExport
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
+
         private bool _createFile(string filename, ObservableCollection<ExportData> lines)
         {
-
+            _log.Debug("_createFile() File Name: " + filename);
             if (lines == null)
                 return false;
 
@@ -375,14 +445,14 @@ namespace CGIXrmRainDanceExport
 
             if (amount.Value == 0)
             {
-                returnValue = "0";    
+                returnValue = "0";
             }
 
             if (!string.IsNullOrEmpty(vatcodename))
             {
                 if (amount.Value < 0)
                 {
-                    string svat = vatcodename.ToUpper().Replace("MOMS", "").Replace("IN","").Replace("UT","");
+                    string svat = vatcodename.ToUpper().Replace("MOMS", "").Replace("IN", "").Replace("UT", "");
                     svat = svat.Replace("%", "");
                     decimal vatFactor1 = Convert.ToDecimal(svat); //Ex. 12%
                     decimal vatFactor2 = vatFactor1 / 100;  //0,12
@@ -459,127 +529,180 @@ namespace CGIXrmRainDanceExport
             return temp;
         }
 
-        private contact _getCurrentContact(string contactid)
+        private string getlabelFromValueOptionSet(int code)
         {
-            contact contact = null;
-
-            ObservableCollection<contact> contacts = _xrmManager.Get<contact>(_xmlContact(contactid));
-            if (contacts != null && contacts.Any())
-                contact = contacts[0];
-
-            return contact;
+            return optionsMetadata.Where(x => x.Value == code).FirstOrDefault().Label.UserLocalizedLabel.Label;
         }
 
-        private incident _getCurrentIncident(string caseid)
+        private OptionMetadataCollection RetrieveOptionSetMetadata(string entityName, string attributename)
         {
-            incident incident = null;
+            RetrieveAttributeRequest attributeRequest = new RetrieveAttributeRequest
+            {
+                EntityLogicalName = entityName,
+                LogicalName = attributename,
+                RetrieveAsIfPublished = true
+            };
 
-            ObservableCollection<incident> incinents = _xrmManager.Get<incident>(_xmlCase(caseid));
-            if (incinents != null && incinents.Any())
-                incident = incinents[0];
+            var attributeResponse = (RetrieveAttributeResponse)localContext.OrganizationService.Execute(attributeRequest);
+            EnumAttributeMetadata attributeMetadata = (EnumAttributeMetadata)attributeResponse.AttributeMetadata;
 
-            return incident;
+            return attributeMetadata.OptionSet.Options;
         }
 
-        private responsible _getCurrentResponsible(string responsibleid)
+        private List<RefundEntity> _getPendingRefunds()
         {
-            responsible responsible = null;
+            ColumnSet columns = new ColumnSet(RefundEntity.Fields.cgi_refundId, RefundEntity.Fields.cgi_refundnumber, RefundEntity.Fields.CreatedOn, RefundEntity.Fields.CreatedBy, RefundEntity.Fields.cgi_Caseid,
+                RefundEntity.Fields.cgi_vat_code, RefundEntity.Fields.cgi_value_code, RefundEntity.Fields.cgi_travelcard_number, RefundEntity.Fields.cgi_transportcompanyid,
+                RefundEntity.Fields.cgi_taxi_company, RefundEntity.Fields.cgi_swift, RefundEntity.Fields.cgi_soc_sec_number, RefundEntity.Fields.cgi_responsibleId, RefundEntity.Fields.cgi_ReInvoicing,
+                RefundEntity.Fields.cgi_ReimbursementFormid, RefundEntity.Fields.cgi_car_reg, RefundEntity.Fields.cgi_RefundTypeid, RefundEntity.Fields.cgi_Reference, RefundEntity.Fields.OverriddenCreatedOn,
+                RefundEntity.Fields.cgi_Quantity, RefundEntity.Fields.cgi_Productid, RefundEntity.Fields.cgi_milage_compensation, RefundEntity.Fields.cgi_milage, RefundEntity.Fields.cgi_last_valid,
+                RefundEntity.Fields.cgi_InvoiceRecipient, RefundEntity.Fields.cgi_iban, RefundEntity.Fields.cgi_foreign_payment, RefundEntity.Fields.cgi_ExportedRaindance, RefundEntity.Fields.TransactionCurrencyId,
+                RefundEntity.Fields.cgi_Contactid, RefundEntity.Fields.cgi_comments, RefundEntity.Fields.cgi_Caseid, RefundEntity.Fields.cgi_Attestation, RefundEntity.Fields.cgi_amountwithtax_Base,
+                RefundEntity.Fields.cgi_AmountwithTAX, RefundEntity.Fields.cgi_amount_Base, RefundEntity.Fields.cgi_Amount, RefundEntity.Fields.cgi_accountno, RefundEntity.Fields.cgi_Accountid);
 
-            ObservableCollection<responsible> responsibles = _xrmManager.Get<responsible>(_xmlResponsible(responsibleid));
-            if (responsibles != null && responsibles.Any())
-                responsible = responsibles[0];
+            QueryExpression query_refund = new QueryExpression(RefundEntity.EntityLogicalName);
+            query_refund.NoLock = true;
+            query_refund.ColumnSet = columns;
+            query_refund.AddOrder(RefundEntity.Fields.cgi_refundnumber, OrderType.Ascending);
+            query_refund.Criteria.AddCondition(RefundEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.cgi_refundState.Active);
+            query_refund.Criteria.AddCondition(RefundEntity.Fields.cgi_Attestation, ConditionOperator.Equal, (int)Generated.cgi_refund_cgi_attestation.Done);
 
-            return responsible;
+            FilterExpression cgi_refund_Criteria0 = new FilterExpression();
+            query_refund.Criteria.AddFilter(cgi_refund_Criteria0);
+
+            cgi_refund_Criteria0.FilterOperator = LogicalOperator.Or;
+            cgi_refund_Criteria0.AddCondition(RefundEntity.Fields.cgi_ExportedRaindance, ConditionOperator.Equal, false);
+            cgi_refund_Criteria0.AddCondition(RefundEntity.Fields.cgi_ExportedRaindance, ConditionOperator.Null);
+
+
+            LinkEntity cgi_refund_cgi_reimbursementformLinkEntity = query_refund.AddLink(ReimbursementFormEntity.EntityLogicalName, RefundEntity.Fields.cgi_ReimbursementFormid, ReimbursementFormEntity.Fields.cgi_reimbursementformId);
+            cgi_refund_cgi_reimbursementformLinkEntity.EntityAlias = "ac";
+
+            cgi_refund_cgi_reimbursementformLinkEntity.LinkCriteria.AddCondition(ReimbursementFormEntity.Fields.cgi_attestation, ConditionOperator.Equal, true);
+            cgi_refund_cgi_reimbursementformLinkEntity.LinkCriteria.AddCondition(ReimbursementFormEntity.Fields.cgi_payment, ConditionOperator.Equal, true);
+
+            return XrmRetrieveHelper.RetrieveMultiple<RefundEntity>(localContext, query_refund);
         }
 
-        private refundproduct _getCurrentRefundProduct(string refundproductid)
+        private ContactEntity _getCurrentContact(Guid contactid)
         {
-            refundproduct refundproduct = null;
+            if (contactid == Guid.Empty || contactid == null)
+            {
+                _log.Error("The Contact was empty: " + contactid.ToString());
+                return null;
+            }
 
-            ObservableCollection<refundproduct> refundproducts = _xrmManager.Get<refundproduct>(_xmlRefundProduct(refundproductid));
-            if (refundproducts != null && refundproducts.Any())
-                refundproduct = refundproducts[0];
-
-            return refundproduct;
+            ColumnSet columns = new ColumnSet(ContactEntity.Fields.ContactId, ContactEntity.Fields.LastName, ContactEntity.Fields.FirstName,
+                ContactEntity.Fields.Address1_Line2, ContactEntity.Fields.Address1_City, ContactEntity.Fields.Address1_PostalCode);
+            return XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, ContactEntity.EntityLogicalName, contactid, columns);
         }
 
-        private user _getUser(string userid)
+        private IncidentEntity _getCurrentIncident(Guid caseid)
         {
-            user user = null;
-
-            ObservableCollection<user> users = _xrmManager.Get<user>(_xmlGetUser(userid));
-            if (users != null && users.Any())
-                user = users[0];
-
-            return user;
+            ColumnSet columns = new ColumnSet(IncidentEntity.Fields.TicketNumber, IncidentEntity.Fields.cgi_Contactid, IncidentEntity.Fields.cgi_Accountid,
+                IncidentEntity.Fields.cgi_rgol_address1_line1, IncidentEntity.Fields.cgi_rgol_address1_line2, IncidentEntity.Fields.cgi_rgol_address1_postalcode,
+                IncidentEntity.Fields.cgi_rgol_address1_city, IncidentEntity.Fields.cgi_rgol_address1_country, IncidentEntity.Fields.cgi_rgol_fullname,
+                IncidentEntity.Fields.cgi_soc_sec_number, IncidentEntity.Fields.cgi_rgol_socialsecuritynumber, IncidentEntity.Fields.CaseOriginCode);
+            return XrmRetrieveHelper.Retrieve<IncidentEntity>(localContext, IncidentEntity.EntityLogicalName, caseid, columns);
         }
 
-        private refundaccount _getRefundAccount(string refundaccountid)
+        private RefundResponsibleEntity _getCurrentResponsible(Guid responsibleid)
         {
-            refundaccount refundaccount = null;
+            if (responsibleid == Guid.Empty || responsibleid == null)
+            {
+                _log.Error("The Responsible was empty: " + responsibleid.ToString());
+                return null;
+            }
 
-            ObservableCollection<refundaccount> refundaccounts = _xrmManager.Get<refundaccount>(_xmlGetRefundAccount(refundaccountid));
-            if (refundaccounts != null && refundaccounts.Any())
-                refundaccount = refundaccounts[0];
+            ColumnSet columns = new ColumnSet(RefundResponsibleEntity.Fields.cgi_responsible);
+            return XrmRetrieveHelper.Retrieve<RefundResponsibleEntity>(localContext, RefundResponsibleEntity.EntityLogicalName, responsibleid, columns);
+        }
 
-            return refundaccount;
+        private RefundProductEntity _getCurrentRefundProduct(Guid refundproductid)
+        {
+            if (refundproductid == Guid.Empty || refundproductid == null)
+            {
+                _log.Error("The Refund Product was empty: " + refundproductid.ToString());
+                return null;
+            }
+
+            ColumnSet columns = new ColumnSet(RefundProductEntity.Fields.cgi_refundproductname, RefundProductEntity.Fields.cgi_Account);
+            FilterExpression filter = new FilterExpression(LogicalOperator.And);
+            filter.AddCondition(RefundProductEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.cgi_refundproductState.Active);
+            filter.AddCondition(RefundProductEntity.Fields.cgi_refundproductId, ConditionOperator.Equal, refundproductid);
+
+            return XrmRetrieveHelper.RetrieveFirst<RefundProductEntity>(localContext, columns, filter);
+        }
+
+        private UserEntity _getUser(Guid userid)
+        {
+            ColumnSet columns = new ColumnSet(UserEntity.Fields.cgi_RSID);
+            return XrmRetrieveHelper.Retrieve<UserEntity>(localContext, UserEntity.EntityLogicalName, userid, columns);
+        }
+
+        private RefundAccountEntity _getRefundAccount(Guid refundaccountid)
+        {
+            if (refundaccountid == Guid.Empty || refundaccountid == null)
+            {
+                _log.Error("The Refund Account was empty: " + refundaccountid.ToString());
+                return null;
+            }
+
+            ColumnSet columns = new ColumnSet(RefundAccountEntity.Fields.cgi_refundaccountname, RefundAccountEntity.Fields.cgi_Account, RefundAccountEntity.Fields.cgi_refundaccountId);
+            FilterExpression filter = new FilterExpression(LogicalOperator.And);
+            filter.AddCondition(RefundAccountEntity.Fields.statecode, ConditionOperator.Equal, (int)Generated.cgi_refundaccountState.Active);
+            filter.AddCondition(RefundAccountEntity.Fields.cgi_refundaccountId, ConditionOperator.Equal, refundaccountid);
+
+            return XrmRetrieveHelper.RetrieveFirst<RefundAccountEntity>(localContext, columns, filter);
         }
 
         private void _logErrorOnRefund(Guid refundid, string ex)
         {
-            Console.WriteLine("_logErrorOnRefund: " + ex);
-            Entity refund = new Entity
-            {
-                LogicalName = "cgi_refund",
-                Id = refundid,
-                Attributes = new AttributeCollection
-                {
-                    {"cgi_exportmessage", ex},
-                    {"cgi_exportedraindance", false},
-                    {"cgi_exportdate", DateTime.Now}
-                }
-            };
+            _log.Error("_logErrorOnRefund: " + ex);
 
-            _xrmManager.Update(refund);
+            RefundEntity eRefund = new RefundEntity();
+            eRefund.Id = refundid;
+            eRefund.cgi_ExportMessage = ex;
+            eRefund.cgi_ExportedRaindance = false;
+            eRefund.cgi_ExportDate = DateTime.Now;
+
+            XrmHelper.Update(localContext, eRefund);
         }
 
         private void _setRecordToExported(Guid refundid)
         {
-            Entity refund = new Entity
-            {
-                LogicalName = "cgi_refund",
-                Id = refundid,
-                Attributes = new AttributeCollection
-                {
-                    {"cgi_exportmessage", ""},
-                    {"cgi_exportedraindance", true},
-                    {"cgi_exportdate", DateTime.Now}
-                }
-            };
+            RefundEntity eRefund = new RefundEntity();
+            eRefund.Id = refundid;
+            eRefund.cgi_ExportMessage = "";
+            eRefund.cgi_ExportedRaindance = true;
+            eRefund.cgi_ExportDate = DateTime.Now;
 
-
-            _xrmManager.Update(refund);
+            XrmHelper.Update(localContext, eRefund);
         }
 
-        private XrmManager _initManager()
+        private static Plugin.LocalPluginContext GenerateLocalContext()
         {
             try
             {
-                string crmServerUrl = ConfigurationManager.AppSettings["CrmServerUrl"];
-                string domain = ConfigurationManager.AppSettings["Domain"];
-                string username = ConfigurationManager.AppSettings["Username"];
-                string password = ConfigurationManager.AppSettings["Password"];
-                if (String.IsNullOrEmpty(crmServerUrl) || String.IsNullOrEmpty(domain) || String.IsNullOrEmpty(username) || String.IsNullOrEmpty(password))
-                    throw new Exception();
+                _log.Debug("Trying to get the Connection to Dynamics.");
+
+                // Connect to the CRM web service using a connection string.
+                CrmServiceClient conn = new CrmServiceClient(CrmConnection.GetCrmConnectionString(RunBatch.CredentialFilePath, RunBatch.Entropy));
+
+                // Cast the proxy client to the IOrganizationService interface.
+                IOrganizationService serviceProxy = (IOrganizationService)conn.OrganizationWebProxyClient != null ? (IOrganizationService)conn.OrganizationWebProxyClient : (IOrganizationService)conn.OrganizationServiceProxy;
+
+                if (serviceProxy == null)
+                    _log.Error("Connection to Dynamics failed.");
                 else
-                {
-                    XrmManager xrmMgr = new XrmManager(crmServerUrl, domain, username, password);
-                    return xrmMgr;
-                }
+                    _log.Error("Connection to Dynamics succeeded.");
+
+                return new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
             }
-            catch
+            catch (Exception e)
             {
-                throw new Exception("Error while initiating XrmManager. Please check the web settings");
+                _log.Error("Error while initiating GenerateLocalContext. " + e.Message);
+                throw new Exception("Error while initiating GenerateLocalContext. " + e.Message);
             }
         }
 
@@ -668,7 +791,7 @@ namespace CGIXrmRainDanceExport
         private string _xmlContact(string contactid)
         {
             string xml = "";
-            
+
             xml += "<fetch version='1.0' mapping='logical' distinct='false'>";
             xml += "    <entity name='contact'>";
             xml += "        <attribute name='contactid' />";
@@ -682,7 +805,7 @@ namespace CGIXrmRainDanceExport
             xml += "        </filter>";
             xml += "    </entity>";
             xml += "</fetch>";
-            
+
             return xml;
         }
 

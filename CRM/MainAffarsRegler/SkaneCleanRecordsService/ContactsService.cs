@@ -38,7 +38,7 @@ namespace Endeavor.Crm.CleanRecordsService
             JobDataMap jobDataMap = new JobDataMap();
             jobDataMap[InactivateContacts.DataMapModifiedAfter] = DateTime.Now;
 
-            _log.Info($"Scheduling UploadJob");
+            _log.Info($"Scheduling Inactivate Contacts Job");
 
             IJobDetail scheduleUploadJob = JobBuilder.Create<InactivateContacts>()
             .WithIdentity(InactivateContacts.JobName, InactivateContacts.GroupName)

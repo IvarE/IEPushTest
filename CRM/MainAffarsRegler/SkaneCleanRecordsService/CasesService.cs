@@ -38,7 +38,7 @@ namespace Endeavor.Crm.CleanRecordsService
             JobDataMap jobDataMap = new JobDataMap();
             jobDataMap[CloseCases.DataMapModifiedAfter] = DateTime.Now;
 
-            _log.Info($"Scheduling UploadJob");
+            _log.Info($"Scheduling Close Cases Job");
 
             IJobDetail scheduleUploadJob = JobBuilder.Create<CloseCases>()
             .WithIdentity(CloseCases.JobName, CloseCases.GroupName)

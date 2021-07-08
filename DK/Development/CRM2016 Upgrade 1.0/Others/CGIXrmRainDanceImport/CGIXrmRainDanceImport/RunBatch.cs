@@ -1,19 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CGIXrmWin;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System.Configuration;
 using System.IO;
+using Endeavor.Crm;
+using Microsoft.Xrm.Tooling.Connector;
 
 namespace CGIXrmRainDanceImport
 {
     public class RunBatch
     {
         #region Declarations
-        readonly XrmManager _xrmManager;
-        List<string> _rsidFromFile;
+        List<string> _rsidFromFile = null;
+        Plugin.LocalPluginContext localContext = null;
+        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        // INFO: (hest) The entropy should be unique for each application. DON'T COPY THIS VALUE INTO A NEW PROJECT!!!!
+        internal static byte[] Entropy = System.Text.Encoding.Unicode.GetBytes("RainDanceImport");
+
+        internal static string CredentialFilePath
+        {
+            get
+            {
+                return Environment.ExpandEnvironmentVariables(Properties.Settings.Default.CredentialsFilePath);
+            }
+        }
         #endregion
 
         #region Constructors
@@ -21,7 +34,7 @@ namespace CGIXrmRainDanceImport
         {
             try
             {
-                _xrmManager = _initManager();
+                localContext = GenerateLocalContext();
             }
             catch (Exception ex)
             {
@@ -37,10 +50,10 @@ namespace CGIXrmRainDanceImport
             {
                 string filepath = ConfigurationManager.AppSettings["FilesDir"];
                 string filebackup = ConfigurationManager.AppSettings["Backup"];
-                
+
                 DirectoryInfo info = new DirectoryInfo(filepath);
                 FileInfo[] files = info.GetFiles().OrderBy(p => p.CreationTime).ToArray();
-                
+
                 if (files.Any())
                 {
                     for (int x = 0; x <= (files.Length - 1); x++)
@@ -59,9 +72,10 @@ namespace CGIXrmRainDanceImport
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                _log.Error("Error Run(): " + ex.Message);
+                throw new Exception("Error Run(): " + ex.Message);
             }
 
             return false;
@@ -69,23 +83,29 @@ namespace CGIXrmRainDanceImport
         #endregion
 
         #region Private Methods
-        private XrmManager _initManager()
+        private static Plugin.LocalPluginContext GenerateLocalContext()
         {
             try
             {
+                _log.Debug("Trying to get the Connection to Dynamics.");
 
-                string crmServerUrl = ConfigurationManager.AppSettings["CrmServerUrl"];
-                string domain = ConfigurationManager.AppSettings["Domain"];
-                string username = ConfigurationManager.AppSettings["Username"];
-                string password = ConfigurationManager.AppSettings["Password"];
-                if (String.IsNullOrEmpty(crmServerUrl) || String.IsNullOrEmpty(domain) || String.IsNullOrEmpty(username) || String.IsNullOrEmpty(password))
-                    throw new Exception();
-                XrmManager xrmMgr = new XrmManager(crmServerUrl, domain, username, password);
-                return xrmMgr;
+                // Connect to the CRM web service using a connection string.
+                CrmServiceClient conn = new CrmServiceClient(CrmConnection.GetCrmConnectionString(RunBatch.CredentialFilePath, RunBatch.Entropy));
+
+                // Cast the proxy client to the IOrganizationService interface.
+                IOrganizationService serviceProxy = (IOrganizationService)conn.OrganizationWebProxyClient != null ? (IOrganizationService)conn.OrganizationWebProxyClient : (IOrganizationService)conn.OrganizationServiceProxy;
+
+                if (serviceProxy == null)
+                    _log.Error("Connection to Dynamics failed.");
+                else
+                    _log.Error("Connection to Dynamics succeeded.");
+
+                return new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
             }
-            catch
+            catch (Exception e)
             {
-                throw new Exception("Error while initiating XrmManager. Please check the web settings");
+                _log.Error("Error while initiating GenerateLocalContext. " + e.Message);
+                throw new Exception("Error while initiating GenerateLocalContext. " + e.Message);
             }
         }
 
@@ -107,11 +127,12 @@ namespace CGIXrmRainDanceImport
                 fetchXml += "  </entity>";
                 fetchXml += "</fetch>";
                 FetchExpression f = new FetchExpression(fetchXml);
-                returnvalue = _xrmManager.Service.RetrieveMultiple(f);
+                returnvalue = localContext.OrganizationService.RetrieveMultiple(f);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                _log.Error("Error _getUsers(): " + ex.Message);
+                throw new Exception("Error _getUsers(): " + ex.Message);
             }
 
             return returnvalue;
@@ -129,9 +150,10 @@ namespace CGIXrmRainDanceImport
                     _rsidFromFile.Add(rsid);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                _log.Error("Error _readFile(): " + ex.Message);
+                throw new Exception("Error _readFile(): " + ex.Message);
             }
         }
 
@@ -146,13 +168,14 @@ namespace CGIXrmRainDanceImport
                     if (string.IsNullOrEmpty(rsid))
                     {
                         user.Attributes["cgi_rsid"] = null;
-                        _xrmManager.Service.Update(user);
+                        localContext.OrganizationService.Update(user);
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                _log.Error("Error _checkUser(): " + ex.Message);
+                throw new Exception("Error _checkUser(): " + ex.Message);
             }
         }
         #endregion
