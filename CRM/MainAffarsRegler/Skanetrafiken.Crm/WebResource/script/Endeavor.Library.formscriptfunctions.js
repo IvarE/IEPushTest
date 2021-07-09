@@ -523,6 +523,9 @@ Endeavor.formscriptfunctions = {
             value = object.value;
             nextUrl = object["@odata.nextLink"];
 
+            if (value == null)
+                return object;
+
             // Add records to total records
             for (var i = 0; i < value.length; i++) {
 
