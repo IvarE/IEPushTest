@@ -1071,10 +1071,10 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                                 }
                             }
                         }
-                        else {
-                            alert("Det finns ingen reseinformation för detta fall!");
-                            return;
-                        }
+                        //else {
+                        //    alert("Det finns ingen reseinformation för detta fall!");
+                        //    return;
+                        //}
                     }
                     //fortsätt med valideringen endast om trafikinfo saknas
                 }

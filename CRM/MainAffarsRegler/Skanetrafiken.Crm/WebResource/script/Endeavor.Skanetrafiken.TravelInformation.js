@@ -789,7 +789,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                 if (datetime == null || datetime == "X")
                     return null;
 
-                datetime = datetime.split('+')[0] + "Z";
+                //datetime = datetime.split('+')[0] + "Z";
                 return new Date(datetime).toISOString();
             }
 
