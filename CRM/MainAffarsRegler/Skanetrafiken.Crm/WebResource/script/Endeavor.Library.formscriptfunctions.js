@@ -154,6 +154,18 @@ Endeavor.formscriptfunctions = {
     },
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Set control label.
+    SetLabel: function (name, label, formContext) {
+        try {
+            var _field = formContext.ui.controls.get(name);
+            _field.setLabel(label);
+        }
+        catch (e) {
+            alert("Fel i Endeavor.formscriptfunctions.SetLabel\n\n" + e.message);
+        }
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set field enabled or disabled.
     SetState: function (name, state, formContext) {
         try {

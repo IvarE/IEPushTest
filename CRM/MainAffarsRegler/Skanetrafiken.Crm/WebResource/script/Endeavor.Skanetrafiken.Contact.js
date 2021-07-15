@@ -33,7 +33,6 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
             //Endeavor.Skanetrafiken.Contact.lockEmailIfMKLidExistAndNotAdminForm(formContext);
 
-
             switch (formType) {
                 case FORM_TYPE_CREATE:
 
@@ -80,6 +79,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 default:
                     break;
             }
+
         },
 
         // Install on onSave
@@ -372,6 +372,34 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         collaborationContact.setRequiredLevel("required");
                     }
                 }
+            }
+        },
+
+        handleAddressCompositeFields: function (formContext) {
+
+            try {
+                debugger;
+                var globalContext = Xrm.Utility.getGlobalContext();
+                var languageId = globalContext.userSettings.languageId;
+                switch (languageId) {
+                    case 1033:
+                        Endeavor.formscriptfunctions.SetLabel("address1_composite_compositionLinkControl_address1_line1", "C/O Adress", formContext);
+                        Endeavor.formscriptfunctions.SetLabel("address1_composite_compositionLinkControl_address1_line2", "Street Address", formContext);
+                        Endeavor.formscriptfunctions.SetLabel("address1_composite_compositionLinkControl_address1_country", "Country", formContext);
+                        Endeavor.formscriptfunctions.HideOrDisplayField("address1_composite_compositionLinkControl_address1_line3", false, formContext);
+                        Endeavor.formscriptfunctions.HideOrDisplayField("address1_composite_compositionLinkControl_address1_stateorprovince", false, formContext);
+                        break;
+                    case 1053:
+                        Endeavor.formscriptfunctions.SetLabel("address1_composite_compositionLinkControl_address1_line1", "C/O Adress", formContext);
+                        Endeavor.formscriptfunctions.SetLabel("address1_composite_compositionLinkControl_address1_line2", "Gatuadress", formContext);
+                        Endeavor.formscriptfunctions.SetLabel("address1_composite_compositionLinkControl_address1_country", "Land", formContext);
+                        Endeavor.formscriptfunctions.HideOrDisplayField("address1_composite_compositionLinkControl_address1_line3", false, formContext);
+                        Endeavor.formscriptfunctions.HideOrDisplayField("address1_composite_compositionLinkControl_address1_stateorprovince", false, formContext);
+                        break;
+                }
+            }
+            catch (ex) {
+                alert("Fel i Endeavor.Skanetrafiken.Contact.handleAddressCompositeFields\n\n" + ex.message);
             }
         },
 
@@ -920,6 +948,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         alert("Form type error!");
                         break;
                 }
+
+                //Handle Composite fields
+                Endeavor.Skanetrafiken.Contact.handleAddressCompositeFields(formContext);
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Contact.onFormLoad\n\n" + e.message);

@@ -3313,9 +3313,8 @@ namespace Skanetrafiken.Crm.Controllers
 
             QualifyLeadResponse resp = (QualifyLeadResponse)localContext.OrganizationService.Execute(req);
             if (resp.CreatedEntities.Count == 0)
-            {
                 throw new Exception(string.Format("Lead validation failed. Qualify lead returned no result"));
-            }
+
             ContactEntity qualifiedContact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, ContactEntity.ContactInfoBlock,
                 new FilterExpression()
                 {
@@ -3324,10 +3323,9 @@ namespace Skanetrafiken.Crm.Controllers
                         new ConditionExpression(ContactEntity.Fields.Id, ConditionOperator.Equal, resp.CreatedEntities.FirstOrDefault().Id)
                     }
                 });
+
             if (qualifiedContact == null)
-            {
                 throw new Exception(string.Format("Lead validation failed. No contact found."));
-            }
 
             // Object used for update.
             ContactEntity updContact = new ContactEntity()
@@ -4838,7 +4836,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                     #region Find Lead
 
-                    ContactEntity newContact = null;
                     _log.Info($"Th={threadId} - ValidateEmail: Retrieving Lead with Id: {leadId}");
 
                     ColumnSet columns = LeadEntity.LeadInfoBlock;
@@ -4869,102 +4866,68 @@ namespace Skanetrafiken.Crm.Controllers
 
                     #endregion
 
-                    #region Conflict Contacts and Lead
+                    #region Conflict Contacts
                     _log.Debug($"Th={threadId} - ValidateEmail: Conflicting Contact Query.");
-                    QueryExpression contactConflictQuery = CreateContactConflictQuery(lead);
+                    QueryExpression contactConflictQuery = QueryContactEmailConflict(lead.EMailAddress1, Contact.Fields.EMailAddress1);
                     IList<ContactEntity> conflictContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactConflictQuery);
-                    _log.Info($"Th={threadId} - ValidateEmail: Found {conflictContacts.Count} conflicting Contacts");
-
-
-                    if (conflictContacts == null || conflictContacts.Count() < 1)
-                    {
-                        _log.Debug($"Th={threadId} - ValidateEmail: Conflicting EMailAddress1 Query.");
-                        contactConflictQuery = CreateContactEMailAddress1ConflictQuery(lead);
-                        conflictContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactConflictQuery);
-                    }
-
-                    _log.Debug($"Th={threadId} - ValidateEmail: Conflicting Leads Query.");
-                    QueryExpression leadConflictQuery = CreateLeadConflictQuery(lead);
-                    IList<LeadEntity> conflictLeads = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, leadConflictQuery);
-                    _log.Info($"Th={threadId} - ValidateEmail: Found {conflictLeads.Count} conflicting Leads");
+                    _log.Info($"Th={threadId} - ValidateEmail: Found {conflictContacts.Count} conflicting Contacts: EmailAddress1");
 
                     if (conflictContacts.Count > 0)
                     {
-                        _log.Info($"Th={threadId} - ValidateEmail: Contact conflicts found.");
-
-                        foreach (ContactEntity c in conflictContacts)
-                        {
-
-                            if (lead.EMailAddress1 != null && lead.EMailAddress1.Equals(c.EMailAddress1))
-                            {
-                                HttpResponseMessage respMess2 = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                respMess2.Content = new StringContent("Duplicate Contact found with the same primary email.");
-                                return respMess2;
-                            }
-                        }
-
-                        _log.Info($"Th={threadId} - ValidateEmail: No EMailAddress1 conflict was found. Qualifying Lead.");
-                        newContact = QualifyLeadToContact(localContext, lead);
-
-                        _log.Info($"Th={threadId} - ValidateEmail: Combining {conflictContacts.Count} conflicting contacts.");
-                        newContact.CombineContacts(localContext, conflictContacts);
-
-                    }
-                    else
-                    {
-                        //Creating New Contact
-                        _log.Info($"Th={threadId} - ValidateEmail: No valid existing contact found, creating new from the Lead.");
-                        newContact = QualifyLeadToContact(localContext, lead);
-                    }
-
-                    #endregion
-
-                    if (newContact == null)
-                    {
-                        HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                        respMess.Content = new StringContent(Resources.UnexpectedErrorWhenValidatingEmail);
+                        HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        respMess.Content = new StringContent("Contact already validated. Contact found with EmailAddress1 equal to Lead's Email.");
                         return respMess;
                     }
 
-                    #region Update Contact
+                    contactConflictQuery = QueryContactEmailConflict(lead.EMailAddress1, Contact.Fields.EMailAddress2);
+                    conflictContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactConflictQuery);
+                    _log.Info($"Th={threadId} - ValidateEmail: Found {conflictContacts.Count} conflicting Contacts: EmailAddress2");
 
-                    // Object used for update.
-                    ContactEntity updContact2 = new ContactEntity()
-                    {
-                        ContactId = newContact.ContactId
-                    };
-                    AttributeCollection attrColl = newContact.Attributes;
+                    ContactEntity contact = null;
 
-                    if (conflictLeads.Count > 0)
+                    if (conflictContacts.Count > 1)
                     {
-                        _log.DebugFormat($"Th={threadId} - ValidateEmail: Merging {conflictLeads.Count} Leads with the new Contact");
-                        foreach (LeadEntity leadConflict in conflictLeads)
-                        {
-                            ContactEntity.UpdateContactWithLead(ref newContact, ref updContact2, leadConflict);
-                        }
-                        _log.Debug($"Th={threadId} - ValidateEmail: Contact updated with Lead.");
+                        HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        respMess.Content = new StringContent("Multiple Contacts found with EmailAddress2 equal to Lead's Email. This will result in multiple validated Contacts.");
+                        return respMess;
                     }
-
-                    if (newContact.DoNotEMail == true)
+                    else if (conflictContacts.Count == 1)
                     {
-                        newContact.DoNotEMail = false;
-                        updContact2.DoNotEMail = false;
+                        contact = conflictContacts.FirstOrDefault();
+                        ContactEntity.UpdateContactWithLeadKampanj(ref contact, lead);
+
+                        localContext.OrganizationService.Update(contact);
+                        //Cancel/Qualify the Lead
                     }
+                    else if (conflictContacts.Count == 0)
+                    {
+                        contact = QualifyLeadToContact(localContext, lead);
+                        contact.ed_PrivateCustomerContact = true;
+                        contact.ed_SourceCampaignId = lead.CampaignId;
+                        contact.ed_InformationSource = ed_informationsource.Kampanj;
 
-                    newContact.ed_PrivateCustomerContact = true;
-                    updContact2.ed_PrivateCustomerContact = true;
-
-                    localContext.OrganizationService.Update(updContact2);
+                        localContext.OrganizationService.Update(contact);
+                    }
 
                     #endregion
 
-                    _log.Debug($"Th={threadId} - ValidateEmail: Contact updated. Sending confirmation Email.");
-                    CrmPlusUtility.SendConfirmationEmail(localContext, threadId, newContact);
-                    _log.Info($"Th={threadId} - ValidateEmail: Confirmation Email sent.");
+                    if(contact != null)
+                    {
+                        _log.Debug($"Th={threadId} - ValidateEmail: Contact updated. Sending confirmation Email.");
+                        CrmPlusUtility.SendConfirmationEmail(localContext, threadId, contact);
+                        _log.Info($"Th={threadId} - ValidateEmail: Confirmation Email sent.");
 
-                    HttpResponseMessage rm4 = new HttpResponseMessage(HttpStatusCode.OK);
-                    rm4.Content = new StringContent(SerializeNoNull(newContact.ToContactInfo(localContext)));
-                    return rm4;
+                        HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.OK);
+                        rm.Content = new StringContent(SerializeNoNull(contact.ToContactInfo(localContext)));
+                        return rm;
+                    }
+                    else
+                    {
+                        _log.Info($"Th={threadId} - ValidateEmail: Empty Response.");
+                        HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.OK);
+                        rm.Content = new StringContent("");
+                        return rm;
+                    }
                 }
             }
             catch (Exception ex)
@@ -5421,6 +5384,22 @@ namespace Skanetrafiken.Crm.Controllers
             }
 
             return result;
+        }
+
+        private static QueryExpression QueryContactEmailConflict(string emailAddress, string logicalNameEmail)
+        {
+            var queryContacts = new QueryExpression(ContactEntity.EntityLogicalName)
+            {
+                NoLock = true,
+                ColumnSet = ContactEntity.ContactInfoBlock
+            };
+
+            queryContacts.ColumnSet.AddColumn(ContactEntity.Fields.DoNotEMail);
+            queryContacts.Criteria.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
+            queryContacts.Criteria.AddCondition(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true);
+            queryContacts.Criteria.AddCondition(logicalNameEmail, ConditionOperator.Equal, emailAddress);
+
+            return queryContacts;
         }
 
         private static QueryExpression CreateLeadConflictQuery(LeadEntity lead)
