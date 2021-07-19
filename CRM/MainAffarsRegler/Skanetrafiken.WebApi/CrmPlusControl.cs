@@ -4897,7 +4897,14 @@ namespace Skanetrafiken.Crm.Controllers
                         ContactEntity.UpdateContactWithLeadKampanj(ref contact, lead);
 
                         localContext.OrganizationService.Update(contact);
-                        //Cancel/Qualify the Lead
+
+                        SetStateRequest req = new SetStateRequest()
+                        {
+                            EntityMoniker = lead.ToEntityReference(),
+                            State = new OptionSetValue((int)Generated.LeadState.Disqualified),
+                            Status = new OptionSetValue((int)Generated.lead_statuscode.Canceled)
+                        };
+                        SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
                     }
                     else if (conflictContacts.Count == 0)
                     {
@@ -4925,7 +4932,7 @@ namespace Skanetrafiken.Crm.Controllers
                     {
                         _log.Info($"Th={threadId} - ValidateEmail: Empty Response.");
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.OK);
-                        rm.Content = new StringContent("");
+                        rm.Content = new StringContent(string.Empty);
                         return rm;
                     }
                 }
