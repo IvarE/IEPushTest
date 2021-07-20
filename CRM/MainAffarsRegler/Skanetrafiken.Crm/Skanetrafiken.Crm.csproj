@@ -283,7 +283,6 @@
     <Content Include="WebResource\script\Endeavor.Common.SaveAndCopyEntity.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.cgi_representative.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.cgi_travelcard.js" />
-    <Content Include="WebResource\script\Endeavor.Skanetrafiken.DeleteActivities.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.ed_mergerecords.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.FrontOffice.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Lead.js" />
