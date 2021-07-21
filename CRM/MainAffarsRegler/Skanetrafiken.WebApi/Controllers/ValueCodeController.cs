@@ -385,7 +385,11 @@ namespace Skanetrafiken.Crm.Controllers
                 return resp;
             }
 
-            if (!System.Text.RegularExpressions.Regex.Match(valueCode.Mobile, @"^((([+]46)(7)|07)[0-9]{8,8})$").Success)
+            bool checkMobile = PhoneNumberUtility.CheckRegexPhoneNumber(localContext, valueCode.Mobile);
+            #region old code 8042
+            //if (!System.Text.RegularExpressions.Regex.Match(valueCode.Mobile, @"^((([+]46)(7)|07)[0-9]{8,8})$").Success)
+            #endregion
+            if(!checkMobile)
             {
                 var resp = ReturnApiMessage(threadId, string.Format(Resources.InvalidFormatForMobile, valueCode.Mobile),
                 HttpStatusCode.BadRequest);
