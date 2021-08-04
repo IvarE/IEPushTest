@@ -128,7 +128,24 @@ namespace Skanetrafiken.Crm.Controllers
 
             return resp;
         }
-        
+
+        [HttpPost]
+        public HttpResponseMessage ClearMKLId(string mklId)
+        {
+            int threadId = Thread.CurrentThread.ManagedThreadId;
+            _log.Info($"Th={threadId} - POST called with parameter: mklId = {mklId}");
+
+            if (string.IsNullOrWhiteSpace(mklId))
+            {
+                HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                erm.Content = new StringContent(Resources.MklIdMissing);
+                _log.Warn($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
+                return erm;
+            }
+
+            return CrmPlusControl.ClearMKLIdContact(threadId, mklId);
+        }
+
         /// <summary>
         /// Controller used for create customers of different types
         /// </summary>

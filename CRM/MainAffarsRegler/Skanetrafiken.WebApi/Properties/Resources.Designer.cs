@@ -728,6 +728,15 @@ namespace Skanetrafiken.Crm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to # Hittade flera kontakter med mklid-koden {0}.
+        /// </summary>
+        internal static string MultipleContactsFound {
+            get {
+                return ResourceManager.GetString("MultipleContactsFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to # Hittade flera leads med kampanjkoden {campaignCode}..
         /// </summary>
         internal static string MultipleLeadsFound {

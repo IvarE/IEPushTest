@@ -1955,6 +1955,74 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
+        public static HttpResponseMessage ClearMKLIdContact(int threadId, string mklId)
+        {
+            try
+            {
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+
+                _log.DebugFormat($"Th={threadId} - ClearMKLIdContact: Creating serviceProxy");
+                // Cast the proxy client to the IOrganizationService interface.
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                {
+                    Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    _log.Info($"Th={threadId} - ClearMKLIdContact: ServiceProxy and LocalContext created Successfully.");
+
+                    _log.Info($"Th={threadId} - ClearMKLIdContact: Retrieving Active Contact using MKLId: {mklId}.");
+
+                    HttpResponseMessage respMess = null;
+
+                    QueryExpression queryContact = new QueryExpression(ContactEntity.EntityLogicalName);
+                    queryContact.NoLock = true;
+                    queryContact.Criteria.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
+                    queryContact.Criteria.AddCondition(ContactEntity.Fields.ed_MklId, ConditionOperator.Equal, mklId);
+
+                    List<ContactEntity> lContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, queryContact);
+
+                    if(lContacts.Count == 1)
+                    {
+                        Contact contact = lContacts.FirstOrDefault();
+
+                        Contact uContact = new Contact();
+                        uContact.Id = contact.Id;
+                        uContact.ed_MklId = string.Empty;
+                        uContact.ed_InformationSource = ed_informationsource.UppdateraMittKonto;
+
+                        XrmHelper.Update(localContext, uContact);
+
+                        respMess = new HttpResponseMessage(HttpStatusCode.OK);
+                        respMess.Content = new StringContent(SerializeNoNull(contact.Id));
+                    }
+                    else if(lContacts.Count == 0)
+                    {
+                        respMess = new HttpResponseMessage(HttpStatusCode.NotFound);
+                        respMess.Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, "MKLId"));
+                    }
+                    else if(lContacts.Count > 1)
+                    {
+                        respMess = new HttpResponseMessage(HttpStatusCode.NotFound);
+                        respMess.Content = new StringContent(string.Format(Resources.MultipleContactsFound, mklId));
+                    }
+
+                    return respMess;
+                }
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
+            }
+        }
+
         public static HttpResponseMessage GetLead(int threadId, string id)
         {
             try
@@ -4799,7 +4867,6 @@ namespace Skanetrafiken.Crm.Controllers
                 ConnectionCacheManager.ReleaseConnection(threadId);
             }
         }
-
 
         /// <summary>
         /// 
