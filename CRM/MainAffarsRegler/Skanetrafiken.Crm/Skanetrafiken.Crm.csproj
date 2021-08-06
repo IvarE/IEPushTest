@@ -277,6 +277,7 @@
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MargeAccounts.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MergeRecordsStarter.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.SearchTravelCards.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.SlotsExcelExport.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.SlotsGeneratorBTN.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.TicketMoveManager.html" />
     <Content Include="WebResource\script\Endeavor.Common.Data.js" />

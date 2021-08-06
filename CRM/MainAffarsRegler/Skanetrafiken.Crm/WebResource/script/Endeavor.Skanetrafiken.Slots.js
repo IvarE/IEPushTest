@@ -1,4 +1,4 @@
-﻿// Begin scoping 
+﻿// Begin scoping
 if (typeof (Endeavor) == "undefined") {
     var Endeavor = {
     };
@@ -12,16 +12,8 @@ if (typeof (Endeavor.Skanetrafiken) == "undefined") {
 if (typeof (Endeavor.Skanetrafiken.Slots) == "undefined") {
     Endeavor.Skanetrafiken.Slots = {
 
-        onClickExportSlots: function (formContext) {
+        getExcelData: function (inputParameters) {
             debugger;
-            var dateFrom = new Date();
-            var dateTo = new Date();
-
-            var inputParameters = [
-                { "Field": "FromDate", "Value": dateFrom, "TypeName": Endeavor.formscriptfunctions.getParameterType("datetime"), "StructuralProperty": 1 },
-                { "Field": "ToDate", "Value": dateTo, "TypeName": Endeavor.formscriptfunctions.getParameterType("datetime"), "StructuralProperty": 1 }
-            ];
-
             Endeavor.formscriptfunctions.callGlobalAction("ed_GetExcelDatafromSlots", inputParameters,
 
                 function (result) {
@@ -46,6 +38,12 @@ if (typeof (Endeavor.Skanetrafiken.Slots) == "undefined") {
                     console.log(errorMessage);
                     Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
                 });
+        },
+
+        onClickExportSlots: function () {
+            debugger;
+            var windowOptions = { height: 800, width: 800 };
+            Xrm.Navigation.openWebResource("ed_/html/Endeavor.Skanetrafiken.SlotsExcelExport.html", windowOptions);
         }
     };
 }

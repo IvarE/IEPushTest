@@ -27,11 +27,11 @@ namespace Skanetrafiken.Crm.Workflow.Slots
     {
         [Input("FromDate")]
         [RequiredArgument()]
-        public InArgument<DateTime> FromDate { get; set; }
+        public InArgument<string> FromDate { get; set; }
 
         [Input("ToDate")]
         [RequiredArgument()]
-        public InArgument<DateTime> ToDate { get; set; }
+        public InArgument<string> ToDate { get; set; }
 
         [Output("ExcelBase64")]
         public OutArgument<string> ExcelBase64 { get; set; }
@@ -53,22 +53,28 @@ namespace Skanetrafiken.Crm.Workflow.Slots
             localContext.Trace($"CreateExcelBase64 started.");
 
             //GET VALUE(S)
-            DateTime fromDate = FromDate.Get(activityContext);
-            DateTime toDate = ToDate.Get(activityContext);
+            string fromDate = FromDate.Get(activityContext);
+            string toDate = ToDate.Get(activityContext);
 
             //TRY EXECUTE
             try
             {
-                string response = ExecuteCodeActivity(localContext, fromDate, toDate);
+                DateTime dtFromDate = DateTime.Parse(fromDate);
+                DateTime dtToDate = DateTime.Parse(toDate);
+
+                string response = ExecuteCodeActivity(localContext, dtFromDate, dtToDate);
                 ExcelBase64.Set(activityContext, response);
             }
-            catch (Exception ex)
+            catch (FormatException e)
             {
-                ExcelBase64.Set(activityContext, ex.Message);
+                throw new InvalidWorkflowException($"Unable to convert dates: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                throw new InvalidWorkflowException($"Exception: {e.Message}");
             }
 
             localContext.Trace($"CreateExcelBase64 finished.");
-
         }
 
         public static string ExecuteCodeActivity(Plugin.LocalPluginContext localContext, DateTime fromDate, DateTime toDate)
