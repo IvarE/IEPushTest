@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1259
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.Crm", "Skanetrafiken.Crm.csproj", "{848A5DE3-4C23-4AF9-A72E-AC1FE6CF93D6}"
 EndProject
@@ -48,6 +48,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.Crm.ConsoleSDKCreations", "Skanetrafiken.Crm.ConsoleSDKCreations\Skanetrafiken.Crm.ConsoleSDKCreations.csproj", "{5E787F06-30C4-4D14-80DD-25218E96EF90}"
 EndProject
 Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Skanetrafiken.SSIS", "..\Skanetrafiken.SSIS\Skanetrafiken.SSIS.dtproj", "{65050D58-CC38-48AE-86AC-73C4F106C699}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.Crm.Workflow.Slots", "..\Skanetrafiken.Crm.Workflow.Slots\Skanetrafiken.Crm.Workflow.Slots.csproj", "{DB407DE5-24BF-488D-900A-8D72DC5E374C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -312,6 +314,20 @@ Global
 		{65050D58-CC38-48AE-86AC-73C4F106C699}.Release|Any CPU.Build.0 = Development
 		{65050D58-CC38-48AE-86AC-73C4F106C699}.Test|Any CPU.ActiveCfg = Development
 		{65050D58-CC38-48AE-86AC-73C4F106C699}.Test|Any CPU.Build.0 = Development
+		{DB407DE5-24BF-488D-900A-8D72DC5E374C}.Acceptans|Any CPU.ActiveCfg = Release|Any CPU
+		{DB407DE5-24BF-488D-900A-8D72DC5E374C}.Acceptans|Any CPU.Build.0 = Release|Any CPU
+		{DB407DE5-24BF-488D-900A-8D72DC5E374C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB407DE5-24BF-488D-900A-8D72DC5E374C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB407DE5-24BF-488D-900A-8D72DC5E374C}.Dev|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB407DE5-24BF-488D-900A-8D72DC5E374C}.Dev|Any CPU.Build.0 = Debug|Any CPU
+		{DB407DE5-24BF-488D-900A-8D72DC5E374C}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB407DE5-24BF-488D-900A-8D72DC5E374C}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{DB407DE5-24BF-488D-900A-8D72DC5E374C}.Produktion|Any CPU.ActiveCfg = Release|Any CPU
+		{DB407DE5-24BF-488D-900A-8D72DC5E374C}.Produktion|Any CPU.Build.0 = Release|Any CPU
+		{DB407DE5-24BF-488D-900A-8D72DC5E374C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB407DE5-24BF-488D-900A-8D72DC5E374C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB407DE5-24BF-488D-900A-8D72DC5E374C}.Test|Any CPU.ActiveCfg = Release|Any CPU
+		{DB407DE5-24BF-488D-900A-8D72DC5E374C}.Test|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

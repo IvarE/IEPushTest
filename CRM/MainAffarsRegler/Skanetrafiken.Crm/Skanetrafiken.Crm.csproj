@@ -141,6 +141,7 @@
   <ItemGroup>
     <Compile Include="ApiHelper.cs" />
     <Compile Include="Entities\OpportunityEntity.cs" />
+    <Compile Include="Entities\OpportunityProductEntity.cs" />
     <Compile Include="Entities\PaymentMethodEntity.cs" />
     <Compile Include="Entities\PaymentEntity.cs" />
     <Compile Include="Entities\KBArticleEntity.cs" />
@@ -289,6 +290,7 @@
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Lead.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Opportunity.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.QueueItem.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Slots.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCodeApproval.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.KBArticle.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCodeTransaction.js" />
