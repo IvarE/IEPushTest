@@ -1450,7 +1450,6 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
-
         public static HttpResponseMessage ChangeEmailAddress(int threadId, CustomerInfo customer)
         {
             try
@@ -1942,6 +1941,90 @@ namespace Skanetrafiken.Crm.Controllers
                     resp.Content = new StringContent(SerializeNoNull(info));
                     return resp;
                 }
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
+            }
+        }
+
+        public static HttpResponseMessage CreateExcelBase64(int threadId, string fromDate, string toDate)
+        {
+            try
+            {
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - CreateExcelBase64: Creating serviceProxy");
+                // Cast the proxy client to the IOrganizationService interface.
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                {
+                    Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    _log.Info($"Th={threadId} - CreateExcelBase64: ServiceProxy and LocalContext created Successfully.");
+
+                    DateTime dtFromDate = DateTime.Parse(fromDate);
+                    DateTime dtToDate = DateTime.Parse(toDate);
+
+                    ColumnSet columnsSlots = new ColumnSet(SlotsEntity.Fields.ed_SlotIdentifier, SlotsEntity.Fields.ed_name, SlotsEntity.Fields.CreatedOn,
+                            SlotsEntity.Fields.ed_BookingDay, SlotsEntity.Fields.ed_StandardPrice, SlotsEntity.Fields.ed_CustomPrice, SlotsEntity.Fields.ed_BookingStatus,
+                            SlotsEntity.Fields.ed_Extended, SlotsEntity.Fields.ed_Opportunity);
+
+                    QueryExpression querySlots = new QueryExpression(SlotsEntity.EntityLogicalName);
+                    querySlots.NoLock = true;
+                    querySlots.ColumnSet = columnsSlots;
+                    querySlots.Criteria.AddCondition(SlotsEntity.Fields.ed_BookingDay, ConditionOperator.OnOrAfter, dtFromDate);
+                    querySlots.Criteria.AddCondition(SlotsEntity.Fields.ed_BookingDay, ConditionOperator.OnOrBefore, dtToDate);
+
+                    LinkEntity linkAccount = querySlots.AddLink(AccountEntity.EntityLogicalName, SlotsEntity.Fields.ed_Account, AccountEntity.Fields.AccountId, JoinOperator.LeftOuter);
+                    linkAccount.EntityAlias = "aa";
+                    linkAccount.Columns.AddColumns(AccountEntity.Fields.Address1_City, AccountEntity.Fields.AccountNumber, AccountEntity.Fields.Name);
+
+                    LinkEntity linkSystemUser = querySlots.AddLink(SystemUserEntity.EntityLogicalName, SlotsEntity.Fields.OwningUser, SystemUserEntity.Fields.SystemUserId, JoinOperator.LeftOuter);
+                    linkSystemUser.EntityAlias = "au";
+                    linkSystemUser.Columns.AddColumns(SystemUserEntity.Fields.ed_RSID, SystemUserEntity.Fields.FullName);
+
+                    LinkEntity linkQuote = querySlots.AddLink(QuoteEntity.EntityLogicalName, SlotsEntity.Fields.ed_Quote, QuoteEntity.Fields.QuoteId, JoinOperator.LeftOuter);
+                    linkQuote.EntityAlias = "aq";
+                    linkQuote.Columns.AddColumns(QuoteEntity.Fields.DiscountAmount, QuoteEntity.Fields.DiscountPercentage, QuoteEntity.Fields.ed_campaigndatestart, QuoteEntity.Fields.ed_campaigndateend);
+
+                    LinkEntity linkQuoteProduct = querySlots.AddLink(QuoteProductEntity.EntityLogicalName, SlotsEntity.Fields.ed_QuoteProductID, QuoteProductEntity.Fields.QuoteDetailId, JoinOperator.LeftOuter);
+                    linkQuoteProduct.EntityAlias = "aqp";
+                    linkQuoteProduct.Columns.AddColumns(QuoteProductEntity.Fields.VolumeDiscountAmount, QuoteProductEntity.Fields.ManualDiscountAmount);
+
+                    LinkEntity linkProduct = querySlots.AddLink(ProductEntity.EntityLogicalName, SlotsEntity.Fields.ed_ProductID, ProductEntity.Fields.ProductId, JoinOperator.LeftOuter);
+                    linkProduct.EntityAlias = "ap";
+                    linkProduct.Columns.AddColumns(ProductEntity.Fields.ProductNumber, ProductEntity.Fields.Name);
+
+                    List<SlotsEntity> lSlots = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlots);
+                    localContext.Trace($"Found {lSlots.Count} relevant Slots to be exported.");
+
+                    if (lSlots.Count == 0)
+                    {
+                        HttpResponseMessage respEmpty = new HttpResponseMessage(HttpStatusCode.OK);
+                        respEmpty.Content = new StringContent(SerializeNoNull(string.Empty));
+                        return respEmpty;
+                    }
+
+                    string base64 = SlotsUtility.CreateExcelFile(lSlots);
+
+                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                    resp.Content = new StringContent(SerializeNoNull(base64));
+                    return resp;
+                }
+            }
+            catch (FormatException ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent($"Unable to convert dates: {ex.Message}");
+                return rm;
             }
             catch (Exception ex)
             {

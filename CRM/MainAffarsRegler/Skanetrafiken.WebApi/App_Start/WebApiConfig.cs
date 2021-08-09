@@ -313,19 +313,32 @@ namespace Skanetrafiken.Crm
                 }
                 );
 
-            config.Routes.MapHttpRoute(
-                name: "PostDeliveryReport",
-                routeTemplate: "api/{controller}/PostDeliveryReport",
-                defaults: new
-                {
-                    action = "PostDeliveryReport"
-                },
+                config.Routes.MapHttpRoute(
+                    name: "PostDeliveryReport",
+                    routeTemplate: "api/{controller}/PostDeliveryReport",
+                    defaults: new
+                    {
+                        action = "PostDeliveryReport"
+                    },
 
-                constraints: new
-                {
-                    httpMethod = new HttpMethodConstraint(HttpMethod.Post)
-                }
-                );
+                    constraints: new
+                    {
+                        httpMethod = new HttpMethodConstraint(HttpMethod.Post)
+                    }
+                    );
+
+                config.Routes.MapHttpRoute(
+                    name: "CreateExcelSlots",
+                    routeTemplate: "api/{controller}/GetExcelBase64",
+                    defaults: new
+                    {
+                        action = "GetExcelBase64"
+                    },
+                    constraints: new
+                    {
+                        httpMethod = new HttpMethodConstraint(HttpMethod.Post)
+                    }
+                    );
 
             //See ValueCodeController.GetMaxAmountValueCode (Route is configured there)
             //config.Routes.MapHttpRoute(

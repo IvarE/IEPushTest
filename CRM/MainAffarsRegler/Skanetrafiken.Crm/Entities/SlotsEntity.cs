@@ -12,6 +12,10 @@ using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
 using System.Runtime;
 using System.Globalization;
+using System.Net;
+using System.Activities;
+using System.IO;
+using System.Web;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -39,7 +43,6 @@ namespace Skanetrafiken.Crm.Entities
                 }
             }
         }
-
 
         public void HandlePreSlotsEntityUpdate(Plugin.LocalPluginContext localContext,  SlotsEntity preImage)
         {
@@ -97,6 +100,7 @@ namespace Skanetrafiken.Crm.Entities
                 }
             }
         }
+
         public static void HandleSlotsEntityCreate(Plugin.LocalPluginContext localContext, SlotsEntity target)
         {
             localContext.Trace("Inside HandleSlotsEntityCreate");
@@ -185,6 +189,7 @@ namespace Skanetrafiken.Crm.Entities
             slotToUpdate.ed_name = target.ed_name + " - " + slotDayProductNumber;
             XrmHelper.Update(localContext, slotToUpdate);
         }
+
         public static void HandleSlotsEntityUpdate(Plugin.LocalPluginContext localContext, SlotsEntity target, SlotsEntity preImage)
         {
             FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
@@ -205,6 +210,7 @@ namespace Skanetrafiken.Crm.Entities
                 }
             }
         }
+
         public static List<SlotsEntity> AvailableSlots (Plugin.LocalPluginContext localContext,EntityReference productER,DateTime starDate,DateTime endDate)
         {
             localContext.Trace("Inside Available Slots");
@@ -361,6 +367,7 @@ namespace Skanetrafiken.Crm.Entities
             response.Message = "Slots created.";
             return response;
         }
+
         public static void GenerateSlotsInternal(Plugin.LocalPluginContext localContext, Guid productId, int quantityPerDay, DateTime startDate, DateTime endDate, List<SlotsEntity> availableSlots = null, Guid? OpportunityGuid = null, QuoteProductEntity quoteProduct = null, OrderProductEntity orderProduct = null)
         {
             localContext.Trace("Inside GenerateSlotsInternal");
@@ -673,6 +680,7 @@ namespace Skanetrafiken.Crm.Entities
                 XrmHelper.Update(localContext, quoteProductToUpdate);
             }
         }
+
         public static void SlotsEntityUpdateQuantity(Plugin.LocalPluginContext localContext, SlotsEntity target, SlotsEntity preImage)
         {
             localContext.Trace("Inside SlotsEntityUpdateQuantity.");
@@ -1199,6 +1207,88 @@ namespace Skanetrafiken.Crm.Entities
 
                     XrmHelper.Update(localContext, currentSlot);
                 }
+            }
+        }
+
+        public static string HandleCreateExcelBase64(Plugin.LocalPluginContext localContext, string fromDate, string toDate)
+        {
+            localContext.TracingService.Trace($"Running HandleCreateExcelBase64.");
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
+            FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_CRMPlusService, ConditionOperator.NotNull);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertName, ConditionOperator.NotNull);
+
+            CgiSettingEntity settingEntity = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                CgiSettingEntity.Fields.ed_CRMPlusService,
+                CgiSettingEntity.Fields.ed_ClientCertName), settingFilter);
+
+            if (settingEntity == null || string.IsNullOrWhiteSpace(settingEntity.ed_CRMPlusService) || string.IsNullOrWhiteSpace(settingEntity.ed_ClientCertName))
+            {
+                //Bad request -> exception
+                throw new InvalidWorkflowException($"The WebApi URl or the ClientCertName are empty or null.");
+            }
+
+            string apiStatusResponse = "";
+
+            try
+            {
+                const long tokenLifetimeSeconds = 30 * 60 + 60 * 60 * 1;  // Add 1h for Summertime UTC
+
+                Int32 unixTimeStamp;
+                DateTime currentTime = DateTime.Now;
+                DateTime zuluTime = currentTime.ToUniversalTime();
+                DateTime unixEpoch = new DateTime(1970, 1, 1);
+                unixTimeStamp = (Int32)(zuluTime.Subtract(unixEpoch)).TotalSeconds;
+
+                long validTo = unixTimeStamp + tokenLifetimeSeconds;
+
+                Identity tokenClass = new Identity();
+                tokenClass.exp = validTo;
+                string clientCert = settingEntity.ed_ClientCertName;
+
+                localContext.TracingService.Trace("HandleCreateExcelBase64:");
+                string url = settingEntity.ed_CRMPlusService + $"/api/Slots/GetExcelBase64";//?fromDate={fromDate}&toDate={toDate}";
+
+                string postData = HttpUtility.UrlEncode("fromDate") + "=" + HttpUtility.UrlEncode(fromDate) + "&";
+                postData += HttpUtility.UrlEncode("toDate") + "=" + HttpUtility.UrlEncode(toDate);
+
+                byte[] data = Encoding.ASCII.GetBytes(postData);
+
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+                httpWebRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCert));
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.ContentLength = data.Length;
+                httpWebRequest.Method = "POST";
+
+                Stream requestStream = httpWebRequest.GetRequestStream();
+                requestStream.Write(data, 0, data.Length);
+                requestStream.Close();
+
+                using (WebResponse getCardHttpResponse = httpWebRequest.GetResponse())
+                {
+                    var checkStatus = (HttpWebResponse)getCardHttpResponse;
+                    if (checkStatus.StatusCode != HttpStatusCode.OK)
+                    {
+                        //Send bad request
+                        apiStatusResponse = "NOT OK!";
+                    }
+                    else
+                    {
+                        //We are done
+                        apiStatusResponse = "OK";
+                    }
+                }
+
+                localContext.TracingService.Trace($"Successfully exiting HandleCreateExcelBase64.");
+
+                return apiStatusResponse;
+            }
+            catch (Exception ex)
+            {
+                localContext.TracingService.Trace("Error generating Excel: " + ex.InnerException.Message + " - " + ex.StackTrace + " - " + ex.ToString());
+                throw new InvalidPluginExecutionException("Error generating Excel: " + ex.Message + " - " + ex.StackTrace + " - " + ex.ToString());
             }
         }
     }

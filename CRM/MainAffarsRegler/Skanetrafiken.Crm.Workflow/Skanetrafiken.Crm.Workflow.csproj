@@ -345,6 +345,7 @@
     <Compile Include="BlockAccountPortal.cs" />
     <Compile Include="CancelValueCode.cs" />
     <Compile Include="CancelOrder.cs" />
+    <Compile Include="CreateExcelSlots.cs" />
     <Compile Include="CrmConnection.cs" />
     <Compile Include="GenerateSlots.cs" />
     <Compile Include="GetCard.cs" />
