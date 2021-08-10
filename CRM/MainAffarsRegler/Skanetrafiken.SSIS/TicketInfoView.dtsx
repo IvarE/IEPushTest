@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package Ticket Info"
   DTS:PackageType="5"
-  DTS:VersionBuild="46"
-  DTS:VersionGUID="{B22F3F2E-5A14-40D0-8695-63AB00D2ACF2}">
+  DTS:VersionBuild="49"
+  DTS:VersionGUID="{1853FA4F-7D3B-449F-B275-2EAD0E1849DC}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABOTs7quOZ57qFnMdSA1Rs3AAAAAASAAACgAAAAEAAAAF7nC5TQbyeJ90vFSFLtOcAgAAAARnSGT+zQzwSkiwBesWJ0h70YUvqVuMYpqriFDiRdaKAUAAAAp+ZXWT37zEGkTeuNylU9O9kPGqk</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADpQ1vIPaOmBTli0NwhtQGZAAAAAASAAACgAAAAEAAAAKgFfI1F4ENYHhsQWTsOUO4gAAAA7k0hSZPRcLTuNV3qhiZPiD/mI2q1lYAmRqIUswK7PsYUAAAAxIQNpgDLrwGjFFxrry0dWYXI9ew</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -42,7 +42,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAALhIm2CbQkV4l2hbm02mzNAAAAAASAAACgAAAAEAAAAB50j0gyzVwjlMK+jOUAMBUgAAAA/PRUbopB0Pcl+aMprgf68jBfzJSQ2JUkoDVGVkxQ4EQUAAAAHDA3O33XoNidpkSC25au7s/6QHE</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAB6eRA+3PyVwq/5nHQdanTcAAAAAASAAACgAAAAEAAAAKijuuRAE5GS81PlY1fI4aggAAAAmbsHnvHJMc+vv10YqjYYCXOk3R3+StBp/rT4mzWaNwEUAAAAtFJhR5U56Zd7pFcH/qzfMB6V3ns</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -57,7 +57,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABXJtKkN6A9ZGBJKGIoDlCDAAAAAASAAACgAAAAEAAAAER9UBrVZeVCTv08kK7ZYCAgAAAA0YDVQt/5CwW8COQat0zitApoiRVasEZ09Qjbwk832ssUAAAA0pAf8w5EOpZXxaHkcZowRw8takw</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADIsdeylSx7cA6Zglr4UmT8AAAAAASAAACgAAAAEAAAAJGW4qNuguz48eBH2G3xSicgAAAA7VBroZMKldA47pkFnDi8wDBVvdjbbZbooEI4oIZeunMUAAAAt5ls92EktaRFYhPyVU//bTIL5FI</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -679,7 +679,7 @@
                 <property
                   dataType="System.String"
                   description="Specifies the name of the database object used to open a rowset."
-                  name="OpenRowset">[dbo].[GetTicketInfoViewWithoutValidations]</property>
+                  name="OpenRowset">[dbo].[GetTicketInfoView]</property>
                 <property
                   dataType="System.String"
                   description="Specifies the variable that contains the name of the database object used to open a rowset."
@@ -688,9 +688,8 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT top 1[TicketId]
-,[cgi_contactnumber]
-		,[LastUpdated]
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT TOP (10) [LastUpdated]
+      ,[TicketId]
       ,[PriceModel]
       ,[PriceModelPriceId]
       ,[DataCreatedDate]
@@ -705,12 +704,12 @@
       ,[TravellersCount]
       ,[HasRefund]
       ,[MkId]
+      ,[cgi_contactnumber]
       ,[activationinterval_from]
       ,[activationinterval_to]
       ,[travelvalidityinterval_from]
       ,[travelvalidityinterval_to]
-  FROM [STDW].[dbo].[GetTicketInfoViewWithoutValidations]
-  order by cgi_contactnumber, ticketid</property>
+  FROM [STDW].[dbo].[GetTicketInfoView]</property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
@@ -727,7 +726,7 @@
                   dataType="System.Int32"
                   description="Specifies the mode used to access the database."
                   name="AccessMode"
-                  typeConverter="AccessMode">0</property>
+                  typeConverter="AccessMode">2</property>
                 <property
                   dataType="System.String"
                   description="The mappings between the parameters in the SQL command and variables."
@@ -1304,8 +1303,8 @@
               <connections>
                 <connection
                   refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Connections[DynamicsCRM]"
-                  connectionManagerID="Package.ConnectionManagers[Dynamics CRM Sekund TST]"
-                  connectionManagerRefId="Package.ConnectionManagers[Dynamics CRM Sekund TST]"
+                  connectionManagerID="Package.ConnectionManagers[Dynamics CRM Sekund PROD]"
+                  connectionManagerRefId="Package.ConnectionManagers[Dynamics CRM Sekund PROD]"
                   description="Dynamics CRM Connection Manager"
                   name="DynamicsCRM" />
               </connections>
