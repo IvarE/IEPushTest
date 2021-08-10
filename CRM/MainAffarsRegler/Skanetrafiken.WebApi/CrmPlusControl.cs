@@ -2015,6 +2015,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                     string base64 = SlotsUtility.CreateExcelFile(lSlots);
 
+                    _log.Info($"Th={threadId} - CreateExcelBase64: Base64: {base64}");
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                     resp.Content = new StringContent(SerializeNoNull(base64));
                     return resp;

@@ -1249,22 +1249,12 @@ namespace Skanetrafiken.Crm.Entities
                 string clientCert = settingEntity.ed_ClientCertName;
 
                 localContext.TracingService.Trace("HandleCreateExcelBase64:");
-                string url = settingEntity.ed_CRMPlusService + $"/api/Slots/GetExcelBase64";//?fromDate={fromDate}&toDate={toDate}";
-
-                string postData = HttpUtility.UrlEncode("fromDate") + "=" + HttpUtility.UrlEncode(fromDate) + "&";
-                postData += HttpUtility.UrlEncode("toDate") + "=" + HttpUtility.UrlEncode(toDate);
-
-                byte[] data = Encoding.ASCII.GetBytes(postData);
+                string url = settingEntity.ed_CRMPlusService + $"/api/Slots/GetExcelBase64/slots?fromDate={fromDate}&toDate={toDate}";
 
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
                 httpWebRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCert));
                 httpWebRequest.ContentType = "application/json";
-                httpWebRequest.ContentLength = data.Length;
-                httpWebRequest.Method = "POST";
-
-                Stream requestStream = httpWebRequest.GetRequestStream();
-                requestStream.Write(data, 0, data.Length);
-                requestStream.Close();
+                httpWebRequest.Method = "GET";
 
                 using (WebResponse getCardHttpResponse = httpWebRequest.GetResponse())
                 {
@@ -1272,12 +1262,14 @@ namespace Skanetrafiken.Crm.Entities
                     if (checkStatus.StatusCode != HttpStatusCode.OK)
                     {
                         //Send bad request
-                        apiStatusResponse = "NOT OK!";
+                        apiStatusResponse = "";
                     }
                     else
                     {
                         //We are done
-                        apiStatusResponse = "OK";
+                        Stream stream = checkStatus.GetResponseStream();
+                        StreamReader reader = new StreamReader(stream);
+                        apiStatusResponse = reader.ReadToEnd();
                     }
                 }
 
