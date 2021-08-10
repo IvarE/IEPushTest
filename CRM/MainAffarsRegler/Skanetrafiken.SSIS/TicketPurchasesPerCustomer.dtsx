@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package Ticket Purchases"
   DTS:PackageType="5"
-  DTS:VersionBuild="30"
-  DTS:VersionGUID="{B404B7D5-13AF-4AB1-92F4-A140DA0A0595}">
+  DTS:VersionBuild="38"
+  DTS:VersionGUID="{2167930C-9743-4D2C-8E1C-58C6067F740D}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAsmZofZRTd8Cp/nXGfufzjAAAAAASAAACgAAAAEAAAAFYAJlthJUfz7vtJ0b82P4kgAAAAkjZuFMZ9kJWOmO7mhkQ3rnjUkAyp7y/TivAkXIPuWYEUAAAAh2fXGzacvv7CWkOeq61C4e7hntQ</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADef3a/fwPJD9M2iiiLEA1MAAAAAASAAACgAAAAEAAAAKi+5oXZyOJHemWuvNvqvM4gAAAAE89TKhH7EE7FPSu1DuDHE+g+nvYBI4wDGNjIigQDyIEUAAAAjiltPFjawrGDlTC4qMKmUnqVgXQ</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -42,7 +42,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABt+WjCO/1d4hjM2Rlsgkn/AAAAAASAAACgAAAAEAAAAHL4K4Ughpxrm2OGnp3HWKogAAAAvHWHRP0FovYNW+hx+QEMkeSvMNGikr2ikA81WJe5VZQUAAAAlqZ8i28Jjd5qLecHNzEBqRUCSQ0</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADaODAx1Bqc7xyZV3uxvQ67AAAAAASAAACgAAAAEAAAAL5XI0l5Kr1FbSyfmBYrEAAgAAAAxskHvyVg+XogfhKQyxAGFXYQW7Xrb0Ba66D29thlAGYUAAAALGi/7jgyEDooBBUQcNka3gnISvM</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -57,7 +57,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACr0OCydeEL76lI5WMF85WrAAAAAASAAACgAAAAEAAAAMhc3KrF/vlhE/AvdrjT8+YgAAAAxK4aTlV5FddumCrLnYPOor/jRVAsuHU6r+GaqIlVaQUUAAAABKOFxzIWsXK2cMcicHMe95coitA</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABSyA7pyi5L8FXzhJTT0JUvAAAAAASAAACgAAAAEAAAALHUiKQwVIbEAZUdHmOHHP0gAAAAhRYmK970xqw1aBMMtPdBHzy/j61CLCRqNfYr+FQL4SYUAAAAAch7C7kHZtetqbFM5SHwYlr7jY0</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -83,7 +83,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="cgi_contactnumber"
-              DTS:DTSID="{35EF6051-7CDE-4CE4-8CEF-271C2C1ECA33}"
+              DTS:DTSID="{3201DFD9-7E89-4629-A3B9-EC5E17549C75}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -91,7 +91,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="MkId"
-              DTS:DTSID="{56610DF7-875C-488A-BD07-AD07E56117B6}"
+              DTS:DTSID="{266C1783-6CC4-4363-B8B0-537BE2C64610}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -100,7 +100,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="OfferName"
-              DTS:DTSID="{FC6EA594-DE42-416A-8355-542866ADB38E}"
+              DTS:DTSID="{17132886-97C3-47C6-A386-BD8DC098CD81}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -108,7 +108,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="NumberOfTickets"
-              DTS:DTSID="{B932B927-FECE-4330-8AD0-C4988B8DA777}"
+              DTS:DTSID="{C4EEF8FA-0AA8-4481-8AEC-DBF934DCA88B}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -118,7 +118,7 @@
               DTS:DataScale="5"
               DTS:TextQualified="True"
               DTS:ObjectName="TotalSumTicketOffer"
-              DTS:DTSID="{C94DA198-1C5E-4D7B-9BED-4418B81610E1}"
+              DTS:DTSID="{959AE418-C166-4364-B996-5353DDDE5D8E}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -126,7 +126,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorCode"
-              DTS:DTSID="{E230342D-67ED-4858-906C-6BAB77FD870E}"
+              DTS:DTSID="{5A7CA1BF-C801-427E-AE8D-FDA572900D15}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -134,7 +134,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorColumn"
-              DTS:DTSID="{F4BDA49A-478F-4DC0-BEDE-E394509C660D}"
+              DTS:DTSID="{04122A20-3FBD-42FF-80B9-556C11DCED9E}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -143,7 +143,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorMessage"
-              DTS:DTSID="{9490464B-1C2D-46F7-B826-B931B4F88C4C}"
+              DTS:DTSID="{D0AD17D7-F014-4BB5-852B-9E6661AC6162}"
               DTS:CreationName="" />
           </DTS:FlatFileColumns>
         </DTS:ConnectionManager>
@@ -336,13 +336,12 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT TOP (10) [cgi_contactnumber]
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT TOP 10 [cgi_contactnumber]
       ,[MkId]
       ,[OfferName]
       ,[NumberOfTickets]
       ,[TotalSumTicketOffer]
-  FROM [STDW].[dbo].[GetTicketPurchasesPerCustomerView]
-ORDER BY MkId</property>
+  FROM [STDW].[dbo].[GetTicketPurchasesPerCustomerView]</property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
@@ -572,7 +571,7 @@ ORDER BY MkId</property>
                   description="Specifies what action will be taken when multiple matches are found with Upsert action."
                   expressionType="Notify"
                   name="HandlingOfMultipleMatches"
-                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">3</property>
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">3</property>
                 <property
                   dataType="System.Int32"
                   description="Specify whether to use optimizations when there are duplicate records form the source system."
@@ -611,8 +610,8 @@ ORDER BY MkId</property>
               <connections>
                 <connection
                   refId="Package\Upsert Ticket Purchases Dynamics\Upsert Ticket Purchases.Connections[DynamicsCRM]"
-                  connectionManagerID="Package.ConnectionManagers[Dynamics CRM Sekund TST]"
-                  connectionManagerRefId="Package.ConnectionManagers[Dynamics CRM Sekund TST]"
+                  connectionManagerID="Package.ConnectionManagers[Dynamics CRM Sekund PROD]"
+                  connectionManagerRefId="Package.ConnectionManagers[Dynamics CRM Sekund PROD]"
                   description="Dynamics CRM Connection Manager"
                   name="DynamicsCRM" />
               </connections>
