@@ -12,18 +12,10 @@ namespace Skanetrafiken.Crm.Controllers
     {
         protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        [HttpPost]
-        public HttpResponseMessage GetExcelBase64([FromBody] string test)/*string fromDate, string toDate)*/
+        [HttpGet]
+        public HttpResponseMessage GetExcelBase64(string fromDate, string toDate)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            string fromDate = "";
-            string toDate = "";
-
-            HttpResponseMessage testT = new HttpResponseMessage(HttpStatusCode.OK);
-            testT.Content = new StringContent(test);
-            _log.Warn($"Th={threadId} - Returning statuscode = {testT.StatusCode}, Content = {testT.Content.ReadAsStringAsync().Result}\n");
-            return testT;
-
 
             _log.Info($"Th={threadId} - GetExcelBase64 called with FromDate: {fromDate} and ToDate: {toDate}");
             if (string.IsNullOrWhiteSpace(fromDate))
