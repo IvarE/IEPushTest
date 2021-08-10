@@ -329,14 +329,14 @@ namespace Skanetrafiken.Crm
 
                 config.Routes.MapHttpRoute(
                     name: "CreateExcelSlots",
-                    routeTemplate: "api/{controller}/GetExcelBase64",
+                    routeTemplate: "api/{controller}/GetExcelBase64/slots",
                     defaults: new
                     {
                         action = "GetExcelBase64"
                     },
                     constraints: new
                     {
-                        httpMethod = new HttpMethodConstraint(HttpMethod.Post)
+                        httpMethod = new HttpMethodConstraint(HttpMethod.Get)
                     }
                     );
 
