@@ -116,7 +116,7 @@ namespace Endeavor.Crm.UnitTest
                     Id = new Guid("d8e20a4f-e7c9-eb11-9481-005056b6fa28"),
                 };
                 
-                QuoteProductEntity.HandlePreValidationQuoteProductEntityDelete(localContext, target);
+                //QuoteProductEntity.HandlePreValidationQuoteProductEntityDelete(localContext, target);
             }
         }
         [Test, Category("Debug")]

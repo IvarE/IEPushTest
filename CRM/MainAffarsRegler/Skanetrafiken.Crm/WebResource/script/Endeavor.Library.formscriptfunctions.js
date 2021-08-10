@@ -154,6 +154,18 @@ Endeavor.formscriptfunctions = {
     },
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Set control label.
+    SetLabel: function (name, label, formContext) {
+        try {
+            var _field = formContext.ui.controls.get(name);
+            _field.setLabel(label);
+        }
+        catch (e) {
+            alert("Fel i Endeavor.formscriptfunctions.SetLabel\n\n" + e.message);
+        }
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Set field enabled or disabled.
     SetState: function (name, state, formContext) {
         try {
@@ -522,6 +534,9 @@ Endeavor.formscriptfunctions = {
             var object = JSON.parse(request.responseText);
             value = object.value;
             nextUrl = object["@odata.nextLink"];
+
+            if (value == null)
+                return object;
 
             // Add records to total records
             for (var i = 0; i < value.length; i++) {

@@ -1033,14 +1033,54 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 if (formContext.getAttribute("cgi_notravelinfo").getValue() != 1) {
                     if (caseid != null)
                     {
-                        var caseidClean = Endeavor.formscriptfunctions.cleanIdField(caseid);
-                        Endeavor.OData_Querys.GetTravelInfoForCase(caseidClean, formContext);
+                        var caseid = Endeavor.formscriptfunctions.cleanIdField(caseid);
+
+                        var globalContext = Xrm.Utility.getGlobalContext();
+                        var clientUrl = globalContext.getClientUrl();
+
+                        var fetchxml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true'>" +
+                            "<entity name='cgi_travelinformation'>" +
+                            "<attribute name='cgi_travelinformationid' />" +
+                            "<filter type='and'>" +
+                            "<condition attribute='cgi_caseid' operator='eq' value='" + caseid + "' />" +
+                            "</filter>" +
+                            "</entity>" +
+                            "</fetch>";
+
+                        var url = clientUrl + "/api/data/v9.0/cgi_travelinformations?fetchXml=" + encodeURIComponent(fetchxml);
+                        var travelInformations = Endeavor.formscriptfunctions.fetchJSONResults(url);
+
+                        if (travelInformations.length === 0) {
+                            debugger;
+                            var cgi_casdet_row1_cat3idLookup = formContext.getAttribute("cgi_casdet_row1_cat3id").getValue();
+
+                            var categoryId = cgi_casdet_row1_cat3idLookup[0].id.replace("{", "").replace("}", "");
+                            url = clientUrl + "/api/data/v9.0/cgi_categorydetails(" + categoryId + ")?$select=cgi_requirestravelinfo";
+                            var categoryDetail = Endeavor.formscriptfunctions.fetchJSONResults(url);
+
+                            debugger;
+                            if (categoryDetail["cgi_requirestravelinfo"] == 1) {
+                                //ge användaren en möljighet att avsluta ärendet ändå utan trafikinfo genom att klicka ok
+                                if (confirm("Ärenden i kategori " + cgi_casdet_row1_cat3idLookup[0].name + " förväntas innehålla trafikinformation, vilken saknas i detta ärende. Vill du verkligen avsluta ärendet utan trafikinformation? ")) {
+                                    //ange explicit att ärendet ska sparas utan trafikinfo. Annars kommer en plugin förhindra att det avslutas utan trafikinformation
+                                    formContext.getAttribute("cgi_notravelinfo").setValue(1);
+                                }
+                                else {
+                                    //genom att avbryta exekveringen undviks att ärendet att avslutas
+                                    return;
+                                }
+                            }
+                        }
+                        //else {
+                        //    alert("Det finns ingen reseinformation för detta fall!");
+                        //    return;
+                        //}
                     }
                     //fortsätt med valideringen endast om trafikinfo saknas
                 }
                 //END validera trafikinfo END
 
-                if (Endeavor.formscriptfunctions.GetDisabledField("cgi_casesolved", formContext) == true) {
+                if (Endeavor.formscriptfunctions.GetDisabledField("cgi_casesolved", formContext)) {
                     alert("Du saknar behörighet att avsluta detta ärende!");
                     return;
                 }

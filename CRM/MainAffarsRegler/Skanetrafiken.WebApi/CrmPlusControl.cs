@@ -1450,7 +1450,6 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
-
         public static HttpResponseMessage ChangeEmailAddress(int threadId, CustomerInfo customer)
         {
             try
@@ -1941,6 +1940,158 @@ namespace Skanetrafiken.Crm.Controllers
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                     resp.Content = new StringContent(SerializeNoNull(info));
                     return resp;
+                }
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
+            }
+        }
+
+        public static HttpResponseMessage CreateExcelBase64(int threadId, string fromDate, string toDate)
+        {
+            try
+            {
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - CreateExcelBase64: Creating serviceProxy");
+                // Cast the proxy client to the IOrganizationService interface.
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                {
+                    Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    _log.Info($"Th={threadId} - CreateExcelBase64: ServiceProxy and LocalContext created Successfully.");
+
+                    DateTime dtFromDate = DateTime.Parse(fromDate);
+                    DateTime dtToDate = DateTime.Parse(toDate);
+
+                    ColumnSet columnsSlots = new ColumnSet(SlotsEntity.Fields.ed_SlotIdentifier, SlotsEntity.Fields.ed_name, SlotsEntity.Fields.CreatedOn,
+                            SlotsEntity.Fields.ed_BookingDay, SlotsEntity.Fields.ed_StandardPrice, SlotsEntity.Fields.ed_CustomPrice, SlotsEntity.Fields.ed_BookingStatus,
+                            SlotsEntity.Fields.ed_Extended, SlotsEntity.Fields.ed_Opportunity);
+
+                    QueryExpression querySlots = new QueryExpression(SlotsEntity.EntityLogicalName);
+                    querySlots.NoLock = true;
+                    querySlots.ColumnSet = columnsSlots;
+                    querySlots.Criteria.AddCondition(SlotsEntity.Fields.ed_BookingDay, ConditionOperator.OnOrAfter, dtFromDate);
+                    querySlots.Criteria.AddCondition(SlotsEntity.Fields.ed_BookingDay, ConditionOperator.OnOrBefore, dtToDate);
+
+                    LinkEntity linkAccount = querySlots.AddLink(AccountEntity.EntityLogicalName, SlotsEntity.Fields.ed_Account, AccountEntity.Fields.AccountId, JoinOperator.LeftOuter);
+                    linkAccount.EntityAlias = "aa";
+                    linkAccount.Columns.AddColumns(AccountEntity.Fields.Address1_City, AccountEntity.Fields.AccountNumber, AccountEntity.Fields.Name);
+
+                    LinkEntity linkSystemUser = querySlots.AddLink(SystemUserEntity.EntityLogicalName, SlotsEntity.Fields.OwningUser, SystemUserEntity.Fields.SystemUserId, JoinOperator.LeftOuter);
+                    linkSystemUser.EntityAlias = "au";
+                    linkSystemUser.Columns.AddColumns(SystemUserEntity.Fields.ed_RSID, SystemUserEntity.Fields.FullName);
+
+                    LinkEntity linkQuote = querySlots.AddLink(QuoteEntity.EntityLogicalName, SlotsEntity.Fields.ed_Quote, QuoteEntity.Fields.QuoteId, JoinOperator.LeftOuter);
+                    linkQuote.EntityAlias = "aq";
+                    linkQuote.Columns.AddColumns(QuoteEntity.Fields.DiscountAmount, QuoteEntity.Fields.DiscountPercentage, QuoteEntity.Fields.ed_campaigndatestart, QuoteEntity.Fields.ed_campaigndateend);
+
+                    LinkEntity linkQuoteProduct = querySlots.AddLink(QuoteProductEntity.EntityLogicalName, SlotsEntity.Fields.ed_QuoteProductID, QuoteProductEntity.Fields.QuoteDetailId, JoinOperator.LeftOuter);
+                    linkQuoteProduct.EntityAlias = "aqp";
+                    linkQuoteProduct.Columns.AddColumns(QuoteProductEntity.Fields.VolumeDiscountAmount, QuoteProductEntity.Fields.ManualDiscountAmount);
+
+                    LinkEntity linkProduct = querySlots.AddLink(ProductEntity.EntityLogicalName, SlotsEntity.Fields.ed_ProductID, ProductEntity.Fields.ProductId, JoinOperator.LeftOuter);
+                    linkProduct.EntityAlias = "ap";
+                    linkProduct.Columns.AddColumns(ProductEntity.Fields.ProductNumber, ProductEntity.Fields.Name);
+
+                    List<SlotsEntity> lSlots = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlots);
+                    localContext.Trace($"Found {lSlots.Count} relevant Slots to be exported.");
+
+                    if (lSlots.Count == 0)
+                    {
+                        HttpResponseMessage respEmpty = new HttpResponseMessage(HttpStatusCode.OK);
+                        respEmpty.Content = new StringContent(SerializeNoNull(string.Empty));
+                        return respEmpty;
+                    }
+
+                    string base64 = SlotsUtility.CreateExcelFile(lSlots);
+
+                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                    resp.Content = new StringContent(SerializeNoNull(base64));
+                    return resp;
+                }
+            }
+            catch (FormatException ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent($"Unable to convert dates: {ex.Message}");
+                return rm;
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
+            }
+        }
+
+        public static HttpResponseMessage ClearMKLIdContact(int threadId, string mklId)
+        {
+            try
+            {
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+
+                _log.DebugFormat($"Th={threadId} - ClearMKLIdContact: Creating serviceProxy");
+                // Cast the proxy client to the IOrganizationService interface.
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                {
+                    Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    _log.Info($"Th={threadId} - ClearMKLIdContact: ServiceProxy and LocalContext created Successfully.");
+
+                    _log.Info($"Th={threadId} - ClearMKLIdContact: Retrieving Active Contact using MKLId: {mklId}.");
+
+                    HttpResponseMessage respMess = null;
+
+                    QueryExpression queryContact = new QueryExpression(ContactEntity.EntityLogicalName);
+                    queryContact.NoLock = true;
+                    queryContact.Criteria.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
+                    queryContact.Criteria.AddCondition(ContactEntity.Fields.ed_MklId, ConditionOperator.Equal, mklId);
+
+                    List<ContactEntity> lContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, queryContact);
+
+                    if(lContacts.Count == 1)
+                    {
+                        Contact contact = lContacts.FirstOrDefault();
+
+                        Contact uContact = new Contact();
+                        uContact.Id = contact.Id;
+                        uContact.ed_MklId = string.Empty;
+                        uContact.ed_InformationSource = ed_informationsource.UppdateraMittKonto;
+
+                        XrmHelper.Update(localContext, uContact);
+
+                        respMess = new HttpResponseMessage(HttpStatusCode.OK);
+                        respMess.Content = new StringContent(SerializeNoNull(contact.Id));
+                    }
+                    else if(lContacts.Count == 0)
+                    {
+                        respMess = new HttpResponseMessage(HttpStatusCode.NotFound);
+                        respMess.Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, "MKLId"));
+                    }
+                    else if(lContacts.Count > 1)
+                    {
+                        respMess = new HttpResponseMessage(HttpStatusCode.NotFound);
+                        respMess.Content = new StringContent(string.Format(Resources.MultipleContactsFound, mklId));
+                    }
+
+                    return respMess;
                 }
             }
             catch (Exception ex)
@@ -3313,9 +3464,8 @@ namespace Skanetrafiken.Crm.Controllers
 
             QualifyLeadResponse resp = (QualifyLeadResponse)localContext.OrganizationService.Execute(req);
             if (resp.CreatedEntities.Count == 0)
-            {
                 throw new Exception(string.Format("Lead validation failed. Qualify lead returned no result"));
-            }
+
             ContactEntity qualifiedContact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, ContactEntity.ContactInfoBlock,
                 new FilterExpression()
                 {
@@ -3324,10 +3474,9 @@ namespace Skanetrafiken.Crm.Controllers
                         new ConditionExpression(ContactEntity.Fields.Id, ConditionOperator.Equal, resp.CreatedEntities.FirstOrDefault().Id)
                     }
                 });
+
             if (qualifiedContact == null)
-            {
                 throw new Exception(string.Format("Lead validation failed. No contact found."));
-            }
 
             // Object used for update.
             ContactEntity updContact = new ContactEntity()
@@ -4782,10 +4931,159 @@ namespace Skanetrafiken.Crm.Controllers
                             return rm4;
 
                         #endregion
+
                         default:
                             HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
                             rm.Content = new StringContent(string.Format(Resources.UnsupportedEntityTypeCode, entityTypeCode));
                             return rm;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="threadId"></param>
+        /// <param name="leadId"></param>
+        /// <returns></returns>
+        public static HttpResponseMessage ValidateEmailKampanj(int threadId, Guid leadId)
+        {
+            try
+            {
+                _log.DebugFormat($"Th={threadId} - ValidateEmail: Entered ValidateEmailKampanj(), leadId: {leadId}");
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - ValidateEmail: Creating serviceProxy");
+
+                // Cast the proxy client to the IOrganizationService interface.
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                {
+                    Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    _log.Info($"Th={threadId} - ValidateEmail: ServiceProxy and LocalContext created Successfully.");
+
+                    // validating indata
+                    _log.Info($"Th={threadId} - ValidateEmail: Validating InData.");
+                    if (leadId == null || Guid.Empty.Equals(leadId))
+                    {
+                        HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        rm.Content = new StringContent(Resources.GuidMissing);
+                        return rm;
+                    }
+
+                    #region Find Lead
+
+                    _log.Info($"Th={threadId} - ValidateEmail: Retrieving Lead with Id: {leadId}");
+
+                    ColumnSet columns = LeadEntity.LeadInfoBlock;
+                    LeadEntity lead = XrmRetrieveHelper.RetrieveFirst<LeadEntity>(localContext, columns, new FilterExpression()
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(LeadEntity.Fields.Id, ConditionOperator.Equal, leadId),
+                            new ConditionExpression(LeadEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.LeadState.Open)
+                        }
+                    });
+
+                    if (lead == null)
+                    {
+                        _log.WarnFormat($"Th={threadId} - ValidateEmail: Could not find a Lead with the provided Guid: {leadId}");
+                        HttpResponseMessage rml = new HttpResponseMessage(HttpStatusCode.NotFound);
+                        rml.Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, leadId));
+                        return rml;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(lead.EMailAddress1))
+                    {
+                        _log.WarnFormat($"Th={threadId} - ValidateEmail: Lead to be validated does not contain an email address");
+                        HttpResponseMessage rml = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        rml.Content = new StringContent(Resources.NoEmailToBeVerifiedFoundOnLead);
+                        return rml;
+                    }
+
+                    #endregion
+
+                    #region Conflict Contacts
+                    _log.Debug($"Th={threadId} - ValidateEmail: Conflicting Contact Query.");
+                    QueryExpression contactConflictQuery = QueryContactEmailConflict(lead.EMailAddress1, Contact.Fields.EMailAddress1);
+                    IList<ContactEntity> conflictContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactConflictQuery);
+                    _log.Info($"Th={threadId} - ValidateEmail: Found {conflictContacts.Count} conflicting Contacts: EmailAddress1");
+
+                    if (conflictContacts.Count > 0)
+                    {
+                        HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        respMess.Content = new StringContent("Contact already validated. Contact found with EmailAddress1 equal to Lead's Email.");
+                        return respMess;
+                    }
+
+                    contactConflictQuery = QueryContactEmailConflict(lead.EMailAddress1, Contact.Fields.EMailAddress2);
+                    conflictContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactConflictQuery);
+                    _log.Info($"Th={threadId} - ValidateEmail: Found {conflictContacts.Count} conflicting Contacts: EmailAddress2");
+
+                    ContactEntity contact = null;
+
+                    if (conflictContacts.Count > 1)
+                    {
+                        HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        respMess.Content = new StringContent("Multiple Contacts found with EmailAddress2 equal to Lead's Email. This will result in multiple validated Contacts.");
+                        return respMess;
+                    }
+                    else if (conflictContacts.Count == 1)
+                    {
+                        contact = conflictContacts.FirstOrDefault();
+                        ContactEntity.UpdateContactWithLeadKampanj(ref contact, lead);
+
+                        localContext.OrganizationService.Update(contact);
+
+                        SetStateRequest req = new SetStateRequest()
+                        {
+                            EntityMoniker = lead.ToEntityReference(),
+                            State = new OptionSetValue((int)Generated.LeadState.Disqualified),
+                            Status = new OptionSetValue((int)Generated.lead_statuscode.Canceled)
+                        };
+                        SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
+                    }
+                    else if (conflictContacts.Count == 0)
+                    {
+                        contact = QualifyLeadToContact(localContext, lead);
+                        contact.ed_PrivateCustomerContact = true;
+                        contact.ed_SourceCampaignId = lead.CampaignId;
+                        contact.ed_InformationSource = ed_informationsource.Kampanj;
+
+                        localContext.OrganizationService.Update(contact);
+                    }
+
+                    #endregion
+
+                    if(contact != null)
+                    {
+                        _log.Debug($"Th={threadId} - ValidateEmail: Contact updated. Sending confirmation Email.");
+                        CrmPlusUtility.SendConfirmationEmail(localContext, threadId, contact);
+                        _log.Info($"Th={threadId} - ValidateEmail: Confirmation Email sent.");
+
+                        HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.OK);
+                        rm.Content = new StringContent(SerializeNoNull(contact.ToContactInfo(localContext)));
+                        return rm;
+                    }
+                    else
+                    {
+                        _log.Info($"Th={threadId} - ValidateEmail: Empty Response.");
+                        HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.OK);
+                        rm.Content = new StringContent(string.Empty);
+                        return rm;
                     }
                 }
             }
@@ -5243,6 +5541,43 @@ namespace Skanetrafiken.Crm.Controllers
             }
 
             return result;
+        }
+
+        private static QueryExpression QueryContactEmailConflict(string emailAddress, string logicalNameEmail)
+        {
+            var queryContacts = new QueryExpression(ContactEntity.EntityLogicalName)
+            {
+                NoLock = true,
+                ColumnSet = ContactEntity.ContactInfoBlock
+            };
+
+            queryContacts.ColumnSet.AddColumn(ContactEntity.Fields.DoNotEMail);
+            queryContacts.Criteria.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
+            queryContacts.Criteria.AddCondition(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true);
+            queryContacts.Criteria.AddCondition(logicalNameEmail, ConditionOperator.Equal, emailAddress);
+
+            return queryContacts;
+        }
+
+        private static QueryExpression CreateLeadConflictQuery(LeadEntity lead)
+        {
+            return new QueryExpression()
+            {
+                EntityName = LeadEntity.EntityLogicalName,
+                ColumnSet = LeadEntity.LeadInfoBlock,
+                Criteria =
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression(LeadEntity.Fields.Id, ConditionOperator.NotEqual, lead.Id),
+                        new ConditionExpression(LeadEntity.Fields.EMailAddress1, ConditionOperator.Equal, lead.EMailAddress1),
+                        new ConditionExpression(LeadEntity.Fields.MobilePhone, ConditionOperator.Equal, lead.MobilePhone),
+                        //new ConditionExpression(LeadEntity.Fields.FirstName, ConditionOperator.Equal, lead.FirstName),
+                        //new ConditionExpression(LeadEntity.Fields.LastName, ConditionOperator.Equal, lead.LastName),
+                        new ConditionExpression(LeadEntity.Fields.CampaignId, ConditionOperator.Null)
+                    }
+                }
+            };
         }
 
         private static QueryExpression CreateContactConflictQuery(LeadEntity lead)

@@ -1,0 +1,71 @@
+﻿<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta charset="utf-8" />
+    <script src="../script/Endeavor.Skanetrafiken.formscriptfunctions.js"></script>
+    <script src="../script/Endeavor.Skanetrafiken.Slots.js"></script>
+    <title>Export Slots to Excel</title>
+
+    <style>
+        .button {
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            background-color: #008CBA;
+            width: 200px;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        function exportSlotsExcel() {
+
+            debugger;
+            var dateFrom = document.getElementById('fromdate');
+            var dateTo = document.getElementById('todate');
+
+            if (dateFrom == null || dateTo == null) {
+                Endeavor.formscriptfunctions.AlertCustomDialog("Either From Date or To Date is null");
+                return;
+            }
+
+            dateFrom = dateFrom.value;
+            dateTo = dateTo.value;ss
+
+            var inputParameters = [
+                { "Field": "FromDate", "Value": dateFrom, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
+                { "Field": "ToDate", "Value": dateTo, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 }
+            ];
+
+            Endeavor.Skanetrafiken.Slots.getExcelData(inputParameters);
+        }
+
+        function cancel() {
+            window.close();
+        }
+
+    </script>
+
+</head>
+<body>
+    <div>
+        <label for="fromdate">From Booking Date:</label>
+        <input type="date" id="fromdate" name="fromdate">
+
+        <label for="todate">To Booking Date:</label>
+        <input type="date" id="todate" to="todate">
+    </div>
+
+    <div>
+        <button class="button" onclick="exportSlotsExcel()">Export Slots</button>
+        <button class="button" onclick="cancel()">Cancel</button>
+    </div>
+
+</body>
+</html>

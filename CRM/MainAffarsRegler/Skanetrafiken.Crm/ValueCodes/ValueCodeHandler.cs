@@ -81,29 +81,29 @@ namespace Skanetrafiken.Crm.ValueCodes
             string nPhoneNumber = PhoneNumberUtility.CheckPhoneFormatCreateValueCodeGeneric(localContext, phoneNumber);
 
             #region old code 8042
-            if (phoneNumber != null && phoneNumber != "")
-            {
-                if (phoneNumber.StartsWith("0046"))
-                {
-                    phoneNumber = "+46" + phoneNumber.Substring(4);
-                }
-                else if (phoneNumber.StartsWith("0045"))
-                {
-                    phoneNumber = "+45" + phoneNumber.Substring(4);
-                }
-                else if (phoneNumber.StartsWith("46") && phoneNumber.Length == 11)
-                {
-                    phoneNumber = "+46" + phoneNumber.Substring(2);
-                }
-                else if (phoneNumber.StartsWith("45") && phoneNumber.Length == 11)
-                {
-                    phoneNumber = "+45" + phoneNumber.Substring(2);
-                }
-                else if (phoneNumber.StartsWith("07") && phoneNumber.Length == 10)
-                {
-                    phoneNumber = "+46" + phoneNumber.Substring(1);
-                }
-            }
+            //if (phoneNumber != null && phoneNumber != "")
+            //{
+            //    if (phoneNumber.StartsWith("0046"))
+            //    {
+            //        phoneNumber = "+46" + phoneNumber.Substring(4);
+            //    }
+            //    else if (phoneNumber.StartsWith("0045"))
+            //    {
+            //        phoneNumber = "+45" + phoneNumber.Substring(4);
+            //    }
+            //    else if (phoneNumber.StartsWith("46") && phoneNumber.Length == 11)
+            //    {
+            //        phoneNumber = "+46" + phoneNumber.Substring(2);
+            //    }
+            //    else if (phoneNumber.StartsWith("45") && phoneNumber.Length == 11)
+            //    {
+            //        phoneNumber = "+45" + phoneNumber.Substring(2);
+            //    }
+            //    else if (phoneNumber.StartsWith("07") && phoneNumber.Length == 10)
+            //    {
+            //        phoneNumber = "+46" + phoneNumber.Substring(1);
+            //    }
+            //}
             #endregion
 
             string apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_CreateValueCodeVoucher);

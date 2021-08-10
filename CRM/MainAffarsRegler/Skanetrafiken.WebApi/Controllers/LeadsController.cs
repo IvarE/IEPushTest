@@ -370,7 +370,8 @@ namespace Skanetrafiken.Crm.Controllers
                     rm = CrmPlusControl.ValidateEmail(threadId, guid, LeadEntity.EntityTypeCode, id, info.MklId);
                     break;
                 case (int)Crm.Schema.Generated.ed_informationsource.Kampanj:
-                    rm = CrmPlusControlCampaign.QualifyLeadToUnvalidatedCustomer(threadId, info);
+                    rm = CrmPlusControl.ValidateEmailKampanj(threadId, guid);
+                    //rm = CrmPlusControlCampaign.QualifyLeadToUnvalidatedCustomer(threadId, info);
                     break;
                 default:
                     rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
