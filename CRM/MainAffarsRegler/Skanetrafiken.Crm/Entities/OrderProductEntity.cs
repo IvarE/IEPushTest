@@ -49,7 +49,7 @@ namespace Skanetrafiken.Crm.Entities
                             {
                                 OrderEntity order = XrmRetrieveHelper.Retrieve<OrderEntity>(localContext, orderProduct.SalesOrderId, new ColumnSet(OrderEntity.Fields.DiscountPercentage, OrderEntity.Fields.DiscountAmount));
 
-                                if (order.DiscountPercentage != null || order.DiscountPercentage > 0 || order.DiscountAmount != null || order.DiscountAmount.Value > 0)
+                                if (order.DiscountPercentage != null && order.DiscountPercentage > 0 || order.DiscountAmount != null && order.DiscountAmount.Value > 0)
                                 {
                                     UpdateSlotsCustomPrice(localContext, order);
                                 }

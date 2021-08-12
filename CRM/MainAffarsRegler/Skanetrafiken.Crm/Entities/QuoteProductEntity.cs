@@ -61,7 +61,7 @@ namespace Skanetrafiken.Crm.Entities
                         {
                             QuoteEntity quote = XrmRetrieveHelper.Retrieve<QuoteEntity>(localContext, quoteProduct.QuoteId, new ColumnSet(QuoteEntity.Fields.DiscountPercentage, QuoteEntity.Fields.DiscountAmount));
 
-                            if (quote.DiscountPercentage != null || quote.DiscountPercentage > 0 || quote.DiscountAmount != null || quote.DiscountAmount.Value > 0)
+                            if (quote.DiscountPercentage != null && quote.DiscountPercentage > 0 || quote.DiscountAmount != null && quote.DiscountAmount.Value > 0)
                             {
                                 UpdateSlotsCustomPrice(localContext, quote);
                             }
