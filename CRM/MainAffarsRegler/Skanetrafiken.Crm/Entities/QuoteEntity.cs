@@ -43,9 +43,9 @@ namespace Skanetrafiken.Crm.Entities
         {
             decimal? discountPercentage = null;
             decimal? discountAmount = null;
-            if(quote.DiscountPercentage != null && quote.DiscountPercentage > 0)
+            if(quote.ed_DiscountPercentage != null && quote.ed_DiscountPercentage > 0)
             {
-                discountPercentage = quote.DiscountPercentage.Value;
+                discountPercentage = quote.ed_DiscountPercentage.Value;
             }
             else if(quote.DiscountAmount != null && quote.DiscountAmount.Value > 0)
             {

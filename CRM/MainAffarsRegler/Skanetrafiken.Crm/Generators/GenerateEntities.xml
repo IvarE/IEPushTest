@@ -55,10 +55,6 @@
     <entity>cgi_refundresponsible</entity>
     <entity>cgi_invoicerecipient</entity>
 
-
-
-    <entity>ed_biffintegrationerrorlog</entity>
-    <entity>ed_biffintegrationerrorlogrow</entity>
     <entity>ed_companyrole</entity>
     <entity>ed_deltabatcherrorlog</entity>
     <entity>ed_deltabatcherrorlogrow</entity>
