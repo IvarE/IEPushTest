@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package Ticket Purchases"
   DTS:PackageType="5"
-  DTS:VersionBuild="38"
-  DTS:VersionGUID="{2167930C-9743-4D2C-8E1C-58C6067F740D}">
+  DTS:VersionBuild="39"
+  DTS:VersionGUID="{98B902AC-C245-446B-921B-D5A50C23EA9D}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADef3a/fwPJD9M2iiiLEA1MAAAAAASAAACgAAAAEAAAAKi+5oXZyOJHemWuvNvqvM4gAAAAE89TKhH7EE7FPSu1DuDHE+g+nvYBI4wDGNjIigQDyIEUAAAAjiltPFjawrGDlTC4qMKmUnqVgXQ</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACygPT7AW1e1br0mSjbrdmXAAAAAASAAACgAAAAEAAAACka/lR/Y7GFSy9XowDHdbogAAAAWos4z7Mg6baDn4gSruY74p+h9Y2rK5ZfXSmHzfsXDWoUAAAAGy3JYIUq8oB3odmLOxM9nnnAMSE</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -42,7 +42,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADaODAx1Bqc7xyZV3uxvQ67AAAAAASAAACgAAAAEAAAAL5XI0l5Kr1FbSyfmBYrEAAgAAAAxskHvyVg+XogfhKQyxAGFXYQW7Xrb0Ba66D29thlAGYUAAAALGi/7jgyEDooBBUQcNka3gnISvM</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACWiD7hmXmSjvAn7mysi/NmAAAAAASAAACgAAAAEAAAAISqtlUuCA4iCDX9LQkB6AIgAAAA3iS+VFSs4A1rkOAlwuFAQCuYxaCQCvkxYrl6Ykk14xAUAAAAkBy2yPa0fjTikU3J0+2HpuchxuY</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -57,7 +57,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABSyA7pyi5L8FXzhJTT0JUvAAAAAASAAACgAAAAEAAAALHUiKQwVIbEAZUdHmOHHP0gAAAAhRYmK970xqw1aBMMtPdBHzy/j61CLCRqNfYr+FQL4SYUAAAAAch7C7kHZtetqbFM5SHwYlr7jY0</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAKgMQhC/dxmgOwnKgnrBXPAAAAAASAAACgAAAAEAAAAAWQTHwoY7vtofMt66JWcHsgAAAAfxIdzDwgSxutxvnpZVJ9gT7AiDuAjSQwPYJ+6K7VZmcUAAAA+Fj+5NcAVSx6K9YKZjcV9mLRpsw</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
