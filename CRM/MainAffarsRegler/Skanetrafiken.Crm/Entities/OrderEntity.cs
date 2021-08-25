@@ -43,11 +43,11 @@ namespace Skanetrafiken.Crm.Entities
         {
             decimal? discountPercentage = null;
             decimal? discountAmount = null;
-            if (order.IsAttributeModified(preImage, OrderEntity.Fields.DiscountPercentage) && order.DiscountPercentage != null && order.DiscountPercentage > 0)
+            if (order.ed_discountpercentage != null && order.ed_discountpercentage > 0)
             {
-                discountPercentage = order.DiscountPercentage.Value;
+                discountPercentage = order.ed_discountpercentage.Value;
             }
-            else if (order.IsAttributeModified(preImage, QuoteEntity.Fields.DiscountAmount) && order.DiscountAmount != null && order.DiscountAmount.Value > 0)
+            else if (order.DiscountAmount != null && order.DiscountAmount.Value > 0)
             {
                 discountAmount = order.DiscountAmount.Value;
             }

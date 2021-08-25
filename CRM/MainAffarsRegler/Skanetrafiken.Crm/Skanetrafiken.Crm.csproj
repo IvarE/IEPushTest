@@ -197,8 +197,6 @@
     <Compile Include="Entities\UnitGroupEntity.cs" />
     <Compile Include="Entities\ProcessStageEntity.cs" />
     <Compile Include="Entities\ProductEntity.cs" />
-    <Compile Include="Entities\BiffIntegrationErrorLogRowEntity.cs" />
-    <Compile Include="Entities\BiffIntegrationErrorLogEntity.cs" />
     <Compile Include="Entities\DeltabatchLogEntity.cs" />
     <Compile Include="Entities\DeltabatchErrorLogRowEntity.cs" />
     <Compile Include="Entities\DeltabatchErrorLogEntity.cs" />
@@ -290,7 +288,9 @@
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.FrontOffice.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Lead.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Opportunity.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Order.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.QueueItem.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Quote.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Slots.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCodeApproval.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.KBArticle.js" />

@@ -3150,7 +3150,7 @@ namespace Endeavor.Crm.UnitTest
         [Test]
         public void Test_Create_ValueCodeType5()
         {
-            CallApi($"{WebApiTestHelper.WebApiRootEndpoint_LocalTest}/ValueCode",
+            CallApi($"{WebApiTestHelper.WebApiRootEndpoint}/ValueCode",
                 CreateTestData_ValueCodeEvent(new DateTime(2020, 01, 01), 0, 5, 1315151, 41215, DateTime.UtcNow), typeof(ValueCodeEvent),
                 delegate (Plugin.LocalPluginContext l, string s, HttpWebResponse h)
                 {
@@ -3186,12 +3186,12 @@ namespace Endeavor.Crm.UnitTest
         [Test]
         public void Test_Update_ValueCodeType5()
         {
-            CallApi($"{WebApiTestHelper.WebApiRootEndpoint_LocalTest}/ValueCode",
+            CallApi($"{WebApiTestHelper.WebApiRootEndpoint}/ValueCode",
                 CreateTestData_ValueCodeEvent(new DateTime(2020, 01, 01), 10, 5, 1315151, 41215, DateTime.UtcNow), typeof(ValueCodeEvent),
                 delegate (Plugin.LocalPluginContext l, string s, HttpWebResponse h)
                 {
 
-                    CallApi($"{WebApiTestHelper.WebApiRootEndpoint_LocalTest}/ValueCode",
+                    CallApi($"{WebApiTestHelper.WebApiRootEndpoint}/ValueCode",
                         CreateTestData_ValueCodeEvent(new DateTime(2020, 01, 01), 5, 5, 1315151, 41215, DateTime.UtcNow), typeof(ValueCodeEvent),
                         delegate (Plugin.LocalPluginContext lx, string sx, HttpWebResponse hx)
                         {

@@ -327,7 +327,20 @@ namespace Skanetrafiken.Crm
                     }
                     );
 
-                config.Routes.MapHttpRoute(
+            config.Routes.MapHttpRoute(
+                    name: "ClearMKLId",
+                    routeTemplate: "api/{controller}/ClearMKLId",
+                    defaults: new
+                    {
+                        action = "ClearMKLId"
+                    },
+                    constraints: new
+                    {
+                        httpMethod = new HttpMethodConstraint(HttpMethod.Post)
+                    }
+                    );
+
+            config.Routes.MapHttpRoute(
                     name: "CreateExcelSlots",
                     routeTemplate: "api/{controller}/GetExcelBase64/slots",
                     defaults: new

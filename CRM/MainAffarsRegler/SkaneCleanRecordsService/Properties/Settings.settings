@@ -29,5 +29,8 @@
     <Setting Name="CredentialsFilePathAudits" Type="System.String" Scope="Application">
       <Value Profile="(Default)">%APPDATA%\Endeavor\DeleteAuditsService.Credential.xml</Value>
     </Setting>
+    <Setting Name="MonthsDelete" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

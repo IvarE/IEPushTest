@@ -3081,6 +3081,7 @@ namespace CGIXrmCreateCaseService.Case
                     }
                 }
                 //add filelinks from collection
+                //Change - Handle Decryption of link
                 if (request.FileLinks == null || !request.FileLinks.Any()) return;
 
                 foreach (var fileLink in request.FileLinks)

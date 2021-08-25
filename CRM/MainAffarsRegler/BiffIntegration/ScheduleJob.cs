@@ -453,21 +453,21 @@ namespace Endeavor.Crm.BiffIntegration
                 _log.Error($"Starting log, Message:{Message} ");
 
 
-                BiffIntegrationErrorLogEntity errorLog = new BiffIntegrationErrorLogEntity()
-                {
-                    ed_name = $"Biff Integration Log - {DateTime.Now.ToString("yyyy/MM/dd - HH:mm")}"
-                };
+                //BiffIntegrationErrorLogEntity errorLog = new BiffIntegrationErrorLogEntity()
+                //{
+                //    ed_name = $"Biff Integration Log - {DateTime.Now.ToString("yyyy/MM/dd - HH:mm")}"
+                //};
 
-                // Cut if string to long.
-                if (Message != null)
-                    if (Message.Length > BiffIntegrationErrorLogEntity.FieldLengths.ed_Statistics)
-                        errorLog.ed_Statistics = Message.Substring(0, BiffIntegrationErrorLogEntity.FieldLengths.ed_Statistics);
-                    else
-                        errorLog.ed_Statistics = Message;
+                //// Cut if string to long.
+                //if (Message != null)
+                //    if (Message.Length > BiffIntegrationErrorLogEntity.FieldLengths.ed_Statistics)
+                //        errorLog.ed_Statistics = Message.Substring(0, BiffIntegrationErrorLogEntity.FieldLengths.ed_Statistics);
+                //    else
+                //        errorLog.ed_Statistics = Message;
 
 
-                errorLog.Id = XrmHelper.Create(localContext, errorLog);
-                errorLog.ed_biffintegrationerrorlogId = errorLog.Id;
+                //errorLog.Id = XrmHelper.Create(localContext, errorLog);
+                //errorLog.ed_biffintegrationerrorlogId = errorLog.Id;
 
 
                 // Need to log rows?
@@ -475,34 +475,34 @@ namespace Endeavor.Crm.BiffIntegration
                 {
                     _log.Error($"Found {_errorRows.Count} error rows. Starting to log...");
 
-                    foreach (Tuple<DataRow, Exception> tuple in _errorRows)
-                    {
-                        int? iNull = null;
-                        BiffIntegrationErrorLogRowEntity errRow = new BiffIntegrationErrorLogRowEntity();
+                    //foreach (Tuple<DataRow, Exception> tuple in _errorRows)
+                    //{
+                    //    int? iNull = null;
+                    //    BiffIntegrationErrorLogRowEntity errRow = new BiffIntegrationErrorLogRowEntity();
 
-                        errRow.ed_BiffIntegrationErrorLog = errorLog.ToEntityReference();
-                        errRow.ed_CardNumber = tuple.Item1.Field<long>("CardNumber").ToString();
-                        errRow.ed_CardOfferingReskassa = tuple.Item1.IsNull("CardOfferingReskassa") == false ? tuple.Item1.Field<string>("CardOfferingReskassa").ToString() : null;
-                        errRow.ed_CardOfferingPeriodkort = tuple.Item1.IsNull("CardOfferingPeriodkort") == false ? tuple.Item1.Field<string>("CardOfferingPeriodkort").ToString() : null;
-                        errRow.ed_IsActive = tuple.Item1.IsNull("IsActive") == false ?  tuple.Item1.Field<int>("IsActive") : iNull;
+                    //    errRow.ed_BiffIntegrationErrorLog = errorLog.ToEntityReference();
+                    //    errRow.ed_CardNumber = tuple.Item1.Field<long>("CardNumber").ToString();
+                    //    errRow.ed_CardOfferingReskassa = tuple.Item1.IsNull("CardOfferingReskassa") == false ? tuple.Item1.Field<string>("CardOfferingReskassa").ToString() : null;
+                    //    errRow.ed_CardOfferingPeriodkort = tuple.Item1.IsNull("CardOfferingPeriodkort") == false ? tuple.Item1.Field<string>("CardOfferingPeriodkort").ToString() : null;
+                    //    errRow.ed_IsActive = tuple.Item1.IsNull("IsActive") == false ?  tuple.Item1.Field<int>("IsActive") : iNull;
 
-                        // Period
-                        //errRow.ed_Blocked = tuple.Item1.IsNull("Blocked") == false ?  tuple.Item1.Field<int?>("Blocked") : null;
-                        errRow.ed_BlockedDate = tuple.Item1.IsNull("BlockedDate") == false ? tuple.Item1.Field<DateTime?>("BlockedDate") : null;
-                        errRow.ed_BlockedDescription = tuple.Item1.IsNull("BlockedDescription") == false ? tuple.Item1.Field<string>("BlockedDescription") : null;
-                        //
-                        errRow.ed_ValidFromDate = tuple.Item1.IsNull("ValidFromDate") == false ? tuple.Item1.Field<DateTime?>("ValidFromDate") : null;
-                        errRow.ed_ValidToDate = tuple.Item1.IsNull("ValidToDate") == false ? tuple.Item1.Field<DateTime?>("ValidToDate") : null;
-                        errRow.ed_LatestTravelDate = tuple.Item1.IsNull("LatestTravelDate") == false ? tuple.Item1.Field<DateTime?>("LatestTravelDate") : null;
-                        errRow.ed_ModifiedDate = tuple.Item1.Field<DateTime>("ModifiedDate");
+                    //    // Period
+                    //    //errRow.ed_Blocked = tuple.Item1.IsNull("Blocked") == false ?  tuple.Item1.Field<int?>("Blocked") : null;
+                    //    errRow.ed_BlockedDate = tuple.Item1.IsNull("BlockedDate") == false ? tuple.Item1.Field<DateTime?>("BlockedDate") : null;
+                    //    errRow.ed_BlockedDescription = tuple.Item1.IsNull("BlockedDescription") == false ? tuple.Item1.Field<string>("BlockedDescription") : null;
+                    //    //
+                    //    errRow.ed_ValidFromDate = tuple.Item1.IsNull("ValidFromDate") == false ? tuple.Item1.Field<DateTime?>("ValidFromDate") : null;
+                    //    errRow.ed_ValidToDate = tuple.Item1.IsNull("ValidToDate") == false ? tuple.Item1.Field<DateTime?>("ValidToDate") : null;
+                    //    errRow.ed_LatestTravelDate = tuple.Item1.IsNull("LatestTravelDate") == false ? tuple.Item1.Field<DateTime?>("LatestTravelDate") : null;
+                    //    errRow.ed_ModifiedDate = tuple.Item1.Field<DateTime>("ModifiedDate");
 
-                        // Add errormessage
-                        errRow.ed_ErrorMessage = $"Error:{tuple.Item2.Message}, inner:{(tuple.Item2.InnerException != null ? tuple.Item2.InnerException.Message :string.Empty )}";
-                        if (errRow.ed_ErrorMessage.Length > BiffIntegrationErrorLogRowEntity.FieldLengths.ed_ErrorMessage)
-                            errRow.ed_ErrorMessage = errRow.ed_ErrorMessage.Substring(0, BiffIntegrationErrorLogRowEntity.FieldLengths.ed_ErrorMessage);
+                    //    // Add errormessage
+                    //    errRow.ed_ErrorMessage = $"Error:{tuple.Item2.Message}, inner:{(tuple.Item2.InnerException != null ? tuple.Item2.InnerException.Message :string.Empty )}";
+                    //    if (errRow.ed_ErrorMessage.Length > BiffIntegrationErrorLogRowEntity.FieldLengths.ed_ErrorMessage)
+                    //        errRow.ed_ErrorMessage = errRow.ed_ErrorMessage.Substring(0, BiffIntegrationErrorLogRowEntity.FieldLengths.ed_ErrorMessage);
 
-                        XrmHelper.Create(localContext, errRow);
-                    }
+                    //    XrmHelper.Create(localContext, errRow);
+                    //}
 
                     _log.Error($"Done writing to log");
                 }

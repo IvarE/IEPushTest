@@ -84,7 +84,7 @@ public partial class PASS_DoAction : System.Web.UI.Page
 
                 if (contacts.Count == 1)
                 {
-                    Contact contact = contacts[0]; //.FirstOrDefault();
+                    Contact contact = contacts.FirstOrDefault();
                     _log.Debug("Found 1 customer : " + contact.ContactId);
                     incident.DefaultCustomer = new EntityReference(contact.LogicalName, contact.ContactId);
                     incident.Contact = new EntityReference(contact.LogicalName, contact.ContactId);

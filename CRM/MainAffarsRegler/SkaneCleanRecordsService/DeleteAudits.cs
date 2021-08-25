@@ -76,9 +76,10 @@ namespace Endeavor.Crm.CleanRecordsService
 
                 // Create a delete request with an end date earlier than possible.
                 DeleteAuditDataRequest deleteRequest = new DeleteAuditDataRequest();
-                deleteRequest.EndDate = DateTime.MinValue; // new DateTime(2000, 1, 1);
+                deleteRequest.EndDate = DateTime.MinValue;
 
-                DateTime dtMonthsAgo = DateTime.Now.AddMonths(-6);
+                int monthsDelete = Properties.Settings.Default.MonthsDelete;
+                DateTime dtMonthsAgo = DateTime.Now.AddMonths((-1) * monthsDelete);
 
                 // Check if partitions are not supported as is the case with SQL Server Standard edition.
                 if (partitions.IsLogicalCollection)
