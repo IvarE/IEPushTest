@@ -2569,7 +2569,6 @@ namespace Skanetrafiken.Import
                 return;
             }
 
-            OptionMetadataCollection colOpCompanyTrade = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_companytrade);
             OptionMetadataCollection colOpBusinessType = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_BusinessType);
 
             Console.Write("Creating Batch of Accounts... ");
@@ -2640,18 +2639,7 @@ namespace Skanetrafiken.Import
 
                                     break;
                                 case "Branschtext":
-
-                                    int? optionSetCT = GetOptionSetValueByName(colOpCompanyTrade, value);
-
-                                    if (optionSetCT == null)
-                                    {
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM. By default it will be created into Skund.");
-                                        optionSetCT = InsertGlobalOptionSetOption(localContext, "ed_companytrade", value, 1053);
-                                    }
-
-                                    if (optionSetCT != null)
-                                        nAccount.ed_companytrade = new OptionSetValue((int)optionSetCT);
-
+                                    nAccount.ed_CompanyTradeText = value;
                                     break;
                                 case "Branschkod":
                                     nAccount.ed_IndustryCodeId = value;
@@ -2684,6 +2672,7 @@ namespace Skanetrafiken.Import
                             }
                         }
 
+                        nAccount.EMailAddress1 = "pedro@pedro.pt";
                         nAccount.StateCode = AccountState.Active;
                         nAccount.ed_customer = true;
 
