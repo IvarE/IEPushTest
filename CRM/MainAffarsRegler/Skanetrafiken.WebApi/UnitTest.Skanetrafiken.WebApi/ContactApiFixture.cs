@@ -2467,7 +2467,7 @@ namespace Endeavor.Crm.UnitTest
                 var leadInfo = CreateTestData_LeadInfo();
 
                 //Create contact from lead - SkapaMittKonto
-                CallApi($"{WebApiTestHelper.WebApiRootEndpoint_LocalTest}/Leads", leadInfo, "POST",
+                CallApi($"{WebApiTestHelper.WebApiRootEndpoint}/Leads", leadInfo, "POST",
                     typeof(LeadInfo), delegate (Plugin.LocalPluginContext l, string s, HttpWebResponse h)
                     {
 
@@ -2478,7 +2478,7 @@ namespace Endeavor.Crm.UnitTest
                 leadInfo.Source = 1;
 
                 //Create contact from lead
-                CallApi($"{WebApiTestHelper.WebApiRootEndpoint_LocalTest}/Leads/{leadInfo.Guid}", leadInfo, "PUT", typeof(LeadInfo),
+                CallApi($"{WebApiTestHelper.WebApiRootEndpoint}/Leads/{leadInfo.Guid}", leadInfo, "PUT", typeof(LeadInfo),
                     delegate (Plugin.LocalPluginContext ll, string ss, HttpWebResponse hh)
                     {
 
@@ -2502,7 +2502,7 @@ namespace Endeavor.Crm.UnitTest
                 Assert.NotNull(t, "Could not find contact based on email and socialsecuritynumber");
 
                 var rgol_Contact = CreateTestData_CustomerInfo();
-                CallApi($"{WebApiTestHelper.WebApiRootEndpoint_LocalTest}/Contacts", rgol_Contact, "POST",
+                CallApi($"{WebApiTestHelper.WebApiRootEndpoint}/Contacts", rgol_Contact, "POST",
                     typeof(CustomerInfo), delegate (Plugin.LocalPluginContext lx, string sx, HttpWebResponse hx)
                     {
                         var c = ContactEntity.FindActiveContact(lx, rgol_Contact);

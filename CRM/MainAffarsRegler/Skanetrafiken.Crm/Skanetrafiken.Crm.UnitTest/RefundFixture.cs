@@ -55,7 +55,7 @@ namespace Endeavor.Crm.UnitTest
                 
                 Guid incidentId = XrmHelper.Create(localContext, incident);
 
-                DateTime lastValid = DateTime.Now.AddYears(1).ToLocalTime();
+                DateTime lastValid = DateTime.Now.AddYears(2).ToLocalTime();
 
                 RefundEntity refund = new RefundEntity
                 {
