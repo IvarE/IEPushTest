@@ -514,6 +514,16 @@ namespace Skanetrafiken.Import
             return option.Value;
         }
 
+        public static string GetOptionSetValueByValue(OptionMetadataCollection colOptions, int value)
+        {
+            OptionMetadata option = colOptions.FirstOrDefault(x => x.Value == value);
+
+            if (option == null)
+                return null;
+
+            return option.Label.UserLocalizedLabel.Label;
+        }
+
         public static int? InsertGlobalOptionSetOption(Plugin.LocalPluginContext localContext, string optionSetName, string label, int languageCode)
         {
             try
@@ -2671,8 +2681,6 @@ namespace Skanetrafiken.Import
                                     break;
                             }
                         }
-
-                        nAccount.EMailAddress1 = "pedro@pedro.pt";
                         nAccount.StateCode = AccountState.Active;
                         nAccount.ed_customer = true;
 

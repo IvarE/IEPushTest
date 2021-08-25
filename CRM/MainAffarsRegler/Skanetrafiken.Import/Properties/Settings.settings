@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="RelativePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\SeKunddata\Pedro\</Value>
+      <Value Profile="(Default)">C:\SeKunddata\</Value>
     </Setting>
     <Setting Name="Bucket1Accounts" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Accounts\Spann 1 - unika 2020-05-27.csv</Value>
