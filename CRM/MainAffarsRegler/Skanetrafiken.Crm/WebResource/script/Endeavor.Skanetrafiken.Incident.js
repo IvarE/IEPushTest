@@ -1085,8 +1085,13 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     return;
                 }
 
-                var _incidentstagecode = Endeavor.formscriptfunctions.GetValue("incidentstagecode", formContext);
+                var caseSolved = Endeavor.formscriptfunctions.GetValue("cgi_casesolved", formContext);
+                if (caseSolved == 2) {
+                    Endeavor.formscriptfunctions.SetValue("cgi_casesolved", "0", formContext);
+                    Endeavor.formscriptfunctions.SaveEntity(formContext);
+                }
 
+                var _incidentstagecode = Endeavor.formscriptfunctions.GetValue("incidentstagecode", formContext);
                 if (_incidentstagecode != 285050002) {
                     formContext.getAttribute("incidentstagecode").setValue(285050004);
                     Endeavor.formscriptfunctions.SetValue("cgi_case_reopen", "1", formContext);
