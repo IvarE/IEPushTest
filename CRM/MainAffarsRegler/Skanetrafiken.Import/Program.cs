@@ -2628,7 +2628,22 @@ namespace Skanetrafiken.Import
                                     nAccount.Name = value;
                                     break;
                                 case "Orgnr":
-                                    nAccount.cgi_organizational_number = value;
+
+                                    QueryExpression queryAccount = new QueryExpression(Account.EntityLogicalName);
+                                    queryAccount.NoLock = true;
+                                    queryAccount.ColumnSet = new ColumnSet(Account.Fields.AccountId);
+                                    queryAccount.Criteria.AddCondition(Account.Fields.cgi_organizational_number, ConditionOperator.Equal, value);
+                                    queryAccount.Criteria.AddCondition(Account.Fields.StateCode, ConditionOperator.Equal, (int)AccountState.Active);
+
+                                    List<Account> l = XrmRetrieveHelper.RetrieveMultiple<Account>(localContext, queryAccount);
+
+                                    if (l.Count == 0)
+                                        nAccount.cgi_organizational_number = value;
+                                    else if (l.Count > 1)
+                                        _log.Error("ERROROROROROORORORO------------------");
+                                    else if(l.Count == 1)
+                                        nAccount.Id = l.FirstOrDefault().Id;
+
                                     break;
                                 case "Bolagsform":
                                     nAccount.ed_BusinessTypeId = value;
@@ -2681,10 +2696,15 @@ namespace Skanetrafiken.Import
                                     break;
                             }
                         }
-                        nAccount.StateCode = AccountState.Active;
-                        nAccount.ed_customer = true;
 
-                        crmContext.AddObject(nAccount);
+                        if (nAccount.Id != null && nAccount.Id != Guid.Empty)
+                        {
+                            crmContext.Attach(nAccount);
+                            crmContext.UpdateObject(nAccount);
+                        }
+                        else
+                            _log.Error("UPDATE: EROROROORORORO");
+                        
                     }
                     catch (Exception e)
                     {
