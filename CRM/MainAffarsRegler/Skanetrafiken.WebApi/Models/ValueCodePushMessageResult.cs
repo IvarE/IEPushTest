@@ -171,7 +171,7 @@ namespace Skanetrafiken.Crm.Models
                                 ed_LastRedemptionDate = validToDate,
                                 ed_CodeId = voucherCode,
                                 ed_Ean = eanCode?.ToString(),
-                                ed_OriginalAmount = 1000,
+                                ed_OriginalAmount = amount,
                                 ed_ValueCodeVoucherId = voucherId.ToString()
                             };
 
@@ -350,7 +350,7 @@ namespace Skanetrafiken.Crm.Models
                                 ed_LastRedemptionDate = validToDate,
                                 ed_CodeId = voucherCode,
                                 ed_Ean = eanCode?.ToString(),
-                                ed_OriginalAmount = 1000,
+                                ed_OriginalAmount = amount,
                                 ed_ValueCodeVoucherId = voucherId.ToString()
                             };
 
