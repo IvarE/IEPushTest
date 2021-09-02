@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.OleDb;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -2848,85 +2849,28 @@ namespace Skanetrafiken.Import
         {
             try
             {
-                // Define the fetch attributes.
-                // Set the number of records per page to retrieve.
-                int fetchCount = 5000;
-                // Initialize the page number.
-                int pageNumber = 1;
-                // Specify the current paging cookie. For retrieving the first page, 
-                // pagingCookie should be null.
-                string pagingCookie = null;
+                string queryString = "select st_ContactID, st_TicketID, Count(*) from st_singaporeticketBase group by st_ContactID, st_TicketID having count(*) > 1";
+                string connectionString = "Server=AG-SQL4-CRM;Database=DKCRM_MSCRM;Integrated Security=True;";
 
-                string fetchXml = @"<fetch distinct='false' mapping='logical' output-format='xml-platform'>
-                                  <entity name='st_singaporeticket' >
-                                    <attribute name='st_contactid' />
-                                    <attribute name='st_ticketid' />
-                                    <order attribute='st_ticketid' descending='false' />
-                                    <order attribute='st_contactid' descending='false' />
-                                    <filter type='and'>
-                                      <condition attribute='st_contactid' operator='not-null' />
-                                      <condition attribute='st_ticketid' operator='not-null' />
-                                    </filter>
-                                  </entity>
-                                </fetch>";
-
-                EntityCollection fullData = new EntityCollection();
-
-                while (true)
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    // Build fetchXml string with the placeholders.
-                    string xml = CreateXml(fetchXml, pagingCookie, pageNumber, fetchCount);
-
-                    // Excute the fetch query and get the xml result.
-                    RetrieveMultipleRequest fetchRequest1 = new RetrieveMultipleRequest
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    try
                     {
-                        Query = new FetchExpression(xml)
-                    };
-
-                    EntityCollection returnCollection = ((RetrieveMultipleResponse)localContext.OrganizationService.Execute(fetchRequest1)).EntityCollection;
-
-                    fullData.Entities.AddRange(returnCollection.Entities);
-
-                    if (fullData.TotalRecordCount == 1000000)
-                        break;
-
-                    // Check for morerecords, if it returns 1.
-                    if (returnCollection.MoreRecords)
-                    {
-                        // Increment the page number to retrieve the next page.
-                        pageNumber++;
-
-                        // Set the paging cookie to the paging cookie returned from current results.                            
-                        pagingCookie = returnCollection.PagingCookie;
-                    }
-                    else
-                    {
-                        // If no more records in the result nodes, exit the loop.
-                        break;
-                    }
-                }
-
-                List<Entity> lFullData = fullData.Entities.ToList();
-
-                foreach (var item in fullData.Entities)
-                {
-                    EntityReference contactId = item.GetAttributeValue<EntityReference>("st_contactid");
-                    string ticketId = item.GetAttributeValue<string>("st_ticketid");
-
-                    List<Entity> lAux = lFullData.Where(x => x.GetAttributeValue<EntityReference>("st_contactid").Id == contactId.Id &&
-                                                                x.GetAttributeValue<string>("st_ticketid") == ticketId).ToList();
-
-                    if (lAux.Count > 1)
-                    {
-                        foreach (var item1 in lAux)
+                        while (reader.Read())
                         {
-                            _log.Error("DELETING SINGAPORE TICKET: " + item1.Id);
+                            Console.WriteLine(String.Format("{0}, {1}",
+                            reader["st_ContactID"], reader["st_TicketID"]));// etc
                         }
                     }
-                    else
-                        _log.Error("SKIPED TICKET: " + lAux.FirstOrDefault().Id);
+                    finally
+                    {
+                        // Always call Close when done reading.
+                        reader.Close();
+                    }
                 }
-
 
             }
             catch (Exception e)
