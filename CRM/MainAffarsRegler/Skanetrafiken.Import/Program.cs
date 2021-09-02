@@ -2913,10 +2913,10 @@ namespace Skanetrafiken.Import
                     EntityReference contactId = item.GetAttributeValue<EntityReference>("st_contactid");
                     string ticketId = item.GetAttributeValue<string>("st_ticketid");
 
-                    //List<Entity> lAux = lFullData.Where(x => x.GetAttributeValue<EntityReference>("st_contactid").Id == contactId.Id &&
-                                                                //x.GetAttributeValue<string>("st_ticketid") == ticketId).ToList();
+                    List<Entity> lAux = lFullData.Where(x => x.GetAttributeValue<EntityReference>("st_contactid").Id == contactId.Id &&
+                                                                x.GetAttributeValue<string>("st_ticketid") == ticketId).ToList();
 
-                    if (true)
+                    if (lAux.Count > 1)
                     {
                         foreach (var item1 in lAux)
                         {
@@ -2924,7 +2924,7 @@ namespace Skanetrafiken.Import
                         }
                     }
                     else
-                        _log.Error("SKIPED TICKET: " + item1.Id);
+                        _log.Error("SKIPED TICKET: " + lAux.FirstOrDefault().Id);
                 }
 
 
