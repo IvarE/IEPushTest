@@ -2861,6 +2861,12 @@ namespace Skanetrafiken.Import
                                   <entity name='st_singaporeticket' >
                                     <attribute name='st_contactid' />
                                     <attribute name='st_ticketid' />
+                                    <order attribute='st_ticketid' descending='false' />
+                                    <order attribute='st_contactid' descending='false' />
+                                    <filter type='and'>
+                                      <condition attribute='st_contactid' operator='not-null' />
+                                      <condition attribute='st_ticketid' operator='not-null' />
+                                    </filter>
                                   </entity>
                                 </fetch>";
 
@@ -2900,9 +2906,25 @@ namespace Skanetrafiken.Import
                     }
                 }
 
+                List<Entity> lFullData = fullData.Entities.ToList();
+
                 foreach (var item in fullData.Entities)
                 {
+                    EntityReference contactId = item.GetAttributeValue<EntityReference>("st_contactid");
+                    string ticketId = item.GetAttributeValue<string>("st_ticketid");
 
+                    //List<Entity> lAux = lFullData.Where(x => x.GetAttributeValue<EntityReference>("st_contactid").Id == contactId.Id &&
+                                                                //x.GetAttributeValue<string>("st_ticketid") == ticketId).ToList();
+
+                    if (true)
+                    {
+                        foreach (var item1 in lAux)
+                        {
+                            _log.Error("DELETING SINGAPORE TICKET: " + item1.Id);
+                        }
+                    }
+                    else
+                        _log.Error("SKIPED TICKET: " + item1.Id);
                 }
 
 
