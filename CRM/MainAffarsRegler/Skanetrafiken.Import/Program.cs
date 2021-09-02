@@ -2859,10 +2859,27 @@ namespace Skanetrafiken.Import
                     SqlDataReader reader = command.ExecuteReader();
                     try
                     {
+                        int i = 0;
                         while (reader.Read())
                         {
-                            Console.WriteLine(String.Format("{0}, {1}",
-                            reader["st_ContactID"], reader["st_TicketID"]));// etc
+                            Guid contactId = new Guid(reader["st_ContactID"].ToString());
+                            string ticketId = reader["st_TicketID"].ToString();
+
+                            QueryExpression querySingapore = new QueryExpression(st_singaporeticket.EntityLogicalName);
+                            querySingapore.NoLock = true;
+                            querySingapore.TopCount = 5000;
+                            querySingapore.ColumnSet = new ColumnSet(st_singaporeticket.Fields.st_ContactID, st_singaporeticket.Fields.st_TicketID);
+                            querySingapore.Criteria.AddCondition(st_singaporeticket.Fields.st_ContactID, ConditionOperator.Equal, contactId);
+                            querySingapore.Criteria.AddCondition(st_singaporeticket.Fields.st_TicketID, ConditionOperator.Equal, ticketId);
+
+                            List<st_singaporeticket> lSingapore = XrmRetrieveHelper.RetrieveMultiple<st_singaporeticket>(localContext, querySingapore);
+
+                            for (int j = 1; j < lSingapore.Count; j++)
+                            {
+                                st_singaporeticket item = lSingapore[j];
+                                XrmHelper.Delete(localContext, new EntityReference(st_singaporeticket.EntityLogicalName, item.Id));
+                                _log.Error(j + " --- DELETING SINGAPORE TICKET: " + item.Id);
+                            }
                         }
                     }
                     finally
