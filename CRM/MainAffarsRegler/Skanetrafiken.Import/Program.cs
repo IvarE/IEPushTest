@@ -2853,17 +2853,14 @@ namespace Skanetrafiken.Import
                 int fetchCount = 5000;
                 // Initialize the page number.
                 int pageNumber = 1;
-                // Initialize the number of records.
-                int recordCount = 0;
                 // Specify the current paging cookie. For retrieving the first page, 
                 // pagingCookie should be null.
                 string pagingCookie = null;
 
-                string fetchXml = @"<fetch distinct='false' mapping='logical' output-format='xml-platform' aggregate='true' >
+                string fetchXml = @"<fetch distinct='false' mapping='logical' output-format='xml-platform'>
                                   <entity name='st_singaporeticket' >
-                                    <attribute name='st_singaporeticketid' alias='singapore_count' aggregate='countcolumn' />
-                                    <attribute name='st_contactid' alias='st_ContactID' groupby='true' />
-                                    <attribute name='st_ticketid' alias='st_TicketID' groupby='true' />
+                                    <attribute name='st_contactid' />
+                                    <attribute name='st_ticketid' />
                                   </entity>
                                 </fetch>";
 
@@ -2884,6 +2881,9 @@ namespace Skanetrafiken.Import
 
                     fullData.Entities.AddRange(returnCollection.Entities);
 
+                    if (fullData.TotalRecordCount == 1000000)
+                        break;
+
                     // Check for morerecords, if it returns 1.
                     if (returnCollection.MoreRecords)
                     {
@@ -2898,6 +2898,11 @@ namespace Skanetrafiken.Import
                         // If no more records in the result nodes, exit the loop.
                         break;
                     }
+                }
+
+                foreach (var item in fullData.Entities)
+                {
+
                 }
 
 
