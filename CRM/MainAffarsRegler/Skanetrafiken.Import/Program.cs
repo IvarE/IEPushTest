@@ -2815,6 +2815,29 @@ namespace Skanetrafiken.Import
             Console.WriteLine("Done.");
         }
 
+        public static void CleanSingaporeDuplicates(Plugin.LocalPluginContext localContext, CrmContext crmContext)
+        {
+            try
+            {
+                string fetchXMl = @"<fetch distinct='false' mapping='logical' aggregate='true' >
+                                  <entity name='st_singaporeticket' >
+                                    <attribute name='st_singaporeticketid' alias='singapore_count' aggregate='countcolumn' />
+                                    <attribute name='st_contactid' alias='st_ContactID' groupby='true' />
+                                    <attribute name='st_ticketid' alias='st_TicketID' groupby='true' />
+                                  </entity>
+                                </fetch>";
+
+                EntityCollection ecSingapore = localContext.OrganizationService.RetrieveMultiple(new FetchExpression(fetchXMl));
+
+
+            }
+            catch (Exception e)
+            {
+                _log.Error("ERROR: " + e.Message);
+                Console.WriteLine("ERROR: " + e.Message);
+            }
+        }
+
         public static bool MainMenuUpsales(Plugin.LocalPluginContext localContext, CrmContext crmContext, SaveChangesOptions optionsChanges, string relativeExcelPath)
         {
             Console.WriteLine();
@@ -2837,8 +2860,9 @@ namespace Skanetrafiken.Import
             Console.WriteLine("13) Fix: Update Price List on Orders");
             Console.WriteLine("14) Fix: Update Total Amount on Orders");
 
-            Console.WriteLine("15) Fix:  Import Accounts May 2021");
+            Console.WriteLine("15) Fix: Import Accounts May 2021");
             Console.WriteLine("16) Fix: Refresh Global OptionSets(ed_BusinessType/ed_companytrade)");
+            Console.WriteLine("17) Fix: Clean Singapore Duplicated");
 
 
             Console.WriteLine("0) Exit");
@@ -3601,6 +3625,34 @@ namespace Skanetrafiken.Import
                     catch (Exception e)
                     {
                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Account Records. Details: " + e.Message);
+                        throw;
+                    }
+
+                    #endregion
+
+                    return true;
+
+                case "17":
+
+                    #region Clean Singapore Duplicated
+
+                    try
+                    {
+                        crmContext.ClearChanges();
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Clean Duplicates Singapore--------------");
+
+
+                        CleanSingaporeDuplicates(localContext, crmContext);
+
+                        Console.WriteLine("Sending Batch of Delete Requests to Sekund...");
+
+                        SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Clean Duplicates Singapore--------------");
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Deleting Singapore Duplicates Records. Details: " + e.Message);
                         throw;
                     }
 
