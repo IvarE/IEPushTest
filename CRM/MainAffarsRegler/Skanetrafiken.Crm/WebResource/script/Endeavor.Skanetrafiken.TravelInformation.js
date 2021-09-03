@@ -960,11 +960,11 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                         debugger;
                         entity = {
                             "cgi_displaytext": "",
-                            "cgi_transport": saveEntity.line.lineDesignation,
+                            "cgi_transport": saveEntity.line == null ? "" : saveEntity.line.lineDesignation,
                             "cgi_travelinformation": travelinformation,
                             "cgi_caseid@odata.bind": "/incidents(" + incidentId + ")",
 
-                            "cgi_line": saveEntity.line.lineNumber,
+                            "cgi_line": saveEntity.line == null ? "" : saveEntity.line.lineNumber,
                             "cgi_tour": getElementValue(saveEntity.directjourney, "JourneyNumber"),
                             "cgi_trainnumber": getElementValue(saveEntity.directjourney, "JourneyNumber"),
                             "cgi_journeynumber": getElementValue(saveEntity.directjourney, "JourneyNumber"),
