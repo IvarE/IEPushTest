@@ -2817,33 +2817,6 @@ namespace Skanetrafiken.Import
             Console.WriteLine("Done.");
         }
 
-        public static string CreateXml(string xml, string cookie, int page, int count)
-        {
-            StringReader stringReader = new StringReader(xml);
-            XmlTextReader reader = new XmlTextReader(stringReader);
-            XmlDocument doc = new XmlDocument();
-            doc.Load(reader);
-            XmlAttributeCollection attrs = doc.DocumentElement.Attributes;
-            if (cookie != null)
-            {
-                XmlAttribute pagingAttr = doc.CreateAttribute("paging-cookie");
-                pagingAttr.Value = cookie;
-                attrs.Append(pagingAttr);
-            }
-            XmlAttribute pageAttr = doc.CreateAttribute("page");
-            pageAttr.Value = System.Convert.ToString(page);
-            attrs.Append(pageAttr);
-            XmlAttribute countAttr = doc.CreateAttribute("count");
-            countAttr.Value = System.Convert.ToString(count);
-            attrs.Append(countAttr);
-            StringBuilder sb = new StringBuilder(1024);
-            StringWriter stringWriter = new StringWriter(sb);
-            XmlTextWriter writer = new XmlTextWriter(stringWriter);
-            doc.WriteTo(writer);
-            writer.Close();
-            return sb.ToString();
-        }
-
 
         public static void CleanSingaporeDuplicates(Plugin.LocalPluginContext localContext, CrmContext crmContext)
         {
@@ -2877,9 +2850,14 @@ namespace Skanetrafiken.Import
                             for (int j = 1; j < lSingapore.Count; j++)
                             {
                                 st_singaporeticket item = lSingapore[j];
-                                XrmHelper.Delete(localContext, new EntityReference(st_singaporeticket.EntityLogicalName, item.Id));
-                                _log.Error(j + " --- DELETING SINGAPORE TICKET: " + item.Id);
+                                st_singaporeticket dSingapore = new st_singaporeticket();
+                                dSingapore.Id = item.Id;
+                                crmContext.Attach(dSingapore);
+                                crmContext.DeleteObject(dSingapore);
                             }
+
+                            i++;
+                            
                         }
                     }
                     finally
