@@ -2832,33 +2832,48 @@ namespace Skanetrafiken.Import
                     SqlDataReader reader = command.ExecuteReader();
                     try
                     {
+                        List<string> lTickets = new List<string>();
+
+                        QueryExpression query = new QueryExpression(st_singaporeticket.EntityLogicalName);
+                        query.ColumnSet.AddColumns(st_singaporeticket.Fields.st_singaporeticketId, st_singaporeticket.Fields.st_TicketID);
+
+                        FilterExpression queryCriteria = new FilterExpression();
+                        query.Criteria.AddFilter(queryCriteria);
+                        queryCriteria.FilterOperator = LogicalOperator.Or;
+
                         int i = 0;
                         while (reader.Read())
                         {
                             Guid contactId = new Guid(reader["st_ContactID"].ToString());
                             string ticketId = reader["st_TicketID"].ToString();
 
-                            QueryExpression querySingapore = new QueryExpression(st_singaporeticket.EntityLogicalName);
-                            querySingapore.NoLock = true;
-                            querySingapore.TopCount = 5000;
-                            querySingapore.ColumnSet = new ColumnSet(st_singaporeticket.Fields.st_ContactID, st_singaporeticket.Fields.st_TicketID);
-                            querySingapore.Criteria.AddCondition(st_singaporeticket.Fields.st_ContactID, ConditionOperator.Equal, contactId);
-                            querySingapore.Criteria.AddCondition(st_singaporeticket.Fields.st_TicketID, ConditionOperator.Equal, ticketId);
+                            queryCriteria.AddCondition(st_singaporeticket.Fields.st_TicketID, ConditionOperator.Equal, ticketId);
 
-                            List<st_singaporeticket> lSingapore = XrmRetrieveHelper.RetrieveMultiple<st_singaporeticket>(localContext, querySingapore);
+                            lTickets.Add(ticketId);
+                            //QueryExpression querySingapore = new QueryExpression(st_singaporeticket.EntityLogicalName);
+                            //querySingapore.NoLock = true;
+                            //querySingapore.TopCount = 5000;
+                            //querySingapore.ColumnSet = new ColumnSet(st_singaporeticket.Fields.st_ContactID, st_singaporeticket.Fields.st_TicketID);
+                            //querySingapore.Criteria.AddCondition(st_singaporeticket.Fields.st_ContactID, ConditionOperator.Equal, contactId);
+                            //querySingapore.Criteria.AddCondition(st_singaporeticket.Fields.st_TicketID, ConditionOperator.Equal, ticketId);
 
-                            for (int j = 1; j < lSingapore.Count; j++)
-                            {
-                                st_singaporeticket item = lSingapore[j];
-                                st_singaporeticket dSingapore = new st_singaporeticket();
-                                dSingapore.Id = item.Id;
-                                crmContext.Attach(dSingapore);
-                                crmContext.DeleteObject(dSingapore);
-                            }
+                            //List<st_singaporeticket> lSingapore = XrmRetrieveHelper.RetrieveMultiple<st_singaporeticket>(localContext, querySingapore);
+
+                            //for (int j = 1; j < lSingapore.Count; j++)
+                            //{
+                            //    st_singaporeticket item = lSingapore[j];
+                            //    st_singaporeticket dSingapore = new st_singaporeticket();
+                            //    dSingapore.Id = item.Id;
+                            //    crmContext.Attach(dSingapore);
+                            //    crmContext.DeleteObject(dSingapore);
+                            //}
 
                             i++;
                             
                         }
+
+                        List<st_singaporeticket> lDynamics = XrmRetrieveHelper.RetrieveMultiple<st_singaporeticket>(localContext, query);
+                        Console.WriteLine("sfasfasf");
                     }
                     finally
                     {
