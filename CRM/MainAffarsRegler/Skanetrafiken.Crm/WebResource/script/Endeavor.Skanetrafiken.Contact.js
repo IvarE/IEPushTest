@@ -115,24 +115,22 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
                 var businessContact = formContext.getAttribute("ed_businesscontact");
                 var agentContact = formContext.getAttribute("ed_agentcontact");
-                var seniorContact = formContext.getAttribute("ed_seniorcontact");
-                var schoolContact = formContext.getAttribute("ed_schoolcontact");
+                var kontaktPerson = formContext.getAttribute("ed_kontaktperson");
+                var epostMottagare = formContext.getAttribute("ed_epostmottagare");
                 var infotainmentContact = formContext.getAttribute("ed_infotainmentcontact");
                 var privateContact = formContext.getAttribute("ed_privatecustomercontact");
-                var resellerContact = formContext.getAttribute("ed_reseller");
                 var collaborationContact = formContext.getAttribute("ed_collaborationcontact");
 
-                if (businessContact != null && agentContact != null && seniorContact != null &&
-                    schoolContact != null && infotainmentContact != null && privateContact != null
-                    && resellerContact != null && collaborationContact != null) {
+                if (businessContact != null && agentContact != null && kontaktPerson != null &&
+                    epostMottagare != null && infotainmentContact != null && privateContact != null
+                    && collaborationContact != null) {
 
                     var businessValue = businessContact.getValue();
                     var agentValue = agentContact.getValue();
-                    var seniorValue = seniorContact.getValue();
-                    var schoolValue = schoolContact.getValue();
+                    var kontaktPersonValue = kontaktPerson.getValue();
+                    var epostMottagareValue = epostMottagare.getValue();
                     var infotainmentValue = infotainmentContact.getValue();
                     var privateValue = privateContact.getValue();
-                    var resellerValue = resellerContact.getValue();
                     var collaborationValue = collaborationContact.getValue();
 
                     if (stateCode == null && formIsOnLoad == true)
@@ -141,17 +139,16 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         privateValue = true;
                     }
 
-                    if (businessValue != false || agentValue != false || seniorValue != false ||
-                        schoolValue != false || infotainmentValue != false || privateValue != false
-                        || resellerValue != false || collaborationValue != false) {
+                    if (businessValue != false || agentValue != false || kontaktPersonValue != false ||
+                        epostMottagareValue != false || infotainmentValue != false || privateValue != false
+                        || collaborationValue != false) {
 
                         businessContact.setRequiredLevel("none");
                         agentContact.setRequiredLevel("none");
-                        seniorContact.setRequiredLevel("none");
-                        schoolContact.setRequiredLevel("none");
+                        kontaktPerson.setRequiredLevel("none");
+                        epostMottagare.setRequiredLevel("none");
                         infotainmentContact.setRequiredLevel("none");
                         privateContact.setRequiredLevel("none");
-                        resellerContact.setRequiredLevel("none");
                         collaborationContact.setRequiredLevel("none");
 
                         if (privateValue != false) {
@@ -159,20 +156,17 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             businessContact.setValue(false);
                             formContext.getControl("ed_businesscontact").setDisabled(true);
 
-                            schoolContact.setValue(false);
-                            formContext.getControl("ed_schoolcontact").setDisabled(true);
-
-                            seniorContact.setValue(false);
-                            formContext.getControl("ed_seniorcontact").setDisabled(true);
-
-                            infotainmentContact.setValue(false);
-                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
-
                             agentContact.setValue(false);
                             formContext.getControl("ed_agentcontact").setDisabled(true);
 
-                            resellerContact.setValue(false);
-                            formContext.getControl("ed_reseller").setDisabled(true);
+                            kontaktPerson.setValue(false);
+                            formContext.getControl("ed_kontaktperson").setDisabled(true);
+
+                            epostMottagare.setValue(false);
+                            formContext.getControl("ed_epostmottagare").setDisabled(true);
+
+                            infotainmentContact.setValue(false);
+                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
 
                             collaborationContact.setValue(false);
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
@@ -180,30 +174,26 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         }
                         else if (businessValue != false)
                         {
-
                             privateContact.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
-
-                            schoolContact.setValue(false);
-                            formContext.getControl("ed_schoolcontact").setDisabled(true);
-
-                            seniorContact.setValue(false);
-                            formContext.getControl("ed_seniorcontact").setDisabled(true);
-
-                            infotainmentContact.setValue(false);
-                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
 
                             agentContact.setValue(false);
                             formContext.getControl("ed_agentcontact").setDisabled(true);
 
-                            resellerContact.setValue(false);
-                            formContext.getControl("ed_reseller").setDisabled(true);
+                            kontaktPerson.setValue(false);
+                            formContext.getControl("ed_kontaktperson").setDisabled(true);
+
+                            epostMottagare.setValue(false);
+                            formContext.getControl("ed_epostmottagare").setDisabled(true);
+
+                            infotainmentContact.setValue(false);
+                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
 
                             collaborationContact.setValue(false);
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
 
                         }
-                        else if (schoolValue != false) {
+                        else if (kontaktPersonValue != false) {
 
                             privateContact.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
@@ -211,23 +201,20 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             businessContact.setValue(false);
                             formContext.getControl("ed_businesscontact").setDisabled(true);
 
-                            seniorContact.setValue(false);
-                            formContext.getControl("ed_seniorcontact").setDisabled(true);
-
-                            infotainmentContact.setValue(false);
-                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
-
                             agentContact.setValue(false);
                             formContext.getControl("ed_agentcontact").setDisabled(true);
 
-                            resellerContact.setValue(false);
-                            formContext.getControl("ed_reseller").setDisabled(true);
+                            epostMottagare.setValue(false);
+                            formContext.getControl("ed_epostmottagare").setDisabled(true);
+
+                            infotainmentContact.setValue(false);
+                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
 
                             collaborationContact.setValue(false);
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
 
                         }
-                        else if (seniorValue != false) {
+                        else if (epostMottagareValue != false) {
 
                             privateContact.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
@@ -235,17 +222,14 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             businessContact.setValue(false);
                             formContext.getControl("ed_businesscontact").setDisabled(true);
 
-                            schoolContact.setValue(false);
-                            formContext.getControl("ed_schoolcontact").setDisabled(true);
-
-                            infotainmentContact.setValue(false);
-                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
-
                             agentContact.setValue(false);
                             formContext.getControl("ed_agentcontact").setDisabled(true);
 
-                            resellerContact.setValue(false);
-                            formContext.getControl("ed_reseller").setDisabled(true);
+                            kontaktPerson.setValue(false);
+                            formContext.getControl("ed_kontaktperson").setDisabled(true);
+
+                            infotainmentContact.setValue(false);
+                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
 
                             collaborationContact.setValue(false);
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
@@ -259,17 +243,14 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             businessContact.setValue(false);
                             formContext.getControl("ed_businesscontact").setDisabled(true);
 
-                            schoolContact.setValue(false);
-                            formContext.getControl("ed_schoolcontact").setDisabled(true);
-
-                            seniorContact.setValue(false);
-                            formContext.getControl("ed_seniorcontact").setDisabled(true);
-
                             agentContact.setValue(false);
                             formContext.getControl("ed_agentcontact").setDisabled(true);
 
-                            resellerContact.setValue(false);
-                            formContext.getControl("ed_reseller").setDisabled(true);
+                            kontaktPerson.setValue(false);
+                            formContext.getControl("ed_kontaktperson").setDisabled(true);
+
+                            epostMottagare.setValue(false);
+                            formContext.getControl("ed_epostmottagare").setDisabled(true);
 
                             collaborationContact.setValue(false);
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
@@ -283,41 +264,14 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             businessContact.setValue(false);
                             formContext.getControl("ed_businesscontact").setDisabled(true);
 
-                            schoolContact.setValue(false);
-                            formContext.getControl("ed_schoolcontact").setDisabled(true);
+                            kontaktPerson.setValue(false);
+                            formContext.getControl("ed_kontaktperson").setDisabled(true);
 
-                            seniorContact.setValue(false);
-                            formContext.getControl("ed_seniorcontact").setDisabled(true);
-
-                            infotainmentContact.setValue(false);
-                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
-
-                            resellerContact.setValue(false);
-                            formContext.getControl("ed_reseller").setDisabled(true);
-
-                            collaborationContact.setValue(false);
-                            formContext.getControl("ed_collaborationcontact").setDisabled(true);
-
-                        }
-                        else if (resellerValue != false) {
-
-                            privateContact.setValue(false);
-                            formContext.getControl("ed_privatecustomercontact").setDisabled(true);
-
-                            businessContact.setValue(false);
-                            formContext.getControl("ed_businesscontact").setDisabled(true);
-
-                            schoolContact.setValue(false);
-                            formContext.getControl("ed_schoolcontact").setDisabled(true);
-
-                            seniorContact.setValue(false);
-                            formContext.getControl("ed_seniorcontact").setDisabled(true);
+                            epostMottagare.setValue(false);
+                            formContext.getControl("ed_epostmottagare").setDisabled(true);
 
                             infotainmentContact.setValue(false);
                             formContext.getControl("ed_infotainmentcontact").setDisabled(true);
-
-                            agentContact.setValue(false);
-                            formContext.getControl("ed_agentcontact").setDisabled(true);
 
                             collaborationContact.setValue(false);
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
@@ -331,44 +285,38 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             businessContact.setValue(false);
                             formContext.getControl("ed_businesscontact").setDisabled(true);
 
-                            schoolContact.setValue(false);
-                            formContext.getControl("ed_schoolcontact").setDisabled(true);
-
-                            seniorContact.setValue(false);
-                            formContext.getControl("ed_seniorcontact").setDisabled(true);
-
-                            infotainmentContact.setValue(false);
-                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
-
                             agentContact.setValue(false);
                             formContext.getControl("ed_agentcontact").setDisabled(true);
 
-                            resellerContact.setValue(false);
-                            formContext.getControl("ed_reseller").setDisabled(true);
+                            kontaktPerson.setValue(false);
+                            formContext.getControl("ed_kontaktperson").setDisabled(true);
 
+                            epostMottagare.setValue(false);
+                            formContext.getControl("ed_epostmottagare").setDisabled(true);
+
+                            infotainmentContact.setValue(false);
+                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
                         }
                     }
                     else if (businessValue == false && agentValue == false
-                        && seniorValue == false && schoolValue == false
+                        && kontaktPersonValue == false && epostMottagareValue == false
                         && infotainmentValue == false && privateValue == false
-                        && resellerValue == false && collaborationValue == false) {
+                        && collaborationValue == false) {
 
                         formContext.getControl("ed_businesscontact").setDisabled(false);
                         formContext.getControl("ed_agentcontact").setDisabled(false);
-                        formContext.getControl("ed_seniorcontact").setDisabled(false);
-                        formContext.getControl("ed_schoolcontact").setDisabled(false);
+                        formContext.getControl("ed_kontaktperson").setDisabled(false);
+                        formContext.getControl("ed_epostmottagare").setDisabled(false);
                         formContext.getControl("ed_infotainmentcontact").setDisabled(false);
                         formContext.getControl("ed_privatecustomercontact").setDisabled(false);
-                        formContext.getControl("ed_reseller").setDisabled(false);
                         formContext.getControl("ed_collaborationcontact").setDisabled(false);
 
                         businessContact.setRequiredLevel("required");
                         agentContact.setRequiredLevel("required");
-                        seniorContact.setRequiredLevel("required");
-                        schoolContact.setRequiredLevel("required");
+                        kontaktPerson.setRequiredLevel("required");
+                        epostMottagare.setRequiredLevel("required");
                         infotainmentContact.setRequiredLevel("required");
                         privateContact.setRequiredLevel("required");
-                        resellerContact.setRequiredLevel("required");
                         collaborationContact.setRequiredLevel("required");
                     }
                 }
