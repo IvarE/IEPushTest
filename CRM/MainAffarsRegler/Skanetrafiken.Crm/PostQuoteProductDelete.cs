@@ -3,23 +3,25 @@ using System.Collections;
 using Microsoft.Xrm.Sdk;
 using Endeavor.Crm;
 using Endeavor.Crm.Extensions;
+using Microsoft.Xrm.Sdk.Query;
 using Generated = Skanetrafiken.Crm.Schema.Generated;
 using Skanetrafiken.Crm.Entities;
 using static Endeavor.Crm.Plugin;
 
-
 namespace Skanetrafiken.Crm
 {
-    public class PostQuoteUpdate : Plugin
+    public class PostQuoteProductDelete : Plugin
     {
+        /// <summary>
+        /// </summary>
         private readonly string preImageAlias = "preImage";
 
         /// <summary>
         /// </summary>
-        public PostQuoteUpdate()
-            : base(typeof(PostQuoteUpdate))
+        public PostQuoteProductDelete()
+            : base(typeof(PostQuoteProductDelete))
         {
-            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>((int)Plugin.SdkMessageProcessingStepStage.PostOperation, Plugin.SdkMessageName.Update, QuoteEntity.EntityLogicalName, new Action<LocalPluginContext>(PostExecuteQuoteUpdate)));
+            base.RegisteredEvents.Add(new Tuple<int, string, string, Action<LocalPluginContext>>(40, "Delete", QuoteProductEntity.EntityLogicalName, new Action<LocalPluginContext>(PostExecuteQuoteProductDelete)));
 
             // Note : you can register for more events here if this plugin is not specific to an individual entity and message combination.
             // You may also need to update your RegisterFile.crmregister plug-in registration file to reflect any change.
@@ -40,7 +42,7 @@ namespace Skanetrafiken.Crm
         /// could execute the plug-in at the same time. All per invocation state information
         /// is stored in the context. This means that you should not use global variables in plug-ins.
         /// </remarks>
-        protected void PostExecuteQuoteUpdate(LocalPluginContext localContext)
+        protected void PostExecuteQuoteProductDelete(LocalPluginContext localContext)
         {
             if (localContext == null)
             {
@@ -59,26 +61,40 @@ namespace Skanetrafiken.Crm
 
             localContext.TracingService.Trace("{0} {1} {2} {3}", localContext.PluginExecutionContext.Stage, localContext.PluginExecutionContext.MessageName, localContext.PluginExecutionContext.PrimaryEntityName, localContext.PluginExecutionContext.Depth);
 
+            // Target on Delete is EntityReference!
             if (localContext.PluginExecutionContext.InputParameters.Contains("Target") &&
-                localContext.PluginExecutionContext.InputParameters["Target"] is Entity)
+                localContext.PluginExecutionContext.InputParameters["Target"] is EntityReference)
             {
+
+                QuoteProductEntity preImage = Plugin.GetPreImage<QuoteProductEntity>(localContext, preImageAlias);
+
+                if (preImage == null)
+                    throw new InvalidPluginExecutionException("Pre-Image not registered correctly.");
+
                 try
                 {
-                    // Obtain the target entity from the input parameters.
-                    QuoteEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<QuoteEntity>();
+                    localContext.TracingService.Trace("preImage Trace");
+                    preImage.Trace(localContext.TracingService);
 
-                    QuoteEntity preImage = Plugin.GetPreImage<QuoteEntity>(localContext, preImageAlias);
+                    // Update Parent value
+                    //if (preImage.Contains(OpportunityEntity.Fields.ed_ParentOpportunityId))
+                    if (preImage.QuoteId != null)
+                    {
+                        QuoteEntity quote = XrmRetrieveHelper.Retrieve<QuoteEntity>(localContext, preImage.QuoteId, new ColumnSet(QuoteEntity.Fields.DiscountPercentage, QuoteEntity.Fields.DiscountAmount));
 
-                    if (preImage == null)
-                        throw new InvalidPluginExecutionException("Pre-Image not registered correctly.");
+                        QuoteProductEntity.UpdateSlotsCustomPrice(localContext, quote);
+                    }
 
-                    QuoteEntity.HandleQuoteEntityUpdate(localContext, target, preImage);
+
                 }
                 catch (Exception ex)
                 {
                     throw new InvalidPluginExecutionException(ex.Message, ex);
                 }
+
+                //throw new InvalidPluginExecutionException("Debug @patric");
             }
         }
     }
 }
+//</snippetAccountNumberPlugin>

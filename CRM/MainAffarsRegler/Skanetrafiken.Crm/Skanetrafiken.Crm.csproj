@@ -154,6 +154,8 @@
     <Compile Include="Helper\PhoneNumberUtility.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="PostOrderProductCreate.cs" />
+    <Compile Include="PostOrderProductDelete.cs" />
+    <Compile Include="PostQuoteProductDelete.cs" />
     <Compile Include="PreSingaporeTicketCreate_Sync.cs" />
     <Compile Include="PreValidationOrderProductDelete.cs" />
     <Compile Include="PostOrderProductUpdate.cs" />
@@ -289,8 +291,10 @@
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Lead.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Opportunity.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Order.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.OrderProduct.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.QueueItem.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Quote.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.QuoteProduct.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Slots.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.ValueCodeApproval.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.KBArticle.js" />
