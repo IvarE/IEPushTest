@@ -50,5 +50,29 @@ if (typeof (Endeavor.Skanetrafiken.Quote) == "undefined") {
             //formContext.data.refresh();
 
         }
+
+        //TotalAmountOnChange: function (executionContext) {
+
+        //    var formContext = executionContext.getFormContext();
+
+        //    var quoteAttribute = formContext.getAttribute("quoteid");
+
+        //    var quoteId = quoteAttribute.getValue()[0].id.replace("{", "").replace("}", "");
+        //    var columnSet = "extendedamount";
+        //    Xrm.WebApi.retrieveMultipleRecords("quotedetail", "?$select=" + columnSet + "&$filter=quoteId eq " + quoteId).then(
+        //        function success(result) {
+
+        //            if (result && result.entities.length > 0) {
+
+        //                result.forEach()
+        //            }
+
+        //        },
+        //        function (error) {
+        //            console.log(error.message);
+        //            Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
+        //        }
+        //    );
+        //}
     };
 }

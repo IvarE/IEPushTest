@@ -26,12 +26,29 @@ namespace Skanetrafiken.Crm.Entities
 
                     if (quoteProductId != null && quoteProductId != Guid.Empty)
                     {
-                        UpdateExistingSlots(localContext, quoteProductId, orderProduct.ToEntityReference(),orderProduct.SalesOrderId);
+                        UpdateExistingSlots(localContext, quoteProductId, orderProduct.ToEntityReference(), orderProduct.SalesOrderId);
                         //UpdateSlotsCustomPriceFromOrderProduct(localContext, orderProduct);
+                    }
+
+                    if (orderProduct.SalesOrderId != null)
+                    {
+                        OrderEntity order = XrmRetrieveHelper.Retrieve<OrderEntity>(localContext, orderProduct.SalesOrderId, new ColumnSet(OrderEntity.Fields.ed_discountpercentage, OrderEntity.Fields.DiscountAmount));
+
+
+
+                        UpdateSlotsCustomPriceFromOrderProduct(localContext, orderProduct);
+
+
+
+                        if (order.ed_discountpercentage != null && order.ed_discountpercentage > 0 || order.DiscountAmount != null && order.DiscountAmount.Value > 0)
+                        {
+                            UpdateSlotsCustomPrice(localContext, order);
+                        }
                     }
                 }
                 else
                 {
+
                     if (orderProduct.UoMId != null && orderProduct.ProductId != null && orderProduct.ed_FromDate != null && orderProduct.ed_ToDate != null)
                     {
                         bool isSlotProduct = false;
@@ -45,15 +62,21 @@ namespace Skanetrafiken.Crm.Entities
                         {
                             UpdateOrGenerateSlots(localContext, orderProduct);
 
-                            if (orderProduct.SalesOrderId != null)
-                            {
-                                OrderEntity order = XrmRetrieveHelper.Retrieve<OrderEntity>(localContext, orderProduct.SalesOrderId, new ColumnSet(OrderEntity.Fields.DiscountPercentage, OrderEntity.Fields.DiscountAmount));
+                            //if (orderProduct.SalesOrderId != null)
+                            //{
+                            //    OrderEntity order = XrmRetrieveHelper.Retrieve<OrderEntity>(localContext, orderProduct.SalesOrderId, new ColumnSet(OrderEntity.Fields.ed_discountpercentage, OrderEntity.Fields.DiscountAmount));
 
-                                if (order.DiscountPercentage != null && order.DiscountPercentage > 0 || order.DiscountAmount != null && order.DiscountAmount.Value > 0)
-                                {
-                                    UpdateSlotsCustomPrice(localContext, order);
-                                }
-                            }
+                               
+
+                            //        UpdateSlotsCustomPriceFromOrderProduct(localContext, orderProduct);
+
+
+
+                            //    if (order.ed_discountpercentage != null && order.ed_discountpercentage > 0 || order.DiscountAmount != null && order.DiscountAmount.Value > 0)
+                            //    {
+                            //        UpdateSlotsCustomPrice(localContext, order);
+                            //    }
+                            //}
                             //UpdateSlotsCustomPriceFromOrderProduct(localContext, orderProduct);
                         }
                     }
@@ -67,9 +90,9 @@ namespace Skanetrafiken.Crm.Entities
         {
             decimal? discountPercentage = null;
             decimal? discountAmount = null;
-            if (order.DiscountPercentage != null && order.DiscountPercentage > 0)
+            if (order.ed_discountpercentage != null && order.ed_discountpercentage > 0)
             {
-                discountPercentage = order.DiscountPercentage.Value;
+                discountPercentage = order.ed_discountpercentage.Value;
             }
             else if (order.DiscountAmount != null && order.DiscountAmount.Value > 0)
             {
@@ -78,7 +101,7 @@ namespace Skanetrafiken.Crm.Entities
 
             QueryExpression querySlots = new QueryExpression();
             querySlots.EntityName = SlotsEntity.EntityLogicalName;
-            querySlots.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_StandardPrice, SlotsEntity.Fields.ed_CustomPrice);
+            querySlots.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_StandardPrice, SlotsEntity.Fields.ed_CustomPrice, SlotsEntity.Fields.ed_DiscountAmount);
 
             FilterExpression filterSlots = new FilterExpression();
             filterSlots.FilterOperator = LogicalOperator.And;
@@ -97,11 +120,37 @@ namespace Skanetrafiken.Crm.Entities
                     {
                         if (slot.ed_StandardPrice != null && slot.ed_StandardPrice.Value > 0)
                         {
+                            decimal previousDiscountAmount = 0;
+
+                            localContext.Trace($"ed_StandardPrice = {slot.ed_StandardPrice.Value} ");
                             SlotsEntity slotToUpdate = new SlotsEntity();
                             slotToUpdate.Id = slot.Id;
-                            slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - (slot.ed_StandardPrice.Value * (discountPercentage.Value / 100)));
 
+                            if (slot.ed_DiscountAmount != null && slot.ed_DiscountAmount.Value != 0)
+                            {
+                                localContext.Trace($"Slot standard price: {slot.ed_StandardPrice.Value} Slot custom price: {slot.ed_CustomPrice.Value}");
+                                previousDiscountAmount = (slot.ed_DiscountAmount.Value * (discountPercentage.Value / 100));
+
+
+                            }
+
+                            if (previousDiscountAmount == 0)
+                            {
+                                slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - (slot.ed_StandardPrice.Value * (discountPercentage.Value / 100)));
+                            }
+                            else
+                            {
+                                slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - (slot.ed_StandardPrice.Value * (discountPercentage.Value / 100)) - previousDiscountAmount);
+                            }
+
+                            localContext.Trace($"new ed_CustomPrice = {slotToUpdate.ed_CustomPrice} ");
                             XrmHelper.Update(localContext, slotToUpdate);
+
+                            //SlotsEntity slotToUpdate = new SlotsEntity();
+                            //slotToUpdate.Id = slot.Id;
+                            //slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - (slot.ed_StandardPrice.Value * (discountPercentage.Value / 100)));
+
+                            //XrmHelper.Update(localContext, slotToUpdate);
                         }
                     }
                 }
@@ -115,8 +164,22 @@ namespace Skanetrafiken.Crm.Entities
                         {
                             SlotsEntity slotToUpdate = new SlotsEntity();
                             slotToUpdate.Id = slot.Id;
-                            slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - discountPerSlot);
+
+                            if (slot.ed_DiscountAmount != null && slot.ed_DiscountAmount.Value != 0)
+                            {
+                                slotToUpdate.ed_CustomPrice = new Money((slot.ed_StandardPrice.Value - discountPerSlot) - slot.ed_DiscountAmount.Value);
+                            }
+                            else
+                            {
+                                slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - discountPerSlot);
+                            }
+
                             XrmHelper.Update(localContext, slotToUpdate);
+
+                            //SlotsEntity slotToUpdate = new SlotsEntity();
+                            //slotToUpdate.Id = slot.Id;
+                            //slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - discountPerSlot);
+                            //XrmHelper.Update(localContext, slotToUpdate);
 
                             //get all slots conected to this quote
                             //divide the discount amount by the number of slots
@@ -134,6 +197,7 @@ namespace Skanetrafiken.Crm.Entities
                         {
                             SlotsEntity slotToUpdate = new SlotsEntity();
                             slotToUpdate.Id = slot.Id;
+                            slotToUpdate.ed_DiscountAmount = 0;
                             slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value);
                             XrmHelper.Update(localContext, slotToUpdate);
 
@@ -186,13 +250,25 @@ namespace Skanetrafiken.Crm.Entities
                     }
                     if (isSlotProduct)
                     {
-                        if (target.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_FromDate) || target.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_ToDate) || target.IsAttributeModified(preImage, OrderProductEntity.Fields.ManualDiscountAmount))
+                        if (target.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_FromDate) || target.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_ToDate) || target.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_ManualDiscount))
                         {
                             localContext.Trace("ed_FromDate or ed_ToDate modified");
                             UpdateOrGenerateSlots(localContext, target, preImage);
                             
                             
-                            //UpdateSlotsCustomPriceFromOrderProduct(localContext, target);
+                            UpdateSlotsCustomPriceFromOrderProduct(localContext, target);
+
+                            if (target.SalesOrderId != null)
+                            {
+                                OrderEntity order = XrmRetrieveHelper.Retrieve<OrderEntity>(localContext, target.SalesOrderId, new ColumnSet(OrderEntity.Fields.ed_discountpercentage, OrderEntity.Fields.DiscountAmount));
+
+
+                                if (order.ed_discountpercentage != null && order.ed_discountpercentage > 0 || order.DiscountAmount != null && order.DiscountAmount.Value > 0)
+                                {
+                                    UpdateSlotsCustomPrice(localContext, order);
+                                }
+
+                            }
                         }
                     }
                 }
@@ -415,11 +491,14 @@ namespace Skanetrafiken.Crm.Entities
 
         public void updatePriceOrderProduct(Plugin.LocalPluginContext localContext, OrderProductEntity preImage)
         {
-            if (this.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_totalslots) || this.IsAttributeModified(preImage, OrderProductEntity.Fields.PricePerUnit))
+            if (this.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_totalslots) || this.IsAttributeModified(preImage, OrderProductEntity.Fields.PricePerUnit) || this.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_ManualDiscount))
             {
                 decimal price = 0;
+                decimal manualDiscount = 0;
                 int quantity = 0;
                 int totalSlots = 0;
+
+                localContext.Trace($"inside updatePriceOrderProduct");
 
                 if (!this.IsAttributeModified(preImage, OrderProductEntity.Fields.PricePerUnit))
                 {
@@ -430,25 +509,68 @@ namespace Skanetrafiken.Crm.Entities
                     price = this.PricePerUnit.Value;
                 }
 
-                if (!this.IsAttributeModified(preImage, OrderProductEntity.Fields.Quantity))
+                if (!this.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_ManualDiscount))
                 {
-                    quantity = (int)preImage.Quantity.Value;
+                    localContext.Trace($"inside !this.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ManualDiscount)");
+                    if (preImage.ed_ManualDiscount == null || preImage.ManualDiscountAmount == null)
+                    {
+                        manualDiscount = 0;
+                    }
+                    else
+                    {
+                        manualDiscount = preImage.ed_ManualDiscount.Value - preImage.ManualDiscountAmount.Value;
+                    }
+                    localContext.Trace($"Manual Discount amount: {manualDiscount}");
+
                 }
                 else
                 {
+                    localContext.Trace($"inside manual discount not changed");
+                    if (this.ed_ManualDiscount == null || this.ManualDiscountAmount == null)
+                    {
+                        manualDiscount = 0;
+                    }
+                    else
+                    {
+                        manualDiscount = this.ed_ManualDiscount.Value - this.ManualDiscountAmount.Value;
+                    }
+                    localContext.Trace($"Manual Discount amount: {manualDiscount}");
+                }
+
+                if (!this.IsAttributeModified(preImage, OrderProductEntity.Fields.Quantity))
+                {
+                    localContext.Trace($"Inside quantity changed");
+                    quantity = (int)preImage.Quantity.Value;
+                    localContext.Trace($"quantity amount: {quantity}");
+                }
+                else
+                {
+                    localContext.Trace($"Inside quantity not changed");
                     quantity = (int)this.Quantity.Value;
+                    localContext.Trace($"quantity amount: {quantity}");
                 }
                 if (!this.IsAttributeModified(preImage, OrderProductEntity.Fields.ed_totalslots))
                 {
+                    localContext.Trace($"Total slots changed");
+
+                    localContext.Trace($"preImage: {preImage.ed_totalslots}");
+                    localContext.Trace($"this: {this.ed_totalslots}");
                     totalSlots = preImage.ed_totalslots.Value;
+                    localContext.Trace($"totalSlots: {totalSlots}");
                 }
                 else
                 {
+                    localContext.Trace($"Total slots not changed");
+                    localContext.Trace($"preImage: {preImage.ed_totalslots}");
+                    localContext.Trace($"this: {this.ed_totalslots}");
                     totalSlots = this.ed_totalslots.Value;
+                    localContext.Trace($"totalSlots: {totalSlots}");
                 }
+                localContext.Trace($"Almost Done");
 
+                localContext.Trace($"Manual Discount amount: {manualDiscount}");
 
-                this.Tax = new Money((totalSlots - quantity) * price);
+                this.Tax = new Money((totalSlots - quantity) * price - manualDiscount);
             }
         }
 
@@ -456,14 +578,14 @@ namespace Skanetrafiken.Crm.Entities
         {
             decimal? discountAmount = null;
 
-            if (orderProduct.ManualDiscountAmount != null && orderProduct.ManualDiscountAmount.Value > 0)
+            if (orderProduct.ed_ManualDiscount != null && orderProduct.ed_ManualDiscount.Value > 0)
             {
-                discountAmount = orderProduct.ManualDiscountAmount.Value;
+                discountAmount = orderProduct.ed_ManualDiscount.Value;
             }
 
             QueryExpression querySlots = new QueryExpression();
             querySlots.EntityName = SlotsEntity.EntityLogicalName;
-            querySlots.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_StandardPrice, SlotsEntity.Fields.ed_CustomPrice);
+            querySlots.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_StandardPrice, SlotsEntity.Fields.ed_CustomPrice, SlotsEntity.Fields.ed_DiscountAmount);
 
             FilterExpression filterSlots = new FilterExpression();
             filterSlots.FilterOperator = LogicalOperator.And;
@@ -485,6 +607,7 @@ namespace Skanetrafiken.Crm.Entities
                         {
                             SlotsEntity slotToUpdate = new SlotsEntity();
                             slotToUpdate.Id = slot.Id;
+                            slotToUpdate.ed_DiscountAmount = discountPerSlot;
                             slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - discountPerSlot);
                             XrmHelper.Update(localContext, slotToUpdate);
 
@@ -504,6 +627,9 @@ namespace Skanetrafiken.Crm.Entities
                         {
                             SlotsEntity slotToUpdate = new SlotsEntity();
                             slotToUpdate.Id = slot.Id;
+
+                            
+                            slotToUpdate.ed_DiscountAmount = 0;
                             slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value);
                             XrmHelper.Update(localContext, slotToUpdate);
 

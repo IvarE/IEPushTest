@@ -115,7 +115,7 @@ namespace Skanetrafiken.Crm.Entities
 
                 if (target.ed_Quote != null)
                 {
-                    SlotsEntity.SlotsEntityUpdateCustomPrice(localContext, target, null);
+                    //SlotsEntity.SlotsEntityUpdateCustomPrice(localContext, target, null); 
                 }
                 else if(target.ed_Order != null)
                 {
@@ -202,7 +202,7 @@ namespace Skanetrafiken.Crm.Entities
 
                 if(target.IsAttributeModified(preImage,SlotsEntity.Fields.ed_Quote))
                 {
-                    SlotsEntity.SlotsEntityUpdateCustomPrice(localContext, target, preImage);
+                    //SlotsEntity.SlotsEntityUpdateCustomPrice(localContext, target, preImage); 
                 }
                 else if (target.IsAttributeModified(preImage, SlotsEntity.Fields.ed_Order))
                 {
@@ -583,6 +583,7 @@ namespace Skanetrafiken.Crm.Entities
                         slotToRelease.ed_Quote = null;
                         slotToRelease.ed_OrderProductID = null;
                         slotToRelease.ed_Order = null;
+                        slotToRelease.ed_DiscountAmount = null;
                         slotToRelease.ed_Opportunity = null;
                         slotToRelease.ed_CustomPrice = slot.ed_StandardPrice;
                         //Validate generatedFromProduct bool or defaultBookingStatus
