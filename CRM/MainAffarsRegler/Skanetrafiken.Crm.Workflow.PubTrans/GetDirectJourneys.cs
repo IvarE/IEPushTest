@@ -137,9 +137,15 @@ namespace Skanetrafiken.Crm
                 district = null;
             }
 
-            byte timeDuration = 120;
+
             int departureMaxCount = 30;
             DateTime departureDate = DateTime.Parse(tripDateTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
+
+            //start 30 min early
+            departureDate = departureDate.AddMinutes(-30);
+
+            //2h after departureDate: 30 min + 120 min
+            byte timeDuration = 150;
 
             string _serviceEndPointUrl = string.Empty;
             string _userName = string.Empty;
