@@ -157,6 +157,7 @@
     <Compile Include="PostOrderProductDelete.cs" />
     <Compile Include="PostQuoteProductDelete.cs" />
     <Compile Include="PreSingaporeTicketCreate_Sync.cs" />
+    <Compile Include="PreSingaporeTicketUpdate_Sync.cs" />
     <Compile Include="PreValidationOrderProductDelete.cs" />
     <Compile Include="PostOrderProductUpdate.cs" />
     <Compile Include="PostOrderUpdate.cs" />

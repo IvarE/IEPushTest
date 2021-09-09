@@ -47,5 +47,41 @@ namespace Skanetrafiken.Crm.Entities
                 throw e;
             }
         }
+
+        internal void HandlePreSingaporeTicketUpdateSync(Plugin.LocalPluginContext localContext, SingaporeTicketEntity preImage)
+        {
+            try
+            {
+                string offerName = string.IsNullOrEmpty(this.FormattedValues["st_singtickettype"]) ? preImage.FormattedValues["st_singtickettype"] : this.FormattedValues["st_singtickettype"];
+                string contactNumber = string.IsNullOrEmpty(this.ed_CRMNummer) ? preImage.ed_CRMNummer : this.ed_CRMNummer;
+
+                this.st_name = contactNumber + "_" + offerName;
+
+                if (!string.IsNullOrEmpty(contactNumber))
+                {
+                    localContext.Trace(contactNumber);
+                    QueryExpression queryContacts = new QueryExpression(ContactEntity.EntityLogicalName);
+                    queryContacts.NoLock = true;
+                    queryContacts.ColumnSet = new ColumnSet(ContactEntity.Fields.ContactId);
+                    queryContacts.Criteria.AddCondition(ContactEntity.Fields.ed_MklId, ConditionOperator.Equal, contactNumber);
+
+                    var lContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, queryContacts);
+
+                    localContext.Trace($"Found {lContacts.Count} Contacts with ed_MklId {contactNumber}");
+                    if (lContacts.Count == 1)
+                    {
+                        var eContact = lContacts.FirstOrDefault();
+                        var erContact = new EntityReference(eContact.LogicalName, eContact.Id);
+
+                        this.st_ContactID = erContact;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                localContext.Trace($"HandlePreSingaporeTicketUpdateSync threw an unexpected exception: {e.Message}");
+                throw e;
+            }
+        }
     }
 }
