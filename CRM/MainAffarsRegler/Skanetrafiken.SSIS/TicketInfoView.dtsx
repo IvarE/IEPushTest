@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package Ticket Info"
   DTS:PackageType="5"
-  DTS:VersionBuild="49"
-  DTS:VersionGUID="{1853FA4F-7D3B-449F-B275-2EAD0E1849DC}">
+  DTS:VersionBuild="53"
+  DTS:VersionGUID="{67B96155-9C7D-41B8-9E5A-8FF5C06B4800}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADpQ1vIPaOmBTli0NwhtQGZAAAAAASAAACgAAAAEAAAAKgFfI1F4ENYHhsQWTsOUO4gAAAA7k0hSZPRcLTuNV3qhiZPiD/mI2q1lYAmRqIUswK7PsYUAAAAxIQNpgDLrwGjFFxrry0dWYXI9ew</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAACWqXtIafm0iZII3jfSA9igAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABxm4KW5t3JYDBHGdWRC+d4AAAAAASAAACgAAAAEAAAADWfDgCPeEtkuOnv/6lWaMggAAAAV+23PSTm0Hl2aJT626gaDNE0xmKRTzi4pokqjVrs/8wUAAAATDp/H/k45ZDutuS68uR7jA/mJp8</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -42,7 +42,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAB6eRA+3PyVwq/5nHQdanTcAAAAAASAAACgAAAAEAAAAKijuuRAE5GS81PlY1fI4aggAAAAmbsHnvHJMc+vv10YqjYYCXOk3R3+StBp/rT4mzWaNwEUAAAAtFJhR5U56Zd7pFcH/qzfMB6V3ns</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAACWqXtIafm0iZII3jfSA9igAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAKXiMbWKFHIhZ0G+UFwrF/AAAAAASAAACgAAAAEAAAAAPPWWdL9emzEHqubJPuErcgAAAAXcFJhrzKDoKBP5ExjGEPiPT44J1PkCdCUBfUu5uAtD8UAAAAsYOg24mv3OYW/WMFcuGnoGjHi+c</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -57,7 +57,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApIjuf/D5zE2SBbZwC50RFQAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADIsdeylSx7cA6Zglr4UmT8AAAAAASAAACgAAAAEAAAAJGW4qNuguz48eBH2G3xSicgAAAA7VBroZMKldA47pkFnDi8wDBVvdjbbZbooEI4oIZeunMUAAAAt5ls92EktaRFYhPyVU//bTIL5FI</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAACWqXtIafm0iZII3jfSA9igAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAoQW7hc7+xbp7F0YBAtqnqAAAAAASAAACgAAAAEAAAAM25Ia5ryLGTuqGCPVUpu7IgAAAAwd8swe7v6bCtOthWO9v4lFNSfBLFHhQYXh2pLZw3K0IUAAAAcoZNq4P5i+Clwwz9TKpqkz0qysY</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -688,7 +688,7 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT TOP (10) [LastUpdated]
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT  [LastUpdated]
       ,[TicketId]
       ,[PriceModel]
       ,[PriceModelPriceId]
@@ -1339,13 +1339,6 @@
                       externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_blockeddate]"
                       lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[blockedDate]" />
                     <inputColumn
-                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].Columns[cgi_contactnumber]"
-                      cachedDataType="wstr"
-                      cachedLength="100"
-                      cachedName="cgi_contactnumber"
-                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_crmnummer]"
-                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
-                    <inputColumn
                       refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].Columns[activatedDate]"
                       cachedDataType="dbTimeStamp2"
                       cachedName="activatedDate"
@@ -1454,6 +1447,13 @@
                       cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_activationintervalto]"
                       lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[activationinterval_to]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].Columns[cgi_contactnumber]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="cgi_contactnumber"
+                      externalMetadataColumnId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input].ExternalColumns[ed_crmnummer]"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Ticket Info.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
                   </inputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -2241,6 +2241,21 @@
                       length="2048"
                       lineageId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Outputs[Error Output].Columns[ErrorMessage]"
                       name="ErrorMessage" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Outputs[Skipped Rows]"
+                  exclusionGroup="1"
+                  name="Skipped Rows"
+                  synchronousInputId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Inputs[Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Outputs[Skipped Rows].Columns[SkipReasonMessage]"
+                      dataType="wstr"
+                      length="2048"
+                      lineageId="Package\Upsert Ticket Info Dynamics\Upsert Ticket Info.Outputs[Skipped Rows].Columns[SkipReasonMessage]"
+                      name="SkipReasonMessage" />
                   </outputColumns>
                   <externalMetadataColumns />
                 </output>
