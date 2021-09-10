@@ -26,12 +26,12 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">V-CRM-TST</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAACWqXtIafm0iZII3jfSA9igAAAAACAAAAAAADZgAAwAAAABAAAAB/uejqXbjAqSFGAPNsZ6TfAAAAAASAAACgAAAAEAAAANhu0WO4iKkw6TPKhIHeCIGIAAAATD+WLIByJxGIBfaE4wOe7lm1mNmRjW92um7zgVffbDQXHj13BEh835ZqIO5q4O/zH21RmljCObNh6pA1YFM/chMqdIaWacytv5kFEE0TT7HHhKE3zPBZV1D+3jiWj6gSxEXnFmD7M8moiX4QLsv9HDeacrClDL74U1thIrvTLc0M0cTKiXJ20hQAAAAKHo82FVoBRsZMaD8pPKL61RMhFQ==</SSIS:Property>
+          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAACWqXtIafm0iZII3jfSA9igAAAAACAAAAAAADZgAAwAAAABAAAACFXU5PHh8VJbTiokGg4JapAAAAAASAAACgAAAAEAAAAORvAfnk3k1cFRbnK5iHJk2IAAAA/Wvs/DwIPWRG38wN5j1PyIHn+7yIp92VRRPCDip8Lkg+J8ia5VnQjvCOgZy5Ekc42guKVLF+7BsdpZIKw7Fsmr6s9HUDMkLB9yBfbr2qwVqxXpVpUgJ++tu8r9kEhH9+7bTrKTeresOjs8kN2s+pgCR/F9vM24fFyxDPpdM6anxdjMaMvDDhHRQAAABVa8fugY2J4dTfoQztraqvJkO07Q==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
           <SSIS:Package SSIS:Name="TicketPurchasesPerCustomer.dtsx" SSIS:EntryPoint="1" />
-          <SSIS:Package SSIS:Name="TicketInfoView.dtsx" SSIS:EntryPoint="1" />
+          <SSIS:Package SSIS:Name="TicketInfoView-SingaporeTickets-Prod.dtsx" SSIS:EntryPoint="1" />
         </SSIS:Packages>
         <SSIS:ConnectionManagers />
         <SSIS:DeploymentInfo>
@@ -1574,16 +1574,16 @@
                 </SSIS:Parameter>
               </SSIS:Parameters>
             </SSIS:PackageMetaData>
-            <SSIS:PackageMetaData SSIS:Name="TicketInfoView.dtsx">
+            <SSIS:PackageMetaData SSIS:Name="TicketInfoView-SingaporeTickets-Prod.dtsx">
               <SSIS:Properties>
-                <SSIS:Property SSIS:Name="ID">{9B0F9E83-C948-4D22-A833-AF06CE953FC5}</SSIS:Property>
-                <SSIS:Property SSIS:Name="Name">Package Ticket Info</SSIS:Property>
+                <SSIS:Property SSIS:Name="ID">{D9D4B278-C447-42C8-89B5-D452BDE00C79}</SSIS:Property>
+                <SSIS:Property SSIS:Name="Name">TicketInfoView-SingaporeTickets-Prod</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">53</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">56</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{67B96155-9C7D-41B8-9E5A-8FF5C06B4800}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{3E592A58-DE63-4C7A-BCAD-D0B54CACAD79}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>
