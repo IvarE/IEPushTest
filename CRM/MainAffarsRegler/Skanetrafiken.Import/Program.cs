@@ -2822,8 +2822,10 @@ namespace Skanetrafiken.Import
         {
             try
             {
-                string queryString = "select st_ContactID, st_TicketID, Count(*) from st_singaporeticketBase group by st_ContactID, st_TicketID having count(*) > 1";
-                string connectionString = "Server=AG-SQL4-CRM;Database=DKCRM_MSCRM;Integrated Security=True;";
+                string queryString = "SELECT [TicketId], [cgi_contactnumber] FROM [STDW].[dbo].[GetTicketInfoView]";
+                string connectionString = "Server=V-DWSQL;Database=STDW;Integrated Security=True;";
+
+                Dictionary<string, string> lTickets = new Dictionary<string, string>();
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -2832,24 +2834,13 @@ namespace Skanetrafiken.Import
                     SqlDataReader reader = command.ExecuteReader();
                     try
                     {
-                        List<string> lTickets = new List<string>();
-
-                        QueryExpression query = new QueryExpression(st_singaporeticket.EntityLogicalName);
-                        query.ColumnSet.AddColumns(st_singaporeticket.Fields.st_singaporeticketId, st_singaporeticket.Fields.st_TicketID);
-
-                        FilterExpression queryCriteria = new FilterExpression();
-                        query.Criteria.AddFilter(queryCriteria);
-                        queryCriteria.FilterOperator = LogicalOperator.Or;
-
                         int i = 0;
                         while (reader.Read())
                         {
-                            Guid contactId = new Guid(reader["st_ContactID"].ToString());
-                            string ticketId = reader["st_TicketID"].ToString();
+                            Guid contactId = new Guid(reader["cgi_contactnumber"].ToString());
+                            string ticketId = reader["TicketId"].ToString();
 
-                            queryCriteria.AddCondition(st_singaporeticket.Fields.st_TicketID, ConditionOperator.Equal, ticketId);
-
-                            lTickets.Add(ticketId);
+                            lTickets.Add(ticketId, contactId.ToString());
                             //QueryExpression querySingapore = new QueryExpression(st_singaporeticket.EntityLogicalName);
                             //querySingapore.NoLock = true;
                             //querySingapore.TopCount = 5000;
@@ -2869,11 +2860,7 @@ namespace Skanetrafiken.Import
                             //}
 
                             i++;
-                            
                         }
-
-                        List<st_singaporeticket> lDynamics = XrmRetrieveHelper.RetrieveMultiple<st_singaporeticket>(localContext, query);
-                        Console.WriteLine("sfasfasf");
                     }
                     finally
                     {
@@ -2881,6 +2868,15 @@ namespace Skanetrafiken.Import
                         reader.Close();
                     }
                 }
+
+                QueryExpression query = new QueryExpression(st_singaporeticket.EntityLogicalName);
+                query.NoLock = true;
+                query.ColumnSet.AddColumns(st_singaporeticket.Fields.st_singaporeticketId, st_singaporeticket.Fields.st_TicketID, st_singaporeticket.Fields.ed_CRMNummer);
+
+                List<st_singaporeticket> lCRMTickets = XrmRetrieveHelper.RetrieveMultiple<st_singaporeticket>(localContext, query);
+                Console.WriteLine("Tickets Dynamics: " + lCRMTickets.Count);
+                Console.WriteLine("Tickets View: " + lTickets.Count);
+
 
             }
             catch (Exception e)
