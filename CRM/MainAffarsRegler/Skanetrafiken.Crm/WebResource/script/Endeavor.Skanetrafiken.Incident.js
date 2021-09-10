@@ -123,7 +123,6 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             switch (formContext.ui.getFormType()) {
                 case FORM_TYPE_CREATE:
                     Endeavor.Skanetrafiken.Incident.setCustomerOnLoad(formContext);
-                    Endeavor.Skanetrafiken.Incident.setDefaultOnCreate(formContext);
                     //Endeavor.Skanetrafiken.Incident.setAccountOrContactVisibility(formContext);
                     break;
                 case FORM_TYPE_UPDATE:
@@ -158,6 +157,8 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
             if (_cgi_contactid != null)
                 Endeavor.Skanetrafiken.Incident.setCustomerFromContact(formContext);
+
+            Endeavor.Skanetrafiken.Incident.setDefaultOnCreate(formContext);
         },
 
         onLoadHideShowTypeOfContactFields: function (executionContext) {
@@ -470,7 +471,9 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         setDefaultOnCreate: function (formContext) {
             try {
                 var _currentdate = new Date();
-                formContext.getAttribute("cgi_arrival_date").setValue(_currentdate);
+                var arrivalDate = formContext.getAttribute("cgi_arrival_date").getValue();
+                if (arrivalDate == null)
+                    formContext.getAttribute("cgi_arrival_date").setValue(_currentdate);
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Incident.setCaseDefaultOnLoad\n\n" + e.message);
