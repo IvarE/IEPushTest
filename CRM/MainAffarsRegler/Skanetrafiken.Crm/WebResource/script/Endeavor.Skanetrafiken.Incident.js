@@ -119,6 +119,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             var formContext = executionContext.getFormContext();
 
             Endeavor.Skanetrafiken.Incident.setVisibilityOnLoad(formContext);
+            Endeavor.Skanetrafiken.Incident.setDefaultOnCreate(formContext);
 
             switch (formContext.ui.getFormType()) {
                 case FORM_TYPE_CREATE:
@@ -157,8 +158,6 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
             if (_cgi_contactid != null)
                 Endeavor.Skanetrafiken.Incident.setCustomerFromContact(formContext);
-
-            Endeavor.Skanetrafiken.Incident.setDefaultOnCreate(formContext);
         },
 
         onLoadHideShowTypeOfContactFields: function (executionContext) {
