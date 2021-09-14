@@ -638,7 +638,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         },
 
         checkSocSecNumber: function (formContext, nr) {
-            if (Endeavor.Skanetrafiken.Contact.checkPersonnummer(nr)) {
+            if (Endeavor.Skanetrafiken.Contact.checkPersonnummer(formContext, nr)) {
                 var sweSocSec = formContext.getAttribute("ed_hasswedishsocialsecuritynumber");
                 if (sweSocSec != null) {
                     sweSocSec.setValue(true);
@@ -647,7 +647,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     alert("Fel i formulär, dolt fält saknas. Vänligen kontakta Administratör");
                 }
                 return true;
-            } else if (Endeavor.Skanetrafiken.Contact.checkNonSwedishSocSecNumber(nr)) {
+            } else if (Endeavor.Skanetrafiken.Contact.checkNonSwedishSocSecNumber(formContext, nr)) {
                 var sweSocSec = formContext.getAttribute("ed_hasswedishsocialsecuritynumber");
                 if (sweSocSec != null) {
                     sweSocSec.setValue(false);
@@ -660,7 +660,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             return false;
         },
 
-        checkPersonnummer: function (nr) {
+        checkPersonnummer: function (formContext, nr) {
             this.valid = false;
             //if(!nr.match(/^(\d{2})(\d{2})(\d{2})\-(\d{4})$/)){ return false; }
             if (nr.match(/^(\d{4})(\d{2})(\d{2})-(\d{4})$/)) {
@@ -693,10 +693,24 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             }
             this.valid = (this.checksum % 10 == 0) ? true : false;
             this.sex = parseInt(this.controldigits.substring(2, 3)) % 2;
+
+            //DevOps 9168: Update birthdate
+            if (this.valid == true)
+            {
+                var birthDateAtr = formContext.getAttribute("birthdate");
+                if (birthDateAtr != null && birthDateAtr != undefined)
+                {
+                    //Create date obj
+                    var monthValue = parseInt(this.month);
+                    var birthDateUpd = new Date(this.year, monthValue - 1, this.day);
+                    birthDateAtr.setValue(birthDateUpd);
+                }
+            }
+
             return this.valid;
         },
 
-        checkNonSwedishSocSecNumber: function (nr) {
+        checkNonSwedishSocSecNumber: function (formContext, nr) {
             if (nr.match(/^(\d{4})(\d{2})(\d{2})$/)) {
                 this.fullYear = RegExp.$1;
                 this.year = this.fullYear.substring(2, 4);
@@ -713,6 +727,16 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             if (!Endeavor.Skanetrafiken.Contact.checkDateFormat()) {
                 return false;
             }
+
+            //DevOps 9168: Update birthdate
+            var birthDateAtr = formContext.getAttribute("birthdate");
+            if (birthDateAtr != null && birthDateAtr != undefined) {
+                //Create date obj
+                var monthValue = parseInt(this.month);
+                var birthDateUpd = new Date(this.fullYear, monthValue - 1, this.day);
+                birthDateAtr.setValue(birthDateUpd);
+            }
+
             return true;
         },
 

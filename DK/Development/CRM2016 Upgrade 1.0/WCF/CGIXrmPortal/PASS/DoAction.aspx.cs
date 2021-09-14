@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+//using System.Linq;
 using System.Web;
 using CGIXrmHandler;
 using Microsoft.Xrm.Sdk;
@@ -84,7 +84,8 @@ public partial class PASS_DoAction : System.Web.UI.Page
 
                 if (contacts.Count == 1)
                 {
-                    Contact contact = contacts.FirstOrDefault();
+                    //Contact contact = contacts.FirstOrDefault();
+                    Contact contact = contacts[0];
                     _log.Debug("Found 1 customer : " + contact.ContactId);
                     incident.DefaultCustomer = new EntityReference(contact.LogicalName, contact.ContactId);
                     incident.Contact = new EntityReference(contact.LogicalName, contact.ContactId);

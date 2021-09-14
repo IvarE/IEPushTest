@@ -4019,6 +4019,7 @@ namespace Skanetrafiken.Crm.Controllers
                                     ContactId = conflict.ContactId,
                                     ed_InformationSource = Generated.ed_informationsource.AdmAndraKund,
                                     cgi_socialsecuritynumber = null,
+                                    BirthDate = null,
                                     ed_ConflictConnectionGuid = Guid.NewGuid().ToString()
                                 };
                                 XrmHelper.Update(localContext.OrganizationService, conflictUpdate);
@@ -5751,6 +5752,7 @@ namespace Skanetrafiken.Crm.Controllers
             if (!string.IsNullOrWhiteSpace(lead.ed_Personnummer) && !lead.ed_Personnummer.Equals(contact.cgi_socialsecuritynumber))
             {
                 contact.cgi_socialsecuritynumber = lead.ed_Personnummer;
+                contact.BirthDate = ContactEntity.UpdateBirthDateOnContact(lead.ed_Personnummer); //DevOps 9168
                 contact.ed_HasSwedishSocialSecurityNumber = lead.ed_HasSwedishSocialSecurityNumber;
                 updated = true;
             }

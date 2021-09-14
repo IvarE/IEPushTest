@@ -43,6 +43,7 @@ namespace Skanetrafiken.Crm.Entities
             ContactEntity.Fields.Telephone1,
             ContactEntity.Fields.Telephone2,
             ContactEntity.Fields.cgi_socialsecuritynumber,
+            ContactEntity.Fields.BirthDate,
             ContactEntity.Fields.ed_HasSwedishSocialSecurityNumber,
             ContactEntity.Fields.EMailAddress1,
             ContactEntity.Fields.EMailAddress2,
@@ -97,7 +98,11 @@ namespace Skanetrafiken.Crm.Entities
                     customerInfo.Source != (int)Generated.ed_informationsource.SeniorPortal)
                 {
                     if (!string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber))
+                    {
                         this.cgi_socialsecuritynumber = customerInfo.SocialSecurityNumber;
+                        this.BirthDate = ContactEntity.UpdateBirthDateOnContact(customerInfo.SocialSecurityNumber); //DevOps 9168
+                    }
+
                     if (customerInfo.SwedishSocialSecurityNumberSpecified)
                         this.ed_HasSwedishSocialSecurityNumber = customerInfo.SwedishSocialSecurityNumber;
 
@@ -454,6 +459,7 @@ namespace Skanetrafiken.Crm.Entities
             if (!string.IsNullOrWhiteSpace(leadInfo.SocialSecurityNumber) && !leadInfo.SocialSecurityNumber.Equals(cgi_socialsecuritynumber))
             {
                 updateEntity.cgi_socialsecuritynumber = leadInfo.SocialSecurityNumber;
+                updateEntity.BirthDate = ContactEntity.UpdateBirthDateOnContact(leadInfo.SocialSecurityNumber); //DevOps 9168
                 update = true;
                 if (leadInfo.SwedishSocialSecurityNumberSpecified && leadInfo.SwedishSocialSecurityNumber != ed_HasSwedishSocialSecurityNumber)
                 {
@@ -587,6 +593,8 @@ namespace Skanetrafiken.Crm.Entities
             if (string.IsNullOrWhiteSpace(cgi_socialsecuritynumber) && !string.IsNullOrWhiteSpace(leadInfo.SocialSecurityNumber))
             {
                 updateEntity.cgi_socialsecuritynumber = leadInfo.SocialSecurityNumber;
+                updateEntity.BirthDate = ContactEntity.UpdateBirthDateOnContact(leadInfo.SocialSecurityNumber); //DevOps 9168
+
                 update = true;
                 if (leadInfo.SwedishSocialSecurityNumberSpecified && leadInfo.SwedishSocialSecurityNumber != ed_HasSwedishSocialSecurityNumber)
                 {
@@ -1321,6 +1329,7 @@ namespace Skanetrafiken.Crm.Entities
                         {
                             Id = conflict.Id,
                             cgi_socialsecuritynumber = null,
+                            BirthDate = null, //DevOps 9168
                             ed_ConflictConnectionGuid = new Guid().ToString()
                         };
                         XrmHelper.Update(localContext, updateConflictEntity);
@@ -1513,7 +1522,9 @@ namespace Skanetrafiken.Crm.Entities
             if ((string.IsNullOrWhiteSpace(cgi_socialsecuritynumber)) && !string.IsNullOrWhiteSpace(subordinate.cgi_socialsecuritynumber))
             {
                 updateContent.cgi_socialsecuritynumber = subordinate.cgi_socialsecuritynumber;
+                updateContent.BirthDate = subordinate.BirthDate; //DevOps 9168
                 cgi_socialsecuritynumber = subordinate.cgi_socialsecuritynumber;
+                BirthDate = subordinate.BirthDate; //DevOps 9168
             }
 
             return updateContent;
@@ -1935,8 +1946,10 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     this.cgi_socialsecuritynumber = customerInfo.SocialSecurityNumber;
                     this.ed_HasSwedishSocialSecurityNumber = customerInfo.SwedishSocialSecurityNumber;
+                    this.BirthDate = ContactEntity.UpdateBirthDateOnContact(customerInfo.SocialSecurityNumber); //DevOps 91658
                     updateContact.cgi_socialsecuritynumber = customerInfo.SocialSecurityNumber;
                     updateContact.ed_HasSwedishSocialSecurityNumber = customerInfo.SwedishSocialSecurityNumber;
+                    updateContact.BirthDate = ContactEntity.UpdateBirthDateOnContact(customerInfo.SocialSecurityNumber); //DevOps 91658
                     updated = true;
                 }
 
@@ -2602,8 +2615,10 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     this.cgi_socialsecuritynumber = customerInfo.SocialSecurityNumber;
                     this.ed_HasSwedishSocialSecurityNumber = customerInfo.SwedishSocialSecurityNumber;
+                    this.BirthDate = ContactEntity.UpdateBirthDateOnContact(customerInfo.SocialSecurityNumber); //DevOps 9168
                     updateContact.cgi_socialsecuritynumber = customerInfo.SocialSecurityNumber;
                     updateContact.ed_HasSwedishSocialSecurityNumber = customerInfo.SwedishSocialSecurityNumber;
+                    updateContact.BirthDate = ContactEntity.UpdateBirthDateOnContact(customerInfo.SocialSecurityNumber); //DevOps 9168
                     updated = true;
                 }
 
@@ -2724,6 +2739,8 @@ namespace Skanetrafiken.Crm.Entities
             {
                 contact.cgi_socialsecuritynumber = lead.ed_Personnummer; //ed_socialsecuritynumberblock
                 updContact.cgi_socialsecuritynumber = lead.ed_Personnummer; //ed_socialsecuritynumberblock
+                contact.BirthDate = ContactEntity.UpdateBirthDateOnContact(lead.ed_Personnummer); //DevOps 9168
+                updContact.BirthDate = ContactEntity.UpdateBirthDateOnContact(lead.ed_Personnummer); //DevOps 9168
                 contact.ed_HasSwedishSocialSecurityNumber = lead.ed_HasSwedishSocialSecurityNumber;
                 updContact.ed_HasSwedishSocialSecurityNumber = lead.ed_HasSwedishSocialSecurityNumber;
                 updated = true;
@@ -2798,6 +2815,7 @@ namespace Skanetrafiken.Crm.Entities
             if (!string.IsNullOrWhiteSpace(lead.ed_Personnummer) && string.IsNullOrWhiteSpace(contact.cgi_socialsecuritynumber)) //Change this solcialsecurity number field (ed_socialsecuritynumberblock)
             {
                 contact.cgi_socialsecuritynumber = lead.ed_Personnummer; //ed_socialsecuritynumberblock
+                contact.BirthDate = ContactEntity.UpdateBirthDateOnContact(lead.ed_Personnummer); //DevOps 9168
                 contact.ed_HasSwedishSocialSecurityNumber = lead.ed_HasSwedishSocialSecurityNumber;
             }
 
@@ -2939,7 +2957,64 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
+        public static DateTime? UpdateBirthDateOnContact(string ssn) 
+        {
+            //DevOps 9168
+            DateTime birthDate = new DateTime();
+            bool failedParse = false;
 
+            //Check length of the sent in ssn
+            Regex regexSweSocSecLong = new Regex("^\\d{12}$"); //YYYY MM DD XXXX
+            Regex regexSweSocSecShort = new Regex("^\\d{10}$"); //YY MM DD XXXX
+            Regex regexDateLong = new Regex("^\\d{8}$"); //YYYY MM DD
+            Regex regexDateShort = new Regex("^\\d{6}$"); //YY MM DD
+
+            if (regexSweSocSecLong.IsMatch(ssn)) //YYYY MM DD XXXX
+            {
+                if (!DateTime.TryParse(ssn.Substring(0, 4) + "-" + ssn.Substring(4, 2) + "-" + ssn.Substring(6, 2), out birthDate))
+                {
+                    //The sent in date could not be parsed
+                    failedParse = true;
+                }
+            }
+            else if (regexSweSocSecShort.IsMatch(ssn)) //YY MM DD XXXX
+            {
+                var dateToParse = ssn.Substring(0, 2) + "-" + ssn.Substring(2, 2) + "-" + ssn.Substring(4, 2);
+                if (!DateTime.TryParseExact(dateToParse, "yy-MM-dd", null, System.Globalization.DateTimeStyles.AdjustToUniversal, out birthDate))
+                {
+                    //The sent in date could not be parsed
+                    failedParse = true;
+                }
+            }
+            else if (regexDateLong.IsMatch(ssn)) //YYYY MM DD
+            {
+                var dateToParse = ssn.Substring(0, 4) + "-" + ssn.Substring(4, 2) + "-" + ssn.Substring(6, 2);
+                if (!DateTime.TryParse(dateToParse, out birthDate))
+                {
+                    //The sent in date could not be parsed
+                    failedParse = true;
+                }
+            }
+            else if (regexDateShort.IsMatch(ssn)) //YY MM DD
+            {
+                var dateToParse = ssn.Substring(0, 2) + "-" + ssn.Substring(2, 2) + "-" + ssn.Substring(4, 2);
+                if (!DateTime.TryParseExact(dateToParse, "yy-MM-dd", null, System.Globalization.DateTimeStyles.AdjustToUniversal, out birthDate))
+                {
+                    //The sent in date could not be parsed
+                    failedParse = true;
+                }
+            }
+            else
+            {
+                failedParse = true;
+            }
+
+            if (failedParse == true)
+            {
+                return null;
+            }
+            return (DateTime?)birthDate;
+        }
 
         [Obsolete]
         public static ContactEntity GetContactFromMkl_Id(Plugin.LocalPluginContext localContext, string mkl_id)

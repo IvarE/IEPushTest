@@ -6,11 +6,18 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
+using System.Threading;
 using System.Xml.Serialization;
 using CGIXrmCreateCaseService.Case.Models;
 using CGIXrmWin;
 using CRM2013.SkanetrafikenPlugins.Common;
+using Microsoft.Azure;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Auth;
+using Microsoft.Azure.Storage.Blob;
+using Microsoft.Azure.KeyVault;
 using Microsoft.Crm.Sdk.Messages;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System.Collections.Generic;
@@ -22,6 +29,11 @@ using System.Text;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Runtime.Serialization;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
+using Microsoft.Azure.Management.Fluent;
+using Azure.Identity;
 
 namespace CGIXrmCreateCaseService.Case
 {
@@ -207,7 +219,8 @@ namespace CGIXrmCreateCaseService.Case
             // Catch HTTP Exceptions from CRMPlus
             catch (Microsoft.Rest.HttpOperationException ex)
             {
-                string msg = ex.Response.Content.ContentToString();
+                //string msg = ex.Response.Content.ContentToString();
+                string msg = ex.Response.Content;
 
                 _log.Error(string.Format("Exception catched in GetOrCreateContactRGOLCase:{0}. Country:{1}", msg, request.CustomerAddress1Country));
                 if (ex.Message != null)
@@ -297,7 +310,8 @@ namespace CGIXrmCreateCaseService.Case
             // Catch HTTP Exceptions from CRMPlus
             catch (Microsoft.Rest.HttpOperationException ex)
             {
-                string msg = ex.Response.Content.ContentToString();
+                //string msg = ex.Response.Content.ContentToString();
+                string msg = ex.Response.Content;
                 string fullMessage = string.Format("Kan inte skapa kund i SeKund. Orsak:{0}", msg);
                 _log.Error(fullMessage);
                 if (ex.Message != null)

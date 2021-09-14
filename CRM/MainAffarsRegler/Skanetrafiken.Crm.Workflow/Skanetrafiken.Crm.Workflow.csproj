@@ -343,6 +343,7 @@
     <Compile Include="ApproveValueCodeApproval.cs" />
     <Compile Include="BigInteger.cs" />
     <Compile Include="BlockAccountPortal.cs" />
+    <Compile Include="DecryptAttachmentFile.cs" />
     <Compile Include="CancelValueCode.cs" />
     <Compile Include="CancelOrder.cs" />
     <Compile Include="CreateExcelSlots.cs" />

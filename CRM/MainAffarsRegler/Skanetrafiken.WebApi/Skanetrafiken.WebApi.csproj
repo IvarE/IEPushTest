@@ -383,6 +383,7 @@
     <Compile Include="..\Skanetrafiken.Crm\XrmRetrieveHelper.cs">
       <Link>XrmRetrieveHelper.cs</Link>
     </Compile>
+    <Compile Include="Controllers\IncidentController.cs" />
     <Compile Include="Controllers\SlotsController.cs" />
     <Compile Include="Controllers\SyncDataController.cs" />
     <Compile Include="Controllers\MultiQController.cs" />
