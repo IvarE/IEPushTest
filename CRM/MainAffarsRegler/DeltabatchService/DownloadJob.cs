@@ -584,6 +584,7 @@ namespace Endeavor.Crm.DeltabatchService
             if (existingContact.cgi_socialsecuritynumber != socSec)
             {
                 updateContact.cgi_socialsecuritynumber = socSec;
+                updateContact.BirthDate = ContactEntity.UpdateBirthDateOnContact(socSec); //DevOps 9168
                 update = true;
             }
             #endregion

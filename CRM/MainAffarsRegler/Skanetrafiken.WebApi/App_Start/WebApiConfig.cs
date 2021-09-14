@@ -353,6 +353,19 @@ namespace Skanetrafiken.Crm
                     }
                     );
 
+            config.Routes.MapHttpRoute(
+                name: "GetAttachmentFromAzure",
+                routeTemplate: "api/{controller}/GetAttachmentFromAzure/encryptedUrl",
+                defaults: new
+                {
+                    action = "GetAttachmentFromAzure"
+                },
+                constraints: new
+                {
+                    httpMethod = new HttpMethodConstraint(HttpMethod.Get)
+                }
+                );
+
             //See ValueCodeController.GetMaxAmountValueCode (Route is configured there)
             //config.Routes.MapHttpRoute(
             //    name: "GetMaxAmountValueCodes",

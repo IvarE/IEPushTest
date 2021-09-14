@@ -362,5 +362,12 @@ namespace Skanetrafiken.Crm.Entities
 
             return incident;
         }
+
+        public static string HandleDecryptAttachment(Plugin.LocalPluginContext localContext, string valueCodeId, Guid? userGuid) 
+        {
+            //Decrypt the file
+
+            return "200";
+        }
     }
 }
