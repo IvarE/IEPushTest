@@ -5,20 +5,26 @@
     <script src="../script/Endeavor.Skanetrafiken.formscriptfunctions.js"></script>
     <script src="../script/Endeavor.Skanetrafiken.Slots.js"></script>
     <title>Export Slots to Excel</title>
+    <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
 
     <style>
-        .button {
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            background-color: #008CBA;
-            width: 200px;
+
+        .margin{
+            margin: 0.5%;
+        }
+
+        .dateFieldsDiv {
+            margin: 5%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .buttonsDiv {
+            margin: 5%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
         }
     </style>
 
@@ -31,19 +37,24 @@
             var dateTo = document.getElementById('todate');
 
             if (dateFrom == null || dateTo == null) {
-                Endeavor.formscriptfunctions.AlertCustomDialog("Either From Date or To Date is null");
+                Endeavor.formscriptfunctions.AlertCustomDialog("Coding Error: The HTML element for From Date or To Date is not coded.");
                 return;
             }
 
             dateFrom = dateFrom.value;
-            dateTo = dateTo.value;ss
+            dateTo = dateTo.value;
+
+            if (dateFrom == '' || dateTo == '') {
+                Endeavor.formscriptfunctions.AlertCustomDialog("Either From Date or To Date is null");
+                return;
+            }
 
             var inputParameters = [
                 { "Field": "FromDate", "Value": dateFrom, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
                 { "Field": "ToDate", "Value": dateTo, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 }
             ];
 
-            Endeavor.Skanetrafiken.Slots.getExcelData(inputParameters);
+            Endeavor.Skanetrafiken.Slots.getExcelData(Xrm, inputParameters);
         }
 
         function cancel() {
@@ -54,17 +65,17 @@
 
 </head>
 <body>
-    <div>
-        <label for="fromdate">From Booking Date:</label>
-        <input type="date" id="fromdate" name="fromdate">
+    <div class="dateFieldsDiv">
+        <label class="margin" for="fromdate">From Booking Date:</label>
+        <input class="margin" type="date" id="fromdate" name="fromdate">
 
-        <label for="todate">To Booking Date:</label>
-        <input type="date" id="todate" to="todate">
+        <label class="margin" for="todate">To Booking Date:</label>
+        <input class="margin" type="date" id="todate" to="todate">
     </div>
 
-    <div>
-        <button class="button" onclick="exportSlotsExcel()">Export Slots</button>
-        <button class="button" onclick="cancel()">Cancel</button>
+    <div class="buttonsDiv">
+        <button class="margin" onclick="exportSlotsExcel()">Export Slots</button>
+        <button class="margin" onclick="cancel()">Cancel</button>
     </div>
 
 </body>
