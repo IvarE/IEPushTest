@@ -102,7 +102,7 @@ namespace Skanetrafiken.Crm
             catch (Exception ex)
             {
                 localContext.Trace("Exception: " + ex.Message);
-                DisplayText.Set(activityContext, "Failed to generate 'Display Text'");
+                DisplayText.Set(activityContext, "Failed to generate 'Display Text': " + ex.Message);
             }
 
             localContext.Trace($"GetDisplayText finished.");
@@ -120,10 +120,9 @@ namespace Skanetrafiken.Crm
                 sLineDesignation = linedesignation + " (" + directionOfText + ")";
             }
 
-
             if (city != null)
                 displayText = SetDisplayTextCitybus(transport, city, sLineDesignation, tour, contractor);
-            else if (transport.ToUpper() == "REGIONBUS" || transport == "SkåneExpressen")
+            else if (transport == "REGIONBUS" || transport == "regionbus" || transport == "SkåneExpressen")
                 displayText = SetDisplayTextRegionbus(transport, sLine, tour, contractor);
             else
                 displayText = SetDisplayTextTrain(transport, sLine, tour, contractor);
