@@ -2182,40 +2182,40 @@ namespace CGIXrmCreateCaseService.Case
             sw.WriteLine("======================================================================================================================");
             sw.WriteLine(DateTime.Now.ToString(CultureInfo.InvariantCulture));
 
-            if (!string.IsNullOrEmpty(request.CustomersCategory))
-                sw.WriteLine("CustomersCategory : " + request.CustomersCategory);
-            else
-                sw.WriteLine("CustomersCategory is missing");
+            //if (!string.IsNullOrEmpty(request.CustomersCategory))
+            //    sw.WriteLine("CustomersCategory : " + request.CustomersCategory);
+            //else
+            //    sw.WriteLine("CustomersCategory is missing");
 
-            if (!string.IsNullOrEmpty(request.CustomersSubcategory))
-                sw.WriteLine("CustomersSubcategory : " + request.CustomersSubcategory);
-            else
-                sw.WriteLine("CustomersSubcategory is missing");
+            //if (!string.IsNullOrEmpty(request.CustomersSubcategory))
+            //    sw.WriteLine("CustomersSubcategory : " + request.CustomersSubcategory);
+            //else
+            //    sw.WriteLine("CustomersSubcategory is missing");
 
             if (!string.IsNullOrEmpty(request.Title))
                 sw.WriteLine("Title : " + request.Title);
             else
                 sw.WriteLine("Title is missing");
 
-            if (!string.IsNullOrEmpty(request.Description))
-                sw.WriteLine("Description : " + request.Description);
-            else
-                sw.WriteLine("Description is missing");
+            //if (!string.IsNullOrEmpty(request.Description))
+            //    sw.WriteLine("Description : " + request.Description);
+            //else
+            //    sw.WriteLine("Description is missing");
 
-            if (!string.IsNullOrEmpty(request.RGOLExtendedDescription))
-                sw.WriteLine("RGOLExtendedDescription : " + request.RGOLExtendedDescription);
-            else
-                sw.WriteLine("RGOLExtendedDescription is missing");
+            //if (!string.IsNullOrEmpty(request.RGOLExtendedDescription))
+            //    sw.WriteLine("RGOLExtendedDescription : " + request.RGOLExtendedDescription);
+            //else
+            //    sw.WriteLine("RGOLExtendedDescription is missing");
 
-            if (!string.IsNullOrEmpty(request.QueueId))
-                sw.WriteLine("QueueId : " + request.QueueId);
-            else
-                sw.WriteLine("QueueId is missing");
+            //if (!string.IsNullOrEmpty(request.QueueId))
+            //    sw.WriteLine("QueueId : " + request.QueueId);
+            //else
+            //    sw.WriteLine("QueueId is missing");
 
-            if (request.CustomerId != null )
-                sw.WriteLine("CustomerId : " + request.CustomerId);
-            else
-                sw.WriteLine("CustomerId is missing");
+            //if (request.CustomerId != null )
+            //    sw.WriteLine("CustomerId : " + request.CustomerId);
+            //else
+            //    sw.WriteLine("CustomerId is missing");
 
             switch (request.CustomerType)
             {
@@ -2230,227 +2230,227 @@ namespace CGIXrmCreateCaseService.Case
                     break;
             }
 
-            if (!string.IsNullOrEmpty(request.CardNumber))
-                sw.WriteLine("CardNumber : " + request.CardNumber);
-            else
-                sw.WriteLine("CardNumber is missing");
+            //if (!string.IsNullOrEmpty(request.CardNumber))
+            //    sw.WriteLine("CardNumber : " + request.CardNumber);
+            //else
+            //    sw.WriteLine("CardNumber is missing");
 
-            if (!string.IsNullOrEmpty(request.SKACardNumber))
-                sw.WriteLine("SKACardNumber : " + request.SKACardNumber);
-            else
-                sw.WriteLine("SKACardNumber is missing");
+            //if (!string.IsNullOrEmpty(request.SKACardNumber))
+            //    sw.WriteLine("SKACardNumber : " + request.SKACardNumber);
+            //else
+            //    sw.WriteLine("SKACardNumber is missing");
 
-            if (!string.IsNullOrEmpty(request.WayOfTravel))
-                sw.WriteLine("WayOfTravel : " + request.WayOfTravel);
-            else
-                sw.WriteLine("WayOfTravel is missing");
+            //if (!string.IsNullOrEmpty(request.WayOfTravel))
+            //    sw.WriteLine("WayOfTravel : " + request.WayOfTravel);
+            //else
+            //    sw.WriteLine("WayOfTravel is missing");
 
-            if (!string.IsNullOrEmpty(request.Line))
-                sw.WriteLine("Line : " + request.Line);
-            else
-                sw.WriteLine("Line is missing");
+            //if (!string.IsNullOrEmpty(request.Line))
+            //    sw.WriteLine("Line : " + request.Line);
+            //else
+            //    sw.WriteLine("Line is missing");
 
-            if (!string.IsNullOrEmpty(request.DriverId))
-                sw.WriteLine("DriverId : " + request.DriverId);
-            else
-                sw.WriteLine("DriverId is missing");
+            //if (!string.IsNullOrEmpty(request.DriverId))
+            //    sw.WriteLine("DriverId : " + request.DriverId);
+            //else
+            //    sw.WriteLine("DriverId is missing");
 
-            if (!string.IsNullOrEmpty(request.FirstName))
-                sw.WriteLine("FirstName : " + request.FirstName);
-            else
-                sw.WriteLine("FirstName is missing");
+            //if (!string.IsNullOrEmpty(request.FirstName))
+            //    sw.WriteLine("FirstName : " + request.FirstName);
+            //else
+            //    sw.WriteLine("FirstName is missing");
 
-            if (!string.IsNullOrEmpty(request.LastName))
-                sw.WriteLine("LastName : " + request.LastName);
-            else
-                sw.WriteLine("LastName is missing");
+            //if (!string.IsNullOrEmpty(request.LastName))
+            //    sw.WriteLine("LastName : " + request.LastName);
+            //else
+            //    sw.WriteLine("LastName is missing");
 
-            if (!string.IsNullOrEmpty(request.EmailAddress))
-                sw.WriteLine("EmailAddress : " + request.EmailAddress);
-            else
-                sw.WriteLine("EmailAddress is missing");
+            //if (!string.IsNullOrEmpty(request.EmailAddress))
+            //    sw.WriteLine("EmailAddress : " + request.EmailAddress);
+            //else
+            //    sw.WriteLine("EmailAddress is missing");
 
-            if (!string.IsNullOrEmpty(request.DeliveryEmailAddress))
-                sw.WriteLine("DeliveryEmailAddress : " + request.DeliveryEmailAddress);
-            else
-                sw.WriteLine("DeliveryEmailAddress is missing");
+            //if (!string.IsNullOrEmpty(request.DeliveryEmailAddress))
+            //    sw.WriteLine("DeliveryEmailAddress : " + request.DeliveryEmailAddress);
+            //else
+            //    sw.WriteLine("DeliveryEmailAddress is missing");
 
-            if (!string.IsNullOrEmpty(request.MobileNo))
-                sw.WriteLine("MobileNo : " + request.MobileNo);
-            else
-                sw.WriteLine("MobileNo is missing");
+            //if (!string.IsNullOrEmpty(request.MobileNo))
+            //    sw.WriteLine("MobileNo : " + request.MobileNo);
+            //else
+            //    sw.WriteLine("MobileNo is missing");
 
-            if (!string.IsNullOrEmpty(request.RGOLIssueID))
-                sw.WriteLine("RGOLIssueID : " + request.RGOLIssueID);
-            else
-                sw.WriteLine("RGOLIssueID is missing");
+            //if (!string.IsNullOrEmpty(request.RGOLIssueID))
+            //    sw.WriteLine("RGOLIssueID : " + request.RGOLIssueID);
+            //else
+            //    sw.WriteLine("RGOLIssueID is missing");
 
-            if (request.DepartureDateTime == null)
-                sw.WriteLine("DepartureDateTime : " + request.DepartureDateTime);
-            else
-                sw.WriteLine("DepartureDateTime is missing");
+            //if (request.DepartureDateTime == null)
+            //    sw.WriteLine("DepartureDateTime : " + request.DepartureDateTime);
+            //else
+            //    sw.WriteLine("DepartureDateTime is missing");
 
-            if (!string.IsNullOrEmpty(request.ExperiencedDelay))
-                sw.WriteLine("ExperiencedDelay : " + request.ExperiencedDelay);
-            else
-                sw.WriteLine("ExperiencedDelay is missing");
+            //if (!string.IsNullOrEmpty(request.ExperiencedDelay))
+            //    sw.WriteLine("ExperiencedDelay : " + request.ExperiencedDelay);
+            //else
+            //    sw.WriteLine("ExperiencedDelay is missing");
 
-            if (!string.IsNullOrEmpty(request.SocialSecurityNumber))
-                sw.WriteLine("SocialSecurityNumber : " + request.SocialSecurityNumber);
-            else
-                sw.WriteLine("SocialSecurityNumber is missing");
+            //if (!string.IsNullOrEmpty(request.SocialSecurityNumber))
+            //    sw.WriteLine("SocialSecurityNumber : " + request.SocialSecurityNumber);
+            //else
+            //    sw.WriteLine("SocialSecurityNumber is missing");
 
-            if (!string.IsNullOrEmpty(request.Address_Line1))
-                sw.WriteLine("Address_Line1 : " + request.Address_Line1);
-            else
-                sw.WriteLine("Address_Line1 is missing");
+            //if (!string.IsNullOrEmpty(request.Address_Line1))
+            //    sw.WriteLine("Address_Line1 : " + request.Address_Line1);
+            //else
+            //    sw.WriteLine("Address_Line1 is missing");
 
-            if (!string.IsNullOrEmpty(request.Address_Line2))
-                sw.WriteLine("Address_Line2 : " + request.Address_Line2);
-            else
-                sw.WriteLine("Address_Line2 is missing");
+            //if (!string.IsNullOrEmpty(request.Address_Line2))
+            //    sw.WriteLine("Address_Line2 : " + request.Address_Line2);
+            //else
+            //    sw.WriteLine("Address_Line2 is missing");
 
-            if (!string.IsNullOrEmpty(request.Address_PostalCode))
-                sw.WriteLine("Address_PostalCode : " + request.Address_PostalCode);
-            else
-                sw.WriteLine("Address_PostalCode is missing");
+            //if (!string.IsNullOrEmpty(request.Address_PostalCode))
+            //    sw.WriteLine("Address_PostalCode : " + request.Address_PostalCode);
+            //else
+            //    sw.WriteLine("Address_PostalCode is missing");
 
-            if (!string.IsNullOrEmpty(request.Address_City))
-                sw.WriteLine("Address_City : " + request.Address_City);
-            else
-                sw.WriteLine("Address_City is missing");
+            //if (!string.IsNullOrEmpty(request.Address_City))
+            //    sw.WriteLine("Address_City : " + request.Address_City);
+            //else
+            //    sw.WriteLine("Address_City is missing");
 
-            if (!string.IsNullOrEmpty(request.Address_Country))
-                sw.WriteLine("Address_Country : " + request.Address_Country);
-            else
-                sw.WriteLine("Address_Country is missing");
+            //if (!string.IsNullOrEmpty(request.Address_Country))
+            //    sw.WriteLine("Address_Country : " + request.Address_Country);
+            //else
+            //    sw.WriteLine("Address_Country is missing");
 
-            if (!string.IsNullOrEmpty(request.TicketType1))
-                sw.WriteLine("TicketType1 : " + request.TicketType1);
-            else
-                sw.WriteLine("TicketType1 is missing");
+            //if (!string.IsNullOrEmpty(request.TicketType1))
+            //    sw.WriteLine("TicketType1 : " + request.TicketType1);
+            //else
+            //    sw.WriteLine("TicketType1 is missing");
 
-            if (!string.IsNullOrEmpty(request.TicketNumber1))
-                sw.WriteLine("TicketNumber1 : " + request.TicketNumber1);
-            else
-                sw.WriteLine("TicketNumber1 is missing");
+            //if (!string.IsNullOrEmpty(request.TicketNumber1))
+            //    sw.WriteLine("TicketNumber1 : " + request.TicketNumber1);
+            //else
+            //    sw.WriteLine("TicketNumber1 is missing");
 
-            if (!string.IsNullOrEmpty(request.TicketType2))
-                sw.WriteLine("TicketType2 : " + request.TicketType2);
-            else
-                sw.WriteLine("TicketType2 is missing");
+            //if (!string.IsNullOrEmpty(request.TicketType2))
+            //    sw.WriteLine("TicketType2 : " + request.TicketType2);
+            //else
+            //    sw.WriteLine("TicketType2 is missing");
 
-            if (!string.IsNullOrEmpty(request.TicketNumber2))
-                sw.WriteLine("TicketNumber2 : " + request.TicketNumber2);
-            else
-                sw.WriteLine("TicketNumber2 is missing");
+            //if (!string.IsNullOrEmpty(request.TicketNumber2))
+            //    sw.WriteLine("TicketNumber2 : " + request.TicketNumber2);
+            //else
+            //    sw.WriteLine("TicketNumber2 is missing");
 
-            if (!string.IsNullOrEmpty(request.MileageFrom))
-                sw.WriteLine("MileageFrom : " + request.MileageFrom);
-            else
-                sw.WriteLine("MileageFrom is missing");
+            //if (!string.IsNullOrEmpty(request.MileageFrom))
+            //    sw.WriteLine("MileageFrom : " + request.MileageFrom);
+            //else
+            //    sw.WriteLine("MileageFrom is missing");
 
-            if (!string.IsNullOrEmpty(request.MileageTo))
-                sw.WriteLine("MileageTo : " + request.MileageTo);
-            else
-                sw.WriteLine("MileageTo is missing");
+            //if (!string.IsNullOrEmpty(request.MileageTo))
+            //    sw.WriteLine("MileageTo : " + request.MileageTo);
+            //else
+            //    sw.WriteLine("MileageTo is missing");
 
-            if (!string.IsNullOrEmpty(request.MileageKilometers))
-                sw.WriteLine("MileageKilometers : " + request.MileageKilometers);
-            else
-                sw.WriteLine("MileageKilometers is missing");
+            //if (!string.IsNullOrEmpty(request.MileageKilometers))
+            //    sw.WriteLine("MileageKilometers : " + request.MileageKilometers);
+            //else
+            //    sw.WriteLine("MileageKilometers is missing");
 
-            if (!string.IsNullOrEmpty(request.MileageLicencePlateNumber))
-                sw.WriteLine("MileageLicencePlateNumber : " + request.MileageLicencePlateNumber);
-            else
-                sw.WriteLine("MileageLicencePlateNumber is missing");
+            //if (!string.IsNullOrEmpty(request.MileageLicencePlateNumber))
+            //    sw.WriteLine("MileageLicencePlateNumber : " + request.MileageLicencePlateNumber);
+            //else
+            //    sw.WriteLine("MileageLicencePlateNumber is missing");
 
 
-            if (!string.IsNullOrEmpty(request.TaxiFrom))
-                sw.WriteLine("TaxiFrom : " + request.TaxiFrom);
-            else
-                sw.WriteLine("TaxiFrom is missing");
+            //if (!string.IsNullOrEmpty(request.TaxiFrom))
+            //    sw.WriteLine("TaxiFrom : " + request.TaxiFrom);
+            //else
+            //    sw.WriteLine("TaxiFrom is missing");
 
-            if (!string.IsNullOrEmpty(request.TaxiTo))
-                sw.WriteLine("TaxiTo : " + request.TaxiTo);
-            else
-                sw.WriteLine("TaxiTo is missing");
+            //if (!string.IsNullOrEmpty(request.TaxiTo))
+            //    sw.WriteLine("TaxiTo : " + request.TaxiTo);
+            //else
+            //    sw.WriteLine("TaxiTo is missing");
 
-            sw.WriteLine("TaxiClaimedAmount : " + request.TaxiClaimedAmount);
+            //sw.WriteLine("TaxiClaimedAmount : " + request.TaxiClaimedAmount);
 
-            if (request.FileLinks != null && request.FileLinks.Length > 0)
-            {
-                foreach (var link in request.FileLinks)
-                {
-                    if (link.Url != null && link.Url != "")
-                        sw.WriteLine("FileLink.Url : " + link.Url);
-                    else if (link.Url == null)
-                        sw.WriteLine("FileLink.Url is null");
-                    else
-                        sw.WriteLine("FileLink.Url is empty");
-                }
-            }
-            else if (request.FileLinks == null)
-                sw.WriteLine("FileLinks list is null");
-            else if (request.FileLinks.Length <= 0)
-                sw.WriteLine("FileLinks.Length <= 0");
-            else
-                sw.WriteLine("Unexpected value in FileLinks");
+            //if (request.FileLinks != null && request.FileLinks.Length > 0)
+            //{
+            //    foreach (var link in request.FileLinks)
+            //    {
+            //        if (link.Url != null && link.Url != "")
+            //            sw.WriteLine("FileLink.Url : " + link.Url);
+            //        else if (link.Url == null)
+            //            sw.WriteLine("FileLink.Url is null");
+            //        else
+            //            sw.WriteLine("FileLink.Url is empty");
+            //    }
+            //}
+            //else if (request.FileLinks == null)
+            //    sw.WriteLine("FileLinks list is null");
+            //else if (request.FileLinks.Length <= 0)
+            //    sw.WriteLine("FileLinks.Length <= 0");
+            //else
+            //    sw.WriteLine("Unexpected value in FileLinks");
 
-            if (!string.IsNullOrEmpty(request.Iban))
-                sw.WriteLine("Iban : " + request.Iban);
-            else
-                sw.WriteLine("Iban is missing");
+            //if (!string.IsNullOrEmpty(request.Iban))
+            //    sw.WriteLine("Iban : " + request.Iban);
+            //else
+            //    sw.WriteLine("Iban is missing");
 
-            if (!string.IsNullOrEmpty(request.Bic))
-                sw.WriteLine("Bic : " + request.Bic);
-            else
-                sw.WriteLine("Bic is missing");
+            //if (!string.IsNullOrEmpty(request.Bic))
+            //    sw.WriteLine("Bic : " + request.Bic);
+            //else
+            //    sw.WriteLine("Bic is missing");
 
-            if (!string.IsNullOrEmpty(request.CustomerSocialSecurityNumber))
-                sw.WriteLine("CustomerSocialSecurityNumber : " + request.CustomerSocialSecurityNumber);
-            else
-                sw.WriteLine("CustomerSocialSecurityNumber is missing");
+            //if (!string.IsNullOrEmpty(request.CustomerSocialSecurityNumber))
+            //    sw.WriteLine("CustomerSocialSecurityNumber : " + request.CustomerSocialSecurityNumber);
+            //else
+            //    sw.WriteLine("CustomerSocialSecurityNumber is missing");
 
-            if (!string.IsNullOrEmpty(request.CustomerAddress1Line1))
-                sw.WriteLine("CustomerAddress1Line1 : " + request.CustomerAddress1Line1);
-            else
-                sw.WriteLine("CustomerAddress1Line1 is missing");
+            //if (!string.IsNullOrEmpty(request.CustomerAddress1Line1))
+            //    sw.WriteLine("CustomerAddress1Line1 : " + request.CustomerAddress1Line1);
+            //else
+            //    sw.WriteLine("CustomerAddress1Line1 is missing");
 
-            if (!string.IsNullOrEmpty(request.CustomerAddress1Line2))
-                sw.WriteLine("CustomerAddress1Line2 : " + request.CustomerAddress1Line2);
-            else
-                sw.WriteLine("CustomerAddress1Line2 is missing");
+            //if (!string.IsNullOrEmpty(request.CustomerAddress1Line2))
+            //    sw.WriteLine("CustomerAddress1Line2 : " + request.CustomerAddress1Line2);
+            //else
+            //    sw.WriteLine("CustomerAddress1Line2 is missing");
 
-            if (!string.IsNullOrEmpty(request.CustomerAddress1Postalcode))
-                sw.WriteLine("CustomerAddress1Postalcode : " + request.CustomerAddress1Postalcode);
-            else
-                sw.WriteLine("CustomerAddress1Postalcode is missing");
+            //if (!string.IsNullOrEmpty(request.CustomerAddress1Postalcode))
+            //    sw.WriteLine("CustomerAddress1Postalcode : " + request.CustomerAddress1Postalcode);
+            //else
+            //    sw.WriteLine("CustomerAddress1Postalcode is missing");
 
-            if (!string.IsNullOrEmpty(request.CustomerAddress1City))
-                sw.WriteLine("CustomerAddress1City : " + request.CustomerAddress1City);
-            else
-                sw.WriteLine("CustomerAddress1City is missing");
+            //if (!string.IsNullOrEmpty(request.CustomerAddress1City))
+            //    sw.WriteLine("CustomerAddress1City : " + request.CustomerAddress1City);
+            //else
+            //    sw.WriteLine("CustomerAddress1City is missing");
 
-            if (!string.IsNullOrEmpty(request.CustomerAddress1Country))
-                sw.WriteLine("CustomerAddress1Country : " + request.CustomerAddress1Country);
-            else
-                sw.WriteLine("CustomerAddress1Country is missing");
+            //if (!string.IsNullOrEmpty(request.CustomerAddress1Country))
+            //    sw.WriteLine("CustomerAddress1Country : " + request.CustomerAddress1Country);
+            //else
+            //    sw.WriteLine("CustomerAddress1Country is missing");
 
-            if (!string.IsNullOrEmpty(request.CustomerTelephonenumber))
-                sw.WriteLine("CustomerTelephonenumber : " + request.CustomerTelephonenumber);
-            else
-                sw.WriteLine("CustomerTelephonenumber is missing");
+            //if (!string.IsNullOrEmpty(request.CustomerTelephonenumber))
+            //    sw.WriteLine("CustomerTelephonenumber : " + request.CustomerTelephonenumber);
+            //else
+            //    sw.WriteLine("CustomerTelephonenumber is missing");
 
-            if (!string.IsNullOrEmpty(request.CustomerFirstName))
-                sw.WriteLine("CustomerFirstName : " + request.CustomerFirstName);
-            else
-                sw.WriteLine("CustomerFirstName is missing");
+            //if (!string.IsNullOrEmpty(request.CustomerFirstName))
+            //    sw.WriteLine("CustomerFirstName : " + request.CustomerFirstName);
+            //else
+            //    sw.WriteLine("CustomerFirstName is missing");
 
-            if (!string.IsNullOrEmpty(request.CustomerLastName))
-                sw.WriteLine("CustomerLastName : " + request.CustomerLastName);
-            else
-                sw.WriteLine("CustomerLastName is missing");
+            //if (!string.IsNullOrEmpty(request.CustomerLastName))
+            //    sw.WriteLine("CustomerLastName : " + request.CustomerLastName);
+            //else
+            //    sw.WriteLine("CustomerLastName is missing");
 
             sw.Flush();
             sw.Close();
@@ -2467,30 +2467,30 @@ namespace CGIXrmCreateCaseService.Case
             sw.WriteLine("======================================================================================================================");
             sw.WriteLine(DateTime.Now.ToString(CultureInfo.InvariantCulture));
 
-            if (!string.IsNullOrEmpty(request.CustomersCategory))
-                sw.WriteLine("CustomersCategory : " + request.CustomersCategory);
-            else
-                sw.WriteLine("CustomersCategory is missing");
+            //if (!string.IsNullOrEmpty(request.CustomersCategory))
+            //    sw.WriteLine("CustomersCategory : " + request.CustomersCategory);
+            //else
+            //    sw.WriteLine("CustomersCategory is missing");
 
-            if (!string.IsNullOrEmpty(request.CustomersSubcategory))
-                sw.WriteLine("CustomersSubcategory : " + request.CustomersSubcategory);
-            else
-                sw.WriteLine("CustomersSubcategory is missing");
+            //if (!string.IsNullOrEmpty(request.CustomersSubcategory))
+            //    sw.WriteLine("CustomersSubcategory : " + request.CustomersSubcategory);
+            //else
+            //    sw.WriteLine("CustomersSubcategory is missing");
 
             if (!string.IsNullOrEmpty(request.Title))
                 sw.WriteLine("Title : " + request.Title);
             else
                 sw.WriteLine("Title is missing");
 
-            if (!string.IsNullOrEmpty(request.Description))
-                sw.WriteLine("Description : " + request.Description);
-            else
-                sw.WriteLine("Description is missing");
+            //if (!string.IsNullOrEmpty(request.Description))
+            //    sw.WriteLine("Description : " + request.Description);
+            //else
+            //    sw.WriteLine("Description is missing");
 
-            if (request.Customer != null && request.Customer != Guid.Empty)
-                sw.WriteLine("Customer : " + request.Customer);
-            else
-                sw.WriteLine("Customer is missing");
+            //if (request.Customer != null && request.Customer != Guid.Empty)
+            //    sw.WriteLine("Customer : " + request.Customer);
+            //else
+            //    sw.WriteLine("Customer is missing");
 
             switch (request.CustomerType)
             {
@@ -2505,98 +2505,98 @@ namespace CGIXrmCreateCaseService.Case
                     break;
             }
 
-            if (!string.IsNullOrEmpty(request.InvoiceNumber))
-                sw.WriteLine("InvoiceNumber : " + request.InvoiceNumber);
-            else
-                sw.WriteLine("InvoiceNumber is missing");
+            //if (!string.IsNullOrEmpty(request.InvoiceNumber))
+            //    sw.WriteLine("InvoiceNumber : " + request.InvoiceNumber);
+            //else
+            //    sw.WriteLine("InvoiceNumber is missing");
 
-            if (!string.IsNullOrEmpty(request.ControlFeeNumber))
-                sw.WriteLine("ControlFeeNumber : " + request.ControlFeeNumber);
-            else
-                sw.WriteLine("ControlFeeNumber is missing");
+            //if (!string.IsNullOrEmpty(request.ControlFeeNumber))
+            //    sw.WriteLine("ControlFeeNumber : " + request.ControlFeeNumber);
+            //else
+            //    sw.WriteLine("ControlFeeNumber is missing");
 
-            if (!string.IsNullOrEmpty(request.CardNumber))
-                sw.WriteLine("CardNumber : " + request.CardNumber);
-            else
-                sw.WriteLine("CardNumber is missing");
+            //if (!string.IsNullOrEmpty(request.CardNumber))
+            //    sw.WriteLine("CardNumber : " + request.CardNumber);
+            //else
+            //    sw.WriteLine("CardNumber is missing");
 
-            if (!string.IsNullOrEmpty(request.WayOfTravel))
-                sw.WriteLine("WayOfTravel : " + request.WayOfTravel);
-            else
-                sw.WriteLine("WayOfTravel is missing");
+            //if (!string.IsNullOrEmpty(request.WayOfTravel))
+            //    sw.WriteLine("WayOfTravel : " + request.WayOfTravel);
+            //else
+            //    sw.WriteLine("WayOfTravel is missing");
 
-            if (!string.IsNullOrEmpty(request.Line))
-                sw.WriteLine("Line : " + request.Line);
-            else
-                sw.WriteLine("Line is missing");
+            //if (!string.IsNullOrEmpty(request.Line))
+            //    sw.WriteLine("Line : " + request.Line);
+            //else
+            //    sw.WriteLine("Line is missing");
 
-            if (!string.IsNullOrEmpty(request.City))
-                sw.WriteLine("City : " + request.City);
-            else
-                sw.WriteLine("City is missing");
+            //if (!string.IsNullOrEmpty(request.City))
+            //    sw.WriteLine("City : " + request.City);
+            //else
+            //    sw.WriteLine("City is missing");
 
-            if (!string.IsNullOrEmpty(request.Train))
-                sw.WriteLine("Train : " + request.Train);
-            else
-                sw.WriteLine("Train is missing");
+            //if (!string.IsNullOrEmpty(request.Train))
+            //    sw.WriteLine("Train : " + request.Train);
+            //else
+            //    sw.WriteLine("Train is missing");
 
-            if (!string.IsNullOrEmpty(request.County))
-                sw.WriteLine("County : " + request.County);
-            else
-                sw.WriteLine("County is missing");
+            //if (!string.IsNullOrEmpty(request.County))
+            //    sw.WriteLine("County : " + request.County);
+            //else
+            //    sw.WriteLine("County is missing");
 
-            if (!string.IsNullOrEmpty(request.FirstName))
-                sw.WriteLine("firstName : " + request.FirstName);
-            else
-                sw.WriteLine("firstName is missing");
+            //if (!string.IsNullOrEmpty(request.FirstName))
+            //    sw.WriteLine("firstName : " + request.FirstName);
+            //else
+            //    sw.WriteLine("firstName is missing");
 
-            if (!string.IsNullOrEmpty(request.LastName))
-                sw.WriteLine("lastName : " + request.LastName);
-            else
-                sw.WriteLine("lastName is missing");
+            //if (!string.IsNullOrEmpty(request.LastName))
+            //    sw.WriteLine("lastName : " + request.LastName);
+            //else
+            //    sw.WriteLine("lastName is missing");
 
-            if (!string.IsNullOrEmpty(request.EmailAddress))
-                sw.WriteLine("emailAddress : " + request.EmailAddress);
-            else
-                sw.WriteLine("emailAddress is missing");
+            //if (!string.IsNullOrEmpty(request.EmailAddress))
+            //    sw.WriteLine("emailAddress : " + request.EmailAddress);
+            //else
+            //    sw.WriteLine("emailAddress is missing");
 
-            switch (request.ContactCustomer)
-            {
-                case true:
-                    sw.WriteLine("ContactCustomer : true");
-                    break;
-                case false:
-                    sw.WriteLine("ContactCustomer : false");
-                    break;
-                default:
-                    sw.WriteLine("ContactCustomer is missing");
-                    break;
-            }
+            //switch (request.ContactCustomer)
+            //{
+            //    case true:
+            //        sw.WriteLine("ContactCustomer : true");
+            //        break;
+            //    case false:
+            //        sw.WriteLine("ContactCustomer : false");
+            //        break;
+            //    default:
+            //        sw.WriteLine("ContactCustomer is missing");
+            //        break;
+            //}
 
-            if (request.FileLinks != null && request.FileLinks.Count > 0)
-            {
-                foreach (var link in request.FileLinks)
-                {
-                    if (link.Url != null && link.Url != "")
-                        sw.WriteLine("FileLink.Url : " + link.Url);
-                    else if (link.Url == null)
-                        sw.WriteLine("FileLink.Url is null");
-                    else
-                        sw.WriteLine("FileLink.Url is empty");
-                }
-            }
-            else if (request.FileLinks == null)
-            {
-                sw.WriteLine("FileLinks list is null");
-            }
-            else if (request.FileLinks.Count <= 0)
-            {
-                sw.WriteLine("FileLinks.Count <= 0");
-            }
-            else
-            {
-                sw.WriteLine("Unexpected value in FileLinks");
-            }
+            //if (request.FileLinks != null && request.FileLinks.Count > 0)
+            //{
+            //    foreach (var link in request.FileLinks)
+            //    {
+            //        if (link.Url != null && link.Url != "")
+            //            sw.WriteLine("FileLink.Url : " + link.Url);
+            //        else if (link.Url == null)
+            //            sw.WriteLine("FileLink.Url is null");
+            //        else
+            //            sw.WriteLine("FileLink.Url is empty");
+            //    }
+            //}
+            //else if (request.FileLinks == null)
+            //{
+            //    sw.WriteLine("FileLinks list is null");
+            //}
+            //else if (request.FileLinks.Count <= 0)
+            //{
+            //    sw.WriteLine("FileLinks.Count <= 0");
+            //}
+            //else
+            //{
+            //    sw.WriteLine("Unexpected value in FileLinks");
+            //}
 
 
             sw.Flush();
