@@ -1484,44 +1484,50 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
                                 parent.Xrm.Page.ui.setFormNotification("Hämtar fil...", "INFO", "attachmentInfo");
 
-                                var inputParameters = [{ "Field": "EncryptedString", "Value": encryptedLink, "TypeName": "Edm.String", "StructuralProperty": 1 }];
+                                parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
 
-                                debugger;
-                                Endeavor.Skanetrafiken.Incident.callGlobalAction("ed_DecryptAttachmentFile", inputParameters,
-                                    function (result) {
-                                        debugger;
-                                        if (result != null && result != "undefined") {
-                                            console.log("Result: " + result.responseText);
-                                        }
+                                //Display file from opened resource:
+                                var windowOptions = { height: 1200, width: 600 };
+                                Xrm.Navigation.openWebResource("ed_/html/Endeavor.Skanetrafiken.DisplayCaseAttachment.html", windowOptions, encryptedLink);
 
-                                        var parsedResult = JSON.parse(result.responseText);
+                                //var inputParameters = [{ "Field": "EncryptedString", "Value": encryptedLink, "TypeName": "Edm.String", "StructuralProperty": 1 }];
 
-                                        if (parsedResult.Result.startsWith("200")) {
+                                //debugger;
+                                //Endeavor.Skanetrafiken.Incident.callGlobalAction("ed_DecryptAttachmentFile", inputParameters,
+                                //    function (result) {
+                                //        debugger;
+                                //        if (result != null && result != "undefined") {
+                                //            console.log("Result: " + result.responseText);
+                                //        }
 
-                                            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
-                                        }
-                                        else {
+                                //        var parsedResult = JSON.parse(result.responseText);
 
-                                            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+                                //        if (parsedResult.Result.startsWith("200")) {
+
+                                //            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+                                //        }
+                                //        else {
+
+                                //            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
                                             
-                                        }
-                                    },
-                                    function (e) {
-                                        // Error
-                                        parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+                                //        }
+                                //    },
+                                //    function (e) {
+                                //        // Error
+                                //        parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
 
-                                        var confirmationAttachment = confirm("Filen kunde ej hämtas. Execution returned: " + e.message);
+                                //        var confirmationAttachment = confirm("Filen kunde ej hämtas. Execution returned: " + e.message);
 
-                                        if (confirmationAttachment) {
-                                            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
-                                        }
-                                        else {
-                                            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
-                                        }
+                                //        if (confirmationAttachment) {
+                                //            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+                                //        }
+                                //        else {
+                                //            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+                                //        }
 
-                                        if (window.console && console.error)
-                                            console.error(e.message + "\n" + t);
-                                    });
+                                //        if (window.console && console.error)
+                                //            console.error(e.message + "\n" + t);
+                                //    });
                             }
                         }
                     }

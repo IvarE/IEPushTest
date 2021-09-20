@@ -1,10 +1,63 @@
 ﻿<html>
-<head>
-    <script type="text/javascript">
-
-    </script>
     <head>
-        <body style="zoom: 1; word-wrap: break-word;">
-            <div style="width: 100px;" id="imagediv"></div>
-        </body>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
+        <title>Attachment</title>
+        <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+        <script src="../script/Endeavor.Skanetrafiken.formscriptfunctions.js"></script>
+
+        <script type="text/javascript">
+            document.onreadystatechange = function () {
+                debugger;
+                if (document.readyState == "complete") {
+                    Endeavor.Skanetrafiken.DisplayCaseAttachment.getDataParam();
+                }
+            }
+
+            // Begin scoping
+            if (typeof (Endeavor) == "undefined") {
+                var Endeavor = {
+                };
+            }
+
+            if (typeof (Endeavor.Skanetrafiken) == "undefined") {
+                Endeavor.Skanetrafiken = {
+                };
+            }
+
+            if (typeof (Endeavor.Skanetrafiken.DisplayCaseAttachment) == "undefined") {
+                Endeavor.Skanetrafiken.DisplayCaseAttachment = {
+
+                    parameterData: "",
+
+                    getDataParam: function () {
+                        debugger;
+
+                        var vals = new Array();
+                        if (location.search != "") {
+                            vals = location.search.substr(1).split("&");
+                            for (var i in vals) {
+                                vals[i] = vals[i].replace(/\+/g, " ").split("=");
+                            }
+                            //look for the parameter named 'data'
+                            for (var i in vals) {
+                                debugger;
+                                if (vals[i][0].toLowerCase() == "data") {
+                                    parameterData = decodeURI(vals[i][1]).split("%3b");
+                                    break;
+                                }
+                            }
+                        }
+
+                        debugger;
+                        alert(parameterData);
+                    },
+                };
+            }
+        </script>
+
+    </head>
+    <body style="zoom: 1; word-wrap: break-word;">
+        <div style="width: 100px;" id="imagediv"></div>
+    </body>
 </html>
