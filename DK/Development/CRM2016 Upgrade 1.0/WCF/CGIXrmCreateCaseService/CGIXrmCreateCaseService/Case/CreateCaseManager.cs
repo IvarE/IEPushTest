@@ -1541,12 +1541,6 @@ namespace CGIXrmCreateCaseService.Case
             if (titleText.Contains("JoJo") && titleText.Contains("kort") && titleText.Contains("och") && titleText.Contains("priser"))
                 titleText = "Kort, appar, biljetter och priser";
 
-            #region SM17479954 - Kontrollavgiffter: Kontrollavgnr i rubrik
-            /* OLD code
-            if (sendtoqueue == 285050008) 
-                titleText = "Bestridan kontrollavgift";
-            */
-            //NEW code
             if (sendtoqueue == 285050008)
             {
                 if (!string.IsNullOrEmpty(request.ControlFeeNumber))
@@ -1554,8 +1548,6 @@ namespace CGIXrmCreateCaseService.Case
                 else
                     titleText = "Bestridan kontrollavgift";
             }
-
-            #endregion
 
             if (string.IsNullOrWhiteSpace(titleText))
                 titleText = "Övrigt";
