@@ -28,8 +28,8 @@ namespace Skanetrafiken.Crm.Controllers
         private const string TenantID = "e1fcb9f3-e5f9-496f-a583-e495dfd57497"; //Tenent
         //private const string StorageAccountName = "CRM-WEBCASE-SP-ACC"; //DisplayName
         private const string StorageAccountName = "webstpublicwebtest"; //DisplayName
-        private const string ClientID = "ac980c05-8c6a-40be-9e7d-1ff0e795d34f"; //AppId?
-        private const string ClientSecret = "Pc-c-~xWKh7jY6Xo_OTB110IaULEpSL~pU"; //Password
+        private const string ClientID = "635555fe-6cb2-4a48-9b54-8d5d6472b00f"; //AppId?
+        private const string ClientSecret = "czv7Q~iQuUCRwkryVp6FqHvmSAhbA_I2XidG_"; //Password
         private const string FileName = "";
 
         private static async Task<string> GetAccessToken()
