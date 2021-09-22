@@ -2062,6 +2062,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                     QueryExpression queryContact = new QueryExpression(ContactEntity.EntityLogicalName);
                     queryContact.NoLock = true;
+                    queryContact.ColumnSet.AddColumn(ContactEntity.Fields.EMailAddress1);
                     queryContact.Criteria.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
                     queryContact.Criteria.AddCondition(ContactEntity.Fields.ed_MklId, ConditionOperator.Equal, mklId);
 
@@ -2070,11 +2071,18 @@ namespace Skanetrafiken.Crm.Controllers
                     if(lContacts.Count == 1)
                     {
                         Contact contact = lContacts.FirstOrDefault();
+                        string email = contact.EMailAddress1;
 
                         Contact uContact = new Contact();
                         uContact.Id = contact.Id;
                         uContact.ed_MklId = string.Empty;
                         uContact.ed_InformationSource = ed_informationsource.UppdateraMittKonto;
+
+                        if (!string.IsNullOrEmpty(email))
+                        {
+                            uContact.EMailAddress1 = null;
+                            uContact.EMailAddress2 = email;
+                        }
 
                         XrmHelper.Update(localContext, uContact);
 
