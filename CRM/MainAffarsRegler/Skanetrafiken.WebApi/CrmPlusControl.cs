@@ -4071,7 +4071,7 @@ namespace Skanetrafiken.Crm.Controllers
                             Id = contactId
                         };
 
-                        if (collection.Count > 2)
+                        if (collection.Count > 0)
                         {
                             updContact.ed_InformationSource = Generated.ed_informationsource.UppdateraMittKonto;
                             contact.ed_InformationSource = Generated.ed_informationsource.UppdateraMittKonto;

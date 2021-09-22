@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using CGIXrmCreateCaseService.Case;
 using CGIXrmCreateCaseService.Case.Models;
 using log4net.Config;
@@ -20,11 +21,15 @@ namespace CGIXrmCreateCaseService
                 //    _log.Debug(string.Format("debug. ============================================"));
                 //    _log.Debug(string.Format("debug. Start RequestCreateAutoRgCase"));
                 //}
-                _log.Debug(string.Format("debug. ============================================"));
-                _log.Debug(string.Format("debug. Start RequestCreateCase"));
+                
+                //_log.Debug(string.Format("debug. ============================================"));
+                //_log.Debug(string.Format("debug. Start RequestCreateCase"));
+
+                int threadId = Thread.CurrentThread.ManagedThreadId;
+                _log.Info($"Th={threadId} - ===================== RequestCreateCase called. =====================\n");
 
                 CreateCaseManager caseManager = new CreateCaseManager();
-                caseManager.RequestCreateCase(request);
+                caseManager.RequestCreateCase(threadId, request);
             }
             catch (Exception ex)
             {
@@ -44,11 +49,14 @@ namespace CGIXrmCreateCaseService
                 //    //LogMessage(_logLocation, string.Format("============================================"));
                 //    //LogMessage(_logLocation, string.Format("Start RequestCreateAutoRgCase"));
                 //}
-                _log.Debug(string.Format("============================================"));
-                _log.Debug(string.Format("Start RequestCreateAutoRGCase"));
+                //_log.Debug(string.Format("============================================"));
+                //_log.Debug(string.Format("Start RequestCreateAutoRGCase"));
+
+                int threadId = Thread.CurrentThread.ManagedThreadId;
+                _log.Info($"Th={threadId} - ===================== RequestCreateAutoRGCase called. =====================\n");
 
                 CreateCaseManager caseManager = new CreateCaseManager();
-                return caseManager.RequestCreateAutoRgCase(request);
+                return caseManager.RequestCreateAutoRgCase(threadId, request);
             }
             catch (Exception ex)
             {
