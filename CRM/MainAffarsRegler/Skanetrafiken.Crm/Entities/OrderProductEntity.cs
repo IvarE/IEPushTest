@@ -497,6 +497,24 @@ namespace Skanetrafiken.Crm.Entities
                 decimal manualDiscount = 0;
                 int quantity = 0;
                 int totalSlots = 0;
+                string unit;
+
+                QueryExpression queryUnit = new QueryExpression();
+                queryUnit.EntityName = UnitEntity.EntityLogicalName;
+                queryUnit.ColumnSet = new ColumnSet(UnitEntity.Fields.Name);
+                queryUnit.Criteria.AddCondition(UnitEntity.Fields.Name, ConditionOperator.Like, "1 vecka");
+
+                UnitEntity orderProductUnit = XrmRetrieveHelper.RetrieveFirst<UnitEntity>(localContext, queryUnit);
+
+
+                if (this.UoMId != null)
+                {
+                    unit = this.UoMId.Name;
+                }
+                else
+                {
+                    unit = preImage.UoMId.Name;
+                }
 
                 localContext.Trace($"inside updatePriceOrderProduct");
 
@@ -570,7 +588,16 @@ namespace Skanetrafiken.Crm.Entities
 
                 localContext.Trace($"Manual Discount amount: {manualDiscount}");
 
-                this.Tax = new Money((totalSlots - quantity) * price - manualDiscount);
+                if (unit == orderProductUnit.Name)
+                {
+                    this.Tax = new Money(0 - manualDiscount);
+                }
+                else
+                {
+                    this.Tax = new Money((totalSlots - quantity) * price - manualDiscount);
+                }
+
+                
             }
         }
 

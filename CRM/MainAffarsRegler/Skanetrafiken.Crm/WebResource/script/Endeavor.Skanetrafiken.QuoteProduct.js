@@ -55,8 +55,25 @@ if (typeof (Endeavor.Skanetrafiken.QuoteProduct) == "undefined") {
             var formContext = executionContext.getFormContext();
 
             var fromDate = formContext.getAttribute("ed_fromdate").getValue();
-            var toDate = formContext.getAttribute("ed_todate").getValue();
+            
             var numberOfSlots = 0; 
+            var unit = formContext.getAttribute("uomid").getValue();
+            
+            function addDays(date, days) {
+                var result = new Date(date);
+                result.setDate(result.getDate() + parseInt(days));
+                return result;
+            }
+           
+
+            if (unit[0].name == "1 vecka") {
+                if (fromDate != null) {
+
+                    formContext.getAttribute("ed_todate").setValue(addDays(fromDate, 6));
+                }
+            }
+
+            var toDate = formContext.getAttribute("ed_todate").getValue();
 
             if (fromDate != null && toDate != null) {
 
