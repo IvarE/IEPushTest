@@ -13,6 +13,12 @@ if (typeof (Endeavor.Skanetrafiken.ProductPriceListItem) == "undefined") {
     Endeavor.Skanetrafiken.ProductPriceListItem = {
 
         onLoad: function (executionContext) {
+         
+            Endeavor.Skanetrafiken.ProductPriceListItem.setPriceList(executionContext);
+
+        },
+
+        setPriceList: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
 
@@ -44,7 +50,6 @@ if (typeof (Endeavor.Skanetrafiken.ProductPriceListItem) == "undefined") {
                     Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
                 }
             );
-            
 
         }
 
