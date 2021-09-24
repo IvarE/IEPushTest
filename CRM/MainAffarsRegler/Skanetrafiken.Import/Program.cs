@@ -3914,22 +3914,51 @@ namespace Skanetrafiken.Import
                 Console.ReadLine();
                 return;
             }
-            string runUpdateContacts = ConfigurationManager.AppSettings["runUpdateContacts"];
 
-            if(runUpdateContacts == "true")
+            QueryExpression queryContacts = new QueryExpression(Contact.EntityLogicalName);
+            queryContacts.NoLock = true;
+            queryContacts.TopCount = 5000;
+            queryContacts.ColumnSet.AddColumns(Contact.Fields.cgi_socialsecuritynumber);
+            queryContacts.Criteria.AddCondition(Contact.Fields.cgi_socialsecuritynumber, ConditionOperator.NotNull);
+            queryContacts.Criteria.AddCondition(Contact.Fields.BirthDate, ConditionOperator.Null);
+
+            List<Contact> lContacts = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts);
+
+            foreach (Contact contact in lContacts)
             {
-                Console.WriteLine("Run Update Contacts selected... from file Import analysdata.csv.");
-                ImportContactsMKLId(localContext, crmContext, optionsChanges, relativeExcelPath);
-            }
-            else
-            {
-                Console.WriteLine("Run Updales import selected...");
-                bool showMenu = true;
-                while (showMenu)
+                string socialNumber = contact.cgi_socialsecuritynumber;
+                if(socialNumber.Length == 12)
                 {
-                    showMenu = MainMenuUpsales(localContext, crmContext, optionsChanges, relativeExcelPath);
+                    int year = int.Parse(socialNumber.Substring(0, 4));
+                    int month = int.Parse(socialNumber.Substring(4, 2));
+                    int day = int.Parse(socialNumber.Substring(6, 2));
+
+                    DateTime dtBirthday = new DateTime(year, month, day);
+
+                    Contact uContact = new Contact();
+                    uContact.Id = contact.Id;
+                    uContact.BirthDate = dtBirthday;
+
+                    XrmHelper.Update(localContext, uContact);
                 }
             }
+
+            //string runUpdateContacts = ConfigurationManager.AppSettings["runUpdateContacts"];
+
+            //if(runUpdateContacts == "true")
+            //{
+            //    Console.WriteLine("Run Update Contacts selected... from file Import analysdata.csv.");
+            //    ImportContactsMKLId(localContext, crmContext, optionsChanges, relativeExcelPath);
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Run Updales import selected...");
+            //    bool showMenu = true;
+            //    while (showMenu)
+            //    {
+            //        showMenu = MainMenuUpsales(localContext, crmContext, optionsChanges, relativeExcelPath);
+            //    }
+            //}
         }
     }
 }
