@@ -32,7 +32,6 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
-using Microsoft.Azure.Management.Fluent;
 using Azure.Identity;
 
 namespace CGIXrmCreateCaseService.Case
