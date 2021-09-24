@@ -276,6 +276,7 @@
     <Compile Include="XrmRetrieveHelper.cs" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.FrontOffice.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.getOrders.html" />
+    <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.DisplayCaseAttachment.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MargeAccounts.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.MergeRecordsStarter.html" />
     <Content Include="WebResource\HTML\Endeavor.Skanetrafiken.SearchTravelCards.html" />

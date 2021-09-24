@@ -173,7 +173,7 @@ namespace CGIXrmRainDanceExport
             string line1 = "02";
             string line2 = _formatSocNumber(_formatString(refund.cgi_soc_sec_number), _formatString(refund.cgi_foreign_payment)).SetToFixedLengthPadRight(15);
             string line3 = string.Format("{0} {1}", _formatString(contact.LastName), _formatString(contact.FirstName)).SetToFixedLengthPadRight(30);
-            string line4 = contact.Address1_Line1.SetToFixedLengthPadRight(30);
+            string line4 = contact.Address1_Line2.SetToFixedLengthPadRight(30);
             string line5 = string.Format("{0}  {1}", _formatString(contact.Address1_PostalCode), _formatString(contact.Address1_City)).SetToFixedLengthPadRight(30);
             string line6 = "1500".SetToFixedLengthPadRight(6);
             string line7 = refund.cgi_iban.Substring(0, refund.cgi_iban.Length >= 2 ? 2 : refund.cgi_iban.Length).SetToFixedLengthPadRight(2);

@@ -24,6 +24,10 @@ namespace Endeavor.Crm.UnitTest
          *****************************************************************************/
 
         //public static string WebApiRootEndpoint = @"http://localhost:37909/api/";
+#if DEBUG
+        //public static string WebApiRootEndpoint = @"https://crmwebapi-tst.skanetrafiken.se/api/";              // ED UTV med token
+
+#endif
 #if DEV
         //public static string WebApiRootEndpoint = @"https://crmwebapi-tst.skanetrafiken.se/api/";              // ED UTV med token
 

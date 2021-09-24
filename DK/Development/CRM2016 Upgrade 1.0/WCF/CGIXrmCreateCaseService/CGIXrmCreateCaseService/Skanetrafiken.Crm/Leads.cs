@@ -100,9 +100,19 @@ namespace CGIXrmCreateCaseService.CRMPlusAPI
             string responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
             if (statusCode != HttpStatusCode.OK)
             {
-                HttpOperationException<object> ex = new HttpOperationException<object>();
-                ex.Request = httpRequest;
-                ex.Response = httpResponse;
+                //HttpOperationException<object> ex = new HttpOperationException<object>();ex.Request = httpRequest;
+                //ex.Response = httpResponse;
+                //ex.Body = null;
+                //if (shouldTrace)
+                //{
+                //    ServiceClientTracing.Error(invocationId, ex);
+                //}
+                //throw ex;
+                HttpOperationException ex = new HttpOperationException();
+                HttpRequestMessageWrapper wrapperRequest = new HttpRequestMessageWrapper(httpRequest, httpRequest.Content.ToString());
+                HttpResponseMessageWrapper wrapperResponse = new HttpResponseMessageWrapper(httpResponse, httpResponse.Content.ToString());
+                ex.Request = wrapperRequest;
+                ex.Response = wrapperResponse;
                 ex.Body = null;
                 if (shouldTrace)
                 {
@@ -209,9 +219,20 @@ namespace CGIXrmCreateCaseService.CRMPlusAPI
             string responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
             if (statusCode != HttpStatusCode.OK)
             {
-                HttpOperationException<object> ex = new HttpOperationException<object>();
-                ex.Request = httpRequest;
-                ex.Response = httpResponse;
+                //HttpOperationException<object> ex = new HttpOperationException<object>();
+                //ex.Request = httpRequest;
+                //ex.Response = httpResponse;
+                //ex.Body = null;
+                //if (shouldTrace)
+                //{
+                //    ServiceClientTracing.Error(invocationId, ex);
+                //}
+                //throw ex;
+                HttpOperationException ex = new HttpOperationException();
+                HttpRequestMessageWrapper wrapperRequest = new HttpRequestMessageWrapper(httpRequest, httpRequest.Content.ToString());
+                HttpResponseMessageWrapper wrapperResponse = new HttpResponseMessageWrapper(httpResponse, httpResponse.Content.ToString());
+                ex.Request = wrapperRequest;
+                ex.Response = wrapperResponse;
                 ex.Body = null;
                 if (shouldTrace)
                 {
@@ -318,9 +339,20 @@ namespace CGIXrmCreateCaseService.CRMPlusAPI
             string responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
             if (statusCode != HttpStatusCode.OK)
             {
-                HttpOperationException<object> ex = new HttpOperationException<object>();
-                ex.Request = httpRequest;
-                ex.Response = httpResponse;
+                //HttpOperationException<object> ex = new HttpOperationException<object>();
+                //ex.Request = httpRequest;
+                //ex.Response = httpResponse;
+                //ex.Body = null;
+                //if (shouldTrace)
+                //{
+                //    ServiceClientTracing.Error(invocationId, ex);
+                //}
+                //throw ex;
+                HttpOperationException ex = new HttpOperationException();
+                HttpRequestMessageWrapper wrapperRequest = new HttpRequestMessageWrapper(httpRequest, httpRequest.Content.ToString());
+                HttpResponseMessageWrapper wrapperResponse = new HttpResponseMessageWrapper(httpResponse, httpResponse.Content.ToString());
+                ex.Request = wrapperRequest;
+                ex.Response = wrapperResponse;
                 ex.Body = null;
                 if (shouldTrace)
                 {
@@ -435,9 +467,20 @@ namespace CGIXrmCreateCaseService.CRMPlusAPI
             string responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
             if (statusCode != HttpStatusCode.OK)
             {
-                HttpOperationException<object> ex = new HttpOperationException<object>();
-                ex.Request = httpRequest;
-                ex.Response = httpResponse;
+                //HttpOperationException<object> ex = new HttpOperationException<object>();
+                //ex.Request = httpRequest;
+                //ex.Response = httpResponse;
+                //ex.Body = null;
+                //if (shouldTrace)
+                //{
+                //    ServiceClientTracing.Error(invocationId, ex);
+                //}
+                //throw ex;
+                HttpOperationException ex = new HttpOperationException();
+                HttpRequestMessageWrapper wrapperRequest = new HttpRequestMessageWrapper(httpRequest, httpRequest.Content.ToString());
+                HttpResponseMessageWrapper wrapperResponse = new HttpResponseMessageWrapper(httpResponse, httpResponse.Content.ToString());
+                ex.Request = wrapperRequest;
+                ex.Response = wrapperResponse;
                 ex.Body = null;
                 if (shouldTrace)
                 {
@@ -567,9 +610,20 @@ namespace CGIXrmCreateCaseService.CRMPlusAPI
             string responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
             if (statusCode != HttpStatusCode.OK)
             {
-                HttpOperationException<object> ex = new HttpOperationException<object>();
-                ex.Request = httpRequest;
-                ex.Response = httpResponse;
+                //HttpOperationException<object> ex = new HttpOperationException<object>();
+                //ex.Request = httpRequest;
+                //ex.Response = httpResponse;
+                //ex.Body = null;
+                //if (shouldTrace)
+                //{
+                //    ServiceClientTracing.Error(invocationId, ex);
+                //}
+                //throw ex;
+                HttpOperationException ex = new HttpOperationException();
+                HttpRequestMessageWrapper wrapperRequest = new HttpRequestMessageWrapper(httpRequest, httpRequest.Content.ToString());
+                HttpResponseMessageWrapper wrapperResponse = new HttpResponseMessageWrapper(httpResponse, httpResponse.Content.ToString());
+                ex.Request = wrapperRequest;
+                ex.Response = wrapperResponse;
                 ex.Body = null;
                 if (shouldTrace)
                 {
@@ -693,9 +747,20 @@ namespace CGIXrmCreateCaseService.CRMPlusAPI
             string responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
             if (statusCode != HttpStatusCode.OK)
             {
-                HttpOperationException<object> ex = new HttpOperationException<object>();
-                ex.Request = httpRequest;
-                ex.Response = httpResponse;
+                //HttpOperationException<object> ex = new HttpOperationException<object>();
+                //ex.Request = httpRequest;
+                //ex.Response = httpResponse;
+                //ex.Body = null;
+                //if (shouldTrace)
+                //{
+                //    ServiceClientTracing.Error(invocationId, ex);
+                //}
+                //throw ex;
+                HttpOperationException ex = new HttpOperationException();
+                HttpRequestMessageWrapper wrapperRequest = new HttpRequestMessageWrapper(httpRequest, httpRequest.Content.ToString());
+                HttpResponseMessageWrapper wrapperResponse = new HttpResponseMessageWrapper(httpResponse, httpResponse.Content.ToString());
+                ex.Request = wrapperRequest;
+                ex.Response = wrapperResponse;
                 ex.Body = null;
                 if (shouldTrace)
                 {

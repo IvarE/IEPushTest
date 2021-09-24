@@ -509,6 +509,32 @@ Endeavor.formscriptfunctions = {
         Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
     },
 
+    callGlobalActionRibbon: function (Xrm, actionName, inputParameters, sucessCallback, errorCallback) {
+
+        var req = {};
+
+        var parameterTypes = {};
+        if (inputParameters != null)
+            for (var i = 0; i < inputParameters.length; i++) {
+                var parameter = inputParameters[i];
+
+                req[parameter.Field] = parameter.Value;
+                parameterTypes[parameter.Field] = { "typeName": parameter.TypeName, "structuralProperty": parameter.StructuralProperty };
+            }
+
+        req.getMetadata = function () {
+
+            return {
+                boundParameter: null,
+                parameterTypes: parameterTypes,
+                operationType: 0,
+                operationName: actionName
+            };
+        };
+
+        Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
+    },
+
     fetchJSONResults: function (url, max_records) {
         /// <summary>
         /// Get records from server

@@ -299,8 +299,32 @@ namespace Skanetrafiken.Crm.Entities
                 decimal manualDiscount = 0; 
                 int quantity = 0;
                 int totalSlots = 0;
+                string unit;
+
                 
 
+                QueryExpression queryUnit = new QueryExpression();
+                queryUnit.EntityName = UnitEntity.EntityLogicalName;
+                queryUnit.ColumnSet = new ColumnSet(UnitEntity.Fields.Name);
+                queryUnit.Criteria.AddCondition(UnitEntity.Fields.Name, ConditionOperator.Like, "1 vecka");
+
+                UnitEntity quoteProductUnit = XrmRetrieveHelper.RetrieveFirst<UnitEntity>(localContext, queryUnit);
+
+
+                if(this.UoMId != null)
+                {
+                    unit = this.UoMId.Name;
+                }
+                else
+                {
+                    unit = preImage.UoMId.Name;
+                }
+                localContext.Trace("Inside updatePriceQuoteProduct");
+
+                localContext.Trace($"unit = {unit} quoteProductUnit.UoMId {quoteProductUnit.Name}");
+
+                
+               
                 if (!this.IsAttributeModified(preImage, QuoteProductEntity.Fields.PricePerUnit))
                 {
                     price = preImage.PricePerUnit.Value;
@@ -309,6 +333,8 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     price = this.PricePerUnit.Value;
                 }
+
+
 
                 if (!this.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ManualDiscount))
                 {
@@ -320,19 +346,19 @@ namespace Skanetrafiken.Crm.Entities
                     {
                         manualDiscount = preImage.ed_ManualDiscount.Value - preImage.ManualDiscountAmount.Value;
                     }
-                        
+
                 }
                 else
                 {
-                    if(this.ed_ManualDiscount == null || this.ManualDiscountAmount == null)
+                    if (this.ed_ManualDiscount == null || this.ManualDiscountAmount == null)
                     {
-                        manualDiscount = 0; 
+                        manualDiscount = 0;
                     }
                     else
                     {
                         manualDiscount = this.ed_ManualDiscount.Value - this.ManualDiscountAmount.Value;
                     }
-                    
+
                 }
 
                 if (!this.IsAttributeModified(preImage, QuoteProductEntity.Fields.Quantity))
@@ -353,7 +379,17 @@ namespace Skanetrafiken.Crm.Entities
                 }
 
 
-                this.Tax = new Money((totalSlots - quantity) * price - manualDiscount);
+                if (unit == quoteProductUnit.Name)
+                {
+                    this.Tax = new Money(0 - manualDiscount);
+                }
+                else
+                {
+                    this.Tax = new Money((totalSlots - quantity) * price - manualDiscount);
+                }
+
+                
+                
             }
         }
 

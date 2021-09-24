@@ -2062,6 +2062,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                     QueryExpression queryContact = new QueryExpression(ContactEntity.EntityLogicalName);
                     queryContact.NoLock = true;
+                    queryContact.ColumnSet.AddColumn(ContactEntity.Fields.EMailAddress1);
                     queryContact.Criteria.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
                     queryContact.Criteria.AddCondition(ContactEntity.Fields.ed_MklId, ConditionOperator.Equal, mklId);
 
@@ -2070,11 +2071,18 @@ namespace Skanetrafiken.Crm.Controllers
                     if(lContacts.Count == 1)
                     {
                         Contact contact = lContacts.FirstOrDefault();
+                        string email = contact.EMailAddress1;
 
                         Contact uContact = new Contact();
                         uContact.Id = contact.Id;
                         uContact.ed_MklId = string.Empty;
                         uContact.ed_InformationSource = ed_informationsource.UppdateraMittKonto;
+
+                        if (!string.IsNullOrEmpty(email))
+                        {
+                            uContact.EMailAddress1 = null;
+                            uContact.EMailAddress2 = email;
+                        }
 
                         XrmHelper.Update(localContext, uContact);
 
@@ -4019,6 +4027,7 @@ namespace Skanetrafiken.Crm.Controllers
                                     ContactId = conflict.ContactId,
                                     ed_InformationSource = Generated.ed_informationsource.AdmAndraKund,
                                     cgi_socialsecuritynumber = null,
+                                    BirthDate = null,
                                     ed_ConflictConnectionGuid = Guid.NewGuid().ToString()
                                 };
                                 XrmHelper.Update(localContext.OrganizationService, conflictUpdate);
@@ -4062,7 +4071,7 @@ namespace Skanetrafiken.Crm.Controllers
                             Id = contactId
                         };
 
-                        if (collection.Count > 2)
+                        if (collection.Count > 0)
                         {
                             updContact.ed_InformationSource = Generated.ed_informationsource.UppdateraMittKonto;
                             contact.ed_InformationSource = Generated.ed_informationsource.UppdateraMittKonto;
@@ -5751,6 +5760,7 @@ namespace Skanetrafiken.Crm.Controllers
             if (!string.IsNullOrWhiteSpace(lead.ed_Personnummer) && !lead.ed_Personnummer.Equals(contact.cgi_socialsecuritynumber))
             {
                 contact.cgi_socialsecuritynumber = lead.ed_Personnummer;
+                contact.BirthDate = ContactEntity.UpdateBirthDateOnContact(lead.ed_Personnummer); //DevOps 9168
                 contact.ed_HasSwedishSocialSecurityNumber = lead.ed_HasSwedishSocialSecurityNumber;
                 updated = true;
             }

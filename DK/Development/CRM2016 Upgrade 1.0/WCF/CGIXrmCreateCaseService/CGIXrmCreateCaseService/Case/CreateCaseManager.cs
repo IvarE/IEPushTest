@@ -6,11 +6,18 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
+using System.Threading;
 using System.Xml.Serialization;
 using CGIXrmCreateCaseService.Case.Models;
 using CGIXrmWin;
 using CRM2013.SkanetrafikenPlugins.Common;
+using Microsoft.Azure;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Auth;
+using Microsoft.Azure.Storage.Blob;
+using Microsoft.Azure.KeyVault;
 using Microsoft.Crm.Sdk.Messages;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System.Collections.Generic;
@@ -22,6 +29,10 @@ using System.Text;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Runtime.Serialization;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
+using Azure.Identity;
 
 namespace CGIXrmCreateCaseService.Case
 {
@@ -207,7 +218,8 @@ namespace CGIXrmCreateCaseService.Case
             // Catch HTTP Exceptions from CRMPlus
             catch (Microsoft.Rest.HttpOperationException ex)
             {
-                string msg = ex.Response.Content.ContentToString();
+                //string msg = ex.Response.Content.ContentToString();
+                string msg = ex.Response.Content;
 
                 _log.Error(string.Format("Exception catched in GetOrCreateContactRGOLCase:{0}. Country:{1}", msg, request.CustomerAddress1Country));
                 if (ex.Message != null)
@@ -297,7 +309,8 @@ namespace CGIXrmCreateCaseService.Case
             // Catch HTTP Exceptions from CRMPlus
             catch (Microsoft.Rest.HttpOperationException ex)
             {
-                string msg = ex.Response.Content.ContentToString();
+                //string msg = ex.Response.Content.ContentToString();
+                string msg = ex.Response.Content;
                 string fullMessage = string.Format("Kan inte skapa kund i SeKund. Orsak:{0}", msg);
                 _log.Error(fullMessage);
                 if (ex.Message != null)
@@ -1527,12 +1540,6 @@ namespace CGIXrmCreateCaseService.Case
             if (titleText.Contains("JoJo") && titleText.Contains("kort") && titleText.Contains("och") && titleText.Contains("priser"))
                 titleText = "Kort, appar, biljetter och priser";
 
-            #region SM17479954 - Kontrollavgiffter: Kontrollavgnr i rubrik
-            /* OLD code
-            if (sendtoqueue == 285050008) 
-                titleText = "Bestridan kontrollavgift";
-            */
-            //NEW code
             if (sendtoqueue == 285050008)
             {
                 if (!string.IsNullOrEmpty(request.ControlFeeNumber))
@@ -1540,8 +1547,6 @@ namespace CGIXrmCreateCaseService.Case
                 else
                     titleText = "Bestridan kontrollavgift";
             }
-
-            #endregion
 
             if (string.IsNullOrWhiteSpace(titleText))
                 titleText = "Övrigt";
@@ -2161,401 +2166,1002 @@ namespace CGIXrmCreateCaseService.Case
         /// 
         /// </summary>
         /// <param name="request"></param>
-        private void CreateLogFileAutoRGCase(AutoRgCaseRequest request)
+        private void CreateLogFileAutoRGCase(int threadId, AutoRgCaseRequest request)
         {
             if (request == null) return;
-            var sw = new StreamWriter("E:\\Logs\\CRM\\CGIXrmCreateCaseService\\RequestCreateCase_Log\\CreateLogFile_Log.txt", true);
-            sw.WriteLine("======================================================================================================================");
-            sw.WriteLine(DateTime.Now.ToString(CultureInfo.InvariantCulture));
+            //var sw = new StreamWriter("E:\\Logs\\CRM\\CGIXrmCreateCaseService\\RequestCreateCase_Log\\CreateLogFile_Log.txt", true);
+            //sw.WriteLine("======================================================================================================================");
+            //sw.WriteLine(DateTime.Now.ToString(CultureInfo.InvariantCulture));
+
+            _log.Info($"Th={threadId} - ===================== Checking Missing Parameters. =====================");
+
+            //if (!string.IsNullOrEmpty(request.CustomersCategory))
+            //    sw.WriteLine("CustomersCategory : " + request.CustomersCategory);
+            //else
+            //    sw.WriteLine("CustomersCategory is missing");
 
             if (!string.IsNullOrEmpty(request.CustomersCategory))
-                sw.WriteLine("CustomersCategory : " + request.CustomersCategory);
+            {
+                _log.Debug($"Th={threadId} - CustomersCategory : {request.CustomersCategory}");
+            }
             else
-                sw.WriteLine("CustomersCategory is missing");
+            {
+                _log.Warn($"Th={threadId} - CustomersCategory is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.CustomersSubcategory))
+            //    sw.WriteLine("CustomersSubcategory : " + request.CustomersSubcategory);
+            //else
+            //    sw.WriteLine("CustomersSubcategory is missing");
 
             if (!string.IsNullOrEmpty(request.CustomersSubcategory))
-                sw.WriteLine("CustomersSubcategory : " + request.CustomersSubcategory);
+            {
+                _log.Debug($"Th={threadId} - CustomersSubcategory : {request.CustomersSubcategory}");
+            }
             else
-                sw.WriteLine("CustomersSubcategory is missing");
+            {
+                _log.Warn($"Th={threadId} - CustomersSubcategory is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.Title))
+            //    sw.WriteLine("Title : " + request.Title);
+            //else
+            //    sw.WriteLine("Title is missing");
 
             if (!string.IsNullOrEmpty(request.Title))
-                sw.WriteLine("Title : " + request.Title);
+            {
+                _log.Debug($"Th={threadId} - Title : {request.Title}");
+            }
             else
-                sw.WriteLine("Title is missing");
+            {
+                _log.Warn($"Th={threadId} - Title is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.Description))
+            //    sw.WriteLine("Description : " + request.Description);
+            //else
+            //    sw.WriteLine("Description is missing");
 
             if (!string.IsNullOrEmpty(request.Description))
-                sw.WriteLine("Description : " + request.Description);
+            {
+                _log.Debug($"Th={threadId} - Description : {request.Description}");
+            }
             else
-                sw.WriteLine("Description is missing");
+            {
+                _log.Warn($"Th={threadId} - Description is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.RGOLExtendedDescription))
+            //    sw.WriteLine("RGOLExtendedDescription : " + request.RGOLExtendedDescription);
+            //else
+            //    sw.WriteLine("RGOLExtendedDescription is missing");
 
             if (!string.IsNullOrEmpty(request.RGOLExtendedDescription))
-                sw.WriteLine("RGOLExtendedDescription : " + request.RGOLExtendedDescription);
+            {
+                _log.Debug($"Th={threadId} - RGOLExtendedDescription : {request.RGOLExtendedDescription}");
+            }
             else
-                sw.WriteLine("RGOLExtendedDescription is missing");
+            {
+                _log.Warn($"Th={threadId} - RGOLExtendedDescription is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.QueueId))
+            //    sw.WriteLine("QueueId : " + request.QueueId);
+            //else
+            //    sw.WriteLine("QueueId is missing");
 
             if (!string.IsNullOrEmpty(request.QueueId))
-                sw.WriteLine("QueueId : " + request.QueueId);
+            {
+                _log.Debug($"Th={threadId} - QueueId : {request.QueueId}");
+            }
             else
-                sw.WriteLine("QueueId is missing");
+            {
+                _log.Warn($"Th={threadId} - QueueId is missing");
+            }
 
-            if (request.CustomerId != null )
-                sw.WriteLine("CustomerId : " + request.CustomerId);
+            //if (request.CustomerId != null )
+            //    sw.WriteLine("CustomerId : " + request.CustomerId);
+            //else
+            //    sw.WriteLine("CustomerId is missing");
+
+            if (request.CustomerId != null)
+            {
+                _log.Debug($"Th={threadId} - CustomerId : {request.CustomerId}");
+            }
             else
-                sw.WriteLine("CustomerId is missing");
+            {
+                _log.Warn($"Th={threadId} - CustomerId is missing");
+            }
 
             switch (request.CustomerType)
             {
                 case 0:// CustomerType.Private:
-                    sw.WriteLine("Customer : Private");
+                    //sw.WriteLine("Customer : Private");
+                    _log.Debug($"Th={threadId} - Customer : Private");
                     break;
                 case 1: // CustomerType.Organisation:
-                    sw.WriteLine("Customer : Organisation");
+                    //sw.WriteLine("Customer : Organisation");
+                    _log.Debug($"Th={threadId} - Customer : Organisation");
                     break;
                 default:
-                    sw.WriteLine("Customer is missing");
+                    //sw.WriteLine("Customer is missing");
+                    _log.Warn($"Th={threadId} - Customer is missing");
                     break;
             }
 
+            //if (!string.IsNullOrEmpty(request.CardNumber))
+            //    sw.WriteLine("CardNumber : " + request.CardNumber);
+            //else
+            //    sw.WriteLine("CardNumber is missing");
+
             if (!string.IsNullOrEmpty(request.CardNumber))
-                sw.WriteLine("CardNumber : " + request.CardNumber);
+            {
+                _log.Debug($"Th={threadId} - CardNumber : {request.CardNumber}");
+            }
             else
-                sw.WriteLine("CardNumber is missing");
+            {
+                _log.Warn($"Th={threadId} - CardNumber is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.SKACardNumber))
+            //    sw.WriteLine("SKACardNumber : " + request.SKACardNumber);
+            //else
+            //    sw.WriteLine("SKACardNumber is missing");
 
             if (!string.IsNullOrEmpty(request.SKACardNumber))
-                sw.WriteLine("SKACardNumber : " + request.SKACardNumber);
+            {
+                _log.Debug($"Th={threadId} - SKACardNumber : {request.SKACardNumber}");
+            }
             else
-                sw.WriteLine("SKACardNumber is missing");
+            {
+                _log.Warn($"Th={threadId} - SKACardNumber is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.WayOfTravel))
+            //    sw.WriteLine("WayOfTravel : " + request.WayOfTravel);
+            //else
+            //    sw.WriteLine("WayOfTravel is missing");
 
             if (!string.IsNullOrEmpty(request.WayOfTravel))
-                sw.WriteLine("WayOfTravel : " + request.WayOfTravel);
+            {
+                _log.Debug($"Th={threadId} - WayOfTravel : {request.WayOfTravel}");
+            }
             else
-                sw.WriteLine("WayOfTravel is missing");
+            {
+                _log.Warn($"Th={threadId} - WayOfTravel is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.Line))
+            //    sw.WriteLine("Line : " + request.Line);
+            //else
+            //    sw.WriteLine("Line is missing");
 
             if (!string.IsNullOrEmpty(request.Line))
-                sw.WriteLine("Line : " + request.Line);
+            {
+                _log.Debug($"Th={threadId} - Line : {request.Line}");
+            }
             else
-                sw.WriteLine("Line is missing");
+            {
+                _log.Warn($"Th={threadId} - Line is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.DriverId))
+            //    sw.WriteLine("DriverId : " + request.DriverId);
+            //else
+            //    sw.WriteLine("DriverId is missing");
 
             if (!string.IsNullOrEmpty(request.DriverId))
-                sw.WriteLine("DriverId : " + request.DriverId);
+            {
+                _log.Debug($"Th={threadId} - DriverId : {request.DriverId}");
+            }
             else
-                sw.WriteLine("DriverId is missing");
+            {
+                _log.Warn($"Th={threadId} - DriverId is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.FirstName))
+            //    sw.WriteLine("FirstName : " + request.FirstName);
+            //else
+            //    sw.WriteLine("FirstName is missing");
 
             if (!string.IsNullOrEmpty(request.FirstName))
-                sw.WriteLine("FirstName : " + request.FirstName);
+            {
+                _log.Debug($"Th={threadId} - FirstName : {request.FirstName}");
+            }
             else
-                sw.WriteLine("FirstName is missing");
+            {
+                _log.Warn($"Th={threadId} - FirstName is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.LastName))
+            //    sw.WriteLine("LastName : " + request.LastName);
+            //else
+            //    sw.WriteLine("LastName is missing");
 
             if (!string.IsNullOrEmpty(request.LastName))
-                sw.WriteLine("LastName : " + request.LastName);
+            {
+                _log.Debug($"Th={threadId} - LastName : {request.LastName}");
+            }
             else
-                sw.WriteLine("LastName is missing");
+            {
+                _log.Warn($"Th={threadId} - LastName is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.EmailAddress))
+            //    sw.WriteLine("EmailAddress : " + request.EmailAddress);
+            //else
+            //    sw.WriteLine("EmailAddress is missing");
 
             if (!string.IsNullOrEmpty(request.EmailAddress))
-                sw.WriteLine("EmailAddress : " + request.EmailAddress);
+            {
+                _log.Debug($"Th={threadId} - EmailAddress : {request.EmailAddress}");
+            }
             else
-                sw.WriteLine("EmailAddress is missing");
+            {
+                _log.Warn($"Th={threadId} - EmailAddress is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.DeliveryEmailAddress))
+            //    sw.WriteLine("DeliveryEmailAddress : " + request.DeliveryEmailAddress);
+            //else
+            //    sw.WriteLine("DeliveryEmailAddress is missing");
 
             if (!string.IsNullOrEmpty(request.DeliveryEmailAddress))
-                sw.WriteLine("DeliveryEmailAddress : " + request.DeliveryEmailAddress);
+            {
+                _log.Debug($"Th={threadId} - DeliveryEmailAddress : {request.DeliveryEmailAddress}");
+            }
             else
-                sw.WriteLine("DeliveryEmailAddress is missing");
+            {
+                _log.Warn($"Th={threadId} - DeliveryEmailAddress is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.MobileNo))
+            //    sw.WriteLine("MobileNo : " + request.MobileNo);
+            //else
+            //    sw.WriteLine("MobileNo is missing");
 
             if (!string.IsNullOrEmpty(request.MobileNo))
-                sw.WriteLine("MobileNo : " + request.MobileNo);
+            {
+                _log.Debug($"Th={threadId} - MobileNo : {request.MobileNo}");
+            }
             else
-                sw.WriteLine("MobileNo is missing");
+            {
+                _log.Warn($"Th={threadId} - MobileNo is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.RGOLIssueID))
+            //    sw.WriteLine("RGOLIssueID : " + request.RGOLIssueID);
+            //else
+            //    sw.WriteLine("RGOLIssueID is missing");
 
             if (!string.IsNullOrEmpty(request.RGOLIssueID))
-                sw.WriteLine("RGOLIssueID : " + request.RGOLIssueID);
+            {
+                _log.Debug($"Th={threadId} - RGOLIssueID : {request.RGOLIssueID}");
+            }
             else
-                sw.WriteLine("RGOLIssueID is missing");
+            {
+                _log.Warn($"Th={threadId} - RGOLIssueID is missing");
+            }
+
+            //if (request.DepartureDateTime == null)
+            //    sw.WriteLine("DepartureDateTime : " + request.DepartureDateTime);
+            //else
+            //    sw.WriteLine("DepartureDateTime is missing");
 
             if (request.DepartureDateTime == null)
-                sw.WriteLine("DepartureDateTime : " + request.DepartureDateTime);
+            {
+                _log.Debug($"Th={threadId} - DepartureDateTime : {request.DepartureDateTime}");
+            }
             else
-                sw.WriteLine("DepartureDateTime is missing");
+            {
+                _log.Warn($"Th={threadId} - DepartureDateTime is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.ExperiencedDelay))
+            //    sw.WriteLine("ExperiencedDelay : " + request.ExperiencedDelay);
+            //else
+            //    sw.WriteLine("ExperiencedDelay is missing");
 
             if (!string.IsNullOrEmpty(request.ExperiencedDelay))
-                sw.WriteLine("ExperiencedDelay : " + request.ExperiencedDelay);
+            {
+                _log.Debug($"Th={threadId} - ExperiencedDelay : {request.ExperiencedDelay}");
+            }
             else
-                sw.WriteLine("ExperiencedDelay is missing");
+            {
+                _log.Warn($"Th={threadId} - ExperiencedDelay is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.SocialSecurityNumber))
+            //    sw.WriteLine("SocialSecurityNumber : " + request.SocialSecurityNumber);
+            //else
+            //    sw.WriteLine("SocialSecurityNumber is missing");
 
             if (!string.IsNullOrEmpty(request.SocialSecurityNumber))
-                sw.WriteLine("SocialSecurityNumber : " + request.SocialSecurityNumber);
+            {
+                _log.Debug($"Th={threadId} - SocialSecurityNumber : {request.SocialSecurityNumber}");
+            }
             else
-                sw.WriteLine("SocialSecurityNumber is missing");
+            {
+                _log.Warn($"Th={threadId} - SocialSecurityNumber is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.Address_Line1))
+            //    sw.WriteLine("Address_Line1 : " + request.Address_Line1);
+            //else
+            //    sw.WriteLine("Address_Line1 is missing");
 
             if (!string.IsNullOrEmpty(request.Address_Line1))
-                sw.WriteLine("Address_Line1 : " + request.Address_Line1);
+            {
+                _log.Debug($"Th={threadId} - Address_Line1 : {request.Address_Line1}");
+            }
             else
-                sw.WriteLine("Address_Line1 is missing");
+            {
+                _log.Warn($"Th={threadId} - Address_Line1 is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.Address_Line2))
+            //    sw.WriteLine("Address_Line2 : " + request.Address_Line2);
+            //else
+            //    sw.WriteLine("Address_Line2 is missing");
 
             if (!string.IsNullOrEmpty(request.Address_Line2))
-                sw.WriteLine("Address_Line2 : " + request.Address_Line2);
+            {
+                _log.Debug($"Th={threadId} - Address_Line2 : {request.Address_Line2}");
+            }
             else
-                sw.WriteLine("Address_Line2 is missing");
+            {
+                _log.Warn($"Th={threadId} - Address_Line2 is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.Address_PostalCode))
+            //    sw.WriteLine("Address_PostalCode : " + request.Address_PostalCode);
+            //else
+            //    sw.WriteLine("Address_PostalCode is missing");
 
             if (!string.IsNullOrEmpty(request.Address_PostalCode))
-                sw.WriteLine("Address_PostalCode : " + request.Address_PostalCode);
+            {
+                _log.Debug($"Th={threadId} - Address_PostalCode : {request.Address_PostalCode}");
+            }
             else
-                sw.WriteLine("Address_PostalCode is missing");
+            {
+                _log.Warn($"Th={threadId} - Address_PostalCode is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.Address_City))
+            //    sw.WriteLine("Address_City : " + request.Address_City);
+            //else
+            //    sw.WriteLine("Address_City is missing");
 
             if (!string.IsNullOrEmpty(request.Address_City))
-                sw.WriteLine("Address_City : " + request.Address_City);
+            {
+                _log.Debug($"Th={threadId} - Address_City : {request.Address_City}");
+            }
             else
-                sw.WriteLine("Address_City is missing");
+            {
+                _log.Warn($"Th={threadId} - Address_City is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.Address_Country))
+            //    sw.WriteLine("Address_Country : " + request.Address_Country);
+            //else
+            //    sw.WriteLine("Address_Country is missing");
 
             if (!string.IsNullOrEmpty(request.Address_Country))
-                sw.WriteLine("Address_Country : " + request.Address_Country);
+            {
+                _log.Debug($"Th={threadId} - Address_Country : {request.Address_Country}");
+            }
             else
-                sw.WriteLine("Address_Country is missing");
+            {
+                _log.Warn($"Th={threadId} - Address_Country is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.TicketType1))
+            //    sw.WriteLine("TicketType1 : " + request.TicketType1);
+            //else
+            //    sw.WriteLine("TicketType1 is missing");
 
             if (!string.IsNullOrEmpty(request.TicketType1))
-                sw.WriteLine("TicketType1 : " + request.TicketType1);
+            {
+                _log.Debug($"Th={threadId} - TicketType1 : {request.TicketType1}");
+            }
             else
-                sw.WriteLine("TicketType1 is missing");
+            {
+                _log.Warn($"Th={threadId} - TicketType1 is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.TicketNumber1))
+            //    sw.WriteLine("TicketNumber1 : " + request.TicketNumber1);
+            //else
+            //    sw.WriteLine("TicketNumber1 is missing");
 
             if (!string.IsNullOrEmpty(request.TicketNumber1))
-                sw.WriteLine("TicketNumber1 : " + request.TicketNumber1);
+            {
+                _log.Debug($"Th={threadId} - TicketNumber1 : {request.TicketNumber1}");
+            }
             else
-                sw.WriteLine("TicketNumber1 is missing");
+            {
+                _log.Warn($"Th={threadId} - TicketNumber1 is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.TicketType2))
+            //    sw.WriteLine("TicketType2 : " + request.TicketType2);
+            //else
+            //    sw.WriteLine("TicketType2 is missing");
 
             if (!string.IsNullOrEmpty(request.TicketType2))
-                sw.WriteLine("TicketType2 : " + request.TicketType2);
+            {
+                _log.Debug($"Th={threadId} - TicketType2 : {request.TicketType2}");
+            }
             else
-                sw.WriteLine("TicketType2 is missing");
+            {
+                _log.Warn($"Th={threadId} - TicketType2 is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.TicketNumber2))
+            //    sw.WriteLine("TicketNumber2 : " + request.TicketNumber2);
+            //else
+            //    sw.WriteLine("TicketNumber2 is missing");
 
             if (!string.IsNullOrEmpty(request.TicketNumber2))
-                sw.WriteLine("TicketNumber2 : " + request.TicketNumber2);
+            {
+                _log.Debug($"Th={threadId} - TicketNumber2 : {request.TicketNumber2}");
+            }
             else
-                sw.WriteLine("TicketNumber2 is missing");
+            {
+                _log.Warn($"Th={threadId} - TicketNumber2 is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.MileageFrom))
+            //    sw.WriteLine("MileageFrom : " + request.MileageFrom);
+            //else
+            //    sw.WriteLine("MileageFrom is missing");
 
             if (!string.IsNullOrEmpty(request.MileageFrom))
-                sw.WriteLine("MileageFrom : " + request.MileageFrom);
+            {
+                _log.Debug($"Th={threadId} - MileageFrom : {request.MileageFrom}");
+            }
             else
-                sw.WriteLine("MileageFrom is missing");
+            {
+                _log.Warn($"Th={threadId} - MileageFrom is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.MileageTo))
+            //    sw.WriteLine("MileageTo : " + request.MileageTo);
+            //else
+            //    sw.WriteLine("MileageTo is missing");
 
             if (!string.IsNullOrEmpty(request.MileageTo))
-                sw.WriteLine("MileageTo : " + request.MileageTo);
+            {
+                _log.Debug($"Th={threadId} - MileageTo : {request.MileageTo}");
+            }
             else
-                sw.WriteLine("MileageTo is missing");
+            {
+                _log.Warn($"Th={threadId} - MileageTo is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.MileageKilometers))
+            //    sw.WriteLine("MileageKilometers : " + request.MileageKilometers);
+            //else
+            //    sw.WriteLine("MileageKilometers is missing");
 
             if (!string.IsNullOrEmpty(request.MileageKilometers))
-                sw.WriteLine("MileageKilometers : " + request.MileageKilometers);
+            {
+                _log.Debug($"Th={threadId} - MileageKilometers : {request.MileageKilometers}");
+            }
             else
-                sw.WriteLine("MileageKilometers is missing");
+            {
+                _log.Warn($"Th={threadId} - MileageKilometers is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.MileageLicencePlateNumber))
+            //    sw.WriteLine("MileageLicencePlateNumber : " + request.MileageLicencePlateNumber);
+            //else
+            //    sw.WriteLine("MileageLicencePlateNumber is missing");
 
             if (!string.IsNullOrEmpty(request.MileageLicencePlateNumber))
-                sw.WriteLine("MileageLicencePlateNumber : " + request.MileageLicencePlateNumber);
+            {
+                _log.Debug($"Th={threadId} - MileageLicencePlateNumber : {request.MileageLicencePlateNumber}");
+            }
             else
-                sw.WriteLine("MileageLicencePlateNumber is missing");
+            {
+                _log.Warn($"Th={threadId} - MileageLicencePlateNumber is missing");
+            }
 
+            //if (!string.IsNullOrEmpty(request.TaxiFrom))
+            //    sw.WriteLine("TaxiFrom : " + request.TaxiFrom);
+            //else
+            //    sw.WriteLine("TaxiFrom is missing");
 
             if (!string.IsNullOrEmpty(request.TaxiFrom))
-                sw.WriteLine("TaxiFrom : " + request.TaxiFrom);
+            {
+                _log.Debug($"Th={threadId} - TaxiFrom : {request.TaxiFrom}");
+            }
             else
-                sw.WriteLine("TaxiFrom is missing");
+            {
+                _log.Warn($"Th={threadId} - TaxiFrom is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.TaxiTo))
+            //    sw.WriteLine("TaxiTo : " + request.TaxiTo);
+            //else
+            //    sw.WriteLine("TaxiTo is missing");
 
             if (!string.IsNullOrEmpty(request.TaxiTo))
-                sw.WriteLine("TaxiTo : " + request.TaxiTo);
+            {
+                _log.Debug($"Th={threadId} - TaxiTo : {request.TaxiTo}");
+            }
             else
-                sw.WriteLine("TaxiTo is missing");
+            {
+                _log.Warn($"Th={threadId} - TaxiTo is missing");
+            }
 
-            sw.WriteLine("TaxiClaimedAmount : " + request.TaxiClaimedAmount);
+            //sw.WriteLine("TaxiClaimedAmount : " + request.TaxiClaimedAmount);
+            _log.Debug($"Th={threadId} - TaxiClaimedAmount : {request.TaxiClaimedAmount}");
 
             if (request.FileLinks != null && request.FileLinks.Length > 0)
             {
                 foreach (var link in request.FileLinks)
                 {
                     if (link.Url != null && link.Url != "")
-                        sw.WriteLine("FileLink.Url : " + link.Url);
+                    {
+                        //sw.WriteLine("FileLink.Url : " + link.Url);
+                        _log.Debug($"Th={threadId} - FileLink.Url : {link.Url}");
+                    }
                     else if (link.Url == null)
-                        sw.WriteLine("FileLink.Url is null");
+                    {
+                        //sw.WriteLine("FileLink.Url is null");
+                        _log.Debug($"Th={threadId} - FileLink.Url is null");
+                    }
                     else
-                        sw.WriteLine("FileLink.Url is empty");
+                    {
+                        //sw.WriteLine("FileLink.Url is empty");
+                        _log.Debug($"Th={threadId} - FileLink.Url is empty");
+                    }
                 }
             }
             else if (request.FileLinks == null)
-                sw.WriteLine("FileLinks list is null");
+            {
+                //sw.WriteLine("FileLinks list is null");
+                _log.Debug($"Th={threadId} - FileLinks list is null");
+            }
             else if (request.FileLinks.Length <= 0)
-                sw.WriteLine("FileLinks.Length <= 0");
-            else
-                sw.WriteLine("Unexpected value in FileLinks");
+            {
+                //sw.WriteLine("FileLinks.Length <= 0");
+                _log.Debug($"Th={threadId} - FileLinks.Length <= 0");
+            }
+            else 
+            {
+                //sw.WriteLine("Unexpected value in FileLinks");
+                _log.Debug($"Th={threadId} - Unexpected value in FileLinks");
+            }
+
+
+            //if (!string.IsNullOrEmpty(request.Iban))
+            //    sw.WriteLine("Iban : " + request.Iban);
+            //else
+            //    sw.WriteLine("Iban is missing");
 
             if (!string.IsNullOrEmpty(request.Iban))
-                sw.WriteLine("Iban : " + request.Iban);
+            {
+                _log.Debug($"Th={threadId} - Iban : {request.Iban}");
+            }
             else
-                sw.WriteLine("Iban is missing");
+            {
+                _log.Warn($"Th={threadId} - Iban is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.Bic))
+            //    sw.WriteLine("Bic : " + request.Bic);
+            //else
+            //    sw.WriteLine("Bic is missing");
 
             if (!string.IsNullOrEmpty(request.Bic))
-                sw.WriteLine("Bic : " + request.Bic);
+            {
+                _log.Debug($"Th={threadId} - Bic : {request.Bic}");
+            }
             else
-                sw.WriteLine("Bic is missing");
+            {
+                _log.Warn($"Th={threadId} - Bic is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.CustomerSocialSecurityNumber))
+            //    sw.WriteLine("CustomerSocialSecurityNumber : " + request.CustomerSocialSecurityNumber);
+            //else
+            //    sw.WriteLine("CustomerSocialSecurityNumber is missing");
 
             if (!string.IsNullOrEmpty(request.CustomerSocialSecurityNumber))
-                sw.WriteLine("CustomerSocialSecurityNumber : " + request.CustomerSocialSecurityNumber);
+            {
+                _log.Debug($"Th={threadId} - CustomerSocialSecurityNumber : {request.CustomerSocialSecurityNumber}");
+            }
             else
-                sw.WriteLine("CustomerSocialSecurityNumber is missing");
+            {
+                _log.Warn($"Th={threadId} - CustomerSocialSecurityNumber is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.CustomerAddress1Line1))
+            //    sw.WriteLine("CustomerAddress1Line1 : " + request.CustomerAddress1Line1);
+            //else
+            //    sw.WriteLine("CustomerAddress1Line1 is missing");
 
             if (!string.IsNullOrEmpty(request.CustomerAddress1Line1))
-                sw.WriteLine("CustomerAddress1Line1 : " + request.CustomerAddress1Line1);
+            {
+                _log.Debug($"Th={threadId} - CustomerAddress1Line1 : {request.CustomerAddress1Line1}");
+            }
             else
-                sw.WriteLine("CustomerAddress1Line1 is missing");
+            {
+                _log.Warn($"Th={threadId} - CustomerAddress1Line1 is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.CustomerAddress1Line2))
+            //    sw.WriteLine("CustomerAddress1Line2 : " + request.CustomerAddress1Line2);
+            //else
+            //    sw.WriteLine("CustomerAddress1Line2 is missing");
 
             if (!string.IsNullOrEmpty(request.CustomerAddress1Line2))
-                sw.WriteLine("CustomerAddress1Line2 : " + request.CustomerAddress1Line2);
+            {
+                _log.Debug($"Th={threadId} - CustomerAddress1Line2 : {request.CustomerAddress1Line2}");
+            }
             else
-                sw.WriteLine("CustomerAddress1Line2 is missing");
+            {
+                _log.Warn($"Th={threadId} - CustomerAddress1Line2 is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.CustomerAddress1Postalcode))
+            //    sw.WriteLine("CustomerAddress1Postalcode : " + request.CustomerAddress1Postalcode);
+            //else
+            //    sw.WriteLine("CustomerAddress1Postalcode is missing");
 
             if (!string.IsNullOrEmpty(request.CustomerAddress1Postalcode))
-                sw.WriteLine("CustomerAddress1Postalcode : " + request.CustomerAddress1Postalcode);
+            {
+                _log.Debug($"Th={threadId} - CustomerAddress1Postalcode : {request.CustomerAddress1Postalcode}");
+            }
             else
-                sw.WriteLine("CustomerAddress1Postalcode is missing");
+            {
+                _log.Warn($"Th={threadId} - CustomerAddress1Postalcode is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.CustomerAddress1City))
+            //    sw.WriteLine("CustomerAddress1City : " + request.CustomerAddress1City);
+            //else
+            //    sw.WriteLine("CustomerAddress1City is missing");
 
             if (!string.IsNullOrEmpty(request.CustomerAddress1City))
-                sw.WriteLine("CustomerAddress1City : " + request.CustomerAddress1City);
+            {
+                _log.Debug($"Th={threadId} - CustomerAddress1City : {request.CustomerAddress1City}");
+            }
             else
-                sw.WriteLine("CustomerAddress1City is missing");
+            {
+                _log.Warn($"Th={threadId} - CustomerAddress1City is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.CustomerAddress1Country))
+            //    sw.WriteLine("CustomerAddress1Country : " + request.CustomerAddress1Country);
+            //else
+            //    sw.WriteLine("CustomerAddress1Country is missing");
 
             if (!string.IsNullOrEmpty(request.CustomerAddress1Country))
-                sw.WriteLine("CustomerAddress1Country : " + request.CustomerAddress1Country);
+            {
+                _log.Debug($"Th={threadId} - CustomerAddress1Country : {request.CustomerAddress1Country}");
+            }
             else
-                sw.WriteLine("CustomerAddress1Country is missing");
+            {
+                _log.Warn($"Th={threadId} - CustomerAddress1Country is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.CustomerTelephonenumber))
+            //    sw.WriteLine("CustomerTelephonenumber : " + request.CustomerTelephonenumber);
+            //else
+            //    sw.WriteLine("CustomerTelephonenumber is missing");
 
             if (!string.IsNullOrEmpty(request.CustomerTelephonenumber))
-                sw.WriteLine("CustomerTelephonenumber : " + request.CustomerTelephonenumber);
+            {
+                _log.Debug($"Th={threadId} - CustomerTelephonenumber : {request.CustomerTelephonenumber}");
+            }
             else
-                sw.WriteLine("CustomerTelephonenumber is missing");
+            {
+                _log.Warn($"Th={threadId} - CustomerTelephonenumber is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.CustomerFirstName))
+            //    sw.WriteLine("CustomerFirstName : " + request.CustomerFirstName);
+            //else
+            //    sw.WriteLine("CustomerFirstName is missing");
 
             if (!string.IsNullOrEmpty(request.CustomerFirstName))
-                sw.WriteLine("CustomerFirstName : " + request.CustomerFirstName);
+            {
+                _log.Debug($"Th={threadId} - CustomerFirstName : {request.CustomerFirstName}");
+            }
             else
-                sw.WriteLine("CustomerFirstName is missing");
+            {
+                _log.Warn($"Th={threadId} - CustomerFirstName is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.CustomerLastName))
+            //    sw.WriteLine("CustomerLastName : " + request.CustomerLastName);
+            //else
+            //    sw.WriteLine("CustomerLastName is missing");
 
             if (!string.IsNullOrEmpty(request.CustomerLastName))
-                sw.WriteLine("CustomerLastName : " + request.CustomerLastName);
+            {
+                _log.Debug($"Th={threadId} - CustomerLastName : {request.CustomerLastName}");
+            }
             else
-                sw.WriteLine("CustomerLastName is missing");
+            {
+                _log.Warn($"Th={threadId} - CustomerLastName is missing");
+            }
 
-            sw.Flush();
-            sw.Close();
+            _log.Info($"Th={threadId} - ===================== Finished Checking Parameters. =====================");
+            //sw.Flush();
+            //sw.Close();
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="request"></param>
-        private void CreateLogFile(CreateCaseRequest request)
+        private void CreateLogFile(int threadId, CreateCaseRequest request)
         {
             if (request == null) return;
-            var sw = new StreamWriter("E:\\Logs\\CRM\\CGIXrmCreateCaseService\\RequestCreateCase_Log\\CreateLogFile_Log.txt", true);
-            sw.WriteLine("======================================================================================================================");
-            sw.WriteLine(DateTime.Now.ToString(CultureInfo.InvariantCulture));
+            //var sw = new StreamWriter("E:\\Logs\\CRM\\CGIXrmCreateCaseService\\RequestCreateCase_Log\\CreateLogFile_Log.txt", true);
+            //sw.WriteLine("======================================================================================================================");
+            //sw.WriteLine(DateTime.Now.ToString(CultureInfo.InvariantCulture));
+
+            _log.Info($"Th={threadId} - ===================== Checking Missing Parameters. =====================");
+            
+            //if (!string.IsNullOrEmpty(request.CustomersCategory))
+            //    sw.WriteLine("CustomersCategory : " + request.CustomersCategory);
+
+            //else
+            //    sw.WriteLine("CustomersCategory is missing");
 
             if (!string.IsNullOrEmpty(request.CustomersCategory))
-                sw.WriteLine("CustomersCategory : " + request.CustomersCategory);
+            {
+                _log.Debug($"Th={threadId} - CustomersCategory : {request.CustomersCategory}");
+            }
             else
-                sw.WriteLine("CustomersCategory is missing");
+            {
+                _log.Warn($"Th={threadId} - CustomersCategory is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.CustomersSubcategory))
+            //    sw.WriteLine("CustomersSubcategory : " + request.CustomersSubcategory);
+            //else
+            //    sw.WriteLine("CustomersSubcategory is missing");
 
             if (!string.IsNullOrEmpty(request.CustomersSubcategory))
-                sw.WriteLine("CustomersSubcategory : " + request.CustomersSubcategory);
+            {
+                _log.Debug($"Th={threadId} - CustomersSubcategory : {request.CustomersSubcategory}");
+            }
             else
-                sw.WriteLine("CustomersSubcategory is missing");
+            {
+                _log.Warn($"Th={threadId} - CustomersSubcategory is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.Title))
+            //    sw.WriteLine("Title : " + request.Title);
+            //else
+            //    sw.WriteLine("Title is missing");
 
             if (!string.IsNullOrEmpty(request.Title))
-                sw.WriteLine("Title : " + request.Title);
+            {
+                _log.Debug($"Title : {request.Title}");
+            }
             else
-                sw.WriteLine("Title is missing");
+            {
+                _log.Warn($"Th={threadId} - Title is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.Description))
+            //    sw.WriteLine("Description : " + request.Description);
+            //else
+            //    sw.WriteLine("Description is missing");
 
             if (!string.IsNullOrEmpty(request.Description))
-                sw.WriteLine("Description : " + request.Description);
+            {
+                _log.Debug($"Th={threadId} - Description : {request.Description}");
+            }
             else
-                sw.WriteLine("Description is missing");
+            {
+                _log.Warn($"Th={threadId} - Description is missing");
+            }
+
+            //if (request.Customer != null && request.Customer != Guid.Empty)
+            //    sw.WriteLine("Customer : " + request.Customer);
+            //else
+            //    sw.WriteLine("Customer is missing");
 
             if (request.Customer != null && request.Customer != Guid.Empty)
-                sw.WriteLine("Customer : " + request.Customer);
+            {
+                _log.Debug($"Th={threadId} - Customer : {request.Customer}");
+            }
             else
-                sw.WriteLine("Customer is missing");
+            {
+                _log.Warn($"Th={threadId} - Customer is missing");
+            }
 
             switch (request.CustomerType)
             {
                 case CustomerType.Private:
-                    sw.WriteLine("Customer : Private");
+                    //sw.WriteLine("Customer : Private");
+                    _log.Debug($"Th={threadId} - Customer : Private");
                     break;
                 case CustomerType.Organisation:
-                    sw.WriteLine("Customer : Organisation");
+                    //sw.WriteLine("Customer : Organisation");
+                    _log.Debug($"Th={threadId} - Customer : Organisation");
                     break;
                 default:
-                    sw.WriteLine("Customer is missing");
+                    //sw.WriteLine("Customer is missing");
+                    _log.Warn($"Th={threadId} - CustomerType is missing");
                     break;
             }
 
-            if (!string.IsNullOrEmpty(request.InvoiceNumber))
-                sw.WriteLine("InvoiceNumber : " + request.InvoiceNumber);
-            else
-                sw.WriteLine("InvoiceNumber is missing");
+            //if (!string.IsNullOrEmpty(request.InvoiceNumber))
+            //    sw.WriteLine("InvoiceNumber : " + request.InvoiceNumber);
+            //else
+            //    sw.WriteLine("InvoiceNumber is missing");
 
-            if (!string.IsNullOrEmpty(request.ControlFeeNumber))
-                sw.WriteLine("ControlFeeNumber : " + request.ControlFeeNumber);
+            if (!string.IsNullOrEmpty(request.InvoiceNumber))
+            {
+                _log.Debug($"Th={threadId} - InvoiceNumber : {request.InvoiceNumber}");
+            }
             else
-                sw.WriteLine("ControlFeeNumber is missing");
+            {
+                _log.Warn($"Th={threadId} - InvoiceNumber is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.ControlFeeNumber))
+            //    sw.WriteLine("ControlFeeNumber : " + request.ControlFeeNumber);
+            //else
+            //    sw.WriteLine("ControlFeeNumber is missing");
+
+            if (!string.IsNullOrEmpty(request.InvoiceNumber))
+            {
+                _log.Debug($"Th={threadId} - InvoiceNumber : {request.InvoiceNumber}");
+            }
+            else
+            {
+                _log.Warn($"Th={threadId} - InvoiceNumber is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.CardNumber))
+            //    sw.WriteLine("CardNumber : " + request.CardNumber);
+            //else
+            //    sw.WriteLine("CardNumber is missing");
 
             if (!string.IsNullOrEmpty(request.CardNumber))
-                sw.WriteLine("CardNumber : " + request.CardNumber);
+            {
+                _log.Debug($"Th={threadId} - CardNumber : {request.CardNumber}");
+            }
             else
-                sw.WriteLine("CardNumber is missing");
+            {
+                _log.Warn($"Th={threadId} - CardNumber is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.WayOfTravel))
+            //    sw.WriteLine("WayOfTravel : " + request.WayOfTravel);
+            //else
+            //    sw.WriteLine("WayOfTravel is missing");
 
             if (!string.IsNullOrEmpty(request.WayOfTravel))
-                sw.WriteLine("WayOfTravel : " + request.WayOfTravel);
+            {
+                _log.Debug($"Th={threadId} - WayOfTravel : {request.WayOfTravel}");
+            }
             else
-                sw.WriteLine("WayOfTravel is missing");
+            {
+                _log.Warn($"Th={threadId} - WayOfTravel is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.Line))
+            //    sw.WriteLine("Line : " + request.Line);
+            //else
+            //    sw.WriteLine("Line is missing");
 
             if (!string.IsNullOrEmpty(request.Line))
-                sw.WriteLine("Line : " + request.Line);
+            {
+                _log.Debug($"Th={threadId} - Line : {request.Line}");
+            }
             else
-                sw.WriteLine("Line is missing");
+            {
+                _log.Warn($"Th={threadId} - Line is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.City))
+            //    sw.WriteLine("City : " + request.City);
+            //else
+            //    sw.WriteLine("City is missing");
 
             if (!string.IsNullOrEmpty(request.City))
-                sw.WriteLine("City : " + request.City);
+            {
+                _log.Debug($"Th={threadId} - City : {request.City}");
+            }
             else
-                sw.WriteLine("City is missing");
+            {
+                _log.Warn($"Th={threadId} - City is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.Train))
+            //    sw.WriteLine("Train : " + request.Train);
+            //else
+            //    sw.WriteLine("Train is missing");
 
             if (!string.IsNullOrEmpty(request.Train))
-                sw.WriteLine("Train : " + request.Train);
+            {
+                _log.Debug($"Th={threadId} - Train : {request.Train}");
+            }
             else
-                sw.WriteLine("Train is missing");
+            {
+                _log.Warn($"Th={threadId} - Train is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.County))
+            //    sw.WriteLine("County : " + request.County);
+            //else
+            //    sw.WriteLine("County is missing");
 
             if (!string.IsNullOrEmpty(request.County))
-                sw.WriteLine("County : " + request.County);
+            {
+                _log.Debug($"Th={threadId} - County : {request.County}");
+            }
             else
-                sw.WriteLine("County is missing");
+            {
+                _log.Warn($"Th={threadId} - County is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.FirstName))
+            //    sw.WriteLine("firstName : " + request.FirstName);
+            //else
+            //    sw.WriteLine("firstName is missing");
 
             if (!string.IsNullOrEmpty(request.FirstName))
-                sw.WriteLine("firstName : " + request.FirstName);
+            {
+                _log.Debug($"Th={threadId} - FirstName : {request.FirstName}");
+            }
             else
-                sw.WriteLine("firstName is missing");
+            {
+                _log.Warn($"Th={threadId} - FirstName is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.LastName))
+            //    sw.WriteLine("lastName : " + request.LastName);
+            //else
+            //    sw.WriteLine("lastName is missing");
 
             if (!string.IsNullOrEmpty(request.LastName))
-                sw.WriteLine("lastName : " + request.LastName);
+            {
+                _log.Debug($"Th={threadId} - LastName : {request.LastName}");
+            }
             else
-                sw.WriteLine("lastName is missing");
+            {
+                _log.Warn($"Th={threadId} - LastName is missing");
+            }
+
+            //if (!string.IsNullOrEmpty(request.EmailAddress))
+            //    sw.WriteLine("emailAddress : " + request.EmailAddress);
+            //else
+            //    sw.WriteLine("emailAddress is missing");
 
             if (!string.IsNullOrEmpty(request.EmailAddress))
-                sw.WriteLine("emailAddress : " + request.EmailAddress);
+            {
+                _log.Debug($"Th={threadId} - EmailAddress : {request.EmailAddress}");
+            }
             else
-                sw.WriteLine("emailAddress is missing");
+            {
+                _log.Warn($"Th={threadId} - EmailAddress is missing");
+            }
 
             switch (request.ContactCustomer)
             {
                 case true:
-                    sw.WriteLine("ContactCustomer : true");
+                    //sw.WriteLine("ContactCustomer : true");
+                    _log.Debug($"Th={threadId} - ContactCustomer : true");
                     break;
                 case false:
-                    sw.WriteLine("ContactCustomer : false");
+                    //sw.WriteLine("ContactCustomer : false");
+                    _log.Debug($"Th={threadId} - ContactCustomer : false");
                     break;
                 default:
-                    sw.WriteLine("ContactCustomer is missing");
+                    //sw.WriteLine("ContactCustomer is missing");
+                    _log.Warn($"Th={threadId} - ContactCustomer is missing");
                     break;
             }
 
@@ -2564,29 +3170,41 @@ namespace CGIXrmCreateCaseService.Case
                 foreach (var link in request.FileLinks)
                 {
                     if (link.Url != null && link.Url != "")
-                        sw.WriteLine("FileLink.Url : " + link.Url);
+                    {
+                        //sw.WriteLine("FileLink.Url : " + link.Url);
+                        _log.Debug($"Th={threadId} - FileLink.Url : {link.Url}");
+                    }
                     else if (link.Url == null)
-                        sw.WriteLine("FileLink.Url is null");
-                    else
-                        sw.WriteLine("FileLink.Url is empty");
+                    {
+                        //sw.WriteLine("FileLink.Url is null");
+                        _log.Debug($"Th={threadId} - FileLink.Url is null");
+                    }
+                    else 
+                    {
+                        //sw.WriteLine("FileLink.Url is empty");
+                        _log.Debug($"Th={threadId} - FileLink.Url is empty");
+                    }
                 }
             }
             else if (request.FileLinks == null)
             {
-                sw.WriteLine("FileLinks list is null");
+                //sw.WriteLine("FileLinks list is null");
+                _log.Debug($"Th={threadId} - FileLinks list is null");
             }
             else if (request.FileLinks.Count <= 0)
             {
-                sw.WriteLine("FileLinks.Count <= 0");
+                //sw.WriteLine("FileLinks.Count <= 0");
+                _log.Debug($"Th={threadId} - FileLinks.Count <= 0");
             }
             else
             {
-                sw.WriteLine("Unexpected value in FileLinks");
+                //sw.WriteLine("Unexpected value in FileLinks");
+                _log.Debug($"Th={threadId} - Unexpected value in FileLinks");
             }
 
-
-            sw.Flush();
-            sw.Close();
+            _log.Info($"Th={threadId} - ===================== Finished Checking Parameters. =====================");
+            //sw.Flush();
+            //sw.Close();
         }
 
 
@@ -2964,9 +3582,10 @@ namespace CGIXrmCreateCaseService.Case
 
 
         //Create Incident from web.
-        internal void RequestCreateCase(CreateCaseRequest request)
+        internal void RequestCreateCase(int threadId, CreateCaseRequest request)
         {
-            CreateLogFile(request);
+            _log.Info($"Th={threadId} - Entered {nameof(RouteIncidentToRgolQueue)}");
+            CreateLogFile(threadId, request);
             Account account = null;
             try
             {
@@ -3088,11 +3707,15 @@ namespace CGIXrmCreateCaseService.Case
                 {
                     CreateFileLink(fileLink, incidentId);
                 }
+                _log.Info($"Th={threadId} - Exeting {nameof(RouteIncidentToRgolQueue)}");
             }
             catch (Exception ex)
             {
                 if (ex.Message != null)
-                    _log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
+                {
+                    //_log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
+                    _log.Error($"Th={threadId} - Exception {ex.Message}, inner:{ex.InnerException.Message}");
+                }
 
                 throw ex;
             }
@@ -3103,13 +3726,13 @@ namespace CGIXrmCreateCaseService.Case
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        internal AutoRgCaseResponse RequestCreateAutoRgCase(AutoRgCaseRequest request)
+        internal AutoRgCaseResponse RequestCreateAutoRgCase(int threadId, AutoRgCaseRequest request)
         {
             // Do debug-tracing. Johan Endeavor
-            CreateLogFileAutoRGCase(request);
-
-            //_log.Debug(string.Format("============================================"));
-            _log.Debug(string.Format("Entered RequestCreateAutoRgCase"));
+            //_log.Debug(string.Format("Entered RequestCreateAutoRgCase"));
+            _log.Info($"Th={threadId} - Entered {nameof(RequestCreateAutoRgCase)}");
+            CreateLogFileAutoRGCase(threadId, request);
+            
 
             var response = new AutoRgCaseResponse()
             {
@@ -3190,9 +3813,13 @@ namespace CGIXrmCreateCaseService.Case
                 //    _log.Debug(string.Format("Fel vid skapande av contact: " + faultex.Message));
                 //    //LogMessage(_logLocation, string.Format("Fel vid skapande av contact: " + faultex.Message));
                 //}
-                _log.Debug(string.Format("Fel vid skapande av contact: " + faultex.Message));
+                //_log.Debug(string.Format("Fel vid skapande av contact: " + faultex.Message));
+                _log.Debug($"Th={threadId} - Fel vid skapande av contact: {faultex.Message}");
                 if (faultex.Message != null)
-                    _log.Error(string.Format("Exception {0}, inner:{1}", faultex.Message, faultex.InnerException.Message));
+                {
+                    //_log.Error(string.Format("Exception {0}, inner:{1}", faultex.Message, faultex.InnerException.Message));
+                    _log.Error($"Th={threadId} - Exception {faultex.Message}, inner:{faultex.InnerException.Message}");
+                }
 
                 response.CaseId = Guid.Empty;
                 response.ErrorMessage = faultex.Message;
@@ -3200,7 +3827,10 @@ namespace CGIXrmCreateCaseService.Case
             catch (Exception ex)
             {
                 if (ex.Message != null)
-                    _log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
+                {
+                    //_log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
+                    _log.Error($"Th={threadId} - Exception {ex.Message}, inner:{ex.InnerException.Message}");
+                }
 
                 response.CaseId = Guid.Empty;
                 response.ErrorMessage = ex.Message;

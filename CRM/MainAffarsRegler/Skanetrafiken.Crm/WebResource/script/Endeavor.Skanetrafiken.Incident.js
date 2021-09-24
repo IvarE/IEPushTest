@@ -119,6 +119,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             var formContext = executionContext.getFormContext();
 
             Endeavor.Skanetrafiken.Incident.setVisibilityOnLoad(formContext);
+            Endeavor.Skanetrafiken.Incident.setDefaultOnCreate(formContext);
 
             switch (formContext.ui.getFormType()) {
                 case FORM_TYPE_CREATE:
@@ -139,7 +140,6 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     alert("Form type error!");
                     break;
             }
-
         },
 
         onSave: function (executionContext) {
@@ -157,8 +157,6 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
             if (_cgi_contactid != null)
                 Endeavor.Skanetrafiken.Incident.setCustomerFromContact(formContext);
-
-            Endeavor.Skanetrafiken.Incident.setDefaultOnCreate(formContext);
         },
 
         onLoadHideShowTypeOfContactFields: function (executionContext) {
@@ -1457,7 +1455,138 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Incident.chechIfAnyFieldIsDirty\n\n" + e.message);
             }
-        }
+        },
 
+        onGridFileLinkRecordSelect: function (executionContext) {
+
+            try {
+                debugger;
+                //DevOps 9168: Apply changes to the links in the section.
+                var formContext = executionContext.getFormContext();
+                var disableFields = ["cgi_url"];
+                Endeavor.Skanetrafiken.Incident.lockFields(executionContext, disableFields);
+
+                //Halndle when there are multiple selected
+                if (confirm("Vill du öppna/hämta denna fil?") == true) {
+                    debugger;
+                    var gridData = formContext.getData();
+                    if (gridData != null && gridData != undefined && gridData.entity != null && gridData.entity != undefined) {
+                        var gridAttributes = gridData.entity.attributes;
+                        if (gridAttributes != null && gridAttributes != undefined) {
+                            var gridAtr = gridAttributes.getAll();
+                            if (gridAtr != null && gridAtr != undefined && gridAtr.length > 0) {
+
+                                //String with the link
+                                var encryptedLink = gridAtr[0].getValue();
+
+                                alert(encryptedLink);
+                                parent.Xrm.Page.getControl("FileLinks").refresh();
+
+                                parent.Xrm.Page.ui.setFormNotification("Hämtar fil...", "INFO", "attachmentInfo");
+
+                                parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+
+                                //Display file from opened resource:
+                                var windowOptions = { height: 1200, width: 600 };
+                                Xrm.Navigation.openWebResource("ed_/html/Endeavor.Skanetrafiken.DisplayCaseAttachment.html", windowOptions, encryptedLink);
+
+                                //var inputParameters = [{ "Field": "EncryptedString", "Value": encryptedLink, "TypeName": "Edm.String", "StructuralProperty": 1 }];
+
+                                //debugger;
+                                //Endeavor.Skanetrafiken.Incident.callGlobalAction("ed_DecryptAttachmentFile", inputParameters,
+                                //    function (result) {
+                                //        debugger;
+                                //        if (result != null && result != "undefined") {
+                                //            console.log("Result: " + result.responseText);
+                                //        }
+
+                                //        var parsedResult = JSON.parse(result.responseText);
+
+                                //        if (parsedResult.Result.startsWith("200")) {
+
+                                //            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+                                //        }
+                                //        else {
+
+                                //            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+                                            
+                                //        }
+                                //    },
+                                //    function (e) {
+                                //        // Error
+                                //        parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+
+                                //        var confirmationAttachment = confirm("Filen kunde ej hämtas. Execution returned: " + e.message);
+
+                                //        if (confirmationAttachment) {
+                                //            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+                                //        }
+                                //        else {
+                                //            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+                                //        }
+
+                                //        if (window.console && console.error)
+                                //            console.error(e.message + "\n" + t);
+                                //    });
+                            }
+                        }
+                    }
+                }
+
+                //Refresh grid
+                parent.Xrm.Page.getControl("FileLinks").refresh();
+            }
+            catch (e) {
+                parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+                alert("Fel i Endeavor.Skanetrafiken.Incident.onGridFileLinkRecordSelect\n\n" + e.message);
+            }
+        },
+
+        lockFields: function (executionContext, disableFields) {
+
+            try {
+                debugger;
+                var formContext = executionContext.getFormContext();
+                var currentEntity = formContext.data.entity;
+                currentEntity.attributes.forEach(function (attribute, i) {
+                    if (disableFields.indexOf(attribute.getName()) > -1) {
+                        var attributeToDisable = attribute.controls.get(0);
+                        attributeToDisable.setDisabled(true);
+                    }
+                });
+            }
+            catch (e) {
+                alert("Fel i Endeavor.Skanetrafiken.Incident.lockFields\n\n" + e.message);
+            }
+        },
+
+        callGlobalAction: function (actionName, inputParameters, sucessCallback, errorCallback) {
+
+            var req = {};
+
+            var parameterTypes = {};
+            if (inputParameters != null)
+                for (var i = 0; i < inputParameters.length; i++) {
+                    var parameter = inputParameters[i];
+
+                    req[parameter.Field] = parameter.Value;
+                    parameterTypes[parameter.Field] = { "typeName": parameter.TypeName, "structuralProperty": parameter.StructuralProperty };
+                }
+
+            req.getMetadata = function () {
+
+                return {
+                    boundParameter: null,
+                    parameterTypes: parameterTypes,
+                    operationType: 0,
+                    operationName: actionName
+                };
+            };
+
+            if (typeof (Xrm) == "undefined")
+                Xrm = parent.Xrm;
+
+            Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
+        }
     };
 }

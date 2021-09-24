@@ -57,9 +57,9 @@ if (typeof (Endeavor.Skanetrafiken.Slots) == "undefined") {
             }
         },
 
-        getExcelData: function (inputParameters) {
+        getExcelData: function (Xrm, inputParameters) {
             debugger;
-            Endeavor.formscriptfunctions.callGlobalAction("ed_GetExcelDatafromSlots", inputParameters,
+            Endeavor.formscriptfunctions.callGlobalActionRibbon(Xrm, "ed_GetExcelDatafromSlots", inputParameters,
 
                 function (result) {
                     if (result.responseText != null && result.responseText != "undefined" && result.responseText != "") {
@@ -87,9 +87,11 @@ if (typeof (Endeavor.Skanetrafiken.Slots) == "undefined") {
                 });
         },
 
+
+        //-----------------------------RIBBON METHODS-------------------------------------------------------------
         onClickExportSlots: function () {
             debugger;
-            var windowOptions = { height: 800, width: 800 };
+            var windowOptions = { height: 350, width: 650 };
             Xrm.Navigation.openWebResource("ed_/html/Endeavor.Skanetrafiken.SlotsExcelExport.html", windowOptions);
         }
     };
