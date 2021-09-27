@@ -59,11 +59,11 @@ namespace Skanetrafiken.Crm
             }
         }
 
-        public static string ExecuteCodeActivity(Plugin.LocalPluginContext localContext, string encryptString, Guid? userGuid)
+        public static string ExecuteCodeActivity(Plugin.LocalPluginContext localContext, string fileName, Guid? userGuid)
         {
             localContext.Trace($"(ExecuteCodeActivity) started.");
 
-            return IncidentEntity.HandleDecryptAttachment(localContext, encryptString, userGuid);
+            return IncidentEntity.HandleDecryptAttachment(localContext, fileName, userGuid);
         }
     }
 }

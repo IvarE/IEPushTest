@@ -30,8 +30,90 @@
 
                     parameterData: "",
 
-                    getDataParam: function () {
+                    callGlobalAction: function (actionName, inputParameters, sucessCallback, errorCallback) {
+
+                        var req = {};
+
+                        var parameterTypes = {};
+                        if (inputParameters != null)
+                            for (var i = 0; i < inputParameters.length; i++) {
+                                var parameter = inputParameters[i];
+
+                                req[parameter.Field] = parameter.Value;
+                                parameterTypes[parameter.Field] = { "typeName": parameter.TypeName, "structuralProperty": parameter.StructuralProperty };
+                            }
+
+                        req.getMetadata = function () {
+
+                            return {
+                                boundParameter: null,
+                                parameterTypes: parameterTypes,
+                                operationType: 0,
+                                operationName: actionName
+                            };
+                        };
+
+                        if (typeof (Xrm) == "undefined")
+                            Xrm = parent.Xrm;
+
+                        //Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
+                        parent.Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
+                    },
+
+                    displayImage: function ()
+                    {
                         debugger;
+
+                        var fileLink = "";
+                        var fileLinkArray = Endeavor.Skanetrafiken.DisplayCaseAttachment.parameterData;
+                        if (fileLinkArray.length > 0) {
+                            fileLink = fileLinkArray[0].replace(/%3a/g, ":").replace(/%2f/g, "/");
+
+                            var fileName = fileLink.split("https://").pop();
+                            var fileExtention = fileLink.split(".").pop();
+
+                            var inputParameters = [{ "Field": "EncryptedString", "Value": fileName, "TypeName": "Edm.String", "StructuralProperty": 1 }];
+
+                            Endeavor.Skanetrafiken.DisplayCaseAttachment.callGlobalAction("ed_DecryptAttachmentFile", inputParameters,
+                                function (result) {
+                                    debugger;
+                                    if (result != null && result != "undefined") {
+                                        console.log("Result: " + result.responseText);
+                                    }
+
+                                    var parsedResult = JSON.parse(result.responseText);
+                                    if (parsedResult.Result != undefined && parsedResult.Result != "") {
+                                        var sourceString = "data:image/" + fileExtention + ";base64," + parsedResult.Result;
+                                        //var sourceString = "data:image/jpg;base64," + parsedResult.Result
+                                        var img = document.querySelector("#imageID");
+                                        img.src = sourceString;
+                                    }
+                                },
+                                function (e) {
+                                    // Error
+                                    debugger;
+                                    parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+
+                                    var confirmationAttachment = confirm("Filen kunde ej hämtas. Execution returned: " + e.message);
+
+                                    if (confirmationAttachment) {
+                                        parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+                                    }
+                                    else {
+                                        parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+                                    }
+
+                                    if (window.console && console.error)
+                                        console.error(e.message + "\n" + t);
+                                });
+                        }
+                        else
+                        {
+                            alert("Bilden gick inte att visas/hämtas!");
+                        }
+                    },
+
+                    getDataParam: function () {
 
                         var vals = new Array();
                         if (location.search != "") {
@@ -41,16 +123,14 @@
                             }
                             //look for the parameter named 'data'
                             for (var i in vals) {
-                                debugger;
                                 if (vals[i][0].toLowerCase() == "data") {
-                                    parameterData = decodeURI(vals[i][1]).split("%3b");
+                                    Endeavor.Skanetrafiken.DisplayCaseAttachment.parameterData = decodeURI(vals[i][1]).split("%3b");
                                     break;
                                 }
                             }
                         }
 
-                        debugger;
-                        alert(parameterData);
+                        Endeavor.Skanetrafiken.DisplayCaseAttachment.displayImage();
                     },
                 };
             }
@@ -58,6 +138,8 @@
 
     </head>
     <body style="zoom: 1; word-wrap: break-word;">
-        <div style="width: 100px;" id="imagediv"></div>
+        <div style="width: 1190px;" id="imagediv">
+            <img id="imageID" />
+        </div>
     </body>
 </html>
