@@ -168,19 +168,11 @@ namespace Skanetrafiken.Crm.Controllers
                 if (imageByteArray?.Length > 0)
                 {
                     _log.Warn($"Th={threadId} - GetAttachmentFromAzure: imageByteArray greater than 0!");
-                    //string testReturnString = HttpServerUtility.UrlTokenEncode(testContent);
                     string imageBase64String = Convert.ToBase64String(imageByteArray);
 
                     _log.Warn($"Th={threadId} - GetAttachmentFromAzure: imageByteArray gconverted to Base64 String!");
                     rm.StatusCode = HttpStatusCode.OK;
                     rm.Content = new StringContent(imageBase64String);
-                    //rm.Content = new ByteArrayContent(testContent);
-                    //rm.Content.Headers.ContentLength = testContent.Length;
-                    //rm.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpg");
-                    //rm.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("inline")
-                    //{
-                    //    FileName = String.Format("ef05fe16-0f9d-43d8-909e-6c64f6394aac")
-                    //};
                 }
                 else 
                 {
@@ -211,9 +203,8 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
-                ex.ToString();
                 rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.InnerException?.Message));
                 _log.Error($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 return rm;
             }

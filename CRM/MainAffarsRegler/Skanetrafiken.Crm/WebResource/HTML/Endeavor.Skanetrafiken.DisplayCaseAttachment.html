@@ -68,9 +68,11 @@
                         var fileLinkArray = Endeavor.Skanetrafiken.DisplayCaseAttachment.parameterData;
                         if (fileLinkArray.length > 0) {
                             fileLink = fileLinkArray[0].replace(/%3a/g, ":").replace(/%2f/g, "/");
-
+                            console.log("FileLink: " + fileLink);
                             var fileName = fileLink.split("https://").pop();
+                            console.log("FileName: " + fileName);
                             var fileExtention = fileLink.split(".").pop();
+                            console.log("FileExtention: " + fileExtention);
 
                             var inputParameters = [{ "Field": "EncryptedString", "Value": fileName, "TypeName": "Edm.String", "StructuralProperty": 1 }];
 
@@ -83,10 +85,22 @@
 
                                     var parsedResult = JSON.parse(result.responseText);
                                     if (parsedResult.Result != undefined && parsedResult.Result != "") {
-                                        var sourceString = "data:image/" + fileExtention + ";base64," + parsedResult.Result;
-                                        //var sourceString = "data:image/jpg;base64," + parsedResult.Result
-                                        var img = document.querySelector("#imageID");
-                                        img.src = sourceString;
+
+                                        if (parsedResult.Result.startsWith("Kunde inte Hämta filen")) {
+                                            var confirmaError = confirm(parsedResult.Result);
+                                            if (confirmaError) {
+                                                window.close();
+                                            }
+                                            else {
+                                                window.close();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            var sourceString = "data:image/" + fileExtention + ";base64," + parsedResult.Result;
+                                            var img = document.querySelector("#imageID");
+                                            img.src = sourceString;
+                                        }
                                     }
                                 },
                                 function (e) {

@@ -55,7 +55,7 @@ namespace Skanetrafiken.Crm
             }
             catch (Exception ex)
             {
-                DecryptedResponse.Set(activityContext, $"Kunde inte Hämta filen. Vänligen försök igen eller kontakta kundtjänst. (DecryptAttachmentFile) Error : { ex.Message }");
+                DecryptedResponse.Set(activityContext, $"Kunde inte hämta filen. Vänligen försök igen eller kontakta kundtjänst. (DecryptAttachmentFile) Error : { ex.Message }");
             }
         }
 
