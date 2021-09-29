@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="TicketInfoView-SingaporeTickets-Prod"
   DTS:PackageType="5"
-  DTS:VersionBuild="57"
-  DTS:VersionGUID="{E0C36651-AAEC-4403-9545-0DE599BC9297}">
+  DTS:VersionBuild="60"
+  DTS:VersionGUID="{CFC722AB-9537-4F36-BEFF-CADEF3CB6144}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAACWqXtIafm0iZII3jfSA9igAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABshpILuqU44/xv2lHKs1T+AAAAAASAAACgAAAAEAAAAMF53VbOeXDhq2o6kq7Io/cgAAAAUIWeQwW6y8tykdEK+RiBTi5RzP/eFHn4nK64leTB5IcUAAAA2BxM9vGtgLSoX+c2kwK7W5MHpv0</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAACWqXtIafm0iZII3jfSA9igAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAD9f45BHlFTcx7baMTC875KAAAAAASAAACgAAAAEAAAANqr6buz8SmJD/ivIL3qkZEgAAAAwOZUMnqqMU4SfcwQMMQyGQgFMdwLBJHe685Zbmk/ufMUAAAAoQI7Fc8D8iZUaq0y3awG1TPplpw</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -42,7 +42,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAACWqXtIafm0iZII3jfSA9igAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABFjZ6G3C0OJP0CpOa+Zyl6AAAAAASAAACgAAAAEAAAAKg83M+x7o+2VpyuXQmfTCsgAAAAcM27pXnXNVmmCHaKIGxEstSFyqR3Ryo10NJUFK9MmbcUAAAAZFLNFbOzsmT8ONOn6epitpiM7Xc</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAACWqXtIafm0iZII3jfSA9igAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACjpgYX/eg0BiIz1F6/YV2RAAAAAASAAACgAAAAEAAAAGUQQR86/ujkuMyW/DH/OiggAAAAxtu+dNM6rIXQvCF1zpe6M/C3rsvtVO+ePWLcPTxiF/UUAAAA4uMRQYcrBX3SLJDsWwo1IUouAWs</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -57,7 +57,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAACWqXtIafm0iZII3jfSA9igAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABmf1XqdS7lhe9fKcI2IVdpAAAAAASAAACgAAAAEAAAABN95VjhGdWbP5adw2MDa3ggAAAAxPwbAN0Eah/eMvEKYq073e4jwelQDc+wf4ja8/kFnMUUAAAAllANEKxuIAdcDjfKXAqfRg1KE8g</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAACWqXtIafm0iZII3jfSA9igAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADZ5rXrcAqQXdoHALy8a5+LAAAAAASAAACgAAAAEAAAAApsbxpFWHHPerxAbBP9mXcgAAAAsjndisJ6bWTp2g4AhHV6fH+DDyq7j8gC7OFXg3LMNqwUAAAA93izR7eMo2T/au5zvke60C20B9Y</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -2293,7 +2293,7 @@
         <NodeLayout
           Size="254,42"
           Id="Package\Upsert Singapore Tickets Dynamics"
-          TopLeft="237,99" />
+          TopLeft="236,99" />
       </GraphLayout>
     </LayoutInfo>
   </Package>
