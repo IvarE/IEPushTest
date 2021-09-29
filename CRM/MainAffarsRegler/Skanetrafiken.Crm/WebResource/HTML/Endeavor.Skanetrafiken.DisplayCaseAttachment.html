@@ -69,7 +69,22 @@
                         if (fileLinkArray.length > 0) {
                             fileLink = fileLinkArray[0].replace(/%3a/g, ":").replace(/%2f/g, "/");
                             console.log("FileLink: " + fileLink);
-                            var fileName = fileLink.split("https://").pop();
+                            //var fileName = fileLink.split("https://").pop();
+
+                            var fileName = "";
+                            if (fileLink.startsWith("https:"))
+                            {
+                                fileName = fileLink.split("https://").pop();
+                            }
+                            else if (fileLink.startsWith("http:"))
+                            {
+                                fileName = fileLink.split("http://").pop();
+                            }
+                            else
+                            {
+                                fileName = fileLink;
+                            }
+
                             console.log("FileName: " + fileName);
                             var fileExtention = fileLink.split(".").pop();
                             console.log("FileExtention: " + fileExtention);
@@ -86,7 +101,7 @@
                                     var parsedResult = JSON.parse(result.responseText);
                                     if (parsedResult.Result != undefined && parsedResult.Result != "") {
 
-                                        if (parsedResult.Result.startsWith("Kunde inte Hämta filen")) {
+                                        if (parsedResult.Result.startsWith("Kunde inte hämta filen")) {
                                             var confirmaError = confirm(parsedResult.Result);
                                             if (confirmaError) {
                                                 window.close();
@@ -97,9 +112,27 @@
                                         }
                                         else
                                         {
-                                            var sourceString = "data:image/" + fileExtention + ";base64," + parsedResult.Result;
-                                            var img = document.querySelector("#imageID");
-                                            img.src = sourceString;
+                                            //var sourceString = "data:image/" + fileExtention + ";base64," + parsedResult.Result;
+
+                                            var sourceString = "";
+                                            if (fileExtention == "pdf") {
+                                                sourceString = "data:application/" + fileExtention + ";base64," + parsedResult.Result;
+                                                //var iFrame = document.querySelector("#iframepdf");
+                                                var iFrame = document.createElement('iframe');
+                                                iFrame.src = sourceString;
+                                                iFrame.height = "975";
+                                                iFrame.width = "835";
+
+                                                var imgDiv = document.querySelector("#imagediv");
+                                                imgDiv.appendChild(iFrame);
+                                            }
+                                            else
+                                            {
+                                                sourceString = "data:image/" + fileExtention + ";base64," + parsedResult.Result;
+                                                var img = document.querySelector("#imageID");
+                                                img.src = sourceString;
+                                            }
+                                            
                                         }
                                     }
                                 },
