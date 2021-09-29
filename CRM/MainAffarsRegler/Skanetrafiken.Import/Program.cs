@@ -233,7 +233,7 @@ namespace Skanetrafiken.Import
                     while (!reader.EndOfStream)
                     {
                         string line = reader.ReadLine();
-                        List<string> values = line.Split('^').ToList();
+                        List<string> values = line.Split(';').ToList();
                         if (i == 0)
                         {
                             for(int j = 0; j < values.Count; j++)
@@ -1366,7 +1366,6 @@ namespace Skanetrafiken.Import
             {
                 for (int i = 0; i < importExcelInfo.lData.Count; i++)
                 {
-                    OptionMetadataCollection colOpCompanyTrade = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_companytrade);
                     OptionMetadataCollection colOpBusinessType = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_BusinessType);
 
                     try
@@ -1453,20 +1452,6 @@ namespace Skanetrafiken.Import
                                     break;
                                 case "Branchid":
                                     nAccount.ed_IndustryCodeId = value;
-                                    break;
-                                case "Branch ":
-
-                                    int? optionSetCT = GetOptionSetValueByName(colOpCompanyTrade, value);
-
-                                    if (optionSetCT == null)
-                                    {
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM. By default it will be created into Skund.");
-                                        optionSetCT = InsertGlobalOptionSetOption(localContext, "ed_companytrade", value, 1053);
-                                    }
-
-                                    if (optionSetCT != null)
-                                        nAccount.ed_companytrade = new OptionSetValue((int)optionSetCT);
-
                                     break;
                                 case "Bolagsformid":
                                     nAccount.ed_BusinessTypeId = value;
@@ -2725,9 +2710,7 @@ namespace Skanetrafiken.Import
                 return;
             }
 
-            List<string> lAddCompanyTrade = new List<string>();
             List<string> lAddBusinessType = new List<string>();
-            OptionMetadataCollection colOpCompanyTrade = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_companytrade);
             OptionMetadataCollection colOpBusinessType = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_BusinessType);
 
             Console.Write("Creating Batch of OptionSets Values... ");
@@ -2783,17 +2766,6 @@ namespace Skanetrafiken.Import
                                     }
 
                                     break;
-                                case "Branschtext":
-
-                                    int? optionSetCT = GetOptionSetValueByName(colOpCompanyTrade, value);
-                                    bool existsC = lAddCompanyTrade.Any(x => x == value);
-
-                                    if (optionSetCT == null && !existsC)
-                                    {
-                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM. By default it will be created into Skund.");
-                                        lAddCompanyTrade.Add(value);
-                                    }
-                                    break;
 
                                 default:
                                     _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
@@ -2810,9 +2782,6 @@ namespace Skanetrafiken.Import
 
             foreach (string option in lAddBusinessType)
                 InsertGlobalOptionSetOption(localContext, "ed_businesstype", option, 1053);
-
-            foreach (string option in lAddCompanyTrade)
-            InsertGlobalOptionSetOption(localContext, "ed_companytrade", option, 1053);
 
             Console.WriteLine("Done.");
         }
@@ -2886,6 +2855,101 @@ namespace Skanetrafiken.Import
             }
         }
 
+        public static void ImportPostalCodes(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
+        {
+            if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
+                return;
+            }
+
+            Console.Write("Creating Batch of PostalCodes... ");
+            using (ProgressBar progress = new ProgressBar())
+            {
+                for (int i = 0; i < importExcelInfo.lData.Count; i++)
+                {
+                    try
+                    {
+                        progress.Report((double)i / (double)importExcelInfo.lData.Count);
+
+                        ed_postnummer nPostalCode = new ed_postnummer();
+                        List<ExcelLineData> line = importExcelInfo.lData[i];
+
+                        if (line.Count != importExcelInfo.lColumns.Count)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The line " + (i + 1) + " was not imported, because the data count is not equal to the column count.");
+                            continue;
+                        }
+
+                        for (int j = 0; j < importExcelInfo.lColumns.Count; j++)
+                        {
+                            ExcelLineData selectedData = line[j];
+
+                            if (selectedData == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
+                                continue;
+                            }
+
+                            ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
+
+                            if (selectedColumn == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
+                                continue;
+                            }
+
+                            string name = selectedColumn.name;
+                            string value = selectedData.value;
+
+                            if (value == null || string.IsNullOrEmpty(value))
+                                continue;
+
+                            switch (name)
+                            {
+                                case "Postnummer":
+                                    nPostalCode.ed_Postnummer = value;
+                                    break;
+                                case "Postort":
+                                    nPostalCode.ed_Postort = value;
+                                    break;
+                                case "Länskod":
+                                    nPostalCode.ed_Lanskod = value;
+                                    break;
+                                case "Län":
+                                    nPostalCode.ed_Lan = value;
+                                    break;
+                                case "Kommunkod":
+                                    nPostalCode.ed_Kommunkod = value;
+                                    break;
+                                case "Kommun":
+                                    nPostalCode.ed_Kommun = value;
+                                    break;
+                                case "AR-kod":
+                                    nPostalCode.ed_ARkod = value;
+                                    break;
+                                case "Name":
+                                    nPostalCode.ed_name = value;
+                                    break;
+
+                                default:
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
+                                    break;
+                            }
+                        }
+
+                        crmContext.AddObject(nPostalCode);
+
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Import PostalCodes Exception. Details: " + e.Message);
+                    }
+                }
+            }
+            Console.WriteLine("Done.");
+        }
+
         public static bool MainMenuUpsales(Plugin.LocalPluginContext localContext, CrmContext crmContext, SaveChangesOptions optionsChanges, string relativeExcelPath)
         {
             Console.WriteLine();
@@ -2900,9 +2964,12 @@ namespace Skanetrafiken.Import
             Console.WriteLine("7) Import Orders");
             Console.WriteLine("8) Import PDF Orders");
             Console.WriteLine("9) Import PDF Agreements");
+            Console.WriteLine("10) Import PostNummer Postal Codes");
+            Console.WriteLine("100) Update Birthday for Contacts");
+            Console.WriteLine("101) Update Postal Codes Information Accounts");
+            Console.WriteLine("102) Delete PostalCodes");
 
             Console.WriteLine("-------Fixes-------");
-            Console.WriteLine("10) Fix: Duplicate OptionSets on Account/Branch");
             Console.WriteLine("11) Fix: Check for Duplicate Records");
             Console.WriteLine("12) Fix: Update SubAccounts Records");
             Console.WriteLine("13) Fix: Update Price List on Orders");
@@ -3269,136 +3336,210 @@ namespace Skanetrafiken.Import
 
                     return true;
 
-                //-----------------------FIXES-----------------------
-
                 case "10":
 
-                    #region Fix Duplicated OptionSets On Account/Branch
+                    #region Import Postal Codes
 
                     try
                     {
                         crmContext.ClearChanges();
-                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting Logic to Eliminate Duplicate OptionSets--------------");
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload the Postal Codes Entity--------------");
 
-                        OptionMetadataCollection colOpCompanyTrade = GetOptionSetMetadata(localContext, Account.EntityLogicalName, Account.Fields.ed_companytrade);
+                        string fileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.PostalCodes);
+                        ImportExcelInfo importExcelInfo = HandleExcelInformationStreamReader(relativeExcelPath, fileName);
 
-                        _log.InfoFormat(CultureInfo.InvariantCulture, $"Count: " + colOpCompanyTrade.Count);
+                        bool isParsingOk = GetParsingStatus(importExcelInfo);
 
-                        List<OptionMetadata> lOpDelete = new List<OptionMetadata>();
-
-                        List<OptionMetadata> lFinal = colOpCompanyTrade.OrderBy(x => x.Label.UserLocalizedLabel.Label).ToList();
-
-                        foreach (OptionMetadata item in lFinal)
+                        if (isParsingOk)
                         {
-                            Console.WriteLine(item.Value + " ---- " + item.Label.UserLocalizedLabel.Label);
-                            _log.InfoFormat(CultureInfo.InvariantCulture, $"" + item.Value + " ---- " + item.Label.UserLocalizedLabel.Label);
+                            ImportPostalCodes(localContext, crmContext, importExcelInfo);
+
+                            Console.WriteLine("Sending Batch of PostalCodes to Sekund...");
+
+                            SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                            LogCrmContextMultipleResponses(localContext, responses);
+
+                            Console.WriteLine("Batch Sent. Please check logs.");
                         }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
 
-                        foreach (OptionMetadata item in lFinal)
-                        {
-                            int uniqueOption = int.MinValue;
-                            string optionLabel = item.Label.UserLocalizedLabel.Label;
-
-                            if(!string.IsNullOrEmpty(optionLabel))
-                            {
-                                if (lOpDelete.Exists(x => x.Label.UserLocalizedLabel.Label == optionLabel))
-                                {
-                                    //skip this one
-                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"The Option with name: " + optionLabel + " has already been handled.");
-                                    continue;
-                                }
-
-                                List<OptionMetadata> lOptionsName = colOpCompanyTrade.Where(x => x.Label.UserLocalizedLabel.Label == optionLabel).OrderBy(x => x.Value).ToList();
-
-                                if(lOptionsName.Count == 1)
-                                {
-                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"Only One Option with name: " + optionLabel);
-                                    continue;
-                                }
-
-                                foreach (OptionMetadata itemDuplicate in lOptionsName)
-                                {
-                                    if (itemDuplicate == lOptionsName.FirstOrDefault())
-                                    {
-                                        //option with lesser value to keep
-                                        uniqueOption = (int)itemDuplicate.Value;
-                                    }
-                                    else
-                                    {
-                                        //options to delete
-                                        if(!lOpDelete.Exists(x => x.Value == itemDuplicate.Value))
-                                            lOpDelete.Add(itemDuplicate);
-                                    }
-                                }
-
-                                QueryExpression queryAccounts = new QueryExpression(Account.EntityLogicalName);
-                                queryAccounts.NoLock = true;
-                                queryAccounts.ColumnSet.AddColumns(Account.Fields.ed_companytrade, Account.Fields.Name);
-                                queryAccounts.Criteria.AddCondition(Account.Fields.ed_UpsalesId, ConditionOperator.NotNull);
-
-                                FilterExpression filter = new FilterExpression();
-                                queryAccounts.Criteria.AddFilter(filter);
-
-                                filter.FilterOperator = LogicalOperator.Or;
-
-                                foreach (OptionMetadata metadata in lOptionsName)
-                                {
-                                    filter.AddCondition(Account.Fields.ed_companytrade, ConditionOperator.Equal, metadata.Value);
-                                }
-
-                                List<Account> lAccounts = XrmRetrieveHelper.RetrieveMultiple<Account>(localContext, queryAccounts);
-
-                                _log.InfoFormat(CultureInfo.InvariantCulture, $"Account Count: " + lAccounts.Count);
-
-                                if (uniqueOption != int.MinValue)
-                                {
-                                    foreach (Account account in lAccounts)
-                                    {
-                                        Account uAccount = new Account();
-                                        uAccount.Id = account.Id;
-                                        uAccount.ed_companytrade = new OptionSetValue(uniqueOption);
-
-                                        XrmHelper.Update(localContext, uAccount);
-                                        _log.InfoFormat(CultureInfo.InvariantCulture, $"A request has been sent to update the Account: " + account.Id + " with company trade: " + uniqueOption);
-                                    }
-                                }
-                                else
-                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Unique Option is equal to the Min Value. Contact your administrator.");
-                            }
-                        }
-
-                        foreach (OptionMetadata opDelete in lOpDelete)
-                        {
-                            _log.InfoFormat(CultureInfo.InvariantCulture, $"Option to Delete: " + opDelete.Value + " and Name: " + opDelete.Label.UserLocalizedLabel.Label);
-
-                            DeleteOptionValueRequest request = new DeleteOptionValueRequest
-                            {
-                                OptionSetName = "ed_companytrade",
-                                Value = (int)opDelete.Value
-                            };
-
-                            try
-                            {
-                                localContext.OrganizationService.Execute(request);
-                            }
-                            catch (Exception)
-                            {
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to delete option from 'ed_companytrade': " + opDelete.Value);
-                            }
-
-                        }
-
-                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished Logic to Eliminate Duplicate OptionSets--------------");
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload the Postal Codes Entity--------------");
                     }
                     catch (Exception e)
                     {
-                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Fixing Duplicated OptionSets. Details: " + e.Message);
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Postal Codes Records. Details: " + e.Message);
                         throw;
                     }
 
                     #endregion
 
                     return true;
+
+                case "100":
+
+                    #region Update Birthdays
+
+                    try
+                    {
+                        QueryExpression queryContacts = new QueryExpression(Contact.EntityLogicalName);
+                        queryContacts.NoLock = true;
+                        queryContacts.ColumnSet.AddColumns(Contact.Fields.cgi_socialsecuritynumber);
+                        queryContacts.Criteria.AddCondition(Contact.Fields.cgi_socialsecuritynumber, ConditionOperator.NotNull);
+                        queryContacts.Criteria.AddCondition(Contact.Fields.BirthDate, ConditionOperator.Null);
+
+                        List<Contact> lContacts = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts);
+                        Console.WriteLine("------------------------------------------");
+                        Console.WriteLine(lContacts.Count);
+                        Console.WriteLine("------------------------------------------");
+
+                        int i = 0;
+                        foreach (Contact contact in lContacts)
+                        {
+                            string socialNumber = contact.cgi_socialsecuritynumber;
+                            if (socialNumber.Length == 12 && socialNumber != "000206177123")
+                            {
+                                int year = int.Parse(socialNumber.Substring(0, 4));
+                                int month = int.Parse(socialNumber.Substring(4, 2));
+                                int day = int.Parse(socialNumber.Substring(6, 2));
+
+                                DateTime dtBirthday = new DateTime(year, month, day);
+
+                                Contact uContact = new Contact();
+                                uContact.Id = contact.Id;
+                                uContact.BirthDate = dtBirthday;
+
+                                try
+                                {
+                                    XrmHelper.Update(localContext, uContact);
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(socialNumber);
+                                    Console.WriteLine($"BirthDay Update Error: Details: " + e.Message);
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"BirthDay Update Error: Details: " + e.Message);
+                                }
+
+                            }
+
+                            if (i % 1000 == 0)
+                                Console.WriteLine(i);
+                            i++;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Updating Birthdays Records. Details: " + e.Message);
+                        throw;
+                    }
+
+                    #endregion
+
+                    return true;
+
+                case "101":
+
+                    #region Update Postal Codes Information Account
+
+                    QueryExpression queryPostalCodes = new QueryExpression(ed_postnummer.EntityLogicalName);
+                    queryPostalCodes.NoLock = true;
+                    queryPostalCodes.ColumnSet.AddColumns(ed_postnummer.Fields.ed_Postnummer, ed_postnummer.Fields.ed_Kommun, ed_postnummer.Fields.ed_Kommunkod,
+                        ed_postnummer.Fields.ed_Lan, ed_postnummer.Fields.ed_Lanskod, ed_postnummer.Fields.ed_name, ed_postnummer.Fields.ed_Postort, ed_postnummer.Fields.ed_postnummerId);
+
+                    List<ed_postnummer> lPostalCodes = XrmRetrieveHelper.RetrieveMultiple<ed_postnummer>(localContext, queryPostalCodes);
+                    Console.WriteLine("-----------------Postal Codes-------------------------");
+                    Console.WriteLine(lPostalCodes.Count);
+                    Console.WriteLine("-----------------Postal Codes-------------------------");
+
+                    QueryExpression queryAccounts = new QueryExpression(Account.EntityLogicalName);
+                    queryAccounts.NoLock = true;
+                    queryAccounts.ColumnSet.AddColumns(Account.Fields.Address1_PostalCode);
+                    queryAccounts.Criteria.AddCondition(Account.Fields.Address1_PostalCode, ConditionOperator.NotNull);
+
+                    List<Account> lAccounts = XrmRetrieveHelper.RetrieveMultiple<Account>(localContext, queryAccounts);
+                    Console.WriteLine("-----------------Accounts-------------------------");
+                    Console.WriteLine(lAccounts.Count);
+                    Console.WriteLine("-----------------Accounts-------------------------");
+
+                    int j = 0;
+                    foreach (Account account in lAccounts)
+                    {
+                        string postalCode = account.Address1_PostalCode;
+                        postalCode = postalCode.Replace(" ", String.Empty);
+
+                        List<ed_postnummer> auxPostalCode = lPostalCodes.Where(x => x.ed_Postnummer == postalCode).ToList();
+                        if (auxPostalCode.Count == 1 || auxPostalCode.Count == 2)
+                        {
+                            ed_postnummer postNummer = auxPostalCode.FirstOrDefault();
+
+                            Account uAccount = new Account();
+                            uAccount.Id = account.Id;
+                            uAccount.Address1_Name = postNummer.ed_name;
+                            uAccount.Address1_City = postNummer.ed_Postort;
+                            uAccount.ed_Address1_CountyNumber = int.Parse(postNummer.ed_Lanskod);
+                            uAccount.Address1_County = postNummer.ed_Lan;
+                            uAccount.ed_Address1_CommunityNumber = int.Parse(postNummer.ed_Kommunkod);
+                            uAccount.Address1_StateOrProvince = postNummer.ed_Kommun;
+
+                            try
+                            {
+                                XrmHelper.Update(localContext, uAccount);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"Postal Code Account Update Error: Details: " + e.Message);
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Postal Code Account Update Error: Details: " + e.Message);
+                            }
+
+                        }
+                        else if (auxPostalCode.Count == 0)
+                            Console.WriteLine($"No Postal Codes found with Postal Code: " + postalCode);
+                        else if (auxPostalCode.Count > 2)
+                            Console.WriteLine($"More than one Postal Code found with Postal Code: " + postalCode);
+
+                        if (j % 1000 == 0)
+                            Console.WriteLine(j);
+                        j++;
+                    }
+
+                    #endregion
+
+                    return true;
+
+                case "102":
+
+                    #region Delete PostalCodes
+
+                    try
+                    {
+                        QueryExpression queryDeletePostalCodes = new QueryExpression(ed_postnummer.EntityLogicalName);
+                        queryDeletePostalCodes.NoLock = true;
+
+                        List<ed_postnummer> lDeletePostalCodes = XrmRetrieveHelper.RetrieveMultiple<ed_postnummer>(localContext, queryDeletePostalCodes);
+                        Console.WriteLine("Delete " + lDeletePostalCodes.Count + " Postal Codes...");
+                        int n = 0;
+                        foreach (ed_postnummer item in lDeletePostalCodes)
+                        {
+                            XrmHelper.Delete(localContext, item.ToEntityReference());
+
+                            if (n % 1000 == 0)
+                                Console.WriteLine(n);
+                            n++;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Delete Postal Code Error: Details: " + e.Message);
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Delete Postal Code Error: Details: " + e.Message);
+                        Console.ReadLine();
+                    }
+                    
+
+                    #endregion
+
+                    return true;
+
+                //-----------------------FIXES-----------------------
 
 
                 case "11":
@@ -3915,54 +4056,22 @@ namespace Skanetrafiken.Import
                 return;
             }
 
-            QueryExpression queryContacts = new QueryExpression(Contact.EntityLogicalName);
-            queryContacts.NoLock = true;
-            queryContacts.ColumnSet.AddColumns(Contact.Fields.cgi_socialsecuritynumber);
-            queryContacts.Criteria.AddCondition(Contact.Fields.cgi_socialsecuritynumber, ConditionOperator.NotNull);
-            queryContacts.Criteria.AddCondition(Contact.Fields.BirthDate, ConditionOperator.Null);
+            string runUpdateContacts = ConfigurationManager.AppSettings["runUpdateContacts"];
 
-            List<Contact> lContacts = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts);
-
-            int i = 0;
-            foreach (Contact contact in lContacts)
+            if (runUpdateContacts == "true")
             {
-                string socialNumber = contact.cgi_socialsecuritynumber;
-                if(socialNumber.Length == 12)
-                {
-                    int year = int.Parse(socialNumber.Substring(0, 4));
-                    int month = int.Parse(socialNumber.Substring(4, 2));
-                    int day = int.Parse(socialNumber.Substring(6, 2));
-
-                    DateTime dtBirthday = new DateTime(year, month, day);
-
-                    Contact uContact = new Contact();
-                    uContact.Id = contact.Id;
-                    uContact.BirthDate = dtBirthday;
-
-                    XrmHelper.Update(localContext, uContact);
-                }
-
-                if (i % 1000 == 0)
-                    Console.WriteLine(i);
-                i++;
+                Console.WriteLine("Run Update Contacts selected... from file Import analysdata.csv.");
+                ImportContactsMKLId(localContext, crmContext, optionsChanges, relativeExcelPath);
             }
-
-            //string runUpdateContacts = ConfigurationManager.AppSettings["runUpdateContacts"];
-
-            //if(runUpdateContacts == "true")
-            //{
-            //    Console.WriteLine("Run Update Contacts selected... from file Import analysdata.csv.");
-            //    ImportContactsMKLId(localContext, crmContext, optionsChanges, relativeExcelPath);
-            //}
-            //else
-            //{
-            //    Console.WriteLine("Run Updales import selected...");
-            //    bool showMenu = true;
-            //    while (showMenu)
-            //    {
-            //        showMenu = MainMenuUpsales(localContext, crmContext, optionsChanges, relativeExcelPath);
-            //    }
-            //}
+            else
+            {
+                Console.WriteLine("Run Updales import selected...");
+                bool showMenu = true;
+                while (showMenu)
+                {
+                    showMenu = MainMenuUpsales(localContext, crmContext, optionsChanges, relativeExcelPath);
+                }
+            }
         }
     }
 }

@@ -79,6 +79,7 @@
     <entity>ed_valuecodeapproval</entity>
     <entity>ed_valuecodetransaction</entity>
     <entity>ed_orderpurchasetype</entity>
+    <entity>ed_postnummer</entity>
     <entity>ed_slots</entity>
     <entity>ed_emailtemplateproxy</entity>
     <entity>ed_returnmessagewebapi</entity>
