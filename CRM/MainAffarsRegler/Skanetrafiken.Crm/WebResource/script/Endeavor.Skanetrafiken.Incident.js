@@ -1487,7 +1487,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                                 parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
 
                                 //Display file from opened resource:
-                                var windowOptions = { height: 850, width: 750 };
+                                var windowOptions = { height: 1000, width: 950 };
                                 Xrm.Navigation.openWebResource("ed_/html/Endeavor.Skanetrafiken.DisplayCaseAttachment.html", windowOptions, encryptedLink);
                             }
                         }
