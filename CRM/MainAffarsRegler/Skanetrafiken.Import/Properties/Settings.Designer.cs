@@ -25,7 +25,7 @@ namespace Skanetrafiken.Import.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\SeKunddata\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("E:\\SeKunddata\\")]
         public string RelativePath {
             get {
                 return ((string)(this["RelativePath"]));
@@ -151,7 +151,7 @@ namespace Skanetrafiken.Import.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\SeKunddata\\Skanetrafiken.Import.Credential.xml")]
+        [global::System.Configuration.DefaultSettingValueAttribute("E:\\SeKunddata\\Skanetrafiken.Import.Credential.xml")]
         public string CredentialsFilePath {
             get {
                 return ((string)(this["CredentialsFilePath"]));

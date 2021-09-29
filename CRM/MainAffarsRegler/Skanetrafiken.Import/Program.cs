@@ -3917,13 +3917,13 @@ namespace Skanetrafiken.Import
 
             QueryExpression queryContacts = new QueryExpression(Contact.EntityLogicalName);
             queryContacts.NoLock = true;
-            queryContacts.TopCount = 5000;
             queryContacts.ColumnSet.AddColumns(Contact.Fields.cgi_socialsecuritynumber);
             queryContacts.Criteria.AddCondition(Contact.Fields.cgi_socialsecuritynumber, ConditionOperator.NotNull);
             queryContacts.Criteria.AddCondition(Contact.Fields.BirthDate, ConditionOperator.Null);
 
             List<Contact> lContacts = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts);
 
+            int i = 0;
             foreach (Contact contact in lContacts)
             {
                 string socialNumber = contact.cgi_socialsecuritynumber;
@@ -3941,6 +3941,10 @@ namespace Skanetrafiken.Import
 
                     XrmHelper.Update(localContext, uContact);
                 }
+
+                if (i % 1000 == 0)
+                    Console.WriteLine(i);
+                i++;
             }
 
             //string runUpdateContacts = ConfigurationManager.AppSettings["runUpdateContacts"];
