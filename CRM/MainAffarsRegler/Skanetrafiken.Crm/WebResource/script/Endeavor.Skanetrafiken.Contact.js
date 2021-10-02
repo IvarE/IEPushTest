@@ -109,8 +109,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         onChangePostalCode: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
-
             var postalCode = Endeavor.formscriptfunctions.GetValue("address1_postalcode", formContext);
+
             debugger;
             var fetchXml = [
                 "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true'>",
@@ -150,9 +150,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         Endeavor.formscriptfunctions.SetValue("ed_address1_community", kommun, formContext);
                     }
                     else if (result.entities.length == 0)
-                        Endeavor.formscriptfunctions.AlertCustomDialog("Inget Postnummer Kommun hittat.");
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Ingen postnummerkommun hittades med värdet " + postalCode + ".");
                     else if (result.entities.length > 1)
-                        Endeavor.formscriptfunctions.AlertCustomDialog("Flera Postnummer Kommun hittades.");
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Flera postnummer kommun hittades med värdet " + postalCode + ".");
                 },
                 function (error) {
                     Endeavor.formscriptfunctions.ErrorCustomDialog(error.message, "Generic Error");

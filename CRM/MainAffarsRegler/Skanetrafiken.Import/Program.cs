@@ -2967,7 +2967,8 @@ namespace Skanetrafiken.Import
             Console.WriteLine("10) Import PostNummer Postal Codes");
             Console.WriteLine("100) Update Birthday for Contacts");
             Console.WriteLine("101) Update Postal Codes Information Accounts");
-            Console.WriteLine("102) Delete PostalCodes");
+            Console.WriteLine("102) Update Postal Codes Information Contacts");
+            Console.WriteLine("103) Delete PostalCodes");
 
             Console.WriteLine("-------Fixes-------");
             Console.WriteLine("11) Fix: Check for Duplicate Records");
@@ -3382,19 +3383,19 @@ namespace Skanetrafiken.Import
 
                     try
                     {
-                        QueryExpression queryContacts = new QueryExpression(Contact.EntityLogicalName);
-                        queryContacts.NoLock = true;
-                        queryContacts.ColumnSet.AddColumns(Contact.Fields.cgi_socialsecuritynumber);
-                        queryContacts.Criteria.AddCondition(Contact.Fields.cgi_socialsecuritynumber, ConditionOperator.NotNull);
-                        queryContacts.Criteria.AddCondition(Contact.Fields.BirthDate, ConditionOperator.Null);
+                        QueryExpression queryContact = new QueryExpression(Contact.EntityLogicalName);
+                        queryContact.NoLock = true;
+                        queryContact.ColumnSet.AddColumns(Contact.Fields.cgi_socialsecuritynumber);
+                        queryContact.Criteria.AddCondition(Contact.Fields.cgi_socialsecuritynumber, ConditionOperator.NotNull);
+                        queryContact.Criteria.AddCondition(Contact.Fields.BirthDate, ConditionOperator.Null);
 
-                        List<Contact> lContacts = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts);
+                        List<Contact> lContact = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContact);
                         Console.WriteLine("------------------------------------------");
-                        Console.WriteLine(lContacts.Count);
+                        Console.WriteLine(lContact.Count);
                         Console.WriteLine("------------------------------------------");
 
                         int i = 0;
-                        foreach (Contact contact in lContacts)
+                        foreach (Contact contact in lContact)
                         {
                             string socialNumber = contact.cgi_socialsecuritynumber;
                             if (socialNumber.Length == 12 && socialNumber != "000206177123")
@@ -3461,6 +3462,7 @@ namespace Skanetrafiken.Import
                     Console.WriteLine(lAccounts.Count);
                     Console.WriteLine("-----------------Accounts-------------------------");
 
+                    Console.ReadKey();
                     int j = 0;
                     foreach (Account account in lAccounts)
                     {
@@ -3507,6 +3509,76 @@ namespace Skanetrafiken.Import
                     return true;
 
                 case "102":
+
+                    #region Update Postal Codes Information Contact
+
+                    QueryExpression query = new QueryExpression(ed_postnummer.EntityLogicalName);
+                    query.NoLock = true;
+                    query.ColumnSet.AddColumns(ed_postnummer.Fields.ed_Postnummer, ed_postnummer.Fields.ed_Kommun, ed_postnummer.Fields.ed_Kommunkod,
+                        ed_postnummer.Fields.ed_Lan, ed_postnummer.Fields.ed_Lanskod, ed_postnummer.Fields.ed_name, ed_postnummer.Fields.ed_Postort, ed_postnummer.Fields.ed_postnummerId);
+
+                    List<ed_postnummer> lPostalCode = XrmRetrieveHelper.RetrieveMultiple<ed_postnummer>(localContext, query);
+                    Console.WriteLine("-----------------Postal Codes-------------------------");
+                    Console.WriteLine(lPostalCode.Count);
+                    Console.WriteLine("-----------------Postal Codes-------------------------");
+
+                    QueryExpression queryContacts = new QueryExpression(Contact.EntityLogicalName);
+                    queryContacts.NoLock = true;
+                    queryContacts.ColumnSet.AddColumns(Contact.Fields.Address1_PostalCode);
+                    queryContacts.Criteria.AddCondition(Contact.Fields.Address1_PostalCode, ConditionOperator.NotNull);
+
+                    List<Contact> lContacts = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts);
+                    Console.WriteLine("-----------------Contacts-------------------------");
+                    Console.WriteLine(lContacts.Count);
+                    Console.WriteLine("-----------------Contacts-------------------------");
+
+                    Console.ReadKey();
+                    int l = 0;
+                    foreach (Contact contact in lContacts)
+                    {
+                        string postalCode = contact.Address1_PostalCode;
+                        postalCode = postalCode.Replace(" ", String.Empty);
+
+                        List<ed_postnummer> auxPostalCode = lPostalCode.Where(x => x.ed_Postnummer == postalCode).ToList();
+                        if (auxPostalCode.Count == 1 || auxPostalCode.Count == 2)
+                        {
+                            ed_postnummer postNummer = auxPostalCode.FirstOrDefault();
+
+                            Contact uContact = new Contact();
+                            uContact.Id = contact.Id;
+                            uContact.Address1_Name = postNummer.ed_name;
+                            uContact.Address1_City = postNummer.ed_Postort;
+                            uContact.ed_Address1_CountyNumber = int.Parse(postNummer.ed_Lanskod);
+                            uContact.Address1_County = postNummer.ed_Lan;
+                            uContact.ed_Address1_CommunityNumber = int.Parse(postNummer.ed_Kommunkod);
+                            uContact.ed_Address1_Community = postNummer.ed_Kommun;
+
+                            try
+                            {
+                                XrmHelper.Update(localContext, uContact);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"Postal Code Contact Update Error: Details: " + e.Message);
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Postal Code Contact Update Error: Details: " + e.Message);
+                            }
+
+                        }
+                        else if (auxPostalCode.Count == 0)
+                            Console.WriteLine($"No Postal Codes found with Postal Code: " + postalCode);
+                        else if (auxPostalCode.Count > 2)
+                            Console.WriteLine($"More than one Postal Code found with Postal Code: " + postalCode);
+
+                        if (l % 1000 == 0)
+                            Console.WriteLine(l);
+                        l++;
+                    }
+
+                    #endregion
+
+                    return true;
+
+                case "103":
 
                     #region Delete PostalCodes
 
@@ -4055,6 +4127,8 @@ namespace Skanetrafiken.Import
                 Console.ReadLine();
                 return;
             }
+
+
 
             string runUpdateContacts = ConfigurationManager.AppSettings["runUpdateContacts"];
 

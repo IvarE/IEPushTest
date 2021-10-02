@@ -792,8 +792,6 @@ namespace Skanetrafiken.Crm.Entities
             };
         }
 
-
-
         public void HandlePreValidationContactDelete(Plugin.LocalPluginContext localContext)
         {
             localContext.Trace("Entered HandlePreContactUpdate() Tracing preImage");
@@ -856,10 +854,38 @@ namespace Skanetrafiken.Crm.Entities
         public void HandlePreContactCreate(Plugin.LocalPluginContext localContext)
         {
             this.Trace(localContext.TracingService);
-            if (this.ed_Address1_Country != null)
+
+            localContext.Trace($"Entered HandlePreContactCreate() Postal Code value: {Address1_PostalCode}");
+            if (!string.IsNullOrEmpty(Address1_PostalCode))
             {
-                localContext.Trace(CountryEntity.GetIsoCodeForCountry(localContext, this.ed_Address1_Country.Id));
+                QueryExpression queryPostalCodes = new QueryExpression(PostalCodesEntity.EntityLogicalName);
+                queryPostalCodes.NoLock = true;
+                queryPostalCodes.ColumnSet.AddColumns(PostalCodesEntity.Fields.ed_Kommun, PostalCodesEntity.Fields.ed_Kommunkod, PostalCodesEntity.Fields.ed_Lan,
+                    PostalCodesEntity.Fields.ed_Lanskod, PostalCodesEntity.Fields.ed_name, PostalCodesEntity.Fields.ed_Postort);
+                queryPostalCodes.Criteria.AddCondition(PostalCodesEntity.Fields.ed_Postnummer, ConditionOperator.Equal, Address1_PostalCode);
+
+                List<PostalCodesEntity> lPostalCodes = XrmRetrieveHelper.RetrieveMultiple<PostalCodesEntity>(localContext, queryPostalCodes);
+
+                if (lPostalCodes.Count > 1)
+                    localContext.Trace($"HandlePreContactCreate(): Found multiple Postal Codes with ZIP Code: {Address1_PostalCode}");
+                else if (lPostalCodes.Count == 0)
+                    localContext.Trace($"HandlePreContactCreate(): No Postal Codes with ZIP Code: {Address1_PostalCode}");
+                else
+                {
+                    PostalCodesEntity ePostalCode = lPostalCodes.FirstOrDefault();
+
+                    this.ed_Address1_Community = ePostalCode.ed_Kommun;
+                    this.ed_Address1_CommunityNumber = int.Parse(ePostalCode.ed_Kommunkod);
+                    this.Address1_County = ePostalCode.ed_Lan;
+                    this.ed_Address1_CountyNumber = int.Parse(ePostalCode.ed_Lanskod);
+                    this.Address1_Name = ePostalCode.ed_name;
+                    this.Address1_City = ePostalCode.ed_Postort;
+                }
             }
+
+            if (this.ed_Address1_Country != null)
+                localContext.Trace(CountryEntity.GetIsoCodeForCountry(localContext, this.ed_Address1_Country.Id));
+
             localContext.Trace("Formatting address fields, phone numbers and mail addresses");
             FirstName = Capitalise(FirstName);
             LastName = Capitalise(LastName);
@@ -867,6 +893,7 @@ namespace Skanetrafiken.Crm.Entities
             Address1_Line2 = Capitalise(Address1_Line2);
             Address2_City = Capitalise(Address2_City);
             Address2_Line2 = Capitalise(Address2_Line2);
+
             if (!string.IsNullOrWhiteSpace(EMailAddress1))
                 EMailAddress1 = EMailAddress1.ToLower().Trim(" ".ToCharArray());
             if (!string.IsNullOrWhiteSpace(EMailAddress2))
@@ -901,32 +928,40 @@ namespace Skanetrafiken.Crm.Entities
 
             //This is not used anymore?
             if (Contains(ContactEntity.Fields.OriginatingLeadId) && OriginatingLeadId != null && !Guid.Empty.Equals(OriginatingLeadId.Id))
-            {
                 this.SetLeadSourceCodeIfNeeded(localContext);
-            }
-        }
-
-        private void SetLeadSourceCodeIfNeeded(Plugin.LocalPluginContext localContext)
-        {
-            LeadEntity originLead = XrmRetrieveHelper.RetrieveFirst<LeadEntity>(localContext, new ColumnSet(LeadEntity.Fields.LeadSourceCode),
-                new FilterExpression
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression(LeadEntity.Fields.LeadId, ConditionOperator.Equal, OriginatingLeadId.Id)
-                    }
-                });
-            if (originLead != null && originLead.LeadSourceCode != null && originLead.LeadSourceCode.HasValue)
-            {
-                this.LeadSourceCode = new OptionSetValue((int)originLead.LeadSourceCode.Value);
-            }
         }
 
         public void HandlePreContactUpdate(Plugin.LocalPluginContext localContext, ContactEntity preImage)
         {
             if (preImage == null)
-            {
                 throw new InvalidPluginExecutionException("PreImage not registered correctly");
+
+            localContext.Trace($"Entered HandlePreContactUpdate() Postal Code value: {Address1_PostalCode}");
+            if (!string.IsNullOrEmpty(Address1_PostalCode))
+            {
+                QueryExpression queryPostalCodes = new QueryExpression(PostalCodesEntity.EntityLogicalName);
+                queryPostalCodes.NoLock = true;
+                queryPostalCodes.ColumnSet.AddColumns(PostalCodesEntity.Fields.ed_Kommun, PostalCodesEntity.Fields.ed_Kommunkod, PostalCodesEntity.Fields.ed_Lan,
+                    PostalCodesEntity.Fields.ed_Lanskod, PostalCodesEntity.Fields.ed_name, PostalCodesEntity.Fields.ed_Postort);
+                queryPostalCodes.Criteria.AddCondition(PostalCodesEntity.Fields.ed_Postnummer, ConditionOperator.Equal, Address1_PostalCode);
+
+                List<PostalCodesEntity> lPostalCodes = XrmRetrieveHelper.RetrieveMultiple<PostalCodesEntity>(localContext, queryPostalCodes);
+
+                if (lPostalCodes.Count > 1)
+                    localContext.Trace($"HandlePreContactUpdate(): Found multiple Postal Codes with ZIP Code: {Address1_PostalCode}");
+                else if (lPostalCodes.Count == 0)
+                    localContext.Trace($"HandlePreContactUpdate(): No Postal Codes with ZIP Code: {Address1_PostalCode}");
+                else
+                {
+                    PostalCodesEntity ePostalCode = lPostalCodes.FirstOrDefault();
+
+                    this.ed_Address1_Community = ePostalCode.ed_Kommun;
+                    this.ed_Address1_CommunityNumber = int.Parse(ePostalCode.ed_Kommunkod);
+                    this.Address1_County = ePostalCode.ed_Lan;
+                    this.ed_Address1_CountyNumber = int.Parse(ePostalCode.ed_Lanskod);
+                    this.Address1_Name = ePostalCode.ed_name;
+                    this.Address1_City = ePostalCode.ed_Postort;
+                }
             }
 
             localContext.Trace("Formatting address fields, phone numbers and mail addresses");
@@ -942,6 +977,7 @@ namespace Skanetrafiken.Crm.Entities
                 Address2_City = Capitalise(Address2_City);
             if (Contains(ContactEntity.Fields.Address2_Line2))
                 Address2_Line2 = Capitalise(Address2_Line2);
+
             if (!string.IsNullOrWhiteSpace(EMailAddress1))
                 EMailAddress1 = EMailAddress1.ToLower().Trim(' ');
             if (!string.IsNullOrWhiteSpace(EMailAddress2))
@@ -988,12 +1024,9 @@ namespace Skanetrafiken.Crm.Entities
             }
 
             if (ed_InformationSource == Generated.ed_informationsource.AdmAndraKund && !string.IsNullOrWhiteSpace(EMailAddress1))
-            {
                 throw new ApplicationException(Properties.Resources.AdminCantValidateContact);
-            }
 
             CustomerInfo info = combined.ToContactInfo(localContext);
-
             StatusBlock status = CustomerUtility.ValidateCustomerInfo(localContext, info);
 
             if (!status.TransactionOk)
@@ -1011,12 +1044,25 @@ namespace Skanetrafiken.Crm.Entities
 
             // Validera dubletter.
             if (combined.ed_InformationSource == Generated.ed_informationsource.AdmAndraKund && wasAlreadyValidated == false)
-            {
                 combined.VerifyNoDuplicates(localContext, Generated.ed_informationsource.AdmAndraKund);
-            }
+
             if (combined.ed_InformationSource == Generated.ed_informationsource.Folkbokforing && wasAlreadyValidated == false)
-            {
                 combined.VerifyNoDuplicates(localContext, Generated.ed_informationsource.Folkbokforing);
+        }
+
+        private void SetLeadSourceCodeIfNeeded(Plugin.LocalPluginContext localContext)
+        {
+            LeadEntity originLead = XrmRetrieveHelper.RetrieveFirst<LeadEntity>(localContext, new ColumnSet(LeadEntity.Fields.LeadSourceCode),
+                new FilterExpression
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression(LeadEntity.Fields.LeadId, ConditionOperator.Equal, OriginatingLeadId.Id)
+                    }
+                });
+            if (originLead != null && originLead.LeadSourceCode != null && originLead.LeadSourceCode.HasValue)
+            {
+                this.LeadSourceCode = new OptionSetValue((int)originLead.LeadSourceCode.Value);
             }
         }
 
@@ -1082,9 +1128,7 @@ namespace Skanetrafiken.Crm.Entities
             query.Criteria.AddCondition(Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true);
 
             if (!isCreate)
-            {
                 query.Criteria.AddCondition(Fields.ContactId, ConditionOperator.NotEqual, this.Id);
-            }
 
             var filterByEmail = new FilterExpression();
             query.Criteria.AddFilter(filterByEmail);
@@ -1392,7 +1436,6 @@ namespace Skanetrafiken.Crm.Entities
             // Read contact
             ContactEntity contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, entityId.Id, new ColumnSet(ContactEntity.Fields.EMailAddress1,
                                                                                                                         ContactEntity.Fields.ed_PrivateCustomerContact));
-
 
             // Must be a valid email
             if (string.IsNullOrWhiteSpace(contact.EMailAddress1))

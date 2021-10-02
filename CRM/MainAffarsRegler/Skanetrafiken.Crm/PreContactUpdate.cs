@@ -41,15 +41,11 @@ namespace Skanetrafiken.Crm
         protected void PreExecuteContactUpdate(LocalPluginContext localContext)
         {
             if (localContext == null)
-            {
                 throw new ArgumentNullException("localContext");
-            }
 
             // Must be Pre operation
             if (localContext.PluginExecutionContext.Stage != 20)
-            {
                 throw new InvalidPluginExecutionException("Plugin must run in Pre-operation mode!");
-            }
 
             // INFO: (Endeavor) Don't do anything in offline mode
             if (localContext.PluginExecutionContext.IsExecutingOffline)
@@ -77,8 +73,6 @@ namespace Skanetrafiken.Crm
                 {
                     throw new InvalidPluginExecutionException(ex.Message, ex);
                 }
-
-                //throw new InvalidPluginExecutionException("Debug @joan");
             }
         }
 

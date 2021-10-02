@@ -14,6 +14,7 @@ using Generated = Skanetrafiken.Crm.Schema.Generated;
 using Endeavor.Crm;
 using System.Globalization;
 using System.IdentityModel;
+using System.Linq;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -399,6 +400,36 @@ namespace Skanetrafiken.Crm.Entities
 
                 this.cgi_organizational_number = FormatOrgNumber(localContext, orgNumber);
             }
+
+            string postalCode = this.Address1_PostalCode;
+
+            localContext.Trace($"Entered HandlePreAccountCreate() Postal Code value: {postalCode}");
+            if (!string.IsNullOrEmpty(postalCode))
+            {
+                QueryExpression queryPostalCodes = new QueryExpression(PostalCodesEntity.EntityLogicalName);
+                queryPostalCodes.NoLock = true;
+                queryPostalCodes.ColumnSet.AddColumns(PostalCodesEntity.Fields.ed_Kommun, PostalCodesEntity.Fields.ed_Kommunkod, PostalCodesEntity.Fields.ed_Lan,
+                    PostalCodesEntity.Fields.ed_Lanskod, PostalCodesEntity.Fields.ed_name, PostalCodesEntity.Fields.ed_Postort);
+                queryPostalCodes.Criteria.AddCondition(PostalCodesEntity.Fields.ed_Postnummer, ConditionOperator.Equal, postalCode);
+
+                List<PostalCodesEntity> lPostalCodes = XrmRetrieveHelper.RetrieveMultiple<PostalCodesEntity>(localContext, queryPostalCodes);
+
+                if (lPostalCodes.Count > 1)
+                    localContext.Trace($"HandlePreAccountCreate: Found multiple Postal Codes with ZIP Code: {postalCode}");
+                else if (lPostalCodes.Count == 0)
+                    localContext.Trace($"HandlePreAccountCreate: No Postal Codes with ZIP Code: {postalCode}");
+                else
+                {
+                    PostalCodesEntity ePostalCode = lPostalCodes.FirstOrDefault();
+
+                    this.Address1_StateOrProvince = ePostalCode.ed_Kommun;
+                    this.ed_Address1_CommunityNumber = int.Parse(ePostalCode.ed_Kommunkod);
+                    this.Address1_County = ePostalCode.ed_Lan;
+                    this.ed_Address1_CountyNumber = int.Parse(ePostalCode.ed_Lanskod);
+                    this.Address1_Name = ePostalCode.ed_name;
+                    this.Address1_City = ePostalCode.ed_Postort;
+                }
+            }
         }
 
         internal void HandlePreAccountUpdate(Plugin.LocalPluginContext localContext, AccountEntity preImage)
@@ -421,10 +452,39 @@ namespace Skanetrafiken.Crm.Entities
 
                 this.cgi_organizational_number = FormatOrgNumber(localContext, orgNumber);
             }
+
+            string postalCode = this.Address1_PostalCode;
+
+            localContext.Trace($"Entered HandlePreAccountUpdate() Postal Code value: {postalCode}");
+            if (!string.IsNullOrEmpty(postalCode))
+            {
+                QueryExpression queryPostalCodes = new QueryExpression(PostalCodesEntity.EntityLogicalName);
+                queryPostalCodes.NoLock = true;
+                queryPostalCodes.ColumnSet.AddColumns(PostalCodesEntity.Fields.ed_Kommun, PostalCodesEntity.Fields.ed_Kommunkod, PostalCodesEntity.Fields.ed_Lan,
+                    PostalCodesEntity.Fields.ed_Lanskod, PostalCodesEntity.Fields.ed_name, PostalCodesEntity.Fields.ed_Postort);
+                queryPostalCodes.Criteria.AddCondition(PostalCodesEntity.Fields.ed_Postnummer, ConditionOperator.Equal, postalCode);
+
+                List<PostalCodesEntity> lPostalCodes = XrmRetrieveHelper.RetrieveMultiple<PostalCodesEntity>(localContext, queryPostalCodes);
+
+                if (lPostalCodes.Count > 1)
+                    localContext.Trace($"HandlePreAccountUpdate: Found multiple Postal Codes with ZIP Code: {postalCode}");
+                else if (lPostalCodes.Count == 0)
+                    localContext.Trace($"HandlePreAccountUpdate: No Postal Codes with ZIP Code: {postalCode}");
+                else
+                {
+                    PostalCodesEntity ePostalCode = lPostalCodes.FirstOrDefault();
+
+                    this.Address1_StateOrProvince = ePostalCode.ed_Kommun;
+                    this.ed_Address1_CommunityNumber = int.Parse(ePostalCode.ed_Kommunkod);
+                    this.Address1_County = ePostalCode.ed_Lan;
+                    this.ed_Address1_CountyNumber = int.Parse(ePostalCode.ed_Lanskod);
+                    this.Address1_Name = ePostalCode.ed_name;
+                    this.Address1_City = ePostalCode.ed_Postort;
+                }
+            }
         }
 
         #region Helpers
-
         private static bool CheckParentAccountOrganizationNumber(Plugin.LocalPluginContext localContext, EntityReference parentAccount)
         {
             localContext.Trace($"Entered CheckParentAccountOrganizationNumber.");
