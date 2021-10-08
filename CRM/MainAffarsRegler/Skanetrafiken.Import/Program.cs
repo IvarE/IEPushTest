@@ -61,7 +61,7 @@ namespace Skanetrafiken.Import
 
         public static string cleanMobileTelefon(string value)
         {
-            return value.Replace("+", "").Replace("(", "").Replace(")", "").Replace("-", "").Replace("'", "").Replace(" ", "").Replace("–", "").Replace("/","").Replace(":","").Replace("Mobil", "");
+            return value.Replace("+", "").Replace("(", "").Replace(")", "").Replace("-", "").Replace("'", "").Replace(" ", "").Replace("–", "").Replace("/", "").Replace(":", "").Replace("Mobil", "");
         }
 
         public static string getSubString(string value, int max)
@@ -236,7 +236,7 @@ namespace Skanetrafiken.Import
                         List<string> values = line.Split(';').ToList();
                         if (i == 0)
                         {
-                            for(int j = 0; j < values.Count; j++)
+                            for (int j = 0; j < values.Count; j++)
                             {
                                 ExcelColumn column = new ExcelColumn(j, values[j]);
                                 lColumns.Add(column);
@@ -292,9 +292,9 @@ namespace Skanetrafiken.Import
 
             if (lCurrencies.Count == 1)
                 return lCurrencies.FirstOrDefault().ToEntityReference();
-            else if(lCurrencies.Count == 0)
+            else if (lCurrencies.Count == 0)
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"No Currencies found with Currency Name: " + name + ".");
-            else if(lCurrencies.Count > 1)
+            else if (lCurrencies.Count > 1)
                 _log.InfoFormat(CultureInfo.InvariantCulture, $"More than One Currency found with Currency Name: " + name + ".");
 
             return null;
@@ -307,7 +307,7 @@ namespace Skanetrafiken.Import
 
             List<SystemUser> lUsers = XrmRetrieveHelper.RetrieveMultiple<SystemUser>(localContext, new ColumnSet(SystemUser.Fields.SystemUserId), filterUsers).ToList();
 
-            if(lUsers.Count == 1)
+            if (lUsers.Count == 1)
                 return lUsers.FirstOrDefault().ToEntityReference();
 
             FilterExpression filterTeams = new FilterExpression();
@@ -718,7 +718,7 @@ namespace Skanetrafiken.Import
                                     _log.InfoFormat(CultureInfo.InvariantCulture, $"Sales Order with Name: " + salesOrder.Name + " was created with id: " + id + ".");
 
                                     FulFillOrder(localContext, id);
-                                    
+
                                     break;
                                 case SalesOrderDetail.EntityLogicalName:
 
@@ -727,7 +727,7 @@ namespace Skanetrafiken.Import
 
                                     EntityReference erOrder = salesOrderDetail.SalesOrderId;
 
-                                    if(erOrder != null)
+                                    if (erOrder != null)
                                     {
                                         FulFillOrder(localContext, erOrder.Id);
                                     }
@@ -996,7 +996,7 @@ namespace Skanetrafiken.Import
             if (nPhoneCall.RegardingObjectId == null || nPhoneCall.ed_UpsalesId == null)
                 return null;
 
-            if(erDefaultUser != null)
+            if (erDefaultUser != null)
             {
                 ActivityParty fromParty = new ActivityParty();
                 fromParty.PartyId = erDefaultUser;
@@ -1374,7 +1374,7 @@ namespace Skanetrafiken.Import
                         Account nAccount = new Account();
                         List<ExcelLineData> line = importExcelInfo.lData[i];
 
-                        if(line.Count != importExcelInfo.lColumns.Count)
+                        if (line.Count != importExcelInfo.lColumns.Count)
                         {
                             _log.ErrorFormat(CultureInfo.InvariantCulture, $"The line " + (i + 1) + " was not imported, because the data count is not equal to the column count.");
                             continue;
@@ -1760,7 +1760,7 @@ namespace Skanetrafiken.Import
 
                             EntityReference erSubAccount = GetCrmAccountByUpsalesId(localContext, upsalesIdValue);
 
-                            if(erSubAccount != null)
+                            if (erSubAccount != null)
                             {
                                 Account uAccount = new Account();
                                 uAccount.Id = erSubAccount.Id;
@@ -1863,7 +1863,7 @@ namespace Skanetrafiken.Import
 
                                     EntityReference erContact = GetCrmContactByUpsalesId(localContext, value);
 
-                                    if(erContact != null)
+                                    if (erContact != null)
                                     {
                                         _log.InfoFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": The Contact with Upsales Id: " + value + " was already imported.");
                                         continue;
@@ -1995,7 +1995,7 @@ namespace Skanetrafiken.Import
                                     if (!crmContext.IsAttached(nContact))
                                         crmContext.Attach(nContact);
 
-                                    if(accountAdded.Count == 0)
+                                    if (accountAdded.Count == 0)
                                         crmContext.AddLink(eParentAccount, new Relationship(rel_contact_account), nContact);
                                     else
                                         crmContext.AddLink(accountAdded.FirstOrDefault(), new Relationship(rel_contact_account), nContact);
@@ -2142,7 +2142,7 @@ namespace Skanetrafiken.Import
                         {
                             ExcelLineData selectedData = line[j];
 
-                            if(selectedData == null)
+                            if (selectedData == null)
                             {
                                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
                                 continue;
@@ -2319,7 +2319,7 @@ namespace Skanetrafiken.Import
 
                         crmContext.AddObject(nOrder);
 
-                        if(totalLineAmmount != string.Empty)
+                        if (totalLineAmmount != string.Empty)
                         {
                             decimal dtotalLineAmount = decimal.MinValue;
 
@@ -2386,7 +2386,7 @@ namespace Skanetrafiken.Import
                     byte[] fileBytes = File.ReadAllBytes(file.filePath);
                     string base64 = Convert.ToBase64String(fileBytes);
 
-                    if(base64 == null)
+                    if (base64 == null)
                     {
                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Base64 for the file: " + file.fileName + " is null.");
                         continue;
@@ -2394,7 +2394,7 @@ namespace Skanetrafiken.Import
 
                     string orderId = GetOrderId(fileName);
 
-                    if(orderId == null)
+                    if (orderId == null)
                     {
                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Upsales Id for the Order is null. File: " + fileName + " will be ignored.");
                         continue;
@@ -2407,7 +2407,7 @@ namespace Skanetrafiken.Import
 
                     List<SalesOrder> lOrders = XrmRetrieveHelper.RetrieveMultiple<SalesOrder>(localContext, queryOrders);
 
-                    if(lOrders.Count == 1)
+                    if (lOrders.Count == 1)
                     {
                         SalesOrder salesOrder = lOrders.FirstOrDefault();
 
@@ -2423,9 +2423,9 @@ namespace Skanetrafiken.Import
                         crmContext.AddObject(note);
                         _log.InfoFormat(CultureInfo.InvariantCulture, $"A request has been sent to CRM to create an Attachment on Related Order: " + salesOrder.SalesOrderId);
                     }
-                    else if(lOrders.Count == 0)
+                    else if (lOrders.Count == 0)
                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"No Orders found with  Upsales Id " + orderId + ". File: " + fileName + " will be ignored.");
-                    else if(lOrders.Count > 1)
+                    else if (lOrders.Count > 1)
                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"More than one Order found with Upsales Id " + orderId + ". File: " + fileName + " will be ignored.");
                 }
                 catch (Exception e)
@@ -2628,7 +2628,7 @@ namespace Skanetrafiken.Import
                                         nAccount.cgi_organizational_number = value;
                                     else if (l.Count > 1)
                                         _log.Error("ERROROROROROORORORO------------------");
-                                    else if(l.Count == 1)
+                                    else if (l.Count == 1)
                                         nAccount.Id = l.FirstOrDefault().Id;
 
                                     break;
@@ -2691,7 +2691,7 @@ namespace Skanetrafiken.Import
                         }
                         else
                             _log.Error("UPDATE: EROROROORORORO");
-                        
+
                     }
                     catch (Exception e)
                     {
@@ -3452,16 +3452,28 @@ namespace Skanetrafiken.Import
                     Console.WriteLine(lPostalCodes.Count);
                     Console.WriteLine("-----------------Postal Codes-------------------------");
 
+
                     QueryExpression queryAccounts = new QueryExpression(Account.EntityLogicalName);
                     queryAccounts.NoLock = true;
                     queryAccounts.ColumnSet.AddColumns(Account.Fields.Address1_PostalCode);
                     queryAccounts.Criteria.AddCondition(Account.Fields.Address1_PostalCode, ConditionOperator.NotNull);
+
+                    var filterAccounts = new FilterExpression();
+                    queryAccounts.Criteria.AddFilter(filterAccounts);
+                    filterAccounts.FilterOperator = LogicalOperator.Or;
+                    filterAccounts.AddCondition(Account.Fields.Address1_Name, ConditionOperator.Null);
+                    filterAccounts.AddCondition(Account.Fields.Address1_City, ConditionOperator.Null);
+                    filterAccounts.AddCondition(Account.Fields.Address1_County, ConditionOperator.Null);
+                    filterAccounts.AddCondition(Account.Fields.Address1_StateOrProvince, ConditionOperator.Null);
+                    filterAccounts.AddCondition(Account.Fields.ed_Address1_CommunityNumber, ConditionOperator.Null);
+                    filterAccounts.AddCondition(Account.Fields.ed_Address1_CountyNumber, ConditionOperator.Null);
 
                     List<Account> lAccounts = XrmRetrieveHelper.RetrieveMultiple<Account>(localContext, queryAccounts);
                     Console.WriteLine("-----------------Accounts-------------------------");
                     Console.WriteLine(lAccounts.Count);
                     Console.WriteLine("-----------------Accounts-------------------------");
 
+                    Console.WriteLine("Continue?");
                     Console.ReadKey();
                     int j = 0;
                     foreach (Account account in lAccounts)
@@ -3527,11 +3539,22 @@ namespace Skanetrafiken.Import
                     queryContacts.ColumnSet.AddColumns(Contact.Fields.Address1_PostalCode);
                     queryContacts.Criteria.AddCondition(Contact.Fields.Address1_PostalCode, ConditionOperator.NotNull);
 
+                    var filterContacts = new FilterExpression();
+                    queryContacts.Criteria.AddFilter(filterContacts);
+                    filterContacts.FilterOperator = LogicalOperator.Or;
+                    filterContacts.AddCondition(Contact.Fields.Address1_Name, ConditionOperator.Null);
+                    filterContacts.AddCondition(Contact.Fields.Address1_City, ConditionOperator.Null);
+                    filterContacts.AddCondition(Contact.Fields.Address1_County, ConditionOperator.Null);
+                    filterContacts.AddCondition(Contact.Fields.ed_Address1_Community, ConditionOperator.Null);
+                    filterContacts.AddCondition(Contact.Fields.ed_Address1_CommunityNumber, ConditionOperator.Null);
+                    filterContacts.AddCondition(Contact.Fields.ed_Address1_CountyNumber, ConditionOperator.Null);
+
                     List<Contact> lContacts = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts);
                     Console.WriteLine("-----------------Contacts-------------------------");
                     Console.WriteLine(lContacts.Count);
                     Console.WriteLine("-----------------Contacts-------------------------");
 
+                    Console.WriteLine("Continue?");
                     Console.ReadKey();
                     int l = 0;
                     foreach (Contact contact in lContacts)
@@ -3559,15 +3582,14 @@ namespace Skanetrafiken.Import
                             }
                             catch (Exception e)
                             {
-                                Console.WriteLine($"Postal Code Contact Update Error: Details: " + e.Message);
                                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"Postal Code Contact Update Error: Details: " + e.Message);
                             }
 
                         }
                         else if (auxPostalCode.Count == 0)
-                            Console.WriteLine($"No Postal Codes found with Postal Code: " + postalCode);
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"No Postal Codes found with Postal Code: " + postalCode);
                         else if (auxPostalCode.Count > 2)
-                            Console.WriteLine($"More than one Postal Code found with Postal Code: " + postalCode);
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"More than one Postal Code found with Postal Code: " + postalCode);
 
                         if (l % 1000 == 0)
                             Console.WriteLine(l);
@@ -3605,7 +3627,7 @@ namespace Skanetrafiken.Import
                         _log.ErrorFormat(CultureInfo.InvariantCulture, $"Delete Postal Code Error: Details: " + e.Message);
                         Console.ReadLine();
                     }
-                    
+
 
                     #endregion
 
@@ -3624,7 +3646,7 @@ namespace Skanetrafiken.Import
                     Console.WriteLine("What's the string unique schema name of the field for that entity?");
                     string uniqueField = Console.ReadLine();
 
-                    if(entityName == null || string.IsNullOrEmpty(entityName))
+                    if (entityName == null || string.IsNullOrEmpty(entityName))
                     {
                         Console.WriteLine("The entity name is null or empty");
                         return true;
@@ -3643,7 +3665,7 @@ namespace Skanetrafiken.Import
 
                     List<Entity> lRecords = XrmRetrieveHelper.RetrieveMultiple<Entity>(localContext, queryDuplicates);
 
-                    if(lRecords.Count == 0)
+                    if (lRecords.Count == 0)
                     {
                         Console.WriteLine("No Accounts found.");
                         return true;
@@ -3651,7 +3673,7 @@ namespace Skanetrafiken.Import
 
                     List<List<Entity>> lDuplicates = lRecords.GroupBy(i => i.GetAttributeValue<string>(uniqueField)).Where(x => x.ToList().Count > 1).Select(x => x.ToList()).ToList();
 
-                    if(lDuplicates.Count == 0)
+                    if (lDuplicates.Count == 0)
                     {
                         Console.WriteLine("No Duplicates found with entity name: " + entityName + " and unique field: " + uniqueField);
                         return true;
@@ -3660,7 +3682,7 @@ namespace Skanetrafiken.Import
                     foreach (List<Entity> duplicate in lDuplicates)
                     {
                         Entity dEntity = duplicate.FirstOrDefault();
-                        if(dEntity != null)
+                        if (dEntity != null)
                             Console.WriteLine("The " + entityName + " is duplicated on field " + uniqueField + " with value: " + dEntity.GetAttributeValue<string>(uniqueField));
                     }
 
@@ -3928,7 +3950,7 @@ namespace Skanetrafiken.Import
                     return true;
             }
         }
-        
+
         public static void ImportMKLContactsRecords(Plugin.LocalPluginContext localContext, CrmContext crmContext, ImportExcelInfo importExcelInfo)
         {
             if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)

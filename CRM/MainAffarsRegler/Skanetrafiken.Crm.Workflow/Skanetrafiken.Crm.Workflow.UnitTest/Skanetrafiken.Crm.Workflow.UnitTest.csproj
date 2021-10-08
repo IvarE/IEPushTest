@@ -178,12 +178,6 @@
     </None>
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\Skanetrafiken.Crm.Workflow.csproj">
-      <Project>{ee3b7945-589d-49ef-8005-4350dfeb2478}</Project>
-      <Name>Skanetrafiken.Crm.Workflow</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
