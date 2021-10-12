@@ -1,5 +1,8 @@
-﻿using Microsoft.WindowsAzure.Storage.Auth;
+﻿using Endeavor.Crm;
+using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Xrm.Sdk.Query;
+using Skanetrafiken.Crm.Entities;
 using Skanetrafiken.Crm.Properties;
 using System;
 using System.IO;
@@ -17,10 +20,20 @@ namespace Skanetrafiken.Crm.Controllers
         protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string TenantID = "e1fcb9f3-e5f9-496f-a583-e495dfd57497"; //Tenent
-        //private const string StorageAccountName = "CRM-WEBCASE-SP-ACC"; //DisplayName
-        private const string StorageAccountName = "webstpublicwebtest"; //DisplayName
-        private const string ClientID = "635555fe-6cb2-4a48-9b54-8d5d6472b00f"; //AppId?
-        private const string ClientSecret = "czv7Q~iQuUCRwkryVp6FqHvmSAhbA_I2XidG_"; //Password
+
+        //private const string StorageAccountName = "webstpublicwebtest"; //TEST
+        //private const string ClientID = "635555fe-6cb2-4a48-9b54-8d5d6472b00f"; //TEST - App/Client ID
+        //private const string ClientSecret = "czv7Q~iQuUCRwkryVp6FqHvmSAhbA_I2XidG_"; //TEST
+
+        private const string StorageAccountName = "webstpublicwebacc"; //ACC
+        private const string ClientID = "7450a67c-038e-4b43-b4a1-b5bbd2961912"; //ACC - App/Client ID
+        private const string ClientSecret = "gf57Q~2TGjcsESRX~20ohxZ-Xg3JhX2C55XKc"; //ACC
+
+        //private const string StorageAccountName = "webpublicwebprod"; //PROD
+        //private const string ClientID = "73acce44-96d3-48a1-8c44-33185bc2f24f"; //PROD - App/Client ID
+        //private const string ClientSecret = "mGJ7Q~4jEXcEgzoYd1IBc4tUYb4raX8XOXTJs"; //PROD
+
+
         private const string FileName = "2021/9/20/ef05fe16-0f9d-43d8-909e-6c64f6394aac.jpg";
 
         private static async Task<string> GetAccessToken()
@@ -70,6 +83,9 @@ namespace Skanetrafiken.Crm.Controllers
                 byte[] imageByteArray = { };
                 var containerName = "crm-attachments"; //Stämmer
                 _log.Warn($"Th={threadId} - GetAttachmentFromAzure: Container Name => {containerName}");
+
+                //Get settings from CRM
+                //CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_StorageAccountName));
 
                 _log.Warn($"Th={threadId} - GetAttachmentFromAzure: Starting TASK...");
                 Task.Run(async () =>

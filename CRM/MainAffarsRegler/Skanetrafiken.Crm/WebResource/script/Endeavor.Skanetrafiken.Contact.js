@@ -206,7 +206,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         privateContact.setRequiredLevel("none");
                         collaborationContact.setRequiredLevel("none");
 
-                        if (privateValue != false) {
+                        if (privateValue != null && privateValue != false) {
 
                             businessContact.setValue(false);
                             formContext.getControl("ed_businesscontact").setDisabled(true);
@@ -227,7 +227,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
 
                         }
-                        else if (businessValue != false)
+                        else if (businessValue != null && businessValue != false)
                         {
                             privateContact.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
@@ -248,7 +248,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
 
                         }
-                        else if (kontaktPersonValue != false) {
+                        else if (kontaktPersonValue != null && kontaktPersonValue != false) {
 
                             privateContact.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
@@ -269,7 +269,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
 
                         }
-                        else if (epostMottagareValue != false) {
+                        else if (epostMottagareValue != null && epostMottagareValue != false) {
 
                             privateContact.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
@@ -290,7 +290,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
 
                         }
-                        else if (infotainmentValue != false) {
+                        else if (infotainmentValue != null && infotainmentValue != false) {
 
                             privateContact.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
@@ -311,7 +311,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
 
                         }
-                        else if (agentValue != false) {
+                        else if (agentValue != null && agentValue != false) {
 
                             privateContact.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
@@ -332,7 +332,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
 
                         }
-                        else if (collaborationValue != false) {
+                        else if (collaborationValue != null && collaborationValue != false) {
 
                             privateContact.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
