@@ -695,7 +695,7 @@ namespace CGIXrmRainDanceExport
                 if (serviceProxy == null)
                     _log.Error("Connection to Dynamics failed.");
                 else
-                    _log.Error("Connection to Dynamics succeeded.");
+                    _log.Info("Connection to Dynamics succeeded.");
 
                 return new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
             }

@@ -334,7 +334,7 @@ namespace CGIXrmRainDanceExport
 
         private bool _createFile(string filename, ObservableCollection<ExportData> lines)
         {
-
+            _log.Debug("_createFile() File Name: " + filename);
             if (lines == null)
                 return false;
 
@@ -682,7 +682,7 @@ namespace CGIXrmRainDanceExport
                 if (serviceProxy == null)
                     _log.Error("Connection to Dynamics failed.");
                 else
-                    _log.Error("Connection to Dynamics succeeded.");
+                    _log.Info("Connection to Dynamics succeeded.");
 
                 return new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
             }

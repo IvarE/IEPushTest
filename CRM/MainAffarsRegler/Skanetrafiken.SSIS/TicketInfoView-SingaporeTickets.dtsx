@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="3"
-  DTS:VersionGUID="{E3CEAA1A-6242-41A0-963C-560C45600E59}">
+  DTS:VersionBuild="6"
+  DTS:VersionGUID="{0016FAC8-508E-4164-AAF6-08E463CD10A9}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables />
@@ -306,13 +306,13 @@
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
         <NodeLayout
-          Size="157,42"
-          Id="Package\Upsert Singapore Tickets\OLE DB Source"
-          TopLeft="208,126" />
-        <NodeLayout
           Size="213,42"
           Id="Package\Upsert Singapore Tickets\Dynamics CRM Destination"
           TopLeft="432,274" />
+        <NodeLayout
+          Size="157,42"
+          Id="Package\Upsert Singapore Tickets\OLE DB Source"
+          TopLeft="208,126" />
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>
