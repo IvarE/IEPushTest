@@ -23,10 +23,10 @@ namespace Endeavor.Crm.UnitTest
 
          *****************************************************************************/
 
-        //public static string WebApiRootEndpoint = @"http://localhost:37909/api/";
+        public static string WebApiRootEndpoint = @"http://localhost:37909/api/";
 #if DEBUG
         //public static string WebApiRootEndpoint = @"https://crmwebapi-tst.skanetrafiken.se/api/";              // ED UTV med token
-
+        
 #endif
 #if DEV
         //public static string WebApiRootEndpoint = @"https://crmwebapi-tst.skanetrafiken.se/api/";              // ED UTV med token
@@ -34,7 +34,7 @@ namespace Endeavor.Crm.UnitTest
 #endif
 #if TEST
         //public static string WebApiRootEndpoint = @"https://crmwebapi-tst.skanetrafiken.se/api/";    // DK test med kabel, token och CERT
-        public static string WebApiRootEndpoint = @"http://localhost:37909/api/";
+        //public static string WebApiRootEndpoint = @"http://localhost:37909/api/";
 #endif
 #if ACCEPTANS
         public static string WebApiRootEndpoint = @"https://crmwebapi-acc.skanetrafiken.se/api/";    // DK Acc med kabel, token och CERT
