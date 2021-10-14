@@ -11,10 +11,27 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="6"
-  DTS:VersionGUID="{0016FAC8-508E-4164-AAF6-08E463CD10A9}">
+  DTS:VersionBuild="8"
+  DTS:VersionGUID="{8B5631F4-574C-4929-B06B-9B8474C2715C}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Dynamics 365 Connection]"
+      DTS:CreationName="DynamicsCRM"
+      DTS:DTSID="{190EDA25-265D-4A98-99AA-0186D963702A}"
+      DTS:ObjectName="Dynamics 365 Connection">
+      <DTS:ObjectData>
+        <CrmConnectionManager
+          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekundtst.skanetrafiken.se/DKCRMTST;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ServiceTimeout=120;RetryOnIntermittentErrors=True;IgnoreCertificateErrors=False"
+          ConnectByProxy="False">
+          <Password
+            Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAJwBvyRipREWjlrSn9j0xpAAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAACodTph7RS7xVdyr+x3RelQPtMIEDELeQEL8QJRth/JogAAAAAOgAAAAAIAACAAAAAPJK/sywuB7/td0eR0AK7CKpL/ubPC2h3MGiXqlqXcryAAAACSdLF4zI1kbd5gpG6YSKdYstaFzT2vb6AUlQX7nxC7D0AAAADoHhZyMVH+tvZ/hAeBR76Zi99/3OMi7EBIhJgNw9ai6OTWCyYFQt46ffrH3PigC6HdZc+crRSm925WisfCjWzZ</Password>
+        </CrmConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
   <DTS:Variables />
   <DTS:Executables>
     <DTS:Executable
@@ -43,7 +60,7 @@
                   dataType="System.String"
                   description="Destination entity to write data."
                   expressionType="Notify"
-                  name="DestinationEntity"></property>
+                  name="DestinationEntity">st_singaporeticket</property>
                 <property
                   dataType="System.Int32"
                   description="Specifies how data is written to CDS/Dynamics CRM server."
@@ -111,7 +128,7 @@
                   dataType="System.Int32"
                   description="Specifies the number of records to be sent to CDS/Dynamics CRM server in each service call."
                   expressionType="Notify"
-                  name="BatchSize">1</property>
+                  name="BatchSize">100</property>
                 <property
                   dataType="System.Int32"
                   description="Specify the total number or concurrent threads to write to CDS/CRM server simultaneously. "
@@ -129,6 +146,8 @@
               <connections>
                 <connection
                   refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Connections[DynamicsCRM]"
+                  connectionManagerID="Package.ConnectionManagers[Dynamics 365 Connection]"
+                  connectionManagerRefId="Package.ConnectionManagers[Dynamics 365 Connection]"
                   description="Dynamics CRM Connection Manager"
                   name="DynamicsCRM" />
               </connections>
@@ -140,7 +159,513 @@
                   hasSideEffects="true"
                   name="Input">
                   <externalMetadataColumns
-                    isUsed="True" />
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[createdby]"
+                      dataType="guid"
+                      name="createdby">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">systemuser</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_activationintervalfrom]"
+                      dataType="dbTimeStamp"
+                      name="ed_activationintervalfrom">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_activationintervalto]"
+                      dataType="dbTimeStamp"
+                      name="ed_activationintervalto">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_bearercategory]"
+                      dataType="wstr"
+                      length="20"
+                      name="ed_bearercategory">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_blockeddate]"
+                      dataType="dbTimeStamp"
+                      name="ed_blockeddate">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_crmnummer]"
+                      dataType="wstr"
+                      length="50"
+                      name="ed_crmnummer">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_hasgroupdiscount]"
+                      dataType="bool"
+                      name="ed_hasgroupdiscount">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Boolean</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_hasrefund]"
+                      dataType="bool"
+                      name="ed_hasrefund">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Boolean</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_lastupdated]"
+                      dataType="dbTimeStamp"
+                      name="ed_lastupdated">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_offernamedetailed]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_offernamedetailed">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_saleschannel]"
+                      dataType="wstr"
+                      length="30"
+                      name="ed_saleschannel">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_skakort]"
+                      dataType="guid"
+                      name="ed_skakort">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">ed_skakort</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_ticketactivated]"
+                      dataType="dbTimeStamp"
+                      name="ed_ticketactivated">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_travelcardid]"
+                      dataType="guid"
+                      name="ed_travelcardid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">cgi_travelcard</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_travellerscount]"
+                      dataType="i4"
+                      name="ed_travellerscount">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Integer</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_travelvalidityintervalfrom]"
+                      dataType="dbTimeStamp"
+                      name="ed_travelvalidityintervalfrom">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_travelvalidityintervalto]"
+                      dataType="dbTimeStamp"
+                      name="ed_travelvalidityintervalto">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[importsequencenumber]"
+                      dataType="i4"
+                      name="importsequencenumber">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Integer</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[overriddencreatedon]"
+                      dataType="dbTimeStamp"
+                      name="overriddencreatedon">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ownerid]"
+                      dataType="guid"
+                      name="ownerid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Owner</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">systemuser;team</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[owneridtype]"
+                      dataType="wstr"
+                      length="64"
+                      name="owneridtype">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">EntityName</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_contactid]"
+                      dataType="guid"
+                      name="st_contactid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">contact</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_name]"
+                      dataType="wstr"
+                      length="100"
+                      name="st_name">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_pricemodel]"
+                      dataType="wstr"
+                      length="25"
+                      name="st_pricemodel">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_pricemodelprice]"
+                      dataType="wstr"
+                      length="100"
+                      name="st_pricemodelprice">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_singaporeticketid]"
+                      dataType="guid"
+                      name="st_singaporeticketid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Uniqueidentifier</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_singtickettype]"
+                      dataType="i4"
+                      name="st_singtickettype">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Picklist</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_ticketactivated]"
+                      dataType="i4"
+                      name="st_ticketactivated">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Picklist</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_ticketcreated]"
+                      dataType="dbTimeStamp"
+                      name="st_ticketcreated">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_ticketid]"
+                      dataType="wstr"
+                      length="10"
+                      name="st_ticketid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_ticketprice]"
+                      dataType="numeric"
+                      name="st_ticketprice"
+                      precision="38"
+                      scale="4">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Money</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_validfrom]"
+                      dataType="dbTimeStamp"
+                      name="st_validfrom">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_validto]"
+                      dataType="dbTimeStamp"
+                      name="st_validto">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[statecode]"
+                      dataType="i4"
+                      name="statecode">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">State</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[statuscode]"
+                      dataType="i4"
+                      name="statuscode">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Status</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[timezoneruleversionnumber]"
+                      dataType="i4"
+                      name="timezoneruleversionnumber">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Integer</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[transactioncurrencyid]"
+                      dataType="guid"
+                      name="transactioncurrencyid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">transactioncurrency</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[utcconversiontimezonecode]"
+                      dataType="i4"
+                      name="utcconversiontimezonecode">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Integer</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                  </externalMetadataColumns>
                 </input>
               </inputs>
               <outputs>
