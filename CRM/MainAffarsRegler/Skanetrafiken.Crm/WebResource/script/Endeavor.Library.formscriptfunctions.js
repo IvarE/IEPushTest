@@ -89,7 +89,11 @@ Endeavor.formscriptfunctions = {
     //Hide or display tab.
     HideOrDisplayTab: function (name, visible, formContext) {
         try {
-            formContext.ui.tabs.get(name).setVisible(visible);
+            var _tab = formContext.ui.tabs.get(name);
+            if (_tab)
+                _tab.setVisible(visible);
+            else
+                console.log("Endeavor.formscriptfunctions.HideOrDisplayTab: tab " + name + " is not on the form.");
         }
         catch (e) {
             alert("Fel i Endeavor.formscriptfunctions.HideOrDisplayTab\n\n" + e.message);
@@ -100,7 +104,11 @@ Endeavor.formscriptfunctions = {
     //expanded or collapsed
     SetDisplayState: function (name, state, formContext) {
         try {
-            formContext.ui.tabs.get(name).setDisplayState(state);
+            var _tab = formContext.ui.tabs.get(name);
+            if (_tab)
+                _tab.setDisplayState(state);
+            else
+                console.log("Endeavor.formscriptfunctions.SetDisplayState: tab " + name + " is not on the form.");
         }
         catch (e) {
             alert("Fel i Endeavor.formscriptfunctions.SetDisplayState\n\n" + e.message);
@@ -111,7 +119,16 @@ Endeavor.formscriptfunctions = {
     //Hide or display section.
     HideOrDisplaySection: function (tabname, sectionname, visible, formContext) {
         try {
-            formContext.ui.tabs.get(tabname).sections.get(sectionname).setVisible(visible)
+            var _tab = formContext.ui.tabs.get(tabname);
+            if (_tab) {
+                var _section = _tab.sections.get(sectionname);
+                if (_section)
+                    _section.setVisible(visible);
+                else
+                    console.log("Endeavor.formscriptfunctions.HideOrDisplaySection: section " + sectionname + " is not on the form.");
+            }
+            else
+                console.log("Endeavor.formscriptfunctions.HideOrDisplaySection: tab " + tabname + " is not on the form.");
         }
         catch (e) {
             alert("Fel i Endeavor.formscriptfunctions.HideOrDisplaySection\n\n" + e.message);
@@ -122,10 +139,14 @@ Endeavor.formscriptfunctions = {
     //Hide or display field.
     HideOrDisplayField: function (name, visible, formContext) {
         try {
-            formContext.getControl(name).setVisible(visible);
+            var _control = formContext.getControl(name);
+            if (_control)
+                _control.setVisible(visible);
+            else
+                console.log("Endeavor.formscriptfunctions.HideOrDisplayField: control " + name + " is not on the form.");
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.HideOrDisplayField\n\n" + e.message + name);
+            alert("Fel i Endeavor.formscriptfunctions.HideOrDisplayField\n\n" + e.message);
         }
     },
 
@@ -133,7 +154,11 @@ Endeavor.formscriptfunctions = {
     //Set value to a field
     SetValue: function (name, value, formContext) {
         try {
-            formContext.data.entity.attributes.get(name).setValue(value);
+            var _attribute = formContext.data.entity.attributes.get(name);
+            if (_attribute)
+                _attribute.setValue(value);
+            else
+                console.log("Endeavor.formscriptfunctions.SetValue: attribute " + name + " is not on the form.");
         }
         catch (e) {
             alert("Fel i Endeavor.formscriptfunctions.SetValue\n\n" + e.message);
@@ -145,7 +170,11 @@ Endeavor.formscriptfunctions = {
     GetValue: function (name, formContext) {
         var _returnvalue = null;
         try {
-            _returnvalue = formContext.data.entity.attributes.get(name).getValue();
+            var _attribute = formContext.data.entity.attributes.get(name);
+            if (_attribute)
+                _returnvalue = _attribute.getValue();
+            else
+                console.log("Endeavor.formscriptfunctions.GetValue: attribute " + name + " is not on the form.");
         }
         catch (e) {
             alert("Fel i Endeavor.formscriptfunctions.GetValue\n\n" + e.message);
@@ -158,7 +187,10 @@ Endeavor.formscriptfunctions = {
     SetLabel: function (name, label, formContext) {
         try {
             var _field = formContext.ui.controls.get(name);
-            _field.setLabel(label);
+            if(_field)
+                _field.setLabel(label);
+            else
+                console.log("Endeavor.formscriptfunctions.SetLabel: control " + name + " is not on the form.");
         }
         catch (e) {
             alert("Fel i Endeavor.formscriptfunctions.SetLabel\n\n" + e.message);
@@ -170,7 +202,10 @@ Endeavor.formscriptfunctions = {
     SetState: function (name, state, formContext) {
         try {
             var _field = formContext.ui.controls.get(name);
-            _field.setDisabled(state);
+            if (_field)
+                _field.setDisabled(state);
+            else
+                console.log("Endeavor.formscriptfunctions.SetState: control " + name + " is not on the form.");
         }
         catch (e) {
             alert("Fel i Endeavor.formscriptfunctions.SetState\n\n" + e.message);
@@ -179,8 +214,13 @@ Endeavor.formscriptfunctions = {
 
     SetSubmitModeAlways: function (name, formContext) {
         try {
-            formContext.getAttribute(name).setSubmitMode("always");
-        } catch (e) {
+            var _attribute = formContext.getAttribute(name);
+            if (_attribute)
+                _attribute.setSubmitMode("always");
+            else
+                console.log("Endeavor.formscriptfunctions.SetSubmitModeAlways: attribute " + name + " is not on the form.");
+        }
+        catch (e) {
             alert("Fel i Endeavor.formscriptfunctions.SetSubmitModeAlways\n\n" + e.message);
         }
     },
@@ -190,8 +230,13 @@ Endeavor.formscriptfunctions = {
     GetState: function (name, formContext) {
         var _returnvalue = null;
         try {
-            _returnvalue = formContext.getControl(name).getDisabled();
-        } catch (e) {
+            var _control = formContext.getControl(name);
+            if (_control)
+                _returnvalue = _control.getDisabled();
+            else
+                console.log("Endeavor.formscriptfunctions.GetState: control " + name + " is not on the form.");
+        }
+        catch (e) {
             alert("Fel i Endeavor.formscriptfunctions.GetState\n\n" + e.message);
         }
         return _returnvalue;
@@ -203,10 +248,14 @@ Endeavor.formscriptfunctions = {
     // none, required, recommended
     SetRequiredLevel: function (name, state, formContext) {
         try {
-            formContext.getAttribute(name).setRequiredLevel(state);
+            var _attribute = formContext.getAttribute(name);
+            if (_attribute)
+                _attribute.setRequiredLevel(state);
+            else
+                console.log("Endeavor.formscriptfunctions.SetRequiredLevel: attribute " + name + " is not on the form.");
         }
         catch (e) {
-            alert("Fel i Endeavor.formscriptfunctions.SetRequiredLevel\n\n" + e.message + name);
+            alert("Fel i Endeavor.formscriptfunctions.SetRequiredLevel\n\n" + e.message);
         }
     },
 
@@ -215,7 +264,11 @@ Endeavor.formscriptfunctions = {
     // always, never, dirty
     SetSubmitMode: function (name, state, formContext) {
         try {
-            formContext.data.entity.attributes.get(name).setSubmitMode(state);
+            var _attribute = formContext.data.entity.attributes.get(name);
+            if (_attribute)
+                _attribute.setSubmitMode(state);
+            else
+                console.log("Endeavor.formscriptfunctions.SetSubmitMode: attribute " + name + " is not on the form.");
         }
         catch (e) {
             alert("Fel i Endeavor.formscriptfunctions.SetSubmitMode\n\n" + e.message);
@@ -227,13 +280,17 @@ Endeavor.formscriptfunctions = {
     SetLookup: function (attributeName, entityType, id, name, formContext) {
         try {
             var _attribute = formContext.getAttribute(attributeName);
-            var _item = new Object();
-            _item.id = id;
-            _item.name = name;
-            _item.entityType = entityType;
-            var _lookup = new Array();
-            _lookup[0] = _item;
-            _attribute.setValue(_lookup);
+            if (_attribute) {
+                var _item = new Object();
+                _item.id = id;
+                _item.name = name;
+                _item.entityType = entityType;
+                var _lookup = new Array();
+                _lookup[0] = _item;
+                _attribute.setValue(_lookup);
+            }
+            else
+                console.log("Endeavor.formscriptfunctions.SetLookup: attribute " + attributeName + " is not on the form.");
         }
         catch (e) {
             alert("Fel i Endeavor.formscriptfunctions.SetLookup\n\n" + e.message);
@@ -247,10 +304,14 @@ Endeavor.formscriptfunctions = {
         try {
             var _id = null;
             var _attribute = formContext.getAttribute(name);
-            var _lookup = _attribute.getValue();
-            if (_lookup != null)
-                _id = _lookup[0].id;
-            return _id;
+            if (_attribute) {
+                var _lookup = _attribute.getValue();
+                if (_lookup != null)
+                    _id = _lookup[0].id;
+                return _id;
+            }
+            else
+                console.log("Endeavor.formscriptfunctions.GetLookupid: attribute " + name + " is not on the form.");
         }
         catch (e) {
             alert("Fel i Endeavor.formscriptfunctions.GetLookupid\n\n" + e.message);
@@ -265,10 +326,14 @@ Endeavor.formscriptfunctions = {
         try {
             var _idName = null;
             var _attribute = formContext.getAttribute(name);
-            var _lookup = _attribute.getValue();
-            if (_lookup != null)
-                _idName = _lookup[0].name;
-            return _idName;
+            if (_attribute) {
+                var _lookup = _attribute.getValue();
+                if (_lookup != null)
+                    _idName = _lookup[0].name;
+                return _idName;
+            }
+            else
+                console.log("Endeavor.formscriptfunctions.GetLookupName: attribute " + name + " is not on the form.");
         }
         catch (e) {
             alert("Fel i Endeavor.formscriptfunctions.GetLookupName\n\n" + e.message);
