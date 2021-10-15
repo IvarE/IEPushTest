@@ -2970,6 +2970,8 @@ namespace Skanetrafiken.Import
             Console.WriteLine("102) Update Postal Codes Information Contacts");
             Console.WriteLine("103) Delete PostalCodes");
 
+            Console.WriteLine("104) Update Sent Value Codes");
+
             Console.WriteLine("-------Fixes-------");
             Console.WriteLine("11) Fix: Check for Duplicate Records");
             Console.WriteLine("12) Fix: Update SubAccounts Records");
@@ -3628,6 +3630,58 @@ namespace Skanetrafiken.Import
                         Console.ReadLine();
                     }
 
+
+                    #endregion
+
+                    return true;
+
+                case "104":
+
+                    #region Update Sent Value Codes
+
+                    try
+                    {
+                        var sent_statuscode = 899310003;
+
+                        // Instantiate QueryExpression query
+                        var queryValueCodes = new QueryExpression(ed_ValueCode.EntityLogicalName);
+                        queryValueCodes.NoLock = true;
+                        queryValueCodes.ColumnSet.AddColumns(ed_ValueCode.Fields.ed_ValueCodeId);
+                        queryValueCodes.Criteria.AddCondition(ed_ValueCode.Fields.statuscode, ConditionOperator.Equal, (int)ed_valuecode_statuscode.Skapad);
+
+                        var ah = queryValueCodes.AddLink(ed_TextMessage.EntityLogicalName, ed_ValueCode.Fields.ed_ValueCodeId, ed_TextMessage.Fields.RegardingObjectId);
+                        ah.EntityAlias = "ah";
+                        ah.LinkCriteria.AddCondition(ed_TextMessage.Fields.StatusCode, ConditionOperator.Equal, sent_statuscode);
+
+                        List<ed_ValueCode> lValueCodes = XrmRetrieveHelper.RetrieveMultiple<ed_ValueCode>(localContext, queryValueCodes);
+
+                        Console.WriteLine("Found " + lValueCodes.Count + " Value Codes to process.");
+                        Console.ReadLine();
+
+                        foreach (var item in lValueCodes)
+                        {
+                            ed_ValueCode uValueCode = new ed_ValueCode();
+                            uValueCode.Id = item.Id;
+                            uValueCode.statuscode = ed_valuecode_statuscode.Skickad;
+
+                            try
+                            {
+                                XrmHelper.Update(localContext, uValueCode);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"Update Sent Value Codes: Details: " + e.Message);
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Update Sent Value Codes: Details: " + e.Message);
+                            }
+
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Update Sent Value Codes: Details: " + e.Message);
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Update Sent Value Codes: Details: " + e.Message);
+                        Console.ReadLine();
+                    }
 
                     #endregion
 
