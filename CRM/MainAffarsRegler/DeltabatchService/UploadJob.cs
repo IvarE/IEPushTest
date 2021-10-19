@@ -11,7 +11,9 @@ using System.Linq;
 using System.Collections;
 using Skanetrafiken.Crm;
 using Microsoft.Crm.Sdk.Messages;
-using Tamir.SharpSsh;
+using Renci.SshNet;
+using Renci.SshNet.Common;
+//using Tamir.SharpSsh;
 
 namespace Endeavor.Crm.DeltabatchService
 {
@@ -25,8 +27,8 @@ namespace Endeavor.Crm.DeltabatchService
         public const string TriggerName = "UploadTrigger";
         public const string JobName = "UploadJob";
 
-        protected Sftp sftp;
-
+        //protected Sftp sftp;
+        protected SftpClient sftpClient;
         private string plusFileName;
         private string minusFileName;
 
@@ -72,7 +74,7 @@ namespace Endeavor.Crm.DeltabatchService
             {
                 _log.Error($"Exception caught in ExecuteJob():\n{e.Message}\n\n{e}");
                 //if (localContext != null)
-                //    DeltabatchJobHelper.SendErrorMailToDev(localContext, e);
+                DeltabatchJobHelper.SendErrorMailToDev(localContext, e);
             }
         }
 
@@ -135,7 +137,10 @@ namespace Endeavor.Crm.DeltabatchService
                     _log.Error($"No DeltabatchQueue Records were found.");
                     return;
                 }
-                // Viggo TODO - Need to handle Deltabatchqueue posts that does not have ed_ContactNumber
+
+                list.RemoveAll(r => null == r.ed_ContactNumber);
+
+
                 List<DeltabatchQueueEntity> distinctList = list.GroupBy(x => x.ed_ContactNumber).Select(f => f.First()).ToList();
                 List<DeltabatchQueueEntity> sortedList = distinctList.OrderByDescending(dbq => dbq.CreatedOn).ToList<DeltabatchQueueEntity>();
                 List<string> processedSocSecNumbers = new List<string>();
@@ -253,7 +258,10 @@ namespace Endeavor.Crm.DeltabatchService
         public void UploadFiles()
         {
             _log.Info($"Entered UploadFiles");
-            sftp = null;
+
+
+            //sftp = null;
+            sftpClient = null;
             try
             {
                 if (!File.Exists(plusFileName))
@@ -265,14 +273,51 @@ namespace Endeavor.Crm.DeltabatchService
                     throw new Exception($"Minus File not found at: {minusFileName}, please create and try again.");
                 }
 
-                sftp = DeltabatchJobHelper.CreateSftpConnectionToCreditsafe(_log);
-                sftp.Connect();
-                if (!sftp.Connected)
+                sftpClient = DeltabatchJobHelper.CreateSftpConnectionToCreditsafe(_log);
+                sftpClient.Connect();
+                if (!sftpClient.IsConnected)
                     throw new Exception($"Unable to connect to sftp-server");
-                sftp.Put(plusFileName, "/INFILE");
-                sftp.Put(minusFileName, "/INFILE");
+                _log.Error("Connected to SFTP");
+
+                sftpClient.ChangeDirectory("/INFILE/");
+                
+
+                //sftpClient.Put(plusFileName, "/INFILE");
+                //sftpClient.Put(minusFileName, "/INFILE");
+
+                //var fileTest = new FileStream(plusFileName, FileMode.Open);
+                //sftpClient.UploadFile(fileTest, plusFileName, true, null);
+
+                
+
+                using (var fileStream = new FileStream(plusFileName,FileMode.Open))
+                {
+                    sftpClient.UploadFile(fileStream, Path.GetFileName(plusFileName)); 
+                }
+
+                
+
+                using (var fileStream = new FileStream(minusFileName, FileMode.Open))
+                {
+                    sftpClient.UploadFile(fileStream, Path.GetFileName(minusFileName)); 
+                }
+
+
+
+                //using (var uplfileStream = System.IO.File.OpenRead(plusFileName))
+                //{
+                //    sftpClient.UploadFile(uplfileStream, @"\INFILE\" + plusFileName); // + plusFileName
+
+                //    //sftpClient.UploadFile(uplfileStream, plusFileName, true);
+                //}
+
+                //using (var uplfileStream = System.IO.File.OpenRead(minusFileName))
+                //{
+                //    sftpClient.UploadFile(uplfileStream, "/INFILE/" + minusFileName, true);
+                //}
+
                 //ArrayList fileList = sftp.GetFileList("/INFILE");
-                sftp.Close();
+                sftpClient.Disconnect();
 
                 File.Move(plusFileName, plusFileName.Insert(plusFileName.IndexOf(Properties.Settings.Default.PlusFileName), "History\\"));
                 File.Move(minusFileName, minusFileName.Insert(minusFileName.IndexOf(Properties.Settings.Default.MinusFileName), "History\\"));
@@ -285,10 +330,10 @@ namespace Endeavor.Crm.DeltabatchService
             finally
             {
                 //Close sftp
-                try { sftp.Close(); }
+                try { sftpClient.Disconnect(); }
                 catch { }
 
-                try { sftp = null; }
+                try { sftpClient = null; }
                 catch { }
 
                 try { GC.Collect(); }
