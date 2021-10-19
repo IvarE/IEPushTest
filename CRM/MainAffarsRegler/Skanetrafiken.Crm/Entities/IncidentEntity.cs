@@ -13,6 +13,8 @@ using Endeavor.Crm;
 using System.Text.RegularExpressions;
 using Skanetrafiken.Crm.ValueCodes;
 using System.Linq;
+using System.Net;
+using System.IO;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -363,9 +365,36 @@ namespace Skanetrafiken.Crm.Entities
             return incident;
         }
 
-        public static string HandleDecryptAttachment(Plugin.LocalPluginContext localContext, string valueCodeId, Guid? userGuid) 
+        public static string HandleDecryptAttachment(Plugin.LocalPluginContext localContext, string fileName, Guid? userGuid) 
         {
             //Decrypt the file
+            //HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create($"https://fasadentst.skanetrafiken.se/api/Incident/GetAttachmentFromAzure/encryptedUrl?encryptedUrl=2021/9/20/ef05fe16-0f9d-43d8-909e-6c64f6394aac.jpg");
+
+            //Get Fasad URL from settings
+            CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_CRMPlusService));
+
+            if (settings != null && !string.IsNullOrWhiteSpace(settings.ed_CRMPlusService)) 
+            {
+                var urlToUse = $"{settings.ed_CRMPlusService}api/Incident/GetAttachmentFromAzure/encryptedUrl?encryptedUrl={fileName}";
+                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(urlToUse);
+                string clientCertName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_ClientCertName);
+                httpWebRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCertName));
+                //httpWebRequest.ContentType = "image/jpg";
+                httpWebRequest.ContentType = "text/plain";
+                httpWebRequest.Method = "GET";
+
+                HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    // Result is 
+                    var result = streamReader.ReadToEnd();
+                    if (httpResponse.StatusCode != HttpStatusCode.OK)
+                    {
+                        throw new InvalidPluginExecutionException($"Fel vid kommunikation med externt system: {result}");
+                    }
+                    return result;
+                }
+            }
 
             return "200";
         }

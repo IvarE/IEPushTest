@@ -1479,7 +1479,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                                 //String with the link
                                 var encryptedLink = gridAtr[0].getValue();
 
-                                alert(encryptedLink);
+                                //alert(encryptedLink);
                                 parent.Xrm.Page.getControl("FileLinks").refresh();
 
                                 parent.Xrm.Page.ui.setFormNotification("Hämtar fil...", "INFO", "attachmentInfo");
@@ -1487,47 +1487,8 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                                 parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
 
                                 //Display file from opened resource:
-                                var windowOptions = { height: 1200, width: 600 };
+                                var windowOptions = { height: 1000, width: 950 };
                                 Xrm.Navigation.openWebResource("ed_/html/Endeavor.Skanetrafiken.DisplayCaseAttachment.html", windowOptions, encryptedLink);
-
-                                //var inputParameters = [{ "Field": "EncryptedString", "Value": encryptedLink, "TypeName": "Edm.String", "StructuralProperty": 1 }];
-
-                                //debugger;
-                                //Endeavor.Skanetrafiken.Incident.callGlobalAction("ed_DecryptAttachmentFile", inputParameters,
-                                //    function (result) {
-                                //        debugger;
-                                //        if (result != null && result != "undefined") {
-                                //            console.log("Result: " + result.responseText);
-                                //        }
-
-                                //        var parsedResult = JSON.parse(result.responseText);
-
-                                //        if (parsedResult.Result.startsWith("200")) {
-
-                                //            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
-                                //        }
-                                //        else {
-
-                                //            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
-                                            
-                                //        }
-                                //    },
-                                //    function (e) {
-                                //        // Error
-                                //        parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
-
-                                //        var confirmationAttachment = confirm("Filen kunde ej hämtas. Execution returned: " + e.message);
-
-                                //        if (confirmationAttachment) {
-                                //            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
-                                //        }
-                                //        else {
-                                //            parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
-                                //        }
-
-                                //        if (window.console && console.error)
-                                //            console.error(e.message + "\n" + t);
-                                //    });
                             }
                         }
                     }

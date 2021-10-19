@@ -109,6 +109,8 @@ namespace Endeavor.Crm.CleanRecordsService
                 _log.Error(ex.Message, ex);
                 throw;
             }
+
+            //test
         }
     }
 }

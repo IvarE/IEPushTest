@@ -1,23 +1,17 @@
 ﻿using Endeavor.Crm;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Tooling.Connector;
-using Skanetrafiken.Crm.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using Skanetrafiken.Crm.Properties;
-using System.Configuration;
-using System.Threading;
-using System.Threading.Tasks;
-using System.IdentityModel.Tokens;
-using Microsoft.Identity.Client;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Microsoft.Xrm.Sdk.Query;
+using Skanetrafiken.Crm.Entities;
+using Skanetrafiken.Crm.Properties;
+using System;
 using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Http;
 
 namespace Skanetrafiken.Crm.Controllers
 {
@@ -26,11 +20,21 @@ namespace Skanetrafiken.Crm.Controllers
         protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string TenantID = "e1fcb9f3-e5f9-496f-a583-e495dfd57497"; //Tenent
-        //private const string StorageAccountName = "CRM-WEBCASE-SP-ACC"; //DisplayName
-        private const string StorageAccountName = "webstpublicwebtest"; //DisplayName
-        private const string ClientID = "635555fe-6cb2-4a48-9b54-8d5d6472b00f"; //AppId?
-        private const string ClientSecret = "czv7Q~iQuUCRwkryVp6FqHvmSAhbA_I2XidG_"; //Password
-        private const string FileName = "";
+
+        //private const string StorageAccountName = "webstpublicwebtest"; //TEST
+        //private const string ClientID = "635555fe-6cb2-4a48-9b54-8d5d6472b00f"; //TEST - App/Client ID
+        //private const string ClientSecret = "czv7Q~iQuUCRwkryVp6FqHvmSAhbA_I2XidG_"; //TEST
+
+        private const string StorageAccountName = "webstpublicwebacc"; //ACC
+        private const string ClientID = "7450a67c-038e-4b43-b4a1-b5bbd2961912"; //ACC - App/Client ID
+        private const string ClientSecret = "gf57Q~2TGjcsESRX~20ohxZ-Xg3JhX2C55XKc"; //ACC
+
+        //private const string StorageAccountName = "webpublicwebprod"; //PROD
+        //private const string ClientID = "73acce44-96d3-48a1-8c44-33185bc2f24f"; //PROD - App/Client ID
+        //private const string ClientSecret = "mGJ7Q~4jEXcEgzoYd1IBc4tUYb4raX8XOXTJs"; //PROD
+
+
+        private const string FileName = "2021/9/20/ef05fe16-0f9d-43d8-909e-6c64f6394aac.jpg";
 
         private static async Task<string> GetAccessToken()
         {
@@ -71,14 +75,17 @@ namespace Skanetrafiken.Crm.Controllers
                 return erm;
             }
 
-            HttpResponseMessage rm = null;
+            HttpResponseMessage rm = new HttpResponseMessage();
             //Decrypt the string
 
             try
             {
-                byte[] testContent = { };
-                var containerName = "crm-attachments"; //might not be correct?
+                byte[] imageByteArray = { };
+                var containerName = "crm-attachments"; //Stämmer
                 _log.Warn($"Th={threadId} - GetAttachmentFromAzure: Container Name => {containerName}");
+
+                //Get settings from CRM
+                //CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_StorageAccountName));
 
                 _log.Warn($"Th={threadId} - GetAttachmentFromAzure: Starting TASK...");
                 Task.Run(async () =>
@@ -166,19 +173,22 @@ namespace Skanetrafiken.Crm.Controllers
                     _log.Warn($"Th={threadId} - GetAttachmentFromAzure: Blob downloaded to Stream!");
 
                     _log.Warn($"Th={threadId} - GetAttachmentFromAzure: Parsing Stream to Byte content...");
-                    //byte[] content = ms.ToArray();
-                    testContent = ms.ToArray();
+
+                    imageByteArray = ms.ToArray();
                     _log.Warn($"Th={threadId} - GetAttachmentFromAzure: Stream Parsed to Byte content!");
+
 
                 }).Wait();
                 _log.Warn($"Th={threadId} - GetAttachmentFromAzure: TASK finished!");
 
-                //var test = IncidentEntity.HandleDecryptAttachment(localContext, encryptedUrl, null);
-                if (testContent?.Length > 0)
+                if (imageByteArray?.Length > 0)
                 {
+                    _log.Warn($"Th={threadId} - GetAttachmentFromAzure: imageByteArray greater than 0!");
+                    string imageBase64String = Convert.ToBase64String(imageByteArray);
+
+                    _log.Warn($"Th={threadId} - GetAttachmentFromAzure: imageByteArray gconverted to Base64 String!");
                     rm.StatusCode = HttpStatusCode.OK;
-                    rm.Content = new StringContent($"Th={threadId} - GetAttachmentFromAzure: Created stream and parsed stream to byte content!");
-                    //rm.Content = File();
+                    rm.Content = new StringContent(imageBase64String);
                 }
                 else 
                 {
@@ -209,9 +219,8 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
-                ex.ToString();
                 rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.InnerException?.Message));
                 _log.Error($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 return rm;
             }

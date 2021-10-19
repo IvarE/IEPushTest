@@ -106,6 +106,61 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             }
         },
 
+        onChangePostalCode: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+            var postalCode = Endeavor.formscriptfunctions.GetValue("address1_postalcode", formContext);
+
+            debugger;
+            var fetchXml = [
+                "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true'>",
+                "  <entity name='ed_postnummer'>",
+                "    <attribute name='ed_postnummerid' />",
+                "    <attribute name='ed_name' />",
+                "    <attribute name='ed_postort' />",
+                "    <attribute name='ed_lanskod' />",
+                "    <attribute name='ed_lan' />",
+                "    <attribute name='ed_kommunkod' />",
+                "    <attribute name='ed_kommun' />",
+                "    <filter type='and'>",
+                "      <condition attribute='ed_postnummer' operator='eq' value='", postalCode, "'/>",
+                "    </filter>",
+                "  </entity>",
+                "</fetch>",
+            ].join("");
+
+            fetchXml = "?fetchXml=" + fetchXml;
+
+            Xrm.WebApi.retrieveMultipleRecords("ed_postnummer", fetchXml).then(
+                function success(result) {
+
+                    if (result.entities.length == 1) {
+                        var name = result.entities[0].ed_name;
+                        var postOrt = result.entities[0].ed_postort;
+                        var lansKod = result.entities[0].ed_lanskod;
+                        var lan = result.entities[0].ed_lan;
+                        var kommunKod = result.entities[0].ed_kommunkod;
+                        var kommun = result.entities[0].ed_kommun;
+
+                        Endeavor.formscriptfunctions.SetValue("address1_name", name, formContext);
+                        Endeavor.formscriptfunctions.SetValue("address1_city", postOrt, formContext);
+                        Endeavor.formscriptfunctions.SetValue("ed_address1_countynumber", parseInt(lansKod), formContext);
+                        Endeavor.formscriptfunctions.SetValue("address1_county", lan, formContext);
+                        Endeavor.formscriptfunctions.SetValue("ed_address1_communitynumber", parseInt(kommunKod), formContext);
+                        Endeavor.formscriptfunctions.SetValue("ed_address1_community", kommun, formContext);
+                    }
+                    else if (result.entities.length == 0)
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Ingen postnummerkommun hittades med värdet " + postalCode + ".");
+                    else if (result.entities.length > 1)
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Flera postnummer kommun hittades med värdet " + postalCode + ".");
+                },
+                function (error) {
+                    Endeavor.formscriptfunctions.ErrorCustomDialog(error.message, "Generic Error");
+                    console.log(error.message);
+                }
+            );
+        },
+
         resetRequiredLevel: function (executionContext, formIsOnLoad) {
             
             var formContext = executionContext.getFormContext();
@@ -151,7 +206,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         privateContact.setRequiredLevel("none");
                         collaborationContact.setRequiredLevel("none");
 
-                        if (privateValue != false) {
+                        if (privateValue != null && privateValue != false) {
 
                             businessContact.setValue(false);
                             formContext.getControl("ed_businesscontact").setDisabled(true);
@@ -172,7 +227,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
 
                         }
-                        else if (businessValue != false)
+                        else if (businessValue != null && businessValue != false)
                         {
                             privateContact.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
@@ -193,7 +248,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
 
                         }
-                        else if (kontaktPersonValue != false) {
+                        else if (kontaktPersonValue != null && kontaktPersonValue != false) {
 
                             privateContact.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
@@ -214,7 +269,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
 
                         }
-                        else if (epostMottagareValue != false) {
+                        else if (epostMottagareValue != null && epostMottagareValue != false) {
 
                             privateContact.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
@@ -235,7 +290,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
 
                         }
-                        else if (infotainmentValue != false) {
+                        else if (infotainmentValue != null && infotainmentValue != false) {
 
                             privateContact.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
@@ -256,7 +311,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
 
                         }
-                        else if (agentValue != false) {
+                        else if (agentValue != null && agentValue != false) {
 
                             privateContact.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
@@ -277,7 +332,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
 
                         }
-                        else if (collaborationValue != false) {
+                        else if (collaborationValue != null && collaborationValue != false) {
 
                             privateContact.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);

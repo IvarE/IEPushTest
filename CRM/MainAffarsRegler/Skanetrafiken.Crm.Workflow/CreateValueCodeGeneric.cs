@@ -250,9 +250,8 @@ namespace Skanetrafiken.Crm.Entities
 
                 DateTime validTo = DateTime.MinValue;
 
-                if ((validTo_Months != null && validTo_Months > 0) || validTo_Date != null)
+                if (validTo_Months > 0 || validTo_Date != null)
                 {
-                    validTo = DateTime.MinValue;
                     if (validTo_Months == 0 && validTo_Date >= DateTime.Now.Date)
                         validTo = validTo_Date;
                     else if (validTo_Months > 0 && (validTo_Date == DateTime.MinValue || validTo_Date == DateTime.MaxValue))

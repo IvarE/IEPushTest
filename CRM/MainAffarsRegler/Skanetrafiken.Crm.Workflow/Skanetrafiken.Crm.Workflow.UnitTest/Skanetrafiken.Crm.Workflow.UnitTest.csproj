@@ -177,7 +177,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Skanetrafiken.Crm.Workflow.csproj">
       <Project>{ee3b7945-589d-49ef-8005-4350dfeb2478}</Project>

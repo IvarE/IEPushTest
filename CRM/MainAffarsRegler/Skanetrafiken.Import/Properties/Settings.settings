@@ -50,5 +50,8 @@
     <Setting Name="BucketNewAccounts" Type="System.String" Scope="Application">
       <Value Profile="(Default)">FöretagSkåneVer2.csv</Value>
     </Setting>
+    <Setting Name="PostalCodes" Type="System.String" Scope="User">
+      <Value Profile="(Default)">PostalCodes\rec2LK_2021-08-02.csv</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

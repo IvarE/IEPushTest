@@ -146,6 +146,7 @@
     <Compile Include="Entities\PaymentEntity.cs" />
     <Compile Include="Entities\KBArticleEntity.cs" />
     <Compile Include="Entities\OrderPurchaseTypeEntity.cs" />
+    <Compile Include="Entities\PostalCodesEntity.cs" />
     <Compile Include="Entities\ProductPriceLevelEntity.cs" />
     <Compile Include="Entities\QuoteEntity.cs" />
     <Compile Include="Entities\QuoteProductEntity.cs" />

@@ -257,6 +257,9 @@
     <Compile Include="..\Skanetrafiken.Crm\Entities\PaymentMethodEntity.cs">
       <Link>Entities\PaymentMethodEntity.cs</Link>
     </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\PostalCodesEntity.cs">
+      <Link>Entities\PostalCodesEntity.cs</Link>
+    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\ProcessStageEntity.cs">
       <Link>Entities\ProcessStageEntity.cs</Link>
     </Compile>
