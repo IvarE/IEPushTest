@@ -24,7 +24,7 @@ namespace Endeavor.Crm.DeltabatchService
                 _log.Debug("Main Started");
 
                 string passwordArgument = null;
-                string passwordCreditsafeArgument = "3L6932Vt";
+                string passwordCreditsafeArgument = "ijg6fmUq"; //"3L6932Vt";
 
                 string[] args = System.Environment.GetCommandLineArgs();
                 if (args != null)

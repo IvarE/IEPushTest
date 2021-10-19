@@ -296,6 +296,8 @@
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Opportunity.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Order.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.OrderProduct.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Product.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.ProductPriceListItem.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.QueueItem.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Quote.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.QuoteProduct.js" />

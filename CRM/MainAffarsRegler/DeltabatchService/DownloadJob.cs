@@ -8,11 +8,14 @@ using Generated = Skanetrafiken.Crm.Schema.Generated;
 using System.Linq;
 using System.Collections;
 using Microsoft.Xrm.Sdk.Query;
-using Tamir.SharpSsh;
+//using Tamir.SharpSsh;
 using System.Reflection;
-using Tamir.SharpSsh.jsch;
+//using Tamir.SharpSsh.jsch;
 using Microsoft.Xrm.Sdk;
 using System.Globalization;
+using Renci.SshNet;
+using Renci.SshNet.Common;
+
 
 namespace Endeavor.Crm.DeltabatchService
 {
@@ -26,7 +29,9 @@ namespace Endeavor.Crm.DeltabatchService
         public const string TriggerName = "DownloadTrigger";
         public const string JobName = "DownloadJob";
 
-        protected Sftp sftp;
+        //protected Sftp sftp;
+
+        protected SftpClient sftpClient;
 
         private string _currentOutputFileName;
         private string[] _fieldNames = new string[0];
@@ -98,7 +103,7 @@ namespace Endeavor.Crm.DeltabatchService
             {
                 _log.Error($"Exception caught in ExecuteJob():\n{e.Message}\n\n{e}");
                 //if (localContext != null)
-                //    DeltabatchJobHelper.SendErrorMailToDev(localContext, e);
+                 DeltabatchJobHelper.SendErrorMailToDev(localContext, e);
             }
         }
 
@@ -130,7 +135,10 @@ namespace Endeavor.Crm.DeltabatchService
             _log.Info("Entered UpdateContactsWithNewInfo()");
             try
             {
-                string outputFilePath = $"{Properties.Settings.Default.DeltabatchRetrievedFileLocation}/{_currentOutputFileName}";
+               
+                string outputFilePath = $"{Properties.Settings.Default.DeltabatchRetrievedFileLocation}{_currentOutputFileName}";
+
+                _log.Info($"outputFilePath {outputFilePath}");
 
                 if (!File.Exists(outputFilePath))
                 {
@@ -161,6 +169,7 @@ namespace Endeavor.Crm.DeltabatchService
 
                                     string socSec = lineParams[Array.IndexOf(_fieldNames, _socSecFieldKeyword)];
 
+                                   
                                     if (socSec == null || string.IsNullOrEmpty(socSec))
                                     {
                                         _errors.Add(new Tuple<string[], Exception>(lineParams, new Exception($"Socialsecuritynumber is null or empty. Please handle manually.")));
@@ -175,7 +184,7 @@ namespace Endeavor.Crm.DeltabatchService
                                     ColumnSet contactColumnsWithAddress2 = ContactEntity.ContactInfoBlock;
                                     contactColumnsWithAddress2.AddColumns(ContactEntity.Fields.Address2_Line1, ContactEntity.Fields.Address2_Line2,
                                                                         ContactEntity.Fields.Address2_PostalCode, ContactEntity.Fields.Address2_City,
-                                                                        ContactEntity.Fields.Address2_Country);
+                                                                        ContactEntity.Fields.Address2_Country, ContactEntity.Fields.ed_MklId);
 
                                     FilterExpression filterContacts = new FilterExpression
                                     {
@@ -231,6 +240,7 @@ namespace Endeavor.Crm.DeltabatchService
                                         // Row added to make sure only Contacts with MKL Id are updated and not sent again to CreditSafe
                                         if ((rejected || update) && !String.IsNullOrEmpty(updateEntity.ed_MklId))
                                         {
+                                            
                                             updateEntity.ed_InformationSource = Generated.ed_informationsource.Folkbokforing;
 
                                             //if (numberOfOperations % 5000 < 3)
@@ -239,6 +249,7 @@ namespace Endeavor.Crm.DeltabatchService
                                             //}
                                             //_log.Debug($"Updating Contact.");
                                             XrmHelper.Update(localContext, updateEntity);
+                                           
                                         }
                                     }
                                 }
@@ -503,8 +514,10 @@ namespace Endeavor.Crm.DeltabatchService
             {
                 ContactId = existingContact.ContactId,
                 Id = existingContact.Id,
-            };
+                ed_MklId = existingContact.ed_MklId,
 
+            };
+            //Viggo TODO rejectCode
             if (!string.IsNullOrWhiteSpace(rejectCode))
             {
                 string rejectErrorMess;
@@ -852,34 +865,72 @@ namespace Endeavor.Crm.DeltabatchService
         {
             _log.Info("Entered RetrieveFile()");
             _log.InfoFormat($"Retrieved File Path is: " + Properties.Settings.Default.DeltabatchRetrievedFileLocation);
-            sftp = null;
+            sftpClient = null;
             try
             {
-                sftp = DeltabatchJobHelper.CreateSftpConnectionToCreditsafe(_log);
-                sftp.Connect(Properties.Settings.Default.CreditsafeFtpPort);
-                if (!sftp.Connected)
+                sftpClient = DeltabatchJobHelper.CreateSftpConnectionToCreditsafe(_log);
+                sftpClient.Connect();
+                if (!sftpClient.IsConnected)
                     throw new Exception($"Unable to connect to sftp-server");
-                ArrayList fileList = sftp.GetFileList("/OUTFILE");
+                sftpClient.ChangeDirectory("/");
+
+                var fileList = sftpClient.ListDirectory("OUTFILE").ToList();
+
+                _log.Info($"Files in OUTFILE: {fileList.Count}");
+
                 if (fileList.Count > 1)
                 {
-                    if ("History".Equals(fileList[0].ToString()))
-                    {
-                        if (fileList[1].ToString().StartsWith(Properties.Settings.Default.OutputFileNameStart) && fileList[1].ToString().EndsWith(".txt"))
-                        {
-                            sftp.Get($"/OUTFILE/{fileList[1].ToString()}", Properties.Settings.Default.DeltabatchRetrievedFileLocation);
-                            _currentOutputFileName = fileList[1].ToString();
-                            sftp.Put($"{Properties.Settings.Default.DeltabatchRetrievedFileLocation}/{fileList[1].ToString()}", $"/OUTFILE/History/{fileList[1].ToString()}");
+                    _log.Info($"More than 0 files in OUTFILE");
+                    //if ("History".Equals(fileList[0].ToString()))
+                    //{
+                    var x = 0;
 
-                            var prop = sftp.GetType().GetProperty("SftpChannel", BindingFlags.NonPublic | BindingFlags.Instance);
-                            var methodInfo = prop.GetGetMethod(true);
-                            var sftpChannel = methodInfo.Invoke(sftp, null);
-                            ((ChannelSftp)sftpChannel).rm($"/OUTFILE/{fileList[1].ToString()}");
-                        }
-                        else
-                            throw new Exception($"Invalid file/folder structure in /Output folder in Creditsafe ftp-server.\nSecond item expected to be '{Properties.Settings.Default.OutputFileNameStart}*...*.txt', but was in fact '{fileList[1].ToString()}'");
+                    if(fileList[0].Name.ToString() == "History")
+                    {
+                        x = 1;
                     }
                     else
-                        throw new Exception($"Invalid file/folder structure in /Output folder in Creditsafe ftp-server.\nFirst item expected to be 'History', but was in fact '{fileList[0].ToString()}'");
+                    {
+                        x = 0;
+                    }
+
+                    if (fileList[x].Name.ToString().StartsWith(Properties.Settings.Default.OutputFileNameStart) && fileList[x].Name.ToString().EndsWith(".txt")) //was fileList[1] when there is a history map
+                        {
+                        _log.Info($"Found a file  {fileList[x].Name.ToString()}");
+
+                            using (Stream RetrivedFile = File.OpenWrite(Properties.Settings.Default.DeltabatchRetrievedFileLocation + fileList[x].Name.ToString()))
+                            {
+                                sftpClient.DownloadFile($"OUTFILE/{fileList[x].Name.ToString()}", RetrivedFile);
+                            }
+
+                        _log.Info($"File downloaded");
+                        _currentOutputFileName = fileList[x].Name.ToString();
+
+                            //sftpClient.ChangeDirectory($"OUTFILE/History/");
+
+                            //using (var uplfileStream = System.IO.File.OpenRead(fileList[1].ToString()))
+                            //{
+                            //    sftpClient.UploadFile(uplfileStream, fileList[1].ToString(), true);
+                            //}
+
+                            //using (var fileStream = new FileStream(plusFileName, FileMode.Open))
+                            //{
+                            //    sftpClient.UploadFile(fileStream, Path.GetFileName(plusFileName));
+                            //}
+
+                            sftpClient.Delete($"OUTFILE/{fileList[x].Name.ToString()}"); 
+
+                        _log.Info($"File deleted from server");
+                        //var prop = sftpClient.GetType().GetProperty("SftpChannel", BindingFlags.NonPublic | BindingFlags.Instance);
+                        //var methodInfo = prop.GetGetMethod(true);
+                        //var sftpChannel = methodInfo.Invoke(sftpClient, null);
+                        //((ChannelSftp)sftpChannel).rm($"/OUTFILE/{fileList[1].ToString()}");
+                    }
+                        else
+                            throw new Exception($"Invalid file/folder structure in /Output folder in Creditsafe ftp-server.\nSecond item expected to be '{Properties.Settings.Default.OutputFileNameStart}*...*.txt', but was in fact '{fileList[1].ToString()}'");
+                    //}
+                    //else
+                      //  throw new Exception($"Invalid file/folder structure in /Output folder in Creditsafe ftp-server.\nFirst item expected to be 'History', but was in fact '{fileList[0].ToString()}'");
                 }
                 else
                 {
@@ -888,10 +939,10 @@ namespace Endeavor.Crm.DeltabatchService
                         case 0:
                             throw new Exception("No Content found in /OUTFILE folder in Creditsafe ftp-server");
                         default:
-                            throw new Exception($"Found only {fileList[0].ToString()} in /OUTFILE folder in Creditsafe ftp-server");
+                            throw new Exception($"Found only {fileList[0].Name.ToString()} in /OUTFILE folder in Creditsafe ftp-server");
                     }
                 }
-                sftp.Close();
+                sftpClient.Disconnect();
             }
             catch (Exception e)
             {
@@ -901,10 +952,10 @@ namespace Endeavor.Crm.DeltabatchService
             finally
             {
                 //Close sftp
-                try { sftp.Close(); }
+                try { sftpClient.Disconnect(); }
                 catch { }
 
-                try { sftp = null; }
+                try { sftpClient = null; }
                 catch { }
 
                 try { GC.Collect(); }
