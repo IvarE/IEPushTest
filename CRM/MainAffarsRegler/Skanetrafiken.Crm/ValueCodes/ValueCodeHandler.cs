@@ -1189,7 +1189,6 @@ namespace Skanetrafiken.Crm.ValueCodes
                 if (deliveryType == (int)Generated.ed_valuecodedeliverytypeglobal.SMS)
                     valueCode.ed_ValueCodeDeliveryTypeGlobal = Generated.ed_valuecodedeliverytypeglobal.SMS;
 
-
                 if (voucherType == (int)Generated.ed_valuecodetypeglobal.Ersattningsarende)
                     valueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.Ersattningsarende;
 
@@ -1218,7 +1217,10 @@ namespace Skanetrafiken.Crm.ValueCodes
                 valueCode.ed_CustomText = "";
 
                 if (response.validToDate != null)
+                {
                     valueCode.ed_LastRedemptionDate = Convert.ToDateTime(response.validToDate);
+                    valueCode.ed_ValidUntil = Convert.ToDateTime(response.validToDate);
+                }
 
                 valueCode.ed_Status = response.eanCode.ToString();
 

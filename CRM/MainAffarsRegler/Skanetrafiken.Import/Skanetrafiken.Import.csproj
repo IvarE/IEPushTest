@@ -117,6 +117,8 @@
     <Compile Include="CrmConnection.cs" />
     <Compile Include="CrmHelper\ServiceProvider.cs" />
     <Compile Include="CrmHelper\TracingService.cs" />
+    <Compile Include="Helper\FixesHelper.cs" />
+    <Compile Include="Helper\ImportHelper.cs" />
     <Compile Include="Model\ExcelColumn.cs" />
     <Compile Include="Model\ImportExcelInfo.cs" />
     <Compile Include="Model\ProgressBar.cs" />

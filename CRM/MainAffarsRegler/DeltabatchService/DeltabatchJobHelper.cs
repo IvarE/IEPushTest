@@ -6,7 +6,9 @@ using Quartz;
 using Skanetrafiken.Crm.Entities;
 using System;
 using System.IO;
-using Tamir.SharpSsh;
+
+using Renci.SshNet;
+using Renci.SshNet.Common;
 using System.Xml.Linq;
 using Endeavor.Crm.UnitTest;
 using Skanetrafiken.Crm.Schema.Generated;
@@ -26,7 +28,7 @@ namespace Endeavor.Crm.DeltabatchService
                DeltabatchQueueEntity.Fields.CreatedOn
             );
         
-        public static Sftp CreateSftpConnectionToCreditsafe(ILog _log)
+        public static SftpClient CreateSftpConnectionToCreditsafe(ILog _log)
         {
             //string username = null, password = null;
             //string credentialFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Endeavor\\CreditsafeCredential.xml");
@@ -38,7 +40,10 @@ namespace Endeavor.Crm.DeltabatchService
 
                 //_log.Debug($"Connecting to Creditsafe({Properties.Settings.Default.CreditsafeIP}) with {username},{password}");
                 ////_log.Debug($"Connecting to Creditsafe({Properties.Settings.Default.CreditsafeIP}) with {username},{password}({doc.Root.Element("Password").Value})");
-                return new Sftp(DeltabatchService.CreditsafeIP, DeltabatchService.CreditsafeUsername, CrmConnection.LoadCredentials(DeltabatchService.CreditsafeCredentialFilePath, DeltabatchService.Entropy));
+
+
+                return new SftpClient(DeltabatchService.CreditsafeIP, Properties.Settings.Default.CreditsafeFtpPort, DeltabatchService.CreditsafeUsername, CrmConnection.LoadCredentials(DeltabatchService.CreditsafeCredentialFilePath, DeltabatchService.Entropy));
+                //return new Sftp(DeltabatchService.CreditsafeIP, DeltabatchService.CreditsafeUsername, CrmConnection.LoadCredentials(DeltabatchService.CreditsafeCredentialFilePath, DeltabatchService.Entropy));
             }
             else
             {
@@ -61,21 +66,36 @@ namespace Endeavor.Crm.DeltabatchService
 
         internal static void SendErrorMailToDev(Plugin.LocalPluginContext localContext, Exception e)
         {
-            SystemUserEntity toUser = XrmRetrieveHelper.RetrieveFirst<SystemUserEntity>(localContext, new ColumnSet(false),
+            //SystemUserEntity toUser1 = XrmRetrieveHelper.RetrieveFirst<SystemUserEntity>(localContext, new ColumnSet(false),
+            //    new FilterExpression
+            //    {
+            //        Conditions =
+            //        {
+            //            new ConditionExpression(SystemUserEntity.Fields.DomainName, ConditionOperator.Equal, @"D1\CRMAdmin") 
+            //        }
+            //    });
+
+            SystemUserEntity toUser2 = XrmRetrieveHelper.RetrieveFirst<SystemUserEntity>(localContext, new ColumnSet(SystemUser.Fields.InternalEMailAddress),
                 new FilterExpression
                 {
                     Conditions =
                     {
-                        new ConditionExpression(SystemUserEntity.Fields.DomainName, ConditionOperator.Equal, @"D1\CRMAdmin")
+                                    new ConditionExpression(SystemUserEntity.Fields.DomainName, ConditionOperator.Equal, @"D1\EVSA") // Marie-Louise Sandberg
                     }
                 });
 
-            ActivityParty toParty = new ActivityParty
+            //ActivityParty toParty1 = new ActivityParty
+            //{
+            //    PartyId = new EntityReference(SystemUserEntity.EntityLogicalName, toUser1.Id),
+            //    AddressUsed = Properties.Settings.Default.DeveloperMailAddress
+            //};
+
+            ActivityParty toParty2 = new ActivityParty
             {
-                PartyId = new EntityReference(SystemUserEntity.EntityLogicalName, toUser.Id),
-                AddressUsed = Properties.Settings.Default.DeveloperMailAddress
+                PartyId = new EntityReference(SystemUserEntity.EntityLogicalName, toUser2.Id),
+                AddressUsed = toUser2.InternalEMailAddress
             };
-        
+
             // Get a system user to send the email (From: field)
             WhoAmIRequest systemUserRequest = new WhoAmIRequest();
             WhoAmIResponse systemUserResponse = (WhoAmIResponse)localContext.OrganizationService.Execute(systemUserRequest);
@@ -87,25 +107,45 @@ namespace Endeavor.Crm.DeltabatchService
                 PartyId = new EntityReference(SystemUserEntity.EntityLogicalName, _userId)
             };
 
-            EmailEntity errorMail = new EmailEntity
+            //EmailEntity errorMail1 = new EmailEntity
+            //{
+            //    To = new List<ActivityParty> { toParty1 },
+            //    From = new List<ActivityParty> { fromParty },
+            //    Subject = "Exception in Deltabatch run",
+            //    Description = $"Exception Message:\n\n{e.Message}",
+            //    DirectionCode = true
+            //};
+
+            EmailEntity errorMail2 = new EmailEntity
             {
-                To = new List<ActivityParty> { toParty },
+                To = new List<ActivityParty> { toParty2 },
                 From = new List<ActivityParty> { fromParty },
                 Subject = "Exception in Deltabatch run",
                 Description = $"Exception Message:\n\n{e.Message}",
                 DirectionCode = true
             };
-            errorMail.Id = XrmHelper.Create(localContext, errorMail);
 
+            //errorMail1.Id = XrmHelper.Create(localContext, errorMail1);
+            errorMail2.Id = XrmHelper.Create(localContext, errorMail2);
             // Use the SendEmail message to send an e-mail message.
-            SendEmailRequest sendEmailreq = new SendEmailRequest
+            //SendEmailRequest sendEmailreq1 = new SendEmailRequest 
+            //{
+            //    EmailId = errorMail1.Id,
+            //    TrackingToken = "",
+            //    IssueSend = true
+            //};
+
+            //SendEmailResponse sendEmailresp = (SendEmailResponse)localContext.OrganizationService.Execute(sendEmailreq1);
+
+            SendEmailRequest sendEmailreq2 = new SendEmailRequest
             {
-                EmailId = errorMail.Id,
+                EmailId = errorMail2.Id,
                 TrackingToken = "",
                 IssueSend = true
             };
 
-            SendEmailResponse sendEmailresp = (SendEmailResponse)localContext.OrganizationService.Execute(sendEmailreq);
+            SendEmailResponse sendEmailresp2 = (SendEmailResponse)localContext.OrganizationService.Execute(sendEmailreq2);
+
             Console.WriteLine("Sent the error-mail message.");
         }
     }
