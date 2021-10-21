@@ -114,7 +114,7 @@ namespace Skanetrafiken.Crm.Entities
 
         public static void UpdateTextMessageStatus(Plugin.LocalPluginContext localContext, TextMessageEntity textMessage)
         {
-            if(textMessage.StatusCode.Value != (int)TextMessageEntity.Status.Delivered && IsAllMessagesDelivered(localContext, textMessage))
+            if(textMessage.StatusCode.Value != (int)TextMessageEntity.Status.Delivered && IsAllMessagesDeliveredAndSent(localContext, textMessage))
             {
                 textMessage.StateCode = Generated.ed_TextMessageState.Completed;
                 textMessage.StatusCode = new OptionSetValue((int)TextMessageEntity.Status.Delivered);
@@ -129,16 +129,14 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
-        public static bool IsAllMessagesDelivered(Plugin.LocalPluginContext localContext, TextMessageEntity textMessage)
+        public static bool IsAllMessagesDeliveredAndSent(Plugin.LocalPluginContext localContext, TextMessageEntity textMessage)
         {
             IList<SentTextMessageEntity> AllMessages = GetSentTextMessages(localContext, textMessage);
 
-            foreach(SentTextMessageEntity s in AllMessages)
+            foreach (SentTextMessageEntity s in AllMessages)
             {
-                if(s.statuscode.Value != (int)SentTextMessageEntity.Status.Delivered)
-                {
+                if(s.statuscode.Value != (int)SentTextMessageEntity.Status.Delivered && s.statuscode.Value != (int)SentTextMessageEntity.Status.Sent)
                     return false;
-                }
             }
 
             return true;
