@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="33"
-  DTS:VersionGUID="{51FBA50E-1EA4-4B3C-833B-91A611E41D92}">
+  DTS:VersionBuild="48"
+  DTS:VersionGUID="{7C4C5F7D-7F57-42CE-BFFD-9CAD77FCA624}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -23,11 +23,11 @@
       DTS:ObjectName="Dynamics 365 Connection">
       <DTS:ObjectData>
         <CrmConnectionManager
-          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekundtst.skanetrafiken.se/DKCRMTST;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=True;IgnoreCertificateErrors=False"
+          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekund.skanetrafiken.se/DKCRM;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=True;IgnoreCertificateErrors=False"
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAC1IDjU676mg2KFS48qrLv2AAAAAASAAACgAAAAEAAAABCsionjDScaIgs90hIhu9ogAAAAas9lECy+XMfj+/tHGcTVzLUams0oZJfALCTzDas8JzEUAAAAKmg2eQrlyxyqRE7vqgFvVeqh7bk</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABBryo6QZmzoTEamIG7IsaOAAAAAASAAACgAAAAEAAAAPz6XkZpB2181RT1ai8t1hcgAAAA5DxtzDp2sqhEvziPcuw4JwBz6HO/Z48f+faFQ0QHbBoUAAAAO8G6vPX81oCHC7qjlqAZjre7+4k</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -54,7 +54,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="Name"
-              DTS:DTSID="{7DEF7552-F19D-4756-A15D-9F14D2EA7D50}"
+              DTS:DTSID="{0A14521B-A734-4162-8B50-B1EA26D22750}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -63,7 +63,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="CRMNummer"
-              DTS:DTSID="{49AE52B7-084A-423E-B92B-14F6F84B6E5D}"
+              DTS:DTSID="{AFFF9F1D-53B4-4CA1-BAA5-92F01717C270}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -71,7 +71,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorCode"
-              DTS:DTSID="{1C11D32B-8BD6-48D9-B3DB-4CE7805D094B}"
+              DTS:DTSID="{9757019E-66C6-4341-B6A1-78A12BEF9180}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -79,7 +79,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorColumn"
-              DTS:DTSID="{C2F420A8-2854-4591-B129-BA1AB314293C}"
+              DTS:DTSID="{974C814F-227F-4DD5-ABCF-BADB646A84B6}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -88,7 +88,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorMessage"
-              DTS:DTSID="{F408A3B0-9093-4C00-8A2C-D3426A68A8E5}"
+              DTS:DTSID="{0474F053-8599-42E1-9DBA-AC32CE12F6B1}"
               DTS:CreationName="" />
           </DTS:FlatFileColumns>
         </DTS:ConnectionManager>
@@ -234,1082 +234,6 @@
               </outputs>
             </component>
             <component
-              refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination"
-              componentClassID="Microsoft.ManagedComponentHost"
-              contactInfo="KingswaySoft Inc.; http://www.kingswaysoft.com; support@kingswaysoft.com; Copyright (c) 2020 KingswaySoft Inc."
-              description="Populate data into Microsoft Dynamics 365 CE/CRM."
-              name="Dynamics CRM Destination"
-              usesDispositions="true"
-              version="4">
-              <properties>
-                <property
-                  dataType="System.String"
-                  description="Destination entity to write data."
-                  expressionType="Notify"
-                  name="DestinationEntity">st_singaporeticket</property>
-                <property
-                  dataType="System.Int32"
-                  description="Specifies how data is written to CDS/Dynamics CRM server."
-                  name="ActionType"
-                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.DestinationActionType">5</property>
-                <property
-                  dataType="System.Boolean"
-                  description="Specifies whether the values of CDS/CRM lookup fields should be removed if the reference records cannot be found. "
-                  expressionType="Notify"
-                  name="RemoveUnresolvableReferences">false</property>
-                <property
-                  dataType="System.Boolean"
-                  description="Specifies whether duplicate detection should be enabled when creating or updating CDS/CRM records. Duplicate records are determined by the duplicate detection rules and settings defined in CDS or Microsoft Dynamics CRM server."
-                  expressionType="Notify"
-                  name="EnableSystemDuplicateDetection">false</property>
-                <property
-                  dataType="System.Int32"
-                  description="Specify the matching criteria to be used when performing an update or upsert. "
-                  expressionType="Notify"
-                  name="RecordMatchingCriteria"
-                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.RecordMatchingCriteria">3</property>
-                <property
-                  dataType="System.String"
-                  description="Specify the key fields to be used to determine the matching records that exist in CDS/CRM for either Upsert/Update action or source duplicate optimization."
-                  expressionType="Notify"
-                  name="RecordMatchingKeyFields">ed_crmnummer;st_ticketid</property>
-                <property
-                  dataType="System.Boolean"
-                  description="Specifies whether to ignore those NULL-valued fields."
-                  expressionType="Notify"
-                  name="IgnoreNullValuedFields">true</property>
-                <property
-                  dataType="System.Boolean"
-                  description="Specifies whether to ignore those fields that have no value changes in the target system. "
-                  expressionType="Notify"
-                  name="IgnoreUnchangedFields">true</property>
-                <property
-                  dataType="System.Boolean"
-                  description="Specify whether to remove those invalid characters before writing to CDS/CRM."
-                  expressionType="Notify"
-                  name="RemoveInvalidCharacters">true</property>
-                <property
-                  dataType="System.String"
-                  description="Specify the flag field(s) that are used to track the source of changes. The field(s) will not posted to CDS/CRM server unless there are changes to other fields if specified. &quot;Ignore Unchange Fields&quot; option is required in order for the specified flag field(s) to work. "
-                  expressionType="Notify"
-                  name="ChangeFlagFields"></property>
-                <property
-                  dataType="System.Int32"
-                  description="Specifies what action will be taken when multiple matches are found with Upsert action."
-                  expressionType="Notify"
-                  name="HandlingOfMultipleMatches"
-                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">2</property>
-                <property
-                  dataType="System.Int32"
-                  description="Specify whether to use optimizations when there are duplicate records form the source system."
-                  expressionType="Notify"
-                  name="OptimizationOnSourceDuplicates"
-                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.OptimizationOnSourceDuplicates">0</property>
-                <property
-                  dataType="System.String"
-                  description="Workflow or action to be executed."
-                  expressionType="Notify"
-                  name="WorkflowAction"></property>
-                <property
-                  dataType="System.Int32"
-                  description="Specifies the number of records to be sent to CDS/Dynamics CRM server in each service call."
-                  expressionType="Notify"
-                  name="BatchSize">100</property>
-                <property
-                  dataType="System.Int32"
-                  description="Specify the total number or concurrent threads to write to CDS/CRM server simultaneously. "
-                  expressionType="Notify"
-                  name="ConcurrentWritingThreadsInTotal">20</property>
-                <property
-                  dataType="System.Boolean"
-                  description="Specifies whether datetime values should be sent to CDS/CRM server in UTC format."
-                  expressionType="Notify"
-                  name="SendDateTimeInUtcFormat">true</property>
-                <property
-                  dataType="System.String"
-                  name="UserComponentTypeName">KingswaySoft.IntegrationToolkit.DynamicsCrm.CrmDestinationComponent</property>
-                <property
-                  dataType="System.Boolean"
-                  description="Specify whethere to tentatively disable entity change tracking (auditing)"
-                  expressionType="Notify"
-                  name="TentativelyDisableEntityAuditing">false</property>
-              </properties>
-              <connections>
-                <connection
-                  refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Connections[DynamicsCRM]"
-                  connectionManagerID="Package.ConnectionManagers[Dynamics 365 Connection]"
-                  connectionManagerRefId="Package.ConnectionManagers[Dynamics 365 Connection]"
-                  description="Dynamics CRM Connection Manager"
-                  name="DynamicsCRM" />
-              </connections>
-              <inputs>
-                <input
-                  refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input]"
-                  errorOrTruncationOperation="Insert"
-                  errorRowDisposition="RedirectRow"
-                  hasSideEffects="true"
-                  name="Input">
-                  <inputColumns>
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[activationinterval_from]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="activationinterval_from"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_activationintervalfrom]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activationinterval_from]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[activationinterval_to]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="activationinterval_to"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_activationintervalto]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activationinterval_to]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[BearerCategory]"
-                      cachedDataType="wstr"
-                      cachedLength="100"
-                      cachedName="BearerCategory"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_bearercategory]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[BearerCategory]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[blockedDate]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="blockedDate"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_blockeddate]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[blockedDate]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[HasRefund]"
-                      cachedDataType="i4"
-                      cachedName="HasRefund"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_hasrefund]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[HasRefund]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[LastUpdated]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="LastUpdated"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_lastupdated]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[LastUpdated]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[HasGroupDiscount]"
-                      cachedDataType="i4"
-                      cachedName="HasGroupDiscount"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_hasgroupdiscount]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[OfferNameDetailed]"
-                      cachedDataType="wstr"
-                      cachedLength="255"
-                      cachedName="OfferNameDetailed"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_offernamedetailed]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[PriceModel]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="PriceModel"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_pricemodel]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[PriceModel]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[PriceModelPriceId]"
-                      cachedDataType="wstr"
-                      cachedLength="30"
-                      cachedName="PriceModelPriceId"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_pricemodelprice]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[OfferName]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="OfferName"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_singtickettype]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[OfferName]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[SalesChannelId]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="SalesChannelId"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_saleschannel]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[SalesChannelId]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[activatedDate]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="activatedDate"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_ticketactivated]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activatedDate]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[TravellersCount]"
-                      cachedDataType="i4"
-                      cachedName="TravellersCount"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_travellerscount]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TravellersCount]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[travelvalidityinterval_from]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="travelvalidityinterval_from"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_travelvalidityintervalfrom]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_from]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[travelvalidityinterval_to]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="travelvalidityinterval_to"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_travelvalidityintervalto]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_to]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[DataCreatedDate]"
-                      cachedDataType="dbTimeStampOffset"
-                      cachedName="DataCreatedDate"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_ticketcreated]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[DataCreatedDate]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[TicketAmount]"
-                      cachedDataType="numeric"
-                      cachedName="TicketAmount"
-                      cachedPrecision="13"
-                      cachedScale="5"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_ticketprice]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketAmount]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[TicketId]"
-                      cachedDataType="wstr"
-                      cachedLength="7"
-                      cachedName="TicketId"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_ticketid]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketId]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[cgi_contactnumber]"
-                      cachedDataType="wstr"
-                      cachedLength="100"
-                      cachedName="cgi_contactnumber"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_contactid]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[Name]"
-                      cachedDataType="wstr"
-                      cachedLength="151"
-                      cachedName="Name"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_name]"
-                      lineageId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Output].Columns[Name]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].Columns[CRMNummer]"
-                      cachedDataType="wstr"
-                      cachedLength="100"
-                      cachedName="CRMNummer"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_crmnummer]"
-                      lineageId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Output].Columns[CRMNummer]" />
-                  </inputColumns>
-                  <externalMetadataColumns
-                    isUsed="True">
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[createdby]"
-                      dataType="guid"
-                      name="createdby">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Lookup</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes">systemuser</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">false</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_activationintervalfrom]"
-                      dataType="dbTimeStamp"
-                      name="ed_activationintervalfrom">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">DateTime</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_activationintervalto]"
-                      dataType="dbTimeStamp"
-                      name="ed_activationintervalto">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">DateTime</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_bearercategory]"
-                      dataType="wstr"
-                      length="20"
-                      name="ed_bearercategory">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">String</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_blockeddate]"
-                      dataType="dbTimeStamp"
-                      name="ed_blockeddate">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">DateTime</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_crmnummer]"
-                      dataType="wstr"
-                      length="50"
-                      name="ed_crmnummer">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">String</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_hasgroupdiscount]"
-                      dataType="bool"
-                      name="ed_hasgroupdiscount">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Boolean</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_hasrefund]"
-                      dataType="bool"
-                      name="ed_hasrefund">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Boolean</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_lastupdated]"
-                      dataType="dbTimeStamp"
-                      name="ed_lastupdated">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">DateTime</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_offernamedetailed]"
-                      dataType="wstr"
-                      length="100"
-                      name="ed_offernamedetailed">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">String</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_saleschannel]"
-                      dataType="wstr"
-                      length="30"
-                      name="ed_saleschannel">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">String</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_skakort]"
-                      dataType="guid"
-                      name="ed_skakort">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Lookup</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes">ed_skakort</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_ticketactivated]"
-                      dataType="dbTimeStamp"
-                      name="ed_ticketactivated">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">DateTime</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_travelcardid]"
-                      dataType="guid"
-                      name="ed_travelcardid">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Lookup</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes">cgi_travelcard</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_travellerscount]"
-                      dataType="i4"
-                      name="ed_travellerscount">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Integer</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_travelvalidityintervalfrom]"
-                      dataType="dbTimeStamp"
-                      name="ed_travelvalidityintervalfrom">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">DateTime</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_travelvalidityintervalto]"
-                      dataType="dbTimeStamp"
-                      name="ed_travelvalidityintervalto">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">DateTime</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[importsequencenumber]"
-                      dataType="i4"
-                      name="importsequencenumber">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Integer</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">false</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[overriddencreatedon]"
-                      dataType="dbTimeStamp"
-                      name="overriddencreatedon">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">DateTime</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">false</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ownerid]"
-                      dataType="guid"
-                      name="ownerid">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Owner</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes">systemuser;team</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[owneridtype]"
-                      dataType="wstr"
-                      length="64"
-                      name="owneridtype">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">EntityName</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_contactid]"
-                      dataType="guid"
-                      name="st_contactid">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Lookup</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes">contact</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupSettings">{"SkipRecordIfLookupFails":true,"CacheStrategy":"FullCache","LookupTargets":[{"TargetEntity":"contact","TargetTextField":"cgi_contactnumber","SecondaryLookupInputColumn":"cgi_contactnumber","SecondaryLookupTargetField":"cgi_contactnumber"}]}</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_name]"
-                      dataType="wstr"
-                      length="100"
-                      name="st_name">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">String</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_pricemodel]"
-                      dataType="wstr"
-                      length="25"
-                      name="st_pricemodel">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">String</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_pricemodelprice]"
-                      dataType="wstr"
-                      length="100"
-                      name="st_pricemodelprice">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">String</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_singaporeticketid]"
-                      dataType="guid"
-                      name="st_singaporeticketid">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Uniqueidentifier</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_singtickettype]"
-                      dataType="i4"
-                      name="st_singtickettype">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Picklist</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_ticketactivated]"
-                      dataType="i4"
-                      name="st_ticketactivated">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Picklist</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_ticketcreated]"
-                      dataType="dbTimeStamp"
-                      name="st_ticketcreated">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">DateTime</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_ticketid]"
-                      dataType="wstr"
-                      length="10"
-                      name="st_ticketid">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">String</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_ticketprice]"
-                      dataType="numeric"
-                      name="st_ticketprice"
-                      precision="38"
-                      scale="4">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Money</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_validfrom]"
-                      dataType="dbTimeStamp"
-                      name="st_validfrom">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">DateTime</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[st_validto]"
-                      dataType="dbTimeStamp"
-                      name="st_validto">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">DateTime</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[statecode]"
-                      dataType="i4"
-                      name="statecode">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">State</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[statuscode]"
-                      dataType="i4"
-                      name="statuscode">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Status</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[timezoneruleversionnumber]"
-                      dataType="i4"
-                      name="timezoneruleversionnumber">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Integer</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[transactioncurrencyid]"
-                      dataType="guid"
-                      name="transactioncurrencyid">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Lookup</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes">transactioncurrency</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input].ExternalColumns[utcconversiontimezonecode]"
-                      dataType="i4"
-                      name="utcconversiontimezonecode">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Integer</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                  </externalMetadataColumns>
-                </input>
-              </inputs>
-              <outputs>
-                <output
-                  refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Default Output]"
-                  exclusionGroup="1"
-                  name="Default Output"
-                  synchronousInputId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input]">
-                  <outputColumns>
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Default Output].Columns[SavedRecordId]"
-                      dataType="guid"
-                      lineageId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Default Output].Columns[SavedRecordId]"
-                      name="SavedRecordId" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Default Output].Columns[IsNew]"
-                      dataType="bool"
-                      lineageId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Default Output].Columns[IsNew]"
-                      name="IsNew" />
-                  </outputColumns>
-                  <externalMetadataColumns />
-                </output>
-                <output
-                  refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Error Output]"
-                  exclusionGroup="1"
-                  isErrorOut="true"
-                  name="Error Output"
-                  synchronousInputId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input]">
-                  <outputColumns>
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Error Output].Columns[ErrorCode]"
-                      dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Error Output].Columns[ErrorCode]"
-                      name="ErrorCode"
-                      specialFlags="1" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Error Output].Columns[ErrorColumn]"
-                      dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Error Output].Columns[ErrorColumn]"
-                      name="ErrorColumn"
-                      specialFlags="2" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Error Output].Columns[ErrorMessage]"
-                      dataType="wstr"
-                      length="2048"
-                      lineageId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Error Output].Columns[ErrorMessage]"
-                      name="ErrorMessage" />
-                  </outputColumns>
-                  <externalMetadataColumns />
-                </output>
-                <output
-                  refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Skipped Rows]"
-                  exclusionGroup="1"
-                  name="Skipped Rows"
-                  synchronousInputId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input]">
-                  <outputColumns>
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Skipped Rows].Columns[SkipReasonMessage]"
-                      dataType="wstr"
-                      length="2048"
-                      lineageId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Skipped Rows].Columns[SkipReasonMessage]"
-                      name="SkipReasonMessage" />
-                  </outputColumns>
-                  <externalMetadataColumns />
-                </output>
-              </outputs>
-            </component>
-            <component
               refId="Package\Upsert Singapore Tickets\Flat File Destination"
               componentClassID="Microsoft.FlatFileDestination"
               contactInfo="Flat File Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
@@ -1350,20 +274,20 @@
                       cachedDataType="i4"
                       cachedName="ErrorCode"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorCode]"
-                      lineageId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Error Output].Columns[ErrorCode]" />
+                      lineageId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Error Output].Columns[ErrorCode]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].Columns[ErrorColumn]"
                       cachedDataType="i4"
                       cachedName="ErrorColumn"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorColumn]"
-                      lineageId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Error Output].Columns[ErrorColumn]" />
+                      lineageId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Error Output].Columns[ErrorColumn]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].Columns[ErrorMessage]"
                       cachedDataType="wstr"
                       cachedLength="2048"
                       cachedName="ErrorMessage"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorMessage]"
-                      lineageId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Error Output].Columns[ErrorMessage]" />
+                      lineageId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Error Output].Columns[ErrorMessage]" />
                   </inputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -1419,7 +343,7 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT [LastUpdated]
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT  [LastUpdated]
       ,[TicketId]
       ,[PriceModel]
       ,[PriceModelPriceId]
@@ -1935,18 +859,1094 @@
                 </output>
               </outputs>
             </component>
+            <component
+              refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets"
+              componentClassID="Microsoft.ManagedComponentHost"
+              contactInfo="KingswaySoft Inc.; http://www.kingswaysoft.com; support@kingswaysoft.com; Copyright (c) 2020 KingswaySoft Inc."
+              description="Populate data into Microsoft Dynamics 365 CE/CRM."
+              name="Upsert Singapore Tickets"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Destination entity to write data."
+                  expressionType="Notify"
+                  name="DestinationEntity">st_singaporeticket</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how data is written to CDS/Dynamics CRM server."
+                  name="ActionType"
+                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.DestinationActionType">5</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether the values of CDS/CRM lookup fields should be removed if the reference records cannot be found. "
+                  expressionType="Notify"
+                  name="RemoveUnresolvableReferences">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether duplicate detection should be enabled when creating or updating CDS/CRM records. Duplicate records are determined by the duplicate detection rules and settings defined in CDS or Microsoft Dynamics CRM server."
+                  expressionType="Notify"
+                  name="EnableSystemDuplicateDetection">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify the matching criteria to be used when performing an update or upsert. "
+                  expressionType="Notify"
+                  name="RecordMatchingCriteria"
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.RecordMatchingCriteria">3</property>
+                <property
+                  dataType="System.String"
+                  description="Specify the key fields to be used to determine the matching records that exist in CDS/CRM for either Upsert/Update action or source duplicate optimization."
+                  expressionType="Notify"
+                  name="RecordMatchingKeyFields">ed_crmnummer;st_ticketid</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether to ignore those NULL-valued fields."
+                  expressionType="Notify"
+                  name="IgnoreNullValuedFields">true</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether to ignore those fields that have no value changes in the target system. "
+                  expressionType="Notify"
+                  name="IgnoreUnchangedFields">true</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specify whether to remove those invalid characters before writing to CDS/CRM."
+                  expressionType="Notify"
+                  name="RemoveInvalidCharacters">true</property>
+                <property
+                  dataType="System.String"
+                  description="Specify the flag field(s) that are used to track the source of changes. The field(s) will not posted to CDS/CRM server unless there are changes to other fields if specified. &quot;Ignore Unchange Fields&quot; option is required in order for the specified flag field(s) to work. "
+                  expressionType="Notify"
+                  name="ChangeFlagFields"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies what action will be taken when multiple matches are found with Upsert action."
+                  expressionType="Notify"
+                  name="HandlingOfMultipleMatches"
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">2</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify whether to use optimizations when there are duplicate records form the source system."
+                  expressionType="Notify"
+                  name="OptimizationOnSourceDuplicates"
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.OptimizationOnSourceDuplicates">0</property>
+                <property
+                  dataType="System.String"
+                  description="Workflow or action to be executed."
+                  expressionType="Notify"
+                  name="WorkflowAction"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the number of records to be sent to CDS/Dynamics CRM server in each service call."
+                  expressionType="Notify"
+                  name="BatchSize">100</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify the total number or concurrent threads to write to CDS/CRM server simultaneously. "
+                  expressionType="Notify"
+                  name="ConcurrentWritingThreadsInTotal">20</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether datetime values should be sent to CDS/CRM server in UTC format."
+                  expressionType="Notify"
+                  name="SendDateTimeInUtcFormat">true</property>
+                <property
+                  dataType="System.String"
+                  name="UserComponentTypeName">KingswaySoft.IntegrationToolkit.DynamicsCrm.CrmDestinationComponent</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specify whethere to tentatively disable entity change tracking (auditing)"
+                  expressionType="Notify"
+                  name="TentativelyDisableEntityAuditing">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Connections[DynamicsCRM]"
+                  connectionManagerID="Package.ConnectionManagers[Dynamics 365 Connection]"
+                  connectionManagerRefId="Package.ConnectionManagers[Dynamics 365 Connection]"
+                  description="Dynamics CRM Connection Manager"
+                  name="DynamicsCRM" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="RedirectRow"
+                  hasSideEffects="true"
+                  name="Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[activationinterval_from]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="activationinterval_from"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_activationintervalfrom]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activationinterval_from]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[activationinterval_to]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="activationinterval_to"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_activationintervalto]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activationinterval_to]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[BearerCategory]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="BearerCategory"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_bearercategory]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[BearerCategory]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[blockedDate]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="blockedDate"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_blockeddate]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[blockedDate]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[HasRefund]"
+                      cachedDataType="i4"
+                      cachedName="HasRefund"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_hasrefund]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[HasRefund]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[LastUpdated]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="LastUpdated"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_lastupdated]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[LastUpdated]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[HasGroupDiscount]"
+                      cachedDataType="i4"
+                      cachedName="HasGroupDiscount"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_hasgroupdiscount]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[OfferNameDetailed]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="OfferNameDetailed"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_offernamedetailed]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[PriceModel]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="PriceModel"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_pricemodel]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[PriceModel]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[PriceModelPriceId]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="PriceModelPriceId"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_pricemodelprice]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[OfferName]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="OfferName"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_singtickettype]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[OfferName]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[SalesChannelId]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="SalesChannelId"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_saleschannel]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[SalesChannelId]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[activatedDate]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="activatedDate"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_ticketactivated]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activatedDate]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TravellersCount]"
+                      cachedDataType="i4"
+                      cachedName="TravellersCount"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_travellerscount]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TravellersCount]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[travelvalidityinterval_from]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="travelvalidityinterval_from"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_travelvalidityintervalfrom]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_from]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[travelvalidityinterval_to]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="travelvalidityinterval_to"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_travelvalidityintervalto]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_to]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[DataCreatedDate]"
+                      cachedDataType="dbTimeStampOffset"
+                      cachedName="DataCreatedDate"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketcreated]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[DataCreatedDate]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TicketAmount]"
+                      cachedDataType="numeric"
+                      cachedName="TicketAmount"
+                      cachedPrecision="13"
+                      cachedScale="5"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketprice]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketAmount]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TicketId]"
+                      cachedDataType="wstr"
+                      cachedLength="7"
+                      cachedName="TicketId"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketid]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketId]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[cgi_contactnumber]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="cgi_contactnumber"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_contactid]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[Name]"
+                      cachedDataType="wstr"
+                      cachedLength="151"
+                      cachedName="Name"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_name]"
+                      lineageId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Output].Columns[Name]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[CRMNummer]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="CRMNummer"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_crmnummer]"
+                      lineageId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Output].Columns[CRMNummer]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[createdby]"
+                      dataType="guid"
+                      name="createdby">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">systemuser</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">false</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_activationintervalfrom]"
+                      dataType="dbTimeStamp"
+                      name="ed_activationintervalfrom">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_activationintervalto]"
+                      dataType="dbTimeStamp"
+                      name="ed_activationintervalto">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_bearercategory]"
+                      dataType="wstr"
+                      length="20"
+                      name="ed_bearercategory">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_blockeddate]"
+                      dataType="dbTimeStamp"
+                      name="ed_blockeddate">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_crmnummer]"
+                      dataType="wstr"
+                      length="50"
+                      name="ed_crmnummer">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_hasgroupdiscount]"
+                      dataType="bool"
+                      name="ed_hasgroupdiscount">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Boolean</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_hasrefund]"
+                      dataType="bool"
+                      name="ed_hasrefund">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Boolean</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_lastupdated]"
+                      dataType="dbTimeStamp"
+                      name="ed_lastupdated">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_offernamedetailed]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_offernamedetailed">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_saleschannel]"
+                      dataType="wstr"
+                      length="30"
+                      name="ed_saleschannel">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_skakort]"
+                      dataType="guid"
+                      name="ed_skakort">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">ed_skakort</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_ticketactivated]"
+                      dataType="dbTimeStamp"
+                      name="ed_ticketactivated">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_travelcardid]"
+                      dataType="guid"
+                      name="ed_travelcardid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">cgi_travelcard</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_travellerscount]"
+                      dataType="i4"
+                      name="ed_travellerscount">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Integer</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_travelvalidityintervalfrom]"
+                      dataType="dbTimeStamp"
+                      name="ed_travelvalidityintervalfrom">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_travelvalidityintervalto]"
+                      dataType="dbTimeStamp"
+                      name="ed_travelvalidityintervalto">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[importsequencenumber]"
+                      dataType="i4"
+                      name="importsequencenumber">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Integer</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">false</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[overriddencreatedon]"
+                      dataType="dbTimeStamp"
+                      name="overriddencreatedon">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">false</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ownerid]"
+                      dataType="guid"
+                      name="ownerid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Owner</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">systemuser;team</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[owneridtype]"
+                      dataType="wstr"
+                      length="64"
+                      name="owneridtype">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">EntityName</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_contactid]"
+                      dataType="guid"
+                      name="st_contactid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">contact</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupSettings">{"SkipRecordIfLookupFails":true,"CacheStrategy":"FullCache","LookupTargets":[{"TargetEntity":"contact","TargetTextField":"ed_mklid"}]}</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_name]"
+                      dataType="wstr"
+                      length="100"
+                      name="st_name">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_pricemodel]"
+                      dataType="wstr"
+                      length="25"
+                      name="st_pricemodel">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_pricemodelprice]"
+                      dataType="wstr"
+                      length="100"
+                      name="st_pricemodelprice">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_singaporeticketid]"
+                      dataType="guid"
+                      name="st_singaporeticketid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Uniqueidentifier</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_singtickettype]"
+                      dataType="i4"
+                      name="st_singtickettype">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Picklist</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketactivated]"
+                      dataType="i4"
+                      name="st_ticketactivated">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Picklist</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketcreated]"
+                      dataType="dbTimeStamp"
+                      name="st_ticketcreated">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketid]"
+                      dataType="wstr"
+                      length="10"
+                      name="st_ticketid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketprice]"
+                      dataType="numeric"
+                      name="st_ticketprice"
+                      precision="38"
+                      scale="4">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Money</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_validfrom]"
+                      dataType="dbTimeStamp"
+                      name="st_validfrom">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_validto]"
+                      dataType="dbTimeStamp"
+                      name="st_validto">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[statecode]"
+                      dataType="i4"
+                      name="statecode">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">State</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[statuscode]"
+                      dataType="i4"
+                      name="statuscode">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Status</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[timezoneruleversionnumber]"
+                      dataType="i4"
+                      name="timezoneruleversionnumber">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Integer</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[transactioncurrencyid]"
+                      dataType="guid"
+                      name="transactioncurrencyid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">transactioncurrency</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[utcconversiontimezonecode]"
+                      dataType="i4"
+                      name="utcconversiontimezonecode">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Integer</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Default Output]"
+                  exclusionGroup="1"
+                  name="Default Output"
+                  synchronousInputId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Default Output].Columns[SavedRecordId]"
+                      dataType="guid"
+                      lineageId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Default Output].Columns[SavedRecordId]"
+                      name="SavedRecordId" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Default Output].Columns[IsNew]"
+                      dataType="bool"
+                      lineageId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Default Output].Columns[IsNew]"
+                      name="IsNew" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Error Output"
+                  synchronousInputId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Error Output].Columns[ErrorMessage]"
+                      dataType="wstr"
+                      length="2048"
+                      lineageId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Error Output].Columns[ErrorMessage]"
+                      name="ErrorMessage" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Skipped Rows]"
+                  exclusionGroup="1"
+                  name="Skipped Rows"
+                  synchronousInputId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Skipped Rows].Columns[SkipReasonMessage]"
+                      dataType="wstr"
+                      length="2048"
+                      lineageId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Skipped Rows].Columns[SkipReasonMessage]"
+                      name="SkipReasonMessage" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
           </components>
           <paths>
             <path
               refId="Package\Upsert Singapore Tickets.Paths[Derived Column Output]"
-              endId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Inputs[Input]"
+              endId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input]"
               name="Derived Column Output"
               startId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Output]" />
             <path
               refId="Package\Upsert Singapore Tickets.Paths[Error Output]"
               endId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input]"
               name="Error Output"
-              startId="Package\Upsert Singapore Tickets\Dynamics CRM Destination.Outputs[Error Output]" />
+              startId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Error Output]" />
             <path
               refId="Package\Upsert Singapore Tickets.Paths[OLE DB Source Output]"
               endId="Package\Upsert Singapore Tickets\Calculate Fields.Inputs[Derived Column Input]"
@@ -1990,45 +1990,9 @@
           Id="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets"
           TopLeft="84,61" />
         <NodeLayout
-          Size="213,42"
-          Id="Package\Upsert Singapore Tickets\Dynamics CRM Destination"
+          Size="202,42"
+          Id="Package\Upsert Singapore Tickets\Upsert Singapore Tickets"
           TopLeft="464,273" />
-        <EdgeLayout
-          Id="Package\Upsert Singapore Tickets.Paths[Error Output]"
-          TopLeft="570.5,315">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="309.5,79"
-              Start="0,0"
-              End="309.5,71.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,35.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,35.5"
-                    Point2="0,39.5"
-                    Point3="4,39.5" />
-                  <mssgle:LineSegment
-                    End="305.5,39.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="305.5,39.5"
-                    Point2="309.5,39.5"
-                    Point3="309.5,43.5" />
-                  <mssgle:LineSegment
-                    End="309.5,71.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="97.659609375,44.5,114.18078125,16"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
         <NodeLayout
           Size="157,42"
           Id="Package\Upsert Singapore Tickets\Calculate Fields"
@@ -2065,7 +2029,43 @@
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="88.09376953125,35,48.3124609375,16"
+              BoundingBox="104.25,35,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Upsert Singapore Tickets.Paths[Error Output]"
+          TopLeft="565,315">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="315,79"
+              Start="0,0"
+              End="315,71.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,35.5"
+                    Point2="0,39.5"
+                    Point3="4,39.5" />
+                  <mssgle:LineSegment
+                    End="311,39.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="311,39.5"
+                    Point2="315,39.5"
+                    Point3="315,43.5" />
+                  <mssgle:LineSegment
+                    End="315,71.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="120.2949609375,44.5,74.410078125,16"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
@@ -2075,9 +2075,9 @@
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="145,68"
+              EndConnector="139.5,68"
               Start="0,0"
-              End="145,60.5">
+              End="139.5,60.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
@@ -2088,19 +2088,21 @@
                     Point2="0,34"
                     Point3="4,34" />
                   <mssgle:LineSegment
-                    End="141,34" />
+                    End="135.5,34" />
                   <mssgle:CubicBezierSegment
-                    Point1="141,34"
-                    Point2="145,34"
-                    Point3="145,38" />
+                    Point1="135.5,34"
+                    Point2="139.5,34"
+                    Point3="139.5,38" />
                   <mssgle:LineSegment
-                    End="145,60.5" />
+                    End="139.5,60.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="61.75,39,16,16"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
