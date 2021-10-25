@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="48"
-  DTS:VersionGUID="{7C4C5F7D-7F57-42CE-BFFD-9CAD77FCA624}">
+  DTS:VersionBuild="54"
+  DTS:VersionGUID="{2951B867-F008-487A-B097-571039A3C4D5}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABBryo6QZmzoTEamIG7IsaOAAAAAASAAACgAAAAEAAAAPz6XkZpB2181RT1ai8t1hcgAAAA5DxtzDp2sqhEvziPcuw4JwBz6HO/Z48f+faFQ0QHbBoUAAAAO8G6vPX81oCHC7qjlqAZjre7+4k</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADw9aKjaWax2l1zzwbnpCdOAAAAAASAAACgAAAAEAAAAO/F2DHBagZzxkP0Pkx4Ng8gAAAAw/cI/WpHRmc2XU0SB0emJk/tFjNH9H6/JAg93JfEEYkUAAAAQ91OOLkZpLlPqljB0PmmbRymiYw</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -343,7 +343,7 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT  [LastUpdated]
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT [LastUpdated]
       ,[TicketId]
       ,[PriceModel]
       ,[PriceModelPriceId]
@@ -1972,7 +1972,7 @@
         <NodeLayout
           Size="202,42"
           Id="Package\Upsert Singapore Tickets"
-          TopLeft="284.5,116.5" />
+          TopLeft="283.5,68.5" />
       </GraphLayout>
     </LayoutInfo>
   </Package>
@@ -1982,17 +1982,17 @@
       <GraphLayout
         Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
-          Size="176,42"
-          Id="Package\Upsert Singapore Tickets\Flat File Destination"
-          TopLeft="792,394" />
+          Size="202,42"
+          Id="Package\Upsert Singapore Tickets\Upsert Singapore Tickets"
+          TopLeft="464,273" />
         <NodeLayout
           Size="234,42"
           Id="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets"
           TopLeft="84,61" />
         <NodeLayout
-          Size="202,42"
-          Id="Package\Upsert Singapore Tickets\Upsert Singapore Tickets"
-          TopLeft="464,273" />
+          Size="176,42"
+          Id="Package\Upsert Singapore Tickets\Flat File Destination"
+          TopLeft="792,394" />
         <NodeLayout
           Size="157,42"
           Id="Package\Upsert Singapore Tickets\Calculate Fields"
@@ -2028,9 +2028,7 @@
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="104.25,35,16,16"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -2065,7 +2063,7 @@
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="120.2949609375,44.5,74.410078125,16"
+              BoundingBox="120.2949609375,44.5,56.6727734375,11.43359375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
@@ -2100,9 +2098,7 @@
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="61.75,39,16,16"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
