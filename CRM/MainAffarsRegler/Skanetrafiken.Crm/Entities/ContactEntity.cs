@@ -883,6 +883,19 @@ namespace Skanetrafiken.Crm.Entities
                 }
             }
 
+            localContext.Trace($"Entered HandlePreContactCreate() Social Security Number: { cgi_socialsecuritynumber }");
+            if (!string.IsNullOrEmpty(cgi_socialsecuritynumber) && cgi_socialsecuritynumber.Length == 12 && BirthDate == null)
+            {
+                int year = int.Parse(cgi_socialsecuritynumber.Substring(0, 4));
+                int month = int.Parse(cgi_socialsecuritynumber.Substring(4, 2));
+                int day = int.Parse(cgi_socialsecuritynumber.Substring(6, 2));
+
+                if(year != 0 && month != 0 && day != 0)
+                    this.BirthDate = new DateTime(year, month, day);
+                else
+                    localContext.Trace($"Year, Month or Day is 0. Birthday is still null.");
+            }
+
             if (this.ed_Address1_Country != null)
                 localContext.Trace(CountryEntity.GetIsoCodeForCountry(localContext, this.ed_Address1_Country.Id));
 
