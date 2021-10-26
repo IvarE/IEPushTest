@@ -14,5 +14,17 @@
     <Setting Name="cardDetailsServiceAddressCardDetails" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://stip.skanetrafiken.se/INTSTDK004/CardDetails2.svc</Value>
     </Setting>
+    <Setting Name="ClientIdCredentialFilePath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%APPDATA%\Endeavor\ClientIdCredential.xml</Value>
+    </Setting>
+    <Setting Name="ClientSecretCredentialFilePath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%APPDATA%\Endeavor\ClientSecretCredential.xml</Value>
+    </Setting>
+    <Setting Name="TenentCredentialFilePath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%APPDATA%\Endeavor\TenentCredential.xml</Value>
+    </Setting>
+    <Setting Name="StorageNameCredentialFilePath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%APPDATA%\Endeavor\StorageNameCredential.xml</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -483,7 +483,7 @@ Endeavor.formscriptfunctions = {
     LoadXrmExecutionContext: function (webResourceName, formContext) {
 
         try {
-            debugger;
+            
             var wrControl = formContext.getControl(webResourceName);
             if (wrControl) {
                 wrControl.getContentWindow().then(contentWindow => {
@@ -621,7 +621,7 @@ Endeavor.formscriptfunctions = {
             if (max_records == null)
                 max_records = 5000;
 
-            debugger;
+            
             var object = JSON.parse(request.responseText);
             value = object.value;
             nextUrl = object["@odata.nextLink"];

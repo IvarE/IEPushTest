@@ -199,7 +199,6 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             var formContext = executionContext.getFormContext();
             var postalCode = Endeavor.formscriptfunctions.GetValue(postalCodeLogicalName, formContext);
 
-            debugger;
             var fetchXml = [
                 "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true'>",
                 "  <entity name='ed_postnummer'>",
@@ -469,14 +468,14 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
         },
 
         blockAccountPortalSuccessCallback: function (formContext) {
-            debugger;
+            
             var portalID = formContext.getAttribute("accountnumber").getValue();
             var blocked = formContext.getAttribute("ed_islockedportal").getValue();
             var parentID = "";
             var organizationNumber = "";
 
             if (formContext.getAttribute("parentaccountid").getValue()) {
-                debugger;
+                
                 var inputParameters = [{ "Field": "PortalID", "Value": portalID, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
                 { "Field": "ParentID", "Value": parentID, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
                 { "Field": "OrganizationNumber", "Value": organizationNumber, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
@@ -529,13 +528,13 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                     });
             }
             else {
-                debugger;
+                
                 var ID = formContext.data.entity.getId();
                 ID = ID.substring(1, ID.length - 1);
 
                 Xrm.WebApi.retrieveMultipleRecords("account", "?$select=accountnumber&$filter=(_parentaccountid_value eq " + ID + ")").then(
                     function success(results) {
-                        debugger;
+                        
                         for (var i = 0; i < results.entities.length; i++) {
 
                             var account = results.entities[i];
@@ -605,7 +604,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                         }
                     },
                     function (error) {
-                        debugger;
+                        
                         console.log(error.message);
                         Endeavor.formscriptfunctions.ErrorCustomDialog(error.message, "Retrieve Multiple Records Error");
                     }

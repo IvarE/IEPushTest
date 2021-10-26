@@ -36,7 +36,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             switch (formType) {
                 case FORM_TYPE_CREATE:
 
-                    debugger;
+                    
                     //Check if quick create
                     var stateCode = formContext.getAttribute("statecode");
                     if (stateCode == null) {
@@ -48,7 +48,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         Endeavor.Skanetrafiken.Contact.setFocusQuickCreateContactFirstName(formContext);
                     }
 
-                    //debugger;
+                    
                     var emailaddress1 = formContext.getAttribute("emailaddress1");
                     var emailaddress2 = formContext.getAttribute("emailaddress2");
                     // Objects in form?
@@ -111,7 +111,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             var formContext = executionContext.getFormContext();
             var postalCode = Endeavor.formscriptfunctions.GetValue("address1_postalcode", formContext);
 
-            debugger;
+            
             var fetchXml = [
                 "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true'>",
                 "  <entity name='ed_postnummer'>",
@@ -164,7 +164,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         resetRequiredLevel: function (executionContext, formIsOnLoad) {
             
             var formContext = executionContext.getFormContext();
-            debugger;
+            
             var stateCode = formContext.getAttribute("statecode");
             if (stateCode == null || (stateCode != null && stateCode.getValue() == 0)) {
 
@@ -381,7 +381,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         handleAddressCompositeFields: function (formContext) {
 
             try {
-                debugger;
+                
                 var globalContext = Xrm.Utility.getGlobalContext();
                 var languageId = globalContext.userSettings.languageId;
                 switch (languageId) {
@@ -409,7 +409,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         lockEmailIfMKLidExistAndNotAdminForm: function (formContext) {
 
             try {
-                debugger;
+                
 
                 var currForm = formContext.ui.formSelector.getCurrentItem();
                 var currFormId = currForm.getId();
@@ -444,7 +444,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
         isMoreThanPrivateContact: function (formContext) {
 
-            debugger;
+            
             formContext.ui.clearFormNotification("IsMoreThanPrivate")
 
             var checkPrivateAttribute = formContext.getAttribute("ed_privatecustomercontact");
@@ -672,7 +672,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     var objectMKLResponse = object.GetTicketMoveDataFromMKLResponse;
                     objectMKLResponse = objectMKLResponse.replace("Ett fel uppstod vid kommunikation med MKL: ", "");
                     objectMKLResponse = JSON.parse(objectMKLResponse);
-                    debugger;
+                    
                     if (objectMKLResponse.message != null) {
                         if (!formContext.ui.setFormNotification(objectMKLResponse.message, "ERROR", Endeavor.Skanetrafiken.Contact._ticketMovesErrorHolder))
                             Endeavor.formscriptfunctions.AlertCustomDialog(objectMKLResponse.message);
@@ -900,7 +900,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         //Senare fix med säkerhetsroller
         showBlockButton: function (formContext) {
 
-            debugger;
+            
             var roles = [];
             roles[0] = "Skånetrafiken Handläggare"; //Borde heta "access block button" eller liknande
             roles[1] = "Skånetrafiken Handläggare Minus";
@@ -952,7 +952,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         onFormLoad: function (executionContext) {
             try {
                 var formContext = executionContext.getFormContext();
-                debugger;
+                
 
                 var formIsOnLoad = true;
                 Endeavor.Skanetrafiken.Contact.resetRequiredLevel(executionContext, formIsOnLoad);

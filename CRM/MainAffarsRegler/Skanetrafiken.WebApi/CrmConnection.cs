@@ -131,6 +131,17 @@ namespace Skanetrafiken.Crm
             _log.Debug(string.Format(Properties.Resources.CredentialsSaved, filePath));
         }
 
+        internal static void SaveCredentials(string filePath, string password, byte[] entropy)
+        {
+            XDocument saveDoc = new XDocument(
+                new XElement("Root",
+                        new XElement("Password", EncryptString(ToSecureString(password), entropy))
+                )
+            );
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            saveDoc.Save(filePath);
+        }
+
         /// <summary>
         /// Read password from the credential file.
         /// </summary>
@@ -146,7 +157,26 @@ namespace Skanetrafiken.Crm
             return ToInsecureString(DecryptString(doc.Root.Element("Password").Value));
         }
 
+        internal static string LoadCredentials(string filePath, byte[] entropy)
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException("The credentials file \"{0}\" cannot be found. Use the /Password: parameter to create the credential file.", filePath);
+            }
+            XDocument doc = XDocument.Load(filePath);
+            return ToInsecureString(DecryptString(doc.Root.Element("Password").Value, entropy));
+        }
+
         public static string EncryptString(System.Security.SecureString input)
+        {
+            byte[] encryptedData = System.Security.Cryptography.ProtectedData.Protect(
+                System.Text.Encoding.Unicode.GetBytes(ToInsecureString(input)),
+                entropy,
+                System.Security.Cryptography.DataProtectionScope.CurrentUser);
+            return Convert.ToBase64String(encryptedData);
+        }
+
+        public static string EncryptString(System.Security.SecureString input, byte[] entropy)
         {
             byte[] encryptedData = System.Security.Cryptography.ProtectedData.Protect(
                 System.Text.Encoding.Unicode.GetBytes(ToInsecureString(input)),
@@ -166,6 +196,22 @@ namespace Skanetrafiken.Crm
                 return ToSecureString(System.Text.Encoding.Unicode.GetString(decryptedData));
             }
             catch
+            {
+                return new SecureString();
+            }
+        }
+
+        public static SecureString DecryptString(string encryptedData, byte[] entropy)
+        {
+            try
+            {
+                byte[] decryptedData = System.Security.Cryptography.ProtectedData.Unprotect(
+                    Convert.FromBase64String(encryptedData),
+                    entropy,
+                    System.Security.Cryptography.DataProtectionScope.CurrentUser);
+                return ToSecureString(System.Text.Encoding.Unicode.GetString(decryptedData));
+            }
+            catch (Exception e)
             {
                 return new SecureString();
             }

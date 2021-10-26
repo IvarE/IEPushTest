@@ -83,7 +83,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         },
 
         onLoad: function (executionContext) {
-            debugger;
+            
             var formContext = executionContext.getFormContext();
 
             var contactAttribute = formContext.getAttribute("cgi_contactid")
@@ -92,7 +92,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             if (contactAttribute && customerEmailAttribute && customerEmailAttribute.getValue && !customerEmailAttribute.getValue() &&
                 contactAttribute.getValue && contactAttribute.getValue() && contactAttribute.getValue().length > 0) {
 
-                debugger;
+                
                 var contactId = contactAttribute.getValue()[0].id.replace("{", "").replace("}", "");
                 var columnSet = "emailaddress1,emailaddress2";
                 Xrm.WebApi.retrieveMultipleRecords("contact", "?$select=" + columnSet + "&$filter=contactid eq " + contactId).then(
@@ -348,7 +348,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
          * */
         hideOrShowTypeOfContactFields: function (formContext) {
             try {
-                debugger;
+               
                 var contactId = formContext.getAttribute("cgi_contactid");
                 if (contactId && contactId.getValue()) {
                     var contactValue = contactId.getValue();
@@ -1052,14 +1052,14 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                         var travelInformations = Endeavor.formscriptfunctions.fetchJSONResults(url);
 
                         if (travelInformations.length === 0) {
-                            debugger;
+                            
                             var cgi_casdet_row1_cat3idLookup = formContext.getAttribute("cgi_casdet_row1_cat3id").getValue();
 
                             var categoryId = cgi_casdet_row1_cat3idLookup[0].id.replace("{", "").replace("}", "");
                             url = clientUrl + "/api/data/v9.0/cgi_categorydetails(" + categoryId + ")?$select=cgi_requirestravelinfo";
                             var categoryDetail = Endeavor.formscriptfunctions.fetchJSONResults(url);
 
-                            debugger;
+                            
                             if (categoryDetail["cgi_requirestravelinfo"] == 1) {
                                 //ge användaren en möljighet att avsluta ärendet ändå utan trafikinfo genom att klicka ok
                                 if (confirm("Ärenden i kategori " + cgi_casdet_row1_cat3idLookup[0].name + " förväntas innehålla trafikinformation, vilken saknas i detta ärende. Vill du verkligen avsluta ärendet utan trafikinformation? ")) {
@@ -1194,7 +1194,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 //    return;
                 //}
 
-                debugger;
+                
                 var hasRep = null;
                 var cgi_representativ = formContext.getAttribute("cgi_representativid").getValue();
 
@@ -1287,7 +1287,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             try {
                 var _returnValue = "parameter_regardingid=" + Endeavor.formscriptfunctions.GetObjectID(formContext);
                 var title = Endeavor.formscriptfunctions.GetValue("title", formContext);
-                debugger;
+                
                 title = title.replace("%", " procent");
                 _returnValue += "&parameter_regardingname=" + title;
                 _returnValue += "&parameter_regardingtype=incident";
@@ -1460,7 +1460,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         onGridFileLinkRecordSelect: function (executionContext) {
 
             try {
-                debugger;
+                
                 //DevOps 9168: Apply changes to the links in the section.
                 var formContext = executionContext.getFormContext();
                 var disableFields = ["cgi_url"];
@@ -1468,7 +1468,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
                 //Halndle when there are multiple selected
                 if (confirm("Vill du öppna/hämta denna fil?") == true) {
-                    debugger;
+                    
                     var gridData = formContext.getData();
                     if (gridData != null && gridData != undefined && gridData.entity != null && gridData.entity != undefined) {
                         var gridAttributes = gridData.entity.attributes;
@@ -1506,7 +1506,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         lockFields: function (executionContext, disableFields) {
 
             try {
-                debugger;
+                
                 var formContext = executionContext.getFormContext();
                 var currentEntity = formContext.data.entity;
                 currentEntity.attributes.forEach(function (attribute, i) {

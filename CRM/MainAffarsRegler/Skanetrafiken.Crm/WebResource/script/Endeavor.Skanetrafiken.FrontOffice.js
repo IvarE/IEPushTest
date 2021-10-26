@@ -18,7 +18,7 @@ if (typeof (Endeavor.Skanetrafiken.FrontOffice) == "undefined") {
             "Information (Skånetrafiken)", "Köp och Sälj", "Information", "Köp och Sälj"],
 
         onFrontOfficeDisplay: function (formContext) {
-            debugger;
+            
             var formItem = formContext.ui.formSelector.getCurrentItem();
 
             if (formItem == null)
@@ -105,7 +105,7 @@ if (typeof (Endeavor.Skanetrafiken.FrontOffice) == "undefined") {
 
         onFrontOfficeIntegrationSalesOrder: function (formContext) {
 
-            debugger;
+            
             var fieldNameTicket = "ed_ticketid";
             var gridContextTicketId = formContext.getControl("SalesOrderLines");
             var allSelectedRowsTicketId = gridContextTicketId.getGrid().getSelectedRows();
