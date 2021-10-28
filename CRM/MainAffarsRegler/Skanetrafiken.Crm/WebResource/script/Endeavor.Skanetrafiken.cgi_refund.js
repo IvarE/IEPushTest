@@ -337,7 +337,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     break;
                 case FORM_TYPE_UPDATE:
                     Endeavor.Skanetrafiken.cgi_refund.refund_Onload(formContext);
-                    //Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnLoad(formContext);
+                    Endeavor.Skanetrafiken.cgi_refund.reimbursementformid_OnLoad(formContext);
                     //Endeavor.Skanetrafiken.cgi_refund.ctrlAttest();
                     break;
                 case FORM_TYPE_READONLY:
