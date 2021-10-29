@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="TicketPurchases-TicketInfo"
   DTS:PackageType="5"
-  DTS:VersionBuild="62"
-  DTS:VersionGUID="{0C3B5028-66F3-4475-94E2-A1EB959401C1}">
+  DTS:VersionBuild="64"
+  DTS:VersionGUID="{77C18942-5843-41E6-8C9F-9447DB6654AF}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -23,11 +23,11 @@
       DTS:ObjectName="Dynamics 365 Connection">
       <DTS:ObjectData>
         <CrmConnectionManager
-          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekundtst.skanetrafiken.se/DKCRMTST;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=True;IgnoreCertificateErrors=False"
+          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekundacc.skanetrafiken.se/DKCRMACC;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=True;IgnoreCertificateErrors=False"
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAA8EWiP3vLnMk5FKxqLxUXlAAAAAASAAACgAAAAEAAAAPM8BJnD9aDhNl6GKtm9umMgAAAA9IAvonYuDbv3V8rlCxD5HtwMHChRd+5UvLWZBUL0aAYUAAAA4Q2/EOjNbZdO7ke1Z9pVHKhmqFA</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAtj8X8iutHRabYf4OvjJm3AAAAAASAAACgAAAAEAAAALKyu3eh+YEJpLlc38Axn4ggAAAAtCqLhJYsqDxbYs+Us8nJ/9VGqJ+m784Y7qx+Xy64H/kUAAAAmsmUNeDEbsAvzWPSMmofGh7ddFs</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
