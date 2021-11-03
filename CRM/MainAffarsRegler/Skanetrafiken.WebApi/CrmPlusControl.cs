@@ -4538,38 +4538,34 @@ namespace Skanetrafiken.Crm.Controllers
                             #region Check for validated EmailAddress1
                             if (contactConflicts.Count > 0)
                             {
-                                _log.Info($"Th={threadId} - ValidateEmail: Combining {contactConflicts.Count} conflicting contacts.");
-                                contactConflicts.Remove(contact);
-                                contact.CombineContacts(localContext, contactConflicts);
-
-                                //if (feature != null && feature.ed_SplittCompany == true)
-                                //{
-                                //    if (contact.ed_EmailToBeVerified.Equals(contactConflicts[0].EMailAddress1))
-                                //    {
-                                //        _log.Warn($"Th={threadId} - ValidateEmail: Found existing, validated contact with conflicting email {contact.ed_EmailToBeVerified}. Cannot validate this contact.");
-                                //        HttpResponseMessage rm3 = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                //        rm3.Content = new StringContent(Resources.CouldNotVerifyCustomerEmail);
-                                //        return rm3;
-                                //    }
-                                //}
-                                //else if (feature == null || (feature != null && feature.ed_SplittCompany == false))
-                                //{
-                                //    if (contact.ed_EmailToBeVerified.Equals(contactConflicts[0].EMailAddress1))
-                                //    {
-                                //        _log.Warn($"Th={threadId} - ValidateEmail: Found existing, validated contact with conflicting email {contact.ed_EmailToBeVerified}. Cannot validate this contact.");
-                                //        HttpResponseMessage rm3 = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                //        rm3.Content = new StringContent(Resources.CouldNotVerifyCustomerEmail);
-                                //        return rm3;
-                                //    }
-                                //    else
-                                //    {
-                                //        _log.Warn($"Th={threadId} - ValidateEmail: Found existing, validated contact with Social Security Number. Cannot validate this contact.");
-                                //        _log.DebugFormat($"Th={threadId} - ValidateEmail: Found existing, validated contact with Social Security Number {contactConflicts[0].cgi_socialsecuritynumber}.");
-                                //        HttpResponseMessage rm3 = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                //        rm3.Content = new StringContent(Resources.CouldNotVerifyCustomerSocSec);
-                                //        return rm3;
-                                //    }
-                                //}
+                                if (feature != null && feature.ed_SplittCompany == true)
+                                {
+                                    if (contact.ed_EmailToBeVerified.Equals(contactConflicts[0].EMailAddress1))
+                                    {
+                                        _log.Warn($"Th={threadId} - ValidateEmail: Found existing, validated contact with conflicting email {contact.ed_EmailToBeVerified}. Cannot validate this contact.");
+                                        HttpResponseMessage rm3 = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                        rm3.Content = new StringContent(Resources.CouldNotVerifyCustomerEmail);
+                                        return rm3;
+                                    }
+                                }
+                                else if (feature == null || (feature != null && feature.ed_SplittCompany == false))
+                                {
+                                    if (contact.ed_EmailToBeVerified.Equals(contactConflicts[0].EMailAddress1))
+                                    {
+                                        _log.Warn($"Th={threadId} - ValidateEmail: Found existing, validated contact with conflicting email {contact.ed_EmailToBeVerified}. Cannot validate this contact.");
+                                        HttpResponseMessage rm3 = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                        rm3.Content = new StringContent(Resources.CouldNotVerifyCustomerEmail);
+                                        return rm3;
+                                    }
+                                    else
+                                    {
+                                        _log.Warn($"Th={threadId} - ValidateEmail: Found existing, validated contact with Social Security Number. Cannot validate this contact.");
+                                        _log.DebugFormat($"Th={threadId} - ValidateEmail: Found existing, validated contact with Social Security Number {contactConflicts[0].cgi_socialsecuritynumber}.");
+                                        HttpResponseMessage rm3 = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                        rm3.Content = new StringContent(Resources.CouldNotVerifyCustomerSocSec);
+                                        return rm3;
+                                    }
+                                }
                             }
                             #endregion
 
@@ -4829,44 +4825,39 @@ namespace Skanetrafiken.Crm.Controllers
                             if (conflictContacts.Count > 0)
                             {
                                 _log.Info($"Th={threadId} - ValidateEmail: Contact conflicts found.");
-                                //ContactEntity emailAddress1Conflict = null;
-                                nContact = null; //choose the oldest one or the newest one QUESTION??
+                                ContactEntity emailAddress1Conflict = null;
 
-                                //foreach (ContactEntity c in conflictContacts)
-                                //{
-
-                                //    if (lead.EMailAddress1 != null && lead.EMailAddress1.Equals(c.EMailAddress1))
-                                //    {
-                                //        HttpResponseMessage respMess2 = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                //        respMess2.Content = new StringContent("Duplicate Contact found with the same primary email.");
-                                //        return respMess2;
-                                //    }
-                                //}
-
-                                //if (emailAddress1Conflict != null)
-                                //{
-                                //    _log.Debug($"Th={threadId} - ValidateEmail: Conflicting EMailAddress1 found.");
-                                //    conflictContacts.Remove(emailAddress1Conflict);
-                                //    newContact = emailAddress1Conflict;
-                                //}
-                                //else
-                                //{
-                                //    _log.Info($"Th={threadId} - ValidateEmail: No EMailAddress1 conflict was found. Qualifying Lead.");
-                                //    newContact = QualifyLeadToContact(localContext, lead);
-                                //}
-
-                                _log.Info($"Th={threadId} - ValidateEmail: Combining {conflictContacts.Count} conflicting contacts.");
-                                conflictContacts.Remove(nContact);
-                                nContact.CombineContacts(localContext, conflictContacts);
-
-                                UpdateContactWithAuthorityLead(ref nContact, lead);
-                                SetStateRequest req = new SetStateRequest()
+                                foreach (ContactEntity c in conflictContacts)
                                 {
-                                    EntityMoniker = lead.ToEntityReference(),
-                                    State = new OptionSetValue((int)Generated.LeadState.Disqualified),
-                                    Status = new OptionSetValue((int)Generated.lead_statuscode.Canceled)
-                                };
-                                SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
+
+                                    if (lead.EMailAddress1 != null && lead.EMailAddress1.Equals(c.EMailAddress1))
+                                    {
+                                        HttpResponseMessage respMess2 = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                        respMess2.Content = new StringContent("Duplicate Contact found with the same primary email.");
+                                        return respMess2;
+                                    }
+                                }
+
+                                if (emailAddress1Conflict != null)
+                                {
+                                    _log.Debug($"Th={threadId} - ValidateEmail: Conflicting EMailAddress1 found.");
+                                    conflictContacts.Remove(emailAddress1Conflict);
+                                    nContact = emailAddress1Conflict;
+
+                                    UpdateContactWithAuthorityLead(ref nContact, lead);
+                                    SetStateRequest req = new SetStateRequest()
+                                    {
+                                        EntityMoniker = lead.ToEntityReference(),
+                                        State = new OptionSetValue((int)Generated.LeadState.Disqualified),
+                                        Status = new OptionSetValue((int)Generated.lead_statuscode.Canceled)
+                                    };
+                                    SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
+                                }
+                                else
+                                {
+                                    _log.Info($"Th={threadId} - ValidateEmail: No EMailAddress1 conflict was found. Qualifying Lead.");
+                                    nContact = QualifyLeadToContact(localContext, lead);
+                                }
                             }
                             else
                             {
