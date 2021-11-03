@@ -4829,7 +4829,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                                 foreach (ContactEntity c in conflictContacts)
                                 {
-
                                     if (lead.EMailAddress1 != null && lead.EMailAddress1.Equals(c.EMailAddress1))
                                     {
                                         HttpResponseMessage respMess2 = new HttpResponseMessage(HttpStatusCode.BadRequest);
@@ -4858,6 +4857,9 @@ namespace Skanetrafiken.Crm.Controllers
                                     _log.Info($"Th={threadId} - ValidateEmail: No EMailAddress1 conflict was found. Qualifying Lead.");
                                     nContact = QualifyLeadToContact(localContext, lead);
                                 }
+
+                                _log.Info($"Th={threadId} - ValidateEmail: Combining {conflictContacts.Count} conflicting contacts.");
+                                nContact.CombineContacts(localContext, conflictContacts);
                             }
                             else
                             {
