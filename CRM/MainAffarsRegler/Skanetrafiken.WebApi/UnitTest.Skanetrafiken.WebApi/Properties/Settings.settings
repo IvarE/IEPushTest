@@ -2,38 +2,38 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Endeavor.Crm.UnitTest.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="UserName" Type="System.String" Scope="User">
+    <Setting Name="UserName" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="UseDefaultCredentials" Type="System.Boolean" Scope="User">
+    <Setting Name="UseDefaultCredentials" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="EndpointType" Type="System.String" Scope="User">
+    <Setting Name="EndpointType" Type="System.String" Scope="Application">
       <Value Profile="(Default)">ActiveDirectory</Value>
     </Setting>
-    <Setting Name="HomeRealmUri" Type="System.String" Scope="User">
+    <Setting Name="HomeRealmUri" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="ServerAddress" Type="System.String" Scope="User">
+    <Setting Name="ServerAddress" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://sekundtst.skanetrafiken.se</Value>
     </Setting>
-    <Setting Name="OrganizationName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">DKCRM</Value>
-    </Setting>
-    <Setting Name="Domain" Type="System.String" Scope="User">
+    <Setting Name="Domain" Type="System.String" Scope="Application">
       <Value Profile="(Default)">D1</Value>
     </Setting>
-    <Setting Name="ServerAddress" Type="System.String" Scope="User">
+    <Setting Name="ServerAddress1" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://sekundtst.skanetrafiken.se</Value>
     </Setting>
-    <Setting Name="OrganizationUri" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://sekundtst.skanetrafiken.se/DKCRMDEV/XRMServices/2011/Organization.svc</Value>
-    </Setting>
-    <Setting Name="DiscoveryUri" Type="System.String" Scope="User">
+    <Setting Name="DiscoveryUri" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://sekundtst.skanetrafiken.se/XRMServices/2011/Discovery.svc</Value>
     </Setting>
-    <Setting Name="Domain" Type="System.String" Scope="User">
+    <Setting Name="Domain1" Type="System.String" Scope="Application">
       <Value Profile="(Default)">D1</Value>
+    </Setting>
+    <Setting Name="OrganizationName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">DKCRMTST</Value>
+    </Setting>
+    <Setting Name="OrganizationUri" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://sekundtst.skanetrafiken.se/DKCRMTST/XRMServices/2011/Organization.svc</Value>
     </Setting>
   </Settings>
 </SettingsFile>

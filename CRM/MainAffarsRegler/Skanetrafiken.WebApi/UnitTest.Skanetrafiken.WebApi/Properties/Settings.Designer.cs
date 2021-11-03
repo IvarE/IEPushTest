@@ -12,7 +12,7 @@ namespace Endeavor.Crm.UnitTest.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -23,135 +23,102 @@ namespace Endeavor.Crm.UnitTest.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string UserName {
             get {
                 return ((string)(this["UserName"]));
             }
-            set {
-                this["UserName"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool UseDefaultCredentials {
             get {
                 return ((bool)(this["UseDefaultCredentials"]));
             }
-            set {
-                this["UseDefaultCredentials"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("ActiveDirectory")]
         public string EndpointType {
             get {
                 return ((string)(this["EndpointType"]));
             }
-            set {
-                this["EndpointType"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string HomeRealmUri {
             get {
                 return ((string)(this["HomeRealmUri"]));
             }
-            set {
-                this["HomeRealmUri"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("http://sekundtst.skanetrafiken.se")]
         public string ServerAddress {
             get {
                 return ((string)(this["ServerAddress"]));
             }
-            set {
-                this["ServerAddress"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("DKCRM")]
-        public string OrganizationName {
-            get {
-                return ((string)(this["OrganizationName"]));
-            }
-            set {
-                this["OrganizationName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("D1")]
         public string Domain {
             get {
                 return ((string)(this["Domain"]));
             }
-            set {
-                this["Domain"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("http://sekundtst.skanetrafiken.se")]
         public string ServerAddress1 {
             get {
                 return ((string)(this["ServerAddress1"]));
             }
-            set {
-                this["ServerAddress1"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://sekundtst.skanetrafiken.se/DKCRMDEV/XRMServices/2011/Organization.svc")]
-        public string OrganizationUri {
-            get {
-                return ((string)(this["OrganizationUri"]));
-            }
-            set {
-                this["OrganizationUri"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("http://sekundtst.skanetrafiken.se/XRMServices/2011/Discovery.svc")]
         public string DiscoveryUri {
             get {
                 return ((string)(this["DiscoveryUri"]));
             }
-            set {
-                this["DiscoveryUri"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("D1")]
         public string Domain1 {
             get {
                 return ((string)(this["Domain1"]));
             }
-            set {
-                this["Domain1"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DKCRMTST")]
+        public string OrganizationName {
+            get {
+                return ((string)(this["OrganizationName"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://sekundtst.skanetrafiken.se/DKCRMTST/XRMServices/2011/Organization.svc")]
+        public string OrganizationUri {
+            get {
+                return ((string)(this["OrganizationUri"]));
             }
         }
     }

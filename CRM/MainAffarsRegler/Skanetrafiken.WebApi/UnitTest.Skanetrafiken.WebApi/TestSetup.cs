@@ -49,9 +49,9 @@ namespace Endeavor.Crm.UnitTest
 
                 if (password.Length == 0)
                 {
-                    throw new Exception(string.Format("The credential file {0} is missing. Please use Endeavor nUnit Credentials Manager to create the credential file.", credentialFile));
+                    //throw new Exception(string.Format("The credential file {0} is missing. Please use Endeavor nUnit Credentials Manager to create the credential file.", credentialFile));
 
-                    //// INFO: (hest) Get password from user. This is not really a good idea for unit tests since the can't run without user interaction.
+                    // INFO: (hest) Get password from user. This is not really a good idea for unit tests since the can't run without user interaction.
                     //user = PromptForPassword.ShowDialog(username, password);
                     //username = user.Item1;
                     //password = user.Item2;
