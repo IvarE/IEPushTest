@@ -56,7 +56,6 @@
                         if (typeof (Xrm) == "undefined")
                             Xrm = parent.Xrm;
 
-                        //Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
                         parent.Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
                     },
 
@@ -69,16 +68,26 @@
                         if (fileLinkArray.length > 0) {
                             fileLink = fileLinkArray[0].replace(/%3a/g, ":").replace(/%2f/g, "/");
                             console.log("FileLink: " + fileLink);
-                            //var fileName = fileLink.split("https://").pop();
 
                             var fileName = "";
                             if (fileLink.startsWith("https:"))
                             {
-                                fileName = fileLink.split("https://").pop();
+                                if (fileLink.startsWith("https://webpublicwebacc.blob.core.windows.net/")) {
+                                    fileName = fileLink.split("https://webpublicwebacc.blob.core.windows.net/").pop();
+                                }
+                                else
+                                {
+                                    fileName = fileLink.split("https://").pop();
+                                }
                             }
                             else if (fileLink.startsWith("http:"))
                             {
-                                fileName = fileLink.split("http://").pop();
+                                if (fileLink.startsWith("http://webpublicwebacc.blob.core.windows.net/")) {
+                                    fileName = fileLink.split("http://webpublicwebacc.blob.core.windows.net/").pop();
+                                }
+                                else {
+                                    fileName = fileLink.split("http://").pop();
+                                }
                             }
                             else
                             {
@@ -112,12 +121,55 @@
                                         }
                                         else
                                         {
-                                            //var sourceString = "data:image/" + fileExtention + ";base64," + parsedResult.Result;
-
                                             var sourceString = "";
-                                            if (fileExtention == "pdf") {
+                                            if (fileExtention == "rtf") {
+                                                sourceString = "data:application/rtf;base64," + parsedResult.Result;
+                                                var aTag = document.createElement('a');
+                                                aTag.id = "rtfId";
+                                                aTag.href = sourceString;
+                                                aTag.download = fileName;
+
+                                                var imgDiv = document.querySelector("#imagediv");
+                                                imgDiv.appendChild(aTag);
+
+                                                document.getElementById('rtfId').click();
+                                            }
+                                            else if (fileExtention == "doc") {
+                                                sourceString = "data:application/msword;base64," + parsedResult.Result;
+                                                var aTag = document.createElement('a');
+                                                aTag.id = "docId";
+                                                aTag.href = sourceString;
+                                                aTag.download = fileName;
+
+                                                var imgDiv = document.querySelector("#imagediv");
+                                                imgDiv.appendChild(aTag);
+
+                                                document.getElementById('docId').click();
+                                            }
+                                            else if (fileExtention == "docx") {
+                                                sourceString = "data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64," + parsedResult.Result;
+                                                var aTag = document.createElement('a');
+                                                aTag.id = "docxId";
+                                                aTag.href = sourceString;
+                                                aTag.download = fileName;
+
+                                                var imgDiv = document.querySelector("#imagediv");
+                                                imgDiv.appendChild(aTag);
+
+                                                document.getElementById('docxId').click();
+                                            }
+                                            else if (fileExtention == "txt") {
+                                                sourceString = "data:text/plain;base64," + parsedResult.Result;
+                                                var iFrame = document.createElement('iframe');
+                                                iFrame.src = sourceString;
+                                                iFrame.height = "975";
+                                                iFrame.width = "835";
+
+                                                var imgDiv = document.querySelector("#imagediv");
+                                                imgDiv.appendChild(iFrame);
+                                            }
+                                            else if (fileExtention == "pdf") {
                                                 sourceString = "data:application/" + fileExtention + ";base64," + parsedResult.Result;
-                                                //var iFrame = document.querySelector("#iframepdf");
                                                 var iFrame = document.createElement('iframe');
                                                 iFrame.src = sourceString;
                                                 iFrame.height = "975";
@@ -132,7 +184,6 @@
                                                 var img = document.querySelector("#imageID");
                                                 img.src = sourceString;
                                             }
-                                            
                                         }
                                     }
                                 },
