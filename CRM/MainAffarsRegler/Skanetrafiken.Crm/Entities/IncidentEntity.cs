@@ -375,7 +375,7 @@ namespace Skanetrafiken.Crm.Entities
 
             if (settings != null && !string.IsNullOrWhiteSpace(settings.ed_CRMPlusService)) 
             {
-                var urlToUse = $"{settings.ed_CRMPlusService}api/Incident/GetAttachmentFromAzure/encryptedUrl?encryptedUrl={fileName}";
+                var urlToUse = $"{settings.ed_CRMPlusService}/api/Incident/GetAttachmentFromAzure/encryptedUrl?encryptedUrl={fileName}";
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(urlToUse);
                 string clientCertName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_ClientCertName);
                 httpWebRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCertName));

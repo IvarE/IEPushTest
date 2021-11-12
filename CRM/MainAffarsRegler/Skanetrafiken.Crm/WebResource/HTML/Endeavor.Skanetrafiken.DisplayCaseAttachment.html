@@ -72,8 +72,8 @@
                             var fileName = "";
                             if (fileLink.startsWith("https:"))
                             {
-                                if (fileLink.startsWith("https://webpublicwebacc.blob.core.windows.net/")) {
-                                    fileName = fileLink.split("https://webpublicwebacc.blob.core.windows.net/").pop();
+                                if (fileLink.startsWith("https://webpublicwebacc.blob.core.windows.net/")) { //https://webpublicwebprod.blob.core.windows.net/
+                                    fileName = fileLink.split("https://webpublicwebacc.blob.core.windows.net/").pop(); //https://webpublicwebprod.blob.core.windows.net/
                                 }
                                 else
                                 {
@@ -82,8 +82,8 @@
                             }
                             else if (fileLink.startsWith("http:"))
                             {
-                                if (fileLink.startsWith("http://webpublicwebacc.blob.core.windows.net/")) {
-                                    fileName = fileLink.split("http://webpublicwebacc.blob.core.windows.net/").pop();
+                                if (fileLink.startsWith("http://webpublicwebacc.blob.core.windows.net/")) { //https://webpublicwebprod.blob.core.windows.net/
+                                    fileName = fileLink.split("http://webpublicwebacc.blob.core.windows.net/").pop(); //https://webpublicwebprod.blob.core.windows.net/
                                 }
                                 else {
                                     fileName = fileLink.split("http://").pop();
@@ -160,13 +160,23 @@
                                             }
                                             else if (fileExtention == "txt") {
                                                 sourceString = "data:text/plain;base64," + parsedResult.Result;
-                                                var iFrame = document.createElement('iframe');
-                                                iFrame.src = sourceString;
-                                                iFrame.height = "975";
-                                                iFrame.width = "835";
+                                                //var iFrame = document.createElement('iframe');
+                                                //iFrame.src = sourceString;
+                                                //iFrame.height = "975";
+                                                //iFrame.width = "835";
+
+                                                //var imgDiv = document.querySelector("#imagediv");
+                                                //imgDiv.appendChild(iFrame);
+
+                                                var aTag = document.createElement('a');
+                                                aTag.id = "txtId";
+                                                aTag.href = sourceString;
+                                                aTag.download = fileName;
 
                                                 var imgDiv = document.querySelector("#imagediv");
-                                                imgDiv.appendChild(iFrame);
+                                                imgDiv.appendChild(aTag);
+
+                                                document.getElementById('txtId').click();
                                             }
                                             else if (fileExtention == "pdf") {
                                                 sourceString = "data:application/" + fileExtention + ";base64," + parsedResult.Result;
