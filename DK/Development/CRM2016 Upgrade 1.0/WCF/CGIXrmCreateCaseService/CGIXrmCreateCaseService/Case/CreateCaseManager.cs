@@ -218,12 +218,21 @@ namespace CGIXrmCreateCaseService.Case
             // Catch HTTP Exceptions from CRMPlus
             catch (Microsoft.Rest.HttpOperationException ex)
             {
-                //string msg = ex.Response.Content.ContentToString();
-                string msg = ex.Response.Content;
+                string msg = "Failed to provide Response Context";
+                msg = ex.Response == null ? msg : ex.Response.Content;
 
                 _log.Error(string.Format("Exception catched in GetOrCreateContactRGOLCase:{0}. Country:{1}", msg, request.CustomerAddress1Country));
+
+                string errorMessage = "Generic Error";
+                string innerMessage = "Generic Inner Message";
+
                 if (ex.Message != null)
-                    _log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
+                    errorMessage = ex.Message;
+
+                if (ex.InnerException != null)
+                    innerMessage = ex.InnerException.Message;
+
+                _log.Error(string.Format("Exception {0}, inner:{1}", errorMessage, innerMessage));
 
                 throw new Exception(string.Format("Kan inte skapa kund i SeKund. Orsak:{0}", msg), ex.InnerException);
             }
