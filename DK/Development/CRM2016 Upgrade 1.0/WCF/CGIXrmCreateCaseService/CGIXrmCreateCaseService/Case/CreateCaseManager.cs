@@ -218,20 +218,11 @@ namespace CGIXrmCreateCaseService.Case
             // Catch HTTP Exceptions from CRMPlus
             catch (Microsoft.Rest.HttpOperationException ex)
             {
-                string msg = "Failed to provide Response Context";
-                msg = ex.Response == null ? msg : ex.Response.Content;
-
+                string msg = ex.Response?.Content ?? "Failed to provide Response Context";
                 _log.Error(string.Format("Exception catched in GetOrCreateContactRGOLCase:{0}. Country:{1}", msg, request.CustomerAddress1Country));
 
-                string errorMessage = "Generic Error";
-                string innerMessage = "Generic Inner Message";
-
-                if (ex.Message != null)
-                    errorMessage = ex.Message;
-
-                if (ex.InnerException != null)
-                    innerMessage = ex.InnerException.Message;
-
+                string errorMessage = ex.Message ?? "No generic Error";
+                string innerMessage = ex.InnerException?.Message ?? "No inner exception";
                 _log.Error(string.Format("Exception {0}, inner:{1}", errorMessage, innerMessage));
 
                 throw new Exception(string.Format("Kan inte skapa kund i SeKund. Orsak:{0}", msg), ex.InnerException);
@@ -240,7 +231,7 @@ namespace CGIXrmCreateCaseService.Case
             catch (System.Runtime.Serialization.SerializationException ex)
             {
                 _log.Error(string.Format("Kunde inte omvandla resultat från CRMPlus till ett objekt. Detaljerat fel:{0}, inner:{1}", ex.Message, ex.InnerException));
-                if (ex.Message != null)
+                if (ex.Message != null && ex.InnerException != null)
                     _log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
 
                 throw new Exception(string.Format("Kunde inte omvandla resultat från CRMPlus till ett objekt. Detaljerat fel:{0}", ex.Message), ex.InnerException);
