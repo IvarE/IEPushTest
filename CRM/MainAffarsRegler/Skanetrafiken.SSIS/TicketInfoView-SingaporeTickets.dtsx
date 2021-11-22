@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="57"
-  DTS:VersionGUID="{4A441986-F2C3-45CE-9FBE-97C45DB75B9E}">
+  DTS:VersionBuild="64"
+  DTS:VersionGUID="{E850234E-239B-4E44-A663-51C19B3FA820}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,16 +27,16 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAC3ykps6U+UJCZr95tGuo3vAAAAAASAAACgAAAAEAAAACPvuvVyRpT6/teVZgUsQm4gAAAAWAHfxGY4Xu/o1Af3/rtbotZF3744TNiaGyXqGDgb/E4UAAAA/Ir1Fj+9l+53JAvl+zC0ygnzRS8</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAC2O/JDfae9S48Zr7sbXB8YAAAAAASAAACgAAAAEAAAAMZHFfAJsjHWS7HeYJ+NKiUgAAAAIWxUbEfx7Glzc93AraxTXg3YWizCG6Jhae5bxZEByK8UAAAA7zKtoqjh5n2tjc+SUxAtaKYLfJg</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
     <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[Flat File Connection Manager - Ticket Info]"
+      DTS:refId="Package.ConnectionManagers[Flat File Connection Manager - Singapore Tickets]"
       DTS:CreationName="FLATFILE"
       DTS:Description="Error records from Ticket Info View"
       DTS:DTSID="{DBFBFA83-99E2-429F-9A8B-4F5A18A77908}"
-      DTS:ObjectName="Flat File Connection Manager - Ticket Info">
+      DTS:ObjectName="Flat File Connection Manager - Singapore Tickets">
       <DTS:ObjectData>
         <DTS:ConnectionManager
           DTS:Format="Delimited"
@@ -45,7 +45,7 @@
           DTS:RowDelimiter=""
           DTS:TextQualifier="_x003C_none_x003E_"
           DTS:CodePage="1252"
-          DTS:ConnectionString="D:\Logs\SSIS\SSIS Import Tickets Info.txt">
+          DTS:ConnectionString="C:\Admin\Log\SQL\SSIS\SSIS Import Singapore Tickets.txt">
           <DTS:FlatFileColumns>
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -54,7 +54,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="Name"
-              DTS:DTSID="{0A14521B-A734-4162-8B50-B1EA26D22750}"
+              DTS:DTSID="{E3A2E0AB-954D-41CC-A7EA-671E00C16CEE}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -63,7 +63,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="CRMNummer"
-              DTS:DTSID="{AFFF9F1D-53B4-4CA1-BAA5-92F01717C270}"
+              DTS:DTSID="{64BFADB7-8BAD-47AD-A4FD-095CD462A8DE}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -71,7 +71,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorCode"
-              DTS:DTSID="{9757019E-66C6-4341-B6A1-78A12BEF9180}"
+              DTS:DTSID="{4BAC604F-7B32-4951-BA89-7CFBC0DB6DAF}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -79,7 +79,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorColumn"
-              DTS:DTSID="{974C814F-227F-4DD5-ABCF-BADB646A84B6}"
+              DTS:DTSID="{7F4F1A34-0CB2-43D4-8266-F2470503266F}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -88,7 +88,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorMessage"
-              DTS:DTSID="{0474F053-8599-42E1-9DBA-AC32CE12F6B1}"
+              DTS:DTSID="{449D4655-C1AD-47B9-820D-555C256FDAA5}"
               DTS:CreationName="" />
           </DTS:FlatFileColumns>
         </DTS:ConnectionManager>
@@ -239,8 +239,7 @@
               contactInfo="Flat File Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
               description="Flat File Destination"
               localeId="1053"
-              name="Flat File Destination"
-              version="1">
+              name="Flat File Destination">
               <properties>
                 <property
                   dataType="System.Boolean"
@@ -259,8 +258,8 @@
               <connections>
                 <connection
                   refId="Package\Upsert Singapore Tickets\Flat File Destination.Connections[FlatFileConnection]"
-                  connectionManagerID="Package.ConnectionManagers[Flat File Connection Manager - Ticket Info]"
-                  connectionManagerRefId="Package.ConnectionManagers[Flat File Connection Manager - Ticket Info]"
+                  connectionManagerID="Package.ConnectionManagers[Flat File Connection Manager - Singapore Tickets]"
+                  connectionManagerRefId="Package.ConnectionManagers[Flat File Connection Manager - Singapore Tickets]"
                   name="FlatFileConnection" />
               </connections>
               <inputs>
@@ -343,7 +342,7 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT [LastUpdated]
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT [LastUpdated]
       ,[TicketId]
       ,[PriceModel]
       ,[PriceModelPriceId]
