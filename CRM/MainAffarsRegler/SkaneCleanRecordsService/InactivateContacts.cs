@@ -116,7 +116,7 @@ namespace Endeavor.Crm.CleanRecordsService
             queryContacts.Criteria.AddFilter(queryFilter0);
             queryFilter0.AddCondition(ContactEntity.Fields.ed_MklId, ConditionOperator.Null);
             queryFilter0.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
-            queryFilter0.AddCondition(Contact.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true);
+            queryFilter0.AddCondition(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true);
 
             var queryFilter1 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter1);
@@ -180,36 +180,6 @@ namespace Endeavor.Crm.CleanRecordsService
             return queryContacts;
         }
 
-        public static bool CheckIfContainsRelevantEmails(Plugin.LocalPluginContext localContext, string emailaddress1, string emailaddress2)
-        {
-            var queryEmails = new QueryExpression(EmailEntity.EntityLogicalName);
-            queryEmails.NoLock = true;
-            queryEmails.ColumnSet.AddColumn(EmailEntity.Fields.ActivityId);
-            queryEmails.Criteria.AddCondition(EmailEntity.Fields.StatusCode, ConditionOperator.Equal, (int)email_statuscode.Received);
-
-            if (emailaddress1 != null && emailaddress2 != null)
-            {
-                _log.Info("'emailaddress1' and 'emailaddress2' are not null.");
-                var filterSender = new FilterExpression();
-                queryEmails.Criteria.AddFilter(filterSender);
-
-                filterSender.FilterOperator = LogicalOperator.Or;
-                filterSender.AddCondition(EmailEntity.Fields.Sender, ConditionOperator.Equal, emailaddress1);
-                filterSender.AddCondition(EmailEntity.Fields.Sender, ConditionOperator.Equal, emailaddress2);
-            }
-            else if(emailaddress1 != null)
-                queryEmails.Criteria.AddCondition(EmailEntity.Fields.Sender, ConditionOperator.Equal, emailaddress1);
-            else if(emailaddress2 != null)
-                queryEmails.Criteria.AddCondition(EmailEntity.Fields.Sender, ConditionOperator.Equal, emailaddress2);
-
-            var ag = queryEmails.AddLink(Incident.EntityLogicalName, EmailEntity.Fields.RegardingObjectId, Incident.Fields.IncidentId);
-            ag.EntityAlias = "ag";
-
-            var lEmails = XrmRetrieveHelper.RetrieveMultiple<EmailEntity>(localContext, queryEmails);
-
-            return lEmails.Count > 0;
-        }
-
         public static ExecuteMultipleResponse RunInactivateContacts(Plugin.LocalPluginContext localContext, bool bRunFullData)
         {
             //Run everyday
@@ -224,14 +194,6 @@ namespace Endeavor.Crm.CleanRecordsService
             {
                 try
                 {
-                    bool isRelevant = CheckIfContainsRelevantEmails(localContext, contact.EMailAddress1, contact.EMailAddress2);
-
-                    if (isRelevant)
-                    {
-                        _log.InfoFormat($"Contact: {contact.FirstName} {contact.LastName} has relevant Emails...");
-                        continue;
-                    }
-
                     ContactEntity nContact = new ContactEntity();
                     nContact.Id = contact.Id;
                     nContact.StateCode = ContactState.Inactive;
@@ -243,7 +205,6 @@ namespace Endeavor.Crm.CleanRecordsService
                     };
 
                     requestsLst.Add(updateContact);
-
                     _log.InfoFormat($"Contact: {contact.FirstName} {contact.LastName} added to Request Batch to be Inactivated.");
                 }
                 catch (Exception e)
