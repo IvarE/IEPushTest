@@ -148,6 +148,7 @@
     <Compile Include="crmservicehelpers.cs" />
     <Compile Include="deviceidmanager.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="LeadApiFixture.cs" />
     <Compile Include="PluginFixtureBase.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

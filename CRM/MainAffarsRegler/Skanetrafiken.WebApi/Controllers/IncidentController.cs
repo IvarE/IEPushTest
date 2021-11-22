@@ -25,18 +25,18 @@ namespace Skanetrafiken.Crm.Controllers
 
         private const string TenantID = "e1fcb9f3-e5f9-496f-a583-e495dfd57497"; //Tenent
 
-        private const string StorageAccountName = "webstpublicwebtest"; //TEST
-        private const string ClientID = "635555fe-6cb2-4a48-9b54-8d5d6472b00f"; //TEST - App/Client ID
-        private const string ClientSecret = "czv7Q~iQuUCRwkryVp6FqHvmSAhbA_I2XidG_"; //TEST
+        //private const string StorageAccountName = "webstpublicwebtest"; //TEST
+        //private const string ClientID = "635555fe-6cb2-4a48-9b54-8d5d6472b00f"; //TEST - App/Client ID
+        //private const string ClientSecret = "czv7Q~iQuUCRwkryVp6FqHvmSAhbA_I2XidG_"; //TEST
 
-        //private const string StorageAccountName = "webstpublicwebacc"; //ACC
+        //private const string StorageAccountName = "webstpublicwebacc"; //ACC (OLD)
         //private const string StorageAccountName = "webpublicwebacc"; //ACC
         //private const string ClientID = "7450a67c-038e-4b43-b4a1-b5bbd2961912"; //ACC - App/Client ID
         //private const string ClientSecret = "gf57Q~2TGjcsESRX~20ohxZ-Xg3JhX2C55XKc"; //ACC
 
-        //private const string StorageAccountName = "webpublicwebprod"; //PROD
-        //private const string ClientID = "73acce44-96d3-48a1-8c44-33185bc2f24f"; //PROD - App/Client ID
-        //private const string ClientSecret = "mGJ7Q~4jEXcEgzoYd1IBc4tUYb4raX8XOXTJs"; //PROD
+        private const string StorageAccountName = "webpublicwebprod"; //PROD
+        private const string ClientID = "73acce44-96d3-48a1-8c44-33185bc2f24f"; //PROD - App/Client ID
+        private const string ClientSecret = "mGJ7Q~4jEXcEgzoYd1IBc4tUYb4raX8XOXTJs"; //PROD
 
 
         private const string FileName = "2021/9/20/ef05fe16-0f9d-43d8-909e-6c64f6394aac.jpg";
@@ -92,65 +92,89 @@ namespace Skanetrafiken.Crm.Controllers
 
             string passwordCreditsafeArgument = "ijg6fmUq"; //"3L6932Vt";
 
-            string[] args = System.Environment.GetCommandLineArgs();
-            if (args != null)
-            {
-                var passwordArgs = args.Where(s => s.Contains("Password:"));
-                if (passwordArgs.Count() > 0)
-                {
-                    passwordArgument = passwordArgs.First();
-                }
-                var passwordCreditsafeArgs = args.Where(s => s.Contains("PasswordCreditsafe:"));
-                if (passwordCreditsafeArgs.Count() > 0)
-                {
-                    passwordCreditsafeArgument = passwordCreditsafeArgs.First();
-                }
-            }
+            //string[] args = System.Environment.GetCommandLineArgs();
+            //if (args != null)
+            //{
+            //    var passwordArgs = args.Where(s => s.Contains("Password:"));
+            //    if (passwordArgs.Count() > 0)
+            //    {
+            //        passwordArgument = passwordArgs.First();
+            //    }
+            //    var passwordCreditsafeArgs = args.Where(s => s.Contains("PasswordCreditsafe:"));
+            //    if (passwordCreditsafeArgs.Count() > 0)
+            //    {
+            //        passwordCreditsafeArgument = passwordCreditsafeArgs.First();
+            //    }
+            //}
 
-            if (!string.IsNullOrEmpty(passwordClientID))
-            {
-                _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
-                string password = passwordClientID.Substring(passwordClientID.IndexOf(":") + 1);
+            //if (!string.IsNullOrEmpty(passwordClientID))
+            //{
+            //    _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
+            //    string password = passwordClientID.Substring(passwordClientID.IndexOf(":") + 1);
 
-                CrmConnection.SaveCredentials(Properties.Settings.Default.ClientIdCredentialFilePath, password, IncidentController.Entropy);
-            }
+            //    CrmConnection.SaveCredentials(Properties.Settings.Default.ClientIdCredentialFilePath, password, IncidentController.Entropy);
+            //}
 
-            if (!string.IsNullOrEmpty(passwordClientSecret))
-            {
-                _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
-                string password = passwordClientSecret.Substring(passwordClientSecret.IndexOf(":") + 1);
+            //if (!string.IsNullOrEmpty(passwordClientSecret))
+            //{
+            //    _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
+            //    string password = passwordClientSecret.Substring(passwordClientSecret.IndexOf(":") + 1);
 
-                CrmConnection.SaveCredentials(Properties.Settings.Default.ClientSecretCredentialFilePath, password, IncidentController.Entropy);
-            }
+            //    CrmConnection.SaveCredentials(Properties.Settings.Default.ClientSecretCredentialFilePath, password, IncidentController.Entropy);
+            //}
 
-            if (!string.IsNullOrEmpty(passwordTenent))
-            {
-                _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
-                string password = passwordTenent.Substring(passwordTenent.IndexOf(":") + 1);
+            //if (!string.IsNullOrEmpty(passwordTenent))
+            //{
+            //    _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
+            //    string password = passwordTenent.Substring(passwordTenent.IndexOf(":") + 1);
 
-                CrmConnection.SaveCredentials(Properties.Settings.Default.TenentCredentialFilePath, password, IncidentController.Entropy);
-            }
+            //    CrmConnection.SaveCredentials(Properties.Settings.Default.TenentCredentialFilePath, password, IncidentController.Entropy);
+            //}
 
-            if (!string.IsNullOrEmpty(passwordStorageName))
-            {
-                _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
-                string password = passwordStorageName.Substring(passwordStorageName.IndexOf(":") + 1);
+            //if (!string.IsNullOrEmpty(passwordStorageName))
+            //{
+            //    _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
+            //    string password = passwordStorageName.Substring(passwordStorageName.IndexOf(":") + 1);
 
-                CrmConnection.SaveCredentials(Properties.Settings.Default.StorageNameCredentialFilePath, password, IncidentController.Entropy);
-            }
+            //    CrmConnection.SaveCredentials(Properties.Settings.Default.StorageNameCredentialFilePath, password, IncidentController.Entropy);
+            //}
 
             HttpResponseMessage rm = new HttpResponseMessage();
             //Decrypt the string
 
             try
             {
-                string clientId = CrmConnection.LoadCredentials(Properties.Settings.Default.ClientIdCredentialFilePath, IncidentController.Entropy);
-                string clientSecret = CrmConnection.LoadCredentials(Properties.Settings.Default.ClientSecretCredentialFilePath, IncidentController.Entropy);
-                string tenantId = CrmConnection.LoadCredentials(Properties.Settings.Default.TenentCredentialFilePath, IncidentController.Entropy);
-                string storageAccountName = CrmConnection.LoadCredentials(Properties.Settings.Default.StorageNameCredentialFilePath, IncidentController.Entropy);
+                //string clientId = CrmConnection.LoadCredentials(Properties.Settings.Default.ClientIdCredentialFilePath, IncidentController.Entropy);
+                //string clientSecret = CrmConnection.LoadCredentials(Properties.Settings.Default.ClientSecretCredentialFilePath, IncidentController.Entropy);
+                //string tenantId = CrmConnection.LoadCredentials(Properties.Settings.Default.TenentCredentialFilePath, IncidentController.Entropy);
+                //string storageAccountName = CrmConnection.LoadCredentials(Properties.Settings.Default.StorageNameCredentialFilePath, IncidentController.Entropy);
+
+                string clientId = ClientID;
+                string clientSecret = ClientSecret;
+                string tenantId = TenantID;
+                string storageAccountName = StorageAccountName;
 
                 byte[] imageByteArray = { };
-                var containerName = "crm-attachments"; //Stämmer
+
+                //var containerName = "crm-attachments"; //Skriv till oss
+                //var containerName = "rgolreceiptinformation"; //RGOL
+                string containerName = "";
+                if (encryptedUrl.Contains("rgolreceiptinformation"))
+                {
+                    containerName = "rgolreceiptinformation";
+                    encryptedUrl = encryptedUrl.Substring("rgolreceiptinformation/".Length);
+                }
+                else if (encryptedUrl.Contains("crm-attachments"))
+                {
+                    containerName = "crm-attachments";
+                    encryptedUrl = encryptedUrl.Substring("crm-attachments/".Length);
+                }
+                else
+                {
+                    containerName = "crm-attachments";
+                }
+                
+
                 _log.Warn($"Th={threadId} - GetAttachmentFromAzure: Container Name => {containerName}");
 
                 //Get settings from CRM
@@ -159,7 +183,8 @@ namespace Skanetrafiken.Crm.Controllers
                 if (string.IsNullOrWhiteSpace(clientId) ||
                     string.IsNullOrWhiteSpace(clientSecret) ||
                     string.IsNullOrWhiteSpace(tenantId) ||
-                    string.IsNullOrWhiteSpace(storageAccountName))
+                    string.IsNullOrWhiteSpace(storageAccountName) ||
+                    string.IsNullOrWhiteSpace(containerName))
                 {
                     rm.StatusCode = HttpStatusCode.InternalServerError;
                     rm.Content = new StringContent($"Th={threadId} - GetAttachmentFromAzure: Could not retrieve the relevant keys.");

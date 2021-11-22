@@ -1495,9 +1495,7 @@ namespace Skanetrafiken.Crm.Entities
         {
             localContext.Trace("Entrered CombineContacts()");
             if (this == null)
-            {
                 new Exception("Invalid indata: No contact to merge with list of contacts.");
-            }
             else if (conflicts == null)
             {
                 localContext.Trace("No contacts in list to merge.");
@@ -1509,7 +1507,6 @@ namespace Skanetrafiken.Crm.Entities
             {
                 // Create 'UpdateContent' - Fields that are null in Target but have information in Subordinate.
                 ContactEntity updateContent = GenerateUpdateContentContact(c);
-
 
                 MergeRequest merge = new MergeRequest()
                 {
