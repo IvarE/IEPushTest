@@ -26,7 +26,7 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">V-CRM-TST</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAACAAAAAAADZgAAwAAAABAAAACXXpLygaIsfJJ8sjGcbEfvAAAAAASAAACgAAAAEAAAALeYNDjna4BgHZ90IUwrVKWIAAAAjs3bxdXW4NTWV26Fpbz9yiXgC29x27MU3LyDAjH5O/KRE93lufSeLDrvOxmYKyRJz4gJKsqZGQ7UbBuLWngW7gBtvGUF0G9j8OZ6ciBXUG8GR0gwgThQoyFJIA/s384QuiJPLcdMIJNeKCN8tZKi/Gq/b3QEXiCveEAxOtfF8pngfcDLiJEkvRQAAAB55EJ6L8UbUGBWG1gDtgLve9l8zw==</SSIS:Property>
+          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAACAAAAAAADZgAAwAAAABAAAABhEuN3QBA9gN1GztqqWqxXAAAAAASAAACgAAAAEAAAAPprzjUL7vrxWTIL3isvU72IAAAABXRTdGbD/sD6GlCbMh/jRYhB6Vr6Oap53B5woqyHQDN8kclRCfW/WdolgqAfPi9t50hzb7Xurrlh5LIUoZ871LRzQ5EhYlGoT8i6C6GhCntIIt8Upq71NNkeV/BmZ+wet/gRLUULhFt85pwQLyahrc54yC6x/UI7boJXayHwVxKQ+qdzZC6iZBQAAAAWbWL/p8C2wF/+kLhdgMKpjvLMMA==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
@@ -43,10 +43,10 @@
                 <SSIS:Property SSIS:Name="Name">Package1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">57</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">64</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{4A441986-F2C3-45CE-9FBE-97C45DB75B9E}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{E850234E-239B-4E44-A663-51C19B3FA820}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>
@@ -446,7 +446,7 @@
                     <SSIS:Property SSIS:Name="IncludeInDebugDump">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Required">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Sensitive">0</SSIS:Property>
-                    <SSIS:Property SSIS:Name="Value">150</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Value">130</SSIS:Property>
                     <SSIS:Property SSIS:Name="DataType">9</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
@@ -465,7 +465,7 @@
                     <SSIS:Property SSIS:Name="DataType">18</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
-                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Ticket Info.AlwaysCheckForRowDelimiters">
+                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Singapore Tickets.AlwaysCheckForRowDelimiters">
                   <SSIS:Properties>
                     <SSIS:Property SSIS:Name="ID">
                     </SSIS:Property>
@@ -480,7 +480,7 @@
                     <SSIS:Property SSIS:Name="DataType">3</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
-                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Ticket Info.CodePage">
+                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Singapore Tickets.CodePage">
                   <SSIS:Properties>
                     <SSIS:Property SSIS:Name="ID">
                     </SSIS:Property>
@@ -495,7 +495,7 @@
                     <SSIS:Property SSIS:Name="DataType">9</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
-                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Ticket Info.ColumnNamesInFirstDataRow">
+                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Singapore Tickets.ColumnNamesInFirstDataRow">
                   <SSIS:Properties>
                     <SSIS:Property SSIS:Name="ID">
                     </SSIS:Property>
@@ -510,7 +510,7 @@
                     <SSIS:Property SSIS:Name="DataType">3</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
-                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Ticket Info.ConnectByProxy">
+                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Singapore Tickets.ConnectByProxy">
                   <SSIS:Properties>
                     <SSIS:Property SSIS:Name="ID">
                     </SSIS:Property>
@@ -525,7 +525,7 @@
                     <SSIS:Property SSIS:Name="DataType">3</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
-                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Ticket Info.ConnectionString">
+                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Singapore Tickets.ConnectionString">
                   <SSIS:Properties>
                     <SSIS:Property SSIS:Name="ID">
                     </SSIS:Property>
@@ -536,11 +536,11 @@
                     <SSIS:Property SSIS:Name="IncludeInDebugDump">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Required">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Sensitive">0</SSIS:Property>
-                    <SSIS:Property SSIS:Name="Value">D:\Logs\SSIS\SSIS Import Tickets Info.txt</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Value">C:\Admin\Log\SQL\SSIS\SSIS Import Singapore Tickets.txt</SSIS:Property>
                     <SSIS:Property SSIS:Name="DataType">18</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
-                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Ticket Info.DataRowsToSkip">
+                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Singapore Tickets.DataRowsToSkip">
                   <SSIS:Properties>
                     <SSIS:Property SSIS:Name="ID">
                     </SSIS:Property>
@@ -555,7 +555,7 @@
                     <SSIS:Property SSIS:Name="DataType">9</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
-                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Ticket Info.Format">
+                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Singapore Tickets.Format">
                   <SSIS:Properties>
                     <SSIS:Property SSIS:Name="ID">
                     </SSIS:Property>
@@ -570,7 +570,7 @@
                     <SSIS:Property SSIS:Name="DataType">18</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
-                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Ticket Info.HeaderRowDelimiter">
+                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Singapore Tickets.HeaderRowDelimiter">
                   <SSIS:Properties>
                     <SSIS:Property SSIS:Name="ID">
                     </SSIS:Property>
@@ -586,7 +586,7 @@
                     <SSIS:Property SSIS:Name="DataType">18</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
-                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Ticket Info.HeaderRowsToSkip">
+                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Singapore Tickets.HeaderRowsToSkip">
                   <SSIS:Properties>
                     <SSIS:Property SSIS:Name="ID">
                     </SSIS:Property>
@@ -601,7 +601,7 @@
                     <SSIS:Property SSIS:Name="DataType">9</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
-                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Ticket Info.LocaleID">
+                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Singapore Tickets.LocaleID">
                   <SSIS:Properties>
                     <SSIS:Property SSIS:Name="ID">
                     </SSIS:Property>
@@ -616,7 +616,7 @@
                     <SSIS:Property SSIS:Name="DataType">9</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
-                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Ticket Info.RowDelimiter">
+                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Singapore Tickets.RowDelimiter">
                   <SSIS:Properties>
                     <SSIS:Property SSIS:Name="ID">
                     </SSIS:Property>
@@ -632,7 +632,7 @@
                     <SSIS:Property SSIS:Name="DataType">18</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
-                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Ticket Info.TextQualifier">
+                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Singapore Tickets.TextQualifier">
                   <SSIS:Properties>
                     <SSIS:Property SSIS:Name="ID">
                     </SSIS:Property>
@@ -647,7 +647,7 @@
                     <SSIS:Property SSIS:Name="DataType">18</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
-                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Ticket Info.Unicode">
+                <SSIS:Parameter SSIS:Name="CM.Flat File Connection Manager - Singapore Tickets.Unicode">
                   <SSIS:Properties>
                     <SSIS:Property SSIS:Name="ID">
                     </SSIS:Property>
@@ -818,10 +818,10 @@
                 <SSIS:Property SSIS:Name="Name">TicketPurchases-TicketInfo</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">64</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">71</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{77C18942-5843-41E6-8C9F-9447DB6654AF}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{447B665F-F11B-48A1-9B95-C12C6B4AD206}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>
@@ -1221,7 +1221,7 @@
                     <SSIS:Property SSIS:Name="IncludeInDebugDump">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Required">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Sensitive">0</SSIS:Property>
-                    <SSIS:Property SSIS:Name="Value">150</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Value">130</SSIS:Property>
                     <SSIS:Property SSIS:Name="DataType">9</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
@@ -1311,7 +1311,7 @@
                     <SSIS:Property SSIS:Name="IncludeInDebugDump">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Required">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Sensitive">0</SSIS:Property>
-                    <SSIS:Property SSIS:Name="Value">D:\Logs\SSIS\SSIS Import Tickets Purchases.txt</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Value">C:\Admin\Log\SQL\SSIS\SSIS Import Tickets Purchases.txt</SSIS:Property>
                     <SSIS:Property SSIS:Name="DataType">18</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
@@ -1603,7 +1603,7 @@
         <ConnectionProviderMappings />
         <ConnectionSecurityMappings />
         <DatabaseStorageLocations />
-        <TargetServerVersion>SQLServer2019</TargetServerVersion>
+        <TargetServerVersion>SQLServer2016</TargetServerVersion>
         <AzureMode>false</AzureMode>
         <LinkedAzureTenantId />
         <LinkedAzureAccountId />
