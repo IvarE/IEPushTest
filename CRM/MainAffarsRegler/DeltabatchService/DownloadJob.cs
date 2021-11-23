@@ -517,7 +517,7 @@ namespace Endeavor.Crm.DeltabatchService
                 ed_MklId = existingContact.ed_MklId,
 
             };
-            //Viggo TODO rejectCode
+            //rejectCode
             if (!string.IsNullOrWhiteSpace(rejectCode))
             {
                 string rejectErrorMess;
@@ -705,37 +705,38 @@ namespace Endeavor.Crm.DeltabatchService
                 update = true;
             }
             #endregion
-            //#region SearchDate
-            //if (dateString.Length != 8)
-            //{
-            //    _errors.Add(new Tuple<string[], Exception>(lineParams, new Exception($"Invalid parameter SEARCH_DATE: {dateString} was expected to be 8 integers")));
-            //    return null;
-            //}
-            //string yearString = dateString.Substring(0, 4);
-            //string monthString = dateString.Substring(4, 2);
-            //string dayString = dateString.Substring(6, 2);
-            //int year, month, day;
-            //if (!int.TryParse(yearString, out year) || !int.TryParse(monthString, out month) || !int.TryParse(dayString, out day))
-            //{
-            //    _errors.Add(new Tuple<string[], Exception>(lineParams, new Exception($"Invalid parameter SEARCH_DATE: {dateString} was expected to be 8 integers")));
-            //    return null;
-            //}
-            //if (1 > month || month > 12)
-            //{
-            //    _errors.Add(new Tuple<string[], Exception>(lineParams, new Exception($"Invalid parameter SEARCH_DATE({dateString}), the month-part({month}) needs to be between 1 and 12.")));
-            //    return null;
-            //}
-            //if (1 > day || day > DateTime.DaysInMonth(year, month))
-            //{
-            //    _errors.Add(new Tuple<string[], Exception>(lineParams, new Exception($"Invalid parameter SEARCH_DATE({dateString}), the day-part({day}) needs to be between 1 and {DateTime.DaysInMonth(year, month)} for month number {month}, year {year}.")));
-            //    return null;
-            //}
-            //DateTime parsedSearchDate = new DateTime(year, month, day);
-            //if (existingContact.ed_UpdatedFBDate != parsedSearchDate)
-            //{
-            //    updateContact.ed_UpdatedFBDate = parsedSearchDate;
-            //}
-            //#endregion
+
+            #region SearchDate
+            if (dateString.Length != 8)
+            {
+                _errors.Add(new Tuple<string[], Exception>(lineParams, new Exception($"Invalid parameter SEARCH_DATE: {dateString} was expected to be 8 integers")));
+                return null;
+            }
+            string yearString = dateString.Substring(0, 4);
+            string monthString = dateString.Substring(4, 2);
+            string dayString = dateString.Substring(6, 2);
+            int year, month, day;
+            if (!int.TryParse(yearString, out year) || !int.TryParse(monthString, out month) || !int.TryParse(dayString, out day))
+            {
+                _errors.Add(new Tuple<string[], Exception>(lineParams, new Exception($"Invalid parameter SEARCH_DATE: {dateString} was expected to be 8 integers")));
+                return null;
+            }
+            if (1 > month || month > 12)
+            {
+                _errors.Add(new Tuple<string[], Exception>(lineParams, new Exception($"Invalid parameter SEARCH_DATE({dateString}), the month-part({month}) needs to be between 1 and 12.")));
+                return null;
+            }
+            if (1 > day || day > DateTime.DaysInMonth(year, month))
+            {
+                _errors.Add(new Tuple<string[], Exception>(lineParams, new Exception($"Invalid parameter SEARCH_DATE({dateString}), the day-part({day}) needs to be between 1 and {DateTime.DaysInMonth(year, month)} for month number {month}, year {year}.")));
+                return null;
+            }
+            DateTime parsedSearchDate = new DateTime(year, month, day);
+            if (existingContact.ed_UpdatedFBDate != parsedSearchDate)
+            {
+                updateContact.ed_UpdatedFBDate = parsedSearchDate;
+            }
+            #endregion
             #region County
             if (existingContact.Address1_County != county)
             {
@@ -763,7 +764,7 @@ namespace Endeavor.Crm.DeltabatchService
             }
             else
             {
-                _log.Error($"Parameter {_countyNumberFieldKeyword} with value {countyNumberString} could not be parsed to an integer. Field ignored");
+                _log.Info($"Parameter {_countyNumberFieldKeyword} with value {countyNumberString} could not be parsed to an integer. Field ignored");
             }
             #endregion
             #region CommunityNumber
@@ -786,7 +787,7 @@ namespace Endeavor.Crm.DeltabatchService
             }
             else
             {
-                _log.Error($"Parameter {_communityNumberFieldKeyword} with value {communityNumberString} could not be parsed to an integer. Field ignored");
+                _log.Info($"Parameter {_communityNumberFieldKeyword} with value {communityNumberString} could not be parsed to an integer. Field ignored");
             }
             #endregion
             #region Country if needed

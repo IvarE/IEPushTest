@@ -134,7 +134,7 @@ namespace Endeavor.Crm.DeltabatchService
 
                 if (list.Count == 0)
                 {
-                    _log.Error($"No DeltabatchQueue Records were found.");
+                    _log.Info($"No DeltabatchQueue Records were found.");
                     return;
                 }
 
@@ -277,7 +277,7 @@ namespace Endeavor.Crm.DeltabatchService
                 sftpClient.Connect();
                 if (!sftpClient.IsConnected)
                     throw new Exception($"Unable to connect to sftp-server");
-                _log.Error("Connected to SFTP");
+                _log.Info("Connected to SFTP");
 
                 sftpClient.ChangeDirectory("/INFILE/");
                 
