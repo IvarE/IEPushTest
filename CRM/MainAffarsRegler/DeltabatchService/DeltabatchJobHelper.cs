@@ -66,14 +66,6 @@ namespace Endeavor.Crm.DeltabatchService
 
         internal static void SendErrorMailToDev(Plugin.LocalPluginContext localContext, Exception e)
         {
-            //SystemUserEntity toUser1 = XrmRetrieveHelper.RetrieveFirst<SystemUserEntity>(localContext, new ColumnSet(false),
-            //    new FilterExpression
-            //    {
-            //        Conditions =
-            //        {
-            //            new ConditionExpression(SystemUserEntity.Fields.DomainName, ConditionOperator.Equal, @"D1\CRMAdmin") 
-            //        }
-            //    });
 
             SystemUserEntity toUser2 = XrmRetrieveHelper.RetrieveFirst<SystemUserEntity>(localContext, new ColumnSet(SystemUser.Fields.InternalEMailAddress),
                 new FilterExpression
@@ -84,11 +76,6 @@ namespace Endeavor.Crm.DeltabatchService
                     }
                 });
 
-            //ActivityParty toParty1 = new ActivityParty
-            //{
-            //    PartyId = new EntityReference(SystemUserEntity.EntityLogicalName, toUser1.Id),
-            //    AddressUsed = Properties.Settings.Default.DeveloperMailAddress
-            //};
 
             ActivityParty toParty2 = new ActivityParty
             {
@@ -107,14 +94,7 @@ namespace Endeavor.Crm.DeltabatchService
                 PartyId = new EntityReference(SystemUserEntity.EntityLogicalName, _userId)
             };
 
-            //EmailEntity errorMail1 = new EmailEntity
-            //{
-            //    To = new List<ActivityParty> { toParty1 },
-            //    From = new List<ActivityParty> { fromParty },
-            //    Subject = "Exception in Deltabatch run",
-            //    Description = $"Exception Message:\n\n{e.Message}",
-            //    DirectionCode = true
-            //};
+    
 
             EmailEntity errorMail2 = new EmailEntity
             {
@@ -125,17 +105,9 @@ namespace Endeavor.Crm.DeltabatchService
                 DirectionCode = true
             };
 
-            //errorMail1.Id = XrmHelper.Create(localContext, errorMail1);
+            
             errorMail2.Id = XrmHelper.Create(localContext, errorMail2);
-            // Use the SendEmail message to send an e-mail message.
-            //SendEmailRequest sendEmailreq1 = new SendEmailRequest 
-            //{
-            //    EmailId = errorMail1.Id,
-            //    TrackingToken = "",
-            //    IssueSend = true
-            //};
-
-            //SendEmailResponse sendEmailresp = (SendEmailResponse)localContext.OrganizationService.Execute(sendEmailreq1);
+        
 
             SendEmailRequest sendEmailreq2 = new SendEmailRequest
             {

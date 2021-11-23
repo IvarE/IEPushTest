@@ -757,7 +757,17 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 {
                     //Create date obj
                     var monthValue = parseInt(this.month);
-                    var birthDateUpd = new Date(this.year, monthValue - 1, this.day);
+
+                    if (nr.charAt(1) == 9 && nr.length == 12) {
+                        var birthDateUpd = new Date("19" + this.year, monthValue - 1, this.day);
+                    }
+                    else if (nr.charAt(1) == 0 && nr.length == 12) {
+                        var birthDateUpd = new Date("20" + this.year, monthValue - 1, this.day);
+                    }
+                    else {
+                        var birthDateUpd = new Date(this.year, monthValue - 1, this.day);
+                    }
+
                     birthDateAtr.setValue(birthDateUpd);
                 }
             }

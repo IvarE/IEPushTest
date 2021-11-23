@@ -70,15 +70,6 @@ namespace Endeavor.Crm.DeltabatchService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("E:\\DeltabatchFiles\\Retrieved\\")]
-        public string DeltabatchRetrievedFileLocation {
-            get {
-                return ((string)(this["DeltabatchRetrievedFileLocation"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("out_Skane_Consumer_PersonFilter")]
         public string OutputFileNameStart {
             get {
@@ -142,7 +133,16 @@ namespace Endeavor.Crm.DeltabatchService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0 0 14,16 1/1 * ? *")]
+        [global::System.Configuration.DefaultSettingValueAttribute("E:\\DeltabatchFiles\\Retrieved\\")]
+        public string DeltabatchRetrievedFileLocation {
+            get {
+                return ((string)(this["DeltabatchRetrievedFileLocation"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0 2 1/1 * ? *")]
         public string FileDownloadScheduleCronExpression {
             get {
                 return ((string)(this["FileDownloadScheduleCronExpression"]));
@@ -151,7 +151,7 @@ namespace Endeavor.Crm.DeltabatchService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0 20,30,45 * ? * *")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0 23 1/1 * ? *")]
         public string FileUploadScheduleCronExpression {
             get {
                 return ((string)(this["FileUploadScheduleCronExpression"]));
