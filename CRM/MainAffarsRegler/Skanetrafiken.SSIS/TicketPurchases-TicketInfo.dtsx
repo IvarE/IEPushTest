@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="TicketPurchases-TicketInfo"
   DTS:PackageType="5"
-  DTS:VersionBuild="64"
-  DTS:VersionGUID="{77C18942-5843-41E6-8C9F-9447DB6654AF}">
+  DTS:VersionBuild="71"
+  DTS:VersionGUID="{447B665F-F11B-48A1-9B95-C12C6B4AD206}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAtj8X8iutHRabYf4OvjJm3AAAAAASAAACgAAAAEAAAALKyu3eh+YEJpLlc38Axn4ggAAAAtCqLhJYsqDxbYs+Us8nJ/9VGqJ+m784Y7qx+Xy64H/kUAAAAmsmUNeDEbsAvzWPSMmofGh7ddFs</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAab0kJ8RPdRo5D0ZC1/cjBAAAAAASAAACgAAAAEAAAAI221K5Q8MZMpBmkhs59RzMgAAAABiN7YsMQe03oPf5Ze2ePYGKtoqgL93+6YDnyoSc5+TEUAAAAujGmc/nkF41toutcDCssU+Jk3rc</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -45,7 +45,7 @@
           DTS:RowDelimiter=""
           DTS:TextQualifier="_x003C_none_x003E_"
           DTS:CodePage="1252"
-          DTS:ConnectionString="D:\Logs\SSIS\SSIS Import Tickets Purchases.txt">
+          DTS:ConnectionString="C:\Admin\Log\SQL\SSIS\SSIS Import Tickets Purchases.txt">
           <DTS:FlatFileColumns>
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -54,7 +54,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="cgi_contactnumber"
-              DTS:DTSID="{14F0EA94-49FE-4BC1-94A8-44C1A3EA5AB3}"
+              DTS:DTSID="{4CF4361D-F347-47FD-9BD6-B3F8F5C832E3}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -62,7 +62,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="MkId"
-              DTS:DTSID="{A967DBE3-7789-4661-B59E-BB12006DB80F}"
+              DTS:DTSID="{9C4837AF-A6B1-4BA4-B684-3E8BEE1D5C46}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -71,7 +71,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="OfferName"
-              DTS:DTSID="{41177BE5-5289-401E-BE60-721C5A071B00}"
+              DTS:DTSID="{67015AAA-56BD-43D5-BCE3-A76D5F8164CA}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -79,7 +79,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="NumberOfTickets"
-              DTS:DTSID="{8F6C04E9-6197-4CCA-8F1C-4BF45D31B65B}"
+              DTS:DTSID="{D4081DC2-076D-4773-A3A8-48ADCDF6C3E3}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -89,7 +89,7 @@
               DTS:DataScale="5"
               DTS:TextQualified="True"
               DTS:ObjectName="TotalSumTicketOffer"
-              DTS:DTSID="{AF5C941E-BBA1-40D5-80B8-3A79B102601F}"
+              DTS:DTSID="{2136F15C-CA87-4D6A-B298-A6018032A5CA}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -98,7 +98,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="Name"
-              DTS:DTSID="{E7F4E044-90AA-4F5F-AD2E-E7DDA2F0371F}"
+              DTS:DTSID="{C6462222-7D29-4B29-B267-7FFE62A7B320}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -107,7 +107,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="CRMNummer"
-              DTS:DTSID="{C249A824-6FA5-4374-BA68-373BEABE4CAA}"
+              DTS:DTSID="{046B08C1-1A30-47A8-8AA1-ADECD4883EBB}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -115,7 +115,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorCode"
-              DTS:DTSID="{732BCA4F-6BC9-45AC-A75F-6B6DB864555F}"
+              DTS:DTSID="{D90AC815-6485-4FF8-9C2A-764878437418}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -123,7 +123,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorColumn"
-              DTS:DTSID="{BC9308EC-4A63-4406-9213-8572E6A477A8}"
+              DTS:DTSID="{76B815EE-A02B-471B-943D-24D27B97369F}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -132,7 +132,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorMessage"
-              DTS:DTSID="{24263D5D-7095-43EA-985D-3F643C782B2C}"
+              DTS:DTSID="{B5AB2D81-22C0-46AF-BEB3-71FAD3B4F2E3}"
               DTS:CreationName="" />
           </DTS:FlatFileColumns>
         </DTS:ConnectionManager>
@@ -284,8 +284,7 @@
               contactInfo="Flat File Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
               description="Flat File Destination"
               localeId="1053"
-              name="Flat File Destination"
-              version="1">
+              name="Flat File Destination">
               <properties>
                 <property
                   dataType="System.Boolean"
@@ -446,7 +445,7 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT [cgi_contactnumber]
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT [cgi_contactnumber]
       ,[MkId]
       ,[OfferName]
       ,[NumberOfTickets]
