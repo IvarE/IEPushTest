@@ -114,30 +114,21 @@ namespace Skanetrafiken.Crm.Entities
 
         public static void UpdateTextMessageStatus(Plugin.LocalPluginContext localContext, TextMessageEntity textMessage)
         {
-            if(textMessage.StatusCode.Value != (int)TextMessageEntity.Status.Delivered && IsAllMessagesDeliveredAndSent(localContext, textMessage))
+            if(textMessage.StatusCode.Value != (int)TextMessageEntity.Status.Delivered && IsAllMessagesDelivered(localContext, textMessage))
             {
                 textMessage.StateCode = Generated.ed_TextMessageState.Completed;
                 textMessage.StatusCode = new OptionSetValue((int)TextMessageEntity.Status.Delivered);
                 XrmHelper.Update(localContext, textMessage);
-
-                if(textMessage.RegardingObjectId != null && textMessage.RegardingObjectId.LogicalName == ValueCodeEntity.EntityLogicalName)
-                {
-                    ValueCodeEntity valueCode = XrmRetrieveHelper.Retrieve<ValueCodeEntity>(localContext, textMessage.RegardingObjectId, new ColumnSet(false));
-                    valueCode.statuscode = Generated.ed_valuecode_statuscode.Skickad;
-                    XrmHelper.Update(localContext, valueCode);
-                }
             }
         }
 
-        public static bool IsAllMessagesDeliveredAndSent(Plugin.LocalPluginContext localContext, TextMessageEntity textMessage)
+        public static bool IsAllMessagesDelivered(Plugin.LocalPluginContext localContext, TextMessageEntity textMessage)
         {
             IList<SentTextMessageEntity> AllMessages = GetSentTextMessages(localContext, textMessage);
 
             foreach (SentTextMessageEntity s in AllMessages)
-            {
-                if(s.statuscode.Value != (int)SentTextMessageEntity.Status.Delivered && s.statuscode.Value != (int)SentTextMessageEntity.Status.Sent)
+                if(s.statuscode.Value != (int)SentTextMessageEntity.Status.Delivered)
                     return false;
-            }
 
             return true;
         }
@@ -150,11 +141,10 @@ namespace Skanetrafiken.Crm.Entities
             return XrmRetrieveHelper.RetrieveMultiple<SentTextMessageEntity>(localContext, new ColumnSet(true), filter);
         }
 
-        private void SendTextMessageToSend(Plugin.LocalPluginContext localContext, IEnumerable<TextMessageToSend<Generated.ActivityParty>.Message> messages, double TimeLimitMillis) {
-
+        private void SendTextMessageToSend(Plugin.LocalPluginContext localContext, IEnumerable<TextMessageToSend<Generated.ActivityParty>.Message> messages, double TimeLimitMillis) 
+        {
             Stopwatch sw = new Stopwatch();
 
-           
             RetrieveBosbecAPIHandler(localContext);
             foreach (TextMessageToSend<Generated.ActivityParty>.Message m in messages)
             {
@@ -166,9 +156,7 @@ namespace Skanetrafiken.Crm.Entities
 
                     sentMessage.ed_TextMessageId = this.ToEntityReference();
                     if(RegardingObjectId != null)
-                    {
                         sentMessage.ed_ValueCode = this.RegardingObjectId.LogicalName == ValueCodeEntity.EntityLogicalName ? this.RegardingObjectId : null;
-                    }
 
                     if (processId != null)
                     {
@@ -176,9 +164,7 @@ namespace Skanetrafiken.Crm.Entities
                         sentMessage.ed_ProcessId = processId;
                     }
                     else
-                    {
                         sentMessage.statuscode = new OptionSetValue((int)SentTextMessageEntity.Status.NotProcessed);
-                    }
 
                     XrmHelper.Update(localContext, sentMessage);
                 }
@@ -198,9 +184,7 @@ namespace Skanetrafiken.Crm.Entities
                     int oldStatus = SentMessage.statuscode.Value;
 
                     if (oldStatus == (int)SentTextMessageEntity.Status.NotProcessed)
-                    {
                         ResendTextMessage(localContext, SentMessage, TimeLimitMillis);
-                    }
                     else
                     {
                         SentMessage.RetrieveUpdatedStatus(localContext);
@@ -209,35 +193,36 @@ namespace Skanetrafiken.Crm.Entities
                         {
                             XrmHelper.Update(localContext, SentMessage);
 
-                            if (SentMessage.statuscode.Value == (int)SentTextMessageEntity.Status.Delivered || SentMessage.statuscode.Value == (int)SentTextMessageEntity.Status.Failed)
-                            {
+                            if (SentMessage.statuscode.Value == (int)SentTextMessageEntity.Status.Delivered || 
+                                SentMessage.statuscode.Value == (int)SentTextMessageEntity.Status.Failed)
                                 break;
-                            }
                         }
                     }
                 }                
             }
         }
 
-        
         private IList<SentTextMessageEntity> GetProcessedSentTextMessages(Plugin.LocalPluginContext localContext, IEnumerable<TextMessageToSend<Generated.ActivityParty>.Message> messages)
         {
             IList<SentTextMessageEntity> ProcessedMessages = new List<SentTextMessageEntity>();
 
             this.StatusCode = new OptionSetValue((int)TextMessageEntity.Status.Sent);
 
+            if (this.RegardingObjectId != null && this.RegardingObjectId.LogicalName == ValueCodeEntity.EntityLogicalName)
+            {
+                ValueCodeEntity valueCode = XrmRetrieveHelper.Retrieve<ValueCodeEntity>(localContext, this.RegardingObjectId, new ColumnSet(false));
+                valueCode.statuscode = Generated.ed_valuecode_statuscode.Skickad;
+                XrmHelper.Update(localContext, valueCode);
+            }
+
             foreach (TextMessageToSend<Generated.ActivityParty>.Message m in messages)
             {
                 foreach(SentTextMessageEntity sentTextMessage in m.ProcessedNotDelivered)
                 {
                     if(sentTextMessage.statuscode.Value == (int)SentTextMessageEntity.Status.Processed)
-                    {
                         ProcessedMessages.Add(sentTextMessage);
-                    }
                     else if(StatusCode.Value != (int)TextMessageEntity.Status.Failed)
-                    {
                         this.StatusCode = new OptionSetValue((int)TextMessageEntity.Status.Failed);
-                    }
                 }
                 
                 XrmHelper.Update(localContext, this);

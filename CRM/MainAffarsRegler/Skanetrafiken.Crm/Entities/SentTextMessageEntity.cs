@@ -47,9 +47,7 @@ namespace Skanetrafiken.Crm.Entities
         public string GetPhoneNumber()
         {
             if(ed_PhoneNumber.First().Equals('0'))
-            {
                 return "+46" + ed_PhoneNumber.Substring(1);
-            }
 
             return ed_PhoneNumber;
         }
@@ -59,9 +57,7 @@ namespace Skanetrafiken.Crm.Entities
             GetBosbecAPIHandler(localContext);
 
             if (this.statuscode.Value == (int)SentTextMessageEntity.Status.Delivered)
-            {
                 return;
-            }
 
             BosbecAPIHandler.ResponseMessage response = GetUpdatedReponse(localContext);
 
@@ -71,9 +67,7 @@ namespace Skanetrafiken.Crm.Entities
             int? UpdatedStatus = GetMessageStatus(localContext, response);
 
             if (UpdatedStatus != null && this.statuscode.Value != UpdatedStatus)
-            {
                 this.statuscode = new OptionSetValue((int)UpdatedStatus);
-            }
         }
 
         private static int? GetMessageStatus(Plugin.LocalPluginContext localContext, BosbecAPIHandler.ResponseMessage response)
@@ -82,22 +76,19 @@ namespace Skanetrafiken.Crm.Entities
             if (Int32.TryParse(response.statusType, out statusType))
             {
                 if (statusType == 6)
-                {
                     return (int)SentTextMessageEntity.Status.Delivered;
-                }
                 else if (statusType == 2 || statusType == 5 || statusType == 7 || statusType == 9 || statusType == 10 || statusType == 13)
-                {
                     return (int)SentTextMessageEntity.Status.Failed;
-                }
                 else if (statusType == 4)
-                {
                     return (int)SentTextMessageEntity.Status.Sent;
-                }
+                else
+                    localContext.Trace($"Entered GetMessageStatus() Status Type : { statusType } not implemented.");
             }
+            else
+                localContext.Trace($"Entered GetMessageStatus() Status Type : { response.statusType } is not an integer.");
 
             return null;
         }
-
 
         private BosbecAPIHandler.ResponseMessage GetUpdatedReponse(Plugin.LocalPluginContext localContext)
         {
