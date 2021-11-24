@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="64"
-  DTS:VersionGUID="{E850234E-239B-4E44-A663-51C19B3FA820}">
+  DTS:VersionBuild="70"
+  DTS:VersionGUID="{3CF143F7-D2D9-4D38-91E3-5BCC399BF8FF}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -23,11 +23,11 @@
       DTS:ObjectName="Dynamics 365 Connection">
       <DTS:ObjectData>
         <CrmConnectionManager
-          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekundacc.skanetrafiken.se/DKCRMACC;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=True;IgnoreCertificateErrors=False"
+          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekund.skanetrafiken.se/DKCRM;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=True;IgnoreCertificateErrors=False"
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAC2O/JDfae9S48Zr7sbXB8YAAAAAASAAACgAAAAEAAAAMZHFfAJsjHWS7HeYJ+NKiUgAAAAIWxUbEfx7Glzc93AraxTXg3YWizCG6Jhae5bxZEByK8UAAAA7zKtoqjh5n2tjc+SUxAtaKYLfJg</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAD5nsbFVr63DinIdKsftScWAAAAAASAAACgAAAAEAAAADIU5Y3dtOnZ7Hwnby3pyXkgAAAA7z6UQ7TnL+uXZY/SjgV3g8RLzLazQYsWID4K1ZrWd3UUAAAAr0R5VOzeVL1ixdimbSShatIT5OI</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -1875,18 +1875,6 @@
                   exclusionGroup="1"
                   name="Default Output"
                   synchronousInputId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input]">
-                  <outputColumns>
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Default Output].Columns[SavedRecordId]"
-                      dataType="guid"
-                      lineageId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Default Output].Columns[SavedRecordId]"
-                      name="SavedRecordId" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Default Output].Columns[IsNew]"
-                      dataType="bool"
-                      lineageId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Default Output].Columns[IsNew]"
-                      name="IsNew" />
-                  </outputColumns>
                   <externalMetadataColumns />
                 </output>
                 <output
