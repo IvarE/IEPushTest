@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="TicketPurchases-TicketInfo"
   DTS:PackageType="5"
-  DTS:VersionBuild="71"
-  DTS:VersionGUID="{447B665F-F11B-48A1-9B95-C12C6B4AD206}">
+  DTS:VersionBuild="75"
+  DTS:VersionGUID="{CEFB500F-8C17-426E-BF6C-B4256E116F1A}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -23,11 +23,11 @@
       DTS:ObjectName="Dynamics 365 Connection">
       <DTS:ObjectData>
         <CrmConnectionManager
-          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekundacc.skanetrafiken.se/DKCRMACC;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=True;IgnoreCertificateErrors=False"
+          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekund.skanetrafiken.se/DKCRM;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=True;IgnoreCertificateErrors=False"
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAab0kJ8RPdRo5D0ZC1/cjBAAAAAASAAACgAAAAEAAAAI221K5Q8MZMpBmkhs59RzMgAAAABiN7YsMQe03oPf5Ze2ePYGKtoqgL93+6YDnyoSc5+TEUAAAAujGmc/nkF41toutcDCssU+Jk3rc</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADJ87hLAEjgw8SRac8/8zU2AAAAAASAAACgAAAAEAAAALWsHkrltjShNAOjhNG3KgkgAAAAHlkZINRHPRLGOpjhfam4soj+MRkJ6QCfvGGTZ1hfCB0UAAAAbCNnpuZQ+GOHv1OMNEarwTEf4jM</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -1117,18 +1117,6 @@
                   exclusionGroup="1"
                   name="Default Output"
                   synchronousInputId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Inputs[Input]">
-                  <outputColumns>
-                    <outputColumn
-                      refId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Outputs[Default Output].Columns[SavedRecordId]"
-                      dataType="guid"
-                      lineageId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Outputs[Default Output].Columns[SavedRecordId]"
-                      name="SavedRecordId" />
-                    <outputColumn
-                      refId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Outputs[Default Output].Columns[IsNew]"
-                      dataType="bool"
-                      lineageId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Outputs[Default Output].Columns[IsNew]"
-                      name="IsNew" />
-                  </outputColumns>
                   <externalMetadataColumns />
                 </output>
                 <output
@@ -1304,7 +1292,7 @@
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="43.02826171875,38.5,56.6727734375,11.43359375"
+              BoundingBox="62.91361328125,38.5,56.6727734375,11.43359375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
