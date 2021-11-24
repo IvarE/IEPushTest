@@ -106,7 +106,7 @@ namespace Skanetrafiken.Crm.ValueCodes
             //}
             #endregion
 
-            string apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_CreateValueCodeVoucher);
+            string apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_VoucherService);
             localContext.Trace($"(CreateValueCodeGeneric) API: {apiUrl}");
 
             string InputJSON = string.Empty;
