@@ -25950,6 +25950,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_voucherservice")]
+		public string ed_VoucherService
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_voucherservice");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_voucherservice", value);
+			}
+		}
+		
+		/// <summary>
 		/// Exchange rate for the currency associated with the entity with respect to the base currency.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
@@ -26675,6 +26691,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_ValueCodeValidDate = "ed_valuecodevaliddate";
 			
+			public const string ed_VoucherService = "ed_voucherservice";
+			
 			public const string ExchangeRate = "exchangerate";
 			
 			public const string ImportSequenceNumber = "importsequencenumber";
@@ -26852,6 +26870,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_TemplateTitleEmailValidationLead = 100;
 			
 			public const int ed_TravelInformationDBConnectionString = 300;
+			
+			public const int ed_VoucherService = 100;
 		}
 	}
 	

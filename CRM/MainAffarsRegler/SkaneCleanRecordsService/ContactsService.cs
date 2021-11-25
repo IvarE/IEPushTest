@@ -48,7 +48,7 @@ namespace Endeavor.Crm.CleanRecordsService
 
             ITrigger scheduleUploadTrigger = TriggerBuilder.Create()
                   .WithIdentity(InactivateContacts.TriggerName, InactivateContacts.GroupName)
-                  .WithCronSchedule(Properties.Settings.Default.CloseCaseScheduleCronExpression)
+                  .WithCronSchedule(Properties.Settings.Default.InactivateContactsScheduleCronExpression)
                   .WithDescription(InactivateContacts.TriggerDescription)
                   .ForJob(scheduleUploadJob)
                   .Build();
