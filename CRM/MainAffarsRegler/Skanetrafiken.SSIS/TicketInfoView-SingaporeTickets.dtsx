@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="70"
-  DTS:VersionGUID="{3CF143F7-D2D9-4D38-91E3-5BCC399BF8FF}">
+  DTS:VersionBuild="71"
+  DTS:VersionGUID="{A0288CD4-A78B-4598-AECB-3B8DB29997A1}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAD5nsbFVr63DinIdKsftScWAAAAAASAAACgAAAAEAAAADIU5Y3dtOnZ7Hwnby3pyXkgAAAA7z6UQ7TnL+uXZY/SjgV3g8RLzLazQYsWID4K1ZrWd3UUAAAAr0R5VOzeVL1ixdimbSShatIT5OI</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACP/6Eh+NjHx1rMMVTqsnewAAAAAASAAACgAAAAEAAAADKXfpPQ0xtI6xGwDn7fwqIgAAAA2NiJTxY+Jyo27AbdqyuCBpKps0woMGXh7QmejIxwiXUUAAAAUywYSAql7Wi1PMd+KXvCaRQsrSY</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
