@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="71"
-  DTS:VersionGUID="{A0288CD4-A78B-4598-AECB-3B8DB29997A1}">
+  DTS:VersionBuild="88"
+  DTS:VersionGUID="{FC31C217-3530-4A1D-B143-A210FDB8640A}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -23,75 +23,12 @@
       DTS:ObjectName="Dynamics 365 Connection">
       <DTS:ObjectData>
         <CrmConnectionManager
-          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekund.skanetrafiken.se/DKCRM;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=True;IgnoreCertificateErrors=False"
+          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekund.skanetrafiken.se/DKCRM;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=False;IgnoreCertificateErrors=False"
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACP/6Eh+NjHx1rMMVTqsnewAAAAAASAAACgAAAAEAAAADKXfpPQ0xtI6xGwDn7fwqIgAAAA2NiJTxY+Jyo27AbdqyuCBpKps0woMGXh7QmejIxwiXUUAAAAUywYSAql7Wi1PMd+KXvCaRQsrSY</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABFECiTDR++O8JRpovqbmp/AAAAAASAAACgAAAAEAAAAGYf+x8vw0IGo7e3VlKlJA0gAAAA0lJWyuyS3ZbILjAhRRBdj8ERx0+rAh3HvRJx9nXXL18UAAAAH6Skrwg6QhrVV04H4wG2yu6ykgE</Password>
         </CrmConnectionManager>
-      </DTS:ObjectData>
-    </DTS:ConnectionManager>
-    <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[Flat File Connection Manager - Singapore Tickets]"
-      DTS:CreationName="FLATFILE"
-      DTS:Description="Error records from Ticket Info View"
-      DTS:DTSID="{DBFBFA83-99E2-429F-9A8B-4F5A18A77908}"
-      DTS:ObjectName="Flat File Connection Manager - Singapore Tickets">
-      <DTS:ObjectData>
-        <DTS:ConnectionManager
-          DTS:Format="Delimited"
-          DTS:LocaleID="1053"
-          DTS:HeaderRowDelimiter="_x000D__x000A_"
-          DTS:RowDelimiter=""
-          DTS:TextQualifier="_x003C_none_x003E_"
-          DTS:CodePage="1252"
-          DTS:ConnectionString="C:\Admin\Log\SQL\SSIS\SSIS Import Singapore Tickets.txt">
-          <DTS:FlatFileColumns>
-            <DTS:FlatFileColumn
-              DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x002C_"
-              DTS:MaximumWidth="151"
-              DTS:DataType="130"
-              DTS:TextQualified="True"
-              DTS:ObjectName="Name"
-              DTS:DTSID="{E3A2E0AB-954D-41CC-A7EA-671E00C16CEE}"
-              DTS:CreationName="" />
-            <DTS:FlatFileColumn
-              DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x002C_"
-              DTS:MaximumWidth="100"
-              DTS:DataType="130"
-              DTS:TextQualified="True"
-              DTS:ObjectName="CRMNummer"
-              DTS:DTSID="{64BFADB7-8BAD-47AD-A4FD-095CD462A8DE}"
-              DTS:CreationName="" />
-            <DTS:FlatFileColumn
-              DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x002C_"
-              DTS:DataType="3"
-              DTS:TextQualified="True"
-              DTS:ObjectName="ErrorCode"
-              DTS:DTSID="{4BAC604F-7B32-4951-BA89-7CFBC0DB6DAF}"
-              DTS:CreationName="" />
-            <DTS:FlatFileColumn
-              DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x002C_"
-              DTS:DataType="3"
-              DTS:TextQualified="True"
-              DTS:ObjectName="ErrorColumn"
-              DTS:DTSID="{7F4F1A34-0CB2-43D4-8266-F2470503266F}"
-              DTS:CreationName="" />
-            <DTS:FlatFileColumn
-              DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x000D__x000A_"
-              DTS:MaximumWidth="2048"
-              DTS:DataType="130"
-              DTS:TextQualified="True"
-              DTS:ObjectName="ErrorMessage"
-              DTS:DTSID="{449D4655-C1AD-47B9-820D-555C256FDAA5}"
-              DTS:CreationName="" />
-          </DTS:FlatFileColumns>
-        </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
     <DTS:ConnectionManager
@@ -122,201 +59,6 @@
         <pipeline
           version="1">
           <components>
-            <component
-              refId="Package\Upsert Singapore Tickets\Calculate Fields"
-              componentClassID="Microsoft.DerivedColumn"
-              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
-              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
-              name="Calculate Fields"
-              usesDispositions="true">
-              <inputs>
-                <input
-                  refId="Package\Upsert Singapore Tickets\Calculate Fields.Inputs[Derived Column Input]"
-                  description="Input to the Derived Column Transformation"
-                  name="Derived Column Input">
-                  <inputColumns>
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Calculate Fields.Inputs[Derived Column Input].Columns[OfferName]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="OfferName"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[OfferName]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Calculate Fields.Inputs[Derived Column Input].Columns[cgi_contactnumber]"
-                      cachedDataType="wstr"
-                      cachedLength="100"
-                      cachedName="cgi_contactnumber"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
-                  </inputColumns>
-                  <externalMetadataColumns />
-                </input>
-              </inputs>
-              <outputs>
-                <output
-                  refId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Output]"
-                  description="Default Output of the Derived Column Transformation"
-                  exclusionGroup="1"
-                  name="Derived Column Output"
-                  synchronousInputId="Package\Upsert Singapore Tickets\Calculate Fields.Inputs[Derived Column Input]">
-                  <outputColumns>
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Output].Columns[Name]"
-                      dataType="wstr"
-                      errorOrTruncationOperation="Computation"
-                      errorRowDisposition="FailComponent"
-                      length="151"
-                      lineageId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Output].Columns[Name]"
-                      name="Name"
-                      truncationRowDisposition="FailComponent">
-                      <properties>
-                        <property
-                          containsID="true"
-                          dataType="System.String"
-                          description="Derived Column Expression"
-                          name="Expression">#{Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]} + "_" + #{Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[OfferName]}</property>
-                        <property
-                          containsID="true"
-                          dataType="System.String"
-                          description="Derived Column Friendly Expression"
-                          expressionType="Notify"
-                          name="FriendlyExpression">cgi_contactnumber + "_" + OfferName</property>
-                      </properties>
-                    </outputColumn>
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Output].Columns[CRMNummer]"
-                      dataType="wstr"
-                      errorOrTruncationOperation="Computation"
-                      errorRowDisposition="FailComponent"
-                      length="100"
-                      lineageId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Output].Columns[CRMNummer]"
-                      name="CRMNummer"
-                      truncationRowDisposition="FailComponent">
-                      <properties>
-                        <property
-                          containsID="true"
-                          dataType="System.String"
-                          description="Derived Column Expression"
-                          name="Expression">#{Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]}</property>
-                        <property
-                          containsID="true"
-                          dataType="System.String"
-                          description="Derived Column Friendly Expression"
-                          expressionType="Notify"
-                          name="FriendlyExpression">cgi_contactnumber</property>
-                      </properties>
-                    </outputColumn>
-                  </outputColumns>
-                  <externalMetadataColumns />
-                </output>
-                <output
-                  refId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Error Output]"
-                  description="Error Output of the Derived Column Transformation"
-                  exclusionGroup="1"
-                  isErrorOut="true"
-                  name="Derived Column Error Output"
-                  synchronousInputId="Package\Upsert Singapore Tickets\Calculate Fields.Inputs[Derived Column Input]">
-                  <outputColumns>
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Error Output].Columns[ErrorCode]"
-                      dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Error Output].Columns[ErrorCode]"
-                      name="ErrorCode"
-                      specialFlags="1" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
-                      dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
-                      name="ErrorColumn"
-                      specialFlags="2" />
-                  </outputColumns>
-                  <externalMetadataColumns />
-                </output>
-              </outputs>
-            </component>
-            <component
-              refId="Package\Upsert Singapore Tickets\Flat File Destination"
-              componentClassID="Microsoft.FlatFileDestination"
-              contactInfo="Flat File Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
-              description="Flat File Destination"
-              localeId="1053"
-              name="Flat File Destination">
-              <properties>
-                <property
-                  dataType="System.Boolean"
-                  description="Specifies whether the data will overwrite or append to the destination file."
-                  name="Overwrite">true</property>
-                <property
-                  dataType="System.Null"
-                  description="Specifies the text to write to the destination file before any data is written."
-                  expressionType="Notify"
-                  name="Header" />
-                <property
-                  dataType="System.Boolean"
-                  description="When text qualifier is enabled, specifies whether the text qualifier in the data written to the destination file will be escaped or not."
-                  name="EscapeQualifier">false</property>
-              </properties>
-              <connections>
-                <connection
-                  refId="Package\Upsert Singapore Tickets\Flat File Destination.Connections[FlatFileConnection]"
-                  connectionManagerID="Package.ConnectionManagers[Flat File Connection Manager - Singapore Tickets]"
-                  connectionManagerRefId="Package.ConnectionManagers[Flat File Connection Manager - Singapore Tickets]"
-                  name="FlatFileConnection" />
-              </connections>
-              <inputs>
-                <input
-                  refId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input]"
-                  hasSideEffects="true"
-                  name="Flat File Destination Input">
-                  <inputColumns>
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].Columns[ErrorCode]"
-                      cachedDataType="i4"
-                      cachedName="ErrorCode"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorCode]"
-                      lineageId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Error Output].Columns[ErrorCode]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].Columns[ErrorColumn]"
-                      cachedDataType="i4"
-                      cachedName="ErrorColumn"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorColumn]"
-                      lineageId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Error Output].Columns[ErrorColumn]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].Columns[ErrorMessage]"
-                      cachedDataType="wstr"
-                      cachedLength="2048"
-                      cachedName="ErrorMessage"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorMessage]"
-                      lineageId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Error Output].Columns[ErrorMessage]" />
-                  </inputColumns>
-                  <externalMetadataColumns
-                    isUsed="True">
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorCode]"
-                      dataType="i4"
-                      name="ErrorCode" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorColumn]"
-                      dataType="i4"
-                      name="ErrorColumn" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[ErrorMessage]"
-                      dataType="wstr"
-                      length="2048"
-                      name="ErrorMessage" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[Name]"
-                      dataType="wstr"
-                      length="151"
-                      name="Name" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input].ExternalColumns[CRMNummer]"
-                      dataType="wstr"
-                      length="100"
-                      name="CRMNummer" />
-                  </externalMetadataColumns>
-                </input>
-              </inputs>
-            </component>
             <component
               refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets"
               componentClassID="Microsoft.OLEDBSource"
@@ -912,7 +654,7 @@
                   dataType="System.Boolean"
                   description="Specify whether to remove those invalid characters before writing to CDS/CRM."
                   expressionType="Notify"
-                  name="RemoveInvalidCharacters">true</property>
+                  name="RemoveInvalidCharacters">false</property>
                 <property
                   dataType="System.String"
                   description="Specify the flag field(s) that are used to track the source of changes. The field(s) will not posted to CDS/CRM server unless there are changes to other fields if specified. &quot;Ignore Unchange Fields&quot; option is required in order for the specified flag field(s) to work. "
@@ -939,12 +681,12 @@
                   dataType="System.Int32"
                   description="Specifies the number of records to be sent to CDS/Dynamics CRM server in each service call."
                   expressionType="Notify"
-                  name="BatchSize">100</property>
+                  name="BatchSize">1000</property>
                 <property
                   dataType="System.Int32"
                   description="Specify the total number or concurrent threads to write to CDS/CRM server simultaneously. "
                   expressionType="Notify"
-                  name="ConcurrentWritingThreadsInTotal">20</property>
+                  name="ConcurrentWritingThreadsInTotal">10</property>
                 <property
                   dataType="System.Boolean"
                   description="Specifies whether datetime values should be sent to CDS/CRM server in UTC format."
@@ -971,7 +713,7 @@
                 <input
                   refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input]"
                   errorOrTruncationOperation="Insert"
-                  errorRowDisposition="RedirectRow"
+                  errorRowDisposition="IgnoreFailure"
                   hasSideEffects="true"
                   name="Input">
                   <inputColumns>
@@ -1111,22 +853,8 @@
                       cachedDataType="wstr"
                       cachedLength="100"
                       cachedName="cgi_contactnumber"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_contactid]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[Name]"
-                      cachedDataType="wstr"
-                      cachedLength="151"
-                      cachedName="Name"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_name]"
-                      lineageId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Output].Columns[Name]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[CRMNummer]"
-                      cachedDataType="wstr"
-                      cachedLength="100"
-                      cachedName="CRMNummer"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_crmnummer]"
-                      lineageId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Output].Columns[CRMNummer]" />
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
                   </inputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -1553,7 +1281,7 @@
                           name="Updateable">true</property>
                         <property
                           dataType="System.String"
-                          name="LookupSettings">{"SkipRecordIfLookupFails":true,"CacheStrategy":"FullCache","LookupTargets":[{"TargetEntity":"contact","TargetTextField":"ed_mklid"}]}</property>
+                          name="LookupSettings"></property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1905,38 +1633,13 @@
                   </outputColumns>
                   <externalMetadataColumns />
                 </output>
-                <output
-                  refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Skipped Rows]"
-                  exclusionGroup="1"
-                  name="Skipped Rows"
-                  synchronousInputId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input]">
-                  <outputColumns>
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Skipped Rows].Columns[SkipReasonMessage]"
-                      dataType="wstr"
-                      length="2048"
-                      lineageId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Skipped Rows].Columns[SkipReasonMessage]"
-                      name="SkipReasonMessage" />
-                  </outputColumns>
-                  <externalMetadataColumns />
-                </output>
               </outputs>
             </component>
           </components>
           <paths>
             <path
-              refId="Package\Upsert Singapore Tickets.Paths[Derived Column Output]"
-              endId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input]"
-              name="Derived Column Output"
-              startId="Package\Upsert Singapore Tickets\Calculate Fields.Outputs[Derived Column Output]" />
-            <path
-              refId="Package\Upsert Singapore Tickets.Paths[Error Output]"
-              endId="Package\Upsert Singapore Tickets\Flat File Destination.Inputs[Flat File Destination Input]"
-              name="Error Output"
-              startId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Outputs[Error Output]" />
-            <path
               refId="Package\Upsert Singapore Tickets.Paths[OLE DB Source Output]"
-              endId="Package\Upsert Singapore Tickets\Calculate Fields.Inputs[Derived Column Input]"
+              endId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input]"
               name="OLE DB Source Output"
               startId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output]" />
           </paths>
@@ -1967,119 +1670,41 @@
     design-time-name="Package\Upsert Singapore Tickets">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="202,42"
           Id="Package\Upsert Singapore Tickets\Upsert Singapore Tickets"
-          TopLeft="464,273" />
+          TopLeft="450,213" />
         <NodeLayout
           Size="234,42"
           Id="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets"
           TopLeft="84,61" />
-        <NodeLayout
-          Size="176,42"
-          Id="Package\Upsert Singapore Tickets\Flat File Destination"
-          TopLeft="792,394" />
-        <NodeLayout
-          Size="157,42"
-          Id="Package\Upsert Singapore Tickets\Calculate Fields"
-          TopLeft="347,163" />
         <EdgeLayout
           Id="Package\Upsert Singapore Tickets.Paths[OLE DB Source Output]"
           TopLeft="201,103">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="224.5,60"
+              EndConnector="350,110"
               Start="0,0"
-              End="224.5,52.5">
+              End="350,102.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,26" />
+                    End="0,51" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,26"
-                    Point2="0,30"
-                    Point3="4,30" />
+                    Point1="0,51"
+                    Point2="0,55"
+                    Point3="4,55" />
                   <mssgle:LineSegment
-                    End="220.5,30" />
+                    End="346,55" />
                   <mssgle:CubicBezierSegment
-                    Point1="220.5,30"
-                    Point2="224.5,30"
-                    Point3="224.5,34" />
+                    Point1="346,55"
+                    Point2="350,55"
+                    Point3="350,59" />
                   <mssgle:LineSegment
-                    End="224.5,52.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Upsert Singapore Tickets.Paths[Error Output]"
-          TopLeft="565,315">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="315,79"
-              Start="0,0"
-              End="315,71.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,35.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,35.5"
-                    Point2="0,39.5"
-                    Point3="4,39.5" />
-                  <mssgle:LineSegment
-                    End="311,39.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="311,39.5"
-                    Point2="315,39.5"
-                    Point3="315,43.5" />
-                  <mssgle:LineSegment
-                    End="315,71.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="120.2949609375,44.5,56.6727734375,11.43359375"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Upsert Singapore Tickets.Paths[Derived Column Output]"
-          TopLeft="425.5,205">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="139.5,68"
-              Start="0,0"
-              End="139.5,60.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,30" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,30"
-                    Point2="0,34"
-                    Point3="4,34" />
-                  <mssgle:LineSegment
-                    End="135.5,34" />
-                  <mssgle:CubicBezierSegment
-                    Point1="135.5,34"
-                    Point2="139.5,34"
-                    Point3="139.5,38" />
-                  <mssgle:LineSegment
-                    End="139.5,60.5" />
+                    End="350,102.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
