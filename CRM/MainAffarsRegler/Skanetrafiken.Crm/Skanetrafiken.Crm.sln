@@ -47,6 +47,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkaneCleanRecordsService", 
 EndProject
 Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Skanetrafiken.SSIS", "..\Skanetrafiken.SSIS\Skanetrafiken.SSIS.dtproj", "{65050D58-CC38-48AE-86AC-73C4F106C699}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{A5E75742-434B-4DB7-8177-063CCB7263AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.Crm.Plugins", "..\Skanetrafiken.Crm.Plugins\Skanetrafiken.Crm.Plugins.csproj", "{37F49606-BA0D-4501-B63F-3B49829099FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Acceptans|Any CPU = Acceptans|Any CPU
@@ -296,9 +300,26 @@ Global
 		{65050D58-CC38-48AE-86AC-73C4F106C699}.Release|Any CPU.Build.0 = Development
 		{65050D58-CC38-48AE-86AC-73C4F106C699}.Test|Any CPU.ActiveCfg = Development
 		{65050D58-CC38-48AE-86AC-73C4F106C699}.Test|Any CPU.Build.0 = Development
+		{37F49606-BA0D-4501-B63F-3B49829099FC}.Acceptans|Any CPU.ActiveCfg = Debug|Any CPU
+		{37F49606-BA0D-4501-B63F-3B49829099FC}.Acceptans|Any CPU.Build.0 = Debug|Any CPU
+		{37F49606-BA0D-4501-B63F-3B49829099FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37F49606-BA0D-4501-B63F-3B49829099FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37F49606-BA0D-4501-B63F-3B49829099FC}.Dev|Any CPU.ActiveCfg = Debug|Any CPU
+		{37F49606-BA0D-4501-B63F-3B49829099FC}.Dev|Any CPU.Build.0 = Debug|Any CPU
+		{37F49606-BA0D-4501-B63F-3B49829099FC}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{37F49606-BA0D-4501-B63F-3B49829099FC}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{37F49606-BA0D-4501-B63F-3B49829099FC}.Produktion|Any CPU.ActiveCfg = Debug|Any CPU
+		{37F49606-BA0D-4501-B63F-3B49829099FC}.Produktion|Any CPU.Build.0 = Debug|Any CPU
+		{37F49606-BA0D-4501-B63F-3B49829099FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37F49606-BA0D-4501-B63F-3B49829099FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37F49606-BA0D-4501-B63F-3B49829099FC}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{37F49606-BA0D-4501-B63F-3B49829099FC}.Test|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{37F49606-BA0D-4501-B63F-3B49829099FC} = {A5E75742-434B-4DB7-8177-063CCB7263AC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E5940934-6B9B-49B5-9A82-89A5AD5B0318}
