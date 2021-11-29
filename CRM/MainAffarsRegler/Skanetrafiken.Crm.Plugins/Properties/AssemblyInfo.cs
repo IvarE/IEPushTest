@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Skanetrafiken.Crm.ConsoleSDKCreations")]
+[assembly: AssemblyTitle("Skanetrafiken.Crm.Plugins")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Skanetrafiken.Crm.ConsoleSDKCreations")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCompany("HP Inc.")]
+[assembly: AssemblyProduct("Skanetrafiken.Crm.Plugins")]
+[assembly: AssemblyCopyright("Copyright © HP Inc. 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5e787f06-30c4-4d14-80dd-25218e96ef90")]
+[assembly: Guid("37f49606-ba0d-4501-b63f-3b49829099fc")]
 
 // Version information for an assembly consists of the following four values:
 //
