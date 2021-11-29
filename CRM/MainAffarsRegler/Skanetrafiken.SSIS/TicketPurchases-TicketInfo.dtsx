@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="TicketPurchases-TicketInfo"
   DTS:PackageType="5"
-  DTS:VersionBuild="75"
-  DTS:VersionGUID="{CEFB500F-8C17-426E-BF6C-B4256E116F1A}">
+  DTS:VersionBuild="76"
+  DTS:VersionGUID="{41B8D631-0423-48E2-9D65-3BE59BE3E5A7}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADJ87hLAEjgw8SRac8/8zU2AAAAAASAAACgAAAAEAAAALWsHkrltjShNAOjhNG3KgkgAAAAHlkZINRHPRLGOpjhfam4soj+MRkJ6QCfvGGTZ1hfCB0UAAAAbCNnpuZQ+GOHv1OMNEarwTEf4jM</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADTqNj4YRRXwjMYQMZaiEBnAAAAAASAAACgAAAAEAAAAEdFIuc2dzrwnPYSFSCmRMQgAAAAD06Q1/aspLH8q60FMgOc8DalDe4cKqWNXqAb01u3/W0UAAAAH9H9w+aiAjiaHNzF6Lyiw+NmPj4</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -54,7 +54,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="cgi_contactnumber"
-              DTS:DTSID="{4CF4361D-F347-47FD-9BD6-B3F8F5C832E3}"
+              DTS:DTSID="{43566CF2-9EA1-4C1D-AAFF-907A1433BF7B}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -62,7 +62,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="MkId"
-              DTS:DTSID="{9C4837AF-A6B1-4BA4-B684-3E8BEE1D5C46}"
+              DTS:DTSID="{CBE5BCD6-5B15-4376-9D2E-F38BD288052B}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -71,7 +71,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="OfferName"
-              DTS:DTSID="{67015AAA-56BD-43D5-BCE3-A76D5F8164CA}"
+              DTS:DTSID="{0F06F369-0076-4995-9E15-61449CAACB72}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -79,7 +79,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="NumberOfTickets"
-              DTS:DTSID="{D4081DC2-076D-4773-A3A8-48ADCDF6C3E3}"
+              DTS:DTSID="{B3F08473-491C-4A6B-B978-DEE03827DB16}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -89,7 +89,7 @@
               DTS:DataScale="5"
               DTS:TextQualified="True"
               DTS:ObjectName="TotalSumTicketOffer"
-              DTS:DTSID="{2136F15C-CA87-4D6A-B298-A6018032A5CA}"
+              DTS:DTSID="{6E690996-4577-44DD-B848-7B9BD70F978E}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -98,7 +98,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="Name"
-              DTS:DTSID="{C6462222-7D29-4B29-B267-7FFE62A7B320}"
+              DTS:DTSID="{7F669944-8A91-4D99-BFE6-C294DF94A701}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -107,7 +107,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="CRMNummer"
-              DTS:DTSID="{046B08C1-1A30-47A8-8AA1-ADECD4883EBB}"
+              DTS:DTSID="{9F71FBD5-41DF-48EC-8FB4-A77E2D9039A8}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -115,7 +115,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorCode"
-              DTS:DTSID="{D90AC815-6485-4FF8-9C2A-764878437418}"
+              DTS:DTSID="{35EC0271-3F36-4B94-921B-5C8C34B393AF}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -123,7 +123,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorColumn"
-              DTS:DTSID="{76B815EE-A02B-471B-943D-24D27B97369F}"
+              DTS:DTSID="{393CF753-AC7C-4C59-A0FD-0FDFB09876D1}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -132,7 +132,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="ErrorMessage"
-              DTS:DTSID="{B5AB2D81-22C0-46AF-BEB3-71FAD3B4F2E3}"
+              DTS:DTSID="{E65425EE-E11B-4CE4-9A06-60AB0E3C5CAE}"
               DTS:CreationName="" />
           </DTS:FlatFileColumns>
         </DTS:ConnectionManager>
