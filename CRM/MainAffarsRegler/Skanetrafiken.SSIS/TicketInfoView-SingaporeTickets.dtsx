@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="88"
-  DTS:VersionGUID="{FC31C217-3530-4A1D-B143-A210FDB8640A}">
+  DTS:VersionBuild="97"
+  DTS:VersionGUID="{D82D623E-62C3-4FBC-B340-0870C52E6601}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABFECiTDR++O8JRpovqbmp/AAAAAASAAACgAAAAEAAAAGYf+x8vw0IGo7e3VlKlJA0gAAAA0lJWyuyS3ZbILjAhRRBdj8ERx0+rAh3HvRJx9nXXL18UAAAAH6Skrwg6QhrVV04H4wG2yu6ykgE</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACDyZU9AYo+u1wtwgs/vG/UAAAAAASAAACgAAAAEAAAANM3xsVzmXxv9n8OpdJQEjAgAAAA3rVwyTIwKI3zHB6+gQdVomh4B1QHZOokz7O8ur1dlOEUAAAAXkQEpo4Cb8ai4vXaWVahVORBw94</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -290,15 +290,6 @@
                       name="HasRefund"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[MkId]"
-                      dataType="i4"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[MkId]"
-                      name="MkId"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
                       refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
                       dataType="wstr"
                       errorOrTruncationOperation="Conversion"
@@ -549,11 +540,6 @@
                       lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[HasRefund]"
                       name="HasRefund" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[MkId]"
-                      dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[MkId]"
-                      name="MkId" />
-                    <outputColumn
                       refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[cgi_contactnumber]"
                       dataType="wstr"
                       length="100"
@@ -681,12 +667,12 @@
                   dataType="System.Int32"
                   description="Specifies the number of records to be sent to CDS/Dynamics CRM server in each service call."
                   expressionType="Notify"
-                  name="BatchSize">1000</property>
+                  name="BatchSize">100</property>
                 <property
                   dataType="System.Int32"
                   description="Specify the total number or concurrent threads to write to CDS/CRM server simultaneously. "
                   expressionType="Notify"
-                  name="ConcurrentWritingThreadsInTotal">10</property>
+                  name="ConcurrentWritingThreadsInTotal">20</property>
                 <property
                   dataType="System.Boolean"
                   description="Specifies whether datetime values should be sent to CDS/CRM server in UTC format."
@@ -1674,7 +1660,7 @@
         <NodeLayout
           Size="202,42"
           Id="Package\Upsert Singapore Tickets\Upsert Singapore Tickets"
-          TopLeft="450,213" />
+          TopLeft="330,226" />
         <NodeLayout
           Size="234,42"
           Id="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets"
@@ -1685,26 +1671,26 @@
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="350,110"
+              EndConnector="230,123"
               Start="0,0"
-              End="350,102.5">
+              End="230,115.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,51" />
+                    End="0,57.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,51"
-                    Point2="0,55"
-                    Point3="4,55" />
+                    Point1="0,57.5"
+                    Point2="0,61.5"
+                    Point3="4,61.5" />
                   <mssgle:LineSegment
-                    End="346,55" />
+                    End="226,61.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="346,55"
-                    Point2="350,55"
-                    Point3="350,59" />
+                    Point1="226,61.5"
+                    Point2="230,61.5"
+                    Point3="230,65.5" />
                   <mssgle:LineSegment
-                    End="350,102.5" />
+                    End="230,115.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
