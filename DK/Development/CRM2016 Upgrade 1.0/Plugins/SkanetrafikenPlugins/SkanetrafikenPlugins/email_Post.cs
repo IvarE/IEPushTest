@@ -41,9 +41,14 @@ namespace CRM2013.SkanetrafikenPlugins
 
                                 if (activity.Attributes.Contains("description"))
                                     activityDescription = activity.Attributes["description"].ToString();
+                                string newdescription = "";
 
-                                string newdescription = description + "\n\n" + activityDescription;
-                                newdescription = Html2Plain(newdescription);
+                                if (description == null || description == "")
+                                {
+                                    newdescription = description + "\n\n" + activityDescription;
+                                    newdescription = Html2Plain(newdescription);
+                                }
+                              
 
                                 EntityReference refcustomerid = null;
                                 if (incident.Attributes.Contains("customerid"))
