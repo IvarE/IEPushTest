@@ -3807,19 +3807,9 @@ namespace CGIXrmCreateCaseService.Case
             }
             catch (FaultException faultex)
             {
-                // Do debug-tracing. Johan Endeavor
-                //if (DateTime.Now < new DateTime(2017, 11, 11))
-                //{
-                //    _log.Debug(string.Format("Fel vid skapande av contact: " + faultex.Message));
-                //    //LogMessage(_logLocation, string.Format("Fel vid skapande av contact: " + faultex.Message));
-                //}
-                //_log.Debug(string.Format("Fel vid skapande av contact: " + faultex.Message));
                 _log.Debug($"Th={threadId} - Fel vid skapande av contact: {faultex.Message}");
                 if (faultex.Message != null)
-                {
-                    //_log.Error(string.Format("Exception {0}, inner:{1}", faultex.Message, faultex.InnerException.Message));
-                    _log.Error($"Th={threadId} - Exception {faultex.Message}, inner:{faultex.InnerException.Message}");
-                }
+                    _log.Error($"Th={threadId} - Exception {faultex.Message}, inner:{faultex.InnerException?.Message}");
 
                 response.CaseId = Guid.Empty;
                 response.ErrorMessage = faultex.Message;
@@ -3827,10 +3817,7 @@ namespace CGIXrmCreateCaseService.Case
             catch (Exception ex)
             {
                 if (ex.Message != null)
-                {
-                    //_log.Error(string.Format("Exception {0}, inner:{1}", ex.Message, ex.InnerException.Message));
-                    _log.Error($"Th={threadId} - Exception {ex.Message}, inner:{ex.InnerException.Message}");
-                }
+                    _log.Error($"Th={threadId} - Exception {ex.Message}, inner:{ex.InnerException?.Message}");
 
                 response.CaseId = Guid.Empty;
                 response.ErrorMessage = ex.Message;
