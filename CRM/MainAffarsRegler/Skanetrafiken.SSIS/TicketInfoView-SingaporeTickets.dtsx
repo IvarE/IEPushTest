@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="97"
-  DTS:VersionGUID="{D82D623E-62C3-4FBC-B340-0870C52E6601}">
+  DTS:VersionBuild="102"
+  DTS:VersionGUID="{086EBFF9-B398-4623-8E51-C560A4A19B5A}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACDyZU9AYo+u1wtwgs/vG/UAAAAAASAAACgAAAAEAAAANM3xsVzmXxv9n8OpdJQEjAgAAAA3rVwyTIwKI3zHB6+gQdVomh4B1QHZOokz7O8ur1dlOEUAAAAXkQEpo4Cb8ai4vXaWVahVORBw94</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADBpiYY+VtK3e/QSFXLIrJMAAAAAASAAACgAAAAEAAAAEJDpaSkLGBH4yrsl6UGbJ0gAAAA7Sgkn1cmR8FS/7TLdAySaQ5ZrWYChHw3yyTlZ6awxbAUAAAAwS/MCYCIXbU/GtUVUhss0RU+8Rs</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -620,12 +620,12 @@
                   description="Specify the matching criteria to be used when performing an update or upsert. "
                   expressionType="Notify"
                   name="RecordMatchingCriteria"
-                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.RecordMatchingCriteria">3</property>
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.RecordMatchingCriteria">4</property>
                 <property
                   dataType="System.String"
                   description="Specify the key fields to be used to determine the matching records that exist in CDS/CRM for either Upsert/Update action or source duplicate optimization."
                   expressionType="Notify"
-                  name="RecordMatchingKeyFields">ed_crmnummer;st_ticketid</property>
+                  name="RecordMatchingKeyFields"></property>
                 <property
                   dataType="System.Boolean"
                   description="Specifies whether to ignore those NULL-valued fields."
@@ -635,7 +635,7 @@
                   dataType="System.Boolean"
                   description="Specifies whether to ignore those fields that have no value changes in the target system. "
                   expressionType="Notify"
-                  name="IgnoreUnchangedFields">true</property>
+                  name="IgnoreUnchangedFields">false</property>
                 <property
                   dataType="System.Boolean"
                   description="Specify whether to remove those invalid characters before writing to CDS/CRM."
@@ -651,7 +651,7 @@
                   description="Specifies what action will be taken when multiple matches are found with Upsert action."
                   expressionType="Notify"
                   name="HandlingOfMultipleMatches"
-                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">2</property>
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">0</property>
                 <property
                   dataType="System.Int32"
                   description="Specify whether to use optimizations when there are duplicate records form the source system."
@@ -685,7 +685,22 @@
                   dataType="System.Boolean"
                   description="Specify whethere to tentatively disable entity change tracking (auditing)"
                   expressionType="Notify"
-                  name="TentativelyDisableEntityAuditing">false</property>
+                  name="TentativelyDisableEntityAuditing">true</property>
+                <property
+                  dataType="System.String"
+                  description="Alternate Key to be used for Upsert or Update action."
+                  expressionType="Notify"
+                  name="AlternateKey">ed_singaporekey</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specify whether to tentatively disable relevant plugins"
+                  expressionType="Notify"
+                  name="TentativelyDisableRelevantPlugins">true</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specify whether to tentatively disable relevant workflows"
+                  expressionType="Notify"
+                  name="TentativelyDisableRelevantWorkflows">true</property>
               </properties>
               <connections>
                 <connection
@@ -1658,13 +1673,13 @@
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="202,42"
-          Id="Package\Upsert Singapore Tickets\Upsert Singapore Tickets"
-          TopLeft="330,226" />
-        <NodeLayout
           Size="234,42"
           Id="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets"
           TopLeft="84,61" />
+        <NodeLayout
+          Size="202,42"
+          Id="Package\Upsert Singapore Tickets\Upsert Singapore Tickets"
+          TopLeft="330,226" />
         <EdgeLayout
           Id="Package\Upsert Singapore Tickets.Paths[OLE DB Source Output]"
           TopLeft="201,103">

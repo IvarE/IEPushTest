@@ -19,6 +19,7 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Text;
 using System.Threading;
@@ -81,6 +82,7 @@ namespace Skanetrafiken.Import
             Console.WriteLine("32) Update Postal Codes Information Contacts");
             Console.WriteLine("34) Update Sent Value Codes");
             Console.WriteLine("35) Delete PostalCodes");
+            Console.WriteLine("36) Fix Singapore Tickets Contacts");
 
 
             Console.WriteLine("0) Exit");
@@ -1141,6 +1143,131 @@ namespace Skanetrafiken.Import
 
                     return true;
 
+                case "36":
+
+                    #region Fix Singapore Tickets Contacts
+
+                    try
+                    {
+
+                        // path to the csv file
+                        string path = "C:\\Users\\PGOEND\\Downloads\\crmNummer.csv";
+
+                        string[] lines = System.IO.File.ReadAllLines(path);
+                        List<string> lCrmNummer = new List<string>();
+                        foreach (string line in lines)
+                        {
+                            string[] columns = line.Split(',');
+                            foreach (string column in columns)
+                            {
+                                lCrmNummer.Add(column);
+                            }
+                        }
+
+                        Console.WriteLine("Found " + lCrmNummer.Count + " Singapore Tickets to process.");
+
+                        queryContacts = new QueryExpression(Contact.EntityLogicalName);
+                        queryContacts.NoLock = true;
+                        queryContacts.ColumnSet.AddColumns(Contact.Fields.ed_MklId);
+                        queryContacts.Criteria.AddCondition(Contact.Fields.ed_MklId, ConditionOperator.NotNull);
+                        queryContacts.Criteria.AddCondition(Contact.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
+
+                        lContacts = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts);
+                        Console.WriteLine("Found " + lContacts.Count + " Contacts to process.");
+
+
+                        List<Contact> lNewList = new List<Contact>();
+                        int q = 0;
+                        foreach (var item in lContacts)
+                        {
+                            q++;
+                            if (q % 5000 == 0)
+                                Console.WriteLine(q);
+                            if (lCrmNummer.Contains(item.ed_MklId))
+                                lNewList.Add(item);
+
+                        }
+
+                        lContacts = new List<Contact>();
+
+                        // Create an ExecuteTransactionRequest object.
+                        var requestToCreateRecords = new ExecuteTransactionRequest()
+                        {
+                            // Create an empty organization request collection.
+                            Requests = new OrganizationRequestCollection(),
+                            ReturnResponses = true
+                        };
+
+                        var i = 0;
+                        foreach (var crmNummer in lCrmNummer)
+                        {
+                            i++;
+                            if(i % 1000 == 0)
+                            {
+                                Console.WriteLine("Process " + requestToCreateRecords.Requests.Count);
+                                // Execute all the requests in the request collection using a single web method call.
+                                try
+                                {
+                                    var responseForCreateRecords = (ExecuteTransactionResponse)localContext.OrganizationService.Execute(requestToCreateRecords);
+                                }
+                                catch (FaultException<OrganizationServiceFault> ex)
+                                {
+                                    Console.WriteLine("Create request failed for the account{0} and the reason being: {1}",
+                                        ((ExecuteTransactionFault)(ex.Detail)).FaultedRequestIndex + 1, ex.Detail.Message);
+                                    throw;
+                                }
+                            }
+
+                            var contact = lNewList.FirstOrDefault(x => x.ed_MklId == crmNummer);
+
+                            if (contact == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"No Contact found with CRMNummer: {crmNummer}");
+                                continue;
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    // Instantiate QueryExpression query
+                                    var querySingapore = new QueryExpression(st_singaporeticket.EntityLogicalName);
+                                    querySingapore.NoLock = true;
+                                    querySingapore.ColumnSet.AddColumns(st_singaporeticket.Fields.ed_CRMNummer);
+                                    querySingapore.Criteria.AddCondition(st_singaporeticket.Fields.ed_CRMNummer, ConditionOperator.Equal, crmNummer);
+
+                                    var lSingaporeTickets = XrmRetrieveHelper.RetrieveMultiple<st_singaporeticket>(localContext, querySingapore);
+
+                                    foreach (var singaporeTicket in lSingaporeTickets)
+                                    {
+                                        st_singaporeticket uSingaporeTicket = new st_singaporeticket();
+                                        uSingaporeTicket.Id = singaporeTicket.Id;
+                                        uSingaporeTicket.st_ContactID = contact.ToEntityReference();
+
+                                        UpdateRequest updateRequest = new UpdateRequest { Target = uSingaporeTicket };
+                                        requestToCreateRecords.Requests.Add(updateRequest);
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine($"Update Singapore Ticket Contact: Details: " + e.Message);
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Update Singapore Ticket Contact: Details: " + e.Message);
+                                }
+                            }
+                        }
+
+                        
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Fix Singapore Tickets Contacts: Details: " + e.Message);
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Fix Singapore Tickets Contacts: Details: " + e.Message);
+                        Console.ReadLine();
+                    }
+
+                    #endregion
+
+                    return true;
+
                 case "0":
                     return false;
                 default:
@@ -1179,7 +1306,7 @@ namespace Skanetrafiken.Import
 #if DEBUG
             _log.Debug("Main Started");
 
-            string passwordArgument = "uSEme2!nstal1";
+            string passwordArgument = null;
 
             if (!string.IsNullOrEmpty(passwordArgument))
             {
