@@ -116,8 +116,9 @@ namespace Endeavor.Crm.CleanRecordsService
             queryContacts.Criteria.AddFilter(queryFilter0);
             queryFilter0.AddCondition(ContactEntity.Fields.ed_MklId, ConditionOperator.Null);
             queryFilter0.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
+            queryFilter0.AddCondition(ContactEntity.Fields.ed_Epostmottagare, ConditionOperator.Equal, false);
             queryFilter0.AddCondition(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true);
-
+            
             var queryFilter1 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter1);
             queryFilter1.AddCondition("ap", IncidentEntity.Fields.cgi_Contactid, ConditionOperator.Null);
