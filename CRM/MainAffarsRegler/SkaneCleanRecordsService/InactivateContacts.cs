@@ -82,17 +82,16 @@ namespace Endeavor.Crm.CleanRecordsService
 
                 _log.Info($"runFullData Flag is {runFullData}");
                 bool bRunFullData = runFullData == "true" ? true : false;
-                ExecuteMultipleResponse responseWithResults = RunInactivateContacts(localContext, bRunFullData);
+                ExecuteTransactionResponse responseWithResults = RunInactivateContacts(localContext, bRunFullData);
 
-                // process the results returned in the responses
-                if (responseWithResults != null && responseWithResults.IsFaulted == true)
-                {
-                    _log.Error(String.Join("; ", responseWithResults.Responses.ToList().FindAll(x => x.Fault != null).Select(x => x.Fault.Message)));
-                }
-                else if (responseWithResults != null && responseWithResults.IsFaulted == false)
-                {
+                //if (responseWithResults != null && responseWithResults.IsFaulted == true)
+                //{
+                //    _log.Error(String.Join("; ", responseWithResults.Responses.ToList().FindAll(x => x.Fault != null).Select(x => x.Fault.Message)));
+                //}
+                //else if (responseWithResults != null && responseWithResults.IsFaulted == false)
+                //{
 
-                }
+                //}
 
                 _log.Info($"ContactsService Done");
             }
@@ -116,9 +115,14 @@ namespace Endeavor.Crm.CleanRecordsService
             queryContacts.Criteria.AddFilter(queryFilter0);
             queryFilter0.AddCondition(ContactEntity.Fields.ed_MklId, ConditionOperator.Null);
             queryFilter0.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
-            queryFilter0.AddCondition(ContactEntity.Fields.ed_Epostmottagare, ConditionOperator.Equal, false);
             queryFilter0.AddCondition(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true);
-            
+
+            var queryEpost = new FilterExpression();
+            queryContacts.Criteria.AddFilter(queryEpost);
+            queryEpost.FilterOperator = LogicalOperator.Or;
+            queryEpost.AddCondition(ContactEntity.Fields.ed_Epostmottagare, ConditionOperator.Null);
+            queryEpost.AddCondition(ContactEntity.Fields.ed_Epostmottagare, ConditionOperator.Equal, false);
+
             var queryFilter1 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter1);
             queryFilter1.AddCondition("ap", IncidentEntity.Fields.cgi_Contactid, ConditionOperator.Null);
@@ -146,10 +150,6 @@ namespace Endeavor.Crm.CleanRecordsService
             var queryFilter7 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter7);
             queryFilter7.AddCondition("av", SkaKortEntity.Fields.ed_Contact, ConditionOperator.Null);
-
-            var al = queryContacts.AddLink(ValueCodeEntity.EntityLogicalName, Contact.Fields.ContactId, ValueCodeEntity.Fields.ed_Contact);
-            al.EntityAlias = "al";
-            al.LinkCriteria.AddCondition(ValueCodeEntity.Fields.statecode, ConditionOperator.Equal, (int)ed_ValueCodeState.Inactive);
 
             var ap = queryContacts.AddLink(IncidentEntity.EntityLogicalName, ContactEntity.Fields.ContactId, IncidentEntity.Fields.cgi_Contactid, JoinOperator.LeftOuter);
             ap.EntityAlias = "ap";
@@ -181,13 +181,36 @@ namespace Endeavor.Crm.CleanRecordsService
             return queryContacts;
         }
 
-        public static ExecuteMultipleResponse RunInactivateContacts(Plugin.LocalPluginContext localContext, bool bRunFullData)
+        public static QueryExpression GetQueryValuesCodes(Guid gContact)
+        {
+            var queryValueCodes = new QueryExpression(ValueCodeEntity.EntityLogicalName);
+            queryValueCodes.NoLock = true;
+            queryValueCodes.ColumnSet.AddColumns(ValueCodeEntity.Fields.statecode);
+            queryValueCodes.Criteria.AddCondition(ValueCodeEntity.Fields.ed_Contact, ConditionOperator.Equal, gContact);
+
+            return queryValueCodes;
+        }
+
+        public static UpdateRequest GetUpdateRequest(Guid gContact)
+        {
+            ContactEntity nContact = new ContactEntity();
+            nContact.Id = gContact;
+            nContact.StateCode = ContactState.Inactive;
+            nContact.StatusCode = contact_statuscode.Inactive;
+
+            return new UpdateRequest()
+            {
+                Target = nContact
+            };
+        }
+
+        public static ExecuteTransactionResponse RunInactivateContacts(Plugin.LocalPluginContext localContext, bool bRunFullData)
         {
             //Run everyday
             _log.Info($"'RunFullData': {bRunFullData}");
             QueryExpression queryContacts = GetQueryInactivateContacts(bRunFullData);
             List<ContactEntity> lContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, queryContacts);
-            _log.Info($"Found { lContacts.Count } Contacts to be Inactivated.");
+            _log.Info($"Found { lContacts.Count } Contacts to be checked.");
 
             List<OrganizationRequest> requestsLst = new List<OrganizationRequest>();
 
@@ -195,18 +218,35 @@ namespace Endeavor.Crm.CleanRecordsService
             {
                 try
                 {
-                    ContactEntity nContact = new ContactEntity();
-                    nContact.Id = contact.Id;
-                    nContact.StateCode = ContactState.Inactive;
-                    nContact.StatusCode = contact_statuscode.Inactive;
+                    QueryExpression queryValueCodes = GetQueryValuesCodes(contact.Id);
+                    List<ValueCodeEntity> lValueCodes = XrmRetrieveHelper.RetrieveMultiple<ValueCodeEntity>(localContext, queryValueCodes);
+                    _log.Info($"Found { lValueCodes.Count } Value Codes on Contact: {contact.Id}.");
 
-                    UpdateRequest updateContact = new UpdateRequest()
+                    if(lValueCodes.Count == 0)
                     {
-                        Target = nContact
-                    };
+                        UpdateRequest updateContact = GetUpdateRequest(contact.Id);
+                        requestsLst.Add(updateContact);
+                        _log.InfoFormat($"Contact: {contact.FirstName} {contact.LastName} added to Request Batch to be Inactivated.");
+                    }
+                    else
+                    {
+                        bool checkActive = false;
+                        foreach (ValueCodeEntity valueCode in lValueCodes)
+                        {
+                            if (valueCode.statecode == ed_ValueCodeState.Active)
+                            {
+                                checkActive = true;
+                                break;
+                            }
+                        }
 
-                    requestsLst.Add(updateContact);
-                    _log.InfoFormat($"Contact: {contact.FirstName} {contact.LastName} added to Request Batch to be Inactivated.");
+                        if (!checkActive)
+                        {
+                            UpdateRequest updateContact = GetUpdateRequest(contact.Id);
+                            requestsLst.Add(updateContact);
+                            _log.InfoFormat($"Contact: {contact.FirstName} {contact.LastName} added to Request Batch to be Inactivated.");
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
@@ -214,7 +254,8 @@ namespace Endeavor.Crm.CleanRecordsService
                 }
             }
 
-            return Helper.ExecuteMultipleRequests(localContext, requestsLst, true, true);
+            _log.Info($"Found { lContacts.Count } Contacts to be Inactivated.");
+            return Helper.ExecuteMultipleRequestsTransaction(localContext, requestsLst, true);
         }
     }
 }

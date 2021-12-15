@@ -71,8 +71,8 @@ namespace Endeavor.Crm.CleanRecordsService
                 }
 
                 string runFullData = ConfigurationManager.AppSettings["runFullData"];
-                
-                ExecuteMultipleResponse responseWithResults = null;
+
+                ExecuteTransactionResponse responseWithResults = null;
 
                 if (runFullData == "true")
                 {
@@ -88,14 +88,14 @@ namespace Endeavor.Crm.CleanRecordsService
                     _log.Debug($"The App Setting 'runFullData' is neither 'true' or 'false'.");
 
                 // process the results returned in the responses
-                if (responseWithResults != null && responseWithResults.IsFaulted == true)
-                {
-                    _log.Error(String.Join("; ", responseWithResults.Responses.ToList().FindAll(x => x.Fault != null).Select(x => x.Fault.Message)));
-                }
-                else if (responseWithResults != null && responseWithResults.IsFaulted == false)
-                {
+                //if (responseWithResults != null && responseWithResults.IsFaulted == true)
+                //{
+                //    _log.Error(String.Join("; ", responseWithResults.Responses.ToList().FindAll(x => x.Fault != null).Select(x => x.Fault.Message)));
+                //}
+                //else if (responseWithResults != null && responseWithResults.IsFaulted == false)
+                //{
 
-                }
+                //}
 
                 _log.Info($"CloseCases Done");
             }
@@ -105,7 +105,7 @@ namespace Endeavor.Crm.CleanRecordsService
             }
         }
 
-        public static ExecuteMultipleResponse RunCloseCasesProduction(Plugin.LocalPluginContext localContext)
+        public static ExecuteTransactionResponse RunCloseCasesProduction(Plugin.LocalPluginContext localContext)
         {
             QueryExpression queryCases = new QueryExpression(IncidentEntity.EntityLogicalName);
             queryCases.NoLock = true;
@@ -156,10 +156,10 @@ namespace Endeavor.Crm.CleanRecordsService
                 }
             }
 
-            return Helper.ExecuteMultipleRequests(localContext, requestsLst, true, true);
+            return Helper.ExecuteMultipleRequestsTransaction(localContext, requestsLst, true);
         }
 
-        public static ExecuteMultipleResponse RunCloseCasesTest(Plugin.LocalPluginContext localContext)
+        public static ExecuteTransactionResponse RunCloseCasesTest(Plugin.LocalPluginContext localContext)
         {
             bool runSpecificDate = true;
 
@@ -242,7 +242,7 @@ namespace Endeavor.Crm.CleanRecordsService
 
             _log.Debug($"Added {unansweredCases} Cases to be Resolved.");
 
-            return Helper.ExecuteMultipleRequests(localContext, requestsLst, true, true);
+            return Helper.ExecuteMultipleRequestsTransaction(localContext, requestsLst, true);
         }
     }
 }
