@@ -402,8 +402,9 @@ namespace Skanetrafiken.Crm.Entities
             }
 
             string postalCode = this.Address1_PostalCode;
+            string city = this.Address1_City;
 
-            localContext.Trace($"Entered HandlePreAccountCreate() Postal Code value: {postalCode}");
+            localContext.Trace($"Entered HandlePreAccountCreate() Postal Code value: {postalCode} City: {city}");
             if (!string.IsNullOrEmpty(postalCode))
             {
                 QueryExpression queryPostalCodes = new QueryExpression(PostalCodesEntity.EntityLogicalName);
@@ -411,13 +412,15 @@ namespace Skanetrafiken.Crm.Entities
                 queryPostalCodes.ColumnSet.AddColumns(PostalCodesEntity.Fields.ed_Kommun, PostalCodesEntity.Fields.ed_Kommunkod, PostalCodesEntity.Fields.ed_Lan,
                     PostalCodesEntity.Fields.ed_Lanskod, PostalCodesEntity.Fields.ed_name, PostalCodesEntity.Fields.ed_Postort);
                 queryPostalCodes.Criteria.AddCondition(PostalCodesEntity.Fields.ed_Postnummer, ConditionOperator.Equal, postalCode);
+                if (!string.IsNullOrEmpty(city))
+                    queryPostalCodes.Criteria.AddCondition(PostalCodesEntity.Fields.ed_Postort, ConditionOperator.Equal, city);
 
                 List<PostalCodesEntity> lPostalCodes = XrmRetrieveHelper.RetrieveMultiple<PostalCodesEntity>(localContext, queryPostalCodes);
 
                 if (lPostalCodes.Count > 1)
-                    localContext.Trace($"HandlePreAccountCreate: Found multiple Postal Codes with ZIP Code: {postalCode}");
+                    localContext.Trace($"HandlePreAccountCreate: Found multiple Postal Codes with ZIP Code: {postalCode} and City: {city}");
                 else if (lPostalCodes.Count == 0)
-                    localContext.Trace($"HandlePreAccountCreate: No Postal Codes with ZIP Code: {postalCode}");
+                    localContext.Trace($"HandlePreAccountCreate: No Postal Codes with ZIP Code: {postalCode} and City: {city}");
                 else
                 {
                     PostalCodesEntity ePostalCode = lPostalCodes.FirstOrDefault();
@@ -453,9 +456,10 @@ namespace Skanetrafiken.Crm.Entities
                 this.cgi_organizational_number = FormatOrgNumber(localContext, orgNumber);
             }
 
-            string postalCode = this.Address1_PostalCode;
+            string postalCode = this.Address1_PostalCode != null ? this.Address1_PostalCode : preImage.Address1_PostalCode;
+            string city = this.Address1_City != null ? this.Address1_City : preImage.Address1_City;
 
-            localContext.Trace($"Entered HandlePreAccountUpdate() Postal Code value: {postalCode}");
+            localContext.Trace($"Entered HandlePreAccountUpdate() Postal Code value: {postalCode} and City: {city}:");
             if (!string.IsNullOrEmpty(postalCode))
             {
                 QueryExpression queryPostalCodes = new QueryExpression(PostalCodesEntity.EntityLogicalName);
@@ -463,13 +467,15 @@ namespace Skanetrafiken.Crm.Entities
                 queryPostalCodes.ColumnSet.AddColumns(PostalCodesEntity.Fields.ed_Kommun, PostalCodesEntity.Fields.ed_Kommunkod, PostalCodesEntity.Fields.ed_Lan,
                     PostalCodesEntity.Fields.ed_Lanskod, PostalCodesEntity.Fields.ed_name, PostalCodesEntity.Fields.ed_Postort);
                 queryPostalCodes.Criteria.AddCondition(PostalCodesEntity.Fields.ed_Postnummer, ConditionOperator.Equal, postalCode);
+                if (!string.IsNullOrEmpty(city))
+                    queryPostalCodes.Criteria.AddCondition(PostalCodesEntity.Fields.ed_Postort, ConditionOperator.Equal, city);
 
                 List<PostalCodesEntity> lPostalCodes = XrmRetrieveHelper.RetrieveMultiple<PostalCodesEntity>(localContext, queryPostalCodes);
 
                 if (lPostalCodes.Count > 1)
-                    localContext.Trace($"HandlePreAccountUpdate: Found multiple Postal Codes with ZIP Code: {postalCode}");
+                    localContext.Trace($"HandlePreAccountUpdate: Found multiple Postal Codes with ZIP Code: {postalCode} and City: {city}");
                 else if (lPostalCodes.Count == 0)
-                    localContext.Trace($"HandlePreAccountUpdate: No Postal Codes with ZIP Code: {postalCode}");
+                    localContext.Trace($"HandlePreAccountUpdate: No Postal Codes with ZIP Code: {postalCode} and City: {city}");
                 else
                 {
                     PostalCodesEntity ePostalCode = lPostalCodes.FirstOrDefault();
