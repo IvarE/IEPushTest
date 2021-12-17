@@ -404,7 +404,7 @@ namespace Skanetrafiken.Crm.Entities
             string postalCode = this.Address1_PostalCode;
             string city = this.Address1_City;
 
-            localContext.Trace($"Entered HandlePreAccountCreate() Postal Code value: {postalCode} City: {city}");
+            localContext.Trace($"Entered HandlePreAccountCreate() Postal Code: {postalCode} City: {city}");
             if (!string.IsNullOrEmpty(postalCode))
             {
                 QueryExpression queryPostalCodes = new QueryExpression(PostalCodesEntity.EntityLogicalName);
@@ -459,7 +459,7 @@ namespace Skanetrafiken.Crm.Entities
             string postalCode = this.Address1_PostalCode != null ? this.Address1_PostalCode : preImage.Address1_PostalCode;
             string city = this.Address1_City != null ? this.Address1_City : preImage.Address1_City;
 
-            localContext.Trace($"Entered HandlePreAccountUpdate() Postal Code value: {postalCode} and City: {city}:");
+            localContext.Trace($"Entered HandlePreAccountUpdate() Postal Code: {postalCode} and City: {city}");
             if (!string.IsNullOrEmpty(postalCode))
             {
                 QueryExpression queryPostalCodes = new QueryExpression(PostalCodesEntity.EntityLogicalName);

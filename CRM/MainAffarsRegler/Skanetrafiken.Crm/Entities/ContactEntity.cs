@@ -855,7 +855,7 @@ namespace Skanetrafiken.Crm.Entities
         {
             this.Trace(localContext.TracingService);
 
-            localContext.Trace($"Entered HandlePreContactCreate() Postal Code value: {Address1_PostalCode}");
+            localContext.Trace($"Entered HandlePreContactCreate() Postal Code: {Address1_PostalCode} and City: {Address1_City}");
             if (!string.IsNullOrEmpty(Address1_PostalCode))
             {
                 QueryExpression queryPostalCodes = new QueryExpression(PostalCodesEntity.EntityLogicalName);
@@ -863,13 +863,15 @@ namespace Skanetrafiken.Crm.Entities
                 queryPostalCodes.ColumnSet.AddColumns(PostalCodesEntity.Fields.ed_Kommun, PostalCodesEntity.Fields.ed_Kommunkod, PostalCodesEntity.Fields.ed_Lan,
                     PostalCodesEntity.Fields.ed_Lanskod, PostalCodesEntity.Fields.ed_name, PostalCodesEntity.Fields.ed_Postort);
                 queryPostalCodes.Criteria.AddCondition(PostalCodesEntity.Fields.ed_Postnummer, ConditionOperator.Equal, Address1_PostalCode);
+                if (!string.IsNullOrEmpty(Address1_City))
+                    queryPostalCodes.Criteria.AddCondition(PostalCodesEntity.Fields.ed_Postort, ConditionOperator.Equal, Address1_City);
 
                 List<PostalCodesEntity> lPostalCodes = XrmRetrieveHelper.RetrieveMultiple<PostalCodesEntity>(localContext, queryPostalCodes);
 
                 if (lPostalCodes.Count > 1)
-                    localContext.Trace($"HandlePreContactCreate(): Found multiple Postal Codes with ZIP Code: {Address1_PostalCode}");
+                    localContext.Trace($"HandlePreContactCreate(): Found multiple Postal Codes with ZIP Code: {Address1_PostalCode} and City: {Address1_City}");
                 else if (lPostalCodes.Count == 0)
-                    localContext.Trace($"HandlePreContactCreate(): No Postal Codes with ZIP Code: {Address1_PostalCode}");
+                    localContext.Trace($"HandlePreContactCreate(): No Postal Codes with ZIP Code: {Address1_PostalCode} and City: {Address1_City}");
                 else
                 {
                     PostalCodesEntity ePostalCode = lPostalCodes.FirstOrDefault();
@@ -949,21 +951,25 @@ namespace Skanetrafiken.Crm.Entities
             if (preImage == null)
                 throw new InvalidPluginExecutionException("PreImage not registered correctly");
 
-            localContext.Trace($"Entered HandlePreContactUpdate() Postal Code value: {Address1_PostalCode}");
-            if (!string.IsNullOrEmpty(Address1_PostalCode))
+            string postalCode = this.Address1_PostalCode != null ? this.Address1_PostalCode : preImage.Address1_PostalCode;
+            string city = this.Address1_City != null ? this.Address1_City : preImage.Address1_City;
+            localContext.Trace($"Entered HandlePreContactUpdate() Postal Code: {postalCode} and City: {city}");
+            if (!string.IsNullOrEmpty(postalCode))
             {
                 QueryExpression queryPostalCodes = new QueryExpression(PostalCodesEntity.EntityLogicalName);
                 queryPostalCodes.NoLock = true;
                 queryPostalCodes.ColumnSet.AddColumns(PostalCodesEntity.Fields.ed_Kommun, PostalCodesEntity.Fields.ed_Kommunkod, PostalCodesEntity.Fields.ed_Lan,
                     PostalCodesEntity.Fields.ed_Lanskod, PostalCodesEntity.Fields.ed_name, PostalCodesEntity.Fields.ed_Postort);
-                queryPostalCodes.Criteria.AddCondition(PostalCodesEntity.Fields.ed_Postnummer, ConditionOperator.Equal, Address1_PostalCode);
+                queryPostalCodes.Criteria.AddCondition(PostalCodesEntity.Fields.ed_Postnummer, ConditionOperator.Equal, postalCode);
+                if (!string.IsNullOrEmpty(city))
+                    queryPostalCodes.Criteria.AddCondition(PostalCodesEntity.Fields.ed_Postort, ConditionOperator.Equal, city);
 
                 List<PostalCodesEntity> lPostalCodes = XrmRetrieveHelper.RetrieveMultiple<PostalCodesEntity>(localContext, queryPostalCodes);
 
                 if (lPostalCodes.Count > 1)
-                    localContext.Trace($"HandlePreContactUpdate(): Found multiple Postal Codes with ZIP Code: {Address1_PostalCode}");
+                    localContext.Trace($"HandlePreContactUpdate(): Found multiple Postal Codes with ZIP Code: {postalCode} and City: {city}");
                 else if (lPostalCodes.Count == 0)
-                    localContext.Trace($"HandlePreContactUpdate(): No Postal Codes with ZIP Code: {Address1_PostalCode}");
+                    localContext.Trace($"HandlePreContactUpdate(): No Postal Codes with ZIP Code: {postalCode} and City: {city}");
                 else
                 {
                     PostalCodesEntity ePostalCode = lPostalCodes.FirstOrDefault();
@@ -1484,7 +1490,6 @@ namespace Skanetrafiken.Crm.Entities
 
             SendDeleteMessageToMKL(localContext, entityId);
         }
-
 
         /// <summary>
         /// Perform merge on all the conflicting contacts
