@@ -12,7 +12,7 @@ using Generated = Skanetrafiken.Crm.Schema.Generated;
 
 namespace Skanetrafiken.Crm.Entities
 {
-    public class Role : Generated.Role
+    public class RoleEntity : Generated.Role
     {
 
     }
