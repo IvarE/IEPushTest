@@ -1,4 +1,5 @@
 using Endeavor.Crm;
+using Endeavor.Crm.Extensions;
 using Endeavor.Crm.Import;
 using log4net;
 using Microsoft.Crm.Sdk.Messages;
@@ -1149,15 +1150,14 @@ namespace Skanetrafiken.Import
 
                     try
                     {
-
                         // path to the csv file
-                        string path = "C:\\Users\\PGOEND\\Downloads\\crmNummer.csv";
+                        string path = "C:\\Users\\PGOEND\\Downloads\\duplicated contacts.csv";
 
                         string[] lines = System.IO.File.ReadAllLines(path);
                         List<string> lCrmNummer = new List<string>();
                         foreach (string line in lines)
                         {
-                            string[] columns = line.Split(',');
+                            string[] columns = line.Split(';');
                             foreach (string column in columns)
                             {
                                 lCrmNummer.Add(column);
@@ -1166,49 +1166,44 @@ namespace Skanetrafiken.Import
 
                         Console.WriteLine("Found " + lCrmNummer.Count + " Singapore Tickets to process.");
 
-                        queryContacts = new QueryExpression(Contact.EntityLogicalName);
-                        queryContacts.NoLock = true;
-                        queryContacts.ColumnSet.AddColumns(Contact.Fields.ed_MklId);
-                        queryContacts.Criteria.AddCondition(Contact.Fields.ed_MklId, ConditionOperator.NotNull);
-                        queryContacts.Criteria.AddCondition(Contact.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
+                        path = "C:\\Users\\PGOEND\\Downloads\\contacts.csv";
 
-                        lContacts = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts);
-                        Console.WriteLine("Found " + lContacts.Count + " Contacts to process.");
-
-
-                        List<Contact> lNewList = new List<Contact>();
-                        int q = 0;
-                        foreach (var item in lContacts)
+                        string[] linesC = System.IO.File.ReadAllLines(path);
+                        List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
+                        foreach (string line in linesC)
                         {
-                            q++;
-                            if (q % 5000 == 0)
-                                Console.WriteLine(q);
-                            if (lCrmNummer.Contains(item.ed_MklId))
-                                lNewList.Add(item);
-
+                            string[] columns = line.Split(';');
+                            list.Add(new KeyValuePair<string, string>(columns[0], columns[1]));
                         }
+                        Console.WriteLine("Found " + list.Count + " Contacts to process.");
 
-                        lContacts = new List<Contact>();
+
+                        //List<KeyValuePair<string, string>> lNewList = new List<KeyValuePair<string, string>>();
+                        //foreach (var item in list)
+                        //{
+                        //    if (lCrmNummer.Contains(item.Key))
+                        //        lNewList.Add(item);
+                        //}
 
                         // Create an ExecuteTransactionRequest object.
                         var requestToCreateRecords = new ExecuteTransactionRequest()
                         {
                             // Create an empty organization request collection.
                             Requests = new OrganizationRequestCollection(),
-                            ReturnResponses = true
+                            ReturnResponses = false
                         };
 
-                        var i = 0;
-                        foreach (var crmNummer in lCrmNummer)
+                        for (int i = 6179; i < lCrmNummer.Count; i++)
                         {
-                            i++;
-                            if(i % 1000 == 0)
+                            string crmNummer = lCrmNummer[i];
+                            if(requestToCreateRecords.Requests.Count != 0 && requestToCreateRecords.Requests.Count > 250)
                             {
-                                Console.WriteLine("Process " + requestToCreateRecords.Requests.Count);
+                                Console.WriteLine("Process " + requestToCreateRecords.Requests.Count + "i: " + i);
                                 // Execute all the requests in the request collection using a single web method call.
                                 try
                                 {
-                                    var responseForCreateRecords = (ExecuteTransactionResponse)localContext.OrganizationService.Execute(requestToCreateRecords);
+                                    localContext.OrganizationService.Execute(requestToCreateRecords);
+                                    requestToCreateRecords.Requests = new OrganizationRequestCollection();
                                 }
                                 catch (FaultException<OrganizationServiceFault> ex)
                                 {
@@ -1218,9 +1213,9 @@ namespace Skanetrafiken.Import
                                 }
                             }
 
-                            var contact = lNewList.FirstOrDefault(x => x.ed_MklId == crmNummer);
+                            var contact = list.FirstOrDefault(x => x.Key == crmNummer);
 
-                            if (contact == null)
+                            if (contact.Key == null)
                             {
                                 _log.ErrorFormat(CultureInfo.InvariantCulture, $"No Contact found with CRMNummer: {crmNummer}");
                                 continue;
@@ -1241,7 +1236,7 @@ namespace Skanetrafiken.Import
                                     {
                                         st_singaporeticket uSingaporeTicket = new st_singaporeticket();
                                         uSingaporeTicket.Id = singaporeTicket.Id;
-                                        uSingaporeTicket.st_ContactID = contact.ToEntityReference();
+                                        uSingaporeTicket.st_ContactID = new EntityReference(Contact.EntityLogicalName, new Guid(contact.Value));
 
                                         UpdateRequest updateRequest = new UpdateRequest { Target = uSingaporeTicket };
                                         requestToCreateRecords.Requests.Add(updateRequest);

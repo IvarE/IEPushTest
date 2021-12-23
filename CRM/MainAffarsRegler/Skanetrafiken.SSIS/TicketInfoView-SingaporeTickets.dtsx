@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="102"
-  DTS:VersionGUID="{086EBFF9-B398-4623-8E51-C560A4A19B5A}">
+  DTS:VersionBuild="144"
+  DTS:VersionGUID="{F6F6267B-BCEB-41B5-8061-DB29D542B131}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -23,11 +23,11 @@
       DTS:ObjectName="Dynamics 365 Connection">
       <DTS:ObjectData>
         <CrmConnectionManager
-          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekund.skanetrafiken.se/DKCRM;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=False;IgnoreCertificateErrors=False"
+          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekundacc.skanetrafiken.se/DKCRMACC;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=False;IgnoreCertificateErrors=False"
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADBpiYY+VtK3e/QSFXLIrJMAAAAAASAAACgAAAAEAAAAEJDpaSkLGBH4yrsl6UGbJ0gAAAA7Sgkn1cmR8FS/7TLdAySaQ5ZrWYChHw3yyTlZ6awxbAUAAAAwS/MCYCIXbU/GtUVUhss0RU+8Rs</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAR0wf2tAUixRQvWr+K8B4mAAAAAASAAACgAAAAEAAAAOf0d1gPDlFe1Vfa8dJMCE8gAAAAJHCGAfp00PGkWyJRtstHSV3iiHCnpc91A+K91cDerFIUAAAAHTTMeueCxKfFhCSaCOw9vxiVEwo</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -142,14 +142,25 @@
                   name="OLE DB Source Output">
                   <outputColumns>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[LastUpdated]"
-                      dataType="dbTimeStamp2"
+                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketAmount]"
+                      dataType="numeric"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[LastUpdated]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[LastUpdated]"
-                      name="LastUpdated"
-                      scale="7"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[TicketAmount]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketAmount]"
+                      name="TicketAmount"
+                      precision="13"
+                      scale="5"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[cgi_contactnumber]"
+                      length="100"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
+                      name="cgi_contactnumber"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
                       refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketId]"
@@ -160,6 +171,16 @@
                       length="7"
                       lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketId]"
                       name="TicketId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[LastUpdated]"
+                      dataType="dbTimeStamp2"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[LastUpdated]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[LastUpdated]"
+                      name="LastUpdated"
+                      scale="7"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
                       refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[PriceModel]"
@@ -232,17 +253,6 @@
                       name="OfferNameDetailed"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketAmount]"
-                      dataType="numeric"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[TicketAmount]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketAmount]"
-                      name="TicketAmount"
-                      precision="13"
-                      scale="5"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
                       refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[SalesChannelId]"
                       dataType="wstr"
                       errorOrTruncationOperation="Conversion"
@@ -290,14 +300,13 @@
                       name="HasRefund"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
-                      dataType="wstr"
+                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[MkId]"
+                      dataType="i4"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[cgi_contactnumber]"
-                      length="100"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
-                      name="cgi_contactnumber"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[MkId]"
+                      name="MkId"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
                       refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activationinterval_from]"
@@ -343,15 +352,26 @@
                   <externalMetadataColumns
                     isUsed="True">
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[LastUpdated]"
-                      dataType="dbTimeStamp2"
-                      name="LastUpdated"
-                      scale="7" />
+                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[TicketAmount]"
+                      dataType="numeric"
+                      name="TicketAmount"
+                      precision="13"
+                      scale="5" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[cgi_contactnumber]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_contactnumber" />
                     <externalMetadataColumn
                       refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[TicketId]"
                       dataType="wstr"
                       length="7"
                       name="TicketId" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[LastUpdated]"
+                      dataType="dbTimeStamp2"
+                      name="LastUpdated"
+                      scale="7" />
                     <externalMetadataColumn
                       refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[PriceModel]"
                       dataType="wstr"
@@ -388,12 +408,6 @@
                       length="255"
                       name="OfferNameDetailed" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[TicketAmount]"
-                      dataType="numeric"
-                      name="TicketAmount"
-                      precision="13"
-                      scale="5" />
-                    <externalMetadataColumn
                       refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[SalesChannelId]"
                       dataType="wstr"
                       length="50"
@@ -419,11 +433,6 @@
                       refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
                       dataType="i4"
                       name="MkId" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[cgi_contactnumber]"
-                      dataType="wstr"
-                      length="100"
-                      name="cgi_contactnumber" />
                     <externalMetadataColumn
                       refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[activationinterval_from]"
                       dataType="dbTimeStamp2"
@@ -540,6 +549,11 @@
                       lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[HasRefund]"
                       name="HasRefund" />
                     <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[MkId]"
+                      dataType="i4"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[MkId]"
+                      name="MkId" />
+                    <outputColumn
                       refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[cgi_contactnumber]"
                       dataType="wstr"
                       length="100"
@@ -604,7 +618,7 @@
                   dataType="System.Int32"
                   description="Specifies how data is written to CDS/Dynamics CRM server."
                   name="ActionType"
-                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.DestinationActionType">5</property>
+                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.DestinationActionType">1</property>
                 <property
                   dataType="System.Boolean"
                   description="Specifies whether the values of CDS/CRM lookup fields should be removed if the reference records cannot be found. "
@@ -620,7 +634,7 @@
                   description="Specify the matching criteria to be used when performing an update or upsert. "
                   expressionType="Notify"
                   name="RecordMatchingCriteria"
-                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.RecordMatchingCriteria">4</property>
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.RecordMatchingCriteria">0</property>
                 <property
                   dataType="System.String"
                   description="Specify the key fields to be used to determine the matching records that exist in CDS/CRM for either Upsert/Update action or source duplicate optimization."
@@ -667,7 +681,7 @@
                   dataType="System.Int32"
                   description="Specifies the number of records to be sent to CDS/Dynamics CRM server in each service call."
                   expressionType="Notify"
-                  name="BatchSize">100</property>
+                  name="BatchSize">250</property>
                 <property
                   dataType="System.Int32"
                   description="Specify the total number or concurrent threads to write to CDS/CRM server simultaneously. "
@@ -685,22 +699,22 @@
                   dataType="System.Boolean"
                   description="Specify whethere to tentatively disable entity change tracking (auditing)"
                   expressionType="Notify"
-                  name="TentativelyDisableEntityAuditing">true</property>
+                  name="TentativelyDisableEntityAuditing">false</property>
                 <property
-                  dataType="System.String"
+                  dataType="System.Null"
                   description="Alternate Key to be used for Upsert or Update action."
                   expressionType="Notify"
-                  name="AlternateKey">ed_singaporekey</property>
+                  name="AlternateKey" />
                 <property
                   dataType="System.Boolean"
                   description="Specify whether to tentatively disable relevant plugins"
                   expressionType="Notify"
-                  name="TentativelyDisableRelevantPlugins">true</property>
+                  name="TentativelyDisableRelevantPlugins">false</property>
                 <property
                   dataType="System.Boolean"
                   description="Specify whether to tentatively disable relevant workflows"
                   expressionType="Notify"
-                  name="TentativelyDisableRelevantWorkflows">true</property>
+                  name="TentativelyDisableRelevantWorkflows">false</property>
               </properties>
               <connections>
                 <connection
@@ -718,6 +732,28 @@
                   hasSideEffects="true"
                   name="Input">
                   <inputColumns>
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TicketAmount]"
+                      cachedDataType="numeric"
+                      cachedName="TicketAmount"
+                      cachedPrecision="13"
+                      cachedScale="5"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketprice]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketAmount]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TicketId]"
+                      cachedDataType="wstr"
+                      cachedLength="7"
+                      cachedName="TicketId"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketid]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketId]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[cgi_contactnumber]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="cgi_contactnumber"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_crmnummer]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[activationinterval_from]"
                       cachedDataType="dbTimeStamp2"
@@ -747,6 +783,12 @@
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_blockeddate]"
                       lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[blockedDate]" />
                     <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[HasGroupDiscount]"
+                      cachedDataType="i4"
+                      cachedName="HasGroupDiscount"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_hasgroupdiscount]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]" />
+                    <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[HasRefund]"
                       cachedDataType="i4"
                       cachedName="HasRefund"
@@ -760,39 +802,12 @@
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_lastupdated]"
                       lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[LastUpdated]" />
                     <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[HasGroupDiscount]"
-                      cachedDataType="i4"
-                      cachedName="HasGroupDiscount"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_hasgroupdiscount]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]" />
-                    <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[OfferNameDetailed]"
                       cachedDataType="wstr"
                       cachedLength="255"
                       cachedName="OfferNameDetailed"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_offernamedetailed]"
                       lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[PriceModel]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="PriceModel"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_pricemodel]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[PriceModel]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[PriceModelPriceId]"
-                      cachedDataType="wstr"
-                      cachedLength="30"
-                      cachedName="PriceModelPriceId"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_pricemodelprice]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[OfferName]"
-                      cachedDataType="wstr"
-                      cachedLength="50"
-                      cachedName="OfferName"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_singtickettype]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[OfferName]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[SalesChannelId]"
                       cachedDataType="wstr"
@@ -828,34 +843,33 @@
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_travelvalidityintervalto]"
                       lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_to]" />
                     <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[PriceModel]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="PriceModel"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_pricemodel]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[PriceModel]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[PriceModelPriceId]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="PriceModelPriceId"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_pricemodelprice]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[OfferName]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="OfferName"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_singtickettype]"
+                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[OfferName]" />
+                    <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[DataCreatedDate]"
                       cachedDataType="dbTimeStampOffset"
                       cachedName="DataCreatedDate"
                       cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketcreated]"
                       lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[DataCreatedDate]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TicketAmount]"
-                      cachedDataType="numeric"
-                      cachedName="TicketAmount"
-                      cachedPrecision="13"
-                      cachedScale="5"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketprice]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketAmount]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TicketId]"
-                      cachedDataType="wstr"
-                      cachedLength="7"
-                      cachedName="TicketId"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketid]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketId]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[cgi_contactnumber]"
-                      cachedDataType="wstr"
-                      cachedLength="100"
-                      cachedName="cgi_contactnumber"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_crmnummer]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
                   </inputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -870,12 +884,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">systemuser</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">false</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -889,12 +897,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -908,12 +910,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -928,12 +924,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -947,12 +937,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -967,12 +951,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -986,12 +964,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1005,12 +977,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1024,12 +990,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1044,12 +1004,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1064,12 +1018,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1083,12 +1031,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">ed_skakort</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1102,12 +1044,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1121,12 +1057,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">cgi_travelcard</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1140,12 +1070,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1159,12 +1083,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1178,12 +1096,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1197,12 +1109,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">false</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1216,12 +1122,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">false</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1235,12 +1135,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">systemuser;team</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1255,12 +1149,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1274,12 +1162,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">contact</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                         <property
                           dataType="System.String"
                           name="LookupSettings"></property>
@@ -1297,12 +1179,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1317,12 +1193,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1337,12 +1207,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1356,12 +1220,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1375,12 +1233,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1394,12 +1246,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1413,12 +1259,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1433,12 +1273,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1454,12 +1288,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1473,12 +1301,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1492,12 +1314,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1511,12 +1327,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1530,12 +1340,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1549,12 +1353,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1568,12 +1366,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">transactioncurrency</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1587,12 +1379,6 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                   </externalMetadataColumns>
@@ -1673,13 +1459,13 @@
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="234,42"
-          Id="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets"
-          TopLeft="84,61" />
-        <NodeLayout
           Size="202,42"
           Id="Package\Upsert Singapore Tickets\Upsert Singapore Tickets"
           TopLeft="330,226" />
+        <NodeLayout
+          Size="234,42"
+          Id="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets"
+          TopLeft="84,61" />
         <EdgeLayout
           Id="Package\Upsert Singapore Tickets.Paths[OLE DB Source Output]"
           TopLeft="201,103">
