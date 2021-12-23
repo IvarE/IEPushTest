@@ -194,28 +194,35 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             Endeavor.Skanetrafiken.Account.showOvrigInformation(formContext);
         },
 
-        onChangePostalCode: function (executionContext, postalCodeLogicalName) {
+        onChangePostalCodeCity: function (executionContext, postalCodeLogicalName, cityLogicalName) {
 
             var formContext = executionContext.getFormContext();
             var postalCode = Endeavor.formscriptfunctions.GetValue(postalCodeLogicalName, formContext);
+            var city = Endeavor.formscriptfunctions.GetValue(cityLogicalName, formContext);
 
-            var fetchXml = [
-                "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true'>",
-                "  <entity name='ed_postnummer'>",
-                "    <attribute name='ed_postnummerid' />",
-                "    <attribute name='ed_name' />",
-                "    <attribute name='ed_postort' />",
-                "    <attribute name='ed_lanskod' />",
-                "    <attribute name='ed_lan' />",
-                "    <attribute name='ed_kommunkod' />",
-                "    <attribute name='ed_kommun' />",
-                "    <filter type='and'>",
-                "      <condition attribute='ed_postnummer' operator='eq' value='", postalCode, "'/>",
-                "    </filter>",
-                "  </entity>",
-                "</fetch>",
-            ].join("");
+            if ((postalCode == null || postalCode == "") && (city == null || city == ""))
+                return;
 
+            var fetchXml =
+                "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' no-lock='true'>" +
+                "  <entity name='ed_postnummer'>" +
+                "    <attribute name='ed_postnummerid' />" +
+                "    <attribute name='ed_name' />" +
+                "    <attribute name='ed_postort' />" +
+                "    <attribute name='ed_postnummer' />" +
+                "    <attribute name='ed_lanskod' />" +
+                "    <attribute name='ed_lan' />" +
+                "    <attribute name='ed_kommunkod' />" +
+                "    <attribute name='ed_kommun' />" +
+                "    <filter type='and'>";
+
+            if (postalCode != null && postalCode != "")
+                fetchXml += "      <condition attribute='ed_postnummer' operator='eq' value='" + postalCode + "'/>";
+
+            if (city != null && city != "")
+                fetchXml += "      <condition attribute='ed_postort' operator='eq' value='" + city + "'/>";
+
+            fetchXml += "    </filter>" + "  </entity>" + "</fetch>";
             fetchXml = "?fetchXml=" + fetchXml;
 
             Xrm.WebApi.retrieveMultipleRecords("ed_postnummer", fetchXml).then(
@@ -223,23 +230,36 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
                     if (result.entities.length == 1) {
                         var name = result.entities[0].ed_name;
+                        var postNummer = result.entities[0].ed_postnummer;
                         var postOrt = result.entities[0].ed_postort;
                         var lansKod = result.entities[0].ed_lanskod;
                         var lan = result.entities[0].ed_lan;
                         var kommunKod = result.entities[0].ed_kommunkod;
                         var kommun = result.entities[0].ed_kommun;
 
-                        Endeavor.formscriptfunctions.SetValue("address1_name", name, formContext);
-                        Endeavor.formscriptfunctions.SetValue("address1_city", postOrt, formContext);
-                        Endeavor.formscriptfunctions.SetValue("ed_address1_countynumber", parseInt(lansKod), formContext);
-                        Endeavor.formscriptfunctions.SetValue("address1_county", lan, formContext);
-                        Endeavor.formscriptfunctions.SetValue("ed_address1_communitynumber", parseInt(kommunKod), formContext);
-                        Endeavor.formscriptfunctions.SetValue("address1_stateorprovince", kommun, formContext);
+                        if (postalCodeLogicalName.indexOf('1') > -1 && cityLogicalName.indexOf('1') > -1) {
+                            Endeavor.formscriptfunctions.SetValue("address1_name", name, formContext);
+                            Endeavor.formscriptfunctions.SetValue("address1_postalcode", postNummer, formContext);
+                            Endeavor.formscriptfunctions.SetValue("address1_city", postOrt, formContext);
+                            Endeavor.formscriptfunctions.SetValue("ed_address1_countynumber", parseInt(lansKod), formContext);
+                            Endeavor.formscriptfunctions.SetValue("address1_county", lan, formContext);
+                            Endeavor.formscriptfunctions.SetValue("ed_address1_communitynumber", parseInt(kommunKod), formContext);
+                            Endeavor.formscriptfunctions.SetValue("address1_stateorprovince", kommun, formContext);
+                        }
+                        else if (postalCodeLogicalName.indexOf('2') > -1 && cityLogicalName.indexOf('2') > -1) {
+                            Endeavor.formscriptfunctions.SetValue("address2_name", name, formContext);
+                            Endeavor.formscriptfunctions.SetValue("address2_postalcode", postNummer, formContext);
+                            Endeavor.formscriptfunctions.SetValue("address2_city", postOrt, formContext);
+                            Endeavor.formscriptfunctions.SetValue("ed_address1_countynumber", parseInt(lansKod), formContext);
+                            Endeavor.formscriptfunctions.SetValue("address2_county", lan, formContext);
+                            Endeavor.formscriptfunctions.SetValue("ed_address1_communitynumber", parseInt(kommunKod), formContext);
+                            Endeavor.formscriptfunctions.SetValue("address2_stateorprovince", kommun, formContext);
+                        }
                     }
-                    else if (result.entities.length == 0)
-                        Endeavor.formscriptfunctions.AlertCustomDialog("Ingen postnummerkommun hittades med värdet " + postalCode + ".");
+                    else if (result.entities.length == 0) 
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Inget postnummer kommun hittades med postnummer: " + postalCode + " och stad: " + city + ". Vänligen överväg att ange stad och postnummer.");
                     else if (result.entities.length > 1)
-                        Endeavor.formscriptfunctions.AlertCustomDialog("Flera postnummer kommun hittades med värdet " + postalCode + ".");
+                        Endeavor.formscriptfunctions.AlertCustomDialog("Flera postnummer kommun hittades med postnummer: " + postalCode + " och stad: " + city + ". Vänligen överväg att ange stad och postnummer.");
                 },
                 function (error) {
                     Endeavor.formscriptfunctions.ErrorCustomDialog(error.message, "Generic Error");

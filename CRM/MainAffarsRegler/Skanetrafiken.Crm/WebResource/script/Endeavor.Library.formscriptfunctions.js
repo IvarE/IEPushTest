@@ -411,7 +411,7 @@ Endeavor.formscriptfunctions = {
     AlertCustomDialog: function (msgText) {
 
         var message = { confirmButtonLabel: "Ok", text: msgText };
-        var alertOptions = { height: 150, width: 280 };
+        var alertOptions = { height: 200, width: 500 };
 
         if (typeof (Xrm) == "undefined")
             Xrm = parent.Xrm;

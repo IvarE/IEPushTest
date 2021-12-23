@@ -258,8 +258,8 @@
     <Compile Include="..\Skanetrafiken.Crm\Entities\ReturnMessageWebApiEntity.cs">
       <Link>Entities\ReturnMessageWebApiEntity.cs</Link>
     </Compile>
-    <Compile Include="..\Skanetrafiken.Crm\Entities\Role.cs">
-      <Link>Entities\Role.cs</Link>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\RoleEntity.cs">
+      <Link>Entities\RoleEntity.cs</Link>
     </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\SentTextMessageEntity.cs">
       <Link>Entities\SentTextMessageEntity.cs</Link>

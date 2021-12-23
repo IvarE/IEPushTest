@@ -168,7 +168,7 @@ namespace CGIXrmCreateCaseService.Case
 
 
             customer.SocialSecurityNumber = request.CustomerSocialSecurityNumber;
-            if (request.CustomerSocialSecurityNumber.Length == 8)
+            if (request.CustomerSocialSecurityNumber == null || request.CustomerSocialSecurityNumber.Length != 10 && request.CustomerSocialSecurityNumber.Length != 12)
                 customer.SwedishSocialSecurityNumber = false;
             else
                 customer.SwedishSocialSecurityNumber = true;
