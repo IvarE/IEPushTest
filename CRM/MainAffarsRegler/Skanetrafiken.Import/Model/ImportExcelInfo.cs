@@ -7,6 +7,12 @@ namespace Skanetrafiken.Import.Model
         public List<ExcelColumn> lColumns { get; set; }
         public List<List<ExcelLineData>> lData { get; set; }
 
+        public ImportExcelInfo()
+        {
+            lColumns = null;
+            lData = null;
+        }
+
         public ImportExcelInfo(List<ExcelColumn> lC, List<List<ExcelLineData>> lD)
         {
             lColumns = lC;

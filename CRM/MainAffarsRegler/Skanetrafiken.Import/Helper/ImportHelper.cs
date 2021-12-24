@@ -1391,6 +1391,278 @@ namespace Skanetrafiken.Import
             Console.WriteLine("Done.");
         }
 
+        public static List<OrganizationRequest>ImportSingaporeTicket(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo)
+        {
+            if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
+                return new List<OrganizationRequest>();
+            }
+
+            OptionMetadataCollection colOpSingaporeTicket = GetOptionSetMetadata(localContext, st_singaporeticket.EntityLogicalName, st_singaporeticket.Fields.st_SingTicketType);
+            List<OrganizationRequest> lUpsertRequests = new List<OrganizationRequest>();
+
+            Console.Write("Creating Batch of Singapore Tickets... ");
+            using (ProgressBar progress = new ProgressBar())
+            {
+                for (int i = 0; i < importExcelInfo.lData.Count; i++)
+                {
+                    try
+                    {
+                        progress.Report((double)i / (double)importExcelInfo.lData.Count);
+                        List<ExcelLineData> line = importExcelInfo.lData[i];
+
+                        string ticketId = GetValueFromLine(importExcelInfo, line, "TicketId");
+                        string crmNummer = GetValueFromLine(importExcelInfo, line, "cgi_contactnumber");
+
+                        // Set alternate Key
+                        KeyAttributeCollection altKey = new KeyAttributeCollection();
+                        altKey.Add("st_ticketid", ticketId);
+                        altKey.Add("ed_crmnummer", crmNummer);
+
+                        Entity upsertSingaporeTicket = new Entity("st_singaporeticket", altKey);
+
+                        if (line.Count != importExcelInfo.lColumns.Count)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The line " + (i + 1) + " was not imported, because the data count is not equal to the column count.");
+                            continue;
+                        }
+
+                        for (int j = 0; j < importExcelInfo.lColumns.Count; j++)
+                        {
+                            ExcelLineData selectedData = line[j];
+
+                            if (selectedData == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
+                                continue;
+                            }
+
+                            ExcelColumn selectedColumn = GetSelectedExcelColumn(importExcelInfo.lColumns, j);
+
+                            if (selectedColumn == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
+                                continue;
+                            }
+                            st_singaporeticket x = new st_singaporeticket();
+                            string name = selectedColumn.name;
+                            string value = selectedData.value;
+
+                            if (value == null || string.IsNullOrEmpty(value))
+                                continue;
+
+                            switch (name)
+                            {
+                                case "LastUpdated":
+
+                                    DateTime lastUpdated = DateTime.MinValue;
+
+                                    if (DateTime.TryParse(value, out lastUpdated))
+                                    {
+                                        if (lastUpdated != DateTime.MinValue)
+                                            upsertSingaporeTicket["ed_lastupdated"] = lastUpdated;
+                                    }
+                                    else
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
+                                    
+                                    break;
+                                case "TicketId":
+                                case "cgi_contactnumber":
+                                    break;
+                                case "PriceModel":
+                                    upsertSingaporeTicket["st_pricemodel"] = value;
+                                    break;
+                                case "PriceModelPriceId":
+                                    upsertSingaporeTicket["st_pricemodelprice"] = value;
+                                    break;
+                                case "DataCreatedDate":
+
+                                    DateTime ticketCreated = DateTime.MinValue;
+
+                                    if (DateTime.TryParse(value, out ticketCreated))
+                                    {
+                                        if (ticketCreated != DateTime.MinValue)
+                                            upsertSingaporeTicket["st_ticketcreated"] = ticketCreated;
+                                    }
+                                    else
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
+
+                                    break;
+                                case "activatedDate":
+
+                                    DateTime ticketActivated = DateTime.MinValue;
+
+                                    if (DateTime.TryParse(value, out ticketActivated))
+                                    {
+                                        if (ticketActivated != DateTime.MinValue)
+                                            upsertSingaporeTicket["ed_ticketactivated"] = ticketActivated;
+                                    }
+                                    else
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
+
+                                    break;
+                                case "blockedDate":
+
+                                    DateTime blockedDate = DateTime.MinValue;
+
+                                    if (DateTime.TryParse(value, out blockedDate))
+                                    {
+                                        if (blockedDate != DateTime.MinValue)
+                                            upsertSingaporeTicket["ed_blockeddate"] = blockedDate;
+                                    }
+                                    else
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
+
+                                    break;
+                                case "OfferName":
+
+                                    int? optionSetST = GetOptionSetValueByName(colOpSingaporeTicket, value);
+
+                                    if (optionSetST == null)
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM.");
+
+                                    if (optionSetST != null)
+                                        upsertSingaporeTicket["st_singtickettype"] = new OptionSetValue((int)optionSetST);
+
+                                    break;
+                                case "OfferNameDetailed":
+                                    upsertSingaporeTicket["ed_offernamedetailed"] = value;
+                                    break;
+                                case "TicketAmount":
+
+                                    decimal ticketPrice = decimal.MinValue;
+
+                                    if (decimal.TryParse(value, out ticketPrice))
+                                    {
+                                        if (ticketPrice != decimal.MinValue)
+                                            upsertSingaporeTicket["st_ticketprice"] = new Money(ticketPrice);
+                                    }
+                                    else
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a Money value.");
+
+                                    break;
+                                case "SalesChannelId":
+                                    upsertSingaporeTicket["ed_saleschannel"] = value;
+                                    break;
+                                case "BearerCategory":
+                                    upsertSingaporeTicket["ed_bearercategory"] = value;
+                                    break;
+                                case "HasGroupDiscount":
+
+                                    bool? hasGroupDiscount = null;
+
+                                    if (value == "1")
+                                        hasGroupDiscount = true;
+                                    else if (value == "0")
+                                        hasGroupDiscount = false;
+
+                                    if(hasGroupDiscount != null)
+                                        upsertSingaporeTicket["ed_hasgroupdiscount"] = hasGroupDiscount;
+
+                                    break;
+                                case "TravellerCount":
+
+                                    int travellerCount = int.MinValue;
+
+                                    if (int.TryParse(value, out travellerCount))
+                                    {
+                                        if (travellerCount != int.MinValue)
+                                            upsertSingaporeTicket["ed_travellerscount"] = travellerCount;
+                                    }
+                                    else
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a int value.");
+
+                                    break;
+                                case "HasRefund":
+
+                                    bool? hasRefund = null;
+
+                                    if (value == "1")
+                                        hasRefund = true;
+                                    else if (value == "0")
+                                        hasRefund = false;
+
+                                    if (hasRefund != null)
+                                        upsertSingaporeTicket["ed_hasrefund"] = hasRefund;
+
+                                    break;
+                                case "activationinternal_from":
+
+                                    DateTime activationFrom = DateTime.MinValue;
+
+                                    if (DateTime.TryParse(value, out activationFrom))
+                                    {
+                                        if (activationFrom != DateTime.MinValue)
+                                            upsertSingaporeTicket["ed_activationintervalfrom"] = activationFrom;
+                                    }
+                                    else
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
+
+                                    break;
+                                case "activationinternal_to":
+
+                                    DateTime activationTo = DateTime.MinValue;
+
+                                    if (DateTime.TryParse(value, out activationTo))
+                                    {
+                                        if (activationTo != DateTime.MinValue)
+                                            upsertSingaporeTicket["ed_activationintervalto"] = activationTo;
+                                    }
+                                    else
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
+
+                                    break;
+                                case "travelvalidityinternal_from":
+
+                                    DateTime travelValidityFrom = DateTime.MinValue;
+
+                                    if (DateTime.TryParse(value, out travelValidityFrom))
+                                    {
+                                        if (travelValidityFrom != DateTime.MinValue)
+                                            upsertSingaporeTicket["ed_travelvalidityintervalfrom"] = travelValidityFrom;
+                                    }
+                                    else
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
+
+                                    break;
+                                case "travelvalidityinternal_to":
+
+                                    DateTime travelValidityTo = DateTime.MinValue;
+
+                                    if (DateTime.TryParse(value, out travelValidityTo))
+                                    {
+                                        if (travelValidityTo != DateTime.MinValue)
+                                            upsertSingaporeTicket["ed_travelvalidityintervalto"] = travelValidityTo;
+                                    }
+                                    else
+                                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Line " + (i + 1) + ": Couldn't parse " + value + " to a DateTime value.");
+
+                                    break;
+
+                            default:
+                                    _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
+                                    break;
+                            }
+                        }
+
+                        UpsertRequest request = new UpsertRequest()
+                        {
+                            Target = upsertSingaporeTicket
+                        };
+
+                        lUpsertRequests.Add(request);
+                    }
+                    catch (Exception e)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Import Singapore Tickets Exception. Details: " + e.Message);
+                    }
+                }
+            }
+            Console.WriteLine("Done.");
+            return lUpsertRequests;
+        }
+
         #region Small Helper Methods
 
         public static string cleanMobileTelefon(string value)

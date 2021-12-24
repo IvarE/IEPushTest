@@ -1150,8 +1150,80 @@ namespace Skanetrafiken.Import
 
                     try
                     {
+                        try
+                        {
+                            crmContext.ClearChanges();
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload Singapore Tickets--------------");
+
+                            string fileName = "first million.csv";
+                            relativeExcelPath = "C:\\Users\\Pedro\\Downloads\\";
+                            ImportExcelInfo importExcelInfo = ImportHelper.HandleExcelInformationStreamReader(relativeExcelPath, fileName);
+
+                            bool isParsingOk = ImportHelper.GetParsingStatus(importExcelInfo);
+
+                            if (isParsingOk)
+                            {
+                                ImportExcelInfo auxImportExcel = new ImportExcelInfo();
+                                auxImportExcel.lColumns = importExcelInfo.lColumns;
+
+                                // split requests according to BatchSize
+                                int batchSize = 10000;
+                                int offset = 0;
+                                while (importExcelInfo.lData.Count > offset)
+                                {
+                                    var tempRequestSet = importExcelInfo.lData.Skip(offset).Take(batchSize).ToList();
+                                    auxImportExcel.lData = tempRequestSet;
+
+                                    List<OrganizationRequest> lRequests = ImportHelper.ImportSingaporeTicket(localContext, auxImportExcel);
+                                    Console.WriteLine("Sending Batch of Singapore Tickets to Sekund...");
+
+                                    // Execute all the requests in the request collection using a single web method call.
+                                    try
+                                    {
+                                        ExecuteTransactionResponse responses = Helper.ExecuteMultipleRequestsTransaction(localContext, lRequests, true);
+                                    }
+                                    catch (FaultException<OrganizationServiceFault> fault)
+                                    {
+                                        // Check if the maximum batch size has been exceeded. The maximum batch size is only included in the fault if it
+                                        // the input request collection count exceeds the maximum batch size.
+                                        if (fault.Detail.ErrorDetails.Contains("MaxBatchSize"))
+                                        {
+                                            int maxBatchSize = Convert.ToInt32(fault.Detail.ErrorDetails["MaxBatchSize"]);
+                                            if (maxBatchSize < auxImportExcel.lData.Count)
+                                            {
+                                                // Here you could reduce the size of your request collection and re-submit the ExecuteMultiple request.
+                                                // For this sample, that only issues a few requests per batch, we will just print out some info. However,
+                                                // this code will never be executed because the default max batch size is 1000.
+                                                batchSize = maxBatchSize;
+                                                continue;
+                                            }
+                                        }
+                                    }
+
+                                    // increment requests counter
+                                    offset += tempRequestSet.Count();
+                                }
+
+                                //SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
+                                //ImportHelper.LogCrmContextMultipleResponses(localContext, responses);
+
+                                Console.WriteLine("Batch Sent. Please check logs.");
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
+
+
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload Singapore Tickets--------------");
+                        }
+                        catch (Exception e)
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Singapore Tickets Records. Details: " + e.Message);
+                            throw;
+                        }
+
+
                         // path to the csv file
-                        string path = "C:\\Users\\PGOEND\\Downloads\\duplicated contacts.csv";
+                        string path = "C:\\Users\\PGOEND\\Downloads\\first million.csv";
 
                         string[] lines = System.IO.File.ReadAllLines(path);
                         List<string> lCrmNummer = new List<string>();
