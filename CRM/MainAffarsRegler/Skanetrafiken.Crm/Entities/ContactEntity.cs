@@ -1320,6 +1320,8 @@ namespace Skanetrafiken.Crm.Entities
                 return;
             }
 
+       
+
             FilterExpression conflictFilter = new FilterExpression(LogicalOperator.Or);
             //25/01/2021 - Chris: New rule where we can have multiple COntacts with same SSN in cgi_socialsecuritynumber (DevOps: 3292)
             //if (Contains(ContactEntity.Fields.cgi_socialsecuritynumber) && ed_HasSwedishSocialSecurityNumber.HasValue && ed_HasSwedishSocialSecurityNumber.Value)
@@ -1335,14 +1337,76 @@ namespace Skanetrafiken.Crm.Entities
             //    };
             //    conflictFilter.AddFilter(socSecFilter);
             //}
+
+
+            
+
             if (Contains(ContactEntity.Fields.EMailAddress2))
             {
+
+                var searchVar = ContactEntity.Fields.ed_PrivateCustomerContact;
+                var searchValue = ed_PrivateCustomerContact;
+                var conditionOp = ConditionOperator.Equal;
+
+                if (Contains(ContactEntity.Fields.ed_PrivateCustomerContact) && ed_PrivateCustomerContact == true)
+                {
+                    searchVar = ContactEntity.Fields.ed_PrivateCustomerContact;
+                    searchValue = ed_PrivateCustomerContact;
+                }
+                else if (Contains(ContactEntity.Fields.ed_Kontaktperson) && ed_Kontaktperson == true)
+                {
+                    searchVar = ContactEntity.Fields.ed_Kontaktperson;
+                    searchValue = ed_Kontaktperson;
+                }
+                else if (Contains(ContactEntity.Fields.ed_Epostmottagare) && ed_Epostmottagare == true)
+                {
+                    searchVar = ContactEntity.Fields.ed_Epostmottagare;
+                    searchValue = ed_Epostmottagare;
+                }
+                else if (Contains(ContactEntity.Fields.ed_BusinessContact) && ed_BusinessContact == true)
+                {
+                    searchVar = ContactEntity.Fields.ed_BusinessContact;
+                    searchValue = ed_BusinessContact;
+                }
+                else if (Contains(ContactEntity.Fields.ed_InfotainmentContact) && ed_InfotainmentContact == true)
+                {
+                    searchVar = ContactEntity.Fields.ed_InfotainmentContact;
+                    searchValue = ed_InfotainmentContact;
+                }
+                else if (Contains(ContactEntity.Fields.ed_CollaborationContact) && ed_CollaborationContact == true)
+                {
+                    searchVar = ContactEntity.Fields.ed_CollaborationContact;
+                    searchValue = ed_CollaborationContact;
+                }
+                else if (Contains(ContactEntity.Fields.ed_AgentContact) && ed_AgentContact == true)
+                {
+                    searchVar = ContactEntity.Fields.ed_AgentContact;
+                    searchValue = ed_AgentContact;
+                }
+                else
+                {
+                    searchVar = ContactEntity.Fields.ed_UpdatedFB;
+                    searchValue = ed_UpdatedFB;
+                    conditionOp = ConditionOperator.NotEqual;
+                }
+
+                localContext.Trace($"searchVar: {searchVar}.conditionOp: {conditionOp} searchValue: {searchValue} ");
+
+                FilterExpression customerContext = new FilterExpression(LogicalOperator.And)
+                {
+                    Conditions =
+                        {
+                            new ConditionExpression(searchVar, conditionOp, searchValue)
+                        }
+                };
+
                 FilterExpression emailFilter = new FilterExpression(LogicalOperator.Or)
                 {
                     Conditions =
                         {
                             new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, EMailAddress2),
                             new ConditionExpression(ContactEntity.Fields.EMailAddress2, ConditionOperator.Equal, EMailAddress2)
+
                         }
                 };
                 FilterExpression nameFilter = new FilterExpression(LogicalOperator.Or)
@@ -1370,17 +1434,19 @@ namespace Skanetrafiken.Crm.Entities
                     {
                         new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
                         new ConditionExpression(ContactEntity.Fields.ContactId, ConditionOperator.NotEqual, ContactId)
+
                     },
                     Filters =
                         {
                             emailFilter,
-                            nameFilter
+                            nameFilter,
+                            customerContext
                         }
                 };
                 conflictFilter.AddFilter(emailNameFilter);
             }
 
-            ContactEntity conflict = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, new ColumnSet(ContactEntity.Fields.cgi_socialsecuritynumber, ContactEntity.Fields.EMailAddress2, ContactEntity.Fields.EMailAddress1, ContactEntity.Fields.FirstName, ContactEntity.Fields.LastName), conflictFilter);
+            ContactEntity conflict = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, new ColumnSet(ContactEntity.Fields.cgi_socialsecuritynumber, ContactEntity.Fields.EMailAddress2, ContactEntity.Fields.EMailAddress1, ContactEntity.Fields.FirstName, ContactEntity.Fields.LastName, ContactEntity.Fields.ed_PrivateCustomerContact, ContactEntity.Fields.ed_Kontaktperson, ContactEntity.Fields.ed_Epostmottagare, ContactEntity.Fields.ed_BusinessContact, ContactEntity.Fields.ed_InfotainmentContact, ContactEntity.Fields.ed_CollaborationContact, ContactEntity.Fields.ed_AgentContact), conflictFilter);
             if (conflict != null)
             {
                 if (infoSource.Equals(Generated.ed_informationsource.Folkbokforing))
