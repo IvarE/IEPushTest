@@ -1155,63 +1155,50 @@ namespace Skanetrafiken.Import
                             crmContext.ClearChanges();
                             _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload Singapore Tickets--------------");
 
-                            string fileName = "first million.csv";
+                            List<string> fileNames = new List<string>();
+                            fileNames.Add("first million.csv");
+                            fileNames.Add("second million.csv");
+                            fileNames.Add("third million.csv");
+                            fileNames.Add("fourth million.csv");
+                            fileNames.Add("fifth million.csv");
+                            fileNames.Add("sixth million.csv");
                             relativeExcelPath = "C:\\Users\\Pedro\\Downloads\\";
-                            ImportExcelInfo importExcelInfo = ImportHelper.HandleExcelInformationStreamReader(relativeExcelPath, fileName);
 
-                            bool isParsingOk = ImportHelper.GetParsingStatus(importExcelInfo);
+                            
+                            var querySingaporeTickets = new QueryExpression(st_singaporeticket.EntityLogicalName);
+                            querySingaporeTickets.NoLock = true;
+                            querySingaporeTickets.ColumnSet = new ColumnSet(st_singaporeticket.Fields.ed_ActivationIntervalFrom, st_singaporeticket.Fields.ed_ActivationIntervalTo,
+                                st_singaporeticket.Fields.ed_BearerCategory, st_singaporeticket.Fields.ed_BlockedDate, st_singaporeticket.Fields.ed_CRMNummer, st_singaporeticket.Fields.ed_HasGroupDiscount,
+                                st_singaporeticket.Fields.ed_HasRefund, st_singaporeticket.Fields.ed_LastUpdated, st_singaporeticket.Fields.ed_OfferNameDetailed, st_singaporeticket.Fields.ed_SalesChannel,
+                                st_singaporeticket.Fields.ed_TicketActivated, st_singaporeticket.Fields.ed_TravellersCount, st_singaporeticket.Fields.ed_TravelValidityIntervalFrom,
+                                st_singaporeticket.Fields.ed_TravelValidityIntervalTo, st_singaporeticket.Fields.st_ContactID, st_singaporeticket.Fields.st_name, st_singaporeticket.Fields.st_PriceModel,
+                                st_singaporeticket.Fields.st_PriceModelPrice, st_singaporeticket.Fields.st_SingTicketType, st_singaporeticket.Fields.st_TicketActivated, st_singaporeticket.Fields.st_TicketCreated,
+                                st_singaporeticket.Fields.st_TicketID, st_singaporeticket.Fields.st_TicketPrice);
 
-                            if (isParsingOk)
+                            List<Entity> records = new List<Entity>();
+
+                            RetrieveMultipleResponse response;
+                            do
                             {
-                                ImportExcelInfo auxImportExcel = new ImportExcelInfo();
-                                auxImportExcel.lColumns = importExcelInfo.lColumns;
+                                RetrieveMultipleRequest request = new RetrieveMultipleRequest();
+                                request.Query = querySingaporeTickets;
 
-                                // split requests according to BatchSize
-                                int batchSize = 10000;
-                                int offset = 0;
-                                while (importExcelInfo.lData.Count > offset)
+                                response = (RetrieveMultipleResponse)localContext.OrganizationService.Execute(request);
+
+                                if (response.EntityCollection.Entities.Count > 0)
+                                    records.AddRange(response.EntityCollection.Entities);
+
+                                if(records.Count >= 10000)
                                 {
-                                    var tempRequestSet = importExcelInfo.lData.Skip(offset).Take(batchSize).ToList();
-                                    auxImportExcel.lData = tempRequestSet;
-
-                                    List<OrganizationRequest> lRequests = ImportHelper.ImportSingaporeTicket(localContext, auxImportExcel);
-                                    Console.WriteLine("Sending Batch of Singapore Tickets to Sekund...");
-
-                                    // Execute all the requests in the request collection using a single web method call.
-                                    try
-                                    {
-                                        ExecuteTransactionResponse responses = Helper.ExecuteMultipleRequestsTransaction(localContext, lRequests, true);
-                                    }
-                                    catch (FaultException<OrganizationServiceFault> fault)
-                                    {
-                                        // Check if the maximum batch size has been exceeded. The maximum batch size is only included in the fault if it
-                                        // the input request collection count exceeds the maximum batch size.
-                                        if (fault.Detail.ErrorDetails.Contains("MaxBatchSize"))
-                                        {
-                                            int maxBatchSize = Convert.ToInt32(fault.Detail.ErrorDetails["MaxBatchSize"]);
-                                            if (maxBatchSize < auxImportExcel.lData.Count)
-                                            {
-                                                // Here you could reduce the size of your request collection and re-submit the ExecuteMultiple request.
-                                                // For this sample, that only issues a few requests per batch, we will just print out some info. However,
-                                                // this code will never be executed because the default max batch size is 1000.
-                                                batchSize = maxBatchSize;
-                                                continue;
-                                            }
-                                        }
-                                    }
-
-                                    // increment requests counter
-                                    offset += tempRequestSet.Count();
+                                    List<OrganizationRequest> lRequests = HandleSingaporeTicket(localContext, relativeExcelPath, records);
                                 }
 
-                                //SaveChangesResultCollection responses = crmContext.SaveChanges(optionsChanges);
-                                //ImportHelper.LogCrmContextMultipleResponses(localContext, responses);
-
-                                Console.WriteLine("Batch Sent. Please check logs.");
-                            }
-                            else
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
-
+                                if (response.EntityCollection.MoreRecords)
+                                {
+                                    querySingaporeTickets.PageInfo.PageNumber++;
+                                    querySingaporeTickets.PageInfo.PagingCookie = response.EntityCollection.PagingCookie;
+                                }
+                            } while (response.EntityCollection.MoreRecords);
 
                             _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload Singapore Tickets--------------");
                         }
@@ -1341,6 +1328,345 @@ namespace Skanetrafiken.Import
                     Console.WriteLine("The option " + option + " is not supported. Please choose again. 0) Exit");
                     return true;
             }
+        }
+
+        public static Entity CheckNecessaryFields(OptionMetadataCollection colOpSingaporeTicket, List<ExcelColumn> lColumns, List<ExcelLineData> line, Entity singaporeTicket)
+        {
+            try
+            {
+                Entity uSingaporeTicket = new Entity();
+
+                if (line.Count != lColumns.Count)
+                {
+                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Data count is not equal to the column count.");
+                    return null;
+                }
+
+                for (int j = 0; j < lColumns.Count; j++)
+                {
+                    ExcelLineData selectedData = line[j];
+
+                    if (selectedData == null)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Data is null. Contact your administrator.");
+                        continue;
+                    }
+
+                    ExcelColumn selectedColumn = ImportHelper.GetSelectedExcelColumn(lColumns, j);
+
+                    if (selectedColumn == null)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Selected Column is null. Contact your administrator.");
+                        continue;
+                    }
+
+                    string name = selectedColumn.name;
+                    string value = selectedData.value;
+
+                    if (value == null || string.IsNullOrEmpty(value))
+                        continue;
+
+                    switch (name)
+                    {
+                        case "LastUpdated":
+                            #region Last Updated
+                            DateTime dtLastUpdated = DateTime.MinValue;
+
+                            if (DateTime.TryParse(value, out dtLastUpdated))
+                            {
+                                if (dtLastUpdated != DateTime.MinValue && (singaporeTicket["ed_lastupdated"] == null || singaporeTicket["ed_lastupdated"] != null && (DateTime)singaporeTicket["ed_lastupdated"] != dtLastUpdated))
+                                    uSingaporeTicket["ed_lastupdated"] = dtLastUpdated;
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            #endregion
+                            break;
+                        case "TicketId":
+                        case "cgi_contactnumber":
+                            break;
+                        case "PriceModel":
+                            #region Price Model
+                            if(value != null && (singaporeTicket["st_pricemodel"] == null || singaporeTicket["st_pricemodel"] != null && (string)singaporeTicket["st_pricemodel"] != value))
+                                uSingaporeTicket["st_pricemodel"] = value;
+                            #endregion
+                            break;
+                        case "PriceModelPriceId":
+                            #region Price Model Price
+                            if (value != null && (singaporeTicket["st_pricemodelprice"] == null || singaporeTicket["st_pricemodelprice"] != null && (string)singaporeTicket["st_pricemodelprice"] != value))
+                                uSingaporeTicket["st_pricemodelprice"] = value;
+                            #endregion
+                            break;
+                        case "DataCreatedDate":
+                            #region Data Created Date
+                            DateTime dtTicketCreated = DateTime.MinValue;
+
+                            if (DateTime.TryParse(value, out dtTicketCreated))
+                            {
+                                if (dtTicketCreated != DateTime.MinValue && (singaporeTicket["st_ticketcreated"] == null || singaporeTicket["st_ticketcreated"] != null && (DateTime)singaporeTicket["st_ticketcreated"] != dtTicketCreated))
+                                    uSingaporeTicket["st_ticketcreated"] = dtTicketCreated;
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            #endregion
+                            break;
+                        case "activatedDate":
+                            #region Activated Date
+                            DateTime dtTicketActivated = DateTime.MinValue;
+
+                            if (DateTime.TryParse(value, out dtTicketActivated))
+                            {
+                                if (dtTicketActivated != DateTime.MinValue && (singaporeTicket["ed_ticketactivated"] == null || singaporeTicket["ed_ticketactivated"] != null && (DateTime)singaporeTicket["ed_ticketactivated"] != dtTicketActivated))
+                                    uSingaporeTicket["ed_ticketactivated"] = dtTicketActivated;
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            #endregion
+                            break;
+                        case "blockedDate":
+                            #region Blocked Date
+                            DateTime dtBlockedDate = DateTime.MinValue;
+
+                            if (DateTime.TryParse(value, out dtBlockedDate))
+                            {
+                                if (dtBlockedDate != DateTime.MinValue && (singaporeTicket["ed_blockeddate "] == null || singaporeTicket["ed_blockeddate "] != null && (DateTime)singaporeTicket["ed_blockeddate "] != dtBlockedDate))
+                                    uSingaporeTicket["ed_blockeddate"] = dtBlockedDate;
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            #endregion
+                            break;
+                        case "OfferName":
+                            #region Offer Name
+                            int? optionSetST = ImportHelper.GetOptionSetValueByName(colOpSingaporeTicket, value);
+
+                            if (optionSetST == null)
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"The OptionSet " + value + " was not found on CRM.");
+
+                            if (optionSetST != null && (singaporeTicket["st_singtickettype"] == null || singaporeTicket["st_singtickettype"] != null && ((OptionSetValue)singaporeTicket["st_singtickettype"]).Value != optionSetST))
+                                uSingaporeTicket["st_singtickettype"] = new OptionSetValue((int)optionSetST);
+                            #endregion
+                            break;
+                        case "OfferNameDetailed":
+                            #region Offer Name Detailed
+                            if (value != null && (singaporeTicket["ed_offernamedetailed"] == null || singaporeTicket["ed_offernamedetailed"] != null && (string)singaporeTicket["ed_offernamedetailed"] != value))
+                                uSingaporeTicket["ed_offernamedetailed"] = value;
+                            #endregion
+                            break;
+                        case "TicketAmount":
+                            #region Ticket Amount
+                            decimal dTicketPrice = decimal.MinValue;
+
+                            if (decimal.TryParse(value, out dTicketPrice))
+                            {
+                                if (dTicketPrice != decimal.MinValue && (singaporeTicket["st_ticketprice"] == null || singaporeTicket["st_ticketprice"] != null && ((Money)singaporeTicket["st_ticketprice"]).Value != dTicketPrice))
+                                    uSingaporeTicket["st_ticketprice"] = new Money(dTicketPrice);
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a Money value.");
+                            #endregion
+                            break;
+                        case "SalesChannelId":
+                            #region Sales Channel
+                            if (value != null && (singaporeTicket["ed_saleschannel"] == null || singaporeTicket["ed_saleschannel"] != null && (string)singaporeTicket["ed_saleschannel"] != value))
+                                uSingaporeTicket["ed_saleschannel"] = value;
+                            #endregion
+                            break;
+                        case "BearerCategory":
+                            #region Bearer Category
+                            if (value != null && (singaporeTicket["ed_bearercategory"] == null || singaporeTicket["ed_bearercategory"] != null && (string)singaporeTicket["ed_bearercategory"] != value))
+                                uSingaporeTicket["ed_bearercategory"] = value;
+                            #endregion
+                            break;
+                        case "HasGroupDiscount":
+                            #region Has Group Discount
+
+                            bool? hasGroupDiscount = null;
+
+                            if (value == "1")
+                                hasGroupDiscount = true;
+                            else if (value == "0")
+                                hasGroupDiscount = false;
+                            else
+                                break;
+
+                            if (singaporeTicket["ed_hasgroupdiscount"] == null || singaporeTicket["ed_hasgroupdiscount"] != null && (bool)singaporeTicket["ed_hasgroupdiscount"] != hasGroupDiscount)
+                                uSingaporeTicket["ed_hasgroupdiscount"] = hasGroupDiscount;
+
+                            #endregion
+                            break;
+                        case "TravellerCount":
+                            #region Traveller Count
+                            int iTravellerCount = int.MinValue;
+
+                            if (int.TryParse(value, out iTravellerCount))
+                            {
+                                if (iTravellerCount != int.MinValue && (singaporeTicket["ed_travellerscount"] == null || singaporeTicket["ed_travellerscount"] != null && (int)singaporeTicket["ed_travellerscount"] != iTravellerCount))
+                                    uSingaporeTicket["ed_travellerscount"] = iTravellerCount;                                    
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a int value.");
+                            #endregion
+                            break;
+                        case "HasRefund":
+                            #region Has Refund
+                            bool? hasRefund = null;
+
+                            if (value == "1")
+                                hasRefund = true;
+                            else if (value == "0")
+                                hasRefund = false;
+                            else
+                                break;
+                                
+                            if (singaporeTicket["ed_hasrefund"] == null || singaporeTicket["ed_hasrefund"] != null && (bool)singaporeTicket["ed_hasrefund"] != hasRefund)
+                                uSingaporeTicket["ed_hasrefund"] = hasRefund;
+                            #endregion
+                            break;
+                        case "activationinternal_from":
+                            #region Activation Interval From
+                            DateTime dtActivationFrom = DateTime.MinValue;
+
+                            if (DateTime.TryParse(value, out dtActivationFrom))
+                            {
+                                if (dtActivationFrom != DateTime.MinValue && (singaporeTicket["ed_activationintervalfrom"] == null || singaporeTicket["ed_activationintervalfrom"] != null && (DateTime)singaporeTicket["ed_activationintervalfrom"] != dtActivationFrom))
+                                    uSingaporeTicket["ed_activationintervalfrom"] = dtActivationFrom;
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            #endregion
+                            break;
+                        case "activationinternal_to":
+                            #region Activation Interval To
+                            DateTime dtAtivationTo = DateTime.MinValue;
+
+                            if (DateTime.TryParse(value, out dtAtivationTo))
+                            {
+                                if (dtAtivationTo != DateTime.MinValue && (singaporeTicket["ed_activationintervalto"] == null || singaporeTicket["ed_activationintervalto"] != null && (DateTime)singaporeTicket["ed_activationintervalto"] != dtAtivationTo))
+                                    uSingaporeTicket["ed_activationintervalto"] = dtAtivationTo;
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            #endregion
+                            break;
+                        case "travelvalidityinternal_from":
+                            #region Travel Validity From
+                            DateTime dtTravelValidityFrom = DateTime.MinValue;
+
+                            if (DateTime.TryParse(value, out dtTravelValidityFrom))
+                            {
+                                if (dtTravelValidityFrom != DateTime.MinValue && (singaporeTicket["ed_travelvalidityintervalfrom"] == null || singaporeTicket["ed_travelvalidityintervalfrom"] != null && (DateTime)singaporeTicket["ed_travelvalidityintervalfrom"] != dtTravelValidityFrom))
+                                    uSingaporeTicket["ed_travelvalidityintervalfrom"] = dtTravelValidityFrom;
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            #endregion
+                            break;
+                        case "travelvalidityinternal_to":
+                            #region Travel Validity To
+                            DateTime dtTravelValidityTo = DateTime.MinValue;
+
+                            if (DateTime.TryParse(value, out dtTravelValidityTo))
+                            {
+                                if (dtTravelValidityTo != DateTime.MinValue && (singaporeTicket["ed_travelvalidityintervalto"] == null || singaporeTicket["ed_travelvalidityintervalto"] != null && (DateTime)singaporeTicket["ed_travelvalidityintervalto"] != dtTravelValidityTo))
+                                    uSingaporeTicket["ed_travelvalidityintervalto"] = dtTravelValidityTo;
+                            }
+                            else
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Couldn't parse " + value + " to a DateTime value.");
+                            #endregion
+                            break;
+                        default:
+                            _log.InfoFormat(CultureInfo.InvariantCulture, $"The Column " + name + " is not on the mappings initially set.");
+                            break;
+                    }
+                }
+
+                if (uSingaporeTicket.Attributes.Count == 0)
+                    return null;
+
+                return uSingaporeTicket;
+            }
+            catch (Exception e)
+            {
+                _log.ErrorFormat (CultureInfo.InvariantCulture, $"CheckNecessaryFields(): Details: {e.Message}");
+                throw new Exception($"CheckNecessaryFields(): Details: {e.Message}");
+            }
+        }
+
+        public static List<OrganizationRequest> HandleSingaporeTicket(Plugin.LocalPluginContext localContext, string relativeExcelPath, List<Entity> lSingaporeTickets)
+        {
+            var filePaths = Directory.GetFiles(@"C:\Users\Pedro\Downloads\", "*.csv");
+            List<OrganizationRequest> lUpsertRequests = new List<OrganizationRequest>();
+            OptionMetadataCollection colOpSingaporeTicket = ImportHelper.GetOptionSetMetadata(localContext, st_singaporeticket.EntityLogicalName, st_singaporeticket.Fields.st_SingTicketType);
+
+            if (filePaths.Length == 0)
+                return null;
+
+            Console.Write("Creating Batch of Singapore Tickets... ");
+            using (ProgressBar progress = new ProgressBar())
+            {
+                for (int j = 0; j < lSingaporeTickets.Count; j++)
+                {
+                    progress.Report((double)j / (double)lSingaporeTickets.Count);
+                    var singaporeTicket = lSingaporeTickets[j];
+                    foreach (string filePath in filePaths)
+                    {
+                        string fileName = Path.GetFileName(filePath);
+                        ImportExcelInfo importExcelInfo = ImportHelper.HandleExcelInformationStreamReader(relativeExcelPath, fileName);
+                        bool isParsingOk = ImportHelper.GetParsingStatus(importExcelInfo);
+
+                        if (isParsingOk)
+                        {
+                            if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
+                            {
+                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Please contact your Administrator.");
+                                continue;
+                            }
+
+                            for (int i = 0; i < importExcelInfo.lData.Count; i++)
+                            {
+                                try
+                                {
+                                    List<ExcelLineData> line = importExcelInfo.lData[i];
+
+                                    string ticketId = ImportHelper.GetValueFromLine(importExcelInfo, line, "TicketId");
+                                    string crmNummer = ImportHelper.GetValueFromLine(importExcelInfo, line, "cgi_contactnumber");
+
+                                    if((singaporeTicket.Contains("st_ticketid") && (string)singaporeTicket["st_ticketid"] != ticketId) || (singaporeTicket.Contains("ed_crmnummer") && (string)singaporeTicket["ed_crmnummer"] != crmNummer))
+                                        continue;
+
+                                    // Set alternate Key
+                                    KeyAttributeCollection altKey = new KeyAttributeCollection();
+                                    altKey.Add("st_ticketid", ticketId);
+                                    altKey.Add("ed_crmnummer", crmNummer);
+
+                                    Entity upsertSingaporeTicket = new Entity("st_singaporeticket", altKey);
+
+                                    Entity eSingaporeTicket = CheckNecessaryFields(colOpSingaporeTicket, importExcelInfo.lColumns, line, singaporeTicket);
+                                    if(eSingaporeTicket != null)
+                                    {
+                                        upsertSingaporeTicket.Attributes = eSingaporeTicket.Attributes;
+                                        UpsertRequest request = new UpsertRequest()
+                                        {
+                                            Target = upsertSingaporeTicket
+                                        };
+
+                                        lUpsertRequests.Add(request);
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Import Singapore Tickets Exception. Details: " + e.Message);
+                                }
+                            }
+                        }
+                        else
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Excel Parsing is not ok. The number of data values is diferent from the number of columns.");
+                    }
+                }
+            }
+            Console.WriteLine("Done.");
+
+            return lUpsertRequests;
         }
 
         // INFO: (hest) The entropy should be unique for each application. DON'T COPY THIS VALUE INTO A NEW PROJECT!!!!

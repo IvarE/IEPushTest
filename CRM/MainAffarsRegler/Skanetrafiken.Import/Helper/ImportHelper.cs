@@ -1391,7 +1391,7 @@ namespace Skanetrafiken.Import
             Console.WriteLine("Done.");
         }
 
-        public static List<OrganizationRequest>ImportSingaporeTicket(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo)
+        public static List<OrganizationRequest> ImportSingaporeTicket(Plugin.LocalPluginContext localContext, ImportExcelInfo importExcelInfo)
         {
             if (importExcelInfo == null || importExcelInfo.lColumns == null || importExcelInfo.lData == null)
             {
@@ -1864,6 +1864,66 @@ namespace Skanetrafiken.Import
                 }
 
                 return new ImportExcelInfo(lColumns, lData);
+            }
+            catch (Exception e)
+            {
+                _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Details: " + e.Message);
+                return null;
+            }
+        }
+
+        public static ImportExcelInfo HandleExcelInformationStreamReader(string relativeExcelPath, List<string> fileNames)
+        {
+            try
+            {
+                ImportExcelInfo importExcelInfo = new ImportExcelInfo();
+
+                foreach (string fileName in fileNames)
+                {
+                    int i = 0;
+                    List<ExcelColumn> lColumns = new List<ExcelColumn>();
+                    List<List<ExcelLineData>> lData = new List<List<ExcelLineData>>();
+
+                    using (var reader = new StreamReader(relativeExcelPath + "\\" + fileName, Encoding.GetEncoding("iso-8859-1")))
+                    {
+                        while (!reader.EndOfStream)
+                        {
+                            string line = reader.ReadLine();
+                            List<string> values = line.Split(';').ToList();
+                            if (i == 0)
+                            {
+                                for (int j = 0; j < values.Count; j++)
+                                {
+                                    ExcelColumn column = new ExcelColumn(j, values[j]);
+                                    lColumns.Add(column);
+                                }
+                            }
+                            else
+                            {
+                                List<ExcelLineData> lLine = new List<ExcelLineData>();
+                                for (int k = 0; k < values.Count; k++)
+                                {
+                                    ExcelLineData dataLine = new ExcelLineData(k, values[k]);
+                                    lLine.Add(dataLine);
+                                }
+
+                                lData.Add(lLine);
+                            }
+                            i++;
+                        }
+                    }
+
+                    if(importExcelInfo.lColumns.Count != 0 && importExcelInfo.lColumns.Count != lColumns.Count)
+                    {
+                        _log.ErrorFormat(CultureInfo.InvariantCulture, $"Failed to read Excel Information. Details: Fatal error reading CSV Columns.");
+                        return null;
+                    }
+                        
+                    importExcelInfo.lColumns = lColumns;
+                    importExcelInfo.lData.AddRange(lData);
+                }
+
+                return importExcelInfo;
             }
             catch (Exception e)
             {

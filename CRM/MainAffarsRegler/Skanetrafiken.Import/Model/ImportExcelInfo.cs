@@ -9,8 +9,8 @@ namespace Skanetrafiken.Import.Model
 
         public ImportExcelInfo()
         {
-            lColumns = null;
-            lData = null;
+            lColumns = new List<ExcelColumn>();
+            lData = new List<List<ExcelLineData>>();
         }
 
         public ImportExcelInfo(List<ExcelColumn> lC, List<List<ExcelLineData>> lD)
