@@ -321,10 +321,7 @@ namespace Skanetrafiken.Crm.Controllers
                 _log.Warn($"Th={threadId} - Returning statuscode = {verm.StatusCode}, Content = {verm.Content.ReadAsStringAsync().Result}\n");
                 return verm;
             }
-//            #if !DEV
-//            else {
-//#if !DEV
-//                // TOKEN VERIFICATION WITH GUID
+            // TOKEN VERIFICATION WITH GUID
             #if !DEV
             else
             {
