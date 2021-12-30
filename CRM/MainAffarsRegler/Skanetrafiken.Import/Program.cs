@@ -1164,8 +1164,26 @@ namespace Skanetrafiken.Import
                             fileNames.Add("sixth million.csv");
                             relativeExcelPath = "C:\\Users\\Pedro\\Downloads\\";
 
-                            
+                            ImportExcelInfo importExcelInfo = new ImportExcelInfo();
+
+                            using (importExcelInfo = ImportHelper.HandleExcelInformationStreamReader(relativeExcelPath, fileNames, 1, 16)) 
+                            {
+                                bool isParsingOk = ImportHelper.GetParsingStatus(importExcelInfo);
+
+                                if (isParsingOk)
+                                {
+                                }
+                            }
+
                             var querySingaporeTickets = new QueryExpression(st_singaporeticket.EntityLogicalName);
+                            querySingaporeTickets.NoLock = true;
+                            querySingaporeTickets.ColumnSet = new ColumnSet(st_singaporeticket.Fields.ed_CRMNummer, st_singaporeticket.Fields.st_TicketID);
+
+                            List<st_singaporeticket> lSingaporeTickets = XrmRetrieveHelper.RetrieveMultiple<st_singaporeticket>(localContext, querySingaporeTickets);
+
+
+
+                            querySingaporeTickets = new QueryExpression(st_singaporeticket.EntityLogicalName);
                             querySingaporeTickets.NoLock = true;
                             querySingaporeTickets.ColumnSet = new ColumnSet(st_singaporeticket.Fields.ed_ActivationIntervalFrom, st_singaporeticket.Fields.ed_ActivationIntervalTo,
                                 st_singaporeticket.Fields.ed_BearerCategory, st_singaporeticket.Fields.ed_BlockedDate, st_singaporeticket.Fields.ed_CRMNummer, st_singaporeticket.Fields.ed_HasGroupDiscount,

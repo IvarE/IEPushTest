@@ -1872,7 +1872,7 @@ namespace Skanetrafiken.Import
             }
         }
 
-        public static ImportExcelInfo HandleExcelInformationStreamReader(string relativeExcelPath, List<string> fileNames)
+        public static ImportExcelInfo HandleExcelInformationStreamReader(string relativeExcelPath, List<string> fileNames, int index1, int index2)
         {
             try
             {
@@ -1895,7 +1895,8 @@ namespace Skanetrafiken.Import
                                 for (int j = 0; j < values.Count; j++)
                                 {
                                     ExcelColumn column = new ExcelColumn(j, values[j]);
-                                    lColumns.Add(column);
+                                    if(column.index == index1 || column.index == index2)
+                                        lColumns.Add(column);
                                 }
                             }
                             else
@@ -1904,7 +1905,8 @@ namespace Skanetrafiken.Import
                                 for (int k = 0; k < values.Count; k++)
                                 {
                                     ExcelLineData dataLine = new ExcelLineData(k, values[k]);
-                                    lLine.Add(dataLine);
+                                    if(dataLine.index == index1 || dataLine.index == index2)
+                                        lLine.Add(dataLine);
                                 }
 
                                 lData.Add(lLine);
