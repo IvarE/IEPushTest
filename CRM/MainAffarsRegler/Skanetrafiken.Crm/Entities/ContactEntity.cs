@@ -2950,11 +2950,8 @@ namespace Skanetrafiken.Crm.Entities
         /// <returns></returns>
         public static void UpdateContactWithLeadKampanj(ref ContactEntity contact, ref ContactEntity updContact, LeadEntity lead)
         {
-            if (lead.CampaignId != null)
-            {
-                contact.ed_SourceCampaignId = lead.CampaignId;
-                updContact.ed_SourceCampaignId = lead.CampaignId;
-            }
+            contact.ed_SourceCampaignId = lead.CampaignId;
+            updContact.ed_SourceCampaignId = lead.CampaignId;
 
             //If any data in address fields in lead and none in Contact - replace everything
             if ((string.IsNullOrWhiteSpace(contact.Address1_Line1) &&

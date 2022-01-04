@@ -4689,37 +4689,6 @@ namespace Skanetrafiken.Crm.Controllers
                                 _log.Debug($"Th={threadId} - ValidateEmail: Contact updated with Lead.");
                             }
 
-                            #region Conflicting Kampanj Leads Query using EmailAddress1
-                            QueryExpression kampanjLeadConflictQuery = new QueryExpression()
-                            {
-                                EntityName = LeadEntity.EntityLogicalName,
-                                ColumnSet = LeadEntity.LeadInfoBlock,
-                                Criteria =
-                                {
-                                    Conditions =
-                                    {
-                                        new ConditionExpression(LeadEntity.Fields.EMailAddress1, ConditionOperator.Equal, contact.ed_EmailToBeVerified),
-                                        (contact.FirstName != null) ? new ConditionExpression(LeadEntity.Fields.FirstName, ConditionOperator.Equal, contact.FirstName) : new ConditionExpression(LeadEntity.Fields.FirstName, ConditionOperator.Null),
-                                        (contact.LastName != null) ? new ConditionExpression(LeadEntity.Fields.LastName, ConditionOperator.Equal, contact.LastName) : new ConditionExpression(LeadEntity.Fields.LastName, ConditionOperator.Null),
-                                        new ConditionExpression(LeadEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.LeadState.Open),
-                                        new ConditionExpression(LeadEntity.Fields.ed_InformationSource, ConditionOperator.Equal, (int)ed_informationsource.Kampanj)
-                                    }
-                                }
-                            };
-                            #endregion
-
-                            IList<LeadEntity> conflictKampanjLeads = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, kampanjLeadConflictQuery);
-                            _log.Info($"Th={threadId} - ValidateEmail: Found {conflictKampanjLeads.Count} conflicting Kampanj Leads");
-
-                            if (conflictKampanjLeads.Count > 0)
-                            {
-                                _log.DebugFormat($"Th={threadId} - ValidateEmail: Merging {conflictKampanjLeads.Count} Kampanj Leads with the new Contact");
-                                foreach (LeadEntity leadConflict in conflictKampanjLeads)
-                                    ContactEntity.UpdateContactWithLeadKampanj(ref contact, ref updContact, leadConflict);
-
-                                _log.Debug($"Th={threadId} - ValidateEmail: Contact updated with Lead.");
-                            }
-
                             contact.EMailAddress1 = contact.ed_EmailToBeVerified;
                             contact.ed_EmailToBeVerified = ContactEntity._NEWEMAILDONE;
                             contact.EMailAddress2 = null;
@@ -4779,7 +4748,7 @@ namespace Skanetrafiken.Crm.Controllers
                             #region Mandatory Validations
                             if (lead == null)
                             {
-                                _log.WarnFormat($"Th={threadId} - ValidateEmail: Could not find a Lead with the provided Guid: {customerId}");
+                                _log.WarnFormat($"Th={threadId} - ValidateEmail: Could not find an Open Lead with the provided Guid: {customerId}");
                                 HttpResponseMessage rml = new HttpResponseMessage(HttpStatusCode.NotFound);
                                 rml.Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, customerId));
                                 return rml;
@@ -4924,7 +4893,7 @@ namespace Skanetrafiken.Crm.Controllers
                             }
 
                             #region Conflicting Kampanj Leads Query using EmailAddress1
-                            kampanjLeadConflictQuery = new QueryExpression()
+                            QueryExpression kampanjLeadConflictQuery = new QueryExpression()
                             {
                                 EntityName = LeadEntity.EntityLogicalName,
                                 ColumnSet = LeadEntity.LeadInfoBlock,
@@ -4934,22 +4903,33 @@ namespace Skanetrafiken.Crm.Controllers
                                     {
                                         new ConditionExpression(LeadEntity.Fields.Id, ConditionOperator.NotEqual, lead.Id),
                                         new ConditionExpression(LeadEntity.Fields.EMailAddress1, ConditionOperator.Equal, lead.EMailAddress1),
-                                        new ConditionExpression(LeadEntity.Fields.MobilePhone, ConditionOperator.Equal, lead.MobilePhone),
-                                        new ConditionExpression(LeadEntity.Fields.ed_InformationSource, ConditionOperator.Equal, (int)ed_informationsource.Kampanj)
+                                        new ConditionExpression(LeadEntity.Fields.ed_InformationSource, ConditionOperator.Equal, (int)ed_informationsource.Kampanj),
+                                        new ConditionExpression(LeadEntity.Fields.StateCode, ConditionOperator.Equal, (int)LeadState.Open)
                                     }
                                 }
                             };
                             #endregion
+                            kampanjLeadConflictQuery.AddOrder(LeadEntity.Fields.CreatedOn, OrderType.Descending);
 
-                            conflictKampanjLeads = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, leadConflictQuery);
+                            List<LeadEntity> conflictKampanjLeads = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, kampanjLeadConflictQuery);
                             _log.Info($"Th={threadId} - ValidateEmail: Found {conflictKampanjLeads.Count} conflicting Kampanj Leads");
 
                             if (conflictKampanjLeads.Count > 0)
                             {
+                                LeadEntity recentLead = conflictKampanjLeads.FirstOrDefault();
                                 _log.DebugFormat($"Th={threadId} - ValidateEmail: Merging {conflictKampanjLeads.Count} Kampanj Leads with the new Contact");
-                                foreach (LeadEntity leadConflict in conflictKampanjLeads)
-                                    ContactEntity.UpdateContactWithLeadKampanj(ref nContact, ref updContact2, leadConflict);
+                                ContactEntity.UpdateContactWithLeadKampanj(ref nContact, ref updContact2, recentLead);
 
+                                QualifyLeadRequest req = new QualifyLeadRequest()
+                                {
+                                    LeadId = recentLead.ToEntityReference(),
+                                    CreateAccount = false,
+                                    CreateContact = false,
+                                    CreateOpportunity = false,
+                                    Status = new OptionSetValue((int)Generated.lead_statuscode.Qualified)
+                                };
+
+                                localContext.OrganizationService.Execute(req);
                                 _log.Debug($"Th={threadId} - ValidateEmail: Contact updated with Lead.");
                             }
 
