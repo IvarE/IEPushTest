@@ -1008,6 +1008,9 @@ namespace Skanetrafiken.Crm.Entities
             if (!string.IsNullOrWhiteSpace(Telephone3))
                 Telephone3 = Telephone3.Replace(" ", "");
 
+            if(ed_InformationSource == Generated.ed_informationsource.RGOL && ed_Address1_Country == null)
+                ed_Address1_Country = CountryEntity.GetEntityRefForCountryCode(localContext, "SE");
+
             ContactEntity combined = new ContactEntity();
             if (preImage != null)
                 combined.CombineAttributes(preImage);
