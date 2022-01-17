@@ -477,9 +477,12 @@ namespace CGIXrmCreateCaseService.CRMPlusAPI
                 //    ServiceClientTracing.Error(invocationId, ex);
                 //}
                 //throw ex;
+
+                string content = await httpResponse.Content.ReadAsStringAsync();
+
                 HttpOperationException ex = new HttpOperationException();
                 HttpRequestMessageWrapper wrapperRequest = new HttpRequestMessageWrapper(httpRequest, httpRequest.Content.ToString());
-                HttpResponseMessageWrapper wrapperResponse = new HttpResponseMessageWrapper(httpResponse, httpResponse.Content.ToString());
+                HttpResponseMessageWrapper wrapperResponse = new HttpResponseMessageWrapper(httpResponse, content);
                 ex.Request = wrapperRequest;
                 ex.Response = wrapperResponse;
                 ex.Body = null;
