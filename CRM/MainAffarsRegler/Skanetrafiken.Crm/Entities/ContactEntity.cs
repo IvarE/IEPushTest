@@ -892,7 +892,7 @@ namespace Skanetrafiken.Crm.Entities
                 int month = int.Parse(cgi_socialsecuritynumber.Substring(4, 2));
                 int day = int.Parse(cgi_socialsecuritynumber.Substring(6, 2));
 
-                if(year != 0 && month != 0 && day != 0)
+                if (year != 0 && month != 0 && day != 0)
                     this.BirthDate = new DateTime(year, month, day);
                 else
                     localContext.Trace($"Year, Month or Day is 0. Birthday is still null.");
@@ -1277,6 +1277,55 @@ namespace Skanetrafiken.Crm.Entities
                 else if (!string.IsNullOrEmpty(subordinate.st_originating_source))
                     updateContentData.Attributes[ContactEntity.Fields.st_originating_source] = subordinate.st_originating_source;
             }
+
+            // Read contact
+            ContactEntity contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, subordinate.Id,
+                new ColumnSet(ContactEntity.Fields.EMailAddress1, ContactEntity.Fields.ed_PrivateCustomerContact,
+                                ContactEntity.Fields.ed_MklId, ContactEntity.Fields.ed_OverrideMerge));
+
+            // Must be a valid email
+            if (string.IsNullOrWhiteSpace(contact.EMailAddress1))
+            {
+                localContext.Trace("The Contact in question is not a validated Contact. No validation required.");
+                return;
+            }
+
+            if (contact.ed_PrivateCustomerContact != null && contact.ed_PrivateCustomerContact != true)
+            {
+                localContext.Trace("MKL verification are only to be done on private customers, aborting.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(contact.ed_MklId))
+            {
+                localContext.Trace("The Contact in question has no MKLId. No validation required.");
+                return;
+            }
+
+            if (localContext?.PluginExecutionContext?.InitiatingUserId == null || localContext?.PluginExecutionContext?.InitiatingUserId == Guid.Empty)
+            {
+                localContext.Trace($"Could not identify an initiating user when trying to check SystemUserRole privileges.");
+                throw new Exception($"Could not identify an initiating user when trying to check SystemUserRole privileges.");
+            }
+
+            // Check if callingUser has privileges to inactivate no matter what.
+            if (!DoesUserHaveInactivationRight(localContext))
+            {
+                localContext.Trace($"Calling user does not have privileges to inactivate Contacts even if they have a balance in MKL, proceeding to check balance.");
+                // Else call MKL to see if customer has an amount connected.
+                if (HasMKLBalance(localContext, subordinate.ToEntityReference()))
+                {
+                    // If so prevent the inactivation
+                    localContext.Trace($"Target still has funds. No inactivation will take place.");
+                    throw new Exception(Properties.Resources.CustomerHasBalanceMKL);
+                }
+
+                throw new Exception($"You do not have permissions to inactivate this contact.");
+            }
+
+            SendDeleteMessageToMKL(localContext, subordinate.ToEntityReference(), contact);
+
+
         }
 
         public void HandlePostContactUpdate(Plugin.LocalPluginContext localContext, ContactEntity preImage)
@@ -1320,7 +1369,7 @@ namespace Skanetrafiken.Crm.Entities
                 return;
             }
 
-       
+
 
             FilterExpression conflictFilter = new FilterExpression(LogicalOperator.Or);
             //25/01/2021 - Chris: New rule where we can have multiple COntacts with same SSN in cgi_socialsecuritynumber (DevOps: 3292)
@@ -1339,7 +1388,7 @@ namespace Skanetrafiken.Crm.Entities
             //}
 
 
-            
+
 
             if (Contains(ContactEntity.Fields.EMailAddress2))
             {
@@ -1519,9 +1568,9 @@ namespace Skanetrafiken.Crm.Entities
             localContext.Trace("entered HandlePreContacSetState()");
 
             // Read contact
-            ContactEntity contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, entityId.Id, 
+            ContactEntity contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, entityId.Id,
                 new ColumnSet(ContactEntity.Fields.EMailAddress1, ContactEntity.Fields.ed_PrivateCustomerContact,
-                                ContactEntity.Fields.ed_MklId));
+                                ContactEntity.Fields.ed_MklId, ContactEntity.Fields.ed_OverrideMerge));
 
             // Must be a valid email
             if (string.IsNullOrWhiteSpace(contact.EMailAddress1))
@@ -1536,7 +1585,7 @@ namespace Skanetrafiken.Crm.Entities
                 return;
             }
 
-            if(string.IsNullOrWhiteSpace(contact.ed_MklId))
+            if (string.IsNullOrWhiteSpace(contact.ed_MklId))
             {
                 localContext.Trace("The Contact in question has no MKLId. No validation required.");
                 return;
@@ -1563,7 +1612,7 @@ namespace Skanetrafiken.Crm.Entities
                 throw new Exception($"You do not have permissions to inactivate this contact.");
             }
 
-            SendDeleteMessageToMKL(localContext, entityId);
+            SendDeleteMessageToMKL(localContext, entityId, contact);
         }
 
         /// <summary>
@@ -1692,7 +1741,7 @@ namespace Skanetrafiken.Crm.Entities
         /// <param name="localContext"></param>
         /// <param name="contactId"></param>
         /// <returns></returns>
-        private static bool SendDeleteMessageToMKL(Plugin.LocalPluginContext localContext, EntityReference contactId)
+        private static bool SendDeleteMessageToMKL(Plugin.LocalPluginContext localContext, EntityReference contactId, ContactEntity contact)
         {
             try
             {
@@ -1731,6 +1780,16 @@ namespace Skanetrafiken.Crm.Entities
                     DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(MklErrorObject));
                     MklErrorObject mklErr = (MklErrorObject)serializer.ReadObject(response.GetResponseStream());
 
+                   if(response.StatusCode == HttpStatusCode.NotFound && contact.ed_OverrideMerge == true)
+                    {
+                        return true;
+                    }
+                   else if (response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        throw new InvalidPluginExecutionException($"Kontakten hittades ej hos Mitt Konto, vill du fortfarande inaktivera kontakten, sätt Override Merge till Ja och utför åtgärden igen.");
+                    }
+
+                    
                     if (MklErrorObject.UserEntityNotFound.Equals(mklErr.code))
                     {
                         return true;
@@ -1830,7 +1889,7 @@ namespace Skanetrafiken.Crm.Entities
             SystemUserEntity sysUser = null;
             try
             {
-                sysUser = XrmRetrieveHelper.Retrieve<SystemUserEntity>(localContext, localContext.PluginExecutionContext.InitiatingUserId, 
+                sysUser = XrmRetrieveHelper.Retrieve<SystemUserEntity>(localContext, localContext.PluginExecutionContext.InitiatingUserId,
                     new ColumnSet(SystemUserEntity.Fields.FullName, SystemUserEntity.Fields.BusinessUnitId));
             }
             catch (Exception e)
@@ -2672,7 +2731,7 @@ namespace Skanetrafiken.Crm.Entities
                                     contact = matchingContacts[0];
                                 }
                             }
-                            else 
+                            else
                             {
                                 contact = matchingContacts[0];
                             }
@@ -2945,13 +3004,35 @@ namespace Skanetrafiken.Crm.Entities
         /// Verify if contact object needs to be updated from lead. No database verification.
         /// </summary>
         /// <param name="contact"></param>
-        /// <param name="updContact"></param>
         /// <param name="lead">Lead to verify against</param>
         /// <returns></returns>
-        public static void UpdateContactWithLeadKampanj(ref ContactEntity contact, ref ContactEntity updContact, LeadEntity lead)
+        public static void UpdateContactWithLeadKampanj(ref ContactEntity contact, LeadEntity lead)
         {
-            contact.ed_SourceCampaignId = lead.CampaignId;
-            updContact.ed_SourceCampaignId = lead.CampaignId;
+            // If dummy lastname has been used, Clear it!
+            if (string.Equals(lead.LastName, LeadEntity.CreateLead_LastNameToUseIfEmpty))
+            {
+                contact.LastName = null;
+                lead.LastName = null;
+            }
+
+            if (!string.IsNullOrWhiteSpace(lead.FirstName) && string.IsNullOrWhiteSpace(contact.FirstName))
+                contact.FirstName = lead.FirstName;
+
+            if (!string.IsNullOrWhiteSpace(lead.LastName) && string.IsNullOrWhiteSpace(contact.LastName))
+                contact.LastName = lead.LastName;
+
+            if (!string.IsNullOrWhiteSpace(lead.Telephone1) && string.IsNullOrWhiteSpace(contact.Telephone1))
+                contact.Telephone1 = lead.Telephone1;
+
+            if (!string.IsNullOrWhiteSpace(lead.MobilePhone) && string.IsNullOrWhiteSpace(contact.Telephone2))
+                contact.Telephone2 = lead.MobilePhone;
+
+            if (!string.IsNullOrWhiteSpace(lead.ed_Personnummer) && string.IsNullOrWhiteSpace(contact.cgi_socialsecuritynumber)) //Change this solcialsecurity number field (ed_socialsecuritynumberblock)
+            {
+                contact.cgi_socialsecuritynumber = lead.ed_Personnummer; //ed_socialsecuritynumberblock
+                contact.BirthDate = ContactEntity.UpdateBirthDateOnContact(lead.ed_Personnummer); //DevOps 9168
+                contact.ed_HasSwedishSocialSecurityNumber = lead.ed_HasSwedishSocialSecurityNumber;
+            }
 
             //If any data in address fields in lead and none in Contact - replace everything
             if ((string.IsNullOrWhiteSpace(contact.Address1_Line1) &&
@@ -2968,21 +3049,24 @@ namespace Skanetrafiken.Crm.Entities
                 lead.ed_Address1_Country != null))
             {
                 contact.Address1_Line1 = lead.Address1_Line1;
-                updContact.Address1_Line1 = lead.Address1_Line1;
                 contact.Address1_Line2 = lead.Address1_Line2;
-                updContact.Address1_Line2 = lead.Address1_Line2;
                 contact.Address1_PostalCode = lead.Address1_PostalCode;
-                updContact.Address1_PostalCode = lead.Address1_PostalCode;
                 contact.Address1_City = lead.Address1_City;
-                updContact.Address1_City = lead.Address1_City;
                 contact.Address1_Country = lead.Address1_Country;
-                updContact.Address1_Country = lead.Address1_Country;
                 contact.ed_Address1_Country = lead.ed_Address1_Country;
-                updContact.ed_Address1_Country = lead.ed_Address1_Country;
             }
 
-            contact.OriginatingLeadId = lead.ToEntityReference();
-            updContact.OriginatingLeadId = lead.ToEntityReference();
+            if (contact.ed_InformationSource == null || !contact.ed_InformationSource.HasValue)
+                contact.ed_InformationSource = Generated.ed_informationsource.Kampanj;
+
+            if (lead.CampaignId != null)
+                contact.ed_SourceCampaignId = lead.CampaignId;
+
+            if (!string.IsNullOrWhiteSpace(contact.EMailAddress2))
+            {
+                contact.EMailAddress1 = contact.EMailAddress2;
+                contact.EMailAddress2 = null;
+            }
         }
 
         //public static ContactEntity CreateContactFromLead(Plugin.LocalPluginContext localContext, LeadEntity lead)
@@ -3088,7 +3172,7 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
-        public static DateTime? UpdateBirthDateOnContact(string ssn) 
+        public static DateTime? UpdateBirthDateOnContact(string ssn)
         {
             //DevOps 9168
             DateTime birthDate = new DateTime();
