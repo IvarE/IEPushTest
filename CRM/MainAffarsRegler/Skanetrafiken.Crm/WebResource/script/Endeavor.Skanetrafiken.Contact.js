@@ -22,9 +22,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
     Endeavor.Skanetrafiken.Contact = {
 
         _ticketMovesErrorHolder: "ticketMovesErrorHolder",
+        _listOfFormsSammanhang: ["Contact (3 - Skånetrafiken)", "Kund (3 - Skånetrafiken)"],
 
         onLoad: function (executionContext) {
-
             var formContext = executionContext.getFormContext();
             var formType = formContext.ui.getFormType();
 
@@ -36,7 +36,6 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             switch (formType) {
                 case FORM_TYPE_CREATE:
 
-                    
                     //Check if quick create
                     var stateCode = formContext.getAttribute("statecode");
                     if (stateCode == null) {
@@ -48,7 +47,6 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         Endeavor.Skanetrafiken.Contact.setFocusQuickCreateContactFirstName(formContext);
                     }
 
-                    
                     var emailaddress1 = formContext.getAttribute("emailaddress1");
                     var emailaddress2 = formContext.getAttribute("emailaddress2");
                     // Objects in form?
@@ -79,7 +77,6 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 default:
                     break;
             }
-
         },
 
         // Install on onSave
@@ -456,6 +453,37 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 alert("Fel i Endeavor.Skanetrafiken.Contact.lockEmailIfMKLidExistAndNotAdminForm\n\n" + ex.message);
             }
 
+        },
+
+        handleSammanhangSection: function (formContext) {
+            var formItem = formContext.ui.formSelector.getCurrentItem();
+
+            if (formItem == null)
+                return;
+
+            var formName = formItem.getLabel();
+
+            for (var i = 0; i < Endeavor.Skanetrafiken.Contact._listOfFormsSammanhang.length; i++) {
+                var valueList = Endeavor.Skanetrafiken.Contact._listOfFormsSammanhang[i];
+                if (formName == valueList) {
+
+                    formContext.getAttribute("ed_privatecustomercontact").setRequiredLevel("none");
+                    formContext.getAttribute("ed_businesscontact").setRequiredLevel("none");
+                    formContext.getAttribute("ed_agentcontact").setRequiredLevel("none");
+                    formContext.getAttribute("ed_kontaktperson").setRequiredLevel("none");
+                    formContext.getAttribute("ed_epostmottagare").setRequiredLevel("none");
+                    formContext.getAttribute("ed_infotainmentcontact").setRequiredLevel("none");
+                    formContext.getAttribute("ed_collaborationcontact").setRequiredLevel("none");
+
+                    formContext.getControl("ed_privatecustomercontact").setDisabled(true);
+                    formContext.getControl("ed_businesscontact").setDisabled(true);
+                    formContext.getControl("ed_agentcontact").setDisabled(true);
+                    formContext.getControl("ed_kontaktperson").setDisabled(true);
+                    formContext.getControl("ed_epostmottagare").setDisabled(true);
+                    formContext.getControl("ed_infotainmentcontact").setDisabled(true);
+                    formContext.getControl("ed_collaborationcontact").setDisabled(true);
+                }
+            }
         },
 
         isMoreThanPrivateContact: function (formContext) {
@@ -989,6 +1017,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         break;
                     case FORM_TYPE_UPDATE:
                         Endeavor.Skanetrafiken.Contact.checkIfUserHasSecRole(executionContext);
+                        Endeavor.Skanetrafiken.Contact.handleSammanhangSection(formContext);
                         //Endeavor.Skanetrafiken.Contact.lockEmailIfMKLidExistAndNotAdminForm(formContext);
                         Endeavor.Skanetrafiken.Contact.timerfunction_eHandel(formContext);
                     case FORM_TYPE_READONLY:
