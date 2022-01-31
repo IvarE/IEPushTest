@@ -620,8 +620,20 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
             var formContext = executionContext.getFormContext();
             var contactNumberControlTag = "cgi_socialsecuritynumber";
-
             var contactNumber = formContext.getAttribute(contactNumberControlTag);
+
+            var ssNumber = formContext.getAttribute("ed_socialsecuritynumberformat");
+            if (ssNumber != null) {
+                contactNumber.setValue(ssNumber.getValue());
+
+                var vssNumber = ssNumber.getValue();
+                var hifen = "-";
+                var position = 8;
+                var check = vssNumber.slice(position, position + 1);
+                if (check !== hifen)
+                    ssNumber.setValue([vssNumber.slice(0, position), hifen, vssNumber.slice(position)].join(''));
+            }
+
             if (!(!contactNumber.getValue() || 0 === contactNumber.getValue().length)) {
                 if (!Endeavor.Skanetrafiken.Contact.checkSocSecNumber(formContext, contactNumber.getValue()))
                     formContext.getControl(contactNumberControlTag).setNotification("Ogiltigt Persnonnummer<BR>(giltiga format: ååmmdd, ååååmmdd, ååååmmddxxxx, ååååmmdd-xxxx)");
