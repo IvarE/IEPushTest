@@ -22,7 +22,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
     Endeavor.Skanetrafiken.Contact = {
 
         _ticketMovesErrorHolder: "ticketMovesErrorHolder",
-        _listOfFormsSammanhang: ["Contact (3 - Skånetrafiken)", "Kund (3 - Skånetrafiken)"],
+        _listOfFormsSammanhang: ["Försäljning och Marknad", "Labbvy Admin", "Tre kolumner (Test)",
+            "Sales Insights", "Försäljningsinsikter", "Contact (Organisation)", "Kund (Företag)", "Contact"],
 
         onLoad: function (executionContext) {
             var formContext = executionContext.getFormContext();
@@ -467,21 +468,35 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 var valueList = Endeavor.Skanetrafiken.Contact._listOfFormsSammanhang[i];
                 if (formName == valueList) {
 
-                    formContext.getAttribute("ed_privatecustomercontact").setRequiredLevel("none");
-                    formContext.getAttribute("ed_businesscontact").setRequiredLevel("none");
-                    formContext.getAttribute("ed_agentcontact").setRequiredLevel("none");
-                    formContext.getAttribute("ed_kontaktperson").setRequiredLevel("none");
-                    formContext.getAttribute("ed_epostmottagare").setRequiredLevel("none");
-                    formContext.getAttribute("ed_infotainmentcontact").setRequiredLevel("none");
-                    formContext.getAttribute("ed_collaborationcontact").setRequiredLevel("none");
+                    if (formContext.getAttribute("ed_privatecustomercontact"))
+                        formContext.getAttribute("ed_privatecustomercontact").setRequiredLevel("none");
+                    if (formContext.getAttribute("ed_businesscontact"))
+                        formContext.getAttribute("ed_businesscontact").setRequiredLevel("none");
+                    if (formContext.getAttribute("ed_agentcontact"))
+                        formContext.getAttribute("ed_agentcontact").setRequiredLevel("none");
+                    if (formContext.getAttribute("ed_kontaktperson"))
+                        formContext.getAttribute("ed_kontaktperson").setRequiredLevel("none");
+                    if (formContext.getAttribute("ed_epostmottagare"))
+                        formContext.getAttribute("ed_epostmottagare").setRequiredLevel("none");
+                    if (formContext.getAttribute("ed_infotainmentcontact"))
+                        formContext.getAttribute("ed_infotainmentcontact").setRequiredLevel("none");
+                    if (formContext.getAttribute("ed_collaborationcontact"))
+                        formContext.getAttribute("ed_collaborationcontact").setRequiredLevel("none");
 
-                    formContext.getControl("ed_privatecustomercontact").setDisabled(true);
-                    formContext.getControl("ed_businesscontact").setDisabled(true);
-                    formContext.getControl("ed_agentcontact").setDisabled(true);
-                    formContext.getControl("ed_kontaktperson").setDisabled(true);
-                    formContext.getControl("ed_epostmottagare").setDisabled(true);
-                    formContext.getControl("ed_infotainmentcontact").setDisabled(true);
-                    formContext.getControl("ed_collaborationcontact").setDisabled(true);
+                    if (formContext.getControl("ed_privatecustomercontact"))
+                        formContext.getControl("ed_privatecustomercontact").setDisabled(true);
+                    if (formContext.getControl("ed_businesscontact"))
+                        formContext.getControl("ed_businesscontact").setDisabled(true);
+                    if (formContext.getControl("ed_agentcontact"))
+                        formContext.getControl("ed_agentcontact").setDisabled(true);
+                    if (formContext.getControl("ed_kontaktperson"))
+                        formContext.getControl("ed_kontaktperson").setDisabled(true);
+                    if (formContext.getControl("ed_epostmottagare"))
+                        formContext.getControl("ed_epostmottagare").setDisabled(true);
+                    if (formContext.getControl("ed_infotainmentcontact"))
+                        formContext.getControl("ed_infotainmentcontact").setDisabled(true);
+                    if (formContext.getControl("ed_collaborationcontact"))
+                        formContext.getControl("ed_collaborationcontact").setDisabled(true);
                 }
             }
         },
