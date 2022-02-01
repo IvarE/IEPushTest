@@ -22,7 +22,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
     Endeavor.Skanetrafiken.Contact = {
 
         _ticketMovesErrorHolder: "ticketMovesErrorHolder",
-        _listOfFormsSammanhang: ["Försäljning och Marknad", "Labbvy Admin", "Tre kolumner (Test)",
+        _listOfFormsSammanhang: ["Försäljning och Marknad",
             "Sales Insights", "Försäljningsinsikter", "Contact (Organisation)", "Kund (Företag)", "Contact"],
 
         onLoad: function (executionContext) {
