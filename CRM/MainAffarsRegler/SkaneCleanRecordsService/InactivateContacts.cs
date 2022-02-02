@@ -82,16 +82,16 @@ namespace Endeavor.Crm.CleanRecordsService
 
                 _log.Info($"runFullData Flag is {runFullData}");
                 bool bRunFullData = runFullData == "true" ? true : false;
-                ExecuteTransactionResponse responseWithResults = RunInactivateContacts(localContext, bRunFullData);
+                ExecuteMultipleResponse responseWithResults = RunInactivateContacts(localContext, bRunFullData);
 
-                //if (responseWithResults != null && responseWithResults.IsFaulted == true)
-                //{
-                //    _log.Error(String.Join("; ", responseWithResults.Responses.ToList().FindAll(x => x.Fault != null).Select(x => x.Fault.Message)));
-                //}
-                //else if (responseWithResults != null && responseWithResults.IsFaulted == false)
-                //{
+                if (responseWithResults != null && responseWithResults.IsFaulted == true)
+                {
+                    _log.Error(String.Join("; ", responseWithResults.Responses.ToList().FindAll(x => x.Fault != null).Select(x => x.Fault.Message)));
+                }
+                else if (responseWithResults != null && responseWithResults.IsFaulted == false)
+                {
 
-                //}
+                }
 
                 _log.Info($"ContactsService Done");
             }
@@ -113,6 +113,13 @@ namespace Endeavor.Crm.CleanRecordsService
 
             var queryFilter0 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter0);
+
+            if (bRunFullData)
+            {
+                _log.Info($"Contacts filtered by Created On Older than 3 months");
+                queryContacts.Criteria.AddCondition(Contact.Fields.CreatedOn, ConditionOperator.OlderThanXMonths, 3);
+            }
+
             queryFilter0.AddCondition(ContactEntity.Fields.ed_MklId, ConditionOperator.Null);
             queryFilter0.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
             queryFilter0.AddCondition(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true);
@@ -204,7 +211,7 @@ namespace Endeavor.Crm.CleanRecordsService
             };
         }
 
-        public static ExecuteTransactionResponse RunInactivateContacts(Plugin.LocalPluginContext localContext, bool bRunFullData)
+        public static ExecuteMultipleResponse RunInactivateContacts(Plugin.LocalPluginContext localContext, bool bRunFullData)
         {
             //Run everyday
             _log.Info($"'RunFullData': {bRunFullData}");
@@ -220,13 +227,11 @@ namespace Endeavor.Crm.CleanRecordsService
                 {
                     QueryExpression queryValueCodes = GetQueryValuesCodes(contact.Id);
                     List<ValueCodeEntity> lValueCodes = XrmRetrieveHelper.RetrieveMultiple<ValueCodeEntity>(localContext, queryValueCodes);
-                    _log.Info($"Found { lValueCodes.Count } Value Codes on Contact: {contact.Id}.");
 
                     if(lValueCodes.Count == 0)
                     {
                         UpdateRequest updateContact = GetUpdateRequest(contact.Id);
                         requestsLst.Add(updateContact);
-                        _log.InfoFormat($"Contact: {contact.FirstName} {contact.LastName} added to Request Batch to be Inactivated.");
                     }
                     else
                     {
@@ -244,7 +249,6 @@ namespace Endeavor.Crm.CleanRecordsService
                         {
                             UpdateRequest updateContact = GetUpdateRequest(contact.Id);
                             requestsLst.Add(updateContact);
-                            _log.InfoFormat($"Contact: {contact.FirstName} {contact.LastName} added to Request Batch to be Inactivated.");
                         }
                     }
                 }
@@ -254,8 +258,8 @@ namespace Endeavor.Crm.CleanRecordsService
                 }
             }
 
-            _log.Info($"Found { lContacts.Count } Contacts to be Inactivated.");
-            return Helper.ExecuteMultipleRequestsTransaction(localContext, requestsLst, true);
+            _log.Info($"Found { requestsLst.Count } Contacts to be Inactivated.");
+            return Helper.ExecuteMultipleRequests(localContext, requestsLst, true, true);
         }
     }
 }
