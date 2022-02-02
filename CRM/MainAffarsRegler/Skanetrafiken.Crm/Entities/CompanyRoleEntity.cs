@@ -217,9 +217,6 @@ namespace Skanetrafiken.Crm.Entities
         /// <returns></returns>
         internal static Guid? CreateNewCompanyRole(Plugin.LocalPluginContext localContext, CustomerInfo customerInfo, ref HttpResponseMessage resp)
         {
-            //FeatureToggling
-            FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_SplittCompany);
-
             CustomerInfoCompanyRole role = customerInfo.CompanyRole[0];
 
             // Finds existing Account - Add Bad Request to function?
@@ -228,17 +225,8 @@ namespace Skanetrafiken.Crm.Entities
             // Tries to find existing Contact, otherwise creates a new Contact
             //ContactEntity contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo);
 
-            ContactEntity contact = null;
-            if (feature.ed_SplittCompany == false) //Old Logic
-            {
-                // Tries to find existing Contact, otherwise creates a new Contact
-                contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo, null, feature); //Changed (06/05-20)
-            }
-            else if (feature.ed_SplittCompany == true) //New Logic
-            {
-                // Tries to find existing Contact, otherwise creates a new Contact
-                contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo, account, feature); //Changed (23/02-21)
-            }
+            // Tries to find existing Contact, otherwise creates a new Contact
+            ContactEntity contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo, account); //Changed (23/02-21)
 
             // Connect Contact to Accounts(level 1 and 2)
             // Create an AssociateEntities request.

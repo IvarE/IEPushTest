@@ -4431,8 +4431,6 @@ namespace Skanetrafiken.Crm.Controllers
                         return rm;
                     }
 
-                    FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_SplittCompany);
-
                     switch (entityTypeCode)
                     {
                         #region Contact
@@ -4507,25 +4505,6 @@ namespace Skanetrafiken.Crm.Controllers
                             };
                             conflictFilter.AddFilter(mailFilter);
 
-                            if (feature != null && feature.ed_SplittCompany == false)
-                            {
-                                if (contact.ed_HasSwedishSocialSecurityNumber.HasValue && contact.ed_HasSwedishSocialSecurityNumber.Value)
-                                {
-                                    FilterExpression socsecFilter = new FilterExpression(LogicalOperator.And)
-                                    {
-                                        Conditions =
-                                        {
-                                            new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
-                                            new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.NotNull),
-                                            new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, contact.cgi_socialsecuritynumber), //Change personal number
-                                            new ConditionExpression(ContactEntity.Fields.Id, ConditionOperator.NotEqual, contact.Id)
-
-                                        }
-                                    };
-                                    conflictFilter.AddFilter(socsecFilter);
-                                }
-                            }
-
                             QueryExpression conflictContactQuery = new QueryExpression()
                             {
                                 EntityName = ContactEntity.EntityLogicalName,
@@ -4538,8 +4517,6 @@ namespace Skanetrafiken.Crm.Controllers
                             #region Check for validated EmailAddress1
                             if (contactConflicts.Count > 0)
                             {
-                                if (feature != null && feature.ed_SplittCompany == true)
-                                {
                                     if (contact.ed_EmailToBeVerified.Equals(contactConflicts[0].EMailAddress1))
                                     {
                                         _log.Warn($"Th={threadId} - ValidateEmail: Found existing, validated contact with conflicting email {contact.ed_EmailToBeVerified}. Cannot validate this contact.");
@@ -4547,25 +4524,6 @@ namespace Skanetrafiken.Crm.Controllers
                                         rm3.Content = new StringContent(Resources.CouldNotVerifyCustomerEmail);
                                         return rm3;
                                     }
-                                }
-                                else if (feature == null || (feature != null && feature.ed_SplittCompany == false))
-                                {
-                                    if (contact.ed_EmailToBeVerified.Equals(contactConflicts[0].EMailAddress1))
-                                    {
-                                        _log.Warn($"Th={threadId} - ValidateEmail: Found existing, validated contact with conflicting email {contact.ed_EmailToBeVerified}. Cannot validate this contact.");
-                                        HttpResponseMessage rm3 = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                        rm3.Content = new StringContent(Resources.CouldNotVerifyCustomerEmail);
-                                        return rm3;
-                                    }
-                                    else
-                                    {
-                                        _log.Warn($"Th={threadId} - ValidateEmail: Found existing, validated contact with Social Security Number. Cannot validate this contact.");
-                                        _log.DebugFormat($"Th={threadId} - ValidateEmail: Found existing, validated contact with Social Security Number {contactConflicts[0].cgi_socialsecuritynumber}.");
-                                        HttpResponseMessage rm3 = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                        rm3.Content = new StringContent(Resources.CouldNotVerifyCustomerSocSec);
-                                        return rm3;
-                                    }
-                                }
                             }
                             #endregion
 
@@ -4594,28 +4552,6 @@ namespace Skanetrafiken.Crm.Controllers
                                     }
                                 }
                             };
-
-                            // If there is a socialSecuriityNumber, add condition
-                            if (feature != null && feature.ed_SplittCompany == false)
-                            {
-                                if (contact.ed_HasSwedishSocialSecurityNumber.HasValue && contact.ed_HasSwedishSocialSecurityNumber.Value)
-                                {
-                                    FilterExpression persNrFilter = new FilterExpression(LogicalOperator.And)
-                                    {
-                                        Conditions =
-                                        {
-                                            new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
-                                            new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, contact.cgi_socialsecuritynumber),
-                                            new ConditionExpression(ContactEntity.Fields.Id, ConditionOperator.NotEqual, contact.Id)
-                                        },
-                                        Filters =
-                                        {
-                                            nameFilter
-                                        }
-                                    };
-                                    mergeContactFilter.AddFilter(persNrFilter);
-                                }
-                            }
 
                             FilterExpression epostFilter = new FilterExpression(LogicalOperator.And)
                             {

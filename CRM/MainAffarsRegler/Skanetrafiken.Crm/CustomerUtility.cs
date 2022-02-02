@@ -439,39 +439,13 @@ namespace Skanetrafiken.Crm
                 #region ForetagsPortal
                 case (int)Schema.Generated.ed_informationsource.ForetagsPortal:
 
-                    FeatureTogglingEntity featureCompany = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_SplittCompany);
-
-                    if (featureCompany.ed_SplittCompany == true)
+                    if (customerInfo.CompanyRole != null)
                     {
-                        if (customerInfo.CompanyRole != null)
+                        if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) ||
+                            string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber))
                         {
-                            if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) ||
-                                string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber))
-                            {
-                                error = true;
-                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                            }
-                        }
-                    }
-                    else if (featureCompany.ed_SplittCompany == false)
-                    {
-                        if (customerInfo.CompanyRole != null)
-                        {
-                            if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Telephone)*/)
-                            {
-                                error = true;
-                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                            }
-                        }
-                        else
-                        {
-                            if (string.IsNullOrWhiteSpace(customerInfo.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.Mobile)*/)
-                            {
-                                error = true;
-                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                            }
+                            error = true;
+                            messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
                         }
                     }
                     break;
@@ -479,39 +453,13 @@ namespace Skanetrafiken.Crm
                 #region SkolPortal
                 case (int)Schema.Generated.ed_informationsource.SkolPortal:
 
-                    FeatureTogglingEntity featureSchool = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_SplittCompany);
-
-                    if (featureSchool.ed_SplittCompany == true)
+                    if (customerInfo.CompanyRole != null)
                     {
-                        if (customerInfo.CompanyRole != null)
+                        if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) ||
+                            string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber))
                         {
-                            if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) ||
-                                string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber))
-                            {
-                                error = true;
-                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                            }
-                        }
-                    }
-                    else if (featureSchool.ed_SplittCompany == false)
-                    {
-                        if (customerInfo.CompanyRole != null)
-                        {
-                            if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Telephone)*/)
-                            {
-                                error = true;
-                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                            }
-                        }
-                        else
-                        {
-                            if (string.IsNullOrWhiteSpace(customerInfo.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.Mobile)*/)
-                            {
-                                error = true;
-                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                            }
+                            error = true;
+                            messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
                         }
                     }
                     break;
@@ -519,39 +467,13 @@ namespace Skanetrafiken.Crm
                 #region SeniorPortal
                 case (int)Schema.Generated.ed_informationsource.SeniorPortal:
 
-                    FeatureTogglingEntity featureSenior = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_SplittCompany);
-
-                    if (featureSenior.ed_SplittCompany == true)
+                    if (customerInfo.CompanyRole != null)
                     {
-                        if (customerInfo.CompanyRole != null)
+                        if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) ||
+                            string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber))
                         {
-                            if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) ||
-                                string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber))
-                            {
-                                error = true;
-                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                            }
-                        }
-                    }
-                    else if (featureSenior.ed_SplittCompany == false)
-                    {
-                        if (customerInfo.CompanyRole != null)
-                        {
-                            if (string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0]?.Telephone)*/)
-                            {
-                                error = true;
-                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                            }
-                        }
-                        else
-                        {
-                            if (string.IsNullOrWhiteSpace(customerInfo.Email) /*||
-                        string.IsNullOrWhiteSpace(customerInfo.Mobile)*/)
-                            {
-                                error = true;
-                                messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                            }
+                            error = true;
+                            messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
                         }
                     }
                     break;
