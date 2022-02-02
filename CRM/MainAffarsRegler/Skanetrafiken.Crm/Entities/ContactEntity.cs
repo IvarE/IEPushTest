@@ -1778,7 +1778,7 @@ namespace Skanetrafiken.Crm.Entities
                     }
                    else if (response.StatusCode == HttpStatusCode.NotFound)
                     {
-                        throw new InvalidPluginExecutionException($"Kontakten hittades ej hos Mitt Konto, vill du fortfarande inaktivera kontakten, sätt Override Merge till Ja och utför åtgärden igen.");
+                        throw new InvalidPluginExecutionException($"Kontakten hittades ej hos Mitt Konto, vill du fortfarande inaktivera kontakten, sätt 'Mitt Konto Saknas' till Ja och utför åtgärden igen.");
                     }
 
                     

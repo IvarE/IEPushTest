@@ -31581,6 +31581,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_forceinactivatecontact")]
+		public System.Nullable<bool> ed_ForceInactivateContact
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_forceinactivatecontact");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_forceinactivatecontact", value);
+			}
+		}
+		
+		/// <summary>
 		/// Kontaktens ansvar i förhållande till Skånetrafiken
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_functioncontext")]
@@ -35794,6 +35810,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_Epostmottagare = "ed_epostmottagare";
 			
 			public const string ed_Fardtjanst = "ed_fardtjanst";
+			
+			public const string ed_ForceInactivateContact = "ed_forceinactivatecontact";
 			
 			public const string ed_functioncontext = "ed_functioncontext";
 			
