@@ -1468,7 +1468,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
                 //Halndle when there are multiple selected
                 if (confirm("Vill du öppna/hämta denna fil?") == true) {
-                    
+
                     var gridData = formContext.getData();
                     if (gridData != null && gridData != undefined && gridData.entity != null && gridData.entity != undefined) {
                         var gridAttributes = gridData.entity.attributes;
@@ -1479,16 +1479,34 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                                 //String with the link
                                 var encryptedLink = gridAtr[0].getValue();
 
-                                //alert(encryptedLink);
-                                parent.Xrm.Page.getControl("FileLinks").refresh();
+                                //If old Fileshare - open as usual
+                                if (encryptedLink.startsWith("https://www.skanetrafiken.se/CRMFiles") ||
+                                    encryptedLink.startsWith("http://www.skanetrafiken.se/CRMFiles") ||
+                                    encryptedLink.startsWith("https://dkcmsprod.skanetrafiken.se/CRMFiles/")) {
 
-                                parent.Xrm.Page.ui.setFormNotification("Hämtar fil...", "INFO", "attachmentInfo");
+                                    //do something else
+                                    //alert(encryptedLink);
+                                    window.open(encryptedLink, "_blank");
 
-                                parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+                                    parent.Xrm.Page.getControl("FileLinks").refresh();
 
-                                //Display file from opened resource:
-                                var windowOptions = { height: 1000, width: 950 };
-                                Xrm.Navigation.openWebResource("ed_/html/Endeavor.Skanetrafiken.DisplayCaseAttachment.html", windowOptions, encryptedLink);
+                                    parent.Xrm.Page.ui.setFormNotification("Hämtar fil...", "INFO", "attachmentInfo");
+
+                                    parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+                                }
+                                else
+                                {
+                                    //alert(encryptedLink);
+                                    parent.Xrm.Page.getControl("FileLinks").refresh();
+
+                                    parent.Xrm.Page.ui.setFormNotification("Hämtar fil...", "INFO", "attachmentInfo");
+
+                                    parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
+
+                                    //Display file from opened resource:
+                                    var windowOptions = { height: 1000, width: 950 };
+                                    Xrm.Navigation.openWebResource("ed_/html/Endeavor.Skanetrafiken.DisplayCaseAttachment.html", windowOptions, encryptedLink);
+                                }
                             }
                         }
                     }
