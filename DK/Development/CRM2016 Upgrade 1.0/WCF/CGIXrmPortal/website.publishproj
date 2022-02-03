@@ -50,6 +50,10 @@ Copyright (C) Microsoft Corporation. All rights reserved.
       <Project>{73F74590-72AF-4DCD-B101-3A449036D550}</Project>
       <Name>CGIXrmLogger</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\XrmManager\Version 8.0.0\CGIXrmWinLibrary.csproj">
+      <Project>{B6B2BCBA-B247-4BE0-9858-2244DCD75C93}</Project>
+      <Name>CGIXrmWinLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(_WebPublishTargetsPath)\Web\Microsoft.WebSite.Publishing.targets" />
 </Project>
