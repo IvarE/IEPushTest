@@ -27,9 +27,9 @@ namespace Skanetrafiken.Crm.Entities
                     QueryExpression queryContacts = new QueryExpression(Generated.Contact.EntityLogicalName);
                     queryContacts.NoLock = true;
                     queryContacts.ColumnSet = new ColumnSet(Generated.Contact.Fields.ContactId);
-                    queryContacts.Criteria.AddCondition(Generated.Contact.Fields.ed_MklId, ConditionOperator.Equal, contactNumber);
+                    queryContacts.Criteria.AddCondition(Generated.Contact.Fields.cgi_ContactNumber, ConditionOperator.Equal, contactNumber);
                     var lContacts = XrmRetrieveHelper.RetrieveMultiple<Generated.Contact>(localContext, queryContacts);
-                    localContext.Trace($"Found {lContacts.Count} Contacts with ed_MklId {contactNumber}");
+                    localContext.Trace($"Found {lContacts.Count} Contacts with cgi_ContactNumber {contactNumber}");
                     if (lContacts.Count == 1)
                     {
                         var eContact = lContacts.FirstOrDefault();
@@ -64,9 +64,9 @@ namespace Skanetrafiken.Crm.Entities
                     QueryExpression queryContacts = new QueryExpression(Generated.Contact.EntityLogicalName);
                     queryContacts.NoLock = true;
                     queryContacts.ColumnSet = new ColumnSet(Generated.Contact.Fields.ContactId);
-                    queryContacts.Criteria.AddCondition(Generated.Contact.Fields.ed_MklId, ConditionOperator.Equal, contactNumber);
+                    queryContacts.Criteria.AddCondition(Generated.Contact.Fields.cgi_ContactNumber, ConditionOperator.Equal, contactNumber);
                     var lContacts = XrmRetrieveHelper.RetrieveMultiple<Generated.Contact>(localContext, queryContacts);
-                    localContext.Trace($"Found {lContacts.Count} Contacts with ed_MklId {contactNumber}");
+                    localContext.Trace($"Found {lContacts.Count} Contacts with cgi_ContactNumber {contactNumber}");
                     if (lContacts.Count == 1)
                     {
                         var eContact = lContacts.FirstOrDefault();
