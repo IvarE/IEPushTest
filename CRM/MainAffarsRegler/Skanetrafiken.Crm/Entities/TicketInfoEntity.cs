@@ -4,41 +4,45 @@ using Microsoft.Xrm.Sdk.Query;
 
 using System;
 using System.Linq;
-using Generated = Skanetrafiken.Crm.Schema.Generated;
+using Skanetrafiken.Crm.Schema.Generated;
 
 namespace Skanetrafiken.Crm.Entities
 {
-    public class TicketInfoEntity : Generated.ed_ticketinfo
+    public class TicketInfoEntity : ed_ticketinfo
     {
         internal void HandlePostTicketPurchasesCreateAsync(Plugin.LocalPluginContext localContext)
         {
             try
             {
-                Generated.ed_ticketinfo uTicketInfo = new Generated.ed_ticketinfo();
-                uTicketInfo.Id = this.Id;
+                bool needsUpdate = false;
+                ed_ticketinfo uTicketInfo = new ed_ticketinfo();
 
-                string offerName = this.FormattedValues["ed_offername"];
-                string contactNumber = this.ed_CRMNumber;
-                uTicketInfo.ed_name = contactNumber + "_" + offerName;
-
-                if (!string.IsNullOrEmpty(contactNumber))
+                string mklId = ed_MklId;
+                string nName = ed_CRMNumber + "_" + FormattedValues["ed_offername"];
+                if (ed_name != nName)
                 {
-                    localContext.Trace(contactNumber);
-                    QueryExpression queryContacts = new QueryExpression(Generated.Contact.EntityLogicalName);
-                    queryContacts.NoLock = true;
-                    queryContacts.ColumnSet = new ColumnSet(Generated.Contact.Fields.ContactId);
-                    queryContacts.Criteria.AddCondition(Generated.Contact.Fields.cgi_ContactNumber, ConditionOperator.Equal, contactNumber);
-                    var lContacts = XrmRetrieveHelper.RetrieveMultiple<Generated.Contact>(localContext, queryContacts);
-                    localContext.Trace($"Found {lContacts.Count} Contacts with cgi_ContactNumber {contactNumber}");
+                    uTicketInfo.ed_name = nName;
+                    needsUpdate = true;
+                }
+
+                if (!string.IsNullOrEmpty(mklId))
+                {
+                    var lContacts = SingaporeTicketEntity.GetActiveContactQuery(localContext, mklId);
+                    localContext.Trace($"Found {lContacts.Count} Active Contacts with ed_MklId {mklId}");
                     if (lContacts.Count == 1)
                     {
                         var eContact = lContacts.FirstOrDefault();
                         var erContact = new EntityReference(eContact.LogicalName, eContact.Id);
                         uTicketInfo.ed_Contact = erContact;
+                        needsUpdate = true;
                     }
                 }
 
-                XrmHelper.Update(localContext, uTicketInfo);
+                if (needsUpdate)
+                {
+                    uTicketInfo.Id = Id;
+                    XrmHelper.Update(localContext, uTicketInfo);
+                }
             }
             catch (Exception e)
             {
@@ -47,35 +51,44 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
-        internal void HandlePostTicketPurchasesUpdateAsync(Plugin.LocalPluginContext localContext, Generated.ed_ticketinfo preImage)
+        internal void HandlePostTicketPurchasesUpdateAsync(Plugin.LocalPluginContext localContext, ed_ticketinfo preImage)
         {
             try
             {
-                Generated.ed_ticketinfo uTicketInfo = new Generated.ed_ticketinfo();
-                uTicketInfo.Id = this.Id;
+                bool needsUpdate = false;
+                ed_ticketinfo uTicketInfo = new ed_ticketinfo();
 
-                string offerName = string.IsNullOrEmpty(this.FormattedValues["ed_offername"]) ? preImage.FormattedValues["ed_offername"] : this.FormattedValues["ed_offername"];
+                string mklId = string.IsNullOrEmpty(ed_MklId) ? preImage.ed_MklId : ed_MklId;
                 string contactNumber = string.IsNullOrEmpty(this.ed_CRMNumber) ? preImage.ed_CRMNumber : this.ed_CRMNumber;
-                uTicketInfo.ed_name = contactNumber + "_" + offerName;
+                string offerName = string.IsNullOrEmpty(this.FormattedValues["ed_offername"]) ? preImage.FormattedValues["ed_offername"] : this.FormattedValues["ed_offername"];
 
-                if (!string.IsNullOrEmpty(contactNumber))
+                string nName = contactNumber + "_" + offerName;
+                if (preImage.ed_name != nName)
                 {
-                    localContext.Trace(contactNumber);
-                    QueryExpression queryContacts = new QueryExpression(Generated.Contact.EntityLogicalName);
-                    queryContacts.NoLock = true;
-                    queryContacts.ColumnSet = new ColumnSet(Generated.Contact.Fields.ContactId);
-                    queryContacts.Criteria.AddCondition(Generated.Contact.Fields.cgi_ContactNumber, ConditionOperator.Equal, contactNumber);
-                    var lContacts = XrmRetrieveHelper.RetrieveMultiple<Generated.Contact>(localContext, queryContacts);
-                    localContext.Trace($"Found {lContacts.Count} Contacts with cgi_ContactNumber {contactNumber}");
+                    uTicketInfo.ed_name = nName;
+                    needsUpdate = true;
+                }
+
+                if (!string.IsNullOrEmpty(mklId))
+                {
+                    var lContacts = SingaporeTicketEntity.GetActiveContactQuery(localContext, mklId);
+                    localContext.Trace($"Found {lContacts.Count} Active Contacts with ed_MklId {mklId}");
                     if (lContacts.Count == 1)
                     {
                         var eContact = lContacts.FirstOrDefault();
-                        var erContact = new EntityReference(eContact.LogicalName, eContact.Id);
-                        uTicketInfo.ed_Contact = erContact;
+                        if(eContact.Id != preImage.ed_Contact?.Id)
+                        {
+                            uTicketInfo.ed_Contact = eContact.ToEntityReference();
+                            needsUpdate = true;
+                        }
                     }
                 }
 
-                XrmHelper.Update(localContext, uTicketInfo);
+                if (needsUpdate)
+                {
+                    uTicketInfo.Id = Id;
+                    XrmHelper.Update(localContext, uTicketInfo);
+                }
             }
             catch (Exception e)
             {
