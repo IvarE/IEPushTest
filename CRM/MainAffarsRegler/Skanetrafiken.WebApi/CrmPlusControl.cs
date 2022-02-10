@@ -4829,45 +4829,45 @@ namespace Skanetrafiken.Crm.Controllers
                             }
 
                             #region Conflicting Kampanj Leads Query using EmailAddress1
-                            //QueryExpression kampanjLeadConflictQuery = new QueryExpression()
-                            //{
-                            //    EntityName = LeadEntity.EntityLogicalName,
-                            //    ColumnSet = LeadEntity.LeadInfoBlock,
-                            //    Criteria =
-                            //    {
-                            //        Conditions =
-                            //        {
-                            //            new ConditionExpression(LeadEntity.Fields.Id, ConditionOperator.NotEqual, lead.Id),
-                            //            new ConditionExpression(LeadEntity.Fields.EMailAddress1, ConditionOperator.Equal, lead.EMailAddress1),
-                            //            new ConditionExpression(LeadEntity.Fields.ed_InformationSource, ConditionOperator.Equal, (int)ed_informationsource.Kampanj),
-                            //            new ConditionExpression(LeadEntity.Fields.StateCode, ConditionOperator.Equal, (int)LeadState.Open)
-                            //        }
-                            //    }
-                            //};
+                            QueryExpression kampanjLeadConflictQuery = new QueryExpression()
+                            {
+                                EntityName = LeadEntity.EntityLogicalName,
+                                ColumnSet = LeadEntity.LeadInfoBlock,
+                                Criteria =
+                                {
+                                    Conditions =
+                                    {
+                                        new ConditionExpression(LeadEntity.Fields.Id, ConditionOperator.NotEqual, lead.Id),
+                                        new ConditionExpression(LeadEntity.Fields.EMailAddress1, ConditionOperator.Equal, lead.EMailAddress1),
+                                        new ConditionExpression(LeadEntity.Fields.ed_InformationSource, ConditionOperator.Equal, (int)ed_informationsource.Kampanj),
+                                        new ConditionExpression(LeadEntity.Fields.StateCode, ConditionOperator.Equal, (int)LeadState.Open)
+                                    }
+                                }
+                            };
                             #endregion
-                            //kampanjLeadConflictQuery.AddOrder(LeadEntity.Fields.CreatedOn, OrderType.Descending);
+                            kampanjLeadConflictQuery.AddOrder(LeadEntity.Fields.CreatedOn, OrderType.Descending);
 
-                            //List<LeadEntity> conflictKampanjLeads = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, kampanjLeadConflictQuery);
-                            //_log.Info($"Th={threadId} - ValidateEmail: Found {conflictKampanjLeads.Count} conflicting Kampanj Leads");
+                            List<LeadEntity> conflictKampanjLeads = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, kampanjLeadConflictQuery);
+                            _log.Info($"Th={threadId} - ValidateEmail: Found {conflictKampanjLeads.Count} conflicting Kampanj Leads");
 
-                            //if (conflictKampanjLeads.Count > 0)
-                            //{
-                            //    LeadEntity recentLead = conflictKampanjLeads.FirstOrDefault();
-                            //    _log.DebugFormat($"Th={threadId} - ValidateEmail: Merging {conflictKampanjLeads.Count} Kampanj Leads with the new Contact");
-                            //    ContactEntity.UpdateContactWithLeadKampanj(ref nContact, recentLead);
+                            if (conflictKampanjLeads.Count > 0)
+                            {
+                                LeadEntity recentLead = conflictKampanjLeads.FirstOrDefault();
+                                _log.DebugFormat($"Th={threadId} - ValidateEmail: Merging {conflictKampanjLeads.Count} Kampanj Leads with the new Contact");
+                                ContactEntity.UpdateContactWithLeadKampanj(ref nContact, recentLead);
 
-                            //    QualifyLeadRequest req = new QualifyLeadRequest()
-                            //    {
-                            //        LeadId = recentLead.ToEntityReference(),
-                            //        CreateAccount = false,
-                            //        CreateContact = false,
-                            //        CreateOpportunity = false,
-                            //        Status = new OptionSetValue((int)Generated.lead_statuscode.Qualified)
-                            //    };
+                                QualifyLeadRequest req = new QualifyLeadRequest()
+                                {
+                                    LeadId = recentLead.ToEntityReference(),
+                                    CreateAccount = false,
+                                    CreateContact = false,
+                                    CreateOpportunity = false,
+                                    Status = new OptionSetValue((int)Generated.lead_statuscode.Qualified)
+                                };
 
-                            //    localContext.OrganizationService.Execute(req);
-                            //    _log.Debug($"Th={threadId} - ValidateEmail: Contact updated with Lead.");
-                            //}
+                                localContext.OrganizationService.Execute(req);
+                                _log.Debug($"Th={threadId} - ValidateEmail: Contact updated with Lead.");
+                            }
 
                             if (nContact.DoNotEMail == true)
                             {
