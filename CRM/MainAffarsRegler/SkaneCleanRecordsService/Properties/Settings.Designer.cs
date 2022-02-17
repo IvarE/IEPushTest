@@ -34,7 +34,7 @@ namespace Endeavor.Crm.CleanRecordsService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0 0 20 ? * FRI *")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0 19 ? * SAT *")]
         public string CloseCaseScheduleCronExpression {
             get {
                 return ((string)(this["CloseCaseScheduleCronExpression"]));
@@ -79,7 +79,7 @@ namespace Endeavor.Crm.CleanRecordsService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0 * * ? * *")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0 18 ? * SAT *")]
         public string InactivateContactsScheduleCronExpression {
             get {
                 return ((string)(this["InactivateContactsScheduleCronExpression"]));
@@ -88,7 +88,7 @@ namespace Endeavor.Crm.CleanRecordsService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0 0 20 ? * FRI *")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0 20 ? * SAT *")]
         public string DeleteAuditScheduleCronExpression {
             get {
                 return ((string)(this["DeleteAuditScheduleCronExpression"]));
