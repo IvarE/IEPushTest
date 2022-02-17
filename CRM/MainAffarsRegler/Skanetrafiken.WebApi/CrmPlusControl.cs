@@ -8,6 +8,8 @@ using Skanetrafiken.Crm.Entities;
 using Endeavor.Crm;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
+using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Endeavor.Crm.Extensions;
 using System.Web;
 using Microsoft.Crm.Sdk.Messages;
@@ -26,6 +28,7 @@ using System.IO;
 using System.IdentityModel;
 using Skanetrafiken.Crm.Models;
 using Skanetrafiken.Crm.Schema.Generated;
+using System.Threading.Tasks;
 
 namespace Skanetrafiken.Crm.Controllers
 {
@@ -4829,45 +4832,45 @@ namespace Skanetrafiken.Crm.Controllers
                             }
 
                             #region Conflicting Kampanj Leads Query using EmailAddress1
-                            //QueryExpression kampanjLeadConflictQuery = new QueryExpression()
-                            //{
-                            //    EntityName = LeadEntity.EntityLogicalName,
-                            //    ColumnSet = LeadEntity.LeadInfoBlock,
-                            //    Criteria =
-                            //    {
-                            //        Conditions =
-                            //        {
-                            //            new ConditionExpression(LeadEntity.Fields.Id, ConditionOperator.NotEqual, lead.Id),
-                            //            new ConditionExpression(LeadEntity.Fields.EMailAddress1, ConditionOperator.Equal, lead.EMailAddress1),
-                            //            new ConditionExpression(LeadEntity.Fields.ed_InformationSource, ConditionOperator.Equal, (int)ed_informationsource.Kampanj),
-                            //            new ConditionExpression(LeadEntity.Fields.StateCode, ConditionOperator.Equal, (int)LeadState.Open)
-                            //        }
-                            //    }
-                            //};
+                            QueryExpression kampanjLeadConflictQuery = new QueryExpression()
+                            {
+                                EntityName = LeadEntity.EntityLogicalName,
+                                ColumnSet = LeadEntity.LeadInfoBlock,
+                                Criteria =
+                                {
+                                    Conditions =
+                                    {
+                                        new ConditionExpression(LeadEntity.Fields.Id, ConditionOperator.NotEqual, lead.Id),
+                                        new ConditionExpression(LeadEntity.Fields.EMailAddress1, ConditionOperator.Equal, lead.EMailAddress1),
+                                        new ConditionExpression(LeadEntity.Fields.ed_InformationSource, ConditionOperator.Equal, (int)ed_informationsource.Kampanj),
+                                        new ConditionExpression(LeadEntity.Fields.StateCode, ConditionOperator.Equal, (int)LeadState.Open)
+                                    }
+                                }
+                            };
                             #endregion
-                            //kampanjLeadConflictQuery.AddOrder(LeadEntity.Fields.CreatedOn, OrderType.Descending);
+                            kampanjLeadConflictQuery.AddOrder(LeadEntity.Fields.CreatedOn, OrderType.Descending);
 
-                            //List<LeadEntity> conflictKampanjLeads = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, kampanjLeadConflictQuery);
-                            //_log.Info($"Th={threadId} - ValidateEmail: Found {conflictKampanjLeads.Count} conflicting Kampanj Leads");
+                            List<LeadEntity> conflictKampanjLeads = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, kampanjLeadConflictQuery);
+                            _log.Info($"Th={threadId} - ValidateEmail: Found {conflictKampanjLeads.Count} conflicting Kampanj Leads");
 
-                            //if (conflictKampanjLeads.Count > 0)
-                            //{
-                            //    LeadEntity recentLead = conflictKampanjLeads.FirstOrDefault();
-                            //    _log.DebugFormat($"Th={threadId} - ValidateEmail: Merging {conflictKampanjLeads.Count} Kampanj Leads with the new Contact");
-                            //    ContactEntity.UpdateContactWithLeadKampanj(ref nContact, recentLead);
+                            if (conflictKampanjLeads.Count > 0)
+                            {
+                                LeadEntity recentLead = conflictKampanjLeads.FirstOrDefault();
+                                _log.DebugFormat($"Th={threadId} - ValidateEmail: Merging {conflictKampanjLeads.Count} Kampanj Leads with the new Contact");
+                                ContactEntity.UpdateContactWithLeadKampanj(ref nContact, recentLead);
 
-                            //    QualifyLeadRequest req = new QualifyLeadRequest()
-                            //    {
-                            //        LeadId = recentLead.ToEntityReference(),
-                            //        CreateAccount = false,
-                            //        CreateContact = false,
-                            //        CreateOpportunity = false,
-                            //        Status = new OptionSetValue((int)Generated.lead_statuscode.Qualified)
-                            //    };
+                                QualifyLeadRequest req = new QualifyLeadRequest()
+                                {
+                                    LeadId = recentLead.ToEntityReference(),
+                                    CreateAccount = false,
+                                    CreateContact = false,
+                                    CreateOpportunity = false,
+                                    Status = new OptionSetValue((int)Generated.lead_statuscode.Qualified)
+                                };
 
-                            //    localContext.OrganizationService.Execute(req);
-                            //    _log.Debug($"Th={threadId} - ValidateEmail: Contact updated with Lead.");
-                            //}
+                                localContext.OrganizationService.Execute(req);
+                                _log.Debug($"Th={threadId} - ValidateEmail: Contact updated with Lead.");
+                            }
 
                             if (nContact.DoNotEMail == true)
                             {
@@ -5655,6 +5658,216 @@ namespace Skanetrafiken.Crm.Controllers
             // TODO teo - transfer activities from lead to contact?
 
             return updated;
+        }
+
+        private static async Task<string> GetAccessToken(string clientId, string clientSectret, string tenantId)
+        {
+            var authContext = new Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext("https://login.windows.net/" + $"{tenantId}");
+            var credential = new Microsoft.IdentityModel.Clients.ActiveDirectory.ClientCredential(clientId, clientSectret);
+            var result = await authContext.AcquireTokenAsync("https://storage.azure.com", credential);
+
+            if (result == null)
+            {
+                _log.Warn($"-- GetAccessToken Failed! --");
+                throw new Exception("Failed to authenticate via ADAL");
+            }
+
+            return result.AccessToken;
+        }
+
+        public static string HandleAttachemntFilesFromAzure(int threadId, string clientId, string clientSecret, string tenantId, string storageAccountName, string containerName, string fileUrl, Guid? emailGuid) 
+        {
+            bool createdCheck = false;
+            try
+            {
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating serviceProxy");
+                // Cast the proxy client to the IOrganizationService interface.
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                {
+                    Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: ServiceProxy and LocalContext created Successfully.");
+
+                    byte[] imageByteArray = { };
+                    string returnString = "";
+
+                    //TODO:
+                    _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Starting TASK...");
+
+                    Task.Run(async () =>
+                    {
+                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Getting Access Token...");
+                        var token = await GetAccessToken(clientId, clientSecret, tenantId);
+                        if (token != string.Empty)
+                        {
+                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Token Retrieved => {token}");
+                        }
+                        else
+                        {
+                            throw new Exception(string.Format($"Could not retrieve a Token!"));
+                        }
+
+                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating Token Credential...");
+                        TokenCredential tokenCredential = new TokenCredential(token);
+                        if (tokenCredential != null)
+                        {
+                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Token Credential Created!");
+                        }
+                        else
+                        {
+                            throw new Exception(string.Format($"Could not create Token Credential!"));
+                        }
+
+                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating Storage Credential...");
+                        StorageCredentials storageCredentials = new StorageCredentials(tokenCredential);
+                        if (storageCredentials != null)
+                        {
+                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Storage Credential Created!");
+                        }
+                        else
+                        {
+                            throw new Exception(string.Format($"Could not create Storage Credential!"));
+                        }
+
+                        string cloudBlobClientURI = "https://" + $"{storageAccountName}" + ".blob.core.windows.net";
+                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating CloudBlobClient with URI: \n {cloudBlobClientURI}");
+                        CloudBlobClient client = new CloudBlobClient(new Uri(cloudBlobClientURI), storageCredentials);
+                        if (client != null)
+                        {
+                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: CloudBlobClient Created!");
+                        }
+                        else
+                        {
+                            throw new Exception(string.Format($"Could not create CloudBlobClient with URI: {cloudBlobClientURI}"));
+                        }
+
+                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating CloudBlobContainer with ContainerName: {containerName}");
+                        CloudBlobContainer container = client.GetContainerReference(containerName);
+                        if (container != null)
+                        {
+                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: CloudBlobContainer Created!");
+                        }
+                        else
+                        {
+                            throw new Exception(string.Format($"Could not create CloudBlobContainer with ContainerName: {containerName}"));
+                        }
+
+                        //var blob = container.GetBlockBlobReference(FileName);
+                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Getting File as a blob using 'container.GetBlockBlobReference()'...");
+                        var blob = container.GetBlockBlobReference(fileUrl);
+                        if (blob != null)
+                        {
+                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Blob Retrieved!");
+                        }
+                        else
+                        {
+                            throw new Exception(string.Format($"Could not find a Blob using GetBlockBlobReference()!"));
+                        }
+
+                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating MemoryStream...");
+                        MemoryStream ms = new MemoryStream();
+                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: MemoryStream Created!");
+
+                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Downloading Blob to created Stream...");
+                        blob.DownloadToStream(ms); //*****
+                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Blob downloaded to Stream!");
+
+                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Parsing Stream to Byte content...");
+
+                        imageByteArray = ms.ToArray();
+                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Stream Parsed to Byte content!");
+
+                    }).Wait();
+                    _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: TASK finished!");
+
+                    if (imageByteArray?.Length > 0)
+                    {
+                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: imageByteArray greater than 0!");
+                        string attachmentBase64String = Convert.ToBase64String(imageByteArray);
+                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: imageByteArray converted to Base64 String!");
+
+                        if (emailGuid != null)
+                        {
+                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating Attachment");
+                            //Create attachments for Email - Get file extention
+                            //handle Extention
+                            string[] extentionTmp = fileUrl.Split('.');
+
+                            Entity attachment = new Entity("activitymimeattachment");
+                            attachment["subject"] = extentionTmp[0];
+                            string fileName = fileUrl;
+                            attachment["filename"] = fileName;
+                            attachment["body"] = attachmentBase64String;
+
+                            if (extentionTmp[1] == "rtf")
+                            {
+                                attachment["mimetype"] = "application/rtf";
+                            }
+                            else if (extentionTmp[1] == "doc") 
+                            {
+                                attachment["mimetype"] = "application/msword";
+                            }
+                            else if (extentionTmp[1] == "docx")
+                            {
+                                attachment["mimetype"] = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                            }
+                            else if (extentionTmp[1] == "txt")
+                            {
+                                attachment["mimetype"] = "text/plain";
+                            }
+                            else if (extentionTmp[1] == "pdf")
+                            {
+                                attachment["mimetype"] = "application/pdf";
+                            }
+                            else
+                            {
+                                attachment["mimetype"] = $"image/{extentionTmp[1]}";
+                            }
+
+                            //attachment["attachmentnumber"] = 1;
+                            attachment["objectid"] = new EntityReference("email", (Guid)emailGuid);
+                            attachment["objecttypecode"] = "email";
+                            XrmHelper.Create(localContext, attachment);
+
+                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Attachment Created");
+
+                            createdCheck = true;
+                        }
+                        else 
+                        {
+                            return attachmentBase64String;
+                        }
+                    }
+                    else 
+                    {
+                        throw new Exception(string.Format($"Parsed Stream did not have any value!"));
+                    }
+
+                    return returnString;
+                }
+            }
+            catch (Exception ex)
+            {
+                string error = string.Empty;
+                if (createdCheck == false)
+                {
+                    error = $"Th={threadId} - Exception was thrown in HandleAttachemntFilesFromAzure: {ex.Message}";
+                }
+                else 
+                {
+                    error = $"Th={threadId} - (Created) Exception was thrown in HandleAttachemntFilesFromAzure: {ex.Message}";
+                }
+                
+                return error;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
+            }
         }
 
         //public static HttpResponseMessage CreateValueCodeCRM(int threadId, ValueCodeResponseInfo valueCodeInfo)

@@ -817,6 +817,55 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             }
         },
 
+        showCreateChildAccountButton: function (formContext) {
+            try {
+
+                var formItem = formContext.ui.formSelector.getCurrentItem();
+                if (formItem != null) {
+                    var formLabel = formItem.getLabel();
+                    return formLabel == "Annons";
+                }
+                return false;
+
+            } catch (e) {
+                alert("Error in Endeavor.Skanetrafiken.Account.showCreateChildAccountButton\n\n", e.message);
+            }
+        },
+
+        createChildAccount: function (formContext) {
+            try {
+
+                var id = formContext.data.entity.getId();
+
+                if (id == null || id == "")
+                    return;
+
+                var name = Endeavor.formscriptfunctions.GetValue("name", formContext);
+
+                var entityFormOptions = {};
+                entityFormOptions["entityName"] = "account";
+
+                // Set default values for the Child Account
+                var formParameters = {};
+                formParameters["name"] = name;
+                formParameters["ed_infotainmentcustomer"] = true;
+                formParameters["parentaccountid"] = id;
+                formParameters["parentaccountidname"] = name;
+
+                // Open the form.
+                Xrm.Navigation.openForm(entityFormOptions, formParameters).then(
+                    function (success) {
+                        console.log(success);
+                    },
+                    function (error) {
+                        console.log(error); parentaccountid
+                    });
+
+            } catch (e) {
+                alert("Error in Endeavor.Skanetrafiken.Account.createChildAccount\n\n", e.message);
+            }
+        },
+
         openMigration_WebResource: function () {
             try {
 

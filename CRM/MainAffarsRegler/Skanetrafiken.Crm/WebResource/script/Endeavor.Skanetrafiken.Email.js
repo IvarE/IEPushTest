@@ -19,6 +19,10 @@ if (typeof (Endeavor.Skanetrafiken) == "undefined") {
 if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
     Endeavor.Skanetrafiken.Email = {
 
+        attachmentUrls: "",
+
+        tempFormContext: function () { },
+
         saveAndSendEmail: function (formContext) {
             debugger;
             formContext.data.save().then(function () { Endeavor.Skanetrafiken.Email.SendEmail(formContext); }, function () { Endeavor.Skanetrafiken.Email.ErrorOnSave(formContext); });
@@ -50,7 +54,6 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
 
             var formContext = executionContext.getFormContext();
 
-            
             Endeavor.Skanetrafiken.Email.addLookupFilter(formContext);
 
             var _form_type = formContext.ui.getFormType();
@@ -125,24 +128,40 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
         set_filelinks_onchange: function (executionContext) {
             try {
                 var formContext = executionContext.getFormContext();
-
-                var _act_value = formContext.data.entity.attributes.get("cgi_getfilelink").getValue();
-                var _attribute = formContext.getAttribute("regardingobjectid");
-
-                if (_attribute == null) {
-                    alert("Den här e-postadressen har ingen associerad post.");
-                    return;
+                switch (formContext.ui.getFormType()) {
+                    case FORM_TYPE_CREATE:
+                        alert("The Email must be saved before attaching attachments!");
+                        break;
+                    case FORM_TYPE_UPDATE:
+                        Endeavor.Skanetrafiken.Email.populateAttachmentArray(formContext);
+                        break;
+                    case FORM_TYPE_READONLY:
+                    case FORM_TYPE_DISABLED:
+                    case FORM_TYPE_QUICKCREATE:
+                    case FORM_TYPE_BULKEDIT:
+                        break;
+                    default:
+                        alert("Form type error!");
+                        break;
                 }
 
-                var _lookup = _attribute.getValue();
+                //var _act_value = formContext.data.entity.attributes.get("cgi_getfilelink").getValue();
+                //var _attribute = formContext.getAttribute("regardingobjectid");
 
-                if (_lookup != null) {
-                    var entity_name = _lookup[0].entityType;
-                    var _incidentid = _lookup[0].id.replace("{", "").replace("}", "");
+                //if (_attribute == null) {
+                //    alert("Den här e-postadressen har ingen associerad post.");
+                //    return;
+                //}
 
-                    if (entity_name == "incident" && _act_value == true)
-                        Endeavor.OData_Querys.GetFilelinks(_incidentid, formContext);
-                }
+                //var _lookup = _attribute.getValue();
+
+                //if (_lookup != null) {
+                //    var entity_name = _lookup[0].entityType;
+                //    var _incidentid = _lookup[0].id.replace("{", "").replace("}", "");
+
+                //    if (entity_name == "incident" && _act_value == true)
+                //        Endeavor.OData_Querys.GetFilelinks(_incidentid, formContext);
+                //}
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.KBArticle.set_filelinks_onchange\n\n" + e.message);
@@ -380,6 +399,204 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
                 var _currentdate = Endeavor.formscriptfunctions.GetDateTime();
                 Endeavor.OData_Querys.GetDefaultUserFromSetting(_currentdate, formContext);
             }
+        },
+
+        populateAttachmentArray: function (formContext) {
+            try {
+                debugger;
+                //var formContext = executionContext.getFormContext();
+                Endeavor.Skanetrafiken.Email.attachmentUrls = formContext.data.entity.getId();
+                Endeavor.Skanetrafiken.Email.tempFormContext = formContext;
+
+                //Get a list of all the attachment URLS
+                var incAtr = formContext.getAttribute("regardingobjectid").getValue();
+                var getFilelinkAtr = formContext.getAttribute("cgi_getfilelink").getValue();
+
+                if (getFilelinkAtr != undefined && getFilelinkAtr != false && incAtr != undefined && incAtr != null && incAtr.length > 0)
+                {
+                    var incidentId = incAtr[0].id.replace("{", "").replace("}", "");
+
+                    var fetchXml = [
+                        "<fetch>",
+                        "  <entity name='cgi_filelink'>",
+                        "    <attribute name='cgi_url' />",
+                        "    <attribute name='cgi_incidentid' />",
+                        "    <filter type='and'>",
+                        "      <condition attribute='cgi_incidentid' operator='eq' value='", incidentId, "'/>",
+                        "    </filter>",
+                        "  </entity>",
+                        "</fetch>",
+                    ].join("");
+
+                    fetchXml = "?fetchXml=" + fetchXml;
+
+                    Xrm.WebApi.retrieveMultipleRecords("cgi_filelink", fetchXml).then(
+                        function success(result) {
+                            debugger;
+                            if (result.entities.length > 0) {
+                                //Loop
+                                if (confirm("Vill du hämta och infoga bilagor från ärende?") == true) {
+
+                                    Xrm.Utility.showProgressIndicator("Hämtar bilagor...");
+
+                                    var fileLink = "";
+                                    var fileLinkString = "";
+                                    var fileLinkArray = [];
+                                    for (var i = 0; i < result.entities.length; i++) {
+
+                                        var cgiUrlString = "";
+
+                                        if (result.entities[i].cgi_url != undefined && result.entities[i].cgi_url != "") {
+
+                                            fileLink = result.entities[i].cgi_url;
+
+                                            //Temp string 
+                                            cgiUrlString = result.entities[i].cgi_url;
+                                            //If old Fileshare - open as usual
+                                            if (cgiUrlString.startsWith("https://www.skanetrafiken.se/CRMFiles") ||
+                                                cgiUrlString.startsWith("http://www.skanetrafiken.se/CRMFiles") ||
+                                                cgiUrlString.startsWith("https://dkcmsprod.skanetrafiken.se/CRMFiles/")) {
+
+                                                //do something else - Update the emails text with the attachment text from before
+                                                var _cgi_Url1 = "";
+                                                if (i == 0)
+                                                    _cgi_Url1 = formContext.getAttribute("description").getValue() + '<br />' + result.entities[i].cgi_url;
+                                                else
+                                                    _cgi_Url1 += '<br />' + result.entities[i].cgi_url;
+                                                formContext.getAttribute("description").setValue(_cgi_Url1);
+                                            }
+                                            else {
+                                                debugger;
+                                                if (cgiUrlString.startsWith("https:")) {
+                                                    if (cgiUrlString.startsWith("https://webpublicwebacc.blob.core.windows.net/")) { //https://webpublicwebprod.blob.core.windows.net/
+                                                        fileLinkString += cgiUrlString.split("https://webpublicwebacc.blob.core.windows.net/").pop(); //https://webpublicwebprod.blob.core.windows.net/
+                                                    }
+                                                    else {
+                                                        fileLinkString += cgiUrlString.split("https://").pop();
+                                                    }
+                                                }
+                                                else if (cgiUrlString.startsWith("http:")) {
+                                                    if (cgiUrlString.startsWith("http://webpublicwebacc.blob.core.windows.net/")) { //https://webpublicwebprod.blob.core.windows.net/
+                                                        fileLinkString += cgiUrlString.split("http://webpublicwebacc.blob.core.windows.net/").pop(); //https://webpublicwebprod.blob.core.windows.net/
+                                                    }
+                                                    else {
+                                                        fileLinkString += cgiUrlString.split("http://").pop();
+                                                    }
+                                                }
+                                                else {
+                                                    fileLinkString += cgiUrlString;
+                                                }
+                                            }
+                                        }
+
+                                        if (fileLinkString != undefined && fileLinkString != "" && cgiUrlString != undefined && cgiUrlString != "") {
+                                            fileLinkString += ";";
+                                        }
+                                    }
+
+                                    //Add the current email guid to the string
+                                    if (Endeavor.Skanetrafiken.Email.attachmentUrls != "") {
+                                        fileLinkString += Endeavor.Skanetrafiken.Email.attachmentUrls.replace("{", "").replace("}", "");
+                                    }
+                                    else
+                                    {
+                                        fileLinkString += "EMAILGUID";
+                                    }                                    
+                                    console.log("File Link String: " + fileLinkString);
+
+                                    var inputParameters = [{ "Field": "EncryptedString", "Value": fileLinkString, "TypeName": "Edm.String", "StructuralProperty": 1 }];
+
+                                    Endeavor.Skanetrafiken.Email.callGlobalAction("ed_DecryptAttachmentFile", inputParameters,
+                                        function (result) {
+                                            debugger;
+                                            Xrm.Utility.closeProgressIndicator();
+                                            if (result != null && result != "undefined") {
+                                                console.log("Result: " + result.responseText);
+                                            }
+
+                                            var parsedResult = JSON.parse(result.responseText);
+                                            if (parsedResult.Result != undefined && parsedResult.Result != "") {
+
+                                                if (parsedResult.Result.startsWith("Kunde inte hämta filen")) {
+                                                    var confirmaError = confirm(parsedResult.Result);
+                                                    if (confirmaError) {
+                                                        console.log("Confirmed: " + parsedResult.Result);
+                                                    }
+                                                    else {
+                                                        console.log("Confirmed: " + parsedResult.Result);
+                                                    }
+                                                }
+                                                else {
+                                                    debugger;
+                                                    Endeavor.Skanetrafiken.Email.tempFormContext.data.entity.save();
+                                                }
+                                            }
+                                        },
+                                        function (e) {
+                                            // Error
+                                            debugger;
+                                            Xrm.Utility.closeProgressIndicator();
+                                            var confirmationAttachment = confirm("Filen kunde ej hämtas. Execution returned: " + e.message);
+                                            if (confirmationAttachment) {
+                                                console.log("Confirmed error: " + e.message);
+                                            }
+                                            else {
+                                                console.log("Confirmed error: " + e.message);
+                                            }
+
+                                            if (window.console && console.error)
+                                                console.error(e.message + "\n" + t);
+                                        });
+                                }
+                            }
+                        },
+                        function (error) {
+                            debugger;
+                            Xrm.Utility.closeProgressIndicator();
+                            alert("Fel i Endeavor.Skanetrafiken.Email.populateAttachmentArray\n\n" + error.message);
+                            console.log(error.message);
+                        }
+                    );
+                }
+            }
+            catch (e) {
+                Xrm.Utility.closeProgressIndicator();
+                alert("Fel i Endeavor.Skanetrafiken.Email.populateAttachmentArray\n\n" + e.message);
+            }
+        },
+
+        downloadAttachmentFiles: function (formContext) {
+
+
+        },
+
+        callGlobalAction: function (actionName, inputParameters, sucessCallback, errorCallback) {
+
+            var req = {};
+
+            var parameterTypes = {};
+            if (inputParameters != null)
+                for (var i = 0; i < inputParameters.length; i++) {
+                    var parameter = inputParameters[i];
+
+                    req[parameter.Field] = parameter.Value;
+                    parameterTypes[parameter.Field] = { "typeName": parameter.TypeName, "structuralProperty": parameter.StructuralProperty };
+                }
+
+            req.getMetadata = function () {
+
+                return {
+                    boundParameter: null,
+                    parameterTypes: parameterTypes,
+                    operationType: 0,
+                    operationName: actionName
+                };
+            };
+
+            if (typeof (Xrm) == "undefined")
+                Xrm = parent.Xrm;
+
+            Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
         }
     }
 }

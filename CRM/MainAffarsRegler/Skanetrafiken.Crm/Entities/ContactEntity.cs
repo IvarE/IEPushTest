@@ -2923,31 +2923,7 @@ namespace Skanetrafiken.Crm.Entities
         /// <returns></returns>
         public static void UpdateContactWithLeadKampanj(ref ContactEntity contact, LeadEntity lead)
         {
-            // If dummy lastname has been used, Clear it!
-            if (string.Equals(lead.LastName, LeadEntity.CreateLead_LastNameToUseIfEmpty))
-            {
-                contact.LastName = null;
-                lead.LastName = null;
-            }
-
-            if (!string.IsNullOrWhiteSpace(lead.FirstName) && string.IsNullOrWhiteSpace(contact.FirstName))
-                contact.FirstName = lead.FirstName;
-
-            if (!string.IsNullOrWhiteSpace(lead.LastName) && string.IsNullOrWhiteSpace(contact.LastName))
-                contact.LastName = lead.LastName;
-
-            if (!string.IsNullOrWhiteSpace(lead.Telephone1) && string.IsNullOrWhiteSpace(contact.Telephone1))
-                contact.Telephone1 = lead.Telephone1;
-
-            if (!string.IsNullOrWhiteSpace(lead.MobilePhone) && string.IsNullOrWhiteSpace(contact.Telephone2))
-                contact.Telephone2 = lead.MobilePhone;
-
-            if (!string.IsNullOrWhiteSpace(lead.ed_Personnummer) && string.IsNullOrWhiteSpace(contact.cgi_socialsecuritynumber)) //Change this solcialsecurity number field (ed_socialsecuritynumberblock)
-            {
-                contact.cgi_socialsecuritynumber = lead.ed_Personnummer; //ed_socialsecuritynumberblock
-                contact.BirthDate = ContactEntity.UpdateBirthDateOnContact(lead.ed_Personnummer); //DevOps 9168
-                contact.ed_HasSwedishSocialSecurityNumber = lead.ed_HasSwedishSocialSecurityNumber;
-            }
+            contact.ed_SourceCampaignId = lead.CampaignId;
 
             //If any data in address fields in lead and none in Contact - replace everything
             if ((string.IsNullOrWhiteSpace(contact.Address1_Line1) &&
@@ -2971,17 +2947,7 @@ namespace Skanetrafiken.Crm.Entities
                 contact.ed_Address1_Country = lead.ed_Address1_Country;
             }
 
-            if (contact.ed_InformationSource == null || !contact.ed_InformationSource.HasValue)
-                contact.ed_InformationSource = Generated.ed_informationsource.Kampanj;
-
-            if (lead.CampaignId != null)
-                contact.ed_SourceCampaignId = lead.CampaignId;
-
-            if (!string.IsNullOrWhiteSpace(contact.EMailAddress2))
-            {
-                contact.EMailAddress1 = contact.EMailAddress2;
-                contact.EMailAddress2 = null;
-            }
+            contact.OriginatingLeadId = lead.ToEntityReference();
         }
 
         //public static ContactEntity CreateContactFromLead(Plugin.LocalPluginContext localContext, LeadEntity lead)
