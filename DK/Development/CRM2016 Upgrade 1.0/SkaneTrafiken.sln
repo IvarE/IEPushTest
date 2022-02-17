@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGIXrmHandlers", "Others\CGIXrmHandler\CGIXrmHandlers.csproj", "{4E72E000-A6D4-472E-A15F-A90640B3A99D}"
 EndProject
@@ -278,7 +278,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "CGIXrmPortal", "http://loca
 		SccLocalPath = "SAK"
 		SccProvider = "SAK"
 		UseIISExpress = "true"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.2"
 		ProjectReferences = "{4e72e000-a6d4-472e-a15f-a90640b3a99d}|CGIXrmHandler.dll;{73F74590-72AF-4DCD-B101-3A449036D550}|CGIXrmLogger.dll;{B6B2BCBA-B247-4BE0-9858-2244DCD75C93}|CGIXrmWinLibrary.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_60348"
 		Debug.AspNetCompiler.PhysicalPath = "WCF\CGIXrmPortal\"

@@ -1150,184 +1150,105 @@ namespace Skanetrafiken.Import
 
                     try
                     {
-                        try
-                        {
-                            crmContext.ClearChanges();
-                            _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload Singapore Tickets--------------");
+                        crmContext.ClearChanges();
+                        _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Starting to Upload Singapore Tickets--------------");
 
-                            List<string> fileNames = new List<string>();
-                            fileNames.Add("first million.csv");
-                            fileNames.Add("second million.csv");
-                            fileNames.Add("third million.csv");
-                            fileNames.Add("fourth million.csv");
-                            fileNames.Add("fifth million.csv");
-                            fileNames.Add("sixth million.csv");
-                            relativeExcelPath = "C:\\Users\\Pedro\\Downloads\\";
+                            //List<string> fileNames = new List<string>();
+                            //fileNames.Add("first million.csv");
+                            //fileNames.Add("second million.csv");
+                            //fileNames.Add("third million.csv");
+                            //fileNames.Add("fourth million.csv");
+                            //fileNames.Add("fifth million.csv");
+                            //fileNames.Add("sixth million.csv");
+                            //relativeExcelPath = "C:\\Users\\Pedro\\Downloads\\";
 
-                            ImportExcelInfo importExcelInfo = new ImportExcelInfo();
+                            //ImportExcelInfo importExcelInfo = new ImportExcelInfo();
 
-                            using (importExcelInfo = ImportHelper.HandleExcelInformationStreamReader(relativeExcelPath, fileNames, 1, 16)) 
-                            {
-                                bool isParsingOk = ImportHelper.GetParsingStatus(importExcelInfo);
+                            //using (importExcelInfo = ImportHelper.HandleExcelInformationStreamReader(relativeExcelPath, fileNames, 1, 16)) 
+                            //{
+                            //    bool isParsingOk = ImportHelper.GetParsingStatus(importExcelInfo);
 
-                                if (isParsingOk)
-                                {
-                                }
-                            }
+                            //    if (isParsingOk)
+                            //    {
+                            //    }
+                            //}
 
-                            var querySingaporeTickets = new QueryExpression(st_singaporeticket.EntityLogicalName);
-                            querySingaporeTickets.NoLock = true;
-                            querySingaporeTickets.ColumnSet = new ColumnSet(st_singaporeticket.Fields.ed_CRMNummer, st_singaporeticket.Fields.st_TicketID);
+                        //    var queryTicketInfo = new QueryExpression(ed_ticketinfo.EntityLogicalName);
+                        //    queryTicketInfo.NoLock = true;
+                        //    queryTicketInfo.ColumnSet = new ColumnSet(ed_ticketinfo.Fields.ed_CRMNumber);
 
-                            List<st_singaporeticket> lSingaporeTickets = XrmRetrieveHelper.RetrieveMultiple<st_singaporeticket>(localContext, querySingaporeTickets);
+                        //    List<ed_ticketinfo> lTicketInfo = XrmRetrieveHelper.RetrieveMultiple<ed_ticketinfo>(localContext, queryTicketInfo);
 
 
 
-                            querySingaporeTickets = new QueryExpression(st_singaporeticket.EntityLogicalName);
-                            querySingaporeTickets.NoLock = true;
-                            querySingaporeTickets.ColumnSet = new ColumnSet(st_singaporeticket.Fields.ed_ActivationIntervalFrom, st_singaporeticket.Fields.ed_ActivationIntervalTo,
-                                st_singaporeticket.Fields.ed_BearerCategory, st_singaporeticket.Fields.ed_BlockedDate, st_singaporeticket.Fields.ed_CRMNummer, st_singaporeticket.Fields.ed_HasGroupDiscount,
-                                st_singaporeticket.Fields.ed_HasRefund, st_singaporeticket.Fields.ed_LastUpdated, st_singaporeticket.Fields.ed_OfferNameDetailed, st_singaporeticket.Fields.ed_SalesChannel,
-                                st_singaporeticket.Fields.ed_TicketActivated, st_singaporeticket.Fields.ed_TravellersCount, st_singaporeticket.Fields.ed_TravelValidityIntervalFrom,
-                                st_singaporeticket.Fields.ed_TravelValidityIntervalTo, st_singaporeticket.Fields.st_ContactID, st_singaporeticket.Fields.st_name, st_singaporeticket.Fields.st_PriceModel,
-                                st_singaporeticket.Fields.st_PriceModelPrice, st_singaporeticket.Fields.st_SingTicketType, st_singaporeticket.Fields.st_TicketActivated, st_singaporeticket.Fields.st_TicketCreated,
-                                st_singaporeticket.Fields.st_TicketID, st_singaporeticket.Fields.st_TicketPrice);
+                        //    querySingaporeTickets = new QueryExpression(st_singaporeticket.EntityLogicalName);
+                        //    querySingaporeTickets.NoLock = true;
+                        //    querySingaporeTickets.ColumnSet = new ColumnSet(st_singaporeticket.Fields.ed_ActivationIntervalFrom, st_singaporeticket.Fields.ed_ActivationIntervalTo,
+                        //        st_singaporeticket.Fields.ed_BearerCategory, st_singaporeticket.Fields.ed_BlockedDate, st_singaporeticket.Fields.ed_CRMNummer, st_singaporeticket.Fields.ed_HasGroupDiscount,
+                        //        st_singaporeticket.Fields.ed_HasRefund, st_singaporeticket.Fields.ed_LastUpdated, st_singaporeticket.Fields.ed_OfferNameDetailed, st_singaporeticket.Fields.ed_SalesChannel,
+                        //        st_singaporeticket.Fields.ed_TicketActivated, st_singaporeticket.Fields.ed_TravellersCount, st_singaporeticket.Fields.ed_TravelValidityIntervalFrom,
+                        //        st_singaporeticket.Fields.ed_TravelValidityIntervalTo, st_singaporeticket.Fields.st_ContactID, st_singaporeticket.Fields.st_name, st_singaporeticket.Fields.st_PriceModel,
+                        //        st_singaporeticket.Fields.st_PriceModelPrice, st_singaporeticket.Fields.st_SingTicketType, st_singaporeticket.Fields.st_TicketActivated, st_singaporeticket.Fields.st_TicketCreated,
+                        //        st_singaporeticket.Fields.st_TicketID, st_singaporeticket.Fields.st_TicketPrice);
 
-                            List<Entity> records = new List<Entity>();
+                        //    List<Entity> records = new List<Entity>();
 
-                            RetrieveMultipleResponse response;
-                            do
-                            {
-                                RetrieveMultipleRequest request = new RetrieveMultipleRequest();
-                                request.Query = querySingaporeTickets;
+                        //    RetrieveMultipleResponse response;
+                        //    do
+                        //    {
+                        //        RetrieveMultipleRequest request = new RetrieveMultipleRequest();
+                        //        request.Query = querySingaporeTickets;
 
-                                response = (RetrieveMultipleResponse)localContext.OrganizationService.Execute(request);
+                        //        response = (RetrieveMultipleResponse)localContext.OrganizationService.Execute(request);
 
-                                if (response.EntityCollection.Entities.Count > 0)
-                                    records.AddRange(response.EntityCollection.Entities);
+                        //        if (response.EntityCollection.Entities.Count > 0)
+                        //            records.AddRange(response.EntityCollection.Entities);
 
-                                if(records.Count >= 10000)
-                                {
-                                    List<OrganizationRequest> lRequests = HandleSingaporeTicket(localContext, relativeExcelPath, records);
-                                }
+                        //        if(records.Count >= 10000)
+                        //        {
+                        //            List<OrganizationRequest> lRequests = HandleSingaporeTicket(localContext, relativeExcelPath, records);
+                        //        }
 
-                                if (response.EntityCollection.MoreRecords)
-                                {
-                                    querySingaporeTickets.PageInfo.PageNumber++;
-                                    querySingaporeTickets.PageInfo.PagingCookie = response.EntityCollection.PagingCookie;
-                                }
-                            } while (response.EntityCollection.MoreRecords);
+                        //        if (response.EntityCollection.MoreRecords)
+                        //        {
+                        //            querySingaporeTickets.PageInfo.PageNumber++;
+                        //            querySingaporeTickets.PageInfo.PagingCookie = response.EntityCollection.PagingCookie;
+                        //        }
+                        //    } while (response.EntityCollection.MoreRecords);
 
-                            _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload Singapore Tickets--------------");
-                        }
-                        catch (Exception e)
-                        {
-                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Singapore Tickets Records. Details: " + e.Message);
-                            throw;
-                        }
+                        //    _log.InfoFormat(CultureInfo.InvariantCulture, $"--------------Finished to Upload Singapore Tickets--------------");
+                        //}
+                        //catch (Exception e)
+                        //{
+                        //    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Error Importing Singapore Tickets Records. Details: " + e.Message);
+                        //    throw;
+                        //}
 
-
-                        // path to the csv file
-                        string path = "C:\\Users\\PGOEND\\Downloads\\first million.csv";
-
-                        string[] lines = System.IO.File.ReadAllLines(path);
-                        List<string> lCrmNummer = new List<string>();
-                        foreach (string line in lines)
-                        {
-                            string[] columns = line.Split(';');
-                            foreach (string column in columns)
-                            {
-                                lCrmNummer.Add(column);
-                            }
-                        }
-
-                        Console.WriteLine("Found " + lCrmNummer.Count + " Singapore Tickets to process.");
-
-                        path = "C:\\Users\\PGOEND\\Downloads\\contacts.csv";
+                        string path = "C:\\Users\\PGOEND\\Downloads\\wrongtickets.csv";
 
                         string[] linesC = System.IO.File.ReadAllLines(path);
                         List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
+                        int i = 0;
                         foreach (string line in linesC)
                         {
+                            i++;
                             string[] columns = line.Split(';');
-                            list.Add(new KeyValuePair<string, string>(columns[0], columns[1]));
+
+                            if(columns[0] != "NULL")
+                            {
+                                Guid ticketPurchase = new Guid(columns[0]);
+
+                                ed_ticketinfo uTicket = new ed_ticketinfo();
+                                uTicket.Id = ticketPurchase;
+                                uTicket.ed_Contact = null;
+
+                                XrmHelper.Update(localContext, uTicket);
+                            }
+                           
                         }
-                        Console.WriteLine("Found " + list.Count + " Contacts to process.");
+                        Console.WriteLine("Found " + i + " Tickets to process.");
+                        Console.ReadLine();
 
-
-                        //List<KeyValuePair<string, string>> lNewList = new List<KeyValuePair<string, string>>();
-                        //foreach (var item in list)
-                        //{
-                        //    if (lCrmNummer.Contains(item.Key))
-                        //        lNewList.Add(item);
-                        //}
-
-                        // Create an ExecuteTransactionRequest object.
-                        var requestToCreateRecords = new ExecuteTransactionRequest()
-                        {
-                            // Create an empty organization request collection.
-                            Requests = new OrganizationRequestCollection(),
-                            ReturnResponses = false
-                        };
-
-                        for (int i = 6179; i < lCrmNummer.Count; i++)
-                        {
-                            string crmNummer = lCrmNummer[i];
-                            if(requestToCreateRecords.Requests.Count != 0 && requestToCreateRecords.Requests.Count > 250)
-                            {
-                                Console.WriteLine("Process " + requestToCreateRecords.Requests.Count + "i: " + i);
-                                // Execute all the requests in the request collection using a single web method call.
-                                try
-                                {
-                                    localContext.OrganizationService.Execute(requestToCreateRecords);
-                                    requestToCreateRecords.Requests = new OrganizationRequestCollection();
-                                }
-                                catch (FaultException<OrganizationServiceFault> ex)
-                                {
-                                    Console.WriteLine("Create request failed for the account{0} and the reason being: {1}",
-                                        ((ExecuteTransactionFault)(ex.Detail)).FaultedRequestIndex + 1, ex.Detail.Message);
-                                    throw;
-                                }
-                            }
-
-                            var contact = list.FirstOrDefault(x => x.Key == crmNummer);
-
-                            if (contact.Key == null)
-                            {
-                                _log.ErrorFormat(CultureInfo.InvariantCulture, $"No Contact found with CRMNummer: {crmNummer}");
-                                continue;
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    // Instantiate QueryExpression query
-                                    var querySingapore = new QueryExpression(st_singaporeticket.EntityLogicalName);
-                                    querySingapore.NoLock = true;
-                                    querySingapore.ColumnSet.AddColumns(st_singaporeticket.Fields.ed_CRMNummer);
-                                    querySingapore.Criteria.AddCondition(st_singaporeticket.Fields.ed_CRMNummer, ConditionOperator.Equal, crmNummer);
-
-                                    var lSingaporeTickets = XrmRetrieveHelper.RetrieveMultiple<st_singaporeticket>(localContext, querySingapore);
-
-                                    foreach (var singaporeTicket in lSingaporeTickets)
-                                    {
-                                        st_singaporeticket uSingaporeTicket = new st_singaporeticket();
-                                        uSingaporeTicket.Id = singaporeTicket.Id;
-                                        uSingaporeTicket.st_ContactID = new EntityReference(Contact.EntityLogicalName, new Guid(contact.Value));
-
-                                        UpdateRequest updateRequest = new UpdateRequest { Target = uSingaporeTicket };
-                                        requestToCreateRecords.Requests.Add(updateRequest);
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-                                    Console.WriteLine($"Update Singapore Ticket Contact: Details: " + e.Message);
-                                    _log.ErrorFormat(CultureInfo.InvariantCulture, $"Update Singapore Ticket Contact: Details: " + e.Message);
-                                }
-                            }
-                        }
-
-                        
                     }
                     catch (Exception e)
                     {
