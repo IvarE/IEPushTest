@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="144"
-  DTS:VersionGUID="{F6F6267B-BCEB-41B5-8061-DB29D542B131}">
+  DTS:VersionBuild="172"
+  DTS:VersionGUID="{05DBA463-0DE9-45D8-8EEF-E5003BBC1E84}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -23,12 +23,221 @@
       DTS:ObjectName="Dynamics 365 Connection">
       <DTS:ObjectData>
         <CrmConnectionManager
-          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekundacc.skanetrafiken.se/DKCRMACC;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=False;IgnoreCertificateErrors=False"
+          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekund.skanetrafiken.se/DKCRM;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=False;IgnoreCertificateErrors=False"
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAR0wf2tAUixRQvWr+K8B4mAAAAAASAAACgAAAAEAAAAOf0d1gPDlFe1Vfa8dJMCE8gAAAAJHCGAfp00PGkWyJRtstHSV3iiHCnpc91A+K91cDerFIUAAAAHTTMeueCxKfFhCSaCOw9vxiVEwo</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACTHYYFezW9jDc3w6zwLHKGAAAAAASAAACgAAAAEAAAAP+sTrxuO4wyhd1PyGEb53ggAAAA/1OoSy0+Eakv8xRIb5Qxq+lyMcsNBkvJO4Jl3n07dDIUAAAA+i5cryFirL4Z63G5F5ssPZ5QUXI</Password>
         </CrmConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Flat File Connection Manager]"
+      DTS:CreationName="FLATFILE"
+      DTS:DTSID="{BB66AAF3-9FC6-428E-B2E8-C3C43A697D52}"
+      DTS:ObjectName="Flat File Connection Manager">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:Format="Delimited"
+          DTS:LocaleID="1053"
+          DTS:HeaderRowDelimiter="_x000D__x000A_"
+          DTS:ColumnNamesInFirstDataRow="True"
+          DTS:RowDelimiter=""
+          DTS:TextQualifier="_x003C_none_x003E_"
+          DTS:CodePage="65001"
+          DTS:ConnectionString="D:\Data\ticketinfo5.csv">
+          <DTS:FlatFileColumns>
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="LastUpdated"
+              DTS:DTSID="{4CF6310E-B330-4C2D-B4E0-9965B3DA32C3}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="TicketId"
+              DTS:DTSID="{742C7022-AA95-43EF-ACB2-0F1AC65983E5}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="PriceModel"
+              DTS:DTSID="{C9A98789-C08E-40C0-A148-1263AB6BD25E}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="PriceModelPriceId"
+              DTS:DTSID="{1F884CD4-F6CE-40B1-877D-DA5A5B2CEEF2}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="DataCreatedDate"
+              DTS:DTSID="{BD219167-BB23-433E-9A4E-F7A27F8EC314}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="activatedDate"
+              DTS:DTSID="{182A54BB-A601-4F94-BE53-C84E8C058FAD}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="blockedDate"
+              DTS:DTSID="{B9ABFF06-5567-4B39-B328-EB35905C5E51}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="OfferName"
+              DTS:DTSID="{3DC21BEA-CADB-433E-BCD4-347C03E864A7}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="OfferNameDetailed"
+              DTS:DTSID="{3760DE23-6ABB-428B-859D-A1BEEDE242B3}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="TicketAmount"
+              DTS:DTSID="{00877B13-76F5-42CF-9ABA-1980C1350D12}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="SalesChannelId"
+              DTS:DTSID="{B9102AC9-3B4A-4121-8163-A7CD3CEC4B67}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="BearerCategory"
+              DTS:DTSID="{E36A43EE-9D8C-42A9-B705-4916E8A2E26D}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="HasGroupDiscount"
+              DTS:DTSID="{0A7D30E7-C738-4059-96AA-D9092123085E}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="TravellersCount"
+              DTS:DTSID="{F794C5B9-94BB-4DAD-92C2-345AC96BEA14}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="HasRefund"
+              DTS:DTSID="{45E2331E-AB02-49F8-8C85-3BDE8471A00D}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="MkId"
+              DTS:DTSID="{4B3CE8BB-CCFA-49D5-A52D-D9E3BD7A2724}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="cgi_contactnumber"
+              DTS:DTSID="{538C6DF4-F004-45DE-AB7C-E99554DD46A4}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="activationinterval_from"
+              DTS:DTSID="{4EF9BA08-52FB-462C-8A39-D312C20475FC}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="activationinterval_to"
+              DTS:DTSID="{A681DB86-07B3-4E93-9231-22542F5D9E33}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x003B_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="travelvalidityinterval_from"
+              DTS:DTSID="{E3FE4CCB-7D5A-4B0B-950B-875825B17C93}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x000D__x000A_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="travelvalidityinterval_to"
+              DTS:DTSID="{326A9FF4-3BC6-42FE-8C33-560DDA700BCB}"
+              DTS:CreationName="" />
+          </DTS:FlatFileColumns>
+        </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
     <DTS:ConnectionManager
@@ -60,539 +269,651 @@
           version="1">
           <components>
             <component
-              refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets"
-              componentClassID="Microsoft.OLEDBSource"
-              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
-              description="OLE DB Source"
-              name="Ticket Info -&gt; Singapore Tickets"
+              refId="Package\Upsert Singapore Tickets\Flat File Source"
+              componentClassID="Microsoft.FlatFileSource"
+              contactInfo="Flat File Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="Flat File Source"
+              localeId="1053"
+              name="Flat File Source"
               usesDispositions="true"
-              version="7">
+              version="1">
               <properties>
                 <property
-                  dataType="System.Int32"
-                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
-                  name="CommandTimeout">0</property>
-                <property
-                  dataType="System.String"
-                  description="Specifies the name of the database object used to open a rowset."
-                  name="OpenRowset"></property>
-                <property
-                  dataType="System.String"
-                  description="Specifies the variable that contains the name of the database object used to open a rowset."
-                  name="OpenRowsetVariable"></property>
-                <property
-                  dataType="System.String"
-                  description="The SQL command to be executed."
-                  name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT [LastUpdated]
-      ,[TicketId]
-      ,[PriceModel]
-      ,[PriceModelPriceId]
-      ,[DataCreatedDate]
-      ,[activatedDate]
-      ,[blockedDate]
-      ,[OfferName]
-      ,[OfferNameDetailed]
-      ,[TicketAmount]
-      ,[SalesChannelId]
-      ,[BearerCategory]
-      ,[HasGroupDiscount]
-      ,[TravellersCount]
-      ,[HasRefund]
-      ,[MkId]
-      ,[cgi_contactnumber]
-      ,[activationinterval_from]
-      ,[activationinterval_to]
-      ,[travelvalidityinterval_from]
-      ,[travelvalidityinterval_to]
-  FROM [STDW].[dbo].[GetTicketInfoView]</property>
-                <property
-                  dataType="System.String"
-                  description="The variable that contains the SQL command to be executed."
-                  name="SqlCommandVariable"></property>
-                <property
-                  dataType="System.Int32"
-                  description="Specifies the column code page to use when code page information is unavailable from the data source."
-                  name="DefaultCodePage">1252</property>
-                <property
                   dataType="System.Boolean"
-                  description="Forces the use of the DefaultCodePage property value when describing character data."
-                  name="AlwaysUseDefaultCodePage">false</property>
-                <property
-                  dataType="System.Int32"
-                  description="Specifies the mode used to access the database."
-                  name="AccessMode"
-                  typeConverter="AccessMode">2</property>
+                  description="Specifies whether zero-length columns are treated as null."
+                  name="RetainNulls">false</property>
                 <property
                   dataType="System.String"
-                  description="The mappings between the parameters in the SQL command and variables."
-                  name="ParameterMapping"></property>
+                  description="Specifies the name of an output column containing the file name. If no name is specified, no output column containing the file name will be generated."
+                  name="FileNameColumnName"></property>
               </properties>
               <connections>
                 <connection
-                  refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[V-DWSQL]"
-                  connectionManagerRefId="Package.ConnectionManagers[V-DWSQL]"
-                  description="The OLE DB runtime connection used to access the database."
-                  name="OleDbConnection" />
+                  refId="Package\Upsert Singapore Tickets\Flat File Source.Connections[FlatFileConnection]"
+                  connectionManagerID="Package.ConnectionManagers[Flat File Connection Manager]"
+                  connectionManagerRefId="Package.ConnectionManagers[Flat File Connection Manager]"
+                  name="FlatFileConnection" />
               </connections>
               <outputs>
                 <output
-                  refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output]"
-                  name="OLE DB Source Output">
+                  refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output]"
+                  name="Flat File Source Output">
                   <outputColumns>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketAmount]"
-                      dataType="numeric"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[LastUpdated]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[TicketAmount]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketAmount]"
-                      name="TicketAmount"
-                      precision="13"
-                      scale="5"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
-                      dataType="wstr"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[cgi_contactnumber]"
-                      length="100"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
-                      name="cgi_contactnumber"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketId]"
-                      dataType="wstr"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[TicketId]"
-                      length="7"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketId]"
-                      name="TicketId"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[LastUpdated]"
-                      dataType="dbTimeStamp2"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[LastUpdated]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[LastUpdated]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[LastUpdated]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[LastUpdated]"
                       name="LastUpdated"
-                      scale="7"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[PriceModel]"
-                      dataType="wstr"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[TicketId]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[PriceModel]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[TicketId]"
                       length="50"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[PriceModel]"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[TicketId]"
+                      name="TicketId"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[PriceModel]"
+                      codePage="65001"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[PriceModel]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[PriceModel]"
                       name="PriceModel"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]"
-                      dataType="wstr"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[PriceModelPriceId]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[PriceModelPriceId]"
-                      length="30"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[PriceModelPriceId]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[PriceModelPriceId]"
                       name="PriceModelPriceId"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[DataCreatedDate]"
-                      dataType="dbTimeStampOffset"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[DataCreatedDate]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[DataCreatedDate]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[DataCreatedDate]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[DataCreatedDate]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[DataCreatedDate]"
                       name="DataCreatedDate"
-                      scale="7"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activatedDate]"
-                      dataType="dbTimeStamp2"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[activatedDate]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[activatedDate]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activatedDate]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[activatedDate]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[activatedDate]"
                       name="activatedDate"
-                      scale="7"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[blockedDate]"
-                      dataType="dbTimeStamp2"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[blockedDate]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[blockedDate]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[blockedDate]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[blockedDate]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[blockedDate]"
                       name="blockedDate"
-                      scale="7"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[OfferName]"
-                      dataType="wstr"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[OfferName]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[OfferName]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[OfferName]"
                       length="50"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[OfferName]"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[OfferName]"
                       name="OfferName"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]"
-                      dataType="wstr"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[OfferNameDetailed]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[OfferNameDetailed]"
-                      length="255"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]"
-                      name="OfferNameDetailed"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[SalesChannelId]"
-                      dataType="wstr"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[SalesChannelId]"
-                      length="50"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[SalesChannelId]"
-                      name="SalesChannelId"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[BearerCategory]"
-                      dataType="wstr"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[BearerCategory]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[OfferNameDetailed]"
                       length="100"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[BearerCategory]"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[OfferNameDetailed]"
+                      name="OfferNameDetailed"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[TicketAmount]"
+                      codePage="65001"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[TicketAmount]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[TicketAmount]"
+                      name="TicketAmount"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[SalesChannelId]"
+                      codePage="65001"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[SalesChannelId]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[SalesChannelId]"
+                      name="SalesChannelId"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[BearerCategory]"
+                      codePage="65001"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[BearerCategory]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[BearerCategory]"
                       name="BearerCategory"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]"
-                      dataType="i4"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[HasGroupDiscount]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[HasGroupDiscount]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[HasGroupDiscount]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[HasGroupDiscount]"
                       name="HasGroupDiscount"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TravellersCount]"
-                      dataType="i4"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[TravellersCount]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[TravellersCount]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TravellersCount]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[TravellersCount]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[TravellersCount]"
                       name="TravellersCount"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[HasRefund]"
-                      dataType="i4"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[HasRefund]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[HasRefund]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[HasRefund]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[HasRefund]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[HasRefund]"
                       name="HasRefund"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[MkId]"
-                      dataType="i4"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[MkId]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[MkId]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[MkId]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[MkId]"
                       name="MkId"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activationinterval_from]"
-                      dataType="dbTimeStamp2"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[cgi_contactnumber]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[activationinterval_from]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activationinterval_from]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[cgi_contactnumber]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[cgi_contactnumber]"
+                      name="cgi_contactnumber"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[activationinterval_from]"
+                      codePage="65001"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[activationinterval_from]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[activationinterval_from]"
                       name="activationinterval_from"
-                      scale="7"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activationinterval_to]"
-                      dataType="dbTimeStamp2"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[activationinterval_to]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[activationinterval_to]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activationinterval_to]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[activationinterval_to]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[activationinterval_to]"
                       name="activationinterval_to"
-                      scale="7"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_from]"
-                      dataType="dbTimeStamp2"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[travelvalidityinterval_from]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[travelvalidityinterval_from]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_from]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[travelvalidityinterval_from]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[travelvalidityinterval_from]"
                       name="travelvalidityinterval_from"
-                      scale="7"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_to]"
-                      dataType="dbTimeStamp2"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[travelvalidityinterval_to]"
+                      codePage="65001"
+                      dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[travelvalidityinterval_to]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_to]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[travelvalidityinterval_to]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[travelvalidityinterval_to]"
                       name="travelvalidityinterval_to"
-                      scale="7"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
                   </outputColumns>
                   <externalMetadataColumns
                     isUsed="True">
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[TicketAmount]"
-                      dataType="numeric"
-                      name="TicketAmount"
-                      precision="13"
-                      scale="5" />
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[LastUpdated]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
+                      name="LastUpdated" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[cgi_contactnumber]"
-                      dataType="wstr"
-                      length="100"
-                      name="cgi_contactnumber" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[TicketId]"
-                      dataType="wstr"
-                      length="7"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[TicketId]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
                       name="TicketId" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[LastUpdated]"
-                      dataType="dbTimeStamp2"
-                      name="LastUpdated"
-                      scale="7" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[PriceModel]"
-                      dataType="wstr"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[PriceModel]"
+                      codePage="65001"
+                      dataType="str"
                       length="50"
                       name="PriceModel" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[PriceModelPriceId]"
-                      dataType="wstr"
-                      length="30"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[PriceModelPriceId]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
                       name="PriceModelPriceId" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[DataCreatedDate]"
-                      dataType="dbTimeStampOffset"
-                      name="DataCreatedDate"
-                      scale="7" />
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[DataCreatedDate]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
+                      name="DataCreatedDate" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[activatedDate]"
-                      dataType="dbTimeStamp2"
-                      name="activatedDate"
-                      scale="7" />
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[activatedDate]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
+                      name="activatedDate" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[blockedDate]"
-                      dataType="dbTimeStamp2"
-                      name="blockedDate"
-                      scale="7" />
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[blockedDate]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
+                      name="blockedDate" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[OfferName]"
-                      dataType="wstr"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[OfferName]"
+                      codePage="65001"
+                      dataType="str"
                       length="50"
                       name="OfferName" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[OfferNameDetailed]"
-                      dataType="wstr"
-                      length="255"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[OfferNameDetailed]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
                       name="OfferNameDetailed" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[SalesChannelId]"
-                      dataType="wstr"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[TicketAmount]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
+                      name="TicketAmount" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[SalesChannelId]"
+                      codePage="65001"
+                      dataType="str"
                       length="50"
                       name="SalesChannelId" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[BearerCategory]"
-                      dataType="wstr"
-                      length="100"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[BearerCategory]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
                       name="BearerCategory" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[HasGroupDiscount]"
-                      dataType="i4"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[HasGroupDiscount]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
                       name="HasGroupDiscount" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[TravellersCount]"
-                      dataType="i4"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[TravellersCount]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
                       name="TravellersCount" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[HasRefund]"
-                      dataType="i4"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[HasRefund]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
                       name="HasRefund" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
-                      dataType="i4"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[MkId]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
                       name="MkId" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[activationinterval_from]"
-                      dataType="dbTimeStamp2"
-                      name="activationinterval_from"
-                      scale="7" />
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[cgi_contactnumber]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
+                      name="cgi_contactnumber" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[activationinterval_to]"
-                      dataType="dbTimeStamp2"
-                      name="activationinterval_to"
-                      scale="7" />
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[activationinterval_from]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
+                      name="activationinterval_from" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[travelvalidityinterval_from]"
-                      dataType="dbTimeStamp2"
-                      name="travelvalidityinterval_from"
-                      scale="7" />
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[activationinterval_to]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
+                      name="activationinterval_to" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].ExternalColumns[travelvalidityinterval_to]"
-                      dataType="dbTimeStamp2"
-                      name="travelvalidityinterval_to"
-                      scale="7" />
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[travelvalidityinterval_from]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
+                      name="travelvalidityinterval_from" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[travelvalidityinterval_to]"
+                      codePage="65001"
+                      dataType="str"
+                      length="50"
+                      name="travelvalidityinterval_to" />
                   </externalMetadataColumns>
                 </output>
                 <output
-                  refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output]"
+                  refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Error Output]"
                   isErrorOut="true"
-                  name="OLE DB Source Error Output">
+                  name="Flat File Source Error Output">
                   <outputColumns>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[LastUpdated]"
-                      dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[LastUpdated]"
-                      name="LastUpdated"
-                      scale="7" />
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Error Output].Columns[Flat File Source Error Output Column]"
+                      codePage="65001"
+                      dataType="text"
+                      description="Flat File Source Error Output Column"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Error Output].Columns[Flat File Source Error Output Column]"
+                      name="Flat File Source Error Output Column" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[TicketId]"
-                      dataType="wstr"
-                      length="7"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[TicketId]"
-                      name="TicketId" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[PriceModel]"
-                      dataType="wstr"
-                      length="50"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[PriceModel]"
-                      name="PriceModel" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[PriceModelPriceId]"
-                      dataType="wstr"
-                      length="30"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[PriceModelPriceId]"
-                      name="PriceModelPriceId" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[DataCreatedDate]"
-                      dataType="dbTimeStampOffset"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[DataCreatedDate]"
-                      name="DataCreatedDate"
-                      scale="7" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[activatedDate]"
-                      dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[activatedDate]"
-                      name="activatedDate"
-                      scale="7" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[blockedDate]"
-                      dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[blockedDate]"
-                      name="blockedDate"
-                      scale="7" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[OfferName]"
-                      dataType="wstr"
-                      length="50"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[OfferName]"
-                      name="OfferName" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[OfferNameDetailed]"
-                      dataType="wstr"
-                      length="255"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[OfferNameDetailed]"
-                      name="OfferNameDetailed" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[TicketAmount]"
-                      dataType="numeric"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[TicketAmount]"
-                      name="TicketAmount"
-                      precision="13"
-                      scale="5" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[SalesChannelId]"
-                      dataType="wstr"
-                      length="50"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[SalesChannelId]"
-                      name="SalesChannelId" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[BearerCategory]"
-                      dataType="wstr"
-                      length="100"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[BearerCategory]"
-                      name="BearerCategory" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[HasGroupDiscount]"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorCode]"
                       dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[HasGroupDiscount]"
-                      name="HasGroupDiscount" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[TravellersCount]"
-                      dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[TravellersCount]"
-                      name="TravellersCount" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[HasRefund]"
-                      dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[HasRefund]"
-                      name="HasRefund" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[MkId]"
-                      dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[MkId]"
-                      name="MkId" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[cgi_contactnumber]"
-                      dataType="wstr"
-                      length="100"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[cgi_contactnumber]"
-                      name="cgi_contactnumber" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[activationinterval_from]"
-                      dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[activationinterval_from]"
-                      name="activationinterval_from"
-                      scale="7" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[activationinterval_to]"
-                      dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[activationinterval_to]"
-                      name="activationinterval_to"
-                      scale="7" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_from]"
-                      dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_from]"
-                      name="travelvalidityinterval_from"
-                      scale="7" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_to]"
-                      dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_to]"
-                      name="travelvalidityinterval_to"
-                      scale="7" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
-                      dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorCode]"
                       name="ErrorCode"
                       specialFlags="1" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      refId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorColumn]"
                       dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorColumn]"
                       name="ErrorColumn"
                       specialFlags="2" />
                   </outputColumns>
@@ -618,7 +939,7 @@
                   dataType="System.Int32"
                   description="Specifies how data is written to CDS/Dynamics CRM server."
                   name="ActionType"
-                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.DestinationActionType">1</property>
+                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.DestinationActionType">5</property>
                 <property
                   dataType="System.Boolean"
                   description="Specifies whether the values of CDS/CRM lookup fields should be removed if the reference records cannot be found. "
@@ -634,7 +955,7 @@
                   description="Specify the matching criteria to be used when performing an update or upsert. "
                   expressionType="Notify"
                   name="RecordMatchingCriteria"
-                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.RecordMatchingCriteria">0</property>
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.RecordMatchingCriteria">4</property>
                 <property
                   dataType="System.String"
                   description="Specify the key fields to be used to determine the matching records that exist in CDS/CRM for either Upsert/Update action or source duplicate optimization."
@@ -701,10 +1022,10 @@
                   expressionType="Notify"
                   name="TentativelyDisableEntityAuditing">false</property>
                 <property
-                  dataType="System.Null"
+                  dataType="System.String"
                   description="Alternate Key to be used for Upsert or Update action."
                   expressionType="Notify"
-                  name="AlternateKey" />
+                  name="AlternateKey">ed_singaporeticketskey</property>
                 <property
                   dataType="System.Boolean"
                   description="Specify whether to tentatively disable relevant plugins"
@@ -728,148 +1049,178 @@
                 <input
                   refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input]"
                   errorOrTruncationOperation="Insert"
-                  errorRowDisposition="IgnoreFailure"
+                  errorRowDisposition="FailComponent"
                   hasSideEffects="true"
                   name="Input">
                   <inputColumns>
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TicketAmount]"
-                      cachedDataType="numeric"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
                       cachedName="TicketAmount"
-                      cachedPrecision="13"
-                      cachedScale="5"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketprice]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketAmount]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[TicketAmount]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TicketId]"
-                      cachedDataType="wstr"
-                      cachedLength="7"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
                       cachedName="TicketId"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketid]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TicketId]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[TicketId]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[cgi_contactnumber]"
-                      cachedDataType="wstr"
-                      cachedLength="100"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
                       cachedName="cgi_contactnumber"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_crmnummer]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[cgi_contactnumber]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[activationinterval_from]"
-                      cachedDataType="dbTimeStamp2"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
                       cachedName="activationinterval_from"
-                      cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_activationintervalfrom]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activationinterval_from]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[activationinterval_from]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[activationinterval_to]"
-                      cachedDataType="dbTimeStamp2"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
                       cachedName="activationinterval_to"
-                      cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_activationintervalto]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activationinterval_to]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[activationinterval_to]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[BearerCategory]"
-                      cachedDataType="wstr"
-                      cachedLength="100"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
                       cachedName="BearerCategory"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_bearercategory]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[BearerCategory]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[BearerCategory]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[blockedDate]"
-                      cachedDataType="dbTimeStamp2"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
                       cachedName="blockedDate"
-                      cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_blockeddate]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[blockedDate]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[HasGroupDiscount]"
-                      cachedDataType="i4"
-                      cachedName="HasGroupDiscount"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_hasgroupdiscount]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[HasRefund]"
-                      cachedDataType="i4"
-                      cachedName="HasRefund"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_hasrefund]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[HasRefund]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[blockedDate]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[LastUpdated]"
-                      cachedDataType="dbTimeStamp2"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
                       cachedName="LastUpdated"
-                      cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_lastupdated]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[LastUpdated]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[LastUpdated]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[OfferNameDetailed]"
-                      cachedDataType="wstr"
-                      cachedLength="255"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="100"
                       cachedName="OfferNameDetailed"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_offernamedetailed]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[OfferNameDetailed]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[SalesChannelId]"
-                      cachedDataType="wstr"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
                       cachedLength="50"
                       cachedName="SalesChannelId"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_saleschannel]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[SalesChannelId]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[SalesChannelId]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[activatedDate]"
-                      cachedDataType="dbTimeStamp2"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
                       cachedName="activatedDate"
-                      cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_ticketactivated]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[activatedDate]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[activatedDate]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TravellersCount]"
-                      cachedDataType="i4"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
                       cachedName="TravellersCount"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_travellerscount]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[TravellersCount]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[TravellersCount]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[travelvalidityinterval_from]"
-                      cachedDataType="dbTimeStamp2"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
                       cachedName="travelvalidityinterval_from"
-                      cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_travelvalidityintervalfrom]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_from]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[travelvalidityinterval_from]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[travelvalidityinterval_to]"
-                      cachedDataType="dbTimeStamp2"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
                       cachedName="travelvalidityinterval_to"
-                      cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_travelvalidityintervalto]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_to]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[travelvalidityinterval_to]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[PriceModel]"
-                      cachedDataType="wstr"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
                       cachedLength="50"
                       cachedName="PriceModel"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_pricemodel]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[PriceModel]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[PriceModel]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[PriceModelPriceId]"
-                      cachedDataType="wstr"
-                      cachedLength="30"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
                       cachedName="PriceModelPriceId"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_pricemodelprice]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[PriceModelPriceId]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[OfferName]"
-                      cachedDataType="wstr"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
                       cachedLength="50"
                       cachedName="OfferName"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_singtickettype]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[OfferName]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[OfferName]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[DataCreatedDate]"
-                      cachedDataType="dbTimeStampOffset"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
                       cachedName="DataCreatedDate"
-                      cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketcreated]"
-                      lineageId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output].Columns[DataCreatedDate]" />
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[DataCreatedDate]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[MkId]"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="MkId"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_mklid]"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[MkId]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[HasGroupDiscount]"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="HasGroupDiscount"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_hasgroupdiscount]"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[HasGroupDiscount]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[HasRefund]"
+                      cachedCodepage="65001"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="HasRefund"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_hasrefund]"
+                      lineageId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output].Columns[HasRefund]" />
                   </inputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -884,6 +1235,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">systemuser</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">false</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -897,6 +1254,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -910,6 +1273,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -924,6 +1293,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -937,6 +1312,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -951,6 +1332,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -964,6 +1351,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -977,6 +1370,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -990,6 +1389,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1004,6 +1409,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1018,6 +1429,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1031,6 +1448,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">ed_skakort</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1044,6 +1467,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1057,6 +1486,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">cgi_travelcard</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1070,6 +1505,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1083,6 +1524,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1096,6 +1543,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1109,6 +1562,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">false</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1122,6 +1581,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">false</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1135,6 +1600,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">systemuser;team</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1149,6 +1620,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1165,6 +1642,12 @@
                         <property
                           dataType="System.String"
                           name="LookupSettings"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1179,6 +1662,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1193,6 +1682,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1207,6 +1702,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1220,6 +1721,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1233,6 +1740,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1246,6 +1759,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1259,6 +1778,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1273,6 +1798,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1288,6 +1819,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1301,6 +1838,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1314,6 +1857,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1327,6 +1876,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1340,6 +1895,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1353,6 +1914,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1366,6 +1933,12 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes">transactioncurrency</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
@@ -1379,6 +1952,32 @@
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_mklid]"
+                      dataType="wstr"
+                      length="50"
+                      name="ed_mklid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
                   </externalMetadataColumns>
@@ -1425,10 +2024,10 @@
           </components>
           <paths>
             <path
-              refId="Package\Upsert Singapore Tickets.Paths[OLE DB Source Output]"
+              refId="Package\Upsert Singapore Tickets.Paths[Flat File Source Output]"
               endId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input]"
-              name="OLE DB Source Output"
-              startId="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets.Outputs[OLE DB Source Output]" />
+              name="Flat File Source Output"
+              startId="Package\Upsert Singapore Tickets\Flat File Source.Outputs[Flat File Source Output]" />
           </paths>
         </pipeline>
       </DTS:ObjectData>
@@ -1461,37 +2060,37 @@
         <NodeLayout
           Size="202,42"
           Id="Package\Upsert Singapore Tickets\Upsert Singapore Tickets"
-          TopLeft="330,226" />
+          TopLeft="390,247" />
         <NodeLayout
-          Size="234,42"
-          Id="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets"
-          TopLeft="84,61" />
+          Size="156,42"
+          Id="Package\Upsert Singapore Tickets\Flat File Source"
+          TopLeft="192,84" />
         <EdgeLayout
-          Id="Package\Upsert Singapore Tickets.Paths[OLE DB Source Output]"
-          TopLeft="201,103">
+          Id="Package\Upsert Singapore Tickets.Paths[Flat File Source Output]"
+          TopLeft="270,126">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="230,123"
+              EndConnector="221,121"
               Start="0,0"
-              End="230,115.5">
+              End="221,113.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,57.5" />
+                    End="0,56.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,57.5"
-                    Point2="0,61.5"
-                    Point3="4,61.5" />
+                    Point1="0,56.5"
+                    Point2="0,60.5"
+                    Point3="4,60.5" />
                   <mssgle:LineSegment
-                    End="226,61.5" />
+                    End="217,60.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="226,61.5"
-                    Point2="230,61.5"
-                    Point3="230,65.5" />
+                    Point1="217,60.5"
+                    Point2="221,60.5"
+                    Point3="221,64.5" />
                   <mssgle:LineSegment
-                    End="230,115.5" />
+                    End="221,113.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1503,13 +2102,5 @@
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>
-  <PipelineComponentMetadata
-    design-time-name="Package\Upsert Singapore Tickets\Ticket Info -&gt; Singapore Tickets">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
 </Objects>]]></DTS:DesignTimeProperties>
 </DTS:Executable>

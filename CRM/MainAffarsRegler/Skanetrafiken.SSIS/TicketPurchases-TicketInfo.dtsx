@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="TicketPurchases-TicketInfo"
   DTS:PackageType="5"
-  DTS:VersionBuild="113"
-  DTS:VersionGUID="{2E07A1CC-32B5-436D-924B-BDF85CC185FD}">
+  DTS:VersionBuild="122"
+  DTS:VersionGUID="{E32C58B9-C2ED-4081-9CB1-17A37BE195D3}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -23,11 +23,11 @@
       DTS:ObjectName="Dynamics 365 Connection">
       <DTS:ObjectData>
         <CrmConnectionManager
-          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekundacc.skanetrafiken.se/DKCRMACC;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=True;IgnoreCertificateErrors=False"
+          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekund.skanetrafiken.se/DKCRM;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=True;IgnoreCertificateErrors=False"
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA73Q/KUtbRUqmlBW8k68xIAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABYO5NOEPvE6oxz1wqaHgjlAAAAAASAAACgAAAAEAAAAG0Clo0Fx8UP479+Iem0uhggAAAAsKZ9becAWuYmQ+ropd5bTc4I//u3W5ubEnJ913YXyu0UAAAAA1uF3rvEafPy77t1hVVU51ylK4M</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABU3+BeYQXLEAdGNq5vQGAgAAAAAASAAACgAAAAEAAAAJbSIJdCFky7cG3Lz6+Xe7sgAAAA5XwO1gWi/7uYB6zQcv0QeecGH5AuCjMMTFmiQgKnBJ4UAAAAEpJCiyY67B8JGTe3ptuu6u5Desc</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -54,7 +54,7 @@
               DTS:DataType="129"
               DTS:TextQualified="True"
               DTS:ObjectName="cgi_contactnumber"
-              DTS:DTSID="{21D2D4F9-96D3-4736-AEC2-A2129E3CE480}"
+              DTS:DTSID="{1AA9DCDA-D252-4477-B9B1-E2439810E038}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -63,7 +63,7 @@
               DTS:DataType="129"
               DTS:TextQualified="True"
               DTS:ObjectName="MkId"
-              DTS:DTSID="{E62FF4D8-528E-4AE0-A8E1-93032C1AA14D}"
+              DTS:DTSID="{70DC82EF-86C8-417A-B707-66603004BA97}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -72,7 +72,7 @@
               DTS:DataType="129"
               DTS:TextQualified="True"
               DTS:ObjectName="OfferName"
-              DTS:DTSID="{D8138174-B684-4339-AA61-20764020DAC5}"
+              DTS:DTSID="{DDB7B8B5-5E1A-4582-BC0D-750CE8F51DBB}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -81,7 +81,7 @@
               DTS:DataType="129"
               DTS:TextQualified="True"
               DTS:ObjectName="NumberOfTickets"
-              DTS:DTSID="{18D7782E-E83F-4CE2-A238-136D15169506}"
+              DTS:DTSID="{B2E7FEBE-45B8-400D-8E92-B5A2436502EF}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -90,7 +90,7 @@
               DTS:DataType="129"
               DTS:TextQualified="True"
               DTS:ObjectName="TotalSumTicketOffer"
-              DTS:DTSID="{87A9DD00-EF43-47C4-B615-DC10425BA3BF}"
+              DTS:DTSID="{F9EFD507-06E0-427F-9ABC-C411452D2C94}"
               DTS:CreationName="" />
           </DTS:FlatFileColumns>
         </DTS:ConnectionManager>
@@ -140,18 +140,16 @@
                   <inputColumns>
                     <inputColumn
                       refId="Package\Upsert Ticket Purchases\Calculate Columns.Inputs[Derived Column Input].Columns[cgi_contactnumber]"
-                      cachedCodepage="65001"
-                      cachedDataType="str"
-                      cachedLength="50"
+                      cachedDataType="wstr"
+                      cachedLength="100"
                       cachedName="cgi_contactnumber"
-                      lineageId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[cgi_contactnumber]" />
+                      lineageId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
                     <inputColumn
                       refId="Package\Upsert Ticket Purchases\Calculate Columns.Inputs[Derived Column Input].Columns[OfferName]"
-                      cachedCodepage="65001"
-                      cachedDataType="str"
+                      cachedDataType="wstr"
                       cachedLength="50"
                       cachedName="OfferName"
-                      lineageId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[OfferName]" />
+                      lineageId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferName]" />
                   </inputColumns>
                   <externalMetadataColumns />
                 </input>
@@ -178,7 +176,7 @@
                           containsID="true"
                           dataType="System.String"
                           description="Derived Column Expression"
-                          name="Expression">#{Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[OfferName]}</property>
+                          name="Expression">#{Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferName]}</property>
                         <property
                           containsID="true"
                           dataType="System.String"
@@ -201,7 +199,7 @@
                           containsID="true"
                           dataType="System.String"
                           description="Derived Column Expression"
-                          name="Expression">#{Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[cgi_contactnumber]} + "_" + #{Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[OfferName]}</property>
+                          name="Expression">#{Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]} + "_" + #{Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferName]}</property>
                         <property
                           containsID="true"
                           dataType="System.String"
@@ -239,211 +237,6 @@
               </outputs>
             </component>
             <component
-              refId="Package\Upsert Ticket Purchases\Flat File Source"
-              componentClassID="Microsoft.FlatFileSource"
-              contactInfo="Flat File Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
-              description="Flat File Source"
-              localeId="1053"
-              name="Flat File Source"
-              usesDispositions="true"
-              version="1">
-              <properties>
-                <property
-                  dataType="System.Boolean"
-                  description="Specifies whether zero-length columns are treated as null."
-                  name="RetainNulls">true</property>
-                <property
-                  dataType="System.String"
-                  description="Specifies the name of an output column containing the file name. If no name is specified, no output column containing the file name will be generated."
-                  name="FileNameColumnName"></property>
-              </properties>
-              <connections>
-                <connection
-                  refId="Package\Upsert Ticket Purchases\Flat File Source.Connections[FlatFileConnection]"
-                  connectionManagerID="Package.ConnectionManagers[Flat File Connection Manager]"
-                  connectionManagerRefId="Package.ConnectionManagers[Flat File Connection Manager]"
-                  name="FlatFileConnection" />
-              </connections>
-              <outputs>
-                <output
-                  refId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output]"
-                  name="Flat File Source Output">
-                  <outputColumns>
-                    <outputColumn
-                      refId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[cgi_contactnumber]"
-                      codePage="65001"
-                      dataType="str"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[cgi_contactnumber]"
-                      length="50"
-                      lineageId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[cgi_contactnumber]"
-                      name="cgi_contactnumber"
-                      truncationRowDisposition="FailComponent">
-                      <properties>
-                        <property
-                          dataType="System.Boolean"
-                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
-                          name="FastParse">false</property>
-                        <property
-                          dataType="System.Boolean"
-                          description="Indicates whether the data is in binary format."
-                          name="UseBinaryFormat">false</property>
-                      </properties>
-                    </outputColumn>
-                    <outputColumn
-                      refId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[MkId]"
-                      codePage="65001"
-                      dataType="str"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[MkId]"
-                      length="50"
-                      lineageId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[MkId]"
-                      name="MkId"
-                      truncationRowDisposition="FailComponent">
-                      <properties>
-                        <property
-                          dataType="System.Boolean"
-                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
-                          name="FastParse">false</property>
-                        <property
-                          dataType="System.Boolean"
-                          description="Indicates whether the data is in binary format."
-                          name="UseBinaryFormat">false</property>
-                      </properties>
-                    </outputColumn>
-                    <outputColumn
-                      refId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[OfferName]"
-                      codePage="65001"
-                      dataType="str"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[OfferName]"
-                      length="50"
-                      lineageId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[OfferName]"
-                      name="OfferName"
-                      truncationRowDisposition="FailComponent">
-                      <properties>
-                        <property
-                          dataType="System.Boolean"
-                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
-                          name="FastParse">false</property>
-                        <property
-                          dataType="System.Boolean"
-                          description="Indicates whether the data is in binary format."
-                          name="UseBinaryFormat">false</property>
-                      </properties>
-                    </outputColumn>
-                    <outputColumn
-                      refId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[NumberOfTickets]"
-                      codePage="65001"
-                      dataType="str"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[NumberOfTickets]"
-                      length="50"
-                      lineageId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[NumberOfTickets]"
-                      name="NumberOfTickets"
-                      truncationRowDisposition="FailComponent">
-                      <properties>
-                        <property
-                          dataType="System.Boolean"
-                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
-                          name="FastParse">false</property>
-                        <property
-                          dataType="System.Boolean"
-                          description="Indicates whether the data is in binary format."
-                          name="UseBinaryFormat">false</property>
-                      </properties>
-                    </outputColumn>
-                    <outputColumn
-                      refId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[TotalSumTicketOffer]"
-                      codePage="65001"
-                      dataType="str"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[TotalSumTicketOffer]"
-                      length="50"
-                      lineageId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[TotalSumTicketOffer]"
-                      name="TotalSumTicketOffer"
-                      truncationRowDisposition="FailComponent">
-                      <properties>
-                        <property
-                          dataType="System.Boolean"
-                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
-                          name="FastParse">false</property>
-                        <property
-                          dataType="System.Boolean"
-                          description="Indicates whether the data is in binary format."
-                          name="UseBinaryFormat">false</property>
-                      </properties>
-                    </outputColumn>
-                  </outputColumns>
-                  <externalMetadataColumns
-                    isUsed="True">
-                    <externalMetadataColumn
-                      refId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[cgi_contactnumber]"
-                      codePage="65001"
-                      dataType="str"
-                      length="50"
-                      name="cgi_contactnumber" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[MkId]"
-                      codePage="65001"
-                      dataType="str"
-                      length="50"
-                      name="MkId" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[OfferName]"
-                      codePage="65001"
-                      dataType="str"
-                      length="50"
-                      name="OfferName" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[NumberOfTickets]"
-                      codePage="65001"
-                      dataType="str"
-                      length="50"
-                      name="NumberOfTickets" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[TotalSumTicketOffer]"
-                      codePage="65001"
-                      dataType="str"
-                      length="50"
-                      name="TotalSumTicketOffer" />
-                  </externalMetadataColumns>
-                </output>
-                <output
-                  refId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Error Output]"
-                  isErrorOut="true"
-                  name="Flat File Source Error Output">
-                  <outputColumns>
-                    <outputColumn
-                      refId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Error Output].Columns[Flat File Source Error Output Column]"
-                      codePage="65001"
-                      dataType="text"
-                      description="Flat File Source Error Output Column"
-                      lineageId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Error Output].Columns[Flat File Source Error Output Column]"
-                      name="Flat File Source Error Output Column" />
-                    <outputColumn
-                      refId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorCode]"
-                      dataType="i4"
-                      lineageId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorCode]"
-                      name="ErrorCode"
-                      specialFlags="1" />
-                    <outputColumn
-                      refId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorColumn]"
-                      dataType="i4"
-                      lineageId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorColumn]"
-                      name="ErrorColumn"
-                      specialFlags="2" />
-                  </outputColumns>
-                  <externalMetadataColumns />
-                </output>
-              </outputs>
-            </component>
-            <component
               refId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info"
               componentClassID="Microsoft.OLEDBSource"
               contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
@@ -468,12 +261,12 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT top 1 [cgi_contactnumber]
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT [cgi_contactnumber]
       ,[MkId]
       ,[OfferName]
       ,[NumberOfTickets]
       ,[TotalSumTicketOffer]
-  FROM [STDW].[dbo].[TicketPurchasesPerCustomerView]</property>
+  FROM [STDW].[dbo].[GetTicketPurchasesPerCustomerView]</property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
@@ -520,15 +313,6 @@
                       name="cgi_contactnumber"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[MkId]"
-                      dataType="i4"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
-                      lineageId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[MkId]"
-                      name="MkId"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
                       refId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferName]"
                       dataType="wstr"
                       errorOrTruncationOperation="Conversion"
@@ -558,6 +342,16 @@
                       precision="38"
                       scale="5"
                       truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[MkId]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
+                      length="100"
+                      lineageId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[MkId]"
+                      name="MkId"
+                      truncationRowDisposition="FailComponent" />
                   </outputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -566,10 +360,6 @@
                       dataType="wstr"
                       length="100"
                       name="cgi_contactnumber" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
-                      dataType="i4"
-                      name="MkId" />
                     <externalMetadataColumn
                       refId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[OfferName]"
                       dataType="wstr"
@@ -585,6 +375,11 @@
                       name="TotalSumTicketOffer"
                       precision="38"
                       scale="5" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
+                      dataType="wstr"
+                      length="100"
+                      name="MkId" />
                   </externalMetadataColumns>
                 </output>
                 <output
@@ -600,7 +395,8 @@
                       name="cgi_contactnumber" />
                     <outputColumn
                       refId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[MkId]"
-                      dataType="i4"
+                      dataType="wstr"
+                      length="100"
                       lineageId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[MkId]"
                       name="MkId" />
                     <outputColumn
@@ -703,7 +499,7 @@
                   description="Specifies what action will be taken when multiple matches are found with Upsert action."
                   expressionType="Notify"
                   name="HandlingOfMultipleMatches"
-                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">0</property>
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">0</property>
                 <property
                   dataType="System.Int32"
                   description="Specify whether to use optimizations when there are duplicate records form the source system."
@@ -757,36 +553,32 @@
                   <inputColumns>
                     <inputColumn
                       refId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Inputs[Input].Columns[NumberOfTickets]"
-                      cachedCodepage="65001"
-                      cachedDataType="str"
-                      cachedLength="50"
+                      cachedDataType="i4"
                       cachedName="NumberOfTickets"
                       externalMetadataColumnId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_numberoftickets]"
-                      lineageId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[NumberOfTickets]" />
+                      lineageId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[NumberOfTickets]" />
                     <inputColumn
                       refId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Inputs[Input].Columns[OfferName]"
-                      cachedCodepage="65001"
-                      cachedDataType="str"
+                      cachedDataType="wstr"
                       cachedLength="50"
                       cachedName="OfferName"
                       externalMetadataColumnId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_offername]"
-                      lineageId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[OfferName]" />
+                      lineageId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferName]" />
                     <inputColumn
                       refId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Inputs[Input].Columns[TotalSumTicketOffer]"
-                      cachedCodepage="65001"
-                      cachedDataType="str"
-                      cachedLength="50"
+                      cachedDataType="numeric"
                       cachedName="TotalSumTicketOffer"
+                      cachedPrecision="38"
+                      cachedScale="5"
                       externalMetadataColumnId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_totalsum]"
-                      lineageId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[TotalSumTicketOffer]" />
+                      lineageId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TotalSumTicketOffer]" />
                     <inputColumn
                       refId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Inputs[Input].Columns[cgi_contactnumber]"
-                      cachedCodepage="65001"
-                      cachedDataType="str"
-                      cachedLength="50"
+                      cachedDataType="wstr"
+                      cachedLength="100"
                       cachedName="cgi_contactnumber"
                       externalMetadataColumnId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_crmnumber]"
-                      lineageId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output].Columns[cgi_contactnumber]" />
+                      lineageId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
                     <inputColumn
                       refId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Inputs[Input].Columns[Name]"
                       cachedDataType="wstr"
@@ -801,6 +593,13 @@
                       cachedName="Offer_Name"
                       externalMetadataColumnId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_offer_name]"
                       lineageId="Package\Upsert Ticket Purchases\Calculate Columns.Outputs[Derived Column Output].Columns[Offer_Name]" />
+                    <inputColumn
+                      refId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Inputs[Input].Columns[MkId]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="MkId"
+                      externalMetadataColumnId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_mklid]"
+                      lineageId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[MkId]" />
                   </inputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -848,7 +647,7 @@
                     <externalMetadataColumn
                       refId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_crmnumber]"
                       dataType="wstr"
-                      length="100"
+                      length="50"
                       name="ed_crmnumber">
                       <properties>
                         <property
@@ -1155,6 +954,26 @@
                           name="Updateable">true</property>
                       </properties>
                     </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Ticket Purchases\Upsert Ticket Purchases.Inputs[Input].ExternalColumns[ed_mklid]"
+                      dataType="wstr"
+                      length="50"
+                      name="ed_mklid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
                   </externalMetadataColumns>
                 </input>
               </inputs>
@@ -1204,10 +1023,10 @@
               name="Derived Column Output"
               startId="Package\Upsert Ticket Purchases\Calculate Columns.Outputs[Derived Column Output]" />
             <path
-              refId="Package\Upsert Ticket Purchases.Paths[Flat File Source Output]"
+              refId="Package\Upsert Ticket Purchases.Paths[OLE DB Source Output]"
               endId="Package\Upsert Ticket Purchases\Calculate Columns.Inputs[Derived Column Input]"
-              name="Flat File Source Output"
-              startId="Package\Upsert Ticket Purchases\Flat File Source.Outputs[Flat File Source Output]" />
+              name="OLE DB Source Output"
+              startId="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info.Outputs[OLE DB Source Output]" />
           </paths>
         </pipeline>
       </DTS:ObjectData>
@@ -1238,47 +1057,43 @@
       <GraphLayout
         Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
+          Size="230,42"
+          Id="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info"
+          TopLeft="191,132" />
+        <NodeLayout
           Size="199,42"
           Id="Package\Upsert Ticket Purchases\Upsert Ticket Purchases"
           TopLeft="651,370" />
-        <NodeLayout
-          Size="230,42"
-          Id="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info"
-          TopLeft="803,95" />
-        <NodeLayout
-          Size="156,42"
-          Id="Package\Upsert Ticket Purchases\Flat File Source"
-          TopLeft="133,145" />
         <NodeLayout
           Size="171,42"
           Id="Package\Upsert Ticket Purchases\Calculate Columns"
           TopLeft="404,263" />
         <EdgeLayout
-          Id="Package\Upsert Ticket Purchases.Paths[Flat File Source Output]"
-          TopLeft="211,187">
+          Id="Package\Upsert Ticket Purchases.Paths[OLE DB Source Output]"
+          TopLeft="306,174">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="278.5,76"
+              EndConnector="183.5,89"
               Start="0,0"
-              End="278.5,68.5">
+              End="183.5,81.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,34" />
+                    End="0,40.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,34"
-                    Point2="0,38"
-                    Point3="4,38" />
+                    Point1="0,40.5"
+                    Point2="0,44.5"
+                    Point3="4,44.5" />
                   <mssgle:LineSegment
-                    End="274.5,38" />
+                    End="179.5,44.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="274.5,38"
-                    Point2="278.5,38"
-                    Point3="278.5,42" />
+                    Point1="179.5,44.5"
+                    Point2="183.5,44.5"
+                    Point3="183.5,48.5" />
                   <mssgle:LineSegment
-                    End="278.5,68.5" />
+                    End="183.5,81.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
