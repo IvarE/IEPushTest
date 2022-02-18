@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="TicketPurchases-TicketInfo"
   DTS:PackageType="5"
-  DTS:VersionBuild="122"
-  DTS:VersionGUID="{E32C58B9-C2ED-4081-9CB1-17A37BE195D3}">
+  DTS:VersionBuild="123"
+  DTS:VersionGUID="{23E83181-EAC7-4A14-AFE4-F761928D63E6}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABU3+BeYQXLEAdGNq5vQGAgAAAAAASAAACgAAAAEAAAAJbSIJdCFky7cG3Lz6+Xe7sgAAAA5XwO1gWi/7uYB6zQcv0QeecGH5AuCjMMTFmiQgKnBJ4UAAAAEpJCiyY67B8JGTe3ptuu6u5Desc</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABjnTV7PqEVj4BUJ+vfZEpgAAAAAASAAACgAAAAEAAAAPOxurRnqW1FqvrS4n416VYgAAAAUTVJTsu/rf3KoU5t+bh86RDxrJ8bp5+hV7/wu8NYYlIUAAAACCnNZwAZZz2SfgBLuPf/hbvAdmQ</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -1057,13 +1057,13 @@
       <GraphLayout
         Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="230,42"
-          Id="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info"
-          TopLeft="191,132" />
-        <NodeLayout
           Size="199,42"
           Id="Package\Upsert Ticket Purchases\Upsert Ticket Purchases"
           TopLeft="651,370" />
+        <NodeLayout
+          Size="230,42"
+          Id="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info"
+          TopLeft="191,132" />
         <NodeLayout
           Size="171,42"
           Id="Package\Upsert Ticket Purchases\Calculate Columns"
