@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="181"
-  DTS:VersionGUID="{79067F48-0490-48A2-A09D-598486921A8F}">
+  DTS:VersionBuild="183"
+  DTS:VersionGUID="{8A6A6804-FECD-4EA8-9A35-E1C91CD30B47}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABZu18y4lmclV4PTzQn8YlMAAAAAASAAACgAAAAEAAAALNGgfxefDLS/XVvGsB0Zn8gAAAAuDAbRILyyXPDVwJy+sxsZnsLkut3YvtG/gQVnNDCRoQUAAAAP+SRvdAJs3LJGw6iGpJS148wzxg</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAA4Qm/tjwSjUuVo7vC2lI+RAAAAAASAAACgAAAAEAAAAEx/lExLwbgZ1+S+NXVdgzAgAAAAOt2mQToqIkKHEDZsaIFeWEqRfEFfsPMe2Gwkf1xZdIwUAAAA+D5rQYNH5Q5NuoIrsE5KxUgU8b0</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -1929,37 +1929,37 @@
         <NodeLayout
           Size="202,42"
           Id="Package\Upsert Singapore Tickets\Upsert Singapore Tickets"
-          TopLeft="578,249" />
+          TopLeft="478,186" />
         <NodeLayout
           Size="157,42"
           Id="Package\Upsert Singapore Tickets\OLE DB Source"
-          TopLeft="287,141" />
+          TopLeft="225,54" />
         <EdgeLayout
           Id="Package\Upsert Singapore Tickets.Paths[OLE DB Source Output]"
-          TopLeft="365.5,183">
+          TopLeft="303.5,96">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="313.5,66"
+              EndConnector="275.5,90"
               Start="0,0"
-              End="313.5,58.5">
+              End="275.5,82.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,29" />
+                    End="0,41" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,29"
-                    Point2="0,33"
-                    Point3="4,33" />
+                    Point1="0,41"
+                    Point2="0,45"
+                    Point3="4,45" />
                   <mssgle:LineSegment
-                    End="309.5,33" />
+                    End="271.5,45" />
                   <mssgle:CubicBezierSegment
-                    Point1="309.5,33"
-                    Point2="313.5,33"
-                    Point3="313.5,37" />
+                    Point1="271.5,45"
+                    Point2="275.5,45"
+                    Point3="275.5,49" />
                   <mssgle:LineSegment
-                    End="313.5,58.5" />
+                    End="275.5,82.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
