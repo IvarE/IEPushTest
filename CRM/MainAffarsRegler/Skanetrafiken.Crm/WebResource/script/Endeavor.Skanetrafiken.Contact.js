@@ -23,7 +23,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
         _ticketMovesErrorHolder: "ticketMovesErrorHolder",
         _listOfFormsSammanhang: ["Försäljning och Marknad",
-            "Sales Insights", "Försäljningsinsikter", "Contact (Organisation)", "Kund (Företag)", "Contact"],
+            "Sales Insights", "Försäljningsinsikter", "Contact (Organisation)", "Kund (Företag)", "Contact", "Contact (3 - Skånetrafiken)", "Kund (3 - Skånetrafiken)"],
 
         onLoad: function (executionContext) {
             var formContext = executionContext.getFormContext();
@@ -456,6 +456,19 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
         },
 
+        formatSocialSecurityNumber: function (formContext) {
+            var socialSecurityNumber = Endeavor.formscriptfunctions.GetValue("cgi_socialsecuritynumber", formContext);
+            var socialSecurityNumberFormat = Endeavor.formscriptfunctions.GetValue("ed_socialsecuritynumberformat", formContext);
+
+            if (socialSecurityNumber != null && socialSecurityNumberFormat == null)
+            {
+                var hifen = "-";
+                var position = 8;
+                Endeavor.formscriptfunctions.SetValue("ed_socialsecuritynumberformat", [socialSecurityNumber.slice(0, position), hifen, socialSecurityNumber.slice(position)].join(''), formContext);
+                Endeavor.formscriptfunctions.SaveEntity(formContext);
+            }
+        },
+
         handleSammanhangSection: function (formContext) {
             var formItem = formContext.ui.formSelector.getCurrentItem();
 
@@ -617,7 +630,6 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         },
 
         onSocialSecurityNumberChange: function (executionContext) {
-
             var formContext = executionContext.getFormContext();
             var contactNumberControlTag = "cgi_socialsecuritynumber";
             var contactNumber = formContext.getAttribute(contactNumberControlTag);
@@ -629,9 +641,12 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 var vssNumber = ssNumber.getValue();
                 var hifen = "-";
                 var position = 8;
-                var check = vssNumber.slice(position, position + 1);
-                if (check !== hifen)
-                    ssNumber.setValue([vssNumber.slice(0, position), hifen, vssNumber.slice(position)].join(''));
+
+                if (vssNumber != null) {
+                    var check = vssNumber.slice(position, position + 1);
+                    if (check !== hifen)
+                        ssNumber.setValue([vssNumber.slice(0, position), hifen, vssNumber.slice(position)].join(''));
+                }
             }
 
             if (!(!contactNumber.getValue() || 0 === contactNumber.getValue().length)) {
@@ -639,7 +654,6 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     formContext.getControl(contactNumberControlTag).setNotification("Ogiltigt Persnonnummer<BR>(giltiga format: ååmmdd, ååååmmdd, ååååmmddxxxx, ååååmmdd-xxxx)");
                 else 
                     formContext.getControl(contactNumberControlTag).clearNotification();
-                
             }
             else
                 formContext.getControl(contactNumberControlTag).clearNotification();
@@ -1032,10 +1046,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         //Form Methods CGI Contact (from contactLibrary.js)
         onFormLoad: function (executionContext) {
             try {
-                var formContext = executionContext.getFormContext();
-                
 
                 var formIsOnLoad = true;
+                var formContext = executionContext.getFormContext();
                 Endeavor.Skanetrafiken.Contact.resetRequiredLevel(executionContext, formIsOnLoad);
                 Endeavor.Skanetrafiken.Contact.lockEmailIfMKLidExistAndNotAdminForm(formContext);
 
@@ -1045,6 +1058,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     case FORM_TYPE_UPDATE:
                         Endeavor.Skanetrafiken.Contact.checkIfUserHasSecRole(executionContext);
                         Endeavor.Skanetrafiken.Contact.handleSammanhangSection(formContext);
+                        Endeavor.Skanetrafiken.Contact.formatSocialSecurityNumber(formContext);
                         //Endeavor.Skanetrafiken.Contact.lockEmailIfMKLidExistAndNotAdminForm(formContext);
                         Endeavor.Skanetrafiken.Contact.timerfunction_eHandel(formContext);
                     case FORM_TYPE_READONLY:

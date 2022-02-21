@@ -13781,6 +13781,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_campaign_st_singaporeticket_SourceCampaignId
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_campaign_st_singaporeticket_SourceCampaignId")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket> ed_campaign_st_singaporeticket_SourceCampaignId
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket>("ed_campaign_st_singaporeticket_SourceCampaignId", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.st_singaporeticket>("ed_campaign_st_singaporeticket_SourceCampaignId", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:N campaigncampaign_association
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("campaigncampaign_association", Microsoft.Xrm.Sdk.EntityRole.Referencing)]
@@ -31964,6 +31980,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_socialsecuritynumberformat")]
+		public string ed_SocialSecurityNumberFormat
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_socialsecuritynumberformat");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_socialsecuritynumberformat", value);
+			}
+		}
+		
+		/// <summary>
 		/// Choose the campaign that the Contact was generated from to track the effectiveness of marketing campaigns and identify  communications received by the lead.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_sourcecampaignid")]
@@ -35841,6 +35873,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_SocialSecurityNumberBlock = "ed_socialsecuritynumberblock";
 			
+			public const string ed_SocialSecurityNumberFormat = "ed_socialsecuritynumberformat";
+			
 			public const string ed_SourceCampaignId = "ed_sourcecampaignid";
 			
 			public const string ed_title = "ed_title";
@@ -36350,6 +36384,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_SocialSecurityNumber2 = 100;
 			
 			public const int ed_SocialSecurityNumberBlock = 100;
+			
+			public const int ed_SocialSecurityNumberFormat = 100;
 			
 			public const int ed_title = 200;
 			
@@ -100923,6 +100959,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_sourcecampaignid")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_SourceCampaignId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_sourcecampaignid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_sourcecampaignid", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_ticketactivated")]
 		public System.Nullable<System.DateTime> ed_TicketActivated
 		{
@@ -101577,6 +101629,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 ed_campaign_st_singaporeticket_SourceCampaignId
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_sourcecampaignid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_campaign_st_singaporeticket_SourceCampaignId")]
+		public Skanetrafiken.Crm.Schema.Generated.Campaign ed_campaign_st_singaporeticket_SourceCampaignId
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Campaign>("ed_campaign_st_singaporeticket_SourceCampaignId", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Campaign>("ed_campaign_st_singaporeticket_SourceCampaignId", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 ed_cgi_travelcard_st_singaporeticket
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_travelcardid")]
@@ -101754,6 +101823,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_SalesChannel = "ed_saleschannel";
 			
 			public const string ed_SKAkort = "ed_skakort";
+			
+			public const string ed_SourceCampaignId = "ed_sourcecampaignid";
 			
 			public const string ed_TicketActivated = "ed_ticketactivated";
 			
