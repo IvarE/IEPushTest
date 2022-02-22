@@ -34,7 +34,7 @@ namespace CRM2013.SkanetrafikenPlugins
                                 description = incident.Attributes["description"].ToString();
                             }
 
-                            if (activitytype == "email" )
+                            if (activitytype == "email" && description == null && description == "")
                             {
                                 Entity activity = _getActivity(data, data.Target.Id);
                                 string activityDescription = "";
