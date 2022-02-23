@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="TicketPurchases-TicketInfo"
   DTS:PackageType="5"
-  DTS:VersionBuild="124"
-  DTS:VersionGUID="{94EA783D-B29B-433E-8F04-24830D6E6F27}">
+  DTS:VersionBuild="126"
+  DTS:VersionGUID="{80DBF2C6-5627-4EEF-A4FA-CE6F0F27FB71}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACfaEHkutAARWgmdeG9yMedAAAAAASAAACgAAAAEAAAAIJtp5YJKFs7kjnedf1hqxEgAAAAKnVPXhk8hFS/PelGlEO04fUggE+XEvytsxfPliDOvOoUAAAAiF5z6DM3OAGFDsCL/ICyDJ7C3ts</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAB5DGF3xakEvMq9K3CiwlC2AAAAAASAAACgAAAAEAAAAMFidZ9BHkuy4cIGYrr13MIgAAAA4Df3g8r1zdmbD1v5zSEEvbw9MnmfIqETPa3X5HWHLWcUAAAAuMkEi4yYQLtW/wH9AbB6504Afv0</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -1059,41 +1059,41 @@
         <NodeLayout
           Size="199,42"
           Id="Package\Upsert Ticket Purchases\Upsert Ticket Purchases"
-          TopLeft="651,371" />
+          TopLeft="602,340" />
         <NodeLayout
           Size="230,42"
           Id="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info"
-          TopLeft="191,132" />
+          TopLeft="154,62" />
         <NodeLayout
           Size="171,42"
           Id="Package\Upsert Ticket Purchases\Calculate Columns"
-          TopLeft="404,263" />
+          TopLeft="397,219" />
         <EdgeLayout
           Id="Package\Upsert Ticket Purchases.Paths[OLE DB Source Output]"
-          TopLeft="306,174">
+          TopLeft="269,104">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="183.5,89"
+              EndConnector="213.5,115"
               Start="0,0"
-              End="183.5,81.5">
+              End="213.5,107.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,40.5" />
+                    End="0,53.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,40.5"
-                    Point2="0,44.5"
-                    Point3="4,44.5" />
+                    Point1="0,53.5"
+                    Point2="0,57.5"
+                    Point3="4,57.5" />
                   <mssgle:LineSegment
-                    End="179.5,44.5" />
+                    End="209.5,57.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="179.5,44.5"
-                    Point2="183.5,44.5"
-                    Point3="183.5,48.5" />
+                    Point1="209.5,57.5"
+                    Point2="213.5,57.5"
+                    Point3="213.5,61.5" />
                   <mssgle:LineSegment
-                    End="183.5,81.5" />
+                    End="213.5,107.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1104,30 +1104,30 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Upsert Ticket Purchases.Paths[Derived Column Output]"
-          TopLeft="489.5,305">
+          TopLeft="482.5,261">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="261,66"
+              EndConnector="219,79"
               Start="0,0"
-              End="261,58.5">
+              End="219,71.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,29" />
+                    End="0,35.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,29"
-                    Point2="0,33"
-                    Point3="4,33" />
+                    Point1="0,35.5"
+                    Point2="0,39.5"
+                    Point3="4,39.5" />
                   <mssgle:LineSegment
-                    End="257,33" />
+                    End="215,39.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="257,33"
-                    Point2="261,33"
-                    Point3="261,37" />
+                    Point1="215,39.5"
+                    Point2="219,39.5"
+                    Point3="219,43.5" />
                   <mssgle:LineSegment
-                    End="261,58.5" />
+                    End="219,71.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>

@@ -9,10 +9,10 @@
   DTS:ExecutableType="Microsoft.Package"
   DTS:LastModifiedProductVersion="15.0.2000.170"
   DTS:LocaleID="1053"
-  DTS:ObjectName="Package1"
+  DTS:ObjectName="Ticket Integration"
   DTS:PackageType="5"
-  DTS:VersionBuild="183"
-  DTS:VersionGUID="{8A6A6804-FECD-4EA8-9A35-E1C91CD30B47}">
+  DTS:VersionBuild="209"
+  DTS:VersionGUID="{2C7D591B-69BA-41EF-8270-B84116A56EB0}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAA4Qm/tjwSjUuVo7vC2lI+RAAAAAASAAACgAAAAEAAAAEx/lExLwbgZ1+S+NXVdgzAgAAAAOt2mQToqIkKHEDZsaIFeWEqRfEFfsPMe2Gwkf1xZdIwUAAAA+D5rQYNH5Q5NuoIrsE5KxUgU8b0</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACaS5Oc1rHuUWwErfueyWeuAAAAAASAAACgAAAAEAAAAEtWtmtHRvrmNjrBVUgdmvwgAAAAE9iXxYwWc50s85sEujmffEUuldLMMZrwH8PYWnVuGr4UAAAAm929WpyEBkExzsKimifWjvB5pdY</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -253,7 +253,17 @@
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
-  <DTS:Variables />
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{30298214-6EC1-4CB6-BA07-33E4C56C3660}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="crmLastUpdated">
+      <DTS:VariableValue
+        DTS:DataType="7">1/1/2023</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
   <DTS:Executables>
     <DTS:Executable
       DTS:refId="Package\Upsert Singapore Tickets"
@@ -269,11 +279,826 @@
           version="1">
           <components>
             <component
-              refId="Package\Upsert Singapore Tickets\OLE DB Source"
+              refId="Package\Upsert Singapore Tickets\Dynamics CRM Source"
+              componentClassID="Microsoft.ManagedComponentHost"
+              contactInfo="KingswaySoft Inc.; http://www.kingswaysoft.com; support@kingswaysoft.com; Copyright (c) 2020 KingswaySoft Inc."
+              description="Extract data from Microsoft Dynamics 365 CE/CRM."
+              name="Dynamics CRM Source"
+              usesDispositions="true"
+              version="3">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of source data from Microsoft Dynamics CRM."
+                  expressionType="Notify"
+                  name="SourceType"
+                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.SourceType">0</property>
+                <property
+                  dataType="System.String"
+                  description="Dynamics CRM entity to retrieve data from."
+                  expressionType="Notify"
+                  name="SourceEntity">cgi_setting</property>
+                <property
+                  dataType="System.String"
+                  description="FetchXML statement."
+                  expressionType="Notify"
+                  name="FetchXML"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the batch size of the query."
+                  expressionType="Notify"
+                  name="BatchSize">2000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify the maximum number of rows to be returned from the Dynamics 365/CRM server (Specify 0 to read all satisfying records)."
+                  expressionType="Notify"
+                  name="MaxRowsReturned">0</property>
+                <property
+                  dataType="System.Null"
+                  description="The caller to be used for CRM impersonation when reading from CRM server."
+                  expressionType="Notify"
+                  name="ImpersonateAs" />
+                <property
+                  dataType="System.Null"
+                  description="Specifies the output timezone for CRM datetime fields."
+                  expressionType="Notify"
+                  name="OutputTimezone"
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.SourceOutputTimezone" />
+                <property
+                  dataType="System.String"
+                  name="UserComponentTypeName">KingswaySoft.IntegrationToolkit.DynamicsCrm.CrmSourceComponent</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Connections[DynamicsCRM]"
+                  connectionManagerID="Package.ConnectionManagers[Dynamics 365 Connection]"
+                  connectionManagerRefId="Package.ConnectionManagers[Dynamics 365 Connection]"
+                  description="Dynamics CRM Connection Manager"
+                  name="DynamicsCRM" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output]"
+                  name="Primary Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].Columns[ed_lastticketrun]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_lastticketrun]"
+                      lineageId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].Columns[ed_lastticketrun]"
+                      name="ed_lastticketrun"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_amount_limit]"
+                      dataType="numeric"
+                      name="cgi_amount_limit"
+                      precision="38" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_amount_limit_base]"
+                      dataType="numeric"
+                      name="cgi_amount_limit_base"
+                      precision="38" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_amount_limit_warn]"
+                      dataType="numeric"
+                      name="cgi_amount_limit_warn"
+                      precision="38"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_amount_limit_warn_base]"
+                      dataType="numeric"
+                      name="cgi_amount_limit_warn_base"
+                      precision="38"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_attentionemailtemplate]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_attentionemailtemplate" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_biffconnectorservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_biffconnectorservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_bomburl]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_bomburl" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_cancelgiftcodeservice]"
+                      dataType="wstr"
+                      length="200"
+                      name="cgi_cancelgiftcodeservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_case_rgol_defaultowner]"
+                      dataType="guid"
+                      name="cgi_case_rgol_defaultowner" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_case_rgol_defaultownername]"
+                      dataType="wstr"
+                      length="200"
+                      name="cgi_case_rgol_defaultownername" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_case_rgol_defaultowneryominame]"
+                      dataType="wstr"
+                      length="200"
+                      name="cgi_case_rgol_defaultowneryominame" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_case_rgol_defaultqueue]"
+                      dataType="guid"
+                      name="cgi_case_rgol_defaultqueue" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_case_rgol_defaultqueuename]"
+                      dataType="wstr"
+                      length="200"
+                      name="cgi_case_rgol_defaultqueuename" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_category_detail1id]"
+                      dataType="guid"
+                      name="cgi_category_detail1id" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_category_detail1idname]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_category_detail1idname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_category_detail2id]"
+                      dataType="guid"
+                      name="cgi_category_detail2id" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_category_detail2idname]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_category_detail2idname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_category_detail3id]"
+                      dataType="guid"
+                      name="cgi_category_detail3id" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_category_detail3idname]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_category_detail3idname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_chargeorderservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_chargeorderservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_createcouponservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_createcouponservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_createemailcouponservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_createemailcouponservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_crmcardservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_crmcardservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_crmuri]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_crmuri" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_cubicservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_cubicservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_customerfilepath]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_customerfilepath" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_data]"
+                      dataType="nText"
+                      name="cgi_data" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_defaultcustomeroncase]"
+                      dataType="guid"
+                      name="cgi_defaultcustomeroncase" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_defaultcustomeroncasename]"
+                      dataType="wstr"
+                      length="160"
+                      name="cgi_defaultcustomeroncasename" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_defaultcustomeroncaseyominame]"
+                      dataType="wstr"
+                      length="160"
+                      name="cgi_defaultcustomeroncaseyominame" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_defaultoutgoingemailqueue]"
+                      dataType="guid"
+                      name="cgi_defaultoutgoingemailqueue" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_defaultoutgoingemailqueuename]"
+                      dataType="wstr"
+                      length="200"
+                      name="cgi_defaultoutgoingemailqueuename" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_defaultteamonpasscase]"
+                      dataType="guid"
+                      name="cgi_defaultteamonpasscase" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_defaultteamonpasscasename]"
+                      dataType="wstr"
+                      length="160"
+                      name="cgi_defaultteamonpasscasename" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_defaultteamonpasscaseyominame]"
+                      dataType="wstr"
+                      length="160"
+                      name="cgi_defaultteamonpasscaseyominame" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_ehandelorderservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_ehandelorderservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_etisservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_etisservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_extconnectorservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_extconnectorservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_getoutstandingchargesservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_getoutstandingchargesservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_giftcardservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_giftcardservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_integrationdbconstr]"
+                      dataType="wstr"
+                      length="250"
+                      name="cgi_integrationdbconstr" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_kbarticlesforintranetservice]"
+                      dataType="wstr"
+                      length="200"
+                      name="cgi_kbarticlesforintranetservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_milage_contribution]"
+                      dataType="numeric"
+                      name="cgi_milage_contribution"
+                      precision="38"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_milage_contribution_base]"
+                      dataType="numeric"
+                      name="cgi_milage_contribution_base"
+                      precision="38"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_name]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_name" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_organizationprefix]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_organizationprefix" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_pubtransservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_pubtransservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_raindanceprefix]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_raindanceprefix" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_rechargecardservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_rechargecardservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_recipient_entity_id]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_recipient_entity_id" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_refundtypeproductnotrequiredid]"
+                      dataType="guid"
+                      name="cgi_refundtypeproductnotrequiredid" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_refundtypeproductnotrequiredidname]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_refundtypeproductnotrequiredidname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_reinvoicingphonenumber]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_reinvoicingphonenumber" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_remitanceemailtemplate]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_remitanceemailtemplate" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_rgolurl]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_rgolurl" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_sendvaluecodemailservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_sendvaluecodemailservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_settingid]"
+                      dataType="guid"
+                      name="cgi_settingid" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_synccustomercardservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_synccustomercardservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_synccustomerservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_synccustomerservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_travelcardfilepath]"
+                      dataType="wstr"
+                      length="100"
+                      name="cgi_travelcardfilepath" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_userid]"
+                      dataType="guid"
+                      name="cgi_userid" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_useridname]"
+                      dataType="wstr"
+                      length="200"
+                      name="cgi_useridname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_useridyominame]"
+                      dataType="wstr"
+                      length="200"
+                      name="cgi_useridyominame" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_validfrom]"
+                      dataType="dbTimeStamp"
+                      name="cgi_validfrom" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_validto]"
+                      dataType="dbTimeStamp"
+                      name="cgi_validto" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[cgi_valuecodevalidformonths]"
+                      dataType="i4"
+                      name="cgi_valuecodevalidformonths" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[createdby]"
+                      dataType="guid"
+                      name="createdby" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[createdbyname]"
+                      dataType="wstr"
+                      length="200"
+                      name="createdbyname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[createdbyyominame]"
+                      dataType="wstr"
+                      length="200"
+                      name="createdbyyominame" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[createdon]"
+                      dataType="dbTimeStamp"
+                      name="createdon" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[createdonbehalfby]"
+                      dataType="guid"
+                      name="createdonbehalfby" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[createdonbehalfbyname]"
+                      dataType="wstr"
+                      length="200"
+                      name="createdonbehalfbyname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[createdonbehalfbyyominame]"
+                      dataType="wstr"
+                      length="200"
+                      name="createdonbehalfbyyominame" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_allowedtoinactivate]"
+                      dataType="guid"
+                      name="ed_allowedtoinactivate" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_allowedtoinactivatename]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_allowedtoinactivatename" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_biffintegrationruntime]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_biffintegrationruntime" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_biztalkblocktravelcard]"
+                      dataType="wstr"
+                      length="300"
+                      name="ed_biztalkblocktravelcard" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_biztalkcreditorderservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_biztalkcreditorderservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_biztalkgetcarddetailsservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_biztalkgetcarddetailsservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_biztalkgetdirectjourneysservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_biztalkgetdirectjourneysservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_biztalkgetoutstandingchargesservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_biztalkgetoutstandingchargesservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_biztalkgetservicejourneyservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_biztalkgetservicejourneyservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_biztalkorderservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_biztalkorderservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_biztalkrechargecardservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_biztalkrechargecardservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_biztalktravelcardtransactionsservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_biztalktravelcardtransactionsservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_blocktravelcardclearontemplateid]"
+                      dataType="i4"
+                      name="ed_blocktravelcardclearontemplateid" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_bosbecapikey]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_bosbecapikey" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_bosbecurl]"
+                      dataType="wstr"
+                      length="200"
+                      name="ed_bosbecurl" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_bosbecworkflowid]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_bosbecworkflowid" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_cancelvaluecodeapiendpoint]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_cancelvaluecodeapiendpoint" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_clientcertname]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_clientcertname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_clientcertnamereskassa]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_clientcertnamereskassa" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_companyintegrationendpoint]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_companyintegrationendpoint" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_createvaluecodeapi]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_createvaluecodeapi" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_createvaluecodecoupons]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_createvaluecodecoupons" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_createvaluecodetoken]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_createvaluecodetoken" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_createvaluecodevoucher]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_createvaluecodevoucher" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_crmplusservice]"
+                      dataType="wstr"
+                      length="255"
+                      name="ed_crmplusservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_defaultqueuevaluecodes]"
+                      dataType="guid"
+                      name="ed_defaultqueuevaluecodes" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_defaultqueuevaluecodesname]"
+                      dataType="wstr"
+                      length="200"
+                      name="ed_defaultqueuevaluecodesname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_defaultsendervaluecodes]"
+                      dataType="guid"
+                      name="ed_defaultsendervaluecodes" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_defaultsendervaluecodesname]"
+                      dataType="wstr"
+                      length="200"
+                      name="ed_defaultsendervaluecodesname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_emailvalidationsite]"
+                      dataType="wstr"
+                      length="400"
+                      name="ed_emailvalidationsite" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_inactivatecontactroles]"
+                      dataType="wstr"
+                      length="500"
+                      name="ed_inactivatecontactroles" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_jojocarddetailsapi]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_jojocarddetailsapi" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_jojocarddetailsapplicationid]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_jojocarddetailsapplicationid" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_jojocarddetailsscope]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_jojocarddetailsscope" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_jojocarddetailstenentid]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_jojocarddetailstenentid" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_lastticketrun]"
+                      dataType="dbTimeStamp"
+                      name="ed_lastticketrun">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="DateTimeBehavior">TimeZoneIndependent</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_leadvalidityhours]"
+                      dataType="i4"
+                      name="ed_leadvalidityhours" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_maxamountforcompensationloss]"
+                      dataType="i4"
+                      name="ed_maxamountforcompensationloss" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_maxamountforgiftcard]"
+                      dataType="numeric"
+                      name="ed_maxamountforgiftcard"
+                      precision="38"
+                      scale="2" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_maxamountwebsitevaluecode]"
+                      dataType="i4"
+                      name="ed_maxamountwebsitevaluecode" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_mklendpoint]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_mklendpoint" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_outstandingchargesapi]"
+                      dataType="wstr"
+                      length="200"
+                      name="ed_outstandingchargesapi" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_outstandingchargesapipassword]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_outstandingchargesapipassword" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_outstandingchargesapiusername]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_outstandingchargesapiusername" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_pubtransencryptionkey]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_pubtransencryptionkey" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_pubtranspassword]"
+                      dataType="wstr"
+                      length="400"
+                      name="ed_pubtranspassword" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_pubtransusername]"
+                      dataType="wstr"
+                      length="50"
+                      name="ed_pubtransusername" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_rgolintegrationkey]"
+                      dataType="wstr"
+                      length="50"
+                      name="ed_rgolintegrationkey" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_rgolintegrationurl]"
+                      dataType="wstr"
+                      length="200"
+                      name="ed_rgolintegrationurl" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_sekundtokenname]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_sekundtokenname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_smstimelimit]"
+                      dataType="r8"
+                      name="ed_smstimelimit" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_storageaccountname]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_storageaccountname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_templatetitleemailconfirmation]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_templatetitleemailconfirmation" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_templatetitleemailvalidationcontact]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_templatetitleemailvalidationcontact" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_templatetitleemailvalidationlead]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_templatetitleemailvalidationlead" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_travelinformationdbconnectionstring]"
+                      dataType="wstr"
+                      length="300"
+                      name="ed_travelinformationdbconnectionstring" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_validfordaysvaluecode]"
+                      dataType="i4"
+                      name="ed_validfordaysvaluecode" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_valuecodevaliddate]"
+                      dataType="dbTimeStamp"
+                      name="ed_valuecodevaliddate" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_voucherservice]"
+                      dataType="wstr"
+                      length="100"
+                      name="ed_voucherservice" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[exchangerate]"
+                      dataType="numeric"
+                      name="exchangerate"
+                      precision="38"
+                      scale="10" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[importsequencenumber]"
+                      dataType="i4"
+                      name="importsequencenumber" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[modifiedby]"
+                      dataType="guid"
+                      name="modifiedby" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[modifiedbyname]"
+                      dataType="wstr"
+                      length="200"
+                      name="modifiedbyname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[modifiedbyyominame]"
+                      dataType="wstr"
+                      length="200"
+                      name="modifiedbyyominame" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[modifiedon]"
+                      dataType="dbTimeStamp"
+                      name="modifiedon" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[modifiedonbehalfby]"
+                      dataType="guid"
+                      name="modifiedonbehalfby" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[modifiedonbehalfbyname]"
+                      dataType="wstr"
+                      length="200"
+                      name="modifiedonbehalfbyname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[modifiedonbehalfbyyominame]"
+                      dataType="wstr"
+                      length="200"
+                      name="modifiedonbehalfbyyominame" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[organizationid]"
+                      dataType="guid"
+                      name="organizationid" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[organizationidname]"
+                      dataType="wstr"
+                      length="160"
+                      name="organizationidname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[overriddencreatedon]"
+                      dataType="dbTimeStamp"
+                      name="overriddencreatedon" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[statecode]"
+                      dataType="i4"
+                      name="statecode" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[statecodename]"
+                      dataType="wstr"
+                      length="255"
+                      name="statecodename" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[statuscode]"
+                      dataType="i4"
+                      name="statuscode" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[statuscodename]"
+                      dataType="wstr"
+                      length="255"
+                      name="statuscodename" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[timezoneruleversionnumber]"
+                      dataType="i4"
+                      name="timezoneruleversionnumber" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[transactioncurrencyid]"
+                      dataType="guid"
+                      name="transactioncurrencyid" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[transactioncurrencyidname]"
+                      dataType="wstr"
+                      length="100"
+                      name="transactioncurrencyidname" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[utcconversiontimezonecode]"
+                      dataType="i4"
+                      name="utcconversiontimezonecode" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[versionnumber]"
+                      dataType="i8"
+                      name="versionnumber" />
+                  </externalMetadataColumns>
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info"
               componentClassID="Microsoft.OLEDBSource"
               contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
               description="OLE DB Source"
-              name="OLE DB Source"
+              name="Singapore Ticket  -&gt; Ticket Info"
               usesDispositions="true"
               version="7">
               <properties>
@@ -293,29 +1118,10 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT [LastUpdated]
-      ,[TicketId]
-      ,[PriceModel]
-      ,[PriceModelPriceId]
-      ,[DataCreatedDate]
-      ,[activatedDate]
-      ,[blockedDate]
-      ,[OfferName]
-      ,[OfferNameDetailed]
-      ,[TicketAmount]
-      ,[SalesChannelId]
-      ,[BearerCategory]
-      ,[HasGroupDiscount]
-      ,[TravellersCount]
-      ,[HasRefund]
-      ,[MkId]
-      ,[cgi_contactnumber]
-      ,[activationinterval_from]
-      ,[activationinterval_to]
-      ,[travelvalidityinterval_from]
-      ,[travelvalidityinterval_to]
-  FROM [STDW].[dbo].[GetTicketInfoView]
-  WHERE travelvalidityinterval_to &gt; DATEADD(MONTH, -3, GETDATE()) and MkId is not null and MkId not like ' ' and LastUpdated &gt; DATEADD(DAY, -1, GETDATE())</property>
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT        LastUpdated, TicketId, PriceModel, PriceModelPriceId, DataCreatedDate, activatedDate, blockedDate, OfferName, OfferNameDetailed, TicketAmount, SalesChannelId, BearerCategory, HasGroupDiscount, TravellersCount, 
+                         HasRefund, MkId, cgi_contactnumber, activationinterval_from, activationinterval_to, travelvalidityinterval_from, travelvalidityinterval_to
+FROM            dbo.GetTicketInfoView
+WHERE        (travelvalidityinterval_to &gt; DATEADD([MONTH], - 3, GETDATE())) AND (MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; ?)</property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
@@ -336,11 +1142,11 @@
                 <property
                   dataType="System.String"
                   description="The mappings between the parameters in the SQL command and variables."
-                  name="ParameterMapping"></property>
+                  name="ParameterMapping">"ParameterLastUpdated:Input",{30298214-6EC1-4CB6-BA07-33E4C56C3660};</property>
               </properties>
               <connections>
                 <connection
-                  refId="Package\Upsert Singapore Tickets\OLE DB Source.Connections[OleDbConnection]"
+                  refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Connections[OleDbConnection]"
                   connectionManagerID="Package.ConnectionManagers[V-DWSQL]"
                   connectionManagerRefId="Package.ConnectionManagers[V-DWSQL]"
                   description="The OLE DB runtime connection used to access the database."
@@ -348,214 +1154,214 @@
               </connections>
               <outputs>
                 <output
-                  refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output]"
+                  refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output]"
                   name="OLE DB Source Output">
                   <outputColumns>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[LastUpdated]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[LastUpdated]"
                       dataType="dbTimeStamp2"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[LastUpdated]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[LastUpdated]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[LastUpdated]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[LastUpdated]"
                       name="LastUpdated"
                       scale="7"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[TicketId]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TicketId]"
                       dataType="wstr"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[TicketId]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[TicketId]"
                       length="7"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[TicketId]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TicketId]"
                       name="TicketId"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[PriceModel]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[PriceModel]"
                       dataType="wstr"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[PriceModel]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[PriceModel]"
                       length="50"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[PriceModel]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[PriceModel]"
                       name="PriceModel"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]"
                       dataType="wstr"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[PriceModelPriceId]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[PriceModelPriceId]"
                       length="30"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]"
                       name="PriceModelPriceId"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[DataCreatedDate]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[DataCreatedDate]"
                       dataType="dbTimeStampOffset"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[DataCreatedDate]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[DataCreatedDate]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[DataCreatedDate]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[DataCreatedDate]"
                       name="DataCreatedDate"
                       scale="7"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[activatedDate]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[activatedDate]"
                       dataType="dbTimeStamp2"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[activatedDate]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[activatedDate]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[activatedDate]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[activatedDate]"
                       name="activatedDate"
                       scale="7"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[blockedDate]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[blockedDate]"
                       dataType="dbTimeStamp2"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[blockedDate]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[blockedDate]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[blockedDate]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[blockedDate]"
                       name="blockedDate"
                       scale="7"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[OfferName]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferName]"
                       dataType="wstr"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[OfferName]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[OfferName]"
                       length="50"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[OfferName]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferName]"
                       name="OfferName"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]"
                       dataType="wstr"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[OfferNameDetailed]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[OfferNameDetailed]"
                       length="255"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]"
                       name="OfferNameDetailed"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[TicketAmount]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TicketAmount]"
                       dataType="numeric"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[TicketAmount]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[TicketAmount]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[TicketAmount]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TicketAmount]"
                       name="TicketAmount"
                       precision="13"
                       scale="5"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[SalesChannelId]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[SalesChannelId]"
                       dataType="wstr"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[SalesChannelId]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[SalesChannelId]"
                       length="50"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[SalesChannelId]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[SalesChannelId]"
                       name="SalesChannelId"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[BearerCategory]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[BearerCategory]"
                       dataType="wstr"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[BearerCategory]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[BearerCategory]"
                       length="100"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[BearerCategory]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[BearerCategory]"
                       name="BearerCategory"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]"
                       dataType="i4"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[HasGroupDiscount]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[HasGroupDiscount]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]"
                       name="HasGroupDiscount"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[TravellersCount]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TravellersCount]"
                       dataType="i4"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[TravellersCount]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[TravellersCount]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[TravellersCount]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TravellersCount]"
                       name="TravellersCount"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[HasRefund]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[HasRefund]"
                       dataType="i4"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[HasRefund]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[HasRefund]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[HasRefund]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[HasRefund]"
                       name="HasRefund"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[MkId]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[MkId]"
                       dataType="wstr"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
                       length="100"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[MkId]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[MkId]"
                       name="MkId"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
                       dataType="wstr"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[cgi_contactnumber]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[cgi_contactnumber]"
                       length="100"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
                       name="cgi_contactnumber"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[activationinterval_from]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[activationinterval_from]"
                       dataType="dbTimeStamp2"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[activationinterval_from]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[activationinterval_from]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[activationinterval_from]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[activationinterval_from]"
                       name="activationinterval_from"
                       scale="7"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[activationinterval_to]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[activationinterval_to]"
                       dataType="dbTimeStamp2"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[activationinterval_to]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[activationinterval_to]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[activationinterval_to]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[activationinterval_to]"
                       name="activationinterval_to"
                       scale="7"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_from]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_from]"
                       dataType="dbTimeStamp2"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[travelvalidityinterval_from]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_from]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[travelvalidityinterval_from]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_from]"
                       name="travelvalidityinterval_from"
                       scale="7"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_to]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_to]"
                       dataType="dbTimeStamp2"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[travelvalidityinterval_to]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_to]"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[travelvalidityinterval_to]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_to]"
                       name="travelvalidityinterval_to"
                       scale="7"
                       truncationRowDisposition="FailComponent" />
@@ -563,249 +1369,249 @@
                   <externalMetadataColumns
                     isUsed="True">
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[LastUpdated]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[LastUpdated]"
                       dataType="dbTimeStamp2"
                       name="LastUpdated"
                       scale="7" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[TicketId]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[TicketId]"
                       dataType="wstr"
                       length="7"
                       name="TicketId" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[PriceModel]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[PriceModel]"
                       dataType="wstr"
                       length="50"
                       name="PriceModel" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[PriceModelPriceId]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[PriceModelPriceId]"
                       dataType="wstr"
                       length="30"
                       name="PriceModelPriceId" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[DataCreatedDate]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[DataCreatedDate]"
                       dataType="dbTimeStampOffset"
                       name="DataCreatedDate"
                       scale="7" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[activatedDate]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[activatedDate]"
                       dataType="dbTimeStamp2"
                       name="activatedDate"
                       scale="7" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[blockedDate]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[blockedDate]"
                       dataType="dbTimeStamp2"
                       name="blockedDate"
                       scale="7" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[OfferName]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[OfferName]"
                       dataType="wstr"
                       length="50"
                       name="OfferName" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[OfferNameDetailed]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[OfferNameDetailed]"
                       dataType="wstr"
                       length="255"
                       name="OfferNameDetailed" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[TicketAmount]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[TicketAmount]"
                       dataType="numeric"
                       name="TicketAmount"
                       precision="13"
                       scale="5" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[SalesChannelId]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[SalesChannelId]"
                       dataType="wstr"
                       length="50"
                       name="SalesChannelId" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[BearerCategory]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[BearerCategory]"
                       dataType="wstr"
                       length="100"
                       name="BearerCategory" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[HasGroupDiscount]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[HasGroupDiscount]"
                       dataType="i4"
                       name="HasGroupDiscount" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[TravellersCount]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[TravellersCount]"
                       dataType="i4"
                       name="TravellersCount" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[HasRefund]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[HasRefund]"
                       dataType="i4"
                       name="HasRefund" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
                       dataType="wstr"
                       length="100"
                       name="MkId" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[cgi_contactnumber]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[cgi_contactnumber]"
                       dataType="wstr"
                       length="100"
                       name="cgi_contactnumber" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[activationinterval_from]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[activationinterval_from]"
                       dataType="dbTimeStamp2"
                       name="activationinterval_from"
                       scale="7" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[activationinterval_to]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[activationinterval_to]"
                       dataType="dbTimeStamp2"
                       name="activationinterval_to"
                       scale="7" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[travelvalidityinterval_from]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[travelvalidityinterval_from]"
                       dataType="dbTimeStamp2"
                       name="travelvalidityinterval_from"
                       scale="7" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[travelvalidityinterval_to]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[travelvalidityinterval_to]"
                       dataType="dbTimeStamp2"
                       name="travelvalidityinterval_to"
                       scale="7" />
                   </externalMetadataColumns>
                 </output>
                 <output
-                  refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output]"
+                  refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output]"
                   isErrorOut="true"
                   name="OLE DB Source Error Output">
                   <outputColumns>
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[LastUpdated]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[LastUpdated]"
                       dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[LastUpdated]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[LastUpdated]"
                       name="LastUpdated"
                       scale="7" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[TicketId]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[TicketId]"
                       dataType="wstr"
                       length="7"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[TicketId]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[TicketId]"
                       name="TicketId" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[PriceModel]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[PriceModel]"
                       dataType="wstr"
                       length="50"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[PriceModel]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[PriceModel]"
                       name="PriceModel" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[PriceModelPriceId]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[PriceModelPriceId]"
                       dataType="wstr"
                       length="30"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[PriceModelPriceId]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[PriceModelPriceId]"
                       name="PriceModelPriceId" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[DataCreatedDate]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[DataCreatedDate]"
                       dataType="dbTimeStampOffset"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[DataCreatedDate]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[DataCreatedDate]"
                       name="DataCreatedDate"
                       scale="7" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[activatedDate]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[activatedDate]"
                       dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[activatedDate]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[activatedDate]"
                       name="activatedDate"
                       scale="7" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[blockedDate]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[blockedDate]"
                       dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[blockedDate]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[blockedDate]"
                       name="blockedDate"
                       scale="7" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[OfferName]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[OfferName]"
                       dataType="wstr"
                       length="50"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[OfferName]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[OfferName]"
                       name="OfferName" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[OfferNameDetailed]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[OfferNameDetailed]"
                       dataType="wstr"
                       length="255"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[OfferNameDetailed]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[OfferNameDetailed]"
                       name="OfferNameDetailed" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[TicketAmount]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[TicketAmount]"
                       dataType="numeric"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[TicketAmount]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[TicketAmount]"
                       name="TicketAmount"
                       precision="13"
                       scale="5" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[SalesChannelId]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[SalesChannelId]"
                       dataType="wstr"
                       length="50"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[SalesChannelId]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[SalesChannelId]"
                       name="SalesChannelId" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[BearerCategory]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[BearerCategory]"
                       dataType="wstr"
                       length="100"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[BearerCategory]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[BearerCategory]"
                       name="BearerCategory" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[HasGroupDiscount]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[HasGroupDiscount]"
                       dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[HasGroupDiscount]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[HasGroupDiscount]"
                       name="HasGroupDiscount" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[TravellersCount]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[TravellersCount]"
                       dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[TravellersCount]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[TravellersCount]"
                       name="TravellersCount" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[HasRefund]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[HasRefund]"
                       dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[HasRefund]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[HasRefund]"
                       name="HasRefund" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[MkId]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[MkId]"
                       dataType="wstr"
                       length="100"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[MkId]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[MkId]"
                       name="MkId" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[cgi_contactnumber]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[cgi_contactnumber]"
                       dataType="wstr"
                       length="100"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[cgi_contactnumber]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[cgi_contactnumber]"
                       name="cgi_contactnumber" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[activationinterval_from]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[activationinterval_from]"
                       dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[activationinterval_from]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[activationinterval_from]"
                       name="activationinterval_from"
                       scale="7" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[activationinterval_to]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[activationinterval_to]"
                       dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[activationinterval_to]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[activationinterval_to]"
                       name="activationinterval_to"
                       scale="7" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_from]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_from]"
                       dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_from]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_from]"
                       name="travelvalidityinterval_from"
                       scale="7" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_to]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_to]"
                       dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_to]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_to]"
                       name="travelvalidityinterval_to"
                       scale="7" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
                       dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
                       name="ErrorCode"
                       specialFlags="1" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
                       dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
                       name="ErrorColumn"
                       specialFlags="2" />
                   </outputColumns>
@@ -952,144 +1758,144 @@
                       cachedPrecision="13"
                       cachedScale="5"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketprice]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[TicketAmount]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TicketAmount]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TicketId]"
                       cachedDataType="wstr"
                       cachedLength="7"
                       cachedName="TicketId"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketid]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[TicketId]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TicketId]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[cgi_contactnumber]"
                       cachedDataType="wstr"
                       cachedLength="100"
                       cachedName="cgi_contactnumber"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_crmnummer]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[activationinterval_from]"
                       cachedDataType="dbTimeStamp2"
                       cachedName="activationinterval_from"
                       cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_activationintervalfrom]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[activationinterval_from]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[activationinterval_from]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[activationinterval_to]"
                       cachedDataType="dbTimeStamp2"
                       cachedName="activationinterval_to"
                       cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_activationintervalto]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[activationinterval_to]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[activationinterval_to]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[BearerCategory]"
                       cachedDataType="wstr"
                       cachedLength="100"
                       cachedName="BearerCategory"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_bearercategory]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[BearerCategory]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[BearerCategory]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[blockedDate]"
                       cachedDataType="dbTimeStamp2"
                       cachedName="blockedDate"
                       cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_blockeddate]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[blockedDate]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[blockedDate]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[LastUpdated]"
                       cachedDataType="dbTimeStamp2"
                       cachedName="LastUpdated"
                       cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_lastupdated]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[LastUpdated]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[LastUpdated]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[OfferNameDetailed]"
                       cachedDataType="wstr"
                       cachedLength="255"
                       cachedName="OfferNameDetailed"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_offernamedetailed]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[SalesChannelId]"
                       cachedDataType="wstr"
                       cachedLength="50"
                       cachedName="SalesChannelId"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_saleschannel]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[SalesChannelId]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[SalesChannelId]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[activatedDate]"
                       cachedDataType="dbTimeStamp2"
                       cachedName="activatedDate"
                       cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_ticketactivated]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[activatedDate]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[activatedDate]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TravellersCount]"
                       cachedDataType="i4"
                       cachedName="TravellersCount"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_travellerscount]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[TravellersCount]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TravellersCount]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[travelvalidityinterval_from]"
                       cachedDataType="dbTimeStamp2"
                       cachedName="travelvalidityinterval_from"
                       cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_travelvalidityintervalfrom]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_from]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_from]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[travelvalidityinterval_to]"
                       cachedDataType="dbTimeStamp2"
                       cachedName="travelvalidityinterval_to"
                       cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_travelvalidityintervalto]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_to]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[travelvalidityinterval_to]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[PriceModel]"
                       cachedDataType="wstr"
                       cachedLength="50"
                       cachedName="PriceModel"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_pricemodel]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[PriceModel]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[PriceModel]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[PriceModelPriceId]"
                       cachedDataType="wstr"
                       cachedLength="30"
                       cachedName="PriceModelPriceId"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_pricemodelprice]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[OfferName]"
                       cachedDataType="wstr"
                       cachedLength="50"
                       cachedName="OfferName"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_singtickettype]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[OfferName]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferName]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[DataCreatedDate]"
                       cachedDataType="dbTimeStampOffset"
                       cachedName="DataCreatedDate"
                       cachedScale="7"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketcreated]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[DataCreatedDate]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[DataCreatedDate]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[MkId]"
                       cachedDataType="wstr"
                       cachedLength="100"
                       cachedName="MkId"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_mklid]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[MkId]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[MkId]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[HasGroupDiscount]"
                       cachedDataType="i4"
                       cachedName="HasGroupDiscount"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_hasgroupdiscount]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[HasRefund]"
                       cachedDataType="i4"
                       cachedName="HasRefund"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_hasrefund]"
-                      lineageId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output].Columns[HasRefund]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[HasRefund]" />
                   </inputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -1896,7 +2702,7 @@
               refId="Package\Upsert Singapore Tickets.Paths[OLE DB Source Output]"
               endId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input]"
               name="OLE DB Source Output"
-              startId="Package\Upsert Singapore Tickets\OLE DB Source.Outputs[OLE DB Source Output]" />
+              startId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output]" />
           </paths>
         </pipeline>
       </DTS:ObjectData>
@@ -1929,37 +2735,37 @@
         <NodeLayout
           Size="202,42"
           Id="Package\Upsert Singapore Tickets\Upsert Singapore Tickets"
-          TopLeft="478,186" />
+          TopLeft="537,213" />
         <NodeLayout
-          Size="157,42"
-          Id="Package\Upsert Singapore Tickets\OLE DB Source"
-          TopLeft="225,54" />
+          Size="231,42"
+          Id="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info"
+          TopLeft="342,91" />
         <EdgeLayout
           Id="Package\Upsert Singapore Tickets.Paths[OLE DB Source Output]"
-          TopLeft="303.5,96">
+          TopLeft="457.5,133">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="275.5,90"
+              EndConnector="180.5,80"
               Start="0,0"
-              End="275.5,82.5">
+              End="180.5,72.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,41" />
+                    End="0,36" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,41"
-                    Point2="0,45"
-                    Point3="4,45" />
+                    Point1="0,36"
+                    Point2="0,40"
+                    Point3="4,40" />
                   <mssgle:LineSegment
-                    End="271.5,45" />
+                    End="176.5,40" />
                   <mssgle:CubicBezierSegment
-                    Point1="271.5,45"
-                    Point2="275.5,45"
-                    Point3="275.5,49" />
+                    Point1="176.5,40"
+                    Point2="180.5,40"
+                    Point3="180.5,44" />
                   <mssgle:LineSegment
-                    End="275.5,82.5" />
+                    End="180.5,72.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1968,11 +2774,15 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="193,42"
+          Id="Package\Upsert Singapore Tickets\Dynamics CRM Source"
+          TopLeft="94,40" />
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\Upsert Singapore Tickets\OLE DB Source">
+    design-time-name="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
