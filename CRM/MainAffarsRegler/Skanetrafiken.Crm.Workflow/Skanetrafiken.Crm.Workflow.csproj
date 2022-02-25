@@ -201,6 +201,9 @@
     <Compile Include="..\Skanetrafiken.Crm\Entities\LeadEntity.cs">
       <Link>Entities\LeadEntity.cs</Link>
     </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\MarketingListEntity.cs">
+      <Link>Entities\MarketingListEntity.cs</Link>
+    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\MergeRecordsEntity.cs">
       <Link>Entities\MergeRecordsEntity.cs</Link>
     </Compile>
@@ -297,6 +300,9 @@
     <Compile Include="..\Skanetrafiken.Crm\GeneratedEntities.cs">
       <Link>GeneratedEntities.cs</Link>
     </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Helper\MarketingInfo.cs">
+      <Link>Helper\MarketingInfo.cs</Link>
+    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Helper\PhoneNumberUtility.cs">
       <Link>Helper\PhoneNumberUtility.cs</Link>
     </Compile>
@@ -392,6 +398,7 @@
     <Compile Include="GetTicketMoveDataFromMKL.cs" />
     <Compile Include="GetOrders.cs" />
     <Compile Include="SendEmailFromRibbon.cs" />
+    <Compile Include="SendMarketingInfo.cs" />
     <Compile Include="SendTextMessage.cs" />
     <Compile Include="SendValueCode.cs" />
     <Compile Include="UpdateTextMessageStatus.cs" />

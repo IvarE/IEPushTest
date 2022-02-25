@@ -15,6 +15,7 @@
     <entity>incident</entity>
     <entity>incidentresolution</entity>
     <entity>lead</entity>
+	<entity>list</entity>
     <entity>opportunity</entity>
     <entity>opportunityproduct</entity>
     <entity>order</entity>

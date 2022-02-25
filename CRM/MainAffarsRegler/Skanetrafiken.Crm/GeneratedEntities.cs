@@ -4634,6 +4634,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:N listaccount_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("listaccount_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.List> listaccount_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("listaccount_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("listaccount_association", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 account_master_account
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("masterid")]
@@ -7273,6 +7289,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Lead>("Lead_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 List_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("List_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.List List_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.List>("List_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.List>("List_Annotation", null, value);
 			}
 		}
 		
@@ -11146,6 +11179,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 List_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("List_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.List List_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.List>("List_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.List>("List_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 lk_asyncoperation_createdby
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
@@ -13825,6 +13875,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Campaign>("campaigncampaign_association", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:N campaignlist_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("campaignlist_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.List> campaignlist_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("campaignlist_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("campaignlist_association", null, value);
 			}
 		}
 		
@@ -35178,6 +35244,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Quote>("contactquotes_association", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:N listcontact_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("listcontact_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.List> listcontact_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("listcontact_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("listcontact_association", null, value);
 			}
 		}
 		
@@ -79090,6 +79172,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:N listlead_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("listlead_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.List> listlead_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("listlead_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("listlead_association", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 campaign_leads
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("campaignid")]
@@ -79994,6 +80092,1006 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int YomiLastName = 150;
 			
 			public const int YomiMiddleName = 150;
+		}
+	}
+	
+	public enum ListState
+	{
+		
+		Active = 0,
+		
+		Inactive = 1,
+	}
+	
+	/// <summary>
+	/// Group of existing or potential customers created for a marketing campaign or other sales purposes.
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("list")]
+	public partial class List : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public List() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "list";
+		
+		public const int EntityTypeCode = 4300;
+		
+		/// <summary>
+		/// Unique identifier for ClickDimensions Import associated with Marketing List.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cdi_marketinglistsforattachid")]
+		public Microsoft.Xrm.Sdk.EntityReference cdi_marketinglistsforattachid
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("cdi_marketinglistsforattachid");
+			}
+			set
+			{
+				this.SetAttributeValue("cdi_marketinglistsforattachid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for ClickDimensions Import associated with Marketing List.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cdi_marketinglistsfordetachid")]
+		public Microsoft.Xrm.Sdk.EntityReference cdi_marketinglistsfordetachid
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("cdi_marketinglistsfordetachid");
+			}
+			set
+			{
+				this.SetAttributeValue("cdi_marketinglistsfordetachid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for Subscription List associated with Marketing List.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cdi_subscriptionlistid")]
+		public Microsoft.Xrm.Sdk.EntityReference cdi_SubscriptionListId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("cdi_subscriptionlistid");
+			}
+			set
+			{
+				this.SetAttributeValue("cdi_subscriptionlistid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the cost of obtaining the marketing list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cost")]
+		public Microsoft.Xrm.Sdk.Money Cost
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("cost");
+			}
+			set
+			{
+				this.SetAttributeValue("cost", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Cost field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cost_base")]
+		public Microsoft.Xrm.Sdk.Money Cost_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("cost_base");
+			}
+		}
+		
+		/// <summary>
+		/// lk_list_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Select the type of members that this marketing list will contain: accounts, contacts, or leads. Each list can have only one member type and this value can't be changed after the marketing list is created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdfromcode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue CreatedFromCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("createdfromcode");
+			}
+			set
+			{
+				this.SetAttributeValue("createdfromcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was created. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// lk_list_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Type additional information to describe the marketing list, such as the intended use or date of the last update.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("description")]
+		public string Description
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("description");
+			}
+			set
+			{
+				this.SetAttributeValue("description", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether to override the opt-out settings on leads, contacts, and accounts for the members of the target marketing lists of the campaign activity. If No is selected, those who have chosen to opt out won't be excluded from the list. This means they will receive marketing materials.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("donotsendonoptout")]
+		public System.Nullable<bool> DoNotSendOnOptOut
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("donotsendonoptout");
+			}
+			set
+			{
+				this.SetAttributeValue("donotsendonoptout", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the conversion rate of the record's currency. The exchange rate is used to convert all money fields in the record from the local currency to the system's default currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+		}
+		
+		/// <summary>
+		/// Select whether inactive accounts, contacts, or leads should be excluded from the campaign activity distribution when the marketing list is included in a campaign.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ignoreinactivelistmembers")]
+		public System.Nullable<bool> IgnoreInactiveListMembers
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ignoreinactivelistmembers");
+			}
+			set
+			{
+				this.SetAttributeValue("ignoreinactivelistmembers", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data import or data migration that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the marketing list was last used in a campaign or in the creation of activities or opportunities.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("lastusedon")]
+		public System.Nullable<System.DateTime> LastUsedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("lastusedon");
+			}
+			set
+			{
+				this.SetAttributeValue("lastusedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the marketing list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("listid")]
+		public System.Nullable<System.Guid> ListId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("listid");
+			}
+			set
+			{
+				this.SetAttributeValue("listid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("listid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.ListId = value;
+			}
+		}
+		
+		/// <summary>
+		/// Type a name for the marketing list so that it is identified correctly in lists.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("listname")]
+		public string ListName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("listname");
+			}
+			set
+			{
+				this.SetAttributeValue("listname", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the marketing list is locked. If Yes is selected, no additional members can be added to the marketing list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("lockstatus")]
+		public System.Nullable<bool> LockStatus
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("lockstatus");
+			}
+			set
+			{
+				this.SetAttributeValue("lockstatus", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the sum of all members in the marketing list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("membercount")]
+		public System.Nullable<int> MemberCount
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("membercount");
+			}
+			set
+			{
+				this.SetAttributeValue("membercount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type of the members that can be stored in the marketing list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("membertype")]
+		public System.Nullable<int> MemberType
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("membertype");
+			}
+			set
+			{
+				this.SetAttributeValue("membertype", value);
+			}
+		}
+		
+		/// <summary>
+		/// lk_list_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was last updated. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// lk_list_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// owner_lists
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ownerid")]
+		public Microsoft.Xrm.Sdk.EntityReference OwnerId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ownerid");
+			}
+			set
+			{
+				this.SetAttributeValue("ownerid", value);
+			}
+		}
+		
+		/// <summary>
+		/// business_unit_list
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningbusinessunit")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningBusinessUnit
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningbusinessunit");
+			}
+		}
+		
+		/// <summary>
+		/// team_list
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningTeam
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningteam");
+			}
+		}
+		
+		/// <summary>
+		/// user_list
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningUser
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owninguser");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the process.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("processid")]
+		public System.Nullable<System.Guid> ProcessId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("processid");
+			}
+			set
+			{
+				this.SetAttributeValue("processid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the intended use of the marketing list to identify its key segments, target offers, or business group.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("purpose")]
+		public string Purpose
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("purpose");
+			}
+			set
+			{
+				this.SetAttributeValue("purpose", value);
+			}
+		}
+		
+		/// <summary>
+		/// Query used for retrieving members of marketing list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("query")]
+		public string Query
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("query");
+			}
+			set
+			{
+				this.SetAttributeValue("query", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the source of the marketing list, such as a third-party supplier or internal database.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("source")]
+		public string Source
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("source");
+			}
+			set
+			{
+				this.SetAttributeValue("source", value);
+			}
+		}
+		
+		/// <summary>
+		/// processstage_lists
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		public System.Nullable<System.Guid> StageId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("stageid");
+			}
+			set
+			{
+				this.SetAttributeValue("stageid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows whether the marketing list is active or inactive. Inactive marketing lists are read-only and can't be edited unless they are reactivated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.ListState> StateCode
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.ListState)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.ListState), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("statecode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statecode", new Microsoft.Xrm.Sdk.OptionSetValue(((int)(value))));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Select the marketing list's status.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue StatusCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+			}
+			set
+			{
+				this.SetAttributeValue("statuscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timezoneruleversionnumber")]
+		public System.Nullable<int> TimeZoneRuleVersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("timezoneruleversionnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// transactioncurrency_list
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public Microsoft.Xrm.Sdk.EntityReference TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("traversedpath")]
+		public string TraversedPath
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("traversedpath");
+			}
+			set
+			{
+				this.SetAttributeValue("traversedpath", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether you want the marketing list to be static or dynamic. The members in a static marketing list are unchanging. A dynamic marketing list is based on a dynamic query that retrieves the updated list of members
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("type")]
+		public System.Nullable<bool> Type
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("type");
+			}
+			set
+			{
+				this.SetAttributeValue("type", value);
+			}
+		}
+		
+		/// <summary>
+		/// Time zone code that was in use when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("utcconversiontimezonecode")]
+		public System.Nullable<int> UTCConversionTimeZoneCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("utcconversiontimezonecode");
+			}
+			set
+			{
+				this.SetAttributeValue("utcconversiontimezonecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the marketing list.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N List_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("List_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> List_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("List_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("List_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N List_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("List_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> List_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("List_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("List_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N list_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("list_Teams")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> list_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("list_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("list_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:N campaignlist_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("campaignlist_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Campaign> campaignlist_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Campaign>("campaignlist_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Campaign>("campaignlist_association", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:N listaccount_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("listaccount_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Account> listaccount_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Account>("listaccount_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Account>("listaccount_association", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:N listcontact_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("listcontact_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Contact> listcontact_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Contact>("listcontact_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Contact>("listcontact_association", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:N listlead_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("listlead_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Lead> listlead_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("listlead_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("listlead_association", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_list_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_list_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_list_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_list_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_list_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_list_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_list_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_list_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_list_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_list_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_list_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_list_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_list_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_list_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_list_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_list_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 processstage_lists
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_lists")]
+		public Skanetrafiken.Crm.Schema.Generated.ProcessStage processstage_lists
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_lists", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_lists", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_list
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_list")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_list
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_list", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 transactioncurrency_list
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_list")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_list
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_list", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_list", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 user_list
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_list")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser user_list
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("user_list", null);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string cdi_marketinglistsforattachid = "cdi_marketinglistsforattachid";
+			
+			public const string cdi_marketinglistsfordetachid = "cdi_marketinglistsfordetachid";
+			
+			public const string cdi_SubscriptionListId = "cdi_subscriptionlistid";
+			
+			public const string Cost = "cost";
+			
+			public const string Cost_Base = "cost_base";
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedFromCode = "createdfromcode";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string Description = "description";
+			
+			public const string DoNotSendOnOptOut = "donotsendonoptout";
+			
+			public const string ExchangeRate = "exchangerate";
+			
+			public const string IgnoreInactiveListMembers = "ignoreinactivelistmembers";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string LastUsedOn = "lastusedon";
+			
+			public const string ListId = "listid";
+			
+			public const string Id = "listid";
+			
+			public const string ListName = "listname";
+			
+			public const string LockStatus = "lockstatus";
+			
+			public const string MemberCount = "membercount";
+			
+			public const string MemberType = "membertype";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string OwnerId = "ownerid";
+			
+			public const string OwningBusinessUnit = "owningbusinessunit";
+			
+			public const string OwningTeam = "owningteam";
+			
+			public const string OwningUser = "owninguser";
+			
+			public const string ProcessId = "processid";
+			
+			public const string Purpose = "purpose";
+			
+			public const string Query = "query";
+			
+			public const string Source = "source";
+			
+			public const string StageId = "stageid";
+			
+			public const string StateCode = "statecode";
+			
+			public const string StatusCode = "statuscode";
+			
+			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
+			
+			public const string TraversedPath = "traversedpath";
+			
+			public const string Type = "type";
+			
+			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
+			
+			public const string VersionNumber = "versionnumber";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int Description = 2000;
+			
+			public const int ListName = 128;
+			
+			public const int Purpose = 512;
+			
+			public const int Query = 1073741823;
+			
+			public const int Source = 128;
+			
+			public const int TraversedPath = 1250;
 		}
 	}
 	
@@ -86740,6 +87838,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("processstage_lead", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N processstage_lists
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_lists")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.List> processstage_lists
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("processstage_lists", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("processstage_lists", null, value);
 			}
 		}
 		
@@ -107657,6 +108771,70 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N lk_list_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_list_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.List> lk_list_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("lk_list_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("lk_list_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_list_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_list_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.List> lk_list_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("lk_list_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("lk_list_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_list_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_list_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.List> lk_list_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("lk_list_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("lk_list_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_list_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_list_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.List> lk_list_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("lk_list_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("lk_list_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N lk_opportunity_createdonbehalfby
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_opportunity_createdonbehalfby")]
@@ -109833,6 +111011,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N user_list
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_list")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.List> user_list
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("user_list", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("user_list", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N user_opportunityproduct
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_opportunityproduct")]
@@ -111857,6 +113051,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N team_list
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_list")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.List> team_list
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("team_list", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("team_list", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N team_opportunities
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_opportunities")]
@@ -112131,6 +113341,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Lead>("lead_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 list_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("list_Teams")]
+		public Skanetrafiken.Crm.Schema.Generated.List list_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.List>("list_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.List>("list_Teams", null, value);
 			}
 		}
 		
@@ -113989,6 +115216,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("transactioncurrency_lead", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N transactioncurrency_list
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_list")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.List> transactioncurrency_list
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("transactioncurrency_list", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.List>("transactioncurrency_list", null, value);
 			}
 		}
 		
@@ -118011,6 +119254,17 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.Lead>();
+			}
+		}
+		
+		/// <summary>
+		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.List"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.List> ListSet
+		{
+			get
+			{
+				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.List>();
 			}
 		}
 		
