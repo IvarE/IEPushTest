@@ -4,6 +4,7 @@ using Skanetrafiken.Crm.Helper;
 using Skanetrafiken.Crm.Schema.Generated;
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -58,7 +59,7 @@ namespace Skanetrafiken.Crm.Entities
 
             Order order = new Order();
             order.createdby = marketingList.OwnerId != null ? marketingList.OwnerId.Name : "";
-            order.created = marketingList.CreatedOn != null ? marketingList.CreatedOn.ToString() : "";
+            order.created = marketingList.CreatedOn != null ? String.Format("{0:s}", marketingList.CreatedOn.Value) + "Z" : "";
             order.offerId = "d1425509-a769-4a34-9baa-2daaf33b93c1";
             order.campaignid = campaign.Id != null ? campaign.Id.ToString() : "";
 
