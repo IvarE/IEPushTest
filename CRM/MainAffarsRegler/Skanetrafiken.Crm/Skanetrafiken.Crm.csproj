@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiHelper.cs" />
+    <Compile Include="Entities\MarketingListEntity.cs" />
     <Compile Include="Entities\OpportunityEntity.cs" />
     <Compile Include="Entities\OpportunityProductEntity.cs" />
     <Compile Include="Entities\PaymentMethodEntity.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="Entities\QuoteProductEntity.cs" />
     <Compile Include="Entities\SlotsEntity.cs" />
     <Compile Include="Entities\TicketInfoEntity.cs" />
+    <Compile Include="Helper\MarketingInfo.cs" />
     <Compile Include="Helper\PhoneNumberUtility.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="PostOrderProductCreate.cs" />
@@ -307,6 +309,7 @@
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.ed_mergerecords.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.FrontOffice.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Lead.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.MarketingList.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Opportunity.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Order.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.OrderProduct.js" />
