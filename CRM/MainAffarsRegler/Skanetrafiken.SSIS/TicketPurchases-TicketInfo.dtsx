@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="TicketPurchases-TicketInfo"
   DTS:PackageType="5"
-  DTS:VersionBuild="126"
-  DTS:VersionGUID="{80DBF2C6-5627-4EEF-A4FA-CE6F0F27FB71}">
+  DTS:VersionBuild="128"
+  DTS:VersionGUID="{2450F51C-E787-493D-9A41-BBDA3AA6A81B}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAB5DGF3xakEvMq9K3CiwlC2AAAAAASAAACgAAAAEAAAAMFidZ9BHkuy4cIGYrr13MIgAAAA4Df3g8r1zdmbD1v5zSEEvbw9MnmfIqETPa3X5HWHLWcUAAAAuMkEi4yYQLtW/wH9AbB6504Afv0</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAOxaWFiuKH93jaoIhPswulAAAAAASAAACgAAAAEAAAAN+g/ri/IwRnD6W/DNiiqkMgAAAAygPsXptPqNzrAoi3usEoDIZoLRjgKJRClse5GkjO8xkUAAAABXC01s0WIJwbPfBHteMtIbcA3vc</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
