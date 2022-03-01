@@ -903,7 +903,10 @@ namespace Skanetrafiken.Crm.Entities
             if (!string.IsNullOrWhiteSpace(EMailAddress2))
                 EMailAddress2 = EMailAddress2.ToLower().Trim(" ".ToCharArray());
             if (!string.IsNullOrWhiteSpace(Telephone1))
+            {
                 Telephone1 = Telephone1.Replace(" ", "");
+                Telephone1 = Telephone1.Replace("-", "");
+            }
             if (!string.IsNullOrWhiteSpace(Telephone2))
                 Telephone2 = Telephone2.Replace(" ", "");
             if (!string.IsNullOrWhiteSpace(Telephone3))
@@ -991,7 +994,10 @@ namespace Skanetrafiken.Crm.Entities
             if (!string.IsNullOrWhiteSpace(EMailAddress2))
                 EMailAddress2 = EMailAddress2.ToLower().Trim(' ');
             if (!string.IsNullOrWhiteSpace(Telephone1))
+            {
                 Telephone1 = Telephone1.Replace(" ", "");
+                Telephone1 = Telephone1.Replace("-", "");
+            } 
             if (!string.IsNullOrWhiteSpace(Telephone2))
                 Telephone2 = Telephone2.Replace(" ", "");
             if (!string.IsNullOrWhiteSpace(Telephone3))
