@@ -26,14 +26,14 @@ namespace Skanetrafiken.Crm.Controllers
         private const string TenantID = "e1fcb9f3-e5f9-496f-a583-e495dfd57497"; //Tenent
 
         //private const string StorageAccountName = "webstpublicwebtest"; //TEST (OLD?)
-        //private const string StorageAccountName = "webpublicwebtest"; //TEST
-        //private const string ClientID = "635555fe-6cb2-4a48-9b54-8d5d6472b00f"; //TEST - App/Client ID
-        //private const string ClientSecret = "czv7Q~iQuUCRwkryVp6FqHvmSAhbA_I2XidG_"; //TEST
+        private const string StorageAccountName = "webpublicwebtest"; //TEST
+        private const string ClientID = "635555fe-6cb2-4a48-9b54-8d5d6472b00f"; //TEST - App/Client ID
+        private const string ClientSecret = "czv7Q~iQuUCRwkryVp6FqHvmSAhbA_I2XidG_"; //TEST
 
         //private const string StorageAccountName = "webstpublicwebacc"; //ACC (OLD)
-        private const string StorageAccountName = "webpublicwebacc"; //ACC
-        private const string ClientID = "7450a67c-038e-4b43-b4a1-b5bbd2961912"; //ACC - App/Client ID
-        private const string ClientSecret = "gf57Q~2TGjcsESRX~20ohxZ-Xg3JhX2C55XKc"; //ACC
+        //private const string StorageAccountName = "webpublicwebacc"; //ACC
+        //private const string ClientID = "7450a67c-038e-4b43-b4a1-b5bbd2961912"; //ACC - App/Client ID
+        //private const string ClientSecret = "gf57Q~2TGjcsESRX~20ohxZ-Xg3JhX2C55XKc"; //ACC
 
         //private const string StorageAccountName = "webpublicwebprod"; //PROD
         //private const string ClientID = "73acce44-96d3-48a1-8c44-33185bc2f24f"; //PROD - App/Client ID
@@ -70,7 +70,7 @@ namespace Skanetrafiken.Crm.Controllers
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
             _log.Info($"Th={threadId} - Get called.\n");
-            _log.Warn($"Th={threadId} - GetAttachmentFromAzure called with Payload:\n {encryptedUrl}");
+            _log.Info($"Th={threadId} - GetAttachmentFromAzure called with Payload:\n {encryptedUrl}");
             _log.DebugFormat($"Th={threadId} - Get called with Payload:\n {encryptedUrl}");
 
             if (encryptedUrl == string.Empty)
@@ -113,58 +113,65 @@ namespace Skanetrafiken.Crm.Controllers
                     {
                         int count = 0;
                         int failedCount = 0;
+                        int createFailedCount = 0;
                         //Handle Loop of all string values
-                        foreach (var link in links)
+                        for (int i = 0; i < links.Length - 1; i++)
                         {
                             //main Function
                             //var containerName = "crm-attachments"; //Skriv till oss
                             //var containerName = "rgolreceiptinformation"; //RGOL
                             string fileUrl = string.Empty;
                             string containerName = "";
-                            if (link.Contains("rgolreceiptinformation"))
+                            if (links[i].Contains("rgolreceiptinformation"))
                             {
                                 containerName = "rgolreceiptinformation";
-                                fileUrl = link.Substring("rgolreceiptinformation/".Length);
+                                fileUrl = links[i].Substring("rgolreceiptinformation/".Length);
                             }
-                            else if (link.Contains("crm-attachments"))
+                            else if (links[i].Contains("crm-attachments"))
                             {
                                 containerName = "crm-attachments";
-                                fileUrl = link.Substring("crm-attachments/".Length);
+                                fileUrl = links[i].Substring("crm-attachments/".Length);
                             }
                             else
                             {
                                 containerName = "crm-attachments";
-                                fileUrl = link;
+                                fileUrl = links[i];
                             }
-                            _log.Warn($"Th={threadId} - GetAttachmentFromAzure: Container Name => {containerName}");
+                            _log.Info($"Th={threadId} - GetAttachmentFromAzure: Container Name => {containerName}");
 
                             //TODO: Create email attachment using GUID passed in the API and attachmentBase64String
                             string attachmentBase64String = "";
                             if (!string.IsNullOrWhiteSpace(fileUrl))
                             {
                                 attachmentBase64String = CrmPlusControl.HandleAttachemntFilesFromAzure(threadId, clientId, clientSecret, tenantId, storageAccountName, containerName, fileUrl, emailGuid);
-                                if (attachmentBase64String.Contains("Exception") && attachmentBase64String.Contains("(Created)"))
+                                if (attachmentBase64String.Contains("(FailedCreate)"))
                                 {
                                     //Highlight that all attachments couldnt be created
                                     failedCount++;
-                                    _log.Warn($"Th={threadId} - GetAttachmentFromAzure: {failedCount} Attachments failed to create");
+                                    _log.Info($"Th={threadId} - GetAttachmentFromAzure: {failedCount} Attachments failed to create");
+                                }
+                                else if (attachmentBase64String.Contains("(SuccessCreate)"))
+                                {
+                                    //Highlight that all attachments couldnt be created
+                                    createFailedCount++;
+                                    _log.Info($"Th={threadId} - GetAttachmentFromAzure: {createFailedCount} Attachments Created with exception thrown");
                                 }
                                 else
                                 {
                                     count++;
-                                    _log.Warn($"Th={threadId} - GetAttachmentFromAzure: {count} Attachments Created");
+                                    _log.Info($"Th={threadId} - GetAttachmentFromAzure: {count} Attachments Created");
                                 }
                             }
                             else
                             {
-                                _log.Warn($"Th={threadId} - GetAttachmentFromAzure: {failedCount + 1} Attachments failed to create - Missing URL");
+                                _log.Warn($"Th={threadId} - GetAttachmentFromAzure: {failedCount} Attachments failed to create - Missing URL");
                             }
                         }
 
-                        _log.Warn($"Th={threadId} - GetAttachmentFromAzure: {count} Attachments Created");
+                        _log.Info($"Th={threadId} - GetAttachmentFromAzure: {count} Attachments Created");
                         //Return success
                         rm.StatusCode = HttpStatusCode.OK;
-                        rm.Content = new StringContent($"Created Attachments");
+                        rm.Content = new StringContent($"Created Attachments. Failed count:{failedCount}");
                     }
                     else 
                     {
@@ -193,7 +200,7 @@ namespace Skanetrafiken.Crm.Controllers
                         containerName = "crm-attachments";
                     }
 
-                    _log.Warn($"Th={threadId} - GetAttachmentFromAzure: Container Name => {containerName}");
+                    _log.Info($"Th={threadId} - GetAttachmentFromAzure: Container Name => {containerName}");
                     string attachmentBase64String = CrmPlusControl.HandleAttachemntFilesFromAzure(threadId, clientId, clientSecret, tenantId, storageAccountName, containerName, encryptedUrl, emailGuid);
 
                     if (!string.IsNullOrWhiteSpace(attachmentBase64String) && attachmentBase64String.Contains("Exception") == false)
@@ -222,7 +229,6 @@ namespace Skanetrafiken.Crm.Controllers
                 }
                 else
                 {
-                    _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
                     _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
                     _log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 }
