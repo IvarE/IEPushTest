@@ -1261,6 +1261,54 @@ namespace Skanetrafiken.Import
 
                     return true;
 
+
+                case "37":
+
+                    QueryExpression query1 = new QueryExpression(Contact.EntityLogicalName);
+                    query1.NoLock = true;
+                    query1.ColumnSet = new ColumnSet(Contact.Fields.cgi_socialsecuritynumber, Contact.Fields.ed_SocialSecurityNumberFormat);
+                    query1.Criteria.AddCondition(Contact.Fields.cgi_socialsecuritynumber, ConditionOperator.NotNull);
+                    query1.Criteria.AddCondition(Contact.Fields.ed_SocialSecurityNumberFormat, ConditionOperator.Null);
+
+                    List<Contact> lList = XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, query1);
+
+                    var z = 0;
+                    foreach (var contact in lList)
+                    {
+                        if (contact.cgi_socialsecuritynumber != null && contact.ed_SocialSecurityNumberFormat == null)
+                        {
+                            var hifen = "-";
+                            var position = 8;
+
+                            string number = contact.cgi_socialsecuritynumber;
+                            if(contact.cgi_socialsecuritynumber.Length > 8)
+                                number = contact.cgi_socialsecuritynumber.Substring(0, position) + hifen + contact.cgi_socialsecuritynumber.Substring(position + 1);
+
+                            try
+                            {
+                                Contact uContact = new Contact();
+                                uContact.Id = contact.Id;
+                                uContact.ed_SocialSecurityNumberFormat = number;
+
+                                crmContext.Attach(uContact);
+                                crmContext.UpdateObject(uContact);
+                                z++;
+                            }
+                            catch (Exception e)
+                            {
+                                
+                            }
+
+                            if(z % 1000 == 0)
+                            {
+                                crmContext.SaveChanges(optionsChanges);
+                                crmContext.ClearChanges();
+                            }
+                        }
+                    }
+
+                    return true;
+
                 case "0":
                     return false;
                 default:
