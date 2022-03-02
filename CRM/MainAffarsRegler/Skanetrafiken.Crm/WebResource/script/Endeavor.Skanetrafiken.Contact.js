@@ -465,7 +465,6 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 var hifen = "-";
                 var position = 8;
                 Endeavor.formscriptfunctions.SetValue("ed_socialsecuritynumberformat", [socialSecurityNumber.slice(0, position), hifen, socialSecurityNumber.slice(position)].join(''), formContext);
-                Endeavor.formscriptfunctions.SaveEntity(formContext);
             }
         },
 
@@ -632,9 +631,10 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         onSocialSecurityNumberChange: function (executionContext) {
             var formContext = executionContext.getFormContext();
             var contactNumberControlTag = "cgi_socialsecuritynumber";
+            var socialSecurityNumberTag = "ed_socialsecuritynumberformat";
             var contactNumber = formContext.getAttribute(contactNumberControlTag);
+            var ssNumber = formContext.getAttribute(socialSecurityNumberTag);
 
-            var ssNumber = formContext.getAttribute("ed_socialsecuritynumberformat");
             if (ssNumber != null) {
                 contactNumber.setValue(ssNumber.getValue());
 
@@ -651,12 +651,12 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
             if (!(!contactNumber.getValue() || 0 === contactNumber.getValue().length)) {
                 if (!Endeavor.Skanetrafiken.Contact.checkSocSecNumber(formContext, contactNumber.getValue()))
-                    formContext.getControl(contactNumberControlTag).setNotification("Ogiltigt Persnonnummer<BR>(giltiga format: ååmmdd, ååååmmdd, ååååmmddxxxx, ååååmmdd-xxxx)");
+                    formContext.getControl(socialSecurityNumberTag).setNotification("Ogiltigt Persnonnummer<BR>(giltiga format: ååmmdd, ååååmmdd, ååååmmddxxxx, ååååmmdd-xxxx)");
                 else 
-                    formContext.getControl(contactNumberControlTag).clearNotification();
+                    formContext.getControl(socialSecurityNumberTag).clearNotification();
             }
             else
-                formContext.getControl(contactNumberControlTag).clearNotification();
+                formContext.getControl(socialSecurityNumberTag).clearNotification();
 
         },
 
