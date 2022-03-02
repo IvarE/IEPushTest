@@ -5696,37 +5696,37 @@ namespace Skanetrafiken.Crm.Controllers
                     string returnString = "";
 
                     //TODO:
-                    _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Starting TASK...");
+                    _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Starting TASK...");
 
                     Task.Run(async () =>
                     {
-                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Getting Access Token...");
+                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Getting Access Token...");
                         var token = await GetAccessToken(clientId, clientSecret, tenantId);
                         if (token != string.Empty)
                         {
-                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Token Retrieved => {token}");
+                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Token Retrieved => {token}");
                         }
                         else
                         {
                             throw new Exception(string.Format($"Could not retrieve a Token!"));
                         }
 
-                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating Token Credential...");
+                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating Token Credential...");
                         TokenCredential tokenCredential = new TokenCredential(token);
                         if (tokenCredential != null)
                         {
-                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Token Credential Created!");
+                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Token Credential Created!");
                         }
                         else
                         {
                             throw new Exception(string.Format($"Could not create Token Credential!"));
                         }
 
-                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating Storage Credential...");
+                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating Storage Credential...");
                         StorageCredentials storageCredentials = new StorageCredentials(tokenCredential);
                         if (storageCredentials != null)
                         {
-                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Storage Credential Created!");
+                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Storage Credential Created!");
                         }
                         else
                         {
@@ -5734,22 +5734,22 @@ namespace Skanetrafiken.Crm.Controllers
                         }
 
                         string cloudBlobClientURI = "https://" + $"{storageAccountName}" + ".blob.core.windows.net";
-                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating CloudBlobClient with URI: \n {cloudBlobClientURI}");
+                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating CloudBlobClient with URI: \n {cloudBlobClientURI}");
                         CloudBlobClient client = new CloudBlobClient(new Uri(cloudBlobClientURI), storageCredentials);
                         if (client != null)
                         {
-                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: CloudBlobClient Created!");
+                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: CloudBlobClient Created!");
                         }
                         else
                         {
                             throw new Exception(string.Format($"Could not create CloudBlobClient with URI: {cloudBlobClientURI}"));
                         }
 
-                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating CloudBlobContainer with ContainerName: {containerName}");
+                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating CloudBlobContainer with ContainerName: {containerName}");
                         CloudBlobContainer container = client.GetContainerReference(containerName);
                         if (container != null)
                         {
-                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: CloudBlobContainer Created!");
+                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: CloudBlobContainer Created!");
                         }
                         else
                         {
@@ -5757,42 +5757,42 @@ namespace Skanetrafiken.Crm.Controllers
                         }
 
                         //var blob = container.GetBlockBlobReference(FileName);
-                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Getting File as a blob using 'container.GetBlockBlobReference()'...");
+                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Getting File as a blob using 'container.GetBlockBlobReference()'...");
                         var blob = container.GetBlockBlobReference(fileUrl);
                         if (blob != null)
                         {
-                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Blob Retrieved!");
+                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Blob Retrieved!");
                         }
                         else
                         {
                             throw new Exception(string.Format($"Could not find a Blob using GetBlockBlobReference()!"));
                         }
 
-                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating MemoryStream...");
+                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating MemoryStream...");
                         MemoryStream ms = new MemoryStream();
-                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: MemoryStream Created!");
+                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: MemoryStream Created!");
 
-                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Downloading Blob to created Stream...");
+                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Downloading Blob to created Stream...");
                         blob.DownloadToStream(ms); //*****
-                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Blob downloaded to Stream!");
+                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Blob downloaded to Stream!");
 
-                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Parsing Stream to Byte content...");
+                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Parsing Stream to Byte content...");
 
                         imageByteArray = ms.ToArray();
-                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Stream Parsed to Byte content!");
+                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Stream Parsed to Byte content!");
 
                     }).Wait();
-                    _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: TASK finished!");
+                    _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: TASK finished!");
 
                     if (imageByteArray?.Length > 0)
                     {
-                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: imageByteArray greater than 0!");
+                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: imageByteArray greater than 0!");
                         string attachmentBase64String = Convert.ToBase64String(imageByteArray);
-                        _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: imageByteArray converted to Base64 String!");
+                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: imageByteArray converted to Base64 String!");
 
                         if (emailGuid != null)
                         {
-                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating Attachment");
+                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating Attachment");
                             //Create attachments for Email - Get file extention
                             //handle Extention
                             string[] extentionTmp = fileUrl.Split('.');
@@ -5833,7 +5833,7 @@ namespace Skanetrafiken.Crm.Controllers
                             attachment["objecttypecode"] = "email";
                             XrmHelper.Create(localContext, attachment);
 
-                            _log.Warn($"Th={threadId} - HandleAttachemntFilesFromAzure: Attachment Created");
+                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Attachment Created");
 
                             createdCheck = true;
                         }
@@ -5844,7 +5844,7 @@ namespace Skanetrafiken.Crm.Controllers
                     }
                     else 
                     {
-                        throw new Exception(string.Format($"Parsed Stream did not have any value!"));
+                        returnString = $"Th={threadId} - (FailedCreate) Exception was thrown in HandleAttachemntFilesFromAzure: Parsed Stream did not have any value!";
                     }
 
                     return returnString;
@@ -5855,11 +5855,11 @@ namespace Skanetrafiken.Crm.Controllers
                 string error = string.Empty;
                 if (createdCheck == false)
                 {
-                    error = $"Th={threadId} - Exception was thrown in HandleAttachemntFilesFromAzure: {ex.Message}";
+                    error = $"Th={threadId} - (FailedCreate) Exception was thrown in HandleAttachemntFilesFromAzure: {ex.Message}";
                 }
                 else 
                 {
-                    error = $"Th={threadId} - (Created) Exception was thrown in HandleAttachemntFilesFromAzure: {ex.Message}";
+                    error = $"Th={threadId} - (SuccessCreate) Exception was thrown in HandleAttachemntFilesFromAzure: {ex.Message}";
                 }
                 
                 return error;

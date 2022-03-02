@@ -72,8 +72,8 @@
                             var fileName = "";
                             if (fileLink.startsWith("https:"))
                             {
-                                if (fileLink.startsWith("https://webpublicwebacc.blob.core.windows.net/")) { //https://webpublicwebprod.blob.core.windows.net/
-                                    fileName = fileLink.split("https://webpublicwebacc.blob.core.windows.net/").pop(); //https://webpublicwebprod.blob.core.windows.net/
+                                if (fileLink.startsWith("https://webpublicwebacc.blob.core.windows.net/")) { //https://webpublicwebprod.blob.core.windows.net/ - https://webpublicwebacc.blob.core.windows.net/
+                                    fileName = fileLink.split("https://webpublicwebacc.blob.core.windows.net/").pop(); //https://webpublicwebprod.blob.core.windows.net/ - https://webpublicwebacc.blob.core.windows.net/
                                 }
                                 else
                                 {
@@ -82,8 +82,8 @@
                             }
                             else if (fileLink.startsWith("http:"))
                             {
-                                if (fileLink.startsWith("http://webpublicwebacc.blob.core.windows.net/")) { //https://webpublicwebprod.blob.core.windows.net/
-                                    fileName = fileLink.split("http://webpublicwebacc.blob.core.windows.net/").pop(); //https://webpublicwebprod.blob.core.windows.net/
+                                if (fileLink.startsWith("http://webpublicwebacc.blob.core.windows.net/")) { //https://webpublicwebprod.blob.core.windows.net/ - http://webpublicwebacc.blob.core.windows.net/
+                                    fileName = fileLink.split("http://webpublicwebacc.blob.core.windows.net/").pop(); //https://webpublicwebprod.blob.core.windows.net/ - http://webpublicwebacc.blob.core.windows.net/
                                 }
                                 else {
                                     fileName = fileLink.split("http://").pop();
