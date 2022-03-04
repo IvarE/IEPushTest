@@ -1231,37 +1231,44 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 if (contact == null)
                     return;
 
-                var contactId = contact[0].id;
+                var globalContext = Xrm.Utility.getGlobalContext();
+                var clientUrl = globalContext.getClientUrl();
 
-                Xrm.WebApi.retrieveRecord("contact", contactId, "?$select=emailaddress1,emailaddress2,yomifullname")
-                    .then(function (result) {
-                        if (result.emailaddress1 == null && result.emailaddress2 == null) {
-                            formContext.ui.setFormNotification(result.yomifullname + " har ingen e-post kopplad till sig.", "Info", "1");
-                            return false;
-                        }
-                        formContext.ui.clearFormNotification("1");
-                        return true;
-                    });
+                var contactId = contact[0].id;
+                contactId = Endeavor.formscriptfunctions.cleanIdField(contactId);
+
+                var url = clientUrl + "/api/data/v9.0/contacts(" + contactId + ")?$select=emailaddress1,emailaddress2,yomifullname";
+                var contact = Endeavor.formscriptfunctions.fetchJSONResults(url);
+
+                if (contact.emailaddress1 == null && contact.emailaddress2 == null) {
+                    formContext.ui.setFormNotification(contact.yomifullname + " har ingen e-post kopplad till sig.", "Info", "1");
+                    return false;
+                }
+                formContext.ui.clearFormNotification("1");
+                return true;
             }
             catch (e) {
                 alert("Ett fel inträffade i Endeavor.Skanetrafiken.Incident.hasContactEmail\n\n" + e.message);
             }
-
         },
 
         hasRepresentativEmail: function (cgi_representativ, formContext) {
             try {
-                var cgi_representativId = cgi_representativ[0].id;
+                var globalContext = Xrm.Utility.getGlobalContext();
+                var clientUrl = globalContext.getClientUrl();
 
-                Xrm.WebApi.retrieveRecord("cgi_representative", cgi_representativId, "?$select=cgi_name,emailaddress")
-                    .then(function (result) {
-                        if (result.emailaddress == null) {
-                            formContext.ui.setFormNotification(result.cgi_name + " har ingen e-post kopplad till sig.", "Info", "1");
-                            return false;
-                        }
-                        formContext.ui.clearFormNotification("1");
-                        return true;
-                    });
+                var cgi_representativId = cgi_representativ[0].id;
+                cgi_representativId = Endeavor.formscriptfunctions.cleanIdField(cgi_representativId);
+
+                var url = clientUrl + "/api/data/v9.0/cgi_representatives(" + cgi_representativId + ")?$select=cgi_name,emailaddress";
+                var contact = Endeavor.formscriptfunctions.fetchJSONResults(url);
+
+                if (contact.emailaddress == null) {
+                    formContext.ui.setFormNotification(contact.cgi_name + " har ingen e-post kopplad till sig.", "Info", "1");
+                    return false;
+                }
+                formContext.ui.clearFormNotification("1");
+                return true;
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Incident.hasRepresentativEmail\n\n" + e.message);
