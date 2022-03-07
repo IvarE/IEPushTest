@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Ticket Integration"
   DTS:PackageType="5"
-  DTS:VersionBuild="215"
-  DTS:VersionGUID="{4419D237-4FC5-44B8-A293-4769F060941D}">
+  DTS:VersionBuild="222"
+  DTS:VersionGUID="{A65C1808-5FF0-4E3E-BAA7-D9E36D844C4F}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADvT9Xs+ztGP6MI30oWk8NzAAAAAASAAACgAAAAEAAAANnlMA+z2WzzB5sne7xhzuYgAAAA/YW1oVM2WEJ5dvg56tw7vPbsYM9h+seF92+KnhHlrq0UAAAA6EEbEYZq/zx/aEQ+T6aZLtxSLos</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABQwrBqpZ41hvkxyPOjZVTQAAAAAASAAACgAAAAEAAAAJhiTsPscDGjsm56f7oTB2sgAAAA7c+ktuiAEuPDu4nnR3Cv6e1Uvs2bYN70WwlT+R9+Zk4UAAAALPpHVrGhXIkcFgcId0MHnJe3jbQ</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -49,192 +49,190 @@
           <DTS:FlatFileColumns>
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="304"
+              DTS:DataScale="7"
               DTS:TextQualified="True"
               DTS:ObjectName="LastUpdated"
-              DTS:DTSID="{4CF6310E-B330-4C2D-B4E0-9965B3DA32C3}"
+              DTS:DTSID="{389F1471-080A-45A4-B721-98327901C669}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="7"
+              DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="TicketId"
-              DTS:DTSID="{742C7022-AA95-43EF-ACB2-0F1AC65983E5}"
+              DTS:DTSID="{1C3C8F7F-9F10-47F2-A583-1A34DDC879D3}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
+              DTS:ColumnDelimiter="_x002C_"
               DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="PriceModel"
-              DTS:DTSID="{C9A98789-C08E-40C0-A148-1263AB6BD25E}"
+              DTS:DTSID="{6D42DBD9-6742-46CA-A7B9-0D0C954A0119}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="30"
+              DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="PriceModelPriceId"
-              DTS:DTSID="{1F884CD4-F6CE-40B1-877D-DA5A5B2CEEF2}"
+              DTS:DTSID="{29568C1B-201D-4CBC-B10B-9E96EFE4935E}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="146"
+              DTS:DataScale="7"
               DTS:TextQualified="True"
               DTS:ObjectName="DataCreatedDate"
-              DTS:DTSID="{BD219167-BB23-433E-9A4E-F7A27F8EC314}"
+              DTS:DTSID="{B3D75CB4-6266-473F-B75E-CB0DE888061F}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="304"
+              DTS:DataScale="7"
               DTS:TextQualified="True"
               DTS:ObjectName="activatedDate"
-              DTS:DTSID="{182A54BB-A601-4F94-BE53-C84E8C058FAD}"
+              DTS:DTSID="{E64C93CA-B9EE-4EBC-B69F-F51ABF5921F4}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="304"
+              DTS:DataScale="7"
               DTS:TextQualified="True"
               DTS:ObjectName="blockedDate"
-              DTS:DTSID="{B9ABFF06-5567-4B39-B328-EB35905C5E51}"
+              DTS:DTSID="{72DAAA24-A775-42DA-AB71-123364F7F3B9}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
+              DTS:ColumnDelimiter="_x002C_"
               DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="OfferName"
-              DTS:DTSID="{3DC21BEA-CADB-433E-BCD4-347C03E864A7}"
+              DTS:DTSID="{463DBD3A-4521-4873-B631-83D4A9F79D8F}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="255"
+              DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="OfferNameDetailed"
-              DTS:DTSID="{3760DE23-6ABB-428B-859D-A1BEEDE242B3}"
+              DTS:DTSID="{5BBE8A09-A359-4B5D-A3E5-0E8417581561}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="131"
+              DTS:DataPrecision="13"
+              DTS:DataScale="5"
               DTS:TextQualified="True"
               DTS:ObjectName="TicketAmount"
-              DTS:DTSID="{00877B13-76F5-42CF-9ABA-1980C1350D12}"
+              DTS:DTSID="{A1060F49-5A18-4EB8-BEC0-EB502D0BA413}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
+              DTS:ColumnDelimiter="_x002C_"
               DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="SalesChannelId"
-              DTS:DTSID="{B9102AC9-3B4A-4121-8163-A7CD3CEC4B67}"
+              DTS:DTSID="{C9AA35C6-69AF-468C-A2F5-3CCD91AD0DD0}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="100"
+              DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="BearerCategory"
-              DTS:DTSID="{E36A43EE-9D8C-42A9-B705-4916E8A2E26D}"
+              DTS:DTSID="{84EC2EF8-5403-4753-9A08-484D8CE0A91E}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="HasGroupDiscount"
-              DTS:DTSID="{0A7D30E7-C738-4059-96AA-D9092123085E}"
+              DTS:DTSID="{9C8317DD-ACF8-419B-AE7C-89AB465E10D2}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="TravellersCount"
-              DTS:DTSID="{F794C5B9-94BB-4DAD-92C2-345AC96BEA14}"
+              DTS:DTSID="{9E4D90CE-A3E8-44DF-AE49-A852E1111507}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="HasRefund"
-              DTS:DTSID="{45E2331E-AB02-49F8-8C85-3BDE8471A00D}"
+              DTS:DTSID="{8ED4A5E7-F54C-4B74-B78A-610BD4CE2FF8}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="100"
+              DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="MkId"
-              DTS:DTSID="{4B3CE8BB-CCFA-49D5-A52D-D9E3BD7A2724}"
+              DTS:DTSID="{58F9AC9E-B575-4741-9B37-FE6E26CF4947}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="100"
+              DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="cgi_contactnumber"
-              DTS:DTSID="{538C6DF4-F004-45DE-AB7C-E99554DD46A4}"
+              DTS:DTSID="{473D1A89-AF02-41BA-9B06-FC6198ED995B}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="304"
+              DTS:DataScale="7"
               DTS:TextQualified="True"
               DTS:ObjectName="activationinterval_from"
-              DTS:DTSID="{4EF9BA08-52FB-462C-8A39-D312C20475FC}"
+              DTS:DTSID="{D474F857-25DB-492A-83B7-2693233C5688}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="304"
+              DTS:DataScale="7"
               DTS:TextQualified="True"
               DTS:ObjectName="activationinterval_to"
-              DTS:DTSID="{A681DB86-07B3-4E93-9231-22542F5D9E33}"
+              DTS:DTSID="{C1EFADCC-D870-41C3-BAAF-083BCD4FB2E7}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x003B_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="304"
+              DTS:DataScale="7"
               DTS:TextQualified="True"
               DTS:ObjectName="travelvalidityinterval_from"
-              DTS:DTSID="{E3FE4CCB-7D5A-4B0B-950B-875825B17C93}"
+              DTS:DTSID="{AB06323A-E545-4987-B903-C81A94239AA9}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
               DTS:ColumnDelimiter="_x000D__x000A_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="129"
+              DTS:DataType="304"
+              DTS:DataScale="7"
               DTS:TextQualified="True"
               DTS:ObjectName="travelvalidityinterval_to"
-              DTS:DTSID="{326A9FF4-3BC6-42FE-8C33-560DDA700BCB}"
+              DTS:DTSID="{02544ACF-1E56-40AA-81BB-9F925D1C3249}"
               DTS:CreationName="" />
           </DTS:FlatFileColumns>
         </DTS:ConnectionManager>
@@ -303,10 +301,15 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT        LastUpdated, TicketId, PriceModel, PriceModelPriceId, DataCreatedDate, activatedDate, blockedDate, OfferName, OfferNameDetailed, TicketAmount, SalesChannelId, BearerCategory, HasGroupDiscount, TravellersCount, 
-                         HasRefund, MkId, cgi_contactnumber, activationinterval_from, activationinterval_to, travelvalidityinterval_from, travelvalidityinterval_to
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT        
+LastUpdated, TicketId, PriceModel, PriceModelPriceId, DataCreatedDate, activatedDate, blockedDate, OfferName, OfferNameDetailed, TicketAmount, 
+SalesChannelId, BearerCategory, HasGroupDiscount, TravellersCount, HasRefund, MkId, cgi_contactnumber, activationinterval_from, activationinterval_to,
+travelvalidityinterval_from, travelvalidityinterval_to
 FROM            dbo.GetTicketInfoView
-WHERE        (travelvalidityinterval_to &gt; DATEADD([MONTH], - 3, GETDATE())) AND (MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD(DAY, -15, GETDATE()))</property>
+WHERE			(travelvalidityinterval_to IS NOT NULL AND blockedDate IS NOT NULL) AND
+				(travelvalidityinterval_to &gt; DATEADD(MONTH, -3, GETDATE()) AND blockedDate &lt; DATEADD(MONTH, -1, GETDATE())) AND
+				(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') --AND
+				--(LastUpdated &gt; DATEADD(DAY, -15, GETDATE()))</property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
@@ -327,7 +330,7 @@ WHERE        (travelvalidityinterval_to &gt; DATEADD([MONTH], - 3, GETDATE())) A
                 <property
                   dataType="System.String"
                   description="The mappings between the parameters in the SQL command and variables."
-                  name="ParameterMapping">"ParameterLastUpdated:Input",{30298214-6EC1-4CB6-BA07-33E4C56C3660};</property>
+                  name="ParameterMapping"></property>
               </properties>
               <connections>
                 <connection
@@ -932,7 +935,7 @@ WHERE        (travelvalidityinterval_to &gt; DATEADD([MONTH], - 3, GETDATE())) A
                 <input
                   refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input]"
                   errorOrTruncationOperation="Insert"
-                  errorRowDisposition="FailComponent"
+                  errorRowDisposition="IgnoreFailure"
                   hasSideEffects="true"
                   name="Input">
                   <inputColumns>
@@ -1918,39 +1921,39 @@ WHERE        (travelvalidityinterval_to &gt; DATEADD([MONTH], - 3, GETDATE())) A
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="202,42"
-          Id="Package\Upsert Singapore Tickets\Upsert Singapore Tickets"
-          TopLeft="616,251" />
-        <NodeLayout
           Size="231,42"
           Id="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info"
-          TopLeft="264,108" />
+          TopLeft="171,54" />
+        <NodeLayout
+          Size="202,42"
+          Id="Package\Upsert Singapore Tickets\Upsert Singapore Tickets"
+          TopLeft="466,179" />
         <EdgeLayout
           Id="Package\Upsert Singapore Tickets.Paths[OLE DB Source Output]"
-          TopLeft="379.5,150">
+          TopLeft="286.5,96">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="337.5,101"
+              EndConnector="280.5,83"
               Start="0,0"
-              End="337.5,93.5">
+              End="280.5,75.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,46.5" />
+                    End="0,37.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,46.5"
-                    Point2="0,50.5"
-                    Point3="4,50.5" />
+                    Point1="0,37.5"
+                    Point2="0,41.5"
+                    Point3="4,41.5" />
                   <mssgle:LineSegment
-                    End="333.5,50.5" />
+                    End="276.5,41.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="333.5,50.5"
-                    Point2="337.5,50.5"
-                    Point3="337.5,54.5" />
+                    Point1="276.5,41.5"
+                    Point2="280.5,41.5"
+                    Point3="280.5,45.5" />
                   <mssgle:LineSegment
-                    End="337.5,93.5" />
+                    End="280.5,75.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
