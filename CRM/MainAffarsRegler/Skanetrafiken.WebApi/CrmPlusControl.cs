@@ -4857,7 +4857,7 @@ namespace Skanetrafiken.Crm.Controllers
                             {
                                 LeadEntity recentLead = conflictKampanjLeads.FirstOrDefault();
                                 _log.DebugFormat($"Th={threadId} - ValidateEmail: Merging {conflictKampanjLeads.Count} Kampanj Leads with the new Contact");
-                                ContactEntity.UpdateContactWithLeadKampanj(ref nContact, recentLead);
+                                ContactEntity.UpdateContactWithLeadKampanj(ref updContact2, recentLead);
 
                                 QualifyLeadRequest req = new QualifyLeadRequest()
                                 {
