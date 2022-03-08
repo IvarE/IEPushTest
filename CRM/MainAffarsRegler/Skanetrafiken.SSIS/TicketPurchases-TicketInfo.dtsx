@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="TicketPurchases-TicketInfo"
   DTS:PackageType="5"
-  DTS:VersionBuild="128"
-  DTS:VersionGUID="{2450F51C-E787-493D-9A41-BBDA3AA6A81B}">
+  DTS:VersionBuild="143"
+  DTS:VersionGUID="{48CA8892-F735-481A-8756-026BD3E3707F}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAOxaWFiuKH93jaoIhPswulAAAAAASAAACgAAAAEAAAAN+g/ri/IwRnD6W/DNiiqkMgAAAAygPsXptPqNzrAoi3usEoDIZoLRjgKJRClse5GkjO8xkUAAAABXC01s0WIJwbPfBHteMtIbcA3vc</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAkv9MW/FFWBLrQkXqD+q99AAAAAASAAACgAAAAEAAAAEqBYJb+gs1HO659tBDKo8wgAAAAKWq7zDJrb1lQ3a8rRpJwS3bR9rVmtGV99jgQu/0aEGkUAAAAAvOaoyXVvk2saDayx/Ia5kL2Pjk</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -111,6 +111,296 @@
   </DTS:ConnectionManagers>
   <DTS:Variables />
   <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Delete UnModified Ticket Purchases"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{D9D6C220-5A12-403E-ACBD-19F599D33F85}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Delete UnModified Ticket Purchases"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination"
+              componentClassID="Microsoft.ManagedComponentHost"
+              contactInfo="KingswaySoft Inc.; http://www.kingswaysoft.com; support@kingswaysoft.com; Copyright (c) 2020 KingswaySoft Inc."
+              description="Populate data into Microsoft Dynamics 365 CE/CRM."
+              name="Dynamics CRM Destination"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Destination entity to write data."
+                  expressionType="Notify"
+                  name="DestinationEntity">ed_ticketinfo</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how data is written to CDS/Dynamics CRM server."
+                  name="ActionType"
+                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.DestinationActionType">4</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether the values of CDS/CRM lookup fields should be removed if the reference records cannot be found. "
+                  expressionType="Notify"
+                  name="RemoveUnresolvableReferences">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether duplicate detection should be enabled when creating or updating CDS/CRM records. Duplicate records are determined by the duplicate detection rules and settings defined in CDS or Microsoft Dynamics CRM server."
+                  expressionType="Notify"
+                  name="EnableSystemDuplicateDetection">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify the matching criteria to be used when performing an update or upsert. "
+                  expressionType="Notify"
+                  name="RecordMatchingCriteria"
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.RecordMatchingCriteria">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specify the key fields to be used to determine the matching records that exist in CDS/CRM for either Upsert/Update action or source duplicate optimization."
+                  expressionType="Notify"
+                  name="RecordMatchingKeyFields"></property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether to ignore those NULL-valued fields."
+                  expressionType="Notify"
+                  name="IgnoreNullValuedFields">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether to ignore those fields that have no value changes in the target system. "
+                  expressionType="Notify"
+                  name="IgnoreUnchangedFields">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specify whether to remove those invalid characters before writing to CDS/CRM."
+                  expressionType="Notify"
+                  name="RemoveInvalidCharacters">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specify the flag field(s) that are used to track the source of changes. The field(s) will not posted to CDS/CRM server unless there are changes to other fields if specified. &quot;Ignore Unchange Fields&quot; option is required in order for the specified flag field(s) to work. "
+                  expressionType="Notify"
+                  name="ChangeFlagFields"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies what action will be taken when multiple matches are found with Upsert action."
+                  expressionType="Notify"
+                  name="HandlingOfMultipleMatches"
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify whether to use optimizations when there are duplicate records form the source system."
+                  expressionType="Notify"
+                  name="OptimizationOnSourceDuplicates"
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.OptimizationOnSourceDuplicates">0</property>
+                <property
+                  dataType="System.String"
+                  description="Workflow or action to be executed."
+                  expressionType="Notify"
+                  name="WorkflowAction"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the number of records to be sent to CDS/Dynamics CRM server in each service call."
+                  expressionType="Notify"
+                  name="BatchSize">250</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify the total number or concurrent threads to write to CDS/CRM server simultaneously. "
+                  expressionType="Notify"
+                  name="ConcurrentWritingThreadsInTotal">20</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether datetime values should be sent to CDS/CRM server in UTC format."
+                  expressionType="Notify"
+                  name="SendDateTimeInUtcFormat">false</property>
+                <property
+                  dataType="System.String"
+                  name="UserComponentTypeName">KingswaySoft.IntegrationToolkit.DynamicsCrm.CrmDestinationComponent</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Connections[DynamicsCRM]"
+                  connectionManagerID="Package.ConnectionManagers[Dynamics 365 Connection]"
+                  connectionManagerRefId="Package.ConnectionManagers[Dynamics 365 Connection]"
+                  description="Dynamics CRM Connection Manager"
+                  name="DynamicsCRM" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Inputs[Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="IgnoreFailure"
+                  hasSideEffects="true"
+                  name="Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Inputs[Input].Columns[ed_ticketinfoid]"
+                      cachedDataType="guid"
+                      cachedName="ed_ticketinfoid"
+                      externalMetadataColumnId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_ticketinfoid]"
+                      lineageId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Source.Outputs[Primary Output].Columns[ed_ticketinfoid]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Inputs[Input].ExternalColumns[ed_ticketinfoid]"
+                      dataType="guid"
+                      name="ed_ticketinfoid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Uniqueidentifier</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">ed_ticketinfo</property>
+                      </properties>
+                    </externalMetadataColumn>
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Outputs[Default Output]"
+                  exclusionGroup="1"
+                  name="Default Output"
+                  synchronousInputId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Inputs[Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Outputs[Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Error Output"
+                  synchronousInputId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Inputs[Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Outputs[Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Outputs[Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Outputs[Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Outputs[Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                    <outputColumn
+                      refId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Outputs[Error Output].Columns[ErrorMessage]"
+                      dataType="wstr"
+                      length="2048"
+                      lineageId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Outputs[Error Output].Columns[ErrorMessage]"
+                      name="ErrorMessage" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Source"
+              componentClassID="Microsoft.ManagedComponentHost"
+              contactInfo="KingswaySoft Inc.; http://www.kingswaysoft.com; support@kingswaysoft.com; Copyright (c) 2020 KingswaySoft Inc."
+              description="Extract data from Microsoft Dynamics 365 CE/CRM."
+              name="Dynamics CRM Source"
+              usesDispositions="true"
+              version="3">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of source data from Microsoft Dynamics CRM."
+                  expressionType="Notify"
+                  name="SourceType"
+                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.SourceType">1</property>
+                <property
+                  dataType="System.String"
+                  description="Dynamics CRM entity to retrieve data from."
+                  expressionType="Notify"
+                  name="SourceEntity"></property>
+                <property
+                  dataType="System.String"
+                  description="FetchXML statement."
+                  expressionType="Notify"
+                  name="FetchXML">&lt;fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false" no-lock="true"&gt;
+  &lt;entity name="ed_ticketinfo"&gt;
+    &lt;attribute name="ed_ticketinfoid" /&gt;
+    &lt;filter type="and"&gt;
+      &lt;condition attribute="modifiedon" operator="olderthan-x-days" value="1" /&gt;
+    &lt;/filter&gt;
+  &lt;/entity&gt;
+&lt;/fetch&gt;</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the batch size of the query."
+                  expressionType="Notify"
+                  name="BatchSize">2000</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify the maximum number of rows to be returned from the Dynamics 365/CRM server (Specify 0 to read all satisfying records)."
+                  expressionType="Notify"
+                  name="MaxRowsReturned">0</property>
+                <property
+                  dataType="System.Null"
+                  description="The caller to be used for CRM impersonation when reading from CRM server."
+                  expressionType="Notify"
+                  name="ImpersonateAs" />
+                <property
+                  dataType="System.Null"
+                  description="Specifies the output timezone for CRM datetime fields."
+                  expressionType="Notify"
+                  name="OutputTimezone"
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.SourceOutputTimezone" />
+                <property
+                  dataType="System.String"
+                  name="UserComponentTypeName">KingswaySoft.IntegrationToolkit.DynamicsCrm.CrmSourceComponent</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Source.Connections[DynamicsCRM]"
+                  connectionManagerID="Package.ConnectionManagers[Dynamics 365 Connection]"
+                  connectionManagerRefId="Package.ConnectionManagers[Dynamics 365 Connection]"
+                  description="Dynamics CRM Connection Manager"
+                  name="DynamicsCRM" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Source.Outputs[Primary Output]"
+                  name="Primary Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Source.Outputs[Primary Output].Columns[ed_ticketinfoid]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_ticketinfoid]"
+                      lineageId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Source.Outputs[Primary Output].Columns[ed_ticketinfoid]"
+                      name="ed_ticketinfoid"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Source.Outputs[Primary Output].ExternalColumns[ed_ticketinfoid]"
+                      dataType="guid"
+                      name="ed_ticketinfoid" />
+                  </externalMetadataColumns>
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Delete UnModified Ticket Purchases.Paths[Primary Output]"
+              endId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination.Inputs[Input]"
+              name="Primary Output"
+              startId="Package\Delete UnModified Ticket Purchases\Dynamics CRM Source.Outputs[Primary Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
     <DTS:Executable
       DTS:refId="Package\Upsert Ticket Purchases"
       DTS:CreationName="Microsoft.Pipeline"
@@ -1032,6 +1322,16 @@
       </DTS:ObjectData>
     </DTS:Executable>
   </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{631454C5-D209-40F2-AE48-1B030FBE830B}"
+      DTS:From="Package\Upsert Ticket Purchases"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Delete UnModified Ticket Purchases" />
+  </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
 <!--If you manually edit this section and make a mistake, you can delete it. -->
@@ -1043,14 +1343,102 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="257,42"
+          Id="Package\Delete UnModified Ticket Purchases"
+          TopLeft="454,272" />
         <NodeLayout
           Size="199,42"
           Id="Package\Upsert Ticket Purchases"
           TopLeft="155,93" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="254.5,135">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="328,137"
+              Start="0,0"
+              End="328,129.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,64.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,64.5"
+                    Point2="0,68.5"
+                    Point3="4,68.5" />
+                  <mssgle:LineSegment
+                    End="324,68.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="324,68.5"
+                    Point2="328,68.5"
+                    Point3="328,72.5" />
+                  <mssgle:LineSegment
+                    End="328,129.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
       </GraphLayout>
     </LayoutInfo>
   </Package>
+  <TaskHost
+    design-time-name="Package\Delete UnModified Ticket Purchases">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="193,42"
+          Id="Package\Delete UnModified Ticket Purchases\Dynamics CRM Source"
+          TopLeft="158,88" />
+        <NodeLayout
+          Size="213,42"
+          Id="Package\Delete UnModified Ticket Purchases\Dynamics CRM Destination"
+          TopLeft="453,240" />
+        <EdgeLayout
+          Id="Package\Delete UnModified Ticket Purchases.Paths[Primary Output]"
+          TopLeft="254.5,130">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="305,110"
+              Start="0,0"
+              End="305,102.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,51"
+                    Point2="0,55"
+                    Point3="4,55" />
+                  <mssgle:LineSegment
+                    End="301,55" />
+                  <mssgle:CubicBezierSegment
+                    Point1="301,55"
+                    Point2="305,55"
+                    Point3="305,59" />
+                  <mssgle:LineSegment
+                    End="305,102.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
   <TaskHost
     design-time-name="Package\Upsert Ticket Purchases">
     <LayoutInfo>
@@ -1059,41 +1447,41 @@
         <NodeLayout
           Size="199,42"
           Id="Package\Upsert Ticket Purchases\Upsert Ticket Purchases"
-          TopLeft="602,340" />
+          TopLeft="531,322" />
         <NodeLayout
           Size="230,42"
           Id="Package\Upsert Ticket Purchases\Ticket Purchases -&gt; Ticket Info"
-          TopLeft="154,62" />
+          TopLeft="80,55" />
         <NodeLayout
           Size="171,42"
           Id="Package\Upsert Ticket Purchases\Calculate Columns"
-          TopLeft="397,219" />
+          TopLeft="339,204" />
         <EdgeLayout
           Id="Package\Upsert Ticket Purchases.Paths[OLE DB Source Output]"
-          TopLeft="269,104">
+          TopLeft="195,97">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="213.5,115"
+              EndConnector="229.5,107"
               Start="0,0"
-              End="213.5,107.5">
+              End="229.5,99.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,53.5" />
+                    End="0,49.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,53.5"
-                    Point2="0,57.5"
-                    Point3="4,57.5" />
+                    Point1="0,49.5"
+                    Point2="0,53.5"
+                    Point3="4,53.5" />
                   <mssgle:LineSegment
-                    End="209.5,57.5" />
+                    End="225.5,53.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="209.5,57.5"
-                    Point2="213.5,57.5"
-                    Point3="213.5,61.5" />
+                    Point1="225.5,53.5"
+                    Point2="229.5,53.5"
+                    Point3="229.5,57.5" />
                   <mssgle:LineSegment
-                    End="213.5,107.5" />
+                    End="229.5,99.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1104,30 +1492,30 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Upsert Ticket Purchases.Paths[Derived Column Output]"
-          TopLeft="482.5,261">
+          TopLeft="424.5,246">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="219,79"
+              EndConnector="206,76"
               Start="0,0"
-              End="219,71.5">
+              End="206,68.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,35.5" />
+                    End="0,34" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,35.5"
-                    Point2="0,39.5"
-                    Point3="4,39.5" />
+                    Point1="0,34"
+                    Point2="0,38"
+                    Point3="4,38" />
                   <mssgle:LineSegment
-                    End="215,39.5" />
+                    End="202,38" />
                   <mssgle:CubicBezierSegment
-                    Point1="215,39.5"
-                    Point2="219,39.5"
-                    Point3="219,43.5" />
+                    Point1="202,38"
+                    Point2="206,38"
+                    Point3="206,42" />
                   <mssgle:LineSegment
-                    End="219,71.5" />
+                    End="206,68.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>

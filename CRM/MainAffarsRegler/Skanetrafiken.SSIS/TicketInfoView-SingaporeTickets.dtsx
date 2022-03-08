@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Ticket Integration"
   DTS:PackageType="5"
-  DTS:VersionBuild="222"
-  DTS:VersionGUID="{A65C1808-5FF0-4E3E-BAA7-D9E36D844C4F}">
+  DTS:VersionBuild="225"
+  DTS:VersionGUID="{BFF00956-A14A-4E9A-A6F5-B9C977ACF7E8}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABQwrBqpZ41hvkxyPOjZVTQAAAAAASAAACgAAAAEAAAAJhiTsPscDGjsm56f7oTB2sgAAAA7c+ktuiAEuPDu4nnR3Cv6e1Uvs2bYN70WwlT+R9+Zk4UAAAALPpHVrGhXIkcFgcId0MHnJe3jbQ</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAtBJEWM8INLmZk2v+wVPGjAAAAAASAAACgAAAAEAAAAM8hTQicxFa7/IXgvVKEDSYgAAAAt0QyIiu1jNtbYJH5+//FP+CoxCrpnuFi+tuA/sbw+xwUAAAAbGlQztItNPjFmNs0IMIZk/cZG8w</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -306,10 +306,7 @@ LastUpdated, TicketId, PriceModel, PriceModelPriceId, DataCreatedDate, activated
 SalesChannelId, BearerCategory, HasGroupDiscount, TravellersCount, HasRefund, MkId, cgi_contactnumber, activationinterval_from, activationinterval_to,
 travelvalidityinterval_from, travelvalidityinterval_to
 FROM            dbo.GetTicketInfoView
-WHERE			(travelvalidityinterval_to IS NOT NULL AND blockedDate IS NOT NULL) AND
-				(travelvalidityinterval_to &gt; DATEADD(MONTH, -3, GETDATE()) AND blockedDate &lt; DATEADD(MONTH, -1, GETDATE())) AND
-				(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') --AND
-				--(LastUpdated &gt; DATEADD(DAY, -15, GETDATE()))</property>
+WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD(DAY, -5, GETDATE()))</property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
@@ -1921,13 +1918,13 @@ WHERE			(travelvalidityinterval_to IS NOT NULL AND blockedDate IS NOT NULL) AND
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="231,42"
-          Id="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info"
-          TopLeft="171,54" />
-        <NodeLayout
           Size="202,42"
           Id="Package\Upsert Singapore Tickets\Upsert Singapore Tickets"
           TopLeft="466,179" />
+        <NodeLayout
+          Size="231,42"
+          Id="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info"
+          TopLeft="171,54" />
         <EdgeLayout
           Id="Package\Upsert Singapore Tickets.Paths[OLE DB Source Output]"
           TopLeft="286.5,96">
