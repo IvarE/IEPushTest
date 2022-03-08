@@ -9,6 +9,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Generated = Skanetrafiken.Crm.Schema.Generated;
+using Microsoft.Xrm.Sdk;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -58,10 +59,21 @@ namespace Skanetrafiken.Crm.Entities
                 new ColumnSet(MarketingListEntity.Fields.OwnerId, MarketingListEntity.Fields.CreatedOn));
 
             Order order = new Order();
+
+            if(marketingList.OwnerId == null)
+                throw new InvalidPluginExecutionException($"OwnerId of Marketing List is null.");
+
+            if (marketingList.OwnerId.Name.Length < 2 || marketingList.OwnerId.Name.Length > 30)
+                throw new InvalidPluginExecutionException($"OwnerId's Name is not in the valid range of 2-30 caracters.");
+
             order.createdby = marketingList.OwnerId != null ? marketingList.OwnerId.Name : "";
             order.created = marketingList.CreatedOn != null ? String.Format("{0:s}", marketingList.CreatedOn.Value) + "Z" : "";
             order.offerId = "d1425509-a769-4a34-9baa-2daaf33b93c1";
             order.campaignid = campaign.Id != null ? campaign.Id.ToString() : "";
+            order.priceid = "TODO STRING";
+            order.pricemodelid = "TODO STRING";
+            order.travelareaids.Add("TODO STRING");
+            order.travelareaids.Add("TODO STRING");
 
             MarketingInfo marketingInfo = new MarketingInfo();
             marketingInfo.order = order;
