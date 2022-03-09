@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="TicketPurchases-TicketInfo"
   DTS:PackageType="5"
-  DTS:VersionBuild="143"
-  DTS:VersionGUID="{48CA8892-F735-481A-8756-026BD3E3707F}">
+  DTS:VersionBuild="146"
+  DTS:VersionGUID="{C28D8F65-6A5F-44DC-B747-178E48EF4D38}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAkv9MW/FFWBLrQkXqD+q99AAAAAASAAACgAAAAEAAAAEqBYJb+gs1HO659tBDKo8wgAAAAKWq7zDJrb1lQ3a8rRpJwS3bR9rVmtGV99jgQu/0aEGkUAAAAAvOaoyXVvk2saDayx/Ia5kL2Pjk</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABQsJE48gKXxOe+qLq1vqykAAAAAASAAACgAAAAEAAAAJNJ7hbQ0QAt5ZtIAf6lK9QgAAAA3LwxiGPB37+d22AFvzd+1YQ/IvfW1+Pi28aUnD/gTlkUAAAAI6Iqlq4Ml3wYu0Zt4QyZiHJCREc</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -206,12 +206,12 @@
                   dataType="System.Int32"
                   description="Specifies the number of records to be sent to CDS/Dynamics CRM server in each service call."
                   expressionType="Notify"
-                  name="BatchSize">250</property>
+                  name="BatchSize">500</property>
                 <property
                   dataType="System.Int32"
                   description="Specify the total number or concurrent threads to write to CDS/CRM server simultaneously. "
                   expressionType="Notify"
-                  name="ConcurrentWritingThreadsInTotal">20</property>
+                  name="ConcurrentWritingThreadsInTotal">5</property>
                 <property
                   dataType="System.Boolean"
                   description="Specifies whether datetime values should be sent to CDS/CRM server in UTC format."
@@ -805,12 +805,12 @@
                   dataType="System.Int32"
                   description="Specifies the number of records to be sent to CDS/Dynamics CRM server in each service call."
                   expressionType="Notify"
-                  name="BatchSize">250</property>
+                  name="BatchSize">500</property>
                 <property
                   dataType="System.Int32"
                   description="Specify the total number or concurrent threads to write to CDS/CRM server simultaneously. "
                   expressionType="Notify"
-                  name="ConcurrentWritingThreadsInTotal">20</property>
+                  name="ConcurrentWritingThreadsInTotal">5</property>
                 <property
                   dataType="System.Boolean"
                   description="Specifies whether datetime values should be sent to CDS/CRM server in UTC format."

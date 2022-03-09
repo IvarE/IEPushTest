@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Ticket Integration"
   DTS:PackageType="5"
-  DTS:VersionBuild="225"
-  DTS:VersionGUID="{BFF00956-A14A-4E9A-A6F5-B9C977ACF7E8}">
+  DTS:VersionBuild="227"
+  DTS:VersionGUID="{61571D79-E5E4-4F2F-832B-4F246E7C0E93}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAtBJEWM8INLmZk2v+wVPGjAAAAAASAAACgAAAAEAAAAM8hTQicxFa7/IXgvVKEDSYgAAAAt0QyIiu1jNtbYJH5+//FP+CoxCrpnuFi+tuA/sbw+xwUAAAAbGlQztItNPjFmNs0IMIZk/cZG8w</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADISCpcNzVD9Ty1EYGQglWoAAAAAASAAACgAAAAEAAAAO+mNMkDHyX4iX2c1lqutmogAAAABEZ/E86wavS+bqAiIWC6+eCvA3gU3yzu9gbAFZHVdFIUAAAAAFf6NKlt7lDONnGAulYXDn7YRss</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -885,12 +885,12 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                   dataType="System.Int32"
                   description="Specifies the number of records to be sent to CDS/Dynamics CRM server in each service call."
                   expressionType="Notify"
-                  name="BatchSize">250</property>
+                  name="BatchSize">500</property>
                 <property
                   dataType="System.Int32"
                   description="Specify the total number or concurrent threads to write to CDS/CRM server simultaneously. "
                   expressionType="Notify"
-                  name="ConcurrentWritingThreadsInTotal">20</property>
+                  name="ConcurrentWritingThreadsInTotal">5</property>
                 <property
                   dataType="System.Boolean"
                   description="Specifies whether datetime values should be sent to CDS/CRM server in UTC format."
