@@ -1898,7 +1898,14 @@ namespace CGIXrmCreateCaseService.Case
 
             if (string.IsNullOrEmpty(request.Address_Country) == false)
             {
-                incident.Attributes.Add("cgi_rgol_address1_country", request.Address_Country);
+                if (request.Address_Country.ToUpper() == "SE")
+                {
+                    incident.Attributes.Add("cgi_rgol_address1_country", "Sverige");
+                }
+                else 
+                {
+                    incident.Attributes.Add("cgi_rgol_address1_country", request.Address_Country);
+                }
             }
 
             if (string.IsNullOrEmpty(request.FirstName) == false && string.IsNullOrEmpty(request.LastName) == false)
