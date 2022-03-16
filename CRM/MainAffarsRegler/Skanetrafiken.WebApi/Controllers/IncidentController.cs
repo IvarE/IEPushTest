@@ -10,10 +10,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Xml.Linq;
 
 namespace Skanetrafiken.Crm.Controllers
 {
@@ -26,14 +28,14 @@ namespace Skanetrafiken.Crm.Controllers
         private const string TenantID = "e1fcb9f3-e5f9-496f-a583-e495dfd57497"; //Tenent
 
         //private const string StorageAccountName = "webstpublicwebtest"; //TEST (OLD?)
-        private const string StorageAccountName = "webpublicwebtest"; //TEST
-        private const string ClientID = "635555fe-6cb2-4a48-9b54-8d5d6472b00f"; //TEST - App/Client ID
-        private const string ClientSecret = "czv7Q~iQuUCRwkryVp6FqHvmSAhbA_I2XidG_"; //TEST
+        //private const string StorageAccountName = "webpublicwebtest"; //TEST
+        //private const string ClientID = "635555fe-6cb2-4a48-9b54-8d5d6472b00f"; //TEST - App/Client ID
+        //private const string ClientSecret = "czv7Q~iQuUCRwkryVp6FqHvmSAhbA_I2XidG_"; //TEST
 
         //private const string StorageAccountName = "webstpublicwebacc"; //ACC (OLD)
-        //private const string StorageAccountName = "webpublicwebacc"; //ACC
-        //private const string ClientID = "7450a67c-038e-4b43-b4a1-b5bbd2961912"; //ACC - App/Client ID
-        //private const string ClientSecret = "gf57Q~2TGjcsESRX~20ohxZ-Xg3JhX2C55XKc"; //ACC
+        private const string StorageAccountName = "webpublicwebacc"; //ACC
+        private const string ClientID = "7450a67c-038e-4b43-b4a1-b5bbd2961912"; //ACC - App/Client ID
+        private const string ClientSecret = "gf57Q~2TGjcsESRX~20ohxZ-Xg3JhX2C55XKc"; //ACC
 
         //private const string StorageAccountName = "webpublicwebprod"; //PROD
         //private const string ClientID = "73acce44-96d3-48a1-8c44-33185bc2f24f"; //PROD - App/Client ID
@@ -65,6 +67,59 @@ namespace Skanetrafiken.Crm.Controllers
             return CrmPlusControl.PingConnection(threadId);
         }
 
+        //public static string ToInsecureString(SecureString input)
+        //{
+        //    string returnValue = string.Empty;
+        //    IntPtr ptr = System.Runtime.InteropServices.Marshal.SecureStringToBSTR(input);
+        //    try
+        //    {
+        //        returnValue = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(ptr);
+        //    }
+        //    finally
+        //    {
+        //        System.Runtime.InteropServices.Marshal.ZeroFreeBSTR(ptr);
+        //    }
+        //    return returnValue;
+        //}
+
+        //public static SecureString ToSecureString(string input)
+        //{
+        //    SecureString secure = new SecureString();
+        //    foreach (char c in input)
+        //    {
+        //        secure.AppendChar(c);
+        //    }
+        //    secure.MakeReadOnly();
+        //    return secure;
+        //}
+
+        //internal static string LoadCredentials(string filePath, byte[] entropy)
+        //{
+        //    if (!File.Exists(filePath))
+        //    {
+        //        throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "The credentials file \"{0}\" cannot be found. Use the /Password: parameter to create the credential file.", filePath));
+        //    }
+        //    XDocument doc = XDocument.Load(filePath);
+         
+        //    return ToInsecureString(DecryptString(doc.Root.Element("Password").Value, entropy));
+        //}
+
+        //public static SecureString DecryptString(string encryptedData, byte[] entropy)
+        //{
+        //    try
+        //    {
+        //        byte[] decryptedData = System.Security.Cryptography.ProtectedData.Unprotect(
+        //            Convert.FromBase64String(encryptedData),
+        //            entropy,
+        //            System.Security.Cryptography.DataProtectionScope.CurrentUser);
+        //        return ToSecureString(System.Text.Encoding.Unicode.GetString(decryptedData));
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return new SecureString();
+        //    }
+        //}
+
         [HttpGet]
         public HttpResponseMessage GetAttachmentFromAzure(string encryptedUrl)
         {
@@ -80,6 +135,8 @@ namespace Skanetrafiken.Crm.Controllers
                 _log.Warn($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
                 return erm;
             }
+
+            //var keyString = LoadCredentials("filepath - Saved in the Properties.Settings", Entropy);
 
             string clientId = ClientID;
             string clientSecret = ClientSecret;
