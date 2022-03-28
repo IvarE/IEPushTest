@@ -270,13 +270,16 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 var formContext = executionContext.getFormContext();
 
                 var __cgi_accountid = formContext.getAttribute("cgi_accountid").getValue();
+                var __cgi_contactid = formContext.getAttribute("cgi_contactid").getValue();
 
                 if (__cgi_accountid != null) {
-                    Endeavor.formscriptfunctions.SetValue("cgi_contactid", null);
-                    Endeavor.formscriptfunctions.HideOrDisplayField("cgi_contactid", false);
+                    if (__cgi_contactid != null) {
+                        Endeavor.formscriptfunctions.SetValue("cgi_contactid", null, formContext);
+                    }
+                    Endeavor.formscriptfunctions.HideOrDisplayField("cgi_contactid", false, formContext);
                 }
                 else
-                    Endeavor.formscriptfunctions.HideOrDisplayField("cgi_contactid", true);
+                    Endeavor.formscriptfunctions.HideOrDisplayField("cgi_contactid", true, formContext);
 
                 if (__cgi_accountid != null)
                     Endeavor.Skanetrafiken.Incident.setCustomerFromAccount(formContext);
