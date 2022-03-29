@@ -67,13 +67,15 @@ namespace Skanetrafiken.Crm.Entities
                 throw new InvalidPluginExecutionException($"OwnerId's Name is not in the valid range of 2-30 caracters.");
 
             order.createdby = marketingList.OwnerId != null ? marketingList.OwnerId.Name : "";
+
             order.created = marketingList.CreatedOn != null ? String.Format("{0:s}", marketingList.CreatedOn.Value) + "Z" : "";
-            order.offerId = "d1425509-a769-4a34-9baa-2daaf33b93c1";
+            order.offerId = "d1425509-a769-4a34-9baa-2daaf33b93c1"; //Grab this from the settings entity - This should be manually uppdated - Or we should send a request to a service to get the latest guid
+
             order.campaignid = campaign.Id != null ? campaign.Id.ToString() : "";
-            order.priceid = "TODO STRING";
-            order.pricemodelid = "TODO STRING";
-            order.travelareaids.Add("TODO STRING");
-            order.travelareaids.Add("TODO STRING");
+            //order.priceid = "TODO STRING";
+            //order.pricemodelid = "TODO STRING";
+            //order.travelareaids.Add("TODO STRING");
+            //order.travelareaids.Add("TODO STRING");
 
             MarketingInfo marketingInfo = new MarketingInfo();
             marketingInfo.order = order;
@@ -103,9 +105,11 @@ namespace Skanetrafiken.Crm.Entities
 
             string sMarketingInfo = JsonHelper.JsonSerializer<MarketingInfo>(marketingInfo);
 
+            //Create a memmory stream? and send it to Kai - He wants s to create a file and send it to them...
+
             response.OK = true;
             response.Message = "Marketing List Information was sent successfully!";
-            response.Message = sMarketingInfo;
+            response.Message = sMarketingInfo; //This is for testing
             return response;
         }
 

@@ -9,9 +9,9 @@ namespace Skanetrafiken.Crm.Helper
         public string created { get; set; }
         public string offerId { get; set; }
         public string campaignid { get; set; }
-        public string pricemodelid { get; set; }
-        public string priceid { get; set; }
-        public List<string> travelareaids { get; set; }
+        //public string pricemodelid { get; set; }
+        //public string priceid { get; set; }
+        //public List<string> travelareaids { get; set; }
 
         public Order()
         {
@@ -19,9 +19,9 @@ namespace Skanetrafiken.Crm.Helper
             created = null;
             offerId = null;
             campaignid = null;
-            pricemodelid = null;
-            priceid = null;
-            travelareaids = new List<string>();
+            //pricemodelid = null;
+            //priceid = null;
+            //travelareaids = new List<string>();
         }
     }
 
