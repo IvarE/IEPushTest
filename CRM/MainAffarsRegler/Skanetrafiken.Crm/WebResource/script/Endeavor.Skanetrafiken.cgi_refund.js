@@ -390,7 +390,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
             var _socialsecuritynumber = formContext.getAttribute("cgi_soc_sec_number").getValue();
 
             if (_show_soc_sec != 0 && _socialsecuritynumber != null && _socialsecuritynumber != "") {
-                var _check_soc = Endeavor.Skanetrafiken.cgi_refund.SocSecNoOnChange(formContext);
+                var _check_soc = Endeavor.Skanetrafiken.cgi_refund.SocSecNoOnChange(executionContext);
                 if (_check_soc == false) {
                     eventArgs.preventDefault();
                 }
@@ -685,7 +685,9 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        SocSecNoOnChange: function (formContext) {
+        SocSecNoOnChange: function (executionContext) {
+            var formContext = executionContext.getFormContext();
+
             var _soc = formContext.getAttribute("cgi_soc_sec_number").getValue();
             var _sectrue = Endeavor.Skanetrafiken.cgi_refund.validatePersonalNumber(_soc);
             var _return_save = true;
