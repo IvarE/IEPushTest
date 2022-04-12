@@ -68,8 +68,14 @@ namespace Skanetrafiken.Crm.Entities
 
             order.createdby = marketingList.OwnerId != null ? marketingList.OwnerId.Name : "";
 
-            order.created = marketingList.CreatedOn != null ? String.Format("{0:s}", marketingList.CreatedOn.Value) + "Z" : "";
-            order.offerId = "d1425509-a769-4a34-9baa-2daaf33b93c1"; //Grab this from the settings entity - This should be manually uppdated - Or we should send a request to a service to get the latest guid
+            //order.created = marketingList.CreatedOn != null ? String.Format("{0:s}", marketingList.CreatedOn.Value) + "Z" : ""; //This might not be needed anymore
+
+            CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_SingaporeTicketOfferId));
+            if (settings != null && !string.IsNullOrWhiteSpace(settings.ed_SingaporeTicketOfferId)) 
+            {
+                order.offerId = settings.ed_SingaporeTicketOfferId; //Grab this from the settings entity - This should be manually uppdated - Or we should send a request to a service to get the latest guid
+            }
+            
 
             order.campaignid = campaign.Id != null ? campaign.Id.ToString() : "";
             //order.priceid = "TODO STRING";

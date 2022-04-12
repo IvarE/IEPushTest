@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using Skanetrafiken.Crm.Schema.Generated;
 using System.Collections.Generic;
+using Skanetrafiken.Crm;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -29,6 +30,7 @@ namespace Skanetrafiken.Crm.Entities
                 st_singaporeticket uSingaporeTicket = new st_singaporeticket();
 
                 string mklId = ed_MklId;
+                string campaignIdValue = ed_Source_Campaign;
                 string nName = ed_CRMNummer + "_" + FormattedValues["st_singtickettype"];
                 if (st_name != nName) {
                     uSingaporeTicket.st_name = nName;
@@ -44,6 +46,23 @@ namespace Skanetrafiken.Crm.Entities
                         var eContact = lContacts.FirstOrDefault();
                         var erContact = new EntityReference(eContact.LogicalName, eContact.Id);
                         uSingaporeTicket.st_ContactID = erContact;
+                        //CampaignID/SourceCampaign
+                        needsUpdate = true;
+                    }
+                }
+
+                //Get SourceCampaign
+                if (!string.IsNullOrEmpty(campaignIdValue) && Guid.TryParse(campaignIdValue, out var campaignGuid))
+                {
+                    //CampaignEntity campaign = XrmRetrieveHelper.Retrieve<CampaignEntity>(localContext, campaignGuid, new ColumnSet(false));
+                    Entity campaign = localContext.OrganizationService.Retrieve("campaign", campaignGuid, new ColumnSet(false));
+
+
+                    if (campaign != null)
+                    {
+                        localContext.Trace($"Found Campaign with Id {campaignGuid}");
+
+                        uSingaporeTicket.ed_SourceCampaignId = campaign.ToEntityReference();
                         needsUpdate = true;
                     }
                 }
@@ -69,6 +88,7 @@ namespace Skanetrafiken.Crm.Entities
                 st_singaporeticket uSingaporeTicket = new st_singaporeticket();
 
                 string mklId = string.IsNullOrEmpty(ed_MklId) ? preImage.ed_MklId : ed_MklId;
+                string campaignIdValue = string.IsNullOrEmpty(ed_Source_Campaign) ? preImage.ed_Source_Campaign : ed_Source_Campaign;
                 string contactNumber = string.IsNullOrEmpty(ed_CRMNummer) ? preImage.ed_CRMNummer : ed_CRMNummer;
                 string offerName = string.IsNullOrEmpty(FormattedValues["st_singtickettype"]) ? preImage.FormattedValues["st_singtickettype"] : FormattedValues["st_singtickettype"];
                 
@@ -91,6 +111,21 @@ namespace Skanetrafiken.Crm.Entities
                             uSingaporeTicket.st_ContactID = eContact.ToEntityReference();
                             needsUpdate = true;
                         }
+                    }
+                }
+
+                //Get SourceCampaign
+                if (!string.IsNullOrEmpty(campaignIdValue) && Guid.TryParse(campaignIdValue, out var campaignGuid))
+                {
+                    //CampaignEntity campaign = XrmRetrieveHelper.Retrieve<CampaignEntity>(localContext, campaignGuid, new ColumnSet(false));
+                    Entity campaign = localContext.OrganizationService.Retrieve("campaign", campaignGuid, new ColumnSet(false));
+
+                    if (campaign != null)
+                    {
+                        localContext.Trace($"Found Campaign with Id {campaignGuid}");
+
+                        uSingaporeTicket.ed_SourceCampaignId = campaign.ToEntityReference();
+                        needsUpdate = true;
                     }
                 }
 
