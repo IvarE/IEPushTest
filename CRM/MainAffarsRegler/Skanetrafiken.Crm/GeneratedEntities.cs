@@ -57853,15 +57853,30 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// 
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_offername")]
-		public Microsoft.Xrm.Sdk.OptionSetValue ed_OfferName
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.st_singaporetickettype> ed_OfferName
 		{
 			get
 			{
-				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("ed_offername");
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("ed_offername");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.st_singaporetickettype)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.st_singaporetickettype), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
 			}
 			set
 			{
-				this.SetAttributeValue("ed_offername", value);
+				if ((value == null))
+				{
+					this.SetAttributeValue("ed_offername", null);
+				}
+				else
+				{
+					this.SetAttributeValue("ed_offername", new Microsoft.Xrm.Sdk.OptionSetValue((int)value));
+				}
 			}
 		}
 		
@@ -101913,6 +101928,78 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 	}
 	
+	public enum st_singaporetickettype
+	{
+		
+		enkla5 = 206290003,
+		
+		out30 = 899310027,
+		
+		enklaapp5 = 206290004,
+		
+		dagar7 = 899310004,
+		
+		_1030 = 899310001,
+		
+		DKinkMetro = 899310003,
+		
+		dagarPlusMetro = 899310002,
+		
+		dagarinklFlygbussarnaSturup = 899310005,
+		
+		Dygnsbiljett = 206290001,
+		
+		Enkelbiljett = 206290002,
+		
+		Grundskola = 899310006,
+		
+		Gymnasieskola = 899310007,
+		
+		LundaspelenBasket = 899310008,
+		
+		Provapa15dagar = 899310009,
+		
+		Seniorbiljett247 = 899310010,
+		
+		SeniorbiljettejrusningstrafikPlushelger = 899310011,
+		
+		Serviceresebiljett = 899310012,
+		
+		SkanetrafikenBlippa1h = 899310013,
+		
+		SkanetrafikenBlippa24h = 899310014,
+		
+		Sommarbiljett = 899310015,
+		
+		UngdomsbiljettGrundskola = 899310016,
+		
+		UngdomsbiljettGymnasieskola = 899310017,
+		
+		dagarsbiljett = 206290000,
+		
+		dagar30 = 899310018,
+		
+		dagarsbiljettmomsfri = 899310019,
+		
+		Dygnsbiljettmomsfri = 899310020,
+		
+		Enkelbiljettmomsfri = 899310021,
+		
+		Hostlovsbiljett = 899310000,
+		
+		Julbiljett = 899310026,
+		
+		LundaspelenHandboll = 899310022,
+		
+		Provak = 757550000,
+		
+		Seniorbiljettejrusningstrafik = 899310023,
+		
+		SkolaSpecial = 899310024,
+		
+		Sportlovsbiljett = 899310025,
+	}
+	
 	public enum st_singaporeticketState
 	{
 		
@@ -102517,15 +102604,30 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// 
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_singtickettype")]
-		public Microsoft.Xrm.Sdk.OptionSetValue st_SingTicketType
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.st_singaporetickettype> st_SingTicketType
 		{
 			get
 			{
-				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("st_singtickettype");
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("st_singtickettype");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.st_singaporetickettype)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.st_singaporetickettype), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
 			}
 			set
 			{
-				this.SetAttributeValue("st_singtickettype", value);
+				if ((value == null))
+				{
+					this.SetAttributeValue("st_singtickettype", null);
+				}
+				else
+				{
+					this.SetAttributeValue("st_singtickettype", new Microsoft.Xrm.Sdk.OptionSetValue((int)value));
+				}
 			}
 		}
 		

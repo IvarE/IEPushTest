@@ -48,7 +48,9 @@ namespace Skanetrafiken.Crm.Plugins
 
                 try
                 {
+                    localContext.Trace($"Started HandlePostSingaporeTicketCreateAsync");
                     target.HandlePostSingaporeTicketCreateAsync(localContext);
+                    localContext.Trace($"Ended HandlePostSingaporeTicketCreateAsync");
                 }
                 catch (Exception ex)
                 {

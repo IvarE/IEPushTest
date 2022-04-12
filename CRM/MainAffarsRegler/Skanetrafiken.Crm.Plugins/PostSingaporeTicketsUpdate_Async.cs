@@ -50,7 +50,9 @@ namespace Skanetrafiken.Crm.Plugins
                 SingaporeTicketEntity preImage = Plugin.GetPreImage<SingaporeTicketEntity>(localContext, preImageAlias);
                 try
                 {
+                    localContext.Trace($"Started HandlePostSingaporeTicketUpdateAsync");
                     target.HandlePostSingaporeTicketUpdateAsync(localContext, preImage);
+                    localContext.Trace($"Ended HandlePostSingaporeTicketUpdateAsync");
                 }
                 catch (Exception ex)
                 {
