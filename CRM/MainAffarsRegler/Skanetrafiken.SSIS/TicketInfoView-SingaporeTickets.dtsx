@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Ticket Integration"
   DTS:PackageType="5"
-  DTS:VersionBuild="230"
-  DTS:VersionGUID="{1C4758C3-E326-4A50-AE62-4D8CC0B8E6C8}">
+  DTS:VersionBuild="256"
+  DTS:VersionGUID="{DA296E7B-EE4A-44D6-ABF5-08A446AD05B8}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -23,11 +23,11 @@
       DTS:ObjectName="Dynamics 365 Connection">
       <DTS:ObjectData>
         <CrmConnectionManager
-          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekund.skanetrafiken.se/DKCRM;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=False;IgnoreCertificateErrors=False"
+          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekundacc.skanetrafiken.se/DKCRMACC;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=False;IgnoreCertificateErrors=False"
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA3vZLmz002UKmF/pkhBvu0gAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAa+9je3XJBBimlhRBPR9B3AAAAAASAAACgAAAAEAAAANKLDHm3xGZWjvSEg0D9tbEgAAAA0F+6wJ1eXdrkQOFWwkFCUuEDtkZ0ksqP/C1ps+ghdcsUAAAADZnFBEXrzbOaVOlydVxh6wD1YVU</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAojlJFYcAMESWTiFemD2tQgAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADouFWB7LOIn3DduRgiX26AAAAAAASAAACgAAAAEAAAAOUXUc5dOw8VDXawJP55uCEgAAAAHYst1XG9YlgjdPCHd2Y9yUivxWyeZjIoeO8tNrAtZ1IUAAAAFPdS7bhuzvEq9kK7a5RXtwmoFfI</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -54,7 +54,7 @@
               DTS:DataScale="7"
               DTS:TextQualified="True"
               DTS:ObjectName="LastUpdated"
-              DTS:DTSID="{389F1471-080A-45A4-B721-98327901C669}"
+              DTS:DTSID="{C1E0C1E5-AF73-43D5-B94B-1F01DD8D2D77}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -63,7 +63,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="TicketId"
-              DTS:DTSID="{1C3C8F7F-9F10-47F2-A583-1A34DDC879D3}"
+              DTS:DTSID="{06FA173C-F78D-4CC3-AD59-C2F57119ADF6}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -72,7 +72,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="PriceModel"
-              DTS:DTSID="{6D42DBD9-6742-46CA-A7B9-0D0C954A0119}"
+              DTS:DTSID="{3AD1BFAF-58A2-4CF1-A828-FB92FF7E3807}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -81,7 +81,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="PriceModelPriceId"
-              DTS:DTSID="{29568C1B-201D-4CBC-B10B-9E96EFE4935E}"
+              DTS:DTSID="{72DEFFA5-0B23-4A2C-9A2F-FC6F9C5D361E}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -89,8 +89,8 @@
               DTS:DataType="146"
               DTS:DataScale="7"
               DTS:TextQualified="True"
-              DTS:ObjectName="DataCreatedDate"
-              DTS:DTSID="{B3D75CB4-6266-473F-B75E-CB0DE888061F}"
+              DTS:ObjectName="DateCreated"
+              DTS:DTSID="{D9A7E57A-CC9A-4964-868E-D249632D5432}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -98,8 +98,8 @@
               DTS:DataType="304"
               DTS:DataScale="7"
               DTS:TextQualified="True"
-              DTS:ObjectName="activatedDate"
-              DTS:DTSID="{E64C93CA-B9EE-4EBC-B69F-F51ABF5921F4}"
+              DTS:ObjectName="activated_datetime"
+              DTS:DTSID="{1FBFADF2-8475-4133-8BD0-EC1C64992B1A}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -107,17 +107,8 @@
               DTS:DataType="304"
               DTS:DataScale="7"
               DTS:TextQualified="True"
-              DTS:ObjectName="blockedDate"
-              DTS:DTSID="{72DAAA24-A775-42DA-AB71-123364F7F3B9}"
-              DTS:CreationName="" />
-            <DTS:FlatFileColumn
-              DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x002C_"
-              DTS:MaximumWidth="50"
-              DTS:DataType="130"
-              DTS:TextQualified="True"
-              DTS:ObjectName="OfferName"
-              DTS:DTSID="{463DBD3A-4521-4873-B631-83D4A9F79D8F}"
+              DTS:ObjectName="blocked_datetime"
+              DTS:DTSID="{3AA7350C-45B5-49AA-A287-AFD0405E1FD3}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -125,8 +116,17 @@
               DTS:MaximumWidth="255"
               DTS:DataType="130"
               DTS:TextQualified="True"
-              DTS:ObjectName="OfferNameDetailed"
-              DTS:DTSID="{5BBE8A09-A359-4B5D-A3E5-0E8417581561}"
+              DTS:ObjectName="Offer"
+              DTS:DTSID="{11E2117A-4D2A-49BF-9B4B-A735AA4502AD}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="255"
+              DTS:DataType="130"
+              DTS:TextQualified="True"
+              DTS:ObjectName="OfferName"
+              DTS:DTSID="{AA6E995F-7C32-45B0-8BB4-BF62E80C566A}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -135,8 +135,8 @@
               DTS:DataPrecision="13"
               DTS:DataScale="5"
               DTS:TextQualified="True"
-              DTS:ObjectName="TicketAmount"
-              DTS:DTSID="{A1060F49-5A18-4EB8-BEC0-EB502D0BA413}"
+              DTS:ObjectName="Amount"
+              DTS:DTSID="{84DECF80-C82C-42D4-B553-0304E7086919}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -145,7 +145,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="SalesChannelId"
-              DTS:DTSID="{C9AA35C6-69AF-468C-A2F5-3CCD91AD0DD0}"
+              DTS:DTSID="{4CCDBA31-2B9D-43C8-BE53-4420A868EE76}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -154,7 +154,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="BearerCategory"
-              DTS:DTSID="{84EC2EF8-5403-4753-9A08-484D8CE0A91E}"
+              DTS:DTSID="{EB123A58-4F40-4072-AEE1-82216541B399}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -162,7 +162,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="HasGroupDiscount"
-              DTS:DTSID="{9C8317DD-ACF8-419B-AE7C-89AB465E10D2}"
+              DTS:DTSID="{560A845C-FBEB-429A-8BB8-C51ACBE748D4}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -170,7 +170,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="TravellersCount"
-              DTS:DTSID="{9E4D90CE-A3E8-44DF-AE49-A852E1111507}"
+              DTS:DTSID="{1DEA0FB2-8444-4A35-936A-0FB1709323E7}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -178,7 +178,7 @@
               DTS:DataType="3"
               DTS:TextQualified="True"
               DTS:ObjectName="HasRefund"
-              DTS:DTSID="{8ED4A5E7-F54C-4B74-B78A-610BD4CE2FF8}"
+              DTS:DTSID="{6C3BEF3F-2617-4EE7-B7D7-01E88C65A4FD}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -186,8 +186,8 @@
               DTS:MaximumWidth="100"
               DTS:DataType="130"
               DTS:TextQualified="True"
-              DTS:ObjectName="MkId"
-              DTS:DTSID="{58F9AC9E-B575-4741-9B37-FE6E26CF4947}"
+              DTS:ObjectName="TravellerId"
+              DTS:DTSID="{B8CE347E-4E4F-4572-908F-36D0289C5AE3}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -196,7 +196,7 @@
               DTS:DataType="130"
               DTS:TextQualified="True"
               DTS:ObjectName="cgi_contactnumber"
-              DTS:DTSID="{473D1A89-AF02-41BA-9B06-FC6198ED995B}"
+              DTS:DTSID="{5B644194-BE80-4BD5-8B83-4AD43B7CD269}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -205,7 +205,7 @@
               DTS:DataScale="7"
               DTS:TextQualified="True"
               DTS:ObjectName="activationinterval_from"
-              DTS:DTSID="{D474F857-25DB-492A-83B7-2693233C5688}"
+              DTS:DTSID="{2ECAEF16-612D-4514-8C39-91380372DD92}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -214,7 +214,7 @@
               DTS:DataScale="7"
               DTS:TextQualified="True"
               DTS:ObjectName="activationinterval_to"
-              DTS:DTSID="{C1EFADCC-D870-41C3-BAAF-083BCD4FB2E7}"
+              DTS:DTSID="{492CCFE5-A0BC-42FB-9EE9-CF168A9C577B}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -223,16 +223,33 @@
               DTS:DataScale="7"
               DTS:TextQualified="True"
               DTS:ObjectName="travelvalidityinterval_from"
-              DTS:DTSID="{AB06323A-E545-4987-B903-C81A94239AA9}"
+              DTS:DTSID="{44F1F648-CADE-4EBF-8EF8-10FC6A06FA73}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
-              DTS:ColumnDelimiter="_x000D__x000A_"
+              DTS:ColumnDelimiter="_x002C_"
               DTS:DataType="304"
               DTS:DataScale="7"
               DTS:TextQualified="True"
               DTS:ObjectName="travelvalidityinterval_to"
-              DTS:DTSID="{02544ACF-1E56-40AA-81BB-9F925D1C3249}"
+              DTS:DTSID="{185AF56F-C88E-4160-B276-51957B4214AE}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="TicketGUID"
+              DTS:DTSID="{390B5570-48CF-4AFD-B29D-1C398E4D69F4}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x000D__x000A_"
+              DTS:MaximumWidth="50"
+              DTS:DataType="130"
+              DTS:TextQualified="True"
+              DTS:ObjectName="CampaignId"
+              DTS:DTSID="{14DD84EF-FC0E-461B-B2C0-E47926E47CF0}"
               DTS:CreationName="" />
           </DTS:FlatFileColumns>
         </DTS:ConnectionManager>
@@ -302,11 +319,31 @@
                   description="The SQL command to be executed."
                   name="SqlCommand"
                   UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT        
-LastUpdated, TicketId, PriceModel, PriceModelPriceId, DataCreatedDate, activatedDate, blockedDate, OfferName, OfferNameDetailed, TicketAmount, 
-SalesChannelId, BearerCategory, HasGroupDiscount, TravellersCount, HasRefund, MkId, cgi_contactnumber, activationinterval_from, activationinterval_to,
-travelvalidityinterval_from, travelvalidityinterval_to
+LastUpdated
+,TicketId
+,TicketGUID 
+,OfferName
+,BearerCategory
+,TravellerId
+,cgi_contactnumber
+,HasGroupDiscount
+,TravellersCount
+,HasRefund
+,DateCreated
+,PriceModelPriceId
+,PriceModel
+,Offer
+,Amount
+,activated_datetime
+,blocked_datetime
+,activationinterval_from
+,activationinterval_to
+,travelvalidityinterval_from
+,travelvalidityinterval_to
+,SalesChannelId
+,CampaignId
 FROM            dbo.GetTicketInfoView
-WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD(DAY, -5, GETDATE()))</property>
+WHERE			(TravellerId IS NOT NULL) AND (TravellerId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD(DAY, -5, GETDATE()))</property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
@@ -383,36 +420,6 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       name="PriceModelPriceId"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[DataCreatedDate]"
-                      dataType="dbTimeStampOffset"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[DataCreatedDate]"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[DataCreatedDate]"
-                      name="DataCreatedDate"
-                      scale="7"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[activatedDate]"
-                      dataType="dbTimeStamp2"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[activatedDate]"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[activatedDate]"
-                      name="activatedDate"
-                      scale="7"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[blockedDate]"
-                      dataType="dbTimeStamp2"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[blockedDate]"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[blockedDate]"
-                      name="blockedDate"
-                      scale="7"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferName]"
                       dataType="wstr"
                       errorOrTruncationOperation="Conversion"
@@ -421,28 +428,7 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       length="50"
                       lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferName]"
                       name="OfferName"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]"
-                      dataType="wstr"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[OfferNameDetailed]"
-                      length="255"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]"
-                      name="OfferNameDetailed"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TicketAmount]"
-                      dataType="numeric"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[TicketAmount]"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TicketAmount]"
-                      name="TicketAmount"
-                      precision="13"
-                      scale="5"
-                      truncationRowDisposition="FailComponent" />
+                      truncationRowDisposition="IgnoreFailure" />
                     <outputColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[SalesChannelId]"
                       dataType="wstr"
@@ -464,15 +450,6 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       name="BearerCategory"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]"
-                      dataType="i4"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[HasGroupDiscount]"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]"
-                      name="HasGroupDiscount"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TravellersCount]"
                       dataType="i4"
                       errorOrTruncationOperation="Conversion"
@@ -480,25 +457,6 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[TravellersCount]"
                       lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TravellersCount]"
                       name="TravellersCount"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[HasRefund]"
-                      dataType="i4"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[HasRefund]"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[HasRefund]"
-                      name="HasRefund"
-                      truncationRowDisposition="FailComponent" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[MkId]"
-                      dataType="wstr"
-                      errorOrTruncationOperation="Conversion"
-                      errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
-                      length="100"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[MkId]"
-                      name="MkId"
                       truncationRowDisposition="FailComponent" />
                     <outputColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]"
@@ -550,6 +508,108 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       name="travelvalidityinterval_to"
                       scale="7"
                       truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[DateCreated]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[DateCreated]"
+                      length="16"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[DateCreated]"
+                      name="DateCreated"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[activated_datetime]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[activated_datetime]"
+                      length="16"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[activated_datetime]"
+                      name="activated_datetime"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[blocked_datetime]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[blocked_datetime]"
+                      length="16"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[blocked_datetime]"
+                      name="blocked_datetime"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[Offer]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[Offer]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[Offer]"
+                      name="Offer"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[Amount]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[Amount]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[Amount]"
+                      name="Amount"
+                      precision="38"
+                      scale="5"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TicketGUID]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[TicketGUID]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TicketGUID]"
+                      name="TicketGUID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[CampaignId]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[CampaignId]"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[CampaignId]"
+                      name="CampaignId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TravellerId]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[TravellerId]"
+                      length="100"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TravellerId]"
+                      name="TravellerId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[HasGroupDiscount]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[HasGroupDiscount]"
+                      name="HasGroupDiscount"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[HasRefund]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[HasRefund]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[HasRefund]"
+                      name="HasRefund"
+                      truncationRowDisposition="FailComponent" />
                   </outputColumns>
                   <externalMetadataColumns
                     isUsed="True">
@@ -574,36 +634,10 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       length="30"
                       name="PriceModelPriceId" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[DataCreatedDate]"
-                      dataType="dbTimeStampOffset"
-                      name="DataCreatedDate"
-                      scale="7" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[activatedDate]"
-                      dataType="dbTimeStamp2"
-                      name="activatedDate"
-                      scale="7" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[blockedDate]"
-                      dataType="dbTimeStamp2"
-                      name="blockedDate"
-                      scale="7" />
-                    <externalMetadataColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[OfferName]"
                       dataType="wstr"
-                      length="50"
-                      name="OfferName" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[OfferNameDetailed]"
-                      dataType="wstr"
                       length="255"
-                      name="OfferNameDetailed" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[TicketAmount]"
-                      dataType="numeric"
-                      name="TicketAmount"
-                      precision="13"
-                      scale="5" />
+                      name="OfferName" />
                     <externalMetadataColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[SalesChannelId]"
                       dataType="wstr"
@@ -615,22 +649,9 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       length="100"
                       name="BearerCategory" />
                     <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[HasGroupDiscount]"
-                      dataType="i4"
-                      name="HasGroupDiscount" />
-                    <externalMetadataColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[TravellersCount]"
                       dataType="i4"
                       name="TravellersCount" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[HasRefund]"
-                      dataType="i4"
-                      name="HasRefund" />
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[MkId]"
-                      dataType="wstr"
-                      length="100"
-                      name="MkId" />
                     <externalMetadataColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[cgi_contactnumber]"
                       dataType="wstr"
@@ -638,24 +659,80 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       name="cgi_contactnumber" />
                     <externalMetadataColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[activationinterval_from]"
-                      dataType="dbTimeStamp2"
-                      name="activationinterval_from"
-                      scale="7" />
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="activationinterval_from" />
                     <externalMetadataColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[activationinterval_to]"
-                      dataType="dbTimeStamp2"
-                      name="activationinterval_to"
-                      scale="7" />
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="activationinterval_to" />
                     <externalMetadataColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[travelvalidityinterval_from]"
-                      dataType="dbTimeStamp2"
-                      name="travelvalidityinterval_from"
-                      scale="7" />
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="travelvalidityinterval_from" />
                     <externalMetadataColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[travelvalidityinterval_to]"
-                      dataType="dbTimeStamp2"
-                      name="travelvalidityinterval_to"
-                      scale="7" />
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="travelvalidityinterval_to" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[DateCreated]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="DateCreated" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[activated_datetime]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="activated_datetime" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[blocked_datetime]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="blocked_datetime" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[Offer]"
+                      dataType="wstr"
+                      length="50"
+                      name="Offer" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[Amount]"
+                      dataType="numeric"
+                      name="Amount"
+                      precision="38"
+                      scale="5" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[TicketGUID]"
+                      dataType="guid"
+                      name="TicketGUID" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[CampaignId]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="CampaignId" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[TravellerId]"
+                      dataType="wstr"
+                      length="100"
+                      name="TravellerId" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[HasGroupDiscount]"
+                      dataType="i4"
+                      name="HasGroupDiscount" />
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].ExternalColumns[HasRefund]"
+                      dataType="i4"
+                      name="HasRefund" />
                   </externalMetadataColumns>
                 </output>
                 <output
@@ -688,41 +765,60 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[PriceModelPriceId]"
                       name="PriceModelPriceId" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[DataCreatedDate]"
-                      dataType="dbTimeStampOffset"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[DataCreatedDate]"
-                      name="DataCreatedDate"
-                      scale="7" />
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[DateCreated]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[DateCreated]"
+                      name="DateCreated" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[activatedDate]"
-                      dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[activatedDate]"
-                      name="activatedDate"
-                      scale="7" />
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[TravellerId]"
+                      dataType="wstr"
+                      length="100"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[TravellerId]"
+                      name="TravellerId" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[blockedDate]"
-                      dataType="dbTimeStamp2"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[blockedDate]"
-                      name="blockedDate"
-                      scale="7" />
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[activated_datetime]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[activated_datetime]"
+                      name="activated_datetime" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[HasGroupDiscount]"
+                      dataType="i4"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[HasGroupDiscount]"
+                      name="HasGroupDiscount" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[blocked_datetime]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[blocked_datetime]"
+                      name="blocked_datetime" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[HasRefund]"
+                      dataType="i4"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[HasRefund]"
+                      name="HasRefund" />
                     <outputColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[OfferName]"
                       dataType="wstr"
-                      length="50"
+                      length="255"
                       lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[OfferName]"
                       name="OfferName" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[OfferNameDetailed]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[Offer]"
                       dataType="wstr"
-                      length="255"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[OfferNameDetailed]"
-                      name="OfferNameDetailed" />
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[Offer]"
+                      name="Offer" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[TicketAmount]"
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[Amount]"
                       dataType="numeric"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[TicketAmount]"
-                      name="TicketAmount"
-                      precision="13"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[Amount]"
+                      name="Amount"
+                      precision="38"
                       scale="5" />
                     <outputColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[SalesChannelId]"
@@ -737,26 +833,15 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[BearerCategory]"
                       name="BearerCategory" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[HasGroupDiscount]"
-                      dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[HasGroupDiscount]"
-                      name="HasGroupDiscount" />
-                    <outputColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[TravellersCount]"
                       dataType="i4"
                       lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[TravellersCount]"
                       name="TravellersCount" />
                     <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[HasRefund]"
-                      dataType="i4"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[HasRefund]"
-                      name="HasRefund" />
-                    <outputColumn
-                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[MkId]"
-                      dataType="wstr"
-                      length="100"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[MkId]"
-                      name="MkId" />
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[TicketGUID]"
+                      dataType="guid"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[TicketGUID]"
+                      name="TicketGUID" />
                     <outputColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[cgi_contactnumber]"
                       dataType="wstr"
@@ -765,28 +850,39 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       name="cgi_contactnumber" />
                     <outputColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[activationinterval_from]"
-                      dataType="dbTimeStamp2"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
                       lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[activationinterval_from]"
-                      name="activationinterval_from"
-                      scale="7" />
+                      name="activationinterval_from" />
                     <outputColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[activationinterval_to]"
-                      dataType="dbTimeStamp2"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
                       lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[activationinterval_to]"
-                      name="activationinterval_to"
-                      scale="7" />
+                      name="activationinterval_to" />
                     <outputColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_from]"
-                      dataType="dbTimeStamp2"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
                       lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_from]"
-                      name="travelvalidityinterval_from"
-                      scale="7" />
+                      name="travelvalidityinterval_from" />
                     <outputColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_to]"
-                      dataType="dbTimeStamp2"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
                       lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[travelvalidityinterval_to]"
-                      name="travelvalidityinterval_to"
-                      scale="7" />
+                      name="travelvalidityinterval_to" />
+                    <outputColumn
+                      refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[CampaignId]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[CampaignId]"
+                      name="CampaignId" />
                     <outputColumn
                       refId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
                       dataType="i4"
@@ -937,27 +1033,12 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                   name="Input">
                   <inputColumns>
                     <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TicketAmount]"
-                      cachedDataType="numeric"
-                      cachedName="TicketAmount"
-                      cachedPrecision="13"
-                      cachedScale="5"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketprice]"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TicketAmount]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TicketId]"
-                      cachedDataType="wstr"
-                      cachedLength="7"
-                      cachedName="TicketId"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketid]"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TicketId]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[cgi_contactnumber]"
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TravellerId]"
                       cachedDataType="wstr"
                       cachedLength="100"
-                      cachedName="cgi_contactnumber"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_crmnummer]"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
+                      cachedName="TravellerId"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_mklid]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TravellerId]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[activationinterval_from]"
                       cachedDataType="dbTimeStamp2"
@@ -980,12 +1061,20 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_bearercategory]"
                       lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[BearerCategory]" />
                     <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[blockedDate]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="blockedDate"
-                      cachedScale="7"
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[blocked_datetime]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="16"
+                      cachedName="blocked_datetime"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_blockeddate]"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[blockedDate]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[blocked_datetime]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[cgi_contactnumber]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="cgi_contactnumber"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_crmnummer]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[cgi_contactnumber]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[LastUpdated]"
                       cachedDataType="dbTimeStamp2"
@@ -994,12 +1083,12 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_lastupdated]"
                       lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[LastUpdated]" />
                     <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[OfferNameDetailed]"
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[OfferName]"
                       cachedDataType="wstr"
-                      cachedLength="255"
-                      cachedName="OfferNameDetailed"
+                      cachedLength="50"
+                      cachedName="OfferName"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_offernamedetailed]"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferNameDetailed]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferName]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[SalesChannelId]"
                       cachedDataType="wstr"
@@ -1008,12 +1097,21 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_saleschannel]"
                       lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[SalesChannelId]" />
                     <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[activatedDate]"
-                      cachedDataType="dbTimeStamp2"
-                      cachedName="activatedDate"
-                      cachedScale="7"
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[CampaignId]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="CampaignId"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_source_campaign]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[CampaignId]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[activated_datetime]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="16"
+                      cachedName="activated_datetime"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_ticketactivated]"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[activatedDate]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[activated_datetime]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TravellersCount]"
                       cachedDataType="i4"
@@ -1049,26 +1147,35 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_pricemodelprice]"
                       lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]" />
                     <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[OfferName]"
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[DateCreated]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="16"
+                      cachedName="DateCreated"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketcreated]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[DateCreated]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[TicketId]"
+                      cachedDataType="wstr"
+                      cachedLength="7"
+                      cachedName="TicketId"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketid]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[TicketId]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[Amount]"
+                      cachedDataType="numeric"
+                      cachedName="Amount"
+                      cachedPrecision="38"
+                      cachedScale="5"
+                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketprice]"
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[Amount]" />
+                    <inputColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[Offer]"
                       cachedDataType="wstr"
                       cachedLength="50"
-                      cachedName="OfferName"
+                      cachedName="Offer"
                       externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_singtickettype]"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[OfferName]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[DataCreatedDate]"
-                      cachedDataType="dbTimeStampOffset"
-                      cachedName="DataCreatedDate"
-                      cachedScale="7"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[st_ticketcreated]"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[DataCreatedDate]" />
-                    <inputColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[MkId]"
-                      cachedDataType="wstr"
-                      cachedLength="100"
-                      cachedName="MkId"
-                      externalMetadataColumnId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_mklid]"
-                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[MkId]" />
+                      lineageId="Package\Upsert Singapore Tickets\Singapore Ticket  -&gt; Ticket Info.Outputs[OLE DB Source Output].Columns[Offer]" />
                     <inputColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].Columns[HasGroupDiscount]"
                       cachedDataType="i4"
@@ -1258,9 +1365,29 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       </properties>
                     </externalMetadataColumn>
                     <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_mklid]"
+                      dataType="wstr"
+                      length="50"
+                      name="ed_mklid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
                       refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_offernamedetailed]"
                       dataType="wstr"
-                      length="100"
+                      length="255"
                       name="ed_offernamedetailed">
                       <properties>
                         <property
@@ -1308,6 +1435,45 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                         <property
                           dataType="System.String"
                           name="LookupTypes">ed_skakort</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_source_campaign]"
+                      dataType="wstr"
+                      length="150"
+                      name="ed_source_campaign">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Createable">true</property>
+                        <property
+                          dataType="System.Boolean"
+                          name="Updateable">true</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_sourcecampaignid]"
+                      dataType="guid"
+                      name="ed_sourcecampaignid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">campaign</property>
                         <property
                           dataType="System.Boolean"
                           name="Createable">true</property>
@@ -1500,9 +1666,6 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                           dataType="System.String"
                           name="LookupTypes">contact</property>
                         <property
-                          dataType="System.String"
-                          name="LookupSettings"></property>
-                        <property
                           dataType="System.Boolean"
                           name="Createable">true</property>
                         <property
@@ -1671,7 +1834,7 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                       dataType="numeric"
                       name="st_ticketprice"
                       precision="38"
-                      scale="2">
+                      scale="4">
                       <properties>
                         <property
                           dataType="System.String"
@@ -1812,45 +1975,6 @@ WHERE			(MkId IS NOT NULL) AND (MkId NOT LIKE ' ') AND (LastUpdated &gt; DATEADD
                         <property
                           dataType="System.String"
                           name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_mklid]"
-                      dataType="wstr"
-                      length="50"
-                      name="ed_mklid">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">String</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes"></property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Createable">true</property>
-                        <property
-                          dataType="System.Boolean"
-                          name="Updateable">true</property>
-                      </properties>
-                    </externalMetadataColumn>
-                    <externalMetadataColumn
-                      refId="Package\Upsert Singapore Tickets\Upsert Singapore Tickets.Inputs[Input].ExternalColumns[ed_sourcecampaignid]"
-                      dataType="guid"
-                      name="ed_sourcecampaignid">
-                      <properties>
-                        <property
-                          dataType="System.String"
-                          name="FieldType">Lookup</property>
-                        <property
-                          dataType="System.String"
-                          name="LookupTypes">campaign</property>
                         <property
                           dataType="System.Boolean"
                           name="Createable">true</property>
