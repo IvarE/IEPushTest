@@ -26,7 +26,7 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">V-CRM-TST</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAojlJFYcAMESWTiFemD2tQgAAAAACAAAAAAADZgAAwAAAABAAAACPVhFwxKKTmdCNNmrntT60AAAAAASAAACgAAAAEAAAAE0EH1KHVPPJtIdHoF6uQLyIAAAA5djHAVT+bSkcrTYYcdOs1EZrhWJ2S+KgrKiJFk/SxanQ13ICNNe829yNygrHdNnNeck7Hlm/PLiv44t4JkUuH75RjEryQO6yiKKl/wJgm3GwxVJrSeVvfXpGXEc3E+xxZ8IN89O9uEFCVqjbN8WLRQ1VXdu88clTVeFwBSVJFeGHNbu1yai8SxQAAAAlX3uH8AN+lfnwJZJhVpMLH131iQ==</SSIS:Property>
+          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAojlJFYcAMESWTiFemD2tQgAAAAACAAAAAAADZgAAwAAAABAAAAB5qreJ4KwORof0y4MoY6dVAAAAAASAAACgAAAAEAAAALqVHvKckpt8Fgfcg6FbCt+IAAAAcdbvh2NIRCOG2ybIEBjY1hDgqLhXQtfMyxKdjQdQfox7bQuMNQn3SQsabdoaUdXXAvvx+ArEn1zHIZ2Zyhxz25YqxVFMgmoVvUvUntHEva8fhF782SDj94KJli1sk83MV9UFUfefH+0cPNp/eduYo6OG6VwF5jOryt5ex7EViCBIR/PozX8ErRQAAACx2mO0SE5ffLqt6+abOeUjf0VVEQ==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
@@ -43,10 +43,10 @@
                 <SSIS:Property SSIS:Name="Name">Ticket Integration</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">252</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">267</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{6960A614-3B87-498C-A23E-22AE132DBD20}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{553AE3FE-5212-4360-885C-14BB17FB57F0}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>
@@ -203,7 +203,7 @@
                     <SSIS:Property SSIS:Name="IncludeInDebugDump">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Required">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Sensitive">0</SSIS:Property>
-                    <SSIS:Property SSIS:Name="Value">AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekundacc.skanetrafiken.se/DKCRMACC;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=False;IgnoreCertificateErrors=False</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Value">AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekund.skanetrafiken.se/DKCRM;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ApiVersion=;ServiceTimeout=120;RetryOnIntermittentErrors=False;IgnoreCertificateErrors=False</SSIS:Property>
                     <SSIS:Property SSIS:Name="DataType">18</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
@@ -385,7 +385,7 @@
                     <SSIS:Property SSIS:Name="IncludeInDebugDump">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Required">0</SSIS:Property>
                     <SSIS:Property SSIS:Name="Sensitive">0</SSIS:Property>
-                    <SSIS:Property SSIS:Name="Value">https://sekundacc.skanetrafiken.se/DKCRMACC</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Value">https://sekund.skanetrafiken.se/DKCRM</SSIS:Property>
                     <SSIS:Property SSIS:Name="DataType">18</SSIS:Property>
                   </SSIS:Properties>
                 </SSIS:Parameter>
