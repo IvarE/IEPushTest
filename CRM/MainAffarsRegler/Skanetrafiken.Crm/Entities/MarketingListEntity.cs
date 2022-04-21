@@ -146,35 +146,35 @@ namespace Skanetrafiken.Crm.Entities
                     {
                         response.OK = true;
                         response.Message = $"Marketing List Information was sent successfully!";
-                        response.Message = $"Marketing List Information was sent successfully! Info: {sMarketingInfo}"; //for test
+                        response.Message = $"Marketing List Information was sent successfully!\r\nResponse: {resposneTjp.RequestMessage}\r\nInfo: {sMarketingInfo}"; //for test
                         return response;
                     }
                     else
                     {
                         response.OK = false;
-                        response.Message = $"Marketing List Information could not be sent. Status: {resposneTjp.StatusCode} Ex: {resposneTjp.RequestMessage}";
-                        response.Message = $"Marketing List Information could not be sent. Status: {resposneTjp.StatusCode} Ex: {resposneTjp.RequestMessage} Info: {sMarketingInfo}"; //for test
+                        response.Message = $"Marketing List Information could not be sent.\r\nStatus: {resposneTjp.StatusCode}\r\nEx: {resposneTjp.RequestMessage}";
+                        response.Message = $"Marketing List Information could not be sent.\r\nStatus: {resposneTjp.StatusCode}\r\nEx: {resposneTjp.RequestMessage}\r\nInfo: {sMarketingInfo}"; //for test
                         return response;
                     }
                 }
                 catch (WebException webEx) when (webEx.Status == WebExceptionStatus.NameResolutionFailure)
                 { /* Do something with e, please.*/
-                    throw new InvalidPluginExecutionException($"HttpRequestException: {webEx.Message}. InnerException: {webEx.InnerException}. StackTrace: {webEx.StackTrace}. Other: {webEx}");
+                    throw new InvalidPluginExecutionException($"HttpRequestException: {webEx.Message}.\r\nInnerException: {webEx.InnerException}.");
                 }
                 catch (HttpRequestException httpEx)
                 {
-                    throw new InvalidPluginExecutionException($"HttpRequestException: {httpEx.Message}. InnerException: {httpEx.InnerException}. StackTrace: {httpEx.StackTrace}. Other: {httpEx}");
+                    throw new InvalidPluginExecutionException($"HttpRequestException: {httpEx.Message}.\r\nInnerException: {httpEx.InnerException}.");
                 }
                 catch (Exception ex)
                 {
                     //_integrationLog.Error("Error accured in GetCardDetailIntegration", ex);
-                    throw new InvalidPluginExecutionException($"Exception: {ex.Message}. InnerException: {ex.InnerException}. StackTrace: {ex.StackTrace}. Other: {ex}");
+                    throw new InvalidPluginExecutionException($"Exception: {ex.Message}.\r\nInnerException: {ex.InnerException}.");
                 }
             }
 
             response.OK = false;
             response.Message = "Marketing List Information could not be sent.";
-            response.Message = $"Marketing List Information could not be sent. Info: {sMarketingInfo}"; ; //This is for testing
+            response.Message = $"Marketing List Information could not be sent.\r\nInfo: {sMarketingInfo}"; ; //This is for testing
             return response;
         }
 

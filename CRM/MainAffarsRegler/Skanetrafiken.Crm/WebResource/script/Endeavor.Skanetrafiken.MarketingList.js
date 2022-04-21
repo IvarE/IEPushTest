@@ -24,8 +24,14 @@ if (typeof (Endeavor.Skanetrafiken.MarketingList) == "undefined") {
                     { "Field": "MarketingListId", "Value": marketingListId, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 }
                 ];
 
+                //Add loading indicator
+                Xrm.Utility.showProgressIndicator("Skickar Marknadslista...");
+
                 Endeavor.formscriptfunctions.callGlobalAction("ed_SendMarketingInfo", inputParameters,
                     function (result) {
+                        //Close loading indicator
+                        Xrm.Utility.closeProgressIndicator();
+
                         if (result.responseText != null && result.responseText != "undefined" && result.responseText != "") {
                             var response = JSON.parse(result.responseText);
                             debugger;
@@ -67,6 +73,9 @@ if (typeof (Endeavor.Skanetrafiken.MarketingList) == "undefined") {
                         }
                     },
                     function (error) {
+                        //Close loading indicator
+                        Xrm.Utility.closeProgressIndicator();
+
                         var errorMessage = "Error in  Sending Marketing Info." + error.message;
                         console.log(errorMessage);
                         Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
