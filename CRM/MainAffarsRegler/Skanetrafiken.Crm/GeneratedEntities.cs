@@ -25928,6 +25928,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_provapacampaignurl")]
+		public string ed_ProvaPaCampaignURL
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_provapacampaignurl");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_provapacampaignurl", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_pubtransencryptionkey")]
 		public string ed_PubTransEncryptionKey
 		{
@@ -26883,6 +26899,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_OutstandingChargesAPIUserName = "ed_outstandingchargesapiusername";
 			
+			public const string ed_ProvaPaCampaignURL = "ed_provapacampaignurl";
+			
 			public const string ed_PubTransEncryptionKey = "ed_pubtransencryptionkey";
 			
 			public const string ed_PubTransPassWord = "ed_pubtranspassword";
@@ -27072,6 +27090,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_OutstandingChargesAPIPassword = 100;
 			
 			public const int ed_OutstandingChargesAPIUserName = 100;
+			
+			public const int ed_ProvaPaCampaignURL = 100;
 			
 			public const int ed_PubTransEncryptionKey = 100;
 			
@@ -103238,7 +103258,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const int ed_MklId = 50;
 			
-			public const int ed_OfferNameDetailed = 100;
+			public const int ed_OfferNameDetailed = 260;
 			
 			public const int ed_SalesChannel = 30;
 			

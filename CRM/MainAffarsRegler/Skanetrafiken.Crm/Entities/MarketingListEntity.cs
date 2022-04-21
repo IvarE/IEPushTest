@@ -10,6 +10,12 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Generated = Skanetrafiken.Crm.Schema.Generated;
 using Microsoft.Xrm.Sdk;
+using System.Net;
+using System.IO;
+using System.Text;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -58,33 +64,24 @@ namespace Skanetrafiken.Crm.Entities
             MarketingListEntity marketingList = XrmRetrieveHelper.Retrieve<MarketingListEntity>(localContext, gMarketingListId,
                 new ColumnSet(MarketingListEntity.Fields.OwnerId, MarketingListEntity.Fields.CreatedOn));
 
-            Order order = new Order();
-
-            if(marketingList.OwnerId == null)
+            if (marketingList.OwnerId == null)
                 throw new InvalidPluginExecutionException($"OwnerId of Marketing List is null.");
 
             if (marketingList.OwnerId.Name.Length < 2 || marketingList.OwnerId.Name.Length > 30)
                 throw new InvalidPluginExecutionException($"OwnerId's Name is not in the valid range of 2-30 caracters.");
 
-            order.createdby = marketingList.OwnerId != null ? marketingList.OwnerId.Name : "";
-
-            //order.created = marketingList.CreatedOn != null ? String.Format("{0:s}", marketingList.CreatedOn.Value) + "Z" : ""; //This might not be needed anymore
-
-            CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_SingaporeTicketOfferId));
-            if (settings != null && !string.IsNullOrWhiteSpace(settings.ed_SingaporeTicketOfferId)) 
-            {
-                order.offerId = settings.ed_SingaporeTicketOfferId; //Grab this from the settings entity - This should be manually uppdated - Or we should send a request to a service to get the latest guid
-            }
-            
-
-            order.campaignid = campaign.Id != null ? campaign.Id.ToString() : "";
-            //order.priceid = "TODO STRING";
-            //order.pricemodelid = "TODO STRING";
-            //order.travelareaids.Add("TODO STRING");
-            //order.travelareaids.Add("TODO STRING");
-
             MarketingInfo marketingInfo = new MarketingInfo();
-            marketingInfo.order = order;
+            marketingInfo.bearerCategory = "SkåApp"; //Hardcoded - This should always be the value
+            marketingInfo.campaignId = campaign.Id != null ? campaign.Id.ToString() : "";
+            CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_SingaporeTicketOfferId, CgiSettingEntity.Fields.ed_ProvaPaCampaignURL));
+            if (settings != null && !string.IsNullOrWhiteSpace(settings.ed_SingaporeTicketOfferId))
+            {
+                marketingInfo.offerId = settings.ed_SingaporeTicketOfferId; //Grab this from the settings entity - This should be manually uppdated - Or we should send a request to a service to get the latest guid
+            }
+
+            //marketingInfo.createdBy = marketingList.OwnerId != null ? marketingList.OwnerId.Name : "CRM";
+            //marketingInfo.created = marketingList.CreatedOn != null ? String.Format("{0:s}", marketingList.CreatedOn.Value) + "Z" : "2022-03-29T08:00:09Z"; //This might not be needed anymore
+
             marketingInfo.orderrows = new List<OrderRow>();
 
             var queryContacts = new QueryExpression(ContactEntity.EntityLogicalName);
@@ -103,7 +100,12 @@ namespace Skanetrafiken.Crm.Entities
             foreach (ContactEntity contact in lContacts)
             {
                 OrderRow orderrow = new OrderRow();
-                orderrow.mklid = contact.ed_MklId;
+                int mklIdNr = 0;
+                if (Int32.TryParse(contact.ed_MklId, out mklIdNr))
+                {
+                    orderrow.mklId = mklIdNr;
+                }
+                
                 orderrow.telephone = contact.Telephone2;
 
                 marketingInfo.orderrows.Add(orderrow);
@@ -112,11 +114,78 @@ namespace Skanetrafiken.Crm.Entities
             string sMarketingInfo = JsonHelper.JsonSerializer<MarketingInfo>(marketingInfo);
 
             //Create a memmory stream? and send it to Kai - He wants s to create a file and send it to them...
+            using (var jsonStream = GenerateStreamFromString(sMarketingInfo))
+            {
+                // ... Do stuff to stream
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                HttpClient _httpClient = new HttpClient();
+                HttpResponseMessage resposneTjp = new HttpResponseMessage();
 
-            response.OK = true;
-            response.Message = "Marketing List Information was sent successfully!";
-            response.Message = sMarketingInfo; //This is for testing
+                if (settings == null || string.IsNullOrWhiteSpace(settings.ed_ProvaPaCampaignURL) || string.IsNullOrWhiteSpace(settings.ed_ProvaPaCampaignURL))
+                {
+                    //Bad request -> exception
+                    throw new Exception($"Exception caught: ProvaPa Campaign URL missing from Settings parameter.");
+                }
+
+                try
+                {
+                    using (var mfdc = new MultipartFormDataContent())
+                    {
+                        var fileStreamContent = new StreamContent(jsonStream);
+                        fileStreamContent.Headers.ContentType = new MediaTypeHeaderValue("multipart/form-data");
+                        mfdc.Add(fileStreamContent, name: "blob", fileName: "order.json");
+                        
+                        Task.Run(async () =>
+                        {
+                            resposneTjp = await _httpClient.PostAsync(settings.ed_ProvaPaCampaignURL, mfdc);
+
+                        }).Wait();
+                    }
+
+                    if (resposneTjp.StatusCode == HttpStatusCode.OK || resposneTjp.StatusCode == HttpStatusCode.Accepted)
+                    {
+                        response.OK = true;
+                        response.Message = $"Marketing List Information was sent successfully!";
+                        response.Message = $"Marketing List Information was sent successfully! Info: {sMarketingInfo}"; //for test
+                        return response;
+                    }
+                    else
+                    {
+                        response.OK = false;
+                        response.Message = $"Marketing List Information could not be sent. Status: {resposneTjp.StatusCode} Ex: {resposneTjp.RequestMessage}";
+                        response.Message = $"Marketing List Information could not be sent. Status: {resposneTjp.StatusCode} Ex: {resposneTjp.RequestMessage} Info: {sMarketingInfo}"; //for test
+                        return response;
+                    }
+                }
+                catch (WebException webEx) when (webEx.Status == WebExceptionStatus.NameResolutionFailure)
+                { /* Do something with e, please.*/
+                    throw new InvalidPluginExecutionException($"HttpRequestException: {webEx.Message}. InnerException: {webEx.InnerException}. StackTrace: {webEx.StackTrace}. Other: {webEx}");
+                }
+                catch (HttpRequestException httpEx)
+                {
+                    throw new InvalidPluginExecutionException($"HttpRequestException: {httpEx.Message}. InnerException: {httpEx.InnerException}. StackTrace: {httpEx.StackTrace}. Other: {httpEx}");
+                }
+                catch (Exception ex)
+                {
+                    //_integrationLog.Error("Error accured in GetCardDetailIntegration", ex);
+                    throw new InvalidPluginExecutionException($"Exception: {ex.Message}. InnerException: {ex.InnerException}. StackTrace: {ex.StackTrace}. Other: {ex}");
+                }
+            }
+
+            response.OK = false;
+            response.Message = "Marketing List Information could not be sent.";
+            response.Message = $"Marketing List Information could not be sent. Info: {sMarketingInfo}"; ; //This is for testing
             return response;
+        }
+
+        public static Stream GenerateStreamFromString(string s)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
         }
 
     }

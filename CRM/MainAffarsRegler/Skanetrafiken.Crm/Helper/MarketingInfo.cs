@@ -9,6 +9,7 @@ namespace Skanetrafiken.Crm.Helper
         public string created { get; set; }
         public string offerId { get; set; }
         public string campaignid { get; set; }
+        public string bearerCategory { get; set; }
         //public string pricemodelid { get; set; }
         //public string priceid { get; set; }
         //public List<string> travelareaids { get; set; }
@@ -19,6 +20,7 @@ namespace Skanetrafiken.Crm.Helper
             created = null;
             offerId = null;
             campaignid = null;
+            bearerCategory = null;
             //pricemodelid = null;
             //priceid = null;
             //travelareaids = new List<string>();
@@ -27,24 +29,35 @@ namespace Skanetrafiken.Crm.Helper
 
     public class OrderRow
     {
-        public string mklid { get; set; }
+        public int? mklId { get; set; }
         public string telephone { get; set; }
 
         public OrderRow()
         {
-            mklid = null;
+            mklId = null;
             telephone = null;
         }
     }
 
     public class MarketingInfo
     {
-        public Order order { get; set; }
+        //public string createdBy { get; set; }
+        //public string created { get; set; }
+        public string offerId { get; set; }
+        public string bearerCategory { get; set; }
+        public string campaignId { get; set; }
+        
+        //public Order order { get; set; }
         public List<OrderRow> orderrows { get; set; }
 
         public MarketingInfo()
         {
-            order = new Order();
+            //createdBy = null;
+            //created = null;
+            offerId = null;
+            bearerCategory = null;
+            campaignId = null;
+            //order = new Order();
             orderrows = new List<OrderRow>();
         }
     }

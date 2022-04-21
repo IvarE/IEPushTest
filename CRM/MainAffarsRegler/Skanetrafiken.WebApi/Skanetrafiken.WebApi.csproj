@@ -233,6 +233,9 @@
     <Compile Include="..\Skanetrafiken.Crm\Entities\LeadEntity.cs">
       <Link>Entities\LeadEntity.cs</Link>
     </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Entities\MarketingListEntity.cs">
+      <Link>Entities\MarketingListEntity.cs</Link>
+    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Entities\NotifyMKLEntity.cs">
       <Link>Entities\NotifyMKLEntity.cs</Link>
     </Compile>
@@ -358,6 +361,9 @@
     </Compile>
     <Compile Include="..\Skanetrafiken.Crm\GeneratedEntities.cs">
       <Link>GeneratedEntities.cs</Link>
+    </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\Helper\MarketingInfo.cs">
+      <Link>Entities\MarketingInfo.cs</Link>
     </Compile>
     <Compile Include="..\Skanetrafiken.Crm\Helper\PhoneNumberUtility.cs">
       <Link>Helper\PhoneNumberUtility.cs</Link>
