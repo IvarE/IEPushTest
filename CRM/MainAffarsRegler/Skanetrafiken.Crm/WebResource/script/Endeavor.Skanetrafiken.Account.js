@@ -100,12 +100,15 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 infotainment.setRequiredLevel("none");
             }
 
-            
+
+            Endeavor.Skanetrafiken.Account.hideTab(executionContext);
 
 
             //Hide/Show Õvrig Information
             Endeavor.Skanetrafiken.Account.showOvrigInformation(formContext);
         },
+
+
 
         resetRequiredLevel: function (executionContext) {
 
@@ -135,6 +138,33 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                     }
                 }
             }
+        },
+
+
+        hideTab: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+            var currForm = formContext.ui.formSelector.getCurrentItem();
+            var currFormId = currForm.getId();
+
+            if (currFormId == "7a53340c-a6c5-468a-9ed2-f365da63e74f") {
+                var tabContacts = formContext.ui.tabs.get("tab_3");
+                var tabOpp = formContext.ui.tabs.get("tab_4");
+                var tabLeadAccount = formContext.ui.tabs.get("tab_5");
+                var tabOrders = formContext.ui.tabs.get("Cost Sites");
+                var tabInvoices = formContext.ui.tabs.get("tab_8");
+                var tabCompanyInfo = formContext.ui.tabs.get("SUMMARY_TAB");
+                var tabEndeavorDev = formContext.ui.tabs.get("tab_6");
+
+                tabContacts.setDisplayState('collapsed');
+                tabOpp.setDisplayState('collapsed');
+                tabLeadAccount.setDisplayState('collapsed');
+                tabOrders.setDisplayState('collapsed');
+                tabInvoices.setDisplayState('collapsed');
+                tabCompanyInfo.setDisplayState('collapsed');
+                tabEndeavorDev.setDisplayState('collapsed');
+            }
+
         },
 
         resetRequiredLevelForAllTypes: function (executionContext) {
@@ -256,7 +286,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                             Endeavor.formscriptfunctions.SetValue("address2_stateorprovince", kommun, formContext);
                         }
                     }
-                    else if (result.entities.length == 0) 
+                    else if (result.entities.length == 0)
                         Endeavor.formscriptfunctions.AlertCustomDialog("Inget postnummer kommun hittades med postnummer: " + postalCode + " och stad: " + city + ". Vänligen överväg att ange stad och postnummer.");
                     else if (result.entities.length > 1)
                         Endeavor.formscriptfunctions.AlertCustomDialog("Flera postnummer kommun hittades med postnummer: " + postalCode + " och stad: " + city + ". Vänligen överväg att ange stad och postnummer.");
@@ -488,14 +518,14 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
         },
 
         blockAccountPortalSuccessCallback: function (formContext) {
-            
+
             var portalID = formContext.getAttribute("accountnumber").getValue();
             var blocked = formContext.getAttribute("ed_islockedportal").getValue();
             var parentID = "";
             var organizationNumber = "";
 
             if (formContext.getAttribute("parentaccountid").getValue()) {
-                
+
                 var inputParameters = [{ "Field": "PortalID", "Value": portalID, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
                 { "Field": "ParentID", "Value": parentID, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
                 { "Field": "OrganizationNumber", "Value": organizationNumber, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
@@ -548,13 +578,13 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                     });
             }
             else {
-                
+
                 var ID = formContext.data.entity.getId();
                 ID = ID.substring(1, ID.length - 1);
 
                 Xrm.WebApi.retrieveMultipleRecords("account", "?$select=accountnumber&$filter=(_parentaccountid_value eq " + ID + ")").then(
                     function success(results) {
-                        
+
                         for (var i = 0; i < results.entities.length; i++) {
 
                             var account = results.entities[i];
@@ -624,7 +654,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                         }
                     },
                     function (error) {
-                        
+
                         console.log(error.message);
                         Endeavor.formscriptfunctions.ErrorCustomDialog(error.message, "Retrieve Multiple Records Error");
                     }
