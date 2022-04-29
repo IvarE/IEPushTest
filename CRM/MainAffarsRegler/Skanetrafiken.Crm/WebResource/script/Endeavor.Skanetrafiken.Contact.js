@@ -31,7 +31,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
             var formIsOnLoad = true;
             Endeavor.Skanetrafiken.Contact.resetRequiredLevel(executionContext, formIsOnLoad);
-
+            Endeavor.Skanetrafiken.Contact.setInfotainmentValues(executionContext);
             //Endeavor.Skanetrafiken.Contact.lockEmailIfMKLidExistAndNotAdminForm(formContext);
 
             switch (formType) {
@@ -102,6 +102,24 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             } else {
                 // TODO teo - Vad gör vi om formuläret sparas och det varken är Create eller Update?
             }
+        },
+
+        setInfotainmentValues: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+            var roles = [];
+            roles[0] = "Skånetrafiken Annons"; 
+
+            var isUserCheck = Endeavor.Skanetrafiken.Contact.currentUserHasSecurityRole(roles);
+
+            if (isUserCheck) {
+
+                Endeavor.formscriptfunctions.SetValue("ed_informationsource", 899310000, formContext);
+                Endeavor.formscriptfunctions.SetValue("ed_infotainmentcontact", true, formContext);
+               // ed_informationsource = Annons
+                //ed_infotainmentcontact = Yes
+            }
+
         },
 
         onChangePostalCodeCity: function (executionContext, postalCodeLogicalName, cityLogicalName) {
@@ -1011,36 +1029,36 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
             return isUserCheck && isContactOrgForm;
         },
+        
+            currentUserHasSecurityRole: function (roles) {
+                var fetchXml =
+                    "<fetch mapping='logical'>" +
+                    "<entity name='systemuser'>" +
+                    "<attribute name='systemuserid' />" +
+                    "<filter type='and'>" +
+                    "<condition attribute='systemuserid' operator='eq-userid' />" +
+                    "</filter>" +
+                    "<link-entity name='systemuserroles' from='systemuserid' to='systemuserid' visible='false' intersect='true'>" +
+                    "<link-entity name='role' from='roleid' to='roleid' alias='r'>" +
+                    "<filter type='or'>";
 
-        currentUserHasSecurityRole: function (roles) {
-            var fetchXml =
-                "<fetch mapping='logical'>" +
-                "<entity name='systemuser'>" +
-                "<attribute name='systemuserid' />" +
-                "<filter type='and'>" +
-                "<condition attribute='systemuserid' operator='eq-userid' />" +
-                "</filter>" +
-                "<link-entity name='systemuserroles' from='systemuserid' to='systemuserid' visible='false' intersect='true'>" +
-                "<link-entity name='role' from='roleid' to='roleid' alias='r'>" +
-                "<filter type='or'>";
+                for (var i = 0; i < roles.length; i++) {
+                    fetchXml += "<condition attribute='name' operator='eq' value='" + roles[i] + "' />";
+                }
 
-            for (var i = 0; i < roles.length; i++) {
-                fetchXml += "<condition attribute='name' operator='eq' value='" + roles[i] + "' />";
-            }
+                fetchXml += "            </filter>" +
+                    "</link-entity>" +
+                    "</link-entity>" +
+                    "</entity>" +
+                    "</fetch>";
+                var modifiedFetchXml = fetchXml.replace("&", "&amp;");
 
-            fetchXml += "            </filter>" +
-                "</link-entity>" +
-                "</link-entity>" +
-                "</entity>" +
-                "</fetch>";
-            var modifiedFetchXml = fetchXml.replace("&", "&amp;");
-
-            var users = Endeavor.formscriptfunctions.executeFetchGetCount(modifiedFetchXml, "systemusers");
-            if (users > 0)
-                return true;
-            else
-                return false;
-        },
+                var users = Endeavor.formscriptfunctions.executeFetchGetCount(modifiedFetchXml, "systemusers");
+                if (users > 0)
+                    return true;
+                else
+                    return false;
+            },
         // Senare fix
 
         //Form Methods CGI Contact (from contactLibrary.js)
