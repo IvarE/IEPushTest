@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Ticket Integration"
   DTS:PackageType="5"
-  DTS:VersionBuild="267"
-  DTS:VersionGUID="{553AE3FE-5212-4360-885C-14BB17FB57F0}">
+  DTS:VersionBuild="273"
+  DTS:VersionGUID="{6DC2CC8F-2BD9-4BB9-85D0-80F7A004ADF3}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAojlJFYcAMESWTiFemD2tQgAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADfpYmq3Xqvro5qzMLf1ZVCAAAAAASAAACgAAAAEAAAALIlckcPQq5hk+y0xEMt9y0gAAAAShHR3wOqfYQjSZtbQL/EdJZ8LSSGDqIJN7vpwRg54i8UAAAAyduQsBpq0BntU06eTrLlbtqlgwU</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAojlJFYcAMESWTiFemD2tQgAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACuTm0M+YIeBGjpgCxxw8hJAAAAAASAAACgAAAAEAAAAJXfjtmk/oFQdrhIu9i6plAgAAAAM5j4IXvs0CRcs76gx0zdtm+AZ4t2z4/cErAMQHuZ8foUAAAA5hO3A11yjDzDwnO/AHVpTeUORP4</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -264,7 +264,12 @@
         <DTS:ConnectionManager
           DTS:ConnectRetryCount="1"
           DTS:ConnectRetryInterval="5"
-          DTS:ConnectionString="Data Source=V-DWSQL;Initial Catalog=STDW;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+          DTS:ConnectionString="Data Source=V-DWSQL;User ID=SSISUserCRM;Initial Catalog=STDW;Provider=SQLNCLI11.1;Persist Security Info=True;Auto Translate=False;">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAojlJFYcAMESWTiFemD2tQgAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAACpf7Ubq7RrQbkH9agt1Q5lAAAAAASAAACgAAAAEAAAAOh0EPF5D7d8aq9q3dqbXnMwAAAApurlcGsTEPIofFVSQdLnkdyrjPq/bqhj3PKFt1rOxoR1rR1EPz/cJpfym2fnuau3FAAAALA7ZC+3d1IN/qaxOGt94H49UfYH</DTS:Password>
+        </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
