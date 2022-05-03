@@ -16,6 +16,7 @@ if (typeof (Endeavor.Skanetrafiken.FrontOffice) == "undefined") {
         _urlRelativeFrontOffice: "https://sttravelconfiguratorweb.azurewebsites.net/ticketdetails/",
         _listOfFormsFrontOffice: ["Contact (3 - Skånetrafiken)", "Kund (3 - Skånetrafiken)", "RGOL", "SalesOrderLIne_Admin",
             "Information (Skånetrafiken)", "Köp och Sälj", "Information", "Köp och Sälj"],
+        _listOfFormsFrontOfficeAccount: ["Account (Portal)"],
 
         onFrontOfficeDisplay: function (formContext) {
             
@@ -28,6 +29,25 @@ if (typeof (Endeavor.Skanetrafiken.FrontOffice) == "undefined") {
 
             for (var i = 0; i < Endeavor.Skanetrafiken.FrontOffice._listOfFormsFrontOffice.length; i++) {
                 var valueList = Endeavor.Skanetrafiken.FrontOffice._listOfFormsFrontOffice[i];
+                if (formName == valueList) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
+        onFrontOfficeDisplayAccount: function (formContext) {
+
+            var formItem = formContext.ui.formSelector.getCurrentItem();
+
+            if (formItem == null)
+                return false;
+
+            var formName = formItem.getLabel();
+
+            for (var i = 0; i < Endeavor.Skanetrafiken.FrontOffice._listOfFormsFrontOfficeAccount.length; i++) {
+                var valueList = Endeavor.Skanetrafiken.FrontOffice._listOfFormsFrontOfficeAccount[i];
                 if (formName == valueList) {
                     return true;
                 }
@@ -75,6 +95,17 @@ if (typeof (Endeavor.Skanetrafiken.FrontOffice) == "undefined") {
 
             var fieldNameSingapore = "st_ticketid";
             var gridContextSingapore = formContext.getControl("Singapore_Biljetter");
+            var allSelectedRowsSingapore = gridContextSingapore.getGrid().getSelectedRows();
+
+            var openUrlSingapore = Endeavor.Skanetrafiken.FrontOffice.findValueFrontOffice(allSelectedRowsSingapore, fieldNameSingapore);
+            if (openUrlSingapore != null)
+                window.open(openUrlSingapore, "_singapore");
+        },
+
+        onFrontOfficeIntegrationAccount: function (formContext) {
+
+            var fieldNameSingapore = "ed_ticketid";
+            var gridContextSingapore = formContext.getControl("AllaBiljetter");
             var allSelectedRowsSingapore = gridContextSingapore.getGrid().getSelectedRows();
 
             var openUrlSingapore = Endeavor.Skanetrafiken.FrontOffice.findValueFrontOffice(allSelectedRowsSingapore, fieldNameSingapore);
