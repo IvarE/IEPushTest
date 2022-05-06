@@ -445,12 +445,8 @@ namespace Skanetrafiken.Crm.Entities
             ContactEntity thisContact = null;
             AccountEntity updatedAccount = new AccountEntity();
 
-
-            localContext.Trace($"Primary Contact id: {this.PrimaryContactId.Id}");
-            localContext.Trace("Inside setContactNamePlaceholder");
             if (this.PrimaryContactId != null)
             {
-                localContext.Trace($"PreImage is null");
                 if (this.PrimaryContactId != null)
                 {
 
@@ -459,8 +455,6 @@ namespace Skanetrafiken.Crm.Entities
                     this.PrimaryContactId.Id,
                     new ColumnSet(ContactEntity.Fields.FirstName, ContactEntity.Fields.LastName)
                     );
-
-                    localContext.Trace($"Primary Contact not null (this): {thisContact.FirstName}{thisContact.LastName}");
                 }
                 else
                 {
@@ -469,7 +463,6 @@ namespace Skanetrafiken.Crm.Entities
             }
             else if(this.PrimaryContactId == null && preImage != null)
             {
-                localContext.Trace($"preImage is not null");
                 if (preImage.PrimaryContactId != null)
                 {
                   thisContact = XrmRetrieveHelper.Retrieve<ContactEntity>(
@@ -477,23 +470,12 @@ namespace Skanetrafiken.Crm.Entities
                   preImage.PrimaryContactId.Id,
                   new ColumnSet(ContactEntity.Fields.FirstName, ContactEntity.Fields.LastName)
                   );
-
-                    localContext.Trace($"Primary Contact not null (preImage): {thisContact.FirstName}{thisContact.LastName}");
                 }
                 else
                 {
                     return;
                 }
             }
-
-            //localContext.Trace($"Contact Name: {contactName}");
-            //var firstSpaceIndex = contactName.IndexOf(" ");
-
-            //var firstString = contactName.Substring(0, firstSpaceIndex);
-            //var secondString = contactName.Substring(firstSpaceIndex + 1);
-
-            //localContext.Trace($"firstString: {firstString}");
-            //localContext.Trace($"secondString: {secondString}");
 
             this.ed_FirstNamePlaceholder = thisContact.FirstName;
             this.ed_LastNamePlaceholder = thisContact.LastName;
@@ -505,7 +487,6 @@ namespace Skanetrafiken.Crm.Entities
                 updatedAccount.ed_FirstNamePlaceholder = thisContact.FirstName;
                 updatedAccount.ed_LastNamePlaceholder = thisContact.LastName;
 
-                localContext.Trace($"preImage not null");
                 XrmHelper.Update(localContext, updatedAccount);
             }
             
