@@ -1,0 +1,1209 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="5/16/2022 2:13:55 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="V-CRMVS"
+  DTS:CreatorName="D1\PGOEND"
+  DTS:DTSID="{10695942-BCE5-46CD-A1CD-4893EC69D318}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.2000.170"
+  DTS:LocaleID="1053"
+  DTS:ObjectName="Package1"
+  DTS:PackageType="5"
+  DTS:VersionBuild="9"
+  DTS:VersionGUID="{1EFB8AE8-2254-46C0-A240-3ABEA3491026}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Dynamics CRM Connection Manager]"
+      DTS:CreationName="DynamicsCRM"
+      DTS:DTSID="{5D8A41CD-A1E3-40A3-A01B-845AD33A71E7}"
+      DTS:ObjectName="Dynamics CRM Connection Manager">
+      <DTS:ObjectData>
+        <CrmConnectionManager
+          ConnectionString="AuthenticationType=Federation;ServiceEndpoint=Soap2011;UserName=D1\CRMAdmin;Domain=;ServerUrl=https://sekundacc.skanetrafiken.se/DKCRMACC;ProxyUsername=;ProxyMode=NoProxy;ProxyServer=;ProxyServerPort=0;BypassProxyOnLocal=False;HomeRealmUri=;ServiceTimeout=120;RetryOnIntermittentErrors=True;IgnoreCertificateErrors=False"
+          ConnectByProxy="False">
+          <Password
+            Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAojlJFYcAMESWTiFemD2tQgAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAAS2nSsftBsRR+qavafyv2cAAAAAASAAACgAAAAEAAAAP97kChQRJDm+MeO8Mc7+RAgAAAA9aZAdCf8IgreInOlQyYOGfzwjvBKDEXQfeTkGMvwsnMUAAAA3EpwiVp54d3g4rGOw7ZTs5FKuB0</Password>
+        </CrmConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[V-DWSQL.STDW.SSISUserCRM]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{0B4DA232-8F68-4E5A-8CC2-4C9E576E718F}"
+      DTS:ObjectName="V-DWSQL.STDW.SSISUserCRM">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=V-DWSQL;User ID=SSISUserCRM;Initial Catalog=STDW;Provider=SQLNCLI11.1;Auto Translate=False;">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAojlJFYcAMESWTiFemD2tQgAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAA8zuFH18ef5pww4RcqhQlbAAAAAASAAACgAAAAEAAAAN79TluLJgjhjD1YBLe2pWkwAAAAi7htHM4+F40QwjKlPpq97IFoyMrTzyvy6Ty7m8DTk8wOuJCP9uCPCJiwmMw8U3TRFAAAAEXFuXV5gmcrF+vGY143obYd1STw</DTS:Password>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Update ActivatedDate on SingaporeTickets"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{1C720985-841E-46B8-AE2D-C84E3DFAEA63}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Update ActivatedDate on SingaporeTickets"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="Get SingaporeTickets ActivationDate"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT [TicketId]
+      ,[PriceModelId]
+      ,[PriceModelPriceId]
+      ,[DataCreatedDate]
+      ,[SumAmount]
+      ,[TravellerId]
+      ,[IsActive]
+      ,[TicketOfferType]
+      ,[Name]
+      ,[SystemDateTime]
+  FROM [STDW].[dbo].[GetActivatedTickets_LatestTwoMonths]
+  WHERE TicketId LIKE 'ZY92LXY'</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[V-DWSQL.STDW.SSISUserCRM]"
+                  connectionManagerRefId="Package.ConnectionManagers[V-DWSQL.STDW.SSISUserCRM]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[TicketId]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[TicketId]"
+                      length="7"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[TicketId]"
+                      name="TicketId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[PriceModelId]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[PriceModelId]"
+                      length="30"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[PriceModelId]"
+                      name="PriceModelId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[PriceModelPriceId]"
+                      length="30"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]"
+                      name="PriceModelPriceId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[DataCreatedDate]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[DataCreatedDate]"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[DataCreatedDate]"
+                      name="DataCreatedDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[SumAmount]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[SumAmount]"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[SumAmount]"
+                      name="SumAmount"
+                      precision="13"
+                      scale="5"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[TravellerId]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[TravellerId]"
+                      length="100"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[TravellerId]"
+                      name="TravellerId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[IsActive]"
+                      dataType="bool"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[IsActive]"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[IsActive]"
+                      name="IsActive"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[TicketOfferType]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[TicketOfferType]"
+                      length="50"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[TicketOfferType]"
+                      name="TicketOfferType"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[Name]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[Name]"
+                      length="50"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[Name]"
+                      name="Name"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[SystemDateTime]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[SystemDateTime]"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[SystemDateTime]"
+                      name="SystemDateTime"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[TicketId]"
+                      dataType="wstr"
+                      length="7"
+                      name="TicketId" />
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[PriceModelId]"
+                      dataType="wstr"
+                      length="30"
+                      name="PriceModelId" />
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[PriceModelPriceId]"
+                      dataType="wstr"
+                      length="30"
+                      name="PriceModelPriceId" />
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[DataCreatedDate]"
+                      dataType="dbTimeStamp"
+                      name="DataCreatedDate" />
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[SumAmount]"
+                      dataType="numeric"
+                      name="SumAmount"
+                      precision="13"
+                      scale="5" />
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[TravellerId]"
+                      dataType="wstr"
+                      length="100"
+                      name="TravellerId" />
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[IsActive]"
+                      dataType="bool"
+                      name="IsActive" />
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[TicketOfferType]"
+                      dataType="wstr"
+                      length="50"
+                      name="TicketOfferType" />
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[Name]"
+                      dataType="wstr"
+                      length="50"
+                      name="Name" />
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].ExternalColumns[SystemDateTime]"
+                      dataType="dbTimeStamp"
+                      name="SystemDateTime" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[TicketId]"
+                      dataType="wstr"
+                      length="7"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[TicketId]"
+                      name="TicketId" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[PriceModelId]"
+                      dataType="wstr"
+                      length="30"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[PriceModelId]"
+                      name="PriceModelId" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[PriceModelPriceId]"
+                      dataType="wstr"
+                      length="30"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[PriceModelPriceId]"
+                      name="PriceModelPriceId" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[DataCreatedDate]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[DataCreatedDate]"
+                      name="DataCreatedDate" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[SumAmount]"
+                      dataType="numeric"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[SumAmount]"
+                      name="SumAmount"
+                      precision="13"
+                      scale="5" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[TravellerId]"
+                      dataType="wstr"
+                      length="100"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[TravellerId]"
+                      name="TravellerId" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[IsActive]"
+                      dataType="bool"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[IsActive]"
+                      name="IsActive" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[TicketOfferType]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[TicketOfferType]"
+                      name="TicketOfferType" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[Name]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[Name]"
+                      name="Name" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[SystemDateTime]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[SystemDateTime]"
+                      name="SystemDateTime" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket"
+              componentClassID="Microsoft.ManagedComponentHost"
+              contactInfo="KingswaySoft Inc.; http://www.kingswaysoft.com; support@kingswaysoft.com; Copyright (c) 2020 KingswaySoft Inc."
+              description="Populate data into Microsoft Dynamics 365 CE/CRM."
+              name="Update SingaporeTicket"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Destination entity to write data."
+                  expressionType="Notify"
+                  name="DestinationEntity">st_singaporeticket</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how data is written to CDS/Dynamics CRM server."
+                  name="ActionType"
+                  typeConverter="KingswaySoft.IntegrationToolkit.DynamicsCrm.DestinationActionType">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether the values of CDS/CRM lookup fields should be removed if the reference records cannot be found. "
+                  expressionType="Notify"
+                  name="RemoveUnresolvableReferences">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether duplicate detection should be enabled when creating or updating CDS/CRM records. Duplicate records are determined by the duplicate detection rules and settings defined in CDS or Microsoft Dynamics CRM server."
+                  expressionType="Notify"
+                  name="EnableSystemDuplicateDetection">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify the matching criteria to be used when performing an update or upsert. "
+                  expressionType="Notify"
+                  name="RecordMatchingCriteria"
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.RecordMatchingCriteria">4</property>
+                <property
+                  dataType="System.String"
+                  description="Specify the key fields to be used to determine the matching records that exist in CDS/CRM for either Upsert/Update action or source duplicate optimization."
+                  expressionType="Notify"
+                  name="RecordMatchingKeyFields"></property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether to ignore those NULL-valued fields."
+                  expressionType="Notify"
+                  name="IgnoreNullValuedFields">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether to ignore those fields that have no value changes in the target system. "
+                  expressionType="Notify"
+                  name="IgnoreUnchangedFields">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specify whether to remove those invalid characters before writing to CDS/CRM."
+                  expressionType="Notify"
+                  name="RemoveInvalidCharacters">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specify the flag field(s) that are used to track the source of changes. The field(s) will not posted to CDS/CRM server unless there are changes to other fields if specified. &quot;Ignore Unchange Fields&quot; option is required in order for the specified flag field(s) to work. "
+                  expressionType="Notify"
+                  name="ChangeFlagFields"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies what action will be taken when multiple matches are found with Upsert action."
+                  expressionType="Notify"
+                  name="HandlingOfMultipleMatches"
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.HandlingOfMultipleMatches">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify whether to use optimizations when there are duplicate records form the source system."
+                  expressionType="Notify"
+                  name="OptimizationOnSourceDuplicates"
+                  typeConverter="KingswaySoft.IntegrationToolkit.Common.DescriptiveEnumTypeConverter`1[[KingswaySoft.IntegrationToolkit.DynamicsCrm.OptimizationOnSourceDuplicates">0</property>
+                <property
+                  dataType="System.String"
+                  description="Workflow or action to be executed."
+                  expressionType="Notify"
+                  name="WorkflowAction"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the number of records to be sent to CDS/Dynamics CRM server in each service call."
+                  expressionType="Notify"
+                  name="BatchSize">500</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify the total number or concurrent threads to write to CDS/CRM server simultaneously. "
+                  expressionType="Notify"
+                  name="ConcurrentWritingThreadsInTotal">5</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether datetime values should be sent to CDS/CRM server in UTC format."
+                  expressionType="Notify"
+                  name="SendDateTimeInUtcFormat">false</property>
+                <property
+                  dataType="System.String"
+                  name="UserComponentTypeName">KingswaySoft.IntegrationToolkit.DynamicsCrm.CrmDestinationComponent</property>
+                <property
+                  dataType="System.String"
+                  description="Alternate Key to be used for Upsert or Update action."
+                  expressionType="Notify"
+                  name="AlternateKey">ed_singaporeticketskey</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Connections[DynamicsCRM]"
+                  connectionManagerID="Package.ConnectionManagers[Dynamics CRM Connection Manager]"
+                  connectionManagerRefId="Package.ConnectionManagers[Dynamics CRM Connection Manager]"
+                  description="Dynamics CRM Connection Manager"
+                  name="DynamicsCRM" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].Columns[TravellerId]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="TravellerId"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_mklid]"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[TravellerId]" />
+                    <inputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].Columns[SystemDateTime]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="SystemDateTime"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_ticketactivated]"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[SystemDateTime]" />
+                    <inputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].Columns[PriceModelId]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="PriceModelId"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_pricemodel]"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[PriceModelId]" />
+                    <inputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].Columns[PriceModelPriceId]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="PriceModelPriceId"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_pricemodelprice]"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[PriceModelPriceId]" />
+                    <inputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].Columns[TicketId]"
+                      cachedDataType="wstr"
+                      cachedLength="7"
+                      cachedName="TicketId"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_ticketid]"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[TicketId]" />
+                    <inputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].Columns[SumAmount]"
+                      cachedDataType="numeric"
+                      cachedName="SumAmount"
+                      cachedPrecision="13"
+                      cachedScale="5"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_ticketprice]"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[SumAmount]" />
+                    <inputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].Columns[DataCreatedDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="DataCreatedDate"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_ticketcreated]"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[DataCreatedDate]" />
+                    <inputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].Columns[TicketOfferType]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="TicketOfferType"
+                      externalMetadataColumnId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_offernamedetailed]"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output].Columns[TicketOfferType]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_activationintervalfrom]"
+                      dataType="dbTimeStamp"
+                      name="ed_activationintervalfrom">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_activationintervalto]"
+                      dataType="dbTimeStamp"
+                      name="ed_activationintervalto">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_bearercategory]"
+                      dataType="wstr"
+                      length="20"
+                      name="ed_bearercategory">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_blockeddate]"
+                      dataType="dbTimeStamp"
+                      name="ed_blockeddate">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_crmnummer]"
+                      dataType="wstr"
+                      length="50"
+                      name="ed_crmnummer">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_hasgroupdiscount]"
+                      dataType="bool"
+                      name="ed_hasgroupdiscount">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Boolean</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_hasrefund]"
+                      dataType="bool"
+                      name="ed_hasrefund">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Boolean</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_lastupdated]"
+                      dataType="dbTimeStamp"
+                      name="ed_lastupdated">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_mklid]"
+                      dataType="wstr"
+                      length="50"
+                      name="ed_mklid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_offernamedetailed]"
+                      dataType="wstr"
+                      length="260"
+                      name="ed_offernamedetailed">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_saleschannel]"
+                      dataType="wstr"
+                      length="30"
+                      name="ed_saleschannel">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_skakort]"
+                      dataType="guid"
+                      name="ed_skakort">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">ed_skakort</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_source_campaign]"
+                      dataType="wstr"
+                      length="150"
+                      name="ed_source_campaign">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_sourcecampaignid]"
+                      dataType="guid"
+                      name="ed_sourcecampaignid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">campaign</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_ticketactivated]"
+                      dataType="dbTimeStamp"
+                      name="ed_ticketactivated">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_travelcardid]"
+                      dataType="guid"
+                      name="ed_travelcardid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">cgi_travelcard</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_travellerscount]"
+                      dataType="i4"
+                      name="ed_travellerscount">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Integer</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_travelvalidityintervalfrom]"
+                      dataType="dbTimeStamp"
+                      name="ed_travelvalidityintervalfrom">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ed_travelvalidityintervalto]"
+                      dataType="dbTimeStamp"
+                      name="ed_travelvalidityintervalto">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[modifiedby]"
+                      dataType="guid"
+                      name="modifiedby">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">systemuser</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[ownerid]"
+                      dataType="guid"
+                      name="ownerid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Owner</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">systemuser;team</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[owneridtype]"
+                      dataType="wstr"
+                      length="64"
+                      name="owneridtype">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">EntityName</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_contactid]"
+                      dataType="guid"
+                      name="st_contactid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">contact</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_name]"
+                      dataType="wstr"
+                      length="100"
+                      name="st_name">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_pricemodel]"
+                      dataType="wstr"
+                      length="25"
+                      name="st_pricemodel">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_pricemodelprice]"
+                      dataType="wstr"
+                      length="100"
+                      name="st_pricemodelprice">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_singaporeticketid]"
+                      dataType="guid"
+                      name="st_singaporeticketid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Uniqueidentifier</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">st_singaporeticket</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_singtickettype]"
+                      dataType="i4"
+                      name="st_singtickettype">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Picklist</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_ticketactivated]"
+                      dataType="i4"
+                      name="st_ticketactivated">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Picklist</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_ticketcreated]"
+                      dataType="dbTimeStamp"
+                      name="st_ticketcreated">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_ticketid]"
+                      dataType="wstr"
+                      length="10"
+                      name="st_ticketid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">String</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_ticketprice]"
+                      dataType="numeric"
+                      name="st_ticketprice"
+                      precision="38"
+                      scale="4">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Money</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_validfrom]"
+                      dataType="dbTimeStamp"
+                      name="st_validfrom">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[st_validto]"
+                      dataType="dbTimeStamp"
+                      name="st_validto">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">DateTime</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[statecode]"
+                      dataType="i4"
+                      name="statecode">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">State</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[statuscode]"
+                      dataType="i4"
+                      name="statuscode">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Status</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[timezoneruleversionnumber]"
+                      dataType="i4"
+                      name="timezoneruleversionnumber">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Integer</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[transactioncurrencyid]"
+                      dataType="guid"
+                      name="transactioncurrencyid">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Lookup</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes">transactioncurrency</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input].ExternalColumns[utcconversiontimezonecode]"
+                      dataType="i4"
+                      name="utcconversiontimezonecode">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          name="FieldType">Integer</property>
+                        <property
+                          dataType="System.String"
+                          name="LookupTypes"></property>
+                      </properties>
+                    </externalMetadataColumn>
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Outputs[Default Output]"
+                  exclusionGroup="1"
+                  name="Default Output"
+                  synchronousInputId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Outputs[Default Output].Columns[SavedRecordId]"
+                      dataType="guid"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Outputs[Default Output].Columns[SavedRecordId]"
+                      name="SavedRecordId" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Outputs[Default Output].Columns[IsNew]"
+                      dataType="bool"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Outputs[Default Output].Columns[IsNew]"
+                      name="IsNew" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Outputs[Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Error Output"
+                  synchronousInputId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Outputs[Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Outputs[Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Outputs[Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Outputs[Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                    <outputColumn
+                      refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Outputs[Error Output].Columns[ErrorMessage]"
+                      dataType="wstr"
+                      length="2048"
+                      lineageId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Outputs[Error Output].Columns[ErrorMessage]"
+                      name="ErrorMessage" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Update ActivatedDate on SingaporeTickets.Paths[OLE DB Source Output]"
+              endId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input]"
+              name="OLE DB Source Output"
+              startId="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="289,42"
+          Id="Package\Update ActivatedDate on SingaporeTickets"
+          TopLeft="271,138" />
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Update ActivatedDate on SingaporeTickets">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="259,42"
+          Id="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate"
+          TopLeft="232,119" />
+        <NodeLayout
+          Size="197,42"
+          Id="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket"
+          TopLeft="412,266" />
+        <EdgeLayout
+          Id="Package\Update ActivatedDate on SingaporeTickets.Paths[OLE DB Source Output]"
+          TopLeft="361.5,161">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="149,105"
+              Start="0,0"
+              End="149,97.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,48.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,48.5"
+                    Point2="0,52.5"
+                    Point3="4,52.5" />
+                  <mssgle:LineSegment
+                    End="145,52.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="145,52.5"
+                    Point2="149,52.5"
+                    Point3="149,56.5" />
+                  <mssgle:LineSegment
+                    End="149,97.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Update ActivatedDate on SingaporeTickets\Get SingaporeTickets ActivationDate">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
