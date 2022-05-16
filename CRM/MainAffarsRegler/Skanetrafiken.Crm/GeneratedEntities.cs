@@ -1782,6 +1782,54 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_berknadinkomstcalc")]
+		public Microsoft.Xrm.Sdk.Money ed_Berknadinkomstcalc
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_berknadinkomstcalc");
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Beräknad inkomst in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_berknadinkomstcalc_base")]
+		public Microsoft.Xrm.Sdk.Money ed_berknadinkomstcalc_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_berknadinkomstcalc_base");
+			}
+		}
+		
+		/// <summary>
+		/// Last Updated time of rollup field Beräknad inkomst.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_berknadinkomstcalc_date")]
+		public System.Nullable<System.DateTime> ed_Berknadinkomstcalc_Date
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_berknadinkomstcalc_date");
+			}
+		}
+		
+		/// <summary>
+		/// State of rollup field Beräknad inkomst.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_berknadinkomstcalc_state")]
+		public System.Nullable<int> ed_Berknadinkomstcalc_State
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("ed_berknadinkomstcalc_state");
+			}
+		}
+		
+		/// <summary>
 		/// Billing emailaddress
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_billingemailaddress")]
@@ -2103,6 +2151,34 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_estimatedrevenue")]
+		public Microsoft.Xrm.Sdk.Money ed_estimatedrevenue
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_estimatedrevenue");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_estimatedrevenue", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Beräknad inkomst in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_estimatedrevenue_base")]
+		public Microsoft.Xrm.Sdk.Money ed_estimatedrevenue_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_estimatedrevenue_base");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_facebook")]
 		public string ed_Facebook
 		{
@@ -2113,6 +2189,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_facebook", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_firstnameplaceholder")]
+		public string ed_FirstNamePlaceholder
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_firstnameplaceholder");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_firstnameplaceholder", value);
 			}
 		}
 		
@@ -2209,6 +2301,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_islockedportal", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_lastnameplaceholder")]
+		public string ed_LastNamePlaceholder
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_lastnameplaceholder");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_lastnameplaceholder", value);
 			}
 		}
 		
@@ -5160,6 +5268,14 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_AllowCreate = "ed_allowcreate";
 			
+			public const string ed_Berknadinkomstcalc = "ed_berknadinkomstcalc";
+			
+			public const string ed_berknadinkomstcalc_Base = "ed_berknadinkomstcalc_base";
+			
+			public const string ed_Berknadinkomstcalc_Date = "ed_berknadinkomstcalc_date";
+			
+			public const string ed_Berknadinkomstcalc_State = "ed_berknadinkomstcalc_state";
+			
 			public const string ed_BillingEmailAddress = "ed_billingemailaddress";
 			
 			public const string ed_BillingMethod = "ed_billingmethod";
@@ -5198,7 +5314,13 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_DoNotAllowCreate = "ed_donotallowcreate";
 			
+			public const string ed_estimatedrevenue = "ed_estimatedrevenue";
+			
+			public const string ed_estimatedrevenue_Base = "ed_estimatedrevenue_base";
+			
 			public const string ed_Facebook = "ed_facebook";
+			
+			public const string ed_FirstNamePlaceholder = "ed_firstnameplaceholder";
 			
 			public const string ed_GLN = "ed_gln";
 			
@@ -5211,6 +5333,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_InfotainmentCustomer = "ed_infotainmentcustomer";
 			
 			public const string ed_IsLockedPortal = "ed_islockedportal";
+			
+			public const string ed_LastNamePlaceholder = "ed_lastnameplaceholder";
 			
 			public const string ed_LinkedIn = "ed_linkedin";
 			
@@ -5572,11 +5696,15 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const int ed_Facebook = 500;
 			
+			public const int ed_FirstNamePlaceholder = 100;
+			
 			public const int ed_GLN = 100;
 			
 			public const int ed_Google = 500;
 			
 			public const int ed_IndustryCodeId = 100;
+			
+			public const int ed_LastNamePlaceholder = 100;
 			
 			public const int ed_LinkedIn = 500;
 			
@@ -26040,6 +26168,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_servicetravelapiendpoint")]
+		public string ed_ServiceTravelAPIEndpoint
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_servicetravelapiendpoint");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_servicetravelapiendpoint", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_singaporeticketofferid")]
 		public string ed_SingaporeTicketOfferId
 		{
@@ -26913,6 +27057,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_SekundTokenName = "ed_sekundtokenname";
 			
+			public const string ed_ServiceTravelAPIEndpoint = "ed_servicetravelapiendpoint";
+			
 			public const string ed_SingaporeTicketOfferId = "ed_singaporeticketofferid";
 			
 			public const string ed_SMSTimeLimit = "ed_smstimelimit";
@@ -27104,6 +27250,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_RGOLIntegrationURL = 200;
 			
 			public const int ed_SekundTokenName = 100;
+			
+			public const int ed_ServiceTravelAPIEndpoint = 1000;
 			
 			public const int ed_SingaporeTicketOfferId = 100;
 			
@@ -101957,7 +102105,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		enklaapp5 = 206290004,
 		
-		dagar7 = 899310004,
+		dagar = 899310004,
 		
 		_1030 = 899310001,
 		
@@ -101996,8 +102144,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		UngdomsbiljettGymnasieskola = 899310017,
 		
 		dagarsbiljett = 206290000,
-		
-		dagar30 = 899310018,
 		
 		dagarsbiljettmomsfri = 899310019,
 		

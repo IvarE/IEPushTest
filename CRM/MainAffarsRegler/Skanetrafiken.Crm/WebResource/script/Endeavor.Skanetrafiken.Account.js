@@ -101,11 +101,11 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             }
 
 
-            Endeavor.Skanetrafiken.Account.hideTab(executionContext);
+            Endeavor.Skanetrafiken.Account.hideTabIfInfotainment(executionContext);
 
 
             //Hide/Show Õvrig Information
-            Endeavor.Skanetrafiken.Account.showOvrigInformation(formContext);
+            //Endeavor.Skanetrafiken.Account.showOvrigInformation(formContext);
         },
 
 
@@ -141,31 +141,41 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
         },
 
 
-        hideTab: function (executionContext) {
+        hideTabIfInfotainment: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
             var currForm = formContext.ui.formSelector.getCurrentItem();
             var currFormId = currForm.getId();
 
-            if (currFormId == "7a53340c-a6c5-468a-9ed2-f365da63e74f") {
-                var tabContacts = formContext.ui.tabs.get("tab_3");
-                var tabOpp = formContext.ui.tabs.get("tab_4");
-                var tabLeadAccount = formContext.ui.tabs.get("tab_5");
-                var tabOrders = formContext.ui.tabs.get("Cost Sites");
-                var tabInvoices = formContext.ui.tabs.get("tab_8");
-                var tabCompanyInfo = formContext.ui.tabs.get("SUMMARY_TAB");
-                var tabEndeavorDev = formContext.ui.tabs.get("tab_6");
-
-                tabContacts.setDisplayState('collapsed');
-                tabOpp.setDisplayState('collapsed');
-                tabLeadAccount.setDisplayState('collapsed');
-                tabOrders.setDisplayState('collapsed');
-                tabInvoices.setDisplayState('collapsed');
-                tabCompanyInfo.setDisplayState('collapsed');
-                tabEndeavorDev.setDisplayState('collapsed');
+            if (currFormId == "7a53340c-a6c5-468a-9ed2-f365da63e74f") { // Annons Form
+                setTimeout(Endeavor.Skanetrafiken.Account.hideTab(formContext), 300)
             }
 
         },
+
+        hideTab: function (formContext) {
+
+            var tabActivities = formContext.ui.tabs.get("Aktiviteter");
+            var tabContacts = formContext.ui.tabs.get("tab_3");
+            var tabOpp = formContext.ui.tabs.get("tab_4");
+            var tabLeadAccount = formContext.ui.tabs.get("tab_5");
+            var tabOrders = formContext.ui.tabs.get("Cost Sites");
+            var tabQuotes = formContext.ui.tabs.get("tab_7");
+            var tabInvoices = formContext.ui.tabs.get("tab_8");
+            var tabCompanyInfo = formContext.ui.tabs.get("SUMMARY_TAB");
+            var tabEndeavorDev = formContext.ui.tabs.get("tab_6");
+
+            tabActivities.setDisplayState('collapsed');
+            tabContacts.setDisplayState('collapsed');
+            tabOpp.setDisplayState('collapsed');
+            tabLeadAccount.setDisplayState('collapsed');
+            tabOrders.setDisplayState('collapsed');
+            tabQuotes.setDisplayState('collapsed');
+            tabInvoices.setDisplayState('collapsed');
+            tabCompanyInfo.setDisplayState('collapsed');
+            tabEndeavorDev.setDisplayState('collapsed');
+        },
+
 
         resetRequiredLevelForAllTypes: function (executionContext) {
 
@@ -221,7 +231,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             var formContext = executionContext.getFormContext();
 
             //Hide/Show Õvrig Information
-            Endeavor.Skanetrafiken.Account.showOvrigInformation(formContext);
+            //Endeavor.Skanetrafiken.Account.showOvrigInformation(formContext);
         },
 
         onChangePostalCodeCity: function (executionContext, postalCodeLogicalName, cityLogicalName) {
@@ -428,36 +438,36 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 return false;
         },
 
-        showOvrigInformation: function (formContext) {
+        //showOvrigInformation: function (formContext) {
 
-            var infotaimentCustomer = formContext.getAttribute("ed_infotainmentcustomer");
-            var customer = formContext.getAttribute("ed_customer");
-            var agent = formContext.getAttribute("ed_agent");
-            var samarbete = formContext.getAttribute("ed_collaborationcustomer");
-            var reseller = formContext.getAttribute("ed_reseller");
-            var school = formContext.getAttribute("ed_schoolcustomer");
-            var senior = formContext.getAttribute("ed_seniorcustomer");
-            var portal = formContext.getAttribute("ed_portalcustomer");
+        //    var infotaimentCustomer = formContext.getAttribute("ed_infotainmentcustomer");
+        //    var customer = formContext.getAttribute("ed_customer");
+        //    var agent = formContext.getAttribute("ed_agent");
+        //    var samarbete = formContext.getAttribute("ed_collaborationcustomer");
+        //    var reseller = formContext.getAttribute("ed_reseller");
+        //    var school = formContext.getAttribute("ed_schoolcustomer");
+        //    var senior = formContext.getAttribute("ed_seniorcustomer");
+        //    var portal = formContext.getAttribute("ed_portalcustomer");
 
-            if (infotaimentCustomer == null || customer == null || agent == null || samarbete == null || reseller == null || school == null || senior == null || portal == null)
-                return;
+        //    if (infotaimentCustomer == null || customer == null || agent == null || samarbete == null || reseller == null || school == null || senior == null || portal == null)
+        //        return;
 
-            if (infotaimentCustomer.getValue() && !customer.getValue() && !agent.getValue() && !samarbete.getValue() &&
-                !reseller.getValue() && !school.getValue() && !senior.getValue() && !portal.getValue()) {
+        //    if (infotaimentCustomer.getValue() && !customer.getValue() && !agent.getValue() && !samarbete.getValue() &&
+        //        !reseller.getValue() && !school.getValue() && !senior.getValue() && !portal.getValue()) {
 
-                formContext.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_12").setVisible(false);
-                formContext.ui.tabs.get("tab_3").sections.get("tab_3_section_1").setVisible(false);
-                formContext.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_9").setVisible(false);
-                formContext.ui.tabs.get("Cost Sites").setVisible(false);
+        //        formContext.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_12").setVisible(false);
+        //        formContext.ui.tabs.get("tab_3").sections.get("tab_3_section_1").setVisible(false); 
+        //        formContext.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_9").setVisible(false);
+        //        formContext.ui.tabs.get("Cost Sites").setVisible(false);
 
-            }
-            else {
-                formContext.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_12").setVisible(true);
-                formContext.ui.tabs.get("tab_3").sections.get("tab_3_section_1").setVisible(true);
-                formContext.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_9").setVisible(true);
-                formContext.ui.tabs.get("Cost Sites").setVisible(true);
-            }
-        },
+        //    }
+        //    else {
+        //        formContext.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_12").setVisible(true);
+        //        formContext.ui.tabs.get("tab_3").sections.get("tab_3_section_1").setVisible(true); 
+        //        formContext.ui.tabs.get("SUMMARY_TAB").sections.get("SUMMARY_TAB_section_9").setVisible(true);
+        //        formContext.ui.tabs.get("Cost Sites").setVisible(true);
+        //    }
+        //},
 
         showInfoAccountPortal: function (formContext) {
 

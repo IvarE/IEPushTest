@@ -384,6 +384,11 @@ namespace Skanetrafiken.Crm.Entities
         {
             string orgNumber = this.cgi_organizational_number;
 
+            if (this.PrimaryContactId != null)
+            {
+                this.setContactNamePlaceholder(localContext, null);
+            }
+
             localContext.Trace($"Entered HandlePreAccountCreate() OrgNumber value: {orgNumber}");
             if (!string.IsNullOrWhiteSpace(orgNumber))
             {
@@ -435,9 +440,68 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
+        internal void setContactNamePlaceholder(Plugin.LocalPluginContext localContext, AccountEntity preImage)
+        {
+            ContactEntity thisContact = null;
+            AccountEntity updatedAccount = new AccountEntity();
+
+            if (this.PrimaryContactId != null)
+            {
+                if (this.PrimaryContactId != null)
+                {
+
+                    thisContact = XrmRetrieveHelper.Retrieve<ContactEntity>(
+                    localContext,
+                    this.PrimaryContactId.Id,
+                    new ColumnSet(ContactEntity.Fields.FirstName, ContactEntity.Fields.LastName)
+                    );
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else if(this.PrimaryContactId == null && preImage != null)
+            {
+                if (preImage.PrimaryContactId != null)
+                {
+                  thisContact = XrmRetrieveHelper.Retrieve<ContactEntity>(
+                  localContext,
+                  preImage.PrimaryContactId.Id,
+                  new ColumnSet(ContactEntity.Fields.FirstName, ContactEntity.Fields.LastName)
+                  );
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            this.ed_FirstNamePlaceholder = thisContact.FirstName;
+            this.ed_LastNamePlaceholder = thisContact.LastName;
+
+            if(preImage != null)
+            {
+                updatedAccount.Id = this.Id;
+
+                updatedAccount.ed_FirstNamePlaceholder = thisContact.FirstName;
+                updatedAccount.ed_LastNamePlaceholder = thisContact.LastName;
+
+                XrmHelper.Update(localContext, updatedAccount);
+            }
+            
+
+
+        }
+
         internal void HandlePreAccountUpdate(Plugin.LocalPluginContext localContext, AccountEntity preImage)
         {
             string orgNumber = this.cgi_organizational_number;
+
+            if (this.PrimaryContactId != null || preImage.PrimaryContactId != null)
+            {
+                this.setContactNamePlaceholder(localContext, preImage);
+            }
 
             localContext.Trace($"Entered HandlePreAccountUpdate() OrgNumber value: {orgNumber}");
             if (!string.IsNullOrWhiteSpace(orgNumber))
