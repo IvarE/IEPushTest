@@ -19,36 +19,63 @@ if (typeof (Endeavor.Skanetrafiken.Lead) == "undefined") {
 
             var formContext = executionContext.getFormContext();
 
-            var url = parent.parent.Xrm.Page.getUrl();
-            var recordId = url.split('&id=')[1];
+            //var url = parent.parent.formContext.getUrl();
+            //var recordId = url.split('&id=')[1];
 
-            if (recordId == "" || recordId == null)
-                return;
+            //if (recordId == "" || recordId == null)
+            //    return;
 
-            var accountId = decodeURIComponent(recordId).replace("{", "").replace("}", "");
+            //var accountId = decodeURIComponent(recordId).replace("{", "").replace("}", "");
 
-            Xrm.WebApi.retrieveRecord("account", accountId, "?$select=_primarycontactid_value,name").then(
-                function success(result) {
+            //Xrm.WebApi.retrieveRecord("account", accountId, "?$select=_primarycontactid_value,name").then(
+            //    function success(result) {
 
-                    if (result._primarycontactid_value != null) {
-                        debugger;
-                        var contactName = result["_primarycontactid_value@OData.Community.Display.V1.FormattedValue"];
-                        var contactId = result._primarycontactid_value;
+            //        if (result._primarycontactid_value != null) {
+            //            debugger;
+            //            var contactName = result["_primarycontactid_value@OData.Community.Display.V1.FormattedValue"];
+            //            var contactId = result._primarycontactid_value;
 
-                        Endeavor.formscriptfunctions.SetLookup("parentcontactid", "contact", contactId, contactName, formContext);
-                        Endeavor.Skanetrafiken.Lead.onChangeParentContactId(executionContext);
-                    }
+            //            Endeavor.formscriptfunctions.SetLookup("parentcontactid", "contact", contactId, contactName, formContext);
+            //            Endeavor.Skanetrafiken.Lead.onChangeParentContactId(executionContext);
+            //        }
 
-                    var accountName = result.name;
-                    var accountId = result.accountid;
-                    Endeavor.formscriptfunctions.SetLookup("parentaccountid", "account", accountId, accountName, formContext);
-                    Endeavor.Skanetrafiken.Lead.onChangeParentAccountId(executionContext);
-                },
-                function (error) {
-                    console.log(error.message);
-                    Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
-                }
-            );
+            //        var accountName = result.name;
+            //        var accountId = result.accountid;
+            //        Endeavor.formscriptfunctions.SetLookup("parentaccountid", "account", accountId, accountName, formContext);
+            //        Endeavor.Skanetrafiken.Lead.onChangeParentAccountId(executionContext);
+            //    },
+            //    function (error) {
+            //        console.log(error.message);
+            //        Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
+            //    }
+            //);
+
+            Endeavor.Skanetrafiken.Lead.updateFullNameField(executionContext);
+            Endeavor.Skanetrafiken.Lead.setCompanyFieldValue(executionContext);
+
+        },
+
+        updateFullNameField: function (executionContext) {
+            var formContext = executionContext.getFormContext();
+            var name = Endeavor.formscriptfunctions.GetValue("fullname", formContext);
+            var lastname = formContext.getAttribute("lastname").getValue();
+            if (name == null) {
+                formContext.getAttribute("lastname").setValue(lastname + " ");
+
+                formContext.data.entity.save();
+            }
+        },
+
+        setCompanyFieldValue: function (executionContext) {
+            var formContext = executionContext.getFormContext();
+
+            var parentCompany = formContext.getAttribute("parentaccountid").getValue();
+            var company = formContext.getAttribute("ed_company").getValue();
+            if (parentCompany != null && company == null) {
+
+                formContext.getAttribute("ed_company").setValue(parentCompany);
+
+            }
         },
 
         onChangeParentAccountId: function (executionContext) {

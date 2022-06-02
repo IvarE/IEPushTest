@@ -116,6 +116,13 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
                 Endeavor.formscriptfunctions.SetValue("ed_informationsource", 899310000, formContext);
                 Endeavor.formscriptfunctions.SetValue("ed_infotainmentcontact", true, formContext);
+                Endeavor.formscriptfunctions.SetValue("ed_privatecustomercontact", false, formContext);
+                Endeavor.formscriptfunctions.SetValue("ed_agentcontact", false, formContext);
+                Endeavor.formscriptfunctions.SetValue("ed_kontaktperson", false, formContext);
+                Endeavor.formscriptfunctions.SetValue("ed_epostmottagare", false, formContext);
+                Endeavor.formscriptfunctions.SetValue("ed_collaborationcontact", false, formContext);
+                Endeavor.formscriptfunctions.SetValue("ed_businesscontact", false, formContext);
+
                // ed_informationsource = Annons
                 //ed_infotainmentcontact = Yes
             }

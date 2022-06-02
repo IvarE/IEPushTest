@@ -4614,6 +4614,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_account_ed_salesorderline_Account
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_account_ed_salesorderline_Account")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline> ed_account_ed_salesorderline_Account
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("ed_account_ed_salesorderline_Account", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("ed_account_ed_salesorderline_Account", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_account_ed_skakort_Account
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_account_ed_skakort_Account")]
@@ -4642,6 +4658,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_Slots>("ed_account_ed_slots_Account", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_account_lead_Company
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_account_lead_Company")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Lead> ed_account_lead_Company
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("ed_account_lead_Company", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Lead>("ed_account_lead_Company", null, value);
 			}
 		}
 		
@@ -50362,6 +50394,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Account connected to Sales Order Lines
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_accountid")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_accountid
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_accountid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_accountid", value);
+			}
+		}
+		
+		/// <summary>
 		/// Amount of order
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_amount")]
@@ -51090,6 +51138,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 ed_account_ed_salesorderline_Account
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_accountid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_account_ed_salesorderline_Account")]
+		public Skanetrafiken.Crm.Schema.Generated.Account ed_account_ed_salesorderline_Account
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("ed_account_ed_salesorderline_Account", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("ed_account_ed_salesorderline_Account", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 ed_ed_orderpurchasetype_ed_salesorderline_OrderPurchaseType
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_orderpurchasetype")]
@@ -51277,6 +51342,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string CreatedOn = "createdon";
 			
 			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string ed_accountid = "ed_accountid";
 			
 			public const string ed_Amount = "ed_amount";
 			
@@ -75773,11 +75840,11 @@ namespace Skanetrafiken.Crm.Schema.Generated
 	public enum ed_informationsource
 	{
 		
-		Skanetrafiken = 100000000,
-		
-		KopOchSkicka = 17,
+		Annons = 899310000,
 		
 		Tillagg = 19,
+		
+		KopOchSkicka = 17,
 		
 		KopOchSkickaFTG = 18,
 		
@@ -77308,6 +77375,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_closepublictransport", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_company")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_Company
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_company");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_company", value);
 			}
 		}
 		
@@ -79503,6 +79586,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 ed_account_lead_Company
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_company")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_account_lead_Company")]
+		public Skanetrafiken.Crm.Schema.Generated.Account ed_account_lead_Company
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("ed_account_lead_Company", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("ed_account_lead_Company", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 ed_ed_companyrole_lead_CompanyEngagement
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_companyengagement")]
@@ -79977,6 +80077,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_classification = "ed_classification";
 			
 			public const string ed_closepublictransport = "ed_closepublictransport";
+			
+			public const string ed_Company = "ed_company";
 			
 			public const string ed_CompanyEngagement = "ed_companyengagement";
 			

@@ -514,6 +514,11 @@ namespace Skanetrafiken.Crm.Entities
 
             //}
 
+            if (this.ParentContactId != null)
+            {
+                this.setContactNamePlaceholder(localContext);
+            }
+
             if (Contains(LeadEntity.Fields.CampaignId) && !Guid.Empty.Equals(CampaignId.Id))
             {
                 ThrowErrorIfConflictingCampaignLead(localContext);
@@ -536,6 +541,31 @@ namespace Skanetrafiken.Crm.Entities
                     LeadSourceCode = campaign.ed_LeadSource != null ? (Generated.lead_leadsourcecode)campaign.ed_LeadSource.Value : LeadSourceCode;
                 }
             }
+        }
+
+        internal void setContactNamePlaceholder(Plugin.LocalPluginContext localContext)
+        {
+            ContactEntity thisContact = null;
+            AccountEntity updatedAccount = new AccountEntity();
+            localContext.Trace($"Inside setContactNamePlaceholder");
+            if (this.ParentContactId != null)
+            {
+                localContext.Trace($"ParentContactId is not null");
+
+                thisContact = XrmRetrieveHelper.Retrieve<ContactEntity>(
+                    localContext,
+                    this.ParentContactId.Id,
+                    new ColumnSet(ContactEntity.Fields.FirstName, ContactEntity.Fields.LastName)
+                    );
+
+            }
+            localContext.Trace($"Firstname: {thisContact.FirstName} || Lastname: {thisContact.LastName}");
+
+            this.FirstName = thisContact.FirstName;
+            this.LastName = thisContact.LastName;
+
+           
+
         }
 
         public void HandlePreLeadUpdate(Plugin.LocalPluginContext localContext, LeadEntity preImage)
