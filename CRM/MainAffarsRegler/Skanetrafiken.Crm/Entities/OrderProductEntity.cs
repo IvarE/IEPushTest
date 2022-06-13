@@ -60,24 +60,8 @@ namespace Skanetrafiken.Crm.Entities
 
                         if (isSlotProduct)
                         {
-                            UpdateOrGenerateSlots(localContext, orderProduct);
+                            UpdateOrGenerateSlots(localContext, orderProduct); 
 
-                            //if (orderProduct.SalesOrderId != null)
-                            //{
-                            //    OrderEntity order = XrmRetrieveHelper.Retrieve<OrderEntity>(localContext, orderProduct.SalesOrderId, new ColumnSet(OrderEntity.Fields.ed_discountpercentage, OrderEntity.Fields.DiscountAmount));
-
-                               
-
-                            //        UpdateSlotsCustomPriceFromOrderProduct(localContext, orderProduct);
-
-
-
-                            //    if (order.ed_discountpercentage != null && order.ed_discountpercentage > 0 || order.DiscountAmount != null && order.DiscountAmount.Value > 0)
-                            //    {
-                            //        UpdateSlotsCustomPrice(localContext, order);
-                            //    }
-                            //}
-                            //UpdateSlotsCustomPriceFromOrderProduct(localContext, orderProduct);
                         }
                     }
                 }

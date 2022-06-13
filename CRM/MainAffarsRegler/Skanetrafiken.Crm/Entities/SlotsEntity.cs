@@ -31,7 +31,7 @@ namespace Skanetrafiken.Crm.Entities
             public string Message { get; set; }
         }
 
-        public void HandlePreSlotsEntityCreate(Plugin.LocalPluginContext localContext)
+        public void HandlePreSlotsEntityCreate(Plugin.LocalPluginContext localContext) // Unregister
         {
             if(this.ed_Opportunity != null && this.ed_Opportunity.Id != Guid.Empty)
             {
@@ -44,7 +44,7 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
-        public void HandlePreSlotsEntityUpdate(Plugin.LocalPluginContext localContext,  SlotsEntity preImage)
+        public void HandlePreSlotsEntityUpdate(Plugin.LocalPluginContext localContext,  SlotsEntity preImage) // Unregister
         {
             if(this.IsAttributeModified(preImage,SlotsEntity.Fields.ed_Opportunity))
             {
@@ -101,7 +101,7 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
-        public static void HandleSlotsEntityCreate(Plugin.LocalPluginContext localContext, SlotsEntity target)
+        public static void HandleSlotsEntityCreate(Plugin.LocalPluginContext localContext, SlotsEntity target) // Unregister
         {
             localContext.Trace("Inside HandleSlotsEntityCreate");
 

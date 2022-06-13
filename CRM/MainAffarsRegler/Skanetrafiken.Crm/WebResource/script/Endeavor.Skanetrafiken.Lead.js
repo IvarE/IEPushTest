@@ -12,12 +12,16 @@ if (typeof (Endeavor.Skanetrafiken) == "undefined") {
 if (typeof (Endeavor.Skanetrafiken.Lead) == "undefined") {
     Endeavor.Skanetrafiken.Lead = {
 
+        infotainmentForm: ["Lead - Annons"],
+
         onLoad: function (executionContext) {
             debugger;
             if (executionContext == null)
                 return;
 
             var formContext = executionContext.getFormContext();
+
+            
 
             //var url = parent.parent.formContext.getUrl();
             //var recordId = url.split('&id=')[1];
@@ -52,6 +56,40 @@ if (typeof (Endeavor.Skanetrafiken.Lead) == "undefined") {
 
             Endeavor.Skanetrafiken.Lead.updateFullNameField(executionContext);
             Endeavor.Skanetrafiken.Lead.setCompanyFieldValue(executionContext);
+            //Endeavor.Skanetrafiken.Lead.setInfotainmentFilters(formContext);
+
+        },
+
+        setInfotainmentFilters: function (formContext) {
+            var formItem = formContext.ui.formSelector.getCurrentItem();
+
+            if (formItem == null)
+                return;
+
+            var formName = formItem.getLabel();
+
+
+            var valueList = Endeavor.Skanetrafiken.Lead.infotainmentForm[0];
+            if (formName == valueList) {
+
+                var company = formContext.getAttribute("parrentaccountid");
+                //var companyGuid = company[0].id;
+                if (company == null) {
+                    return;
+                }
+
+                company = formContext.getAttribute("parrentaccountid").getValue();
+
+                formContext.getControl("parentcontactid").addPreSearch(function () {
+
+                    var fetchXml = "<filter type='and'><condition attribute='ed_infotainmentcontact' operator='eq' value='1' /><condition attribute='parentcustomerid' operator='eq' uitype='account' value='" + company[0].id + "' /></filter>";
+
+                    formContext.getControl("parentcontactid").addCustomFilter(fetchXml);
+
+                });
+
+            }
+
 
         },
 

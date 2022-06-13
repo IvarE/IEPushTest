@@ -23,6 +23,23 @@ if (typeof (Endeavor.Skanetrafiken.Quote) == "undefined") {
 
         },
 
+        //onSave: function (executionContext) {
+        //    var formContext = executionContext.getFormContext();
+
+        //    Endeavor.Skanetrafiken.Quote.setInfotainmentFilters(formContext);
+
+        //},
+
+        //customeridOnChange: function(executionContext) {
+        //    var formContext = executionContext.getFormContext();
+
+            
+        //        formContext.data.refresh(true).then();
+            
+                
+           
+        //},
+
         setInfotainmentFilters: function (formContext) {
             var formItem = formContext.ui.formSelector.getCurrentItem();
 
@@ -34,14 +51,14 @@ if (typeof (Endeavor.Skanetrafiken.Quote) == "undefined") {
             
                 var valueList = Endeavor.Skanetrafiken.Quote.infotainmentForm[0];
                 if (formName == valueList) {
-                    
-                    var company = formContext.getAttribute("customerid").getValue();
+
+                    var company = formContext.getAttribute("customerid");
                     //var companyGuid = company[0].id;
                     if (company == null) {
                         return;
                     }
                 
-
+                    company = formContext.getAttribute("customerid").getValue();
                     //formContext.getControl("ed_contact").addPreSearch(Endeavor.Skanetrafiken.Quote.addActionTypeLookupFilter(formContext, company));
 
 

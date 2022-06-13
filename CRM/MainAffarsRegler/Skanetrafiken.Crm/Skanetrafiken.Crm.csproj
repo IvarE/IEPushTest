@@ -308,6 +308,7 @@
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Country.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.ed_mergerecords.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.FrontOffice.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.Invoice.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Lead.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.MarketingList.js" />
     <Content Include="WebResource\script\Endeavor.Skanetrafiken.Opportunity.js" />

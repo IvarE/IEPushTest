@@ -17,6 +17,7 @@ if (typeof (Endeavor.Skanetrafiken.Opportunity) == "undefined") {
             var formContext = executionContext.getFormContext();
 
             Endeavor.Skanetrafiken.Opportunity.updateEstimatedWeightedeRevenue(executionContext);
+            //Endeavor.Skanetrafiken.Opportunity.SubGridFilterExecution(executionContext);
             formContext.data.process.addOnStageChange(function () { Endeavor.Skanetrafiken.Opportunity.updateEstimatedWeightedeRevenue(executionContext); });
         },
 
@@ -73,6 +74,43 @@ if (typeof (Endeavor.Skanetrafiken.Opportunity) == "undefined") {
                 }
 
                 formContext.data.entity.save();
+            }
+        },
+
+        SubGridFilterExecution: function (executionContext) {
+        //Create a Form Context.
+            var formContext = executionContext.getFormContext();
+            //Step 1 - Get the subgrid control.
+                var gridContext = formContext.getControl("STAKEHOLDERS");
+            //Step 2 - Retrieving Form Attribute Value.
+            var company = formContext.getAttribute("parentaccountid");
+                //var companyGuid = company[0].id;
+                if (company == null) {
+                    return;
+                }
+
+                company = formContext.getAttribute("parentaccountid").getValue();
+
+            //Step 3 - Recall the execution method if the subgrid context is null or empty.
+            if (gridContext == null) {
+                setTimeout(Endeavor.Skanetrafiken.Opportunity.SubGridFilterExecution, 3000);
+                return;
+            }
+            else {
+                //Set grid with query A based fetch XML.
+                if (company != null) {
+                    //Step 4 - Build a fetch XML in a variable.
+                    var FetchXmlA = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>" +
+                        "<entity name='connection'>" +
+                        "<filter type='and'>" +
+                        "<condition attribute='parentcustomerid' operator='eq' uitype='account' value='" + company[0].id + "' /></filter>" +
+                        "</entity>" +
+                        "</fetch>";
+                    //Step 5 - Update The Subrid Context
+                    gridContext.setFilterXml(FetchXmlA);
+                    //Step 6 - Refresh grid to show filtered records only.
+                    formContext.getControl("STAKEHOLDERS").refresh();
+                }
             }
         },
 
