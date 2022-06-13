@@ -40,11 +40,19 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     //Check if quick create
                     var stateCode = formContext.getAttribute("statecode");
                     if (stateCode == null) {
-                        var privateContact = formContext.getAttribute("ed_privatecustomercontact");
-                        if (privateContact != null) {
-                            privateContact.setValue(true);
-                        }
 
+                        var roles = [];
+                        roles[0] = "Skånetrafiken Annons";
+
+                        var isUserCheck = Endeavor.Skanetrafiken.Contact.currentUserHasSecurityRole(roles);
+
+                        if (!isUserCheck) {
+
+                            var privateContact = formContext.getAttribute("ed_privatecustomercontact");
+                            if (privateContact != null) {
+                                privateContact.setValue(true);
+                            }
+                        }
                         Endeavor.Skanetrafiken.Contact.setFocusQuickCreateContactFirstName(formContext);
                     }
 
@@ -123,6 +131,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 Endeavor.formscriptfunctions.SetValue("ed_collaborationcontact", false, formContext);
                 Endeavor.formscriptfunctions.SetValue("ed_businesscontact", false, formContext);
 
+               
+                formContext.getControl("ed_privatecustomercontact").setDisabled(true);
                // ed_informationsource = Annons
                 //ed_infotainmentcontact = Yes
             }

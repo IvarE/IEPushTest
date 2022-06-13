@@ -496,13 +496,13 @@ namespace Skanetrafiken.Crm
                     break;
                 #endregion
                 #region Annons
-                case (int)Schema.Generated.ed_informationsource.Annons: 
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName))
-                    {
-                        error = true;
-                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
-                    }
+                case (int)Generated.ed_informationsource.Annons: 
+                    //if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
+                    //    string.IsNullOrWhiteSpace(customerInfo.LastName))
+                    //{
+                    //    error = true;
+                    //    messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                    //}
                     break;
                 #endregion
 
