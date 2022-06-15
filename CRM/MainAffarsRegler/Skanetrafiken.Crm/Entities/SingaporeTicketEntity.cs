@@ -22,6 +22,15 @@ namespace Skanetrafiken.Crm.Entities
             return XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts);
         }
 
+        public static List<Campaign> GetCampaignQuery(Plugin.LocalPluginContext localContext, string campaignId)
+        {
+            QueryExpression queryCampaign = new QueryExpression(Campaign.EntityLogicalName);
+            queryCampaign.NoLock = true;
+            queryCampaign.ColumnSet = new ColumnSet(Campaign.Fields.Name);
+            queryCampaign.Criteria.AddCondition(Campaign.Fields.Id, ConditionOperator.Equal, campaignId);
+            return XrmRetrieveHelper.RetrieveMultiple<Campaign>(localContext, queryCampaign);
+        }
+
         internal void HandlePostSingaporeTicketCreateAsync(Plugin.LocalPluginContext localContext)
         {
             try
@@ -72,13 +81,13 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     localContext.Trace($"CampaignIdValue converted to Guid {campaignGuid}.");
 
-                    Campaign campaign = XrmRetrieveHelper.Retrieve<Campaign>(localContext, campaignGuid, new ColumnSet(false));
+                    var lCampaign = GetCampaignQuery(localContext, campaignIdValue);
+                    //Campaign campaign = XrmRetrieveHelper.Retrieve<Campaign>(localContext, campaignGuid, new ColumnSet(false));
 
-                    localContext.Trace($"Campain id is {campaign?.Id}.");
-
-                    if (campaign != null)
+                    if (lCampaign.Count == 1)
                     {
-                        localContext.Trace($"Found Campaign with Id {campaignGuid}");
+                        var campaign = lCampaign.FirstOrDefault();
+                        localContext.Trace($"Found Campaign with Id {campaign.Id}");
                         uSingaporeTicket.ed_SourceCampaignId = campaign.ToEntityReference();
                         needsUpdate = true;
                     }
@@ -155,13 +164,13 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     localContext.Trace($"CampaignIdValue converted to Guid {campaignGuid}.");
 
-                    Campaign campaign = XrmRetrieveHelper.Retrieve<Campaign>(localContext, campaignGuid, new ColumnSet(false));
+                    var lCampaign = GetCampaignQuery(localContext, campaignIdValue);
+                    //Campaign campaign = XrmRetrieveHelper.Retrieve<Campaign>(localContext, campaignGuid, new ColumnSet(false));
 
-                    localContext.Trace($"Campain id is {campaign?.Id}.");
-
-                    if (campaign != null)
+                    if (lCampaign.Count == 1)
                     {
-                        localContext.Trace($"Found Campaign with Id {campaignGuid}");
+                        var campaign = lCampaign.FirstOrDefault();
+                        localContext.Trace($"Found Campaign with Id {campaign.Id}");
                         uSingaporeTicket.ed_SourceCampaignId = campaign.ToEntityReference();
                         needsUpdate = true;
                     }
