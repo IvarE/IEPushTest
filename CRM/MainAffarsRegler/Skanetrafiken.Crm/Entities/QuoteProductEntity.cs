@@ -79,6 +79,103 @@ namespace Skanetrafiken.Crm.Entities
                     }
                 }
             }
+
+
+            if (quoteProduct.QuoteId != null)
+            {
+                QuoteEntity thisQuote = XrmRetrieveHelper.Retrieve<QuoteEntity>(
+                    localContext,
+                    quoteProduct.QuoteId.Id,
+                    new ColumnSet(QuoteEntity.Fields.OpportunityId, QuoteEntity.Fields.QuoteId, QuoteEntity.Fields.CreatedOn, QuoteEntity.Fields.TotalAmount)
+                );
+
+
+                IList<QuoteEntity> quotes = XrmRetrieveHelper.RetrieveMultiple<QuoteEntity>(localContext,
+                    new ColumnSet(QuoteEntity.Fields.CreatedOn),
+                    new FilterExpression()
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(QuoteEntity.Fields.OpportunityId, ConditionOperator.Equal,
+                                thisQuote.OpportunityId.Id),
+                            new ConditionExpression(QuoteEntity.Fields.QuoteId, ConditionOperator.NotEqual,
+                                thisQuote.QuoteId)
+
+                        }
+                    });
+
+                localContext.Trace($"Number of Quotes found {quotes.Count}");
+
+                bool isLatestQuote = true;
+
+                DateTime? quoteCreatedOn = thisQuote.CreatedOn;
+
+
+
+                    foreach (QuoteEntity listQuote in quotes)
+                {
+                    //localContext.Trace($"listQuote created ón: {listQuote.CreatedOn}. Current Quote Created on: {quoteCreatedOn}");
+
+                    int result = DateTime.Compare((DateTime)listQuote.CreatedOn, (DateTime)quoteCreatedOn);
+                    localContext.Trace($"Result: {result}");
+
+                    if (result > 0)
+                    {
+                        isLatestQuote = false;
+                    }
+
+                    localContext.Trace($"listQuote: {(DateTime)listQuote.CreatedOn}");
+                    localContext.Trace($"thisQuote: {(DateTime)quoteCreatedOn}");
+                    localContext.Trace($"isLatestQuote: {isLatestQuote}");
+                }
+
+                if (isLatestQuote)
+                {
+      
+                    Money quoteTotalAmount = thisQuote.TotalAmount;
+
+                    quoteTotalAmount = new Money(thisQuote.TotalAmount.Value + quoteProduct.ExtendedAmount.Value);
+
+                    OpportunityEntity thisOpportunity = XrmRetrieveHelper.Retrieve<OpportunityEntity>(
+                        localContext,
+                        thisQuote.OpportunityId.Id,
+                        new ColumnSet(OpportunityEntity.Fields.EstimatedValue)
+                    );
+
+                    //IList<QuoteProductEntity> quoteProducts = XrmRetrieveHelper.RetrieveMultiple<QuoteProductEntity>(localContext,
+                    //    new ColumnSet(QuoteProductEntity.Fields.ExtendedAmount),
+                    //    new FilterExpression()
+                    //    {
+                    //        Conditions =
+                    //        {
+                    //            new ConditionExpression(QuoteProductEntity.Fields.QuoteId, ConditionOperator.Equal,
+                    //                thisQuote.QuoteId),
+                    //            new ConditionExpression(QuoteEntity.Fields.QuoteId, ConditionOperator.NotEqual,
+                    //                thisQuote.QuoteId)
+
+                    //        }
+                    //    });
+
+                    localContext.Trace($"quoteTotalAmount: {quoteTotalAmount}");
+                    localContext.Trace($"quoteTotalAmount.value: {quoteTotalAmount.Value}");
+                    if (thisOpportunity != null)
+                    {
+                        OpportunityEntity opportunityToUpdate = new OpportunityEntity
+                        {
+                            Id = thisOpportunity.Id,
+                            IsRevenueSystemCalculated = false,
+                            EstimatedValue = quoteTotalAmount
+                        };
+
+
+                        //localContext.Trace($"opportunityToUpdate: {thisOpportunity.Id}");
+                        //localContext.Trace($"opportunityToUpdate.EstimatedValue: {opportunityToUpdate.EstimatedValue.Value}");
+
+                        //localContext.Trace($"preImageQuote Opp id.id: {quote.OpportunityId.Id}");
+                        XrmHelper.Update(localContext, opportunityToUpdate);
+                    }
+                }
+            }
         }
 
         public static void UpdateSlotsCustomPrice(Plugin.LocalPluginContext localContext, QuoteEntity quote)
