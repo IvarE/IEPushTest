@@ -33,6 +33,116 @@ namespace Skanetrafiken.Crm.Entities
 
             CalculateRollupFieldResponse response = (CalculateRollupFieldResponse)localContext.OrganizationService.Execute(request);
 
+            var opportunityId = Guid.Empty;
+
+            if (quote.OpportunityId == null)
+            {
+                opportunityId = preImage.OpportunityId.Id;
+            }
+            else
+            {
+                opportunityId = quote.OpportunityId.Id;
+
+            }
+            //localContext.Trace($"Quote Opp id: {quote.OpportunityId}");
+           // localContext.Trace($"Quote Opp id.id: {quote.OpportunityId.Id}");
+            localContext.Trace($"preImageQuote Opp id: {preImage.OpportunityId}");
+            
+            localContext.Trace($"preImageQuote Opp id.id: {preImage.OpportunityId.Id}");
+            if (opportunityId != null)
+            {
+                localContext.Trace($"Quote.QuoteId: {quote.QuoteId}");
+                IList<QuoteEntity> quotes = XrmRetrieveHelper.RetrieveMultiple<QuoteEntity>(localContext,
+                    new ColumnSet(QuoteEntity.Fields.CreatedOn),
+                    new FilterExpression()
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(QuoteEntity.Fields.OpportunityId, ConditionOperator.Equal,
+                                opportunityId),
+                            new ConditionExpression(QuoteEntity.Fields.QuoteId, ConditionOperator.NotEqual,
+                                quote.QuoteId)
+
+                        }
+                    });
+
+                localContext.Trace($"Number of Quotes found {quotes.Count}");
+
+                bool isLatestQuote = true;
+
+                DateTime? quoteCreatedOn;
+
+                if(quote.CreatedOn == null)
+                {
+                    quoteCreatedOn = preImage.CreatedOn;
+                }
+                else
+                {
+                    quoteCreatedOn = quote.CreatedOn; 
+                }
+
+                foreach (QuoteEntity listQuote in quotes)
+                {
+                    //localContext.Trace($"listQuote created ón: {listQuote.CreatedOn}. Current Quote Created on: {quoteCreatedOn}");
+
+                    int result = DateTime.Compare((DateTime)listQuote.CreatedOn, (DateTime)quoteCreatedOn);
+                    localContext.Trace($"Result: {result}");
+
+                    if (result > 0)
+                    {
+                        isLatestQuote = false;
+                    }
+                    localContext.Trace($"listQuote: {(DateTime)listQuote.CreatedOn}");
+                    localContext.Trace($"thisQuote: {(DateTime)quoteCreatedOn}");
+                    localContext.Trace($"isLatestQuote: {isLatestQuote}");
+                }
+
+                if (isLatestQuote)
+                {
+                    OpportunityEntity thisOpportunity = XrmRetrieveHelper.Retrieve<OpportunityEntity>(
+                        localContext,
+                        opportunityId,
+                        new ColumnSet(OpportunityEntity.Fields.EstimatedValue)
+                    );
+
+                    localContext.Trace($"thisOpportunity: {thisOpportunity.Id}");
+
+                    Money quoteTotalAmount;
+
+                    if (quote.TotalAmount == null)
+                    {
+                        quoteTotalAmount = preImage.TotalAmount;
+                    }
+                    else if(preImage.TotalAmount == null)
+                    {
+                        quoteTotalAmount = quote.TotalAmount;
+                    }
+                    else
+                    {
+                        return; 
+                    }
+
+                    localContext.Trace($"quoteTotalAmount: {quoteTotalAmount}");
+                    localContext.Trace($"quoteTotalAmount.value: {quoteTotalAmount.Value}");
+                    if (thisOpportunity != null)
+                    {
+                        OpportunityEntity opportunityToUpdate = new OpportunityEntity
+                        {
+                            Id = thisOpportunity.Id,
+                            IsRevenueSystemCalculated = false,
+                            EstimatedValue = quoteTotalAmount
+                        };
+
+                        
+                        //localContext.Trace($"opportunityToUpdate: {thisOpportunity.Id}");
+                        //localContext.Trace($"opportunityToUpdate.EstimatedValue: {opportunityToUpdate.EstimatedValue.Value}");
+
+                        //localContext.Trace($"preImageQuote Opp id.id: {quote.OpportunityId.Id}");
+                        XrmHelper.Update(localContext, opportunityToUpdate);
+                    }
+                }
+            }
+
             FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
             if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
             {
