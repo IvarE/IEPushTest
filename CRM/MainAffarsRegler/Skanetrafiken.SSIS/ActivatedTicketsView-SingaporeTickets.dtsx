@@ -11,8 +11,8 @@
   DTS:LocaleID="1053"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="43"
-  DTS:VersionGUID="{2D39B2FF-28E1-4627-8A27-2412E5B64942}">
+  DTS:VersionBuild="46"
+  DTS:VersionGUID="{66267F2E-D255-4CB3-A9AC-E069934D389A}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           ConnectByProxy="False">
           <Password
             Sensitive="1" xmlns="www.microsoft.com/SqlServer/Dts"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAojlJFYcAMESWTiFemD2tQgAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADZJyZvcgGcX4Ovxz7+8aGFAAAAAASAAACgAAAAEAAAALQi7FDyI3/2n8EplNctVBcgAAAAuZA7l3W1mKC9+n+n0ZHtQuYpjcrT7ZVSK4mxraekh4MUAAAAkKYPAv86LUOcOB43m72VMj3Arg0</Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAojlJFYcAMESWTiFemD2tQgAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAABOKHIkQocFibciQSgfWA4AAAAAASAAACgAAAAEAAAAHTxM/hPyhLMxAcCwE5en6IgAAAA8kHtOMss8zKO14Yl8TsdPrGCRkNqsV2IAExJ65OArj8UAAAAQQ5i+rJk3JfHl9hTUDHM+WHpuso</Password>
         </CrmConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -44,7 +44,7 @@
           <DTS:Password
             DTS:Name="Password"
             Sensitive="1"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAojlJFYcAMESWTiFemD2tQgAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAAD+jTMPG58kvTNeluHEBnc9AAAAAASAAACgAAAAEAAAAFAUlTSb0ArnVRRYOZxs8UAwAAAAD0+yZmYQhNkcnfsoOeZnZFyu42ntsxnAX54aLF0xA4OXtgKn9CqM/QA7eGqtVK17FAAAAE5s7/4pFb+12D8zL3KQz9Fautdz</DTS:Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAojlJFYcAMESWTiFemD2tQgAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAABw57BTN4a8PyHj5lhHhj0aAAAAAASAAACgAAAAEAAAACqUS3dvxPqeIPvm/dBnDq0wAAAAI4mhQ+r4/oVXchHqg4D4tAc6HdSFz/62HZZ9z0QPWMc3YhDtLo2wuqSiHfZW6gZiFAAAAMYIv11owqL2o7+CS4dyCCkJMJkF</DTS:Password>
         </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -382,7 +382,7 @@
                 <input
                   refId="Package\Update ActivatedDate on SingaporeTickets\Update SingaporeTicket.Inputs[Input]"
                   errorOrTruncationOperation="Insert"
-                  errorRowDisposition="FailComponent"
+                  errorRowDisposition="RedirectRow"
                   hasSideEffects="true"
                   name="Input">
                   <inputColumns>
