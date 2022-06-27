@@ -72,7 +72,19 @@ if (typeof (Endeavor.Skanetrafiken.Quote) == "undefined") {
 
                 }
 
-            
+            var priceListValue = formContext.getAttribute("pricelevelid");
+
+            if (priceListValue == null || priceListValue.getValue() == null) {
+                var pricelist = new Array();
+
+                pricelist[0] = new Object();
+                pricelist[0].id = "6ba54d56-b6e9-e911-80f0-005056b61fff"; // should be 	c103aeb7-3994-ea11-80f8-005056b64d75 in acc and prod
+                pricelist[0].name = "Infotainment";
+                pricelist[0].entityType = "pricelevel";
+
+
+                formContext.getAttribute("pricelevelid").setValue(pricelist);
+            }
         },
 
         //addActionTypeLookupFilter: function (formContext, company) {
