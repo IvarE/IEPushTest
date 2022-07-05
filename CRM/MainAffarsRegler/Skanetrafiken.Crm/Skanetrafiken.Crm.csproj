@@ -159,6 +159,9 @@
     <Compile Include="PostOrderProductCreate.cs" />
     <Compile Include="PostOrderProductDelete.cs" />
     <Compile Include="PostQuoteProductDelete.cs" />
+    <Compile Include="PostTicketInfoCreate.cs" />
+    <Compile Include="PostTicketInfoDelete.cs" />
+    <Compile Include="PostTicketInfoUpdate.cs" />
     <Compile Include="PreValidationOrderProductDelete.cs" />
     <Compile Include="PostOrderProductUpdate.cs" />
     <Compile Include="PostOrderUpdate.cs" />
