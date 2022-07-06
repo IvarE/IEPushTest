@@ -98,7 +98,7 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
-        public static void HandleTicketInfoEntityCreate(Plugin.LocalPluginContext localContext, TicketInfoEntity ticketInfo)
+        public static void HandlePostTicketInfoEntityCreate(Plugin.LocalPluginContext localContext, TicketInfoEntity ticketInfo)
         {
             string mklId = ticketInfo.ed_MklId;
 
@@ -108,7 +108,7 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
-        public static void HandleTicketInfoEntityUpdate(Plugin.LocalPluginContext localContext, TicketInfoEntity ticketInfo, TicketInfoEntity preImage)
+        public static void HandlePostTicketInfoEntityUpdate(Plugin.LocalPluginContext localContext, TicketInfoEntity ticketInfo, TicketInfoEntity preImage)
         {
             string mklId = null;
 
@@ -128,7 +128,7 @@ namespace Skanetrafiken.Crm.Entities
 
         }
 
-        public static void HandleTicketInfoEntityDelete(Plugin.LocalPluginContext localContext, TicketInfoEntity preImage)
+        public static void HandlePostTicketInfoEntityDelete(Plugin.LocalPluginContext localContext, TicketInfoEntity preImage)
         {
             string mklId = preImage.ed_MklId;
 

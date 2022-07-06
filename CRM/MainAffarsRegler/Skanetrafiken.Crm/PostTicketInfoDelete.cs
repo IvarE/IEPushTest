@@ -81,7 +81,7 @@ namespace Skanetrafiken.Crm
                     if (preImage.Id != null)
                     {
                         
-                        TicketInfoEntity.HandleTicketInfoEntityDelete(localContext, preImage);
+                        TicketInfoEntity.HandlePostTicketInfoEntityDelete(localContext, preImage);
                     }
 
 

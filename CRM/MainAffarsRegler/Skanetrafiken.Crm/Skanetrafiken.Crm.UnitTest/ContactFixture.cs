@@ -35,7 +35,7 @@ namespace Endeavor.Crm.UnitTest
     {
         private ServerConnection _serverConnection;
 
-        [Test]
+        [Test, Explicit, Category("Debug")]
         public void TestCode()
         {
             // Connect to the Organization service. 
@@ -66,7 +66,7 @@ namespace Endeavor.Crm.UnitTest
             }
         }
 
-        [Test, Explicit]
+        [Test, Explicit, Category("Debug")]
         public void Contact_Util()
         {
             // Connect to the Organization service. 

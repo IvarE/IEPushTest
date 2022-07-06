@@ -70,7 +70,7 @@ namespace Skanetrafiken.Crm
                     // Obtain the target entity from the input parameters.
                     TicketInfoEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<TicketInfoEntity>();
 
-                    TicketInfoEntity.HandleTicketInfoEntityUpdate(localContext, target, preImage);
+                    TicketInfoEntity.HandlePostTicketInfoEntityUpdate(localContext, target, preImage);
                 }
                 catch (Exception ex)
                 {
