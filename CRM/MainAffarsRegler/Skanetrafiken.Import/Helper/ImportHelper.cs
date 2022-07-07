@@ -66,6 +66,13 @@ namespace Skanetrafiken.Import
 
                         string uniqueValue = lColumnData[i].value;
                         Contact uContact = lContacts.Where(x => x.cgi_ContactNumber == uniqueValue).FirstOrDefault();
+
+                        if (uContact == null) 
+                        {
+                            _log.ErrorFormat(CultureInfo.InvariantCulture, $"The Contact with Contact Number {uniqueValue} could not be found in Dynamics.");
+                            continue;
+                        }
+
                         List<ExcelLineData> line = importExcelInfo.lData[i];
 
                         if (line.Count != importExcelInfo.lColumns.Count)
