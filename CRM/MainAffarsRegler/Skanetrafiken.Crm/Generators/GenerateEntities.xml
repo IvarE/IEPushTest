@@ -42,7 +42,8 @@
     <entity>salesorderdetail</entity>
     <entity>transactioncurrency</entity>
     <entity>kbarticle</entity>
-
+	  <entity>invoice</entity>
+	  <entity>invoicedetail</entity>
 
     <entity>cgi_categorydetail</entity>
     <entity>cgi_creditorderrow</entity>

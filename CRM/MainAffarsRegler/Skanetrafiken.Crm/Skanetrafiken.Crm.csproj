@@ -140,6 +140,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiHelper.cs" />
+    <Compile Include="Entities\InvoiceEntity.cs" />
+    <Compile Include="Entities\InvoiceProductEntity.cs" />
     <Compile Include="Entities\MarketingListEntity.cs" />
     <Compile Include="Entities\OpportunityEntity.cs" />
     <Compile Include="Entities\OpportunityProductEntity.cs" />
@@ -156,6 +158,7 @@
     <Compile Include="Helper\MarketingInfo.cs" />
     <Compile Include="Helper\PhoneNumberUtility.cs" />
     <Compile Include="JsonHelper.cs" />
+    <Compile Include="PostCalculatePrice.cs" />
     <Compile Include="PostOrderProductCreate.cs" />
     <Compile Include="PostOrderProductDelete.cs" />
     <Compile Include="PostQuoteProductDelete.cs" />

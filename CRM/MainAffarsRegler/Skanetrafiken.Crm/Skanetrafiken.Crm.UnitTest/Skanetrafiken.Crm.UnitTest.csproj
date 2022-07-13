@@ -108,6 +108,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CalculatePriceFixture.cs" />
     <Compile Include="CampaignResponseFixture.cs" />
     <Compile Include="crmservicehelpers.cs" />
     <Compile Include="deviceidmanager.cs" />

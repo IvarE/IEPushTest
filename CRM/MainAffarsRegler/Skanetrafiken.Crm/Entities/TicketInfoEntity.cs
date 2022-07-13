@@ -199,13 +199,13 @@ namespace Skanetrafiken.Crm.Entities
                     }
 
                     //Sällanresnär
-                    if((enkelbiljett > 1 || dygnsbiljett > 1 || tioEnklaFem > 1 || enkelbiljett > 10) && trettioDagarsbiljett == 0 || tioTrettioDagarsbiljett == 0)
+                    if((enkelbiljett > 1 || dygnsbiljett > 1 || tioEnklaFem > 1 || enkelbiljett > 10) && trettioDagarsbiljett == 0 && tioTrettioDagarsbiljett == 0 && trettioDagarsbiljettMetro == 0)
                     {
                         isSallanresenar = true; 
                     }
 
                     //Växlare
-                    var manadsbiljetter = trettioDagarsbiljett + tioTrettioDagarsbiljett + tioTrettioDagarsbiljettDKMetro;
+                    var manadsbiljetter = trettioDagarsbiljett + tioTrettioDagarsbiljett + tioTrettioDagarsbiljettDKMetro + trettioDagarsbiljettMetro;
                     if (manadsbiljetter != 0 && manadsbiljetter < 7)
                     {
                         isVaxlare = true;

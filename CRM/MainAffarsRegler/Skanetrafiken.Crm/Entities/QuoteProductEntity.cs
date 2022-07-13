@@ -16,377 +16,388 @@ namespace Skanetrafiken.Crm.Entities
     {
         public void HandlePreQuoteProductUpdate(Plugin.LocalPluginContext localContext, QuoteProductEntity preImage)
         {
-            FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
-            if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
-            {
-                updatePriceQuoteProduct(localContext, preImage);
-            }
+            #region slot removal
+            //FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
+            //if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
+            //{
+            //    updatePriceQuoteProduct(localContext, preImage);
+            //}
+            #endregion
         }
         public static void HandleQuoteProductEntityCreate(Plugin.LocalPluginContext localContext, QuoteProductEntity quoteProduct)
         {
-            localContext.Trace("Inside HandleQuoteProductEntityCreate");
-            //validate necessary things to generateSlots
-            if(quoteProduct.Id != null)
-            {
-                QuoteProductEntity updateQuoteProduct = new QuoteProductEntity();
-                updateQuoteProduct.Id = quoteProduct.Id;
+            #region slot removal
+            //localContext.Trace("Inside HandleQuoteProductEntityCreate");
+            ////validate necessary things to generateSlots
+            //if(quoteProduct.Id != null)
+            //{
+            //    QuoteProductEntity updateQuoteProduct = new QuoteProductEntity();
+            //    updateQuoteProduct.Id = quoteProduct.Id;
 
-                var idString = quoteProduct.Id.ToString();
+            //    var idString = quoteProduct.Id.ToString();
 
-                idString = idString.Replace("{", "");
-                idString = idString.Replace("}", "");
+            //    idString = idString.Replace("{", "");
+            //    idString = idString.Replace("}", "");
 
-                updateQuoteProduct.ed_QuoteProductIDTXT = idString;
+            //    updateQuoteProduct.ed_QuoteProductIDTXT = idString;
 
-                XrmHelper.Update(localContext, updateQuoteProduct);
+            //    XrmHelper.Update(localContext, updateQuoteProduct);
 
-            }
-            if (quoteProduct.UoMId != null && quoteProduct.ProductId != null && quoteProduct.ed_FromDate != null && quoteProduct.ed_ToDate != null)
-            {
-                FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
-                if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
-                {
-                    bool isSlotProduct = false;
+            //}
+            //if (quoteProduct.UoMId != null && quoteProduct.ProductId != null && quoteProduct.ed_FromDate != null && quoteProduct.ed_ToDate != null)
+            //{
+            //    FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
+            //    if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
+            //    {
+            //        bool isSlotProduct = false;
 
-                    if(quoteProduct.ProductId != null && quoteProduct.ProductId.Id != Guid.Empty)
-                    {
-                        isSlotProduct = ProductEntity.IsSlotProduct(localContext, quoteProduct.ProductId);
-                    }
+            //        if(quoteProduct.ProductId != null && quoteProduct.ProductId.Id != Guid.Empty)
+            //        {
+            //            isSlotProduct = ProductEntity.IsSlotProduct(localContext, quoteProduct.ProductId);
+            //        }
 
-                    if(isSlotProduct)
-                    {
-                        UpdateOrGenerateSlots(localContext, quoteProduct);
+            //        if(isSlotProduct)
+            //        {
+            //            UpdateOrGenerateSlots(localContext, quoteProduct);
 
-                        if(quoteProduct.QuoteId != null)
-                        {
-                            QuoteEntity quote = XrmRetrieveHelper.Retrieve<QuoteEntity>(localContext, quoteProduct.QuoteId, new ColumnSet(QuoteEntity.Fields.ed_DiscountPercentage, QuoteEntity.Fields.DiscountAmount));
-
-                          
-
-
-                                UpdateSlotsCustomPriceFromQuoteProduct(localContext, quoteProduct);
- 
-                            
-
-                            if (quote.ed_DiscountPercentage != null && quote.ed_DiscountPercentage > 0 || quote.DiscountAmount != null && quote.DiscountAmount.Value > 0)
-                            {
-                                UpdateSlotsCustomPrice(localContext, quote);
-                            }
-
-                        }
-
-
-                    }
-                }
-            }
-
-
-            if (quoteProduct.QuoteId != null)
-            {
-                QuoteEntity thisQuote = XrmRetrieveHelper.Retrieve<QuoteEntity>(
-                    localContext,
-                    quoteProduct.QuoteId.Id,
-                    new ColumnSet(QuoteEntity.Fields.OpportunityId, QuoteEntity.Fields.QuoteId, QuoteEntity.Fields.CreatedOn, QuoteEntity.Fields.TotalAmount)
-                );
-
-
-                IList<QuoteEntity> quotes = XrmRetrieveHelper.RetrieveMultiple<QuoteEntity>(localContext,
-                    new ColumnSet(QuoteEntity.Fields.CreatedOn),
-                    new FilterExpression()
-                    {
-                        Conditions =
-                        {
-                            new ConditionExpression(QuoteEntity.Fields.OpportunityId, ConditionOperator.Equal,
-                                thisQuote.OpportunityId.Id),
-                            new ConditionExpression(QuoteEntity.Fields.QuoteId, ConditionOperator.NotEqual,
-                                thisQuote.QuoteId)
-
-                        }
-                    });
-
-                localContext.Trace($"Number of Quotes found {quotes.Count}");
-
-                bool isLatestQuote = true;
-
-                DateTime? quoteCreatedOn = thisQuote.CreatedOn;
+            //            if(quoteProduct.QuoteId != null)
+            //            {
+            //                QuoteEntity quote = XrmRetrieveHelper.Retrieve<QuoteEntity>(localContext, quoteProduct.QuoteId, new ColumnSet(QuoteEntity.Fields.ed_DiscountPercentage, QuoteEntity.Fields.DiscountAmount));
 
 
 
-                    foreach (QuoteEntity listQuote in quotes)
-                {
-                    //localContext.Trace($"listQuote created ón: {listQuote.CreatedOn}. Current Quote Created on: {quoteCreatedOn}");
 
-                    int result = DateTime.Compare((DateTime)listQuote.CreatedOn, (DateTime)quoteCreatedOn);
-                    localContext.Trace($"Result: {result}");
-
-                    if (result > 0)
-                    {
-                        isLatestQuote = false;
-                    }
-
-                    localContext.Trace($"listQuote: {(DateTime)listQuote.CreatedOn}");
-                    localContext.Trace($"thisQuote: {(DateTime)quoteCreatedOn}");
-                    localContext.Trace($"isLatestQuote: {isLatestQuote}");
-                }
-
-                if (isLatestQuote)
-                {
-      
-                    Money quoteTotalAmount = thisQuote.TotalAmount;
-
-                    quoteTotalAmount = new Money(thisQuote.TotalAmount.Value + quoteProduct.ExtendedAmount.Value);
-
-                    OpportunityEntity thisOpportunity = XrmRetrieveHelper.Retrieve<OpportunityEntity>(
-                        localContext,
-                        thisQuote.OpportunityId.Id,
-                        new ColumnSet(OpportunityEntity.Fields.EstimatedValue)
-                    );
-
-                    //IList<QuoteProductEntity> quoteProducts = XrmRetrieveHelper.RetrieveMultiple<QuoteProductEntity>(localContext,
-                    //    new ColumnSet(QuoteProductEntity.Fields.ExtendedAmount),
-                    //    new FilterExpression()
-                    //    {
-                    //        Conditions =
-                    //        {
-                    //            new ConditionExpression(QuoteProductEntity.Fields.QuoteId, ConditionOperator.Equal,
-                    //                thisQuote.QuoteId),
-                    //            new ConditionExpression(QuoteEntity.Fields.QuoteId, ConditionOperator.NotEqual,
-                    //                thisQuote.QuoteId)
-
-                    //        }
-                    //    });
-
-                    localContext.Trace($"quoteTotalAmount: {quoteTotalAmount}");
-                    localContext.Trace($"quoteTotalAmount.value: {quoteTotalAmount.Value}");
-                    if (thisOpportunity != null)
-                    {
-                        OpportunityEntity opportunityToUpdate = new OpportunityEntity
-                        {
-                            Id = thisOpportunity.Id,
-                            IsRevenueSystemCalculated = false,
-                            EstimatedValue = quoteTotalAmount
-                        };
+            //                    UpdateSlotsCustomPriceFromQuoteProduct(localContext, quoteProduct);
 
 
-                        //localContext.Trace($"opportunityToUpdate: {thisOpportunity.Id}");
-                        //localContext.Trace($"opportunityToUpdate.EstimatedValue: {opportunityToUpdate.EstimatedValue.Value}");
 
-                        //localContext.Trace($"preImageQuote Opp id.id: {quote.OpportunityId.Id}");
-                        XrmHelper.Update(localContext, opportunityToUpdate);
-                    }
-                }
-            }
+            //                if (quote.ed_DiscountPercentage != null && quote.ed_DiscountPercentage > 0 || quote.DiscountAmount != null && quote.DiscountAmount.Value > 0)
+            //                {
+            //                    UpdateSlotsCustomPrice(localContext, quote);
+            //                }
+
+            //            }
+
+
+            //        }
+            //    }
+
+            //}
+
+
+            //if (quoteProduct.QuoteId != null)
+            //{
+            //    QuoteEntity thisQuote = XrmRetrieveHelper.Retrieve<QuoteEntity>(
+            //        localContext,
+            //        quoteProduct.QuoteId.Id,
+            //        new ColumnSet(QuoteEntity.Fields.OpportunityId, QuoteEntity.Fields.QuoteId, QuoteEntity.Fields.CreatedOn, QuoteEntity.Fields.TotalAmount)
+            //    );
+
+
+            //    IList<QuoteEntity> quotes = XrmRetrieveHelper.RetrieveMultiple<QuoteEntity>(localContext,
+            //        new ColumnSet(QuoteEntity.Fields.CreatedOn),
+            //        new FilterExpression()
+            //        {
+            //            Conditions =
+            //            {
+            //                new ConditionExpression(QuoteEntity.Fields.OpportunityId, ConditionOperator.Equal,
+            //                    thisQuote.OpportunityId.Id),
+            //                new ConditionExpression(QuoteEntity.Fields.QuoteId, ConditionOperator.NotEqual,
+            //                    thisQuote.QuoteId)
+
+            //            }
+            //        });
+
+            //    localContext.Trace($"Number of Quotes found {quotes.Count}");
+
+            //    bool isLatestQuote = true;
+
+            //    DateTime? quoteCreatedOn = thisQuote.CreatedOn;
+
+
+
+            //        foreach (QuoteEntity listQuote in quotes)
+            //    {
+            //        //localContext.Trace($"listQuote created ón: {listQuote.CreatedOn}. Current Quote Created on: {quoteCreatedOn}");
+
+            //        int result = DateTime.Compare((DateTime)listQuote.CreatedOn, (DateTime)quoteCreatedOn);
+            //        localContext.Trace($"Result: {result}");
+
+            //        if (result > 0)
+            //        {
+            //            isLatestQuote = false;
+            //        }
+
+            //        localContext.Trace($"listQuote: {(DateTime)listQuote.CreatedOn}");
+            //        localContext.Trace($"thisQuote: {(DateTime)quoteCreatedOn}");
+            //        localContext.Trace($"isLatestQuote: {isLatestQuote}");
+            //    }
+
+            //    if (isLatestQuote)
+            //    {
+
+            //        Money quoteTotalAmount = thisQuote.TotalAmount;
+
+            //        quoteTotalAmount = new Money(thisQuote.TotalAmount.Value + quoteProduct.ExtendedAmount.Value);
+
+            //        OpportunityEntity thisOpportunity = XrmRetrieveHelper.Retrieve<OpportunityEntity>(
+            //            localContext,
+            //            thisQuote.OpportunityId.Id,
+            //            new ColumnSet(OpportunityEntity.Fields.EstimatedValue)
+            //        );
+
+            //        //IList<QuoteProductEntity> quoteProducts = XrmRetrieveHelper.RetrieveMultiple<QuoteProductEntity>(localContext,
+            //        //    new ColumnSet(QuoteProductEntity.Fields.ExtendedAmount),
+            //        //    new FilterExpression()
+            //        //    {
+            //        //        Conditions =
+            //        //        {
+            //        //            new ConditionExpression(QuoteProductEntity.Fields.QuoteId, ConditionOperator.Equal,
+            //        //                thisQuote.QuoteId),
+            //        //            new ConditionExpression(QuoteEntity.Fields.QuoteId, ConditionOperator.NotEqual,
+            //        //                thisQuote.QuoteId)
+
+            //        //        }
+            //        //    });
+
+            //        localContext.Trace($"quoteTotalAmount: {quoteTotalAmount}");
+            //        localContext.Trace($"quoteTotalAmount.value: {quoteTotalAmount.Value}");
+            //        if (thisOpportunity != null)
+            //        {
+            //            OpportunityEntity opportunityToUpdate = new OpportunityEntity
+            //            {
+            //                Id = thisOpportunity.Id,
+            //                IsRevenueSystemCalculated = false,
+            //                EstimatedValue = quoteTotalAmount
+            //            };
+
+
+            //            //localContext.Trace($"opportunityToUpdate: {thisOpportunity.Id}");
+            //            //localContext.Trace($"opportunityToUpdate.EstimatedValue: {opportunityToUpdate.EstimatedValue.Value}");
+
+            //            //localContext.Trace($"preImageQuote Opp id.id: {quote.OpportunityId.Id}");
+            //            XrmHelper.Update(localContext, opportunityToUpdate);
+            //        }
+            //    }
+            //}
+            #endregion
         }
 
         public static void UpdateSlotsCustomPrice(Plugin.LocalPluginContext localContext, QuoteEntity quote)
         {
-            localContext.Trace("Inside UpdateSlotsCustomPrice");
-            decimal? discountPercentage = null;
-            decimal? discountAmount = null;
-            if (quote.ed_DiscountPercentage != null && quote.ed_DiscountPercentage > 0)//(quote.DiscountPercentage != null && quote.DiscountPercentage > 0)
-            {
-                discountPercentage = quote.ed_DiscountPercentage.Value;
-            }
-            else if (quote.DiscountAmount != null && quote.DiscountAmount.Value > 0)
-            {
-                discountAmount = quote.DiscountAmount.Value;
-            }
-            localContext.Trace($"DiscountPercentage = {discountPercentage} ");
-            localContext.Trace($"discountAmount = {discountAmount} ");
+            #region slot removal
+            //localContext.Trace("Inside UpdateSlotsCustomPrice");
+            //decimal? discountPercentage = null;
+            //decimal? discountAmount = null;
+            //if (quote.ed_DiscountPercentage != null && quote.ed_DiscountPercentage > 0)//(quote.DiscountPercentage != null && quote.DiscountPercentage > 0)
+            //{
+            //    discountPercentage = quote.ed_DiscountPercentage.Value;
+            //}
+            //else if (quote.DiscountAmount != null && quote.DiscountAmount.Value > 0)
+            //{
+            //    discountAmount = quote.DiscountAmount.Value;
+            //}
+            //localContext.Trace($"DiscountPercentage = {discountPercentage} ");
+            //localContext.Trace($"discountAmount = {discountAmount} ");
 
-            QueryExpression querySlots = new QueryExpression();
-            querySlots.EntityName = SlotsEntity.EntityLogicalName;
-            querySlots.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_StandardPrice, SlotsEntity.Fields.ed_CustomPrice, SlotsEntity.Fields.ed_DiscountAmount);
+            //QueryExpression querySlots = new QueryExpression();
+            //querySlots.EntityName = SlotsEntity.EntityLogicalName;
+            //querySlots.ColumnSet = new ColumnSet(SlotsEntity.Fields.ed_StandardPrice, SlotsEntity.Fields.ed_CustomPrice, SlotsEntity.Fields.ed_DiscountAmount);
 
-            FilterExpression filterSlots = new FilterExpression();
-            filterSlots.FilterOperator = LogicalOperator.And;
-            filterSlots.AddCondition(SlotsEntity.Fields.ed_Quote, ConditionOperator.Equal, quote.Id);
+            //FilterExpression filterSlots = new FilterExpression();
+            //filterSlots.FilterOperator = LogicalOperator.And;
+            //filterSlots.AddCondition(SlotsEntity.Fields.ed_Quote, ConditionOperator.Equal, quote.Id);
 
-            querySlots.Criteria.AddFilter(filterSlots);
+            //querySlots.Criteria.AddFilter(filterSlots);
 
-            List<SlotsEntity> slots = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlots);
+            //List<SlotsEntity> slots = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlots);
 
-            if (slots != null && slots.Count > 0)
-            {
-                if (discountPercentage != null && discountPercentage.Value > 0)
-                {
-                    localContext.Trace("discountPercentage not null");
-                    //update all customPrice slots with this percentage
-                    foreach (SlotsEntity slot in slots)
-                    {
-                        if (slot.ed_StandardPrice != null && slot.ed_StandardPrice.Value > 0)
-                        {
-                            decimal previousDiscountAmount = 0; 
+            //if (slots != null && slots.Count > 0)
+            //{
+            //    if (discountPercentage != null && discountPercentage.Value > 0)
+            //    {
+            //        localContext.Trace("discountPercentage not null");
+            //        //update all customPrice slots with this percentage
+            //        foreach (SlotsEntity slot in slots)
+            //        {
+            //            if (slot.ed_StandardPrice != null && slot.ed_StandardPrice.Value > 0)
+            //            {
+            //                decimal previousDiscountAmount = 0; 
 
-                            localContext.Trace($"ed_StandardPrice = {slot.ed_StandardPrice.Value} ");
-                            SlotsEntity slotToUpdate = new SlotsEntity();
-                            slotToUpdate.Id = slot.Id;
+            //                localContext.Trace($"ed_StandardPrice = {slot.ed_StandardPrice.Value} ");
+            //                SlotsEntity slotToUpdate = new SlotsEntity();
+            //                slotToUpdate.Id = slot.Id;
 
-                            if (slot.ed_DiscountAmount != null && slot.ed_DiscountAmount.Value != 0)
-                            {
-                                localContext.Trace($"Slot standard price: {slot.ed_StandardPrice.Value} Slot custom price: {slot.ed_CustomPrice.Value}");
-                                previousDiscountAmount = (slot.ed_DiscountAmount.Value * (discountPercentage.Value / 100));
+            //                if (slot.ed_DiscountAmount != null && slot.ed_DiscountAmount.Value != 0)
+            //                {
+            //                    localContext.Trace($"Slot standard price: {slot.ed_StandardPrice.Value} Slot custom price: {slot.ed_CustomPrice.Value}");
+            //                    previousDiscountAmount = (slot.ed_DiscountAmount.Value * (discountPercentage.Value / 100));
 
 
-                            }
+            //                }
 
-                            if (previousDiscountAmount == 0)
-                            {
-                                slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - (slot.ed_StandardPrice.Value * (discountPercentage.Value / 100)));
-                            }
-                            else
-                            {
-                                slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - (slot.ed_StandardPrice.Value * (discountPercentage.Value / 100)) - previousDiscountAmount);
-                            }
+            //                if (previousDiscountAmount == 0)
+            //                {
+            //                    slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - (slot.ed_StandardPrice.Value * (discountPercentage.Value / 100)));
+            //                }
+            //                else
+            //                {
+            //                    slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - (slot.ed_StandardPrice.Value * (discountPercentage.Value / 100)) - previousDiscountAmount);
+            //                }
 
-                            localContext.Trace($"new ed_CustomPrice = {slotToUpdate.ed_CustomPrice} ");
-                            XrmHelper.Update(localContext, slotToUpdate);
+            //                localContext.Trace($"new ed_CustomPrice = {slotToUpdate.ed_CustomPrice} ");
+            //                XrmHelper.Update(localContext, slotToUpdate);
                             
-                        }
-                    }
-                }
-                else if (discountAmount != null && discountAmount.Value > 0)
-                {
-                    decimal discountPerSlot = discountAmount.Value / slots.Count;
+            //            }
+            //        }
+            //    }
+            //    else if (discountAmount != null && discountAmount.Value > 0)
+            //    {
+            //        decimal discountPerSlot = discountAmount.Value / slots.Count;
 
-                    foreach (SlotsEntity slot in slots)
-                    {
-                        if (slot.ed_StandardPrice != null && slot.ed_StandardPrice.Value > 0)
-                        {
-                            SlotsEntity slotToUpdate = new SlotsEntity();
-                            slotToUpdate.Id = slot.Id;
+            //        foreach (SlotsEntity slot in slots)
+            //        {
+            //            if (slot.ed_StandardPrice != null && slot.ed_StandardPrice.Value > 0)
+            //            {
+            //                SlotsEntity slotToUpdate = new SlotsEntity();
+            //                slotToUpdate.Id = slot.Id;
 
-                            if (slot.ed_DiscountAmount != null && slot.ed_DiscountAmount.Value != 0)
-                            {
-                                slotToUpdate.ed_CustomPrice = new Money((slot.ed_StandardPrice.Value - discountPerSlot) - slot.ed_DiscountAmount.Value);
-                            }
-                            else
-                            {
-                                slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - discountPerSlot);
-                            }
+            //                if (slot.ed_DiscountAmount != null && slot.ed_DiscountAmount.Value != 0)
+            //                {
+            //                    slotToUpdate.ed_CustomPrice = new Money((slot.ed_StandardPrice.Value - discountPerSlot) - slot.ed_DiscountAmount.Value);
+            //                }
+            //                else
+            //                {
+            //                    slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value - discountPerSlot);
+            //                }
                                 
-                            XrmHelper.Update(localContext, slotToUpdate);
+            //                XrmHelper.Update(localContext, slotToUpdate);
 
-                            //get all slots conected to this quote
-                            //divide the discount amount by the number of slots
-                            // subtract the result to the customPrice
-                            //update all slots
-                        }
-                    }
-                }
-                else
-                {
-                    //update customprice of all slots with their defaultPriceValue
-                    foreach (SlotsEntity slot in slots)
-                    {
-                        if (slot.ed_StandardPrice != null && slot.ed_StandardPrice.Value > 0)
-                        {
-                            SlotsEntity slotToUpdate = new SlotsEntity();
-                            slotToUpdate.Id = slot.Id;
-                            slotToUpdate.ed_DiscountAmount = 0;
-                            slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value);
-                            XrmHelper.Update(localContext, slotToUpdate);
+            //                //get all slots conected to this quote
+            //                //divide the discount amount by the number of slots
+            //                // subtract the result to the customPrice
+            //                //update all slots
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        //update customprice of all slots with their defaultPriceValue
+            //        foreach (SlotsEntity slot in slots)
+            //        {
+            //            if (slot.ed_StandardPrice != null && slot.ed_StandardPrice.Value > 0)
+            //            {
+            //                SlotsEntity slotToUpdate = new SlotsEntity();
+            //                slotToUpdate.Id = slot.Id;
+            //                slotToUpdate.ed_DiscountAmount = 0;
+            //                slotToUpdate.ed_CustomPrice = new Money(slot.ed_StandardPrice.Value);
+            //                XrmHelper.Update(localContext, slotToUpdate);
 
-                            //get all slots conected to this quote
-                            //divide the discount amount by the number of slots
-                            // subtract the result to the customPrice
-                            //update all slots
-                        }
-                    }
-                }
-            }
+            //                //get all slots conected to this quote
+            //                //divide the discount amount by the number of slots
+            //                // subtract the result to the customPrice
+            //                //update all slots
+            //            }
+            //        }
+            //    }
+            //}
+            #endregion
         }
 
         public static void HandleQuoteProductEntityUpdate(Plugin.LocalPluginContext localContext, QuoteProductEntity target, QuoteProductEntity preImage)
         {
-            localContext.Trace("Inside HandleQuoteProductEntityUpdate");
+            #region slot removal
+            //localContext.Trace("Inside HandleQuoteProductEntityUpdate");
 
-            localContext.Trace("PreImage Info");
-            preImage.Trace(localContext.TracingService);
-            localContext.Trace("_______________");
+            //localContext.Trace("PreImage Info");
+            //preImage.Trace(localContext.TracingService);
+            //localContext.Trace("_______________");
 
-            localContext.Trace("Target Info");
-            target.Trace(localContext.TracingService);
-            localContext.Trace("_______________");
+            //localContext.Trace("Target Info");
+            //target.Trace(localContext.TracingService);
+            //localContext.Trace("_______________");
 
-            bool removeSlotsConnectedPreProduct = false;
-            if (!target.IsAttributeModified(preImage, QuoteProductEntity.Fields.UoMId))
-            {
-                localContext.Trace("UoMID not modified");
-                target.UoMId = preImage.UoMId;
-            }
-            if (!target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ProductId))
-            {
-                localContext.Trace("ProductId not modified");
-                target.ProductId = preImage.ProductId;
-            }
-            else
-            {
-                if(preImage.ProductId != null && preImage.ProductId.Id != Guid.Empty)
-                {
-                    removeSlotsConnectedPreProduct = true;
-                }
-            }
-            FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
-            if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
-            {
-                if (removeSlotsConnectedPreProduct)
-                {
-                    //relese all slots connect to the QuoteProduct
+            //bool removeSlotsConnectedPreProduct = false;
+            //if (!target.IsAttributeModified(preImage, QuoteProductEntity.Fields.UoMId))
+            //{
+            //    localContext.Trace("UoMID not modified");
+            //    target.UoMId = preImage.UoMId;
+            //}
+            //if (!target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ProductId))
+            //{
+            //    localContext.Trace("ProductId not modified");
+            //    target.ProductId = preImage.ProductId;
+            //}
+            //else
+            //{
+            //    if(preImage.ProductId != null && preImage.ProductId.Id != Guid.Empty)
+            //    {
+            //        removeSlotsConnectedPreProduct = true;
+            //    }
+            //}
+            //FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
+            //if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
+            //{
+            //    if (removeSlotsConnectedPreProduct)
+            //    {
+            //        //relese all slots connect to the QuoteProduct
 
-                    //Generate Slots for new product
+            //        //Generate Slots for new product
 
-                    // Testa ta bort. 
-                }
-                else
-                {
-                    //validate necessary things to generateSlots
-                    if (target.UoMId != null && target.ProductId != null)
-                    {
-                        localContext.Trace("UoMId and ProductId not NULL");
+            //        // Testa ta bort. 
+            //    }
+            //    else
+            //    {
+            //        //validate necessary things to generateSlots
+            //        if (target.UoMId != null && target.ProductId != null)
+            //        {
+            //            localContext.Trace("UoMId and ProductId not NULL");
 
-                        localContext.Trace("ed_bookingSystem enabled");
-                        bool isSlotProduct = false;
-                        //check if the Product on this QuoteProduct has non extended slots already created (method to see if this Product is a slot Product)
-                        if (target.ProductId != null && target.ProductId.Id != Guid.Empty)
-                        {
-                            isSlotProduct = ProductEntity.IsSlotProduct(localContext, target.ProductId);
-                        }
-                        if (isSlotProduct)
-                        {
-                            if (target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_FromDate) || target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate) || target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ManualDiscount))
-                            {
-                                localContext.Trace("ed_FromDate or ed_ToDate modified");
-                                UpdateOrGenerateSlots(localContext, target, preImage);
+            //            localContext.Trace("ed_bookingSystem enabled");
+            //            bool isSlotProduct = false;
+            //            //check if the Product on this QuoteProduct has non extended slots already created (method to see if this Product is a slot Product)
+            //            if (target.ProductId != null && target.ProductId.Id != Guid.Empty)
+            //            {
+            //                isSlotProduct = ProductEntity.IsSlotProduct(localContext, target.ProductId);
+            //            }
+            //            if (isSlotProduct)
+            //            {
+            //                if (target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_FromDate) || target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ToDate) || target.IsAttributeModified(preImage, QuoteProductEntity.Fields.ed_ManualDiscount))
+            //                {
+            //                    localContext.Trace("ed_FromDate or ed_ToDate modified");
+            //                    UpdateOrGenerateSlots(localContext, target, preImage);
 
                                 
-                                UpdateSlotsCustomPriceFromQuoteProduct(localContext, target);
+            //                    UpdateSlotsCustomPriceFromQuoteProduct(localContext, target);
 
-                                if (target.QuoteId != null)
-                                {
-                                    QuoteEntity quote = XrmRetrieveHelper.Retrieve<QuoteEntity>(localContext, target.QuoteId, new ColumnSet(QuoteEntity.Fields.ed_DiscountPercentage, QuoteEntity.Fields.DiscountAmount));
+            //                    if (target.QuoteId != null)
+            //                    {
+            //                        QuoteEntity quote = XrmRetrieveHelper.Retrieve<QuoteEntity>(localContext, target.QuoteId, new ColumnSet(QuoteEntity.Fields.ed_DiscountPercentage, QuoteEntity.Fields.DiscountAmount));
 
 
-                                    if (quote.ed_DiscountPercentage != null && quote.ed_DiscountPercentage > 0 || quote.DiscountAmount != null && quote.DiscountAmount.Value > 0)
-                                    {
-                                        UpdateSlotsCustomPrice(localContext, quote);
-                                    }
+            //                        if (quote.ed_DiscountPercentage != null && quote.ed_DiscountPercentage > 0 || quote.DiscountAmount != null && quote.DiscountAmount.Value > 0)
+            //                        {
+            //                            UpdateSlotsCustomPrice(localContext, quote);
+            //                        }
 
-                                }
+            //                    }
 
-                            }
-                        }
-                    }
-                }
-            }
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            #endregion
         }
 
         public static void HandlePreValidationQuoteProductEntityDelete(Plugin.LocalPluginContext localContext, EntityReference targetER)
         {
-            if(targetER != null && targetER.Id != Guid.Empty)
-            {
-                SlotsEntity.ReleaseSlots(localContext, true, targetER.Id);
-            }
+            #region slot removal
+            //if (targetER != null && targetER.Id != Guid.Empty)
+            //{
+            //    SlotsEntity.ReleaseSlots(localContext, true, targetER.Id);
+            //}
+            #endregion
         }
         public void updatePriceQuoteProduct(Plugin.LocalPluginContext localContext, QuoteProductEntity preImage)
         {
