@@ -100,6 +100,20 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 infotainment.setRequiredLevel("none");
             }
 
+            var roles = [];
+            roles[0] = "Skånetrafiken Annons";
+
+            var isUserCheck = Endeavor.Skanetrafiken.Account.currentUserHasSecurityRole(roles);
+
+            if (isUserCheck) {
+
+                if ((seniorCustomer.getValue() == false || seniorCustomer.getValue() == null) && (schoolCustomer.getValue() == false || schoolCustomer.getValue() == null) && (reseller.getValue() == false || reseller.getValue() == null) && (collaborationCustomer.getValue() == false || collaborationCustomer.getValue() == null) && (customer.getValue() == false || customer.getValue() == null) && (portalCustomer.getValue() == false || portalCustomer.getValue() == null) && (agent.getValue() == false || agent.getValue() == null) && (infotainment.getValue() == false || infotainment.getValue() == null)) {
+
+                    if (infotainment != null) {
+                        infotainment.setValue(true);
+                    }
+                }
+            }
 
             Endeavor.Skanetrafiken.Account.hideTabIfInfotainment(executionContext);
 
@@ -715,9 +729,11 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
         onFormLoad: function (executionContext) {
             try {
                 var formContext = executionContext.getFormContext();
+                var formType = formContext.ui.getFormType();
 
-                switch (formContext.ui.getFormType()) {
+                switch (formType) {
                     case FORM_TYPE_CREATE:
+
                         break;
                     case FORM_TYPE_UPDATE:
                         Endeavor.Skanetrafiken.Account.checkIfUserHasSecRole(formContext);
@@ -915,6 +931,36 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             } catch (e) {
                 alert("Exception caught in Endeavor.Skanetrafiken.Account.openMigration_WebResource");
             }
+        },
+
+        currentUserHasSecurityRole: function (roles) {
+            var fetchXml =
+                "<fetch mapping='logical'>" +
+                "<entity name='systemuser'>" +
+                "<attribute name='systemuserid' />" +
+                "<filter type='and'>" +
+                "<condition attribute='systemuserid' operator='eq-userid' />" +
+                "</filter>" +
+                "<link-entity name='systemuserroles' from='systemuserid' to='systemuserid' visible='false' intersect='true'>" +
+                "<link-entity name='role' from='roleid' to='roleid' alias='r'>" +
+                "<filter type='or'>";
+
+            for (var i = 0; i < roles.length; i++) {
+                fetchXml += "<condition attribute='name' operator='eq' value='" + roles[i] + "' />";
+            }
+
+            fetchXml += "            </filter>" +
+                "</link-entity>" +
+                "</link-entity>" +
+                "</entity>" +
+                "</fetch>";
+            var modifiedFetchXml = fetchXml.replace("&", "&amp;");
+
+            var users = Endeavor.formscriptfunctions.executeFetchGetCount(modifiedFetchXml, "systemusers");
+            if (users > 0)
+                return true;
+            else
+                return false;
         },
 
         hideMigration_Button: function () {
