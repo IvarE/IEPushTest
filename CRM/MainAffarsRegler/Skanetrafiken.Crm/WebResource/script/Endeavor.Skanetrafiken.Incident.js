@@ -1347,7 +1347,9 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 var formContext = primaryControl;
 
                 var _cgi_accountid = Endeavor.formscriptfunctions.GetLookupid("cgi_accountid", formContext),
-                    _representative = Endeavor.formscriptfunctions.GetLookupid("cgi_representativid", formContext);
+                    _representative = Endeavor.formscriptfunctions.GetLookupid("cgi_representativid", formContext),
+                    _cgi_contactid = Endeavor.formscriptfunctions.GetLookupid("cgi_contactid", formContext);
+                
 
                 // If the customer as a representative all communication should go through the representative.
                 if (_representative != null) {
@@ -1355,16 +1357,17 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     param["parameter_customername"] = Endeavor.formscriptfunctions.GetLookupName("cgi_representativid", formContext);
                     param["parameter_customertype"] = "cgi_representative";
                 }
-                else if (_cgi_accountid != null) {
+                else if (_cgi_contactid != null) {
+                    param["parameter_customerid"] = Endeavor.formscriptfunctions.GetLookupid("cgi_contactid", formContext);
+                    param["parameter_customername"] = Endeavor.formscriptfunctions.GetLookupName("cgi_contactid", formContext);
+                    param["parameter_customertype"] = "contact";
+                
+                }
+                else {
                     //cgi_accountid
                     param["parameter_customerid"] = Endeavor.formscriptfunctions.GetLookupid("cgi_accountid", formContext);
                     param["parameter_customername"] = Endeavor.formscriptfunctions.GetLookupName("cgi_accountid", formContext);
                     param["parameter_customertype"] = "account";
-                }
-                else {
-                    param["parameter_customerid"] = Endeavor.formscriptfunctions.GetLookupid("cgi_contactid", formContext);
-                    param["parameter_customername"] = Endeavor.formscriptfunctions.GetLookupName("cgi_contactid", formContext);
-                    param["parameter_customertype"] = "contact";
                 }
             }
             catch (e) {
