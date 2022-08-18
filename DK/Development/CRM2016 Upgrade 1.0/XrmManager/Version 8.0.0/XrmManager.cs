@@ -23,6 +23,7 @@ using Microsoft.Xrm.Tooling.Connector;
 using System.Net;
 using Microsoft.Xrm.Client.Services;
 using System.Threading;
+using CGI.CRM2013.Skanetrafiken.CGIXrmLogger;
 
 namespace CGIXrmWin
 {
@@ -32,7 +33,7 @@ namespace CGIXrmWin
     public partial class XrmManager
     {
 
-
+        readonly LogToCrm _log2Crm = new LogToCrm();
         #region constructors
 
         // -------------------------------------------------------------------------
@@ -75,8 +76,6 @@ namespace CGIXrmWin
 
         public IOrganizationService InitService(string serverAddress = "", string domain = "", string username = "", string password = "")
         {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-
             //pService = null;
             if (string.IsNullOrEmpty(serverAddress))
             {
@@ -117,7 +116,15 @@ namespace CGIXrmWin
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-            CrmServiceClient conn = ConnectionCacheManager.GetConnectionFromConfig("sekundCrm");
+            CrmServiceClient conn = null;
+            if (!string.IsNullOrWhiteSpace(_crmConnectionString))
+            {
+                conn = ConnectionCacheManager.GetConnectionFromConfig("sekundCrm", _crmConnectionString);
+            }
+            else 
+            {
+                conn = ConnectionCacheManager.GetConnectionFromConfig("sekundCrm", null);
+            }
 
             // Cast the proxy client to the IOrganizationService interface.
             IOrganizationService pService = (IOrganizationService)conn.OrganizationWebProxyClient != null ? (IOrganizationService)conn.OrganizationWebProxyClient : (IOrganizationService)conn.OrganizationServiceProxy;
