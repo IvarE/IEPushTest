@@ -844,6 +844,11 @@ namespace Skanetrafiken.Crm.Entities
         {
             this.Trace(localContext.TracingService);
 
+            if((!string.IsNullOrEmpty(this.ed_MklId)) && (this.ed_Kundresan == null))
+            {
+                    ed_Kundresan = new OptionSetValue((int)899310000);
+            }
+
             localContext.Trace($"Entered HandlePreContactCreate() Postal Code: {Address1_PostalCode} and City: {Address1_City}");
             if (!string.IsNullOrEmpty(Address1_PostalCode))
             {
@@ -942,6 +947,19 @@ namespace Skanetrafiken.Crm.Entities
         {
             if (preImage == null)
                 throw new InvalidPluginExecutionException("PreImage not registered correctly");
+
+            if (preImage.ed_CalculateClassification == true || this.ed_CalculateClassification == true)
+            {
+                localContext.Trace($"CalculateClassification = true");
+                ed_CalculateClassification = false;
+                localContext.Trace($"CalculateClassification = {ed_CalculateClassification}");
+                return;
+            }
+
+            if ((!string.IsNullOrEmpty(this.ed_MklId) || !string.IsNullOrEmpty(preImage.ed_MklId)) && ((this.ed_Kundresan == null) || (preImage.ed_Kundresan == null)))
+            {
+                ed_Kundresan = new OptionSetValue((int)899310000);
+            }
 
             string postalCode = this.Address1_PostalCode != null ? this.Address1_PostalCode : preImage.Address1_PostalCode;
             string city = this.Address1_City != null ? this.Address1_City : preImage.Address1_City;

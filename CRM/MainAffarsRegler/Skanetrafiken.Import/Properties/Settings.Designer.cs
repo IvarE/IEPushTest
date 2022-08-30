@@ -12,7 +12,7 @@ namespace Skanetrafiken.Import.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,7 +25,7 @@ namespace Skanetrafiken.Import.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\SeKunddata\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("H:\\SeKunddata\\")]
         public string RelativePath {
             get {
                 return ((string)(this["RelativePath"]));
@@ -151,7 +151,7 @@ namespace Skanetrafiken.Import.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\SeKunddata\\Skanetrafiken.Import.Credential.xml")]
+        [global::System.Configuration.DefaultSettingValueAttribute("H:\\SeKunddata\\Skanetrafiken.Import.Credential.xml")]
         public string CredentialsFilePath {
             get {
                 return ((string)(this["CredentialsFilePath"]));

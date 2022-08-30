@@ -31829,6 +31829,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_calculateclassification")]
+		public System.Nullable<bool> ed_CalculateClassification
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_calculateclassification");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_calculateclassification", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_collaborationcontact")]
 		public System.Nullable<bool> ed_CollaborationContact
 		{
@@ -36343,6 +36359,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_analysdata3 = "ed_analysdata3";
 			
 			public const string ed_BusinessContact = "ed_businesscontact";
+			
+			public const string ed_CalculateClassification = "ed_calculateclassification";
 			
 			public const string ed_CollaborationContact = "ed_collaborationcontact";
 			
@@ -106638,7 +106656,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 	public enum st_singaporetickettype
 	{
 		
-		
+		Provapakampanj = 100000000,
 		
 		enkla5 = 206290003,
 		
@@ -106646,7 +106664,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		enklaapp5 = 206290004,
 		
-		
+		dagar = 899310004,
 		
 		_1030 = 899310001,
 		
@@ -106686,8 +106704,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		dagarsbiljett = 206290000,
 		
-		dagar = 899310018,
-		
 		dagarsbiljettmomsfri = 899310019,
 		
 		Dygnsbiljettmomsfri = 899310020,
@@ -106707,8 +106723,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		SkolaSpecial = 899310024,
 		
 		Sportlovsbiljett = 899310025,
-		
-		Provapakampanj = 899310028,
 	}
 	
 	public enum st_singaporeticketState

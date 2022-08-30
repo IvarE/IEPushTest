@@ -169,37 +169,37 @@ namespace Skanetrafiken.Crm.Entities
 
                         if (ticketOfferNameValue == 206290000)
                         {
-                            trettioDagarsbiljett = Convert.ToInt32(ticket.ed_NumberofTickets);
+                            trettioDagarsbiljett = trettioDagarsbiljett + Convert.ToInt32(ticket.ed_NumberofTickets);
                         }
                         else if(ticketOfferNameValue == 899310002)
                         {
-                            trettioDagarsbiljettMetro = Convert.ToInt32(ticket.ed_NumberofTickets);
+                            trettioDagarsbiljettMetro = trettioDagarsbiljettMetro + Convert.ToInt32(ticket.ed_NumberofTickets);
                         }
                         else if (ticketOfferNameValue == 899310001)
                         {
-                            tioTrettioDagarsbiljett = Convert.ToInt32(ticket.ed_NumberofTickets);
+                            tioTrettioDagarsbiljett = tioTrettioDagarsbiljett + Convert.ToInt32(ticket.ed_NumberofTickets);
                         }
                         else if (ticketOfferNameValue == 899310003)
                         {
-                            tioTrettioDagarsbiljettDKMetro = Convert.ToInt32(ticket.ed_NumberofTickets);
+                            tioTrettioDagarsbiljettDKMetro = tioTrettioDagarsbiljettDKMetro + Convert.ToInt32(ticket.ed_NumberofTickets);
                         }
                         else if (ticketOfferNameValue == 206290002)
                         {
-                            enkelbiljett = Convert.ToInt32(ticket.ed_NumberofTickets);
+                            enkelbiljett = enkelbiljett + Convert.ToInt32(ticket.ed_NumberofTickets);
                         }
                         else if (ticketOfferNameValue == 206290003)
                         {
-                            tioEnklaFem = Convert.ToInt32(ticket.ed_NumberofTickets);
+                            tioEnklaFem = tioEnklaFem + Convert.ToInt32(ticket.ed_NumberofTickets);
                         }
                         else if (ticketOfferNameValue == 206290001) 
                         {
-                            dygnsbiljett = Convert.ToInt32(ticket.ed_NumberofTickets);
+                            dygnsbiljett = dygnsbiljett + Convert.ToInt32(ticket.ed_NumberofTickets);
                         }
                         
                     }
 
                     //Sällanresnär
-                    if((enkelbiljett > 1 || dygnsbiljett > 1 || tioEnklaFem > 1 || enkelbiljett > 10) && trettioDagarsbiljett == 0 && tioTrettioDagarsbiljett == 0 && trettioDagarsbiljettMetro == 0)
+                    if((enkelbiljett > 0 || dygnsbiljett > 0 || tioEnklaFem > 0) && trettioDagarsbiljett == 0 && tioTrettioDagarsbiljett == 0 && trettioDagarsbiljettMetro == 0)
                     {
                         isSallanresenar = true; 
                     }
@@ -240,7 +240,15 @@ namespace Skanetrafiken.Crm.Entities
                         eContact.ed_Kundresan = new OptionSetValue((int)899310001);
                     }
 
-                    XrmHelper.Update(localContext, eContact);
+                    ContactEntity updateContact = new ContactEntity
+                    {
+                        ed_CalculateClassification = true,
+                        Id = eContact.Id,
+                        ed_Kundresan = eContact.ed_Kundresan
+                    };
+
+
+                    XrmHelper.Update(localContext, updateContact);
                 }
 
             }
@@ -250,7 +258,6 @@ namespace Skanetrafiken.Crm.Entities
         public static List<Contact> GetActiveContactMklIdQuery(Plugin.LocalPluginContext localContext, string mklId)
         {
             QueryExpression queryContacts = new QueryExpression(Contact.EntityLogicalName);
-            queryContacts.NoLock = true;
             queryContacts.ColumnSet = new ColumnSet(Contact.Fields.ContactId, Contact.Fields.ed_Kundresan);
             queryContacts.Criteria.AddCondition(Contact.Fields.ed_MklId, ConditionOperator.Equal, mklId);
             queryContacts.Criteria.AddCondition(Contact.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
@@ -260,7 +267,6 @@ namespace Skanetrafiken.Crm.Entities
         public static List<TicketInfoEntity> GetEveryTicketInfoQuery(Plugin.LocalPluginContext localContext, Guid contactId)
         {
             QueryExpression queryTicketInfo = new QueryExpression(TicketInfoEntity.EntityLogicalName);
-            queryTicketInfo.NoLock = true;
             queryTicketInfo.ColumnSet = new ColumnSet(TicketInfoEntity.Fields.ed_OfferName, TicketInfoEntity.Fields.ed_NumberofTickets);
             queryTicketInfo.Criteria.AddCondition(TicketInfoEntity.Fields.ed_Contact, ConditionOperator.Equal, contactId);
             return XrmRetrieveHelper.RetrieveMultiple<TicketInfoEntity>(localContext, queryTicketInfo);
