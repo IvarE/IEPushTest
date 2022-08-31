@@ -104,7 +104,7 @@ namespace Skanetrafiken.Crm.Entities
 
             if (!string.IsNullOrEmpty(mklId))
             {
-                CalculateClassification(localContext, mklId);
+                CalculateClassification(localContext, mklId, ticketInfo);
             }
         }
 
@@ -123,7 +123,7 @@ namespace Skanetrafiken.Crm.Entities
 
             if (!string.IsNullOrEmpty(mklId))
             {
-                CalculateClassification(localContext, mklId);
+                CalculateClassification(localContext, mklId, null);
             }
 
         }
@@ -134,11 +134,11 @@ namespace Skanetrafiken.Crm.Entities
 
             if (!string.IsNullOrEmpty(mklId))
             {
-                CalculateClassification(localContext, mklId);
+                CalculateClassification(localContext, mklId, null);
             }
         }
 
-        public static void CalculateClassification(Plugin.LocalPluginContext localContext, string mklId)
+        public static void CalculateClassification(Plugin.LocalPluginContext localContext, string mklId, TicketInfoEntity ticketInfo)
         {
             var lContacts = GetActiveContactMklIdQuery(localContext, mklId);
             if (lContacts.Count == 1)
@@ -157,6 +157,43 @@ namespace Skanetrafiken.Crm.Entities
                     var tioEnklaFem = 0; //  	206290003 //motsvarar 10 enkelbiljetter
                     var dygnsbiljett = 0; // 	206290001
                     
+
+                    if(ticketInfo != null)
+                    {
+                        var offerName = Convert.ToInt32(ticketInfo.ed_OfferName.Value);
+
+                        if (offerName == 206290000)
+                        {
+                            trettioDagarsbiljett = trettioDagarsbiljett + Convert.ToInt32(ticketInfo.ed_NumberofTickets);
+                        }
+                        else if (offerName == 899310002)
+                        {
+                            trettioDagarsbiljettMetro = trettioDagarsbiljettMetro + Convert.ToInt32(ticketInfo.ed_NumberofTickets);
+                        }
+                        else if (offerName == 899310001)
+                        {
+                            tioTrettioDagarsbiljett = tioTrettioDagarsbiljett + Convert.ToInt32(ticketInfo.ed_NumberofTickets);
+                        }
+                        else if (offerName == 899310003)
+                        {
+                            tioTrettioDagarsbiljettDKMetro = tioTrettioDagarsbiljettDKMetro + Convert.ToInt32(ticketInfo.ed_NumberofTickets);
+                        }
+                        else if (offerName == 206290002)
+                        {
+                            enkelbiljett = enkelbiljett + Convert.ToInt32(ticketInfo.ed_NumberofTickets);
+                        }
+                        else if (offerName == 206290003)
+                        {
+                            tioEnklaFem = tioEnklaFem + Convert.ToInt32(ticketInfo.ed_NumberofTickets);
+                        }
+                        else if (offerName == 206290001)
+                        {
+                            dygnsbiljett = dygnsbiljett + Convert.ToInt32(ticketInfo.ed_NumberofTickets);
+                        }
+
+                    }
+
+                
 
                     var isSallanresenar = false;
                     var isVaxlare = false;
