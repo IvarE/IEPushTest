@@ -172,8 +172,6 @@
     <Compile Include="PostQuoteUpdate.cs" />
     <Compile Include="PostQuoteProductCreate.cs" />
     <Compile Include="PostQuoteProductUpdate.cs" />
-    <Compile Include="PostSlotCreate.cs" />
-    <Compile Include="PostSlotUpdate.cs" />
     <Compile Include="PreAccountUpdate.cs" />
     <Compile Include="PreAccountCreate.cs" />
     <Compile Include="CountryUtility.cs" />
@@ -259,8 +257,6 @@
     <Compile Include="PreLeadCreate.cs" />
     <Compile Include="PreContactSetState.cs" />
     <Compile Include="PreQuoteProductUpdate.cs" />
-    <Compile Include="PreSlotCreate.cs" />
-    <Compile Include="PreSlotUpdate.cs" />
     <Compile Include="PreTemplateDelete.cs" />
     <Compile Include="PreValidationContactDelete.cs" />
     <Compile Include="PreValueCodeApprovalCreate.cs" />

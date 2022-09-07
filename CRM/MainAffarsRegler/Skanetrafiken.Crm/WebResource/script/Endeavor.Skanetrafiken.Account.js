@@ -324,7 +324,11 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
         // ORGANISATION (TOP LEVEL) - Show/hide Block button
         onBlockAccountShow: function (formContext) {
+            var currForm = formContext.ui.formSelector.getCurrentItem();
+            var currFormId = currForm.getId();
 
+            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70")
+                return false;
             // Only show button if TypeOfAccount = Företagskund (Portal)
             var accountType = formContext.getAttribute("ed_typeofaccount");
             if (accountType != null) {
@@ -347,7 +351,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             // If Account = Organization (top level) and 
             // if ed_isLockedPortal = false
             // => Show button "Block Organization"
-            if (parentAccount == null && lockedPortal == false && showButton != true)
+            if (parentAccount == null && lockedPortal == false && showButton != false)
                 return true;
             // If Account = CostSite (bottom level) and
             // if ed_isLockedPortal = true
@@ -357,7 +361,11 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
         // ORGANISATION (TOP LEVEL) - Show/hide Unblock button
         onUnblockAccountShow: function (formContext) {
+            var currForm = formContext.ui.formSelector.getCurrentItem();
+            var currFormId = currForm.getId();
 
+            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70")
+                return false;
             // Only show button if TypeOfAccount = Företagskund (Portal)
             var accountType = formContext.getAttribute("ed_typeofaccount");
             if (accountType != null) {
@@ -379,7 +387,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             // If Account = Organization (top level) and 
             // if ed_isLockedPortal = false
             // => Show button "Block Organization"
-            if (parentAccount == null && lockedPortal == true && showButton != true)
+            if (parentAccount == null && lockedPortal == true && showButton != false)
                 return true;
             // If Account = CostSite (bottom level) and
             // if ed_isLockedPortal = true
@@ -389,7 +397,11 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
         // COST SITE (BOTTOM LEVEL) - Show/hide Block button
         onBlockCostSiteShow: function (formContext) {
+            var currForm = formContext.ui.formSelector.getCurrentItem();
+            var currFormId = currForm.getId();
 
+            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70")
+                return false;
             // Only show button if TypeOfAccount = Företagskund (Portal)
             var accountType = formContext.getAttribute("ed_typeofaccount");
             if (accountType != null) {
@@ -407,12 +419,12 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             var lockedPortal = formContext.getAttribute("ed_islockedportal").getValue();
             var showButton = false;
 
-            showButton = Endeavor.Skanetrafiken.Account.showBlockButton();
+            showButton = Endeavor.Skanetrafiken.Account.showBlockButton(); 
 
             // If Account = Cost Site (bottom level) and 
             // if ed_isLockedPortal = false
             // => Show button "Block Cost Site"
-            if (parentAccount != null && lockedPortal == false && showButton != true)
+            if (parentAccount != null && lockedPortal == false && showButton != false)
                 return true;
             // If Account = Cost Site (bottom level) and
             // if ed_isLockedPortal = true
@@ -422,6 +434,12 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
         // COST SITE (BOTTOM LEVEL) - Show/hide Unblock button
         onUnblockCostSiteShow: function (formContext) {
+            var currForm = formContext.ui.formSelector.getCurrentItem();
+            var currFormId = currForm.getId();
+
+            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70")
+                return false;
+
             // Only show button if TypeOfAccount = Företagskund (Portal)
             var accountType = formContext.getAttribute("ed_typeofaccount");
             if (accountType != null) {
@@ -444,7 +462,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             // If Account = Cost Site (bottom level) and 
             // if ed_isLockedPortal = false
             // => Show button "Block Cost Site"
-            if (parentAccount != null && lockedPortal == true && showButton != true)
+            if (parentAccount != null && lockedPortal == true && showButton != false)
                 return true;
             // If Account = CostSite (bottom level) and
             // if ed_isLockedPortal = true

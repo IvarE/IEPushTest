@@ -34,7 +34,7 @@ namespace Endeavor.Crm.UnitTest
         private ServerConnection _serverConnection;
 
         [Test, Explicit, Category("Debug")]
-        public void CreateClientelingActionAndEmailForContacts()
+        public void UpdateClassificationForAllCustomers()
         {
             // The using statement assures that the service proxy will be properly disposed.
             using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
@@ -44,13 +44,41 @@ namespace Endeavor.Crm.UnitTest
 
                 Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
 
+                bool live = false; 
 
+                QueryExpression query1 = new QueryExpression()
+                {
+                    EntityName = ContactEntity.EntityLogicalName,
+                    ColumnSet = new ColumnSet(ContactEntity.Fields.ed_MklId, ContactEntity.Fields.ed_Kundresan),
+                    LinkEntities =
+                    {
+                        new LinkEntity()
+                        {
+                            LinkFromEntityName = ContactEntity.EntityLogicalName,
+                            LinkToEntityName = TicketInfoEntity.EntityLogicalName,
+                            LinkFromAttributeName = ContactEntity.Fields.ed_MklId,
+                            LinkToAttributeName = TicketInfoEntity.Fields.ed_MklId,
+                            EntityAlias = TicketInfoEntity.EntityLogicalName,
+                            JoinOperator = JoinOperator.Inner
+                        }
+                    }
+                };
+                //828k
+                // Denna lista hämtar duplicates (finns det mer än 1 ticket purchase på kunden hamnar kunden här 1 gång för varje ticket purchase) 
+                IList<ContactEntity> contactsWithTicketPurchase = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, query1);
 
+                var numberOfContacts = 0;
 
-
-                //TicketInfoEntity ticketInfo = XrmRetrieveHelper.Retrieve<TicketInfoEntity>(localContext, new Guid("2e63c67b-c8fd-ec11-9489-005056b6fa28"), new ColumnSet(true));
-
-                TicketInfoEntity.CalculateClassification(localContext, "54321");
+                if (live)
+                {
+                    foreach (ContactEntity contact in contactsWithTicketPurchase)
+                    {
+                        numberOfContacts++;
+                        TicketInfoEntity.CalculateClassification(localContext, contact.ed_MklId, null);
+                        localContext.TracingService.Trace($"Handled {numberOfContacts}/{contactsWithTicketPurchase.Count}");
+                    }
+                }
+                
 
 
             }
