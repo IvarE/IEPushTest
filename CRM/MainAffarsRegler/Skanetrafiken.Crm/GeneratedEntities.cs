@@ -75816,6 +75816,50 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscount")]
+		public System.Nullable<decimal> ed_mediaagencydiscount
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("ed_mediaagencydiscount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscount", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_mediaagencydiscountamount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Media Agency Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_mediaagencydiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount_base");
+			}
+		}
+		
+		/// <summary>
 		/// Indikerar om affärsmöjligheten är kopplad till en kund som är mediabyrå
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediabusiness")]
@@ -75908,6 +75952,34 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_tax_base");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_TotalDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_totaldiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Total Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_totaldiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount_base");
 			}
 		}
 		
@@ -77469,6 +77541,12 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_krediteringsstatus = "ed_krediteringsstatus";
 			
+			public const string ed_mediaagencydiscount = "ed_mediaagencydiscount";
+			
+			public const string ed_mediaagencydiscountamount = "ed_mediaagencydiscountamount";
+			
+			public const string ed_mediaagencydiscountamount_Base = "ed_mediaagencydiscountamount_base";
+			
 			public const string ed_mediabusiness = "ed_mediabusiness";
 			
 			public const string ed_Peppolnr = "ed_peppolnr";
@@ -77482,6 +77560,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_tax = "ed_tax";
 			
 			public const string ed_tax_Base = "ed_tax_base";
+			
+			public const string ed_TotalDiscountAmount = "ed_totaldiscountamount";
+			
+			public const string ed_totaldiscountamount_Base = "ed_totaldiscountamount_base";
 			
 			public const string ed_ubussiness = "ed_ubussiness";
 			
@@ -86372,6 +86454,50 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscount")]
+		public System.Nullable<decimal> ed_MediaAgencyDiscount
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("ed_mediaagencydiscount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscount", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_MediaAgencyDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Media Agency Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_mediaagencydiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount_base");
+			}
+		}
+		
+		/// <summary>
 		/// Indikerar om affärsmöjligheten är kopplad till en kund som är mediabyrå
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediabusiness")]
@@ -86496,6 +86622,34 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_totalamountforcalculation", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_TotalDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_totaldiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Total Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_totaldiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount_base");
 			}
 		}
 		
@@ -88318,6 +88472,12 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_infotainmentcustomer = "ed_infotainmentcustomer";
 			
+			public const string ed_MediaAgencyDiscount = "ed_mediaagencydiscount";
+			
+			public const string ed_MediaAgencyDiscountAmount = "ed_mediaagencydiscountamount";
+			
+			public const string ed_mediaagencydiscountamount_Base = "ed_mediaagencydiscountamount_base";
+			
 			public const string ed_mediabusiness = "ed_mediabusiness";
 			
 			public const string ed_priceinctax = "ed_priceinctax";
@@ -88335,6 +88495,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_taxcalculation_Base = "ed_taxcalculation_base";
 			
 			public const string ed_totalamountforcalculation = "ed_totalamountforcalculation";
+			
+			public const string ed_TotalDiscountAmount = "ed_totaldiscountamount";
+			
+			public const string ed_totaldiscountamount_Base = "ed_totaldiscountamount_base";
 			
 			public const string ed_volymcustomer = "ed_volymcustomer";
 			
@@ -97978,6 +98142,50 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscount")]
+		public System.Nullable<decimal> ed_mediaagencydiscount
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("ed_mediaagencydiscount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscount", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_mediaagencydiscountamount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Media Agency Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_mediaagencydiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount_base");
+			}
+		}
+		
+		/// <summary>
 		/// Indikerar om affärsmöjligheten är kopplad till en kund som är mediabyrå
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediabusiness")]
@@ -98082,6 +98290,34 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_totalamountforcalculation", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_TotalDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_totaldiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Total Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_totaldiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount_base");
 			}
 		}
 		
@@ -99682,6 +99918,12 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_infotainmentcustomer = "ed_infotainmentcustomer";
 			
+			public const string ed_mediaagencydiscount = "ed_mediaagencydiscount";
+			
+			public const string ed_mediaagencydiscountamount = "ed_mediaagencydiscountamount";
+			
+			public const string ed_mediaagencydiscountamount_Base = "ed_mediaagencydiscountamount_base";
+			
 			public const string ed_mediabusiness = "ed_mediabusiness";
 			
 			public const string ed_Mediabyrprovision = "ed_mediabyrprovision";
@@ -99697,6 +99939,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_taxcalculation_Base = "ed_taxcalculation_base";
 			
 			public const string ed_TotalAmountForCalculation = "ed_totalamountforcalculation";
+			
+			public const string ed_TotalDiscountAmount = "ed_totaldiscountamount";
+			
+			public const string ed_totaldiscountamount_Base = "ed_totaldiscountamount_base";
 			
 			public const string ed_TotalExtendedAmount = "ed_totalextendedamount";
 			
@@ -102734,6 +102980,50 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscount")]
+		public System.Nullable<decimal> ed_mediaagencydiscount
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("ed_mediaagencydiscount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscount", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_mediaagencydiscountamount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Media Agency Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_mediaagencydiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount_base");
+			}
+		}
+		
+		/// <summary>
 		/// Indikerar om affärsmöjligheten är kopplad till en kund som är mediabyrå
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediabusiness")]
@@ -102874,6 +103164,34 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_totalamountforcalculation", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_TotalDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_totaldiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Total Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_totaldiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount_base");
 			}
 		}
 		
@@ -104618,6 +104936,12 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_infotainmentcustomer = "ed_infotainmentcustomer";
 			
+			public const string ed_mediaagencydiscount = "ed_mediaagencydiscount";
+			
+			public const string ed_mediaagencydiscountamount = "ed_mediaagencydiscountamount";
+			
+			public const string ed_mediaagencydiscountamount_Base = "ed_mediaagencydiscountamount_base";
+			
 			public const string ed_mediabusiness = "ed_mediabusiness";
 			
 			public const string ed_Orderfakturerad = "ed_orderfakturerad";
@@ -104637,6 +104961,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_tax_Base = "ed_tax_base";
 			
 			public const string ed_totalamountforcalculation = "ed_totalamountforcalculation";
+			
+			public const string ed_TotalDiscountAmount = "ed_totaldiscountamount";
+			
+			public const string ed_totaldiscountamount_Base = "ed_totaldiscountamount_base";
 			
 			public const string ed_TotalExtendedAmount = "ed_totalextendedamount";
 			

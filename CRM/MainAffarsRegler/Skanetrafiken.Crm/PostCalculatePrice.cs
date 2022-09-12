@@ -178,7 +178,7 @@ namespace Skanetrafiken.Crm
             {
                 localContext.Trace("State code = 0");
                 ColumnSet columns = new ColumnSet();
-                columns.AddColumns("totaltax", "totallineitemamount", "totalamountlessfreight", "discountamount", "discountpercentage", "ed_mediaagencydiscount", "ed_mediaagencydiscountamount", "ed_mediabusiness");
+                columns.AddColumns("totaltax", "totallineitemamount", "totalamountlessfreight", "discountamount", "discountpercentage", "ed_mediaagencydiscount", "ed_mediaagencydiscountamount", "ed_mediabusiness", "ed_totaldiscountamount");
                 Entity opp = service.Retrieve(entity.LogicalName, entity.Id, columns);
 
                 localContext.Trace("Opp retrived");
@@ -193,7 +193,9 @@ namespace Skanetrafiken.Crm
                 decimal discount = 0;
                 decimal tax = 0;
                 decimal manualDiscount = 0;
-                decimal discountAmount = 0;               
+                decimal discountAmount = 0;
+                decimal mediaAgencyDiscountAmount = 0;
+                decimal productDiscount = 0; 
 
                 for (int i = 0; i < ec.Entities.Count; i++)
                 {
@@ -214,6 +216,7 @@ namespace Skanetrafiken.Crm
                     if(calcOppProductManualDiscount)
                     {
                         total = total - ((Money)ec.Entities[i]["manualdiscountamount"]).Value;
+                        productDiscount = productDiscount + ((Money)ec.Entities[i]["manualdiscountamount"]).Value;
                         (ec.Entities[i])["extendedamount"] = new Money(((decimal)ec.Entities[i]["quantity"] * ((Money)ec.Entities[i]["priceperunit"]).Value) - ((Money)ec.Entities[i]["manualdiscountamount"]).Value);
                     }
                     
@@ -268,7 +271,7 @@ namespace Skanetrafiken.Crm
                     opp["ed_mediaagencydiscount"] = mediaAgencyDiscountPercent;
                     discount = discount + 6;
 
-                    decimal mediaAgencyDiscountAmount = mediaAgencyDiscount * total;
+                    mediaAgencyDiscountAmount = mediaAgencyDiscount * total;
                     opp["ed_mediaagencydiscountamount"] = new Money(mediaAgencyDiscountAmount);
                 }
 
@@ -287,10 +290,11 @@ namespace Skanetrafiken.Crm
                     //localContext.Trace($"Manual discount = {opp["discountamount"]}");
                 }
 
-                
+             
                 
                 total = total - manualDiscount;
                 opp["totalamountlessfreight"] = new Money(total);
+                opp["ed_totaldiscountamount"] = new Money(discountAmount + manualDiscount + productDiscount - mediaAgencyDiscountAmount);
                 service.Update(opp);
                 localContext.Trace("discount calculated");
         
@@ -355,7 +359,7 @@ namespace Skanetrafiken.Crm
             if (statecode.Value == 0)
             {
                 ColumnSet columns = new ColumnSet();
-                columns.AddColumns("totaltax", "totallineitemamount", "totalamountlessfreight", "discountamount", "discountpercentage", "ed_mediaagencydiscount", "ed_mediaagencydiscountamount", "ed_mediabusiness");
+                columns.AddColumns("totaltax", "totallineitemamount", "totalamountlessfreight", "discountamount", "discountpercentage", "ed_mediaagencydiscount", "ed_mediaagencydiscountamount", "ed_mediabusiness", "ed_totaldiscountamount");
                 Entity quote = service.Retrieve(entity.LogicalName, entity.Id, columns);
 
                 QueryExpression query = new QueryExpression("quotedetail");
@@ -369,6 +373,8 @@ namespace Skanetrafiken.Crm
                 decimal tax = 0;
                 decimal manualDiscount = 0;
                 decimal discountAmount = 0;
+                decimal mediaAgencyDiscountAmount = 0;
+                decimal productDiscount = 0;
 
                 for (int i = 0; i < ec.Entities.Count; i++)
                 {
@@ -389,6 +395,7 @@ namespace Skanetrafiken.Crm
                     if (calcQuoteProductManualDiscount)
                     {
                         total = total - ((Money)ec.Entities[i]["manualdiscountamount"]).Value;
+                        productDiscount = productDiscount + ((Money)ec.Entities[i]["manualdiscountamount"]).Value;
                         (ec.Entities[i])["extendedamount"] = new Money(((decimal)ec.Entities[i]["quantity"] * ((Money)ec.Entities[i]["priceperunit"]).Value) - ((Money)ec.Entities[i]["manualdiscountamount"]).Value);
                     }
 
@@ -438,7 +445,7 @@ namespace Skanetrafiken.Crm
                     quote["ed_mediaagencydiscount"] = mediaAgencyDiscountPercent;
                     discount = discount + 6;
 
-                    decimal mediaAgencyDiscountAmount = mediaAgencyDiscount * total;
+                    mediaAgencyDiscountAmount = mediaAgencyDiscount * total;
                     quote["ed_mediaagencydiscountamount"] = new Money(mediaAgencyDiscountAmount);
                 }
 
@@ -454,6 +461,7 @@ namespace Skanetrafiken.Crm
 
                 total = total - manualDiscount;
                 quote["totalamountlessfreight"] = new Money(total);
+                quote["ed_totaldiscountamount"] = new Money(discountAmount + productDiscount + manualDiscount - mediaAgencyDiscountAmount);
                 service.Update(quote);
                 localContext.Trace("discount calculated");
 
@@ -513,7 +521,7 @@ namespace Skanetrafiken.Crm
             if (statecode.Value == 0)
             {
                 ColumnSet columns = new ColumnSet();
-                columns.AddColumns("totaltax", "totallineitemamount", "totalamountlessfreight", "discountamount", "discountpercentage", "ed_mediaagencydiscount", "ed_mediaagencydiscountamount", "ed_mediabusiness");
+                columns.AddColumns("totaltax", "totallineitemamount", "totalamountlessfreight", "discountamount", "discountpercentage", "ed_mediaagencydiscount", "ed_mediaagencydiscountamount", "ed_mediabusiness", "ed_totaldiscountamount");
                 Entity order = service.Retrieve(entity.LogicalName, entity.Id, columns);
 
                 QueryExpression query = new QueryExpression("salesorderdetail");
@@ -533,6 +541,8 @@ namespace Skanetrafiken.Crm
                 decimal tax = 0;
                 decimal manualDiscount = 0;
                 decimal discountAmount = 0;
+                decimal mediaAgencyDiscountAmount = 0;
+                decimal productDiscount = 0;
 
                 for (int i = 0; i < ec.Entities.Count; i++)
                 {
@@ -553,6 +563,7 @@ namespace Skanetrafiken.Crm
                     if (calcOrderProductManualDiscount)
                     {
                         total = total - ((Money)ec.Entities[i]["manualdiscountamount"]).Value;
+                        productDiscount = productDiscount + ((Money)ec.Entities[i]["manualdiscountamount"]).Value;
                         (ec1.Entities[i])["extendedamount"] = new Money(((decimal)ec.Entities[i]["quantity"] * ((Money)ec.Entities[i]["priceperunit"]).Value) - ((Money)ec.Entities[i]["manualdiscountamount"]).Value);
                     }
 
@@ -599,7 +610,7 @@ namespace Skanetrafiken.Crm
                     order["ed_mediaagencydiscount"] = mediaAgencyDiscountPercent;
                     discount = discount + 6;
 
-                    decimal mediaAgencyDiscountAmount = mediaAgencyDiscount * total;
+                    mediaAgencyDiscountAmount = mediaAgencyDiscount * total;
                     order["ed_mediaagencydiscountamount"] = new Money(mediaAgencyDiscountAmount);
                 }
 
@@ -618,6 +629,7 @@ namespace Skanetrafiken.Crm
 
                 total = total - manualDiscount;
                 order["totalamountlessfreight"] = new Money(total);
+                order["ed_totaldiscountamount"] = new Money(discountAmount + manualDiscount + productDiscount - mediaAgencyDiscountAmount);
                 service.Update(order);
 
                 // Calculate tax after the discount is applied
@@ -677,7 +689,7 @@ namespace Skanetrafiken.Crm
             if (statecode.Value == 0)
             {
                 ColumnSet columns = new ColumnSet();
-                columns.AddColumns("totaltax", "totallineitemamount", "totalamountlessfreight", "discountamount", "discountpercentage", "ed_mediaagencydiscount", "ed_mediaagencydiscountamount", "ed_mediabusiness");
+                columns.AddColumns("totaltax", "totallineitemamount", "totalamountlessfreight", "discountamount", "discountpercentage", "ed_mediaagencydiscount", "ed_mediaagencydiscountamount", "ed_mediabusiness", "ed_totaldiscountamount");
 
                 Entity invoice = service.Retrieve(entity.LogicalName, entity.Id, columns);
 
@@ -699,6 +711,8 @@ namespace Skanetrafiken.Crm
                 decimal tax = 0;
                 decimal manualDiscount = 0;
                 decimal discountAmount = 0;
+                decimal mediaAgencyDiscountAmount = 0;
+                decimal productDiscount = 0; 
 
                 for (int i = 0; i < ec.Entities.Count; i++)
                 {
@@ -719,6 +733,7 @@ namespace Skanetrafiken.Crm
                     if (calcInvoiceProductManualDiscount)
                     {
                         total = total - ((Money)ec.Entities[i]["manualdiscountamount"]).Value;
+                        productDiscount = productDiscount + ((Money)ec.Entities[i]["manualdiscountamount"]).Value;
                         (ec1.Entities[i])["extendedamount"] = new Money(((decimal)ec.Entities[i]["quantity"] * ((Money)ec.Entities[i]["priceperunit"]).Value) - ((Money)ec.Entities[i]["manualdiscountamount"]).Value);
                     }
 
@@ -763,7 +778,7 @@ namespace Skanetrafiken.Crm
                     invoice["ed_mediaagencydiscount"] = mediaAgencyDiscountPercent;
                     discount = discount + 6;
 
-                    decimal mediaAgencyDiscountAmount = mediaAgencyDiscount * total;
+                    mediaAgencyDiscountAmount = mediaAgencyDiscount * total;
                     invoice["ed_mediaagencydiscountamount"] = new Money(mediaAgencyDiscountAmount);
                 }
 
@@ -778,6 +793,7 @@ namespace Skanetrafiken.Crm
 
                 total = total - manualDiscount;
                 invoice["totalamountlessfreight"] = new Money(total);
+                invoice["ed_totaldiscountamount"] = new Money(discountAmount + manualDiscount + productDiscount - mediaAgencyDiscountAmount);
                 service.Update(invoice);
 
                 // Calculate tax after the discount is applied
