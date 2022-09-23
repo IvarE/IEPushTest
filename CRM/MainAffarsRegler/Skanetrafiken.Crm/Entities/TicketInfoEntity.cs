@@ -61,7 +61,20 @@ namespace Skanetrafiken.Crm.Entities
 
                 string mklId = string.IsNullOrEmpty(ed_MklId) ? preImage.ed_MklId : ed_MklId;
                 string contactNumber = string.IsNullOrEmpty(this.ed_CRMNumber) ? preImage.ed_CRMNumber : this.ed_CRMNumber;
-                string offerName = string.IsNullOrEmpty(this.FormattedValues["ed_offername"]) ? preImage.FormattedValues["ed_offername"] : this.FormattedValues["ed_offername"];
+
+                //string offerName = string.IsNullOrEmpty(this.FormattedValues["ed_offername"]) ? preImage.FormattedValues["ed_offername"] : this.FormattedValues["ed_offername"];
+
+                string offerName = string.Empty;
+                if (this.ed_OfferName != null)
+                {
+                    offerName = $"{this.ed_OfferName}";
+                    localContext.Trace($"OfferName (this):" + offerName);
+                }
+                else if (preImage.ed_OfferName != null)
+                {
+                    offerName = $"{preImage.ed_OfferName}";
+                    localContext.Trace($"OfferName (preImage):" + offerName);
+                }
 
                 string nName = contactNumber + "_" + offerName;
                 if (preImage.ed_name != nName)
@@ -277,7 +290,7 @@ namespace Skanetrafiken.Crm.Entities
                         eContact.ed_Kundresan = new OptionSetValue((int)899310001);
                     }
 
-                    ContactEntity updateContact = new ContactEntity
+                    Contact updateContact = new Contact
                     {
                         ed_CalculateClassification = true,
                         Id = eContact.Id,
