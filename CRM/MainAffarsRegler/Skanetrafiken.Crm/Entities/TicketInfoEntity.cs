@@ -249,7 +249,7 @@ namespace Skanetrafiken.Crm.Entities
                     }
 
                     //Pendlare
-                    if(manadsbiljetter > 7)
+                    if(manadsbiljetter > 6)
                     {
                         isPendlare = true;
                     }

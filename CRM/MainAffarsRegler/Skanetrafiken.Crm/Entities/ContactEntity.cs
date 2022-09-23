@@ -1021,7 +1021,12 @@ namespace Skanetrafiken.Crm.Entities
             if (!string.IsNullOrWhiteSpace(Telephone3))
                 Telephone3 = Telephone3.Replace(" ", "");
 
-            if(ed_InformationSource == Generated.ed_informationsource.RGOL && ed_Address1_Country == null)
+            FilterExpression filterThisContact = new FilterExpression();
+            filterThisContact.AddCondition(ContactEntity.Fields.Id, ConditionOperator.Equal, this.Id);
+
+            ContactEntity thisContact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, new ColumnSet(ContactEntity.Fields.ed_Address1_Country), filterThisContact);
+
+            if (ed_InformationSource == Generated.ed_informationsource.RGOL && thisContact.ed_Address1_Country == null)
                 ed_Address1_Country = CountryEntity.GetEntityRefForCountryCode(localContext, "SE");
 
             ContactEntity combined = new ContactEntity();
