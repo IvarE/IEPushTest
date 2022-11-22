@@ -1032,9 +1032,16 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     return;
                 }
 
+                //var category = Endeavor.formscriptfunctions.GetValue("cgi_casdet_row1_cat3id", formContext);
+                var cgi_casdet_row1_cat3idLookup = Endeavor.formscriptfunctions.GetValue("cgi_casdet_row1_cat3id", formContext);
+                if (!cgi_casdet_row1_cat3idLookup) {
+                    alert("Kan inte avsluta ärendet: första kategorin saknas.");
+                    return;
+                }
+
                 //START validera trafikinfo START
                 //fortsätt valideringen endast ifall användaren INTE explicit angivit att ingen trafikinformation ska registreras
-                if (formContext.getAttribute("cgi_notravelinfo").getValue() != 1) {
+                if (formContext.getAttribute("cgi_notravelinfo").getValue() != 1 && cgi_casdet_row1_cat3idLookup) {
                     if (caseid != null)
                     {
                         var caseid = Endeavor.formscriptfunctions.cleanIdField(caseid);
@@ -1055,9 +1062,6 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                         var travelInformations = Endeavor.formscriptfunctions.fetchJSONResults(url);
 
                         if (travelInformations.length === 0) {
-                            
-                            var cgi_casdet_row1_cat3idLookup = formContext.getAttribute("cgi_casdet_row1_cat3id").getValue();
-
                             var categoryId = cgi_casdet_row1_cat3idLookup[0].id.replace("{", "").replace("}", "");
                             url = clientUrl + "/api/data/v9.0/cgi_categorydetails(" + categoryId + ")?$select=cgi_requirestravelinfo";
                             var categoryDetail = Endeavor.formscriptfunctions.fetchJSONResults(url);
