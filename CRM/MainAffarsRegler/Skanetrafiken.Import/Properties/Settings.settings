@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="RelativePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">H:\SeKunddata\</Value>
+      <Value Profile="(Default)">G:\SeKunddata\</Value>
     </Setting>
     <Setting Name="Bucket1Accounts" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Accounts\Spann 1 - unika 2020-05-27.csv</Value>
@@ -45,7 +45,7 @@
       <Value Profile="(Default)">Import analysdata.csv</Value>
     </Setting>
     <Setting Name="CredentialsFilePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">H:\SeKunddata\Skanetrafiken.Import.Credential.xml</Value>
+      <Value Profile="(Default)">G:\SeKunddata\Skanetrafiken.Import.Credential.xml</Value>
     </Setting>
     <Setting Name="BucketNewAccounts" Type="System.String" Scope="Application">
       <Value Profile="(Default)">FöretagSkåneVer2.csv</Value>

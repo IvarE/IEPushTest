@@ -319,6 +319,50 @@ namespace Endeavor.Crm.UnitTest
             }
         }
 
+        [Test, Explicit]
+        public void PopulateSocialSecurityNumberFormat()
+        {
+            // Connect to the Organization service. 
+            // The using statement assures that the service proxy will be properly disposed.
+            using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+            {
+                // This statement is required to enable early-bound type support.
+                _serviceProxy.EnableProxyTypes();
+
+                Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
+
+                System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+                stopwatch.Start();
+
+                QueryExpression query = new QueryExpression
+                {
+                    EntityName = IncidentEntity.EntityLogicalName,
+                    ColumnSet = new ColumnSet(IncidentEntity.Fields.cgi_soc_sec_number, IncidentEntity.Fields.ed_socialsecuritynumberformat), // needs to be generated
+                    Criteria =
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(IncidentEntity.Fields.cgi_soc_sec_number, ConditionOperator.NotNull),
+                            new ConditionExpression(IncidentEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.IncidentState.Active)
+                        }
+                    }
+                };
+
+                IList<IncidentEntity> casesWithSocialSecurityNumber = XrmRetrieveHelper.RetrieveMultiple<IncidentEntity>(localContext, query);
+
+                var tempHoldingSocSec = "";
+
+                foreach(IncidentEntity incident in casesWithSocialSecurityNumber)
+                {
+                    tempHoldingSocSec = incident.cgi_soc_sec_number;
+                    tempHoldingSocSec.Insert(8, "-");
+
+                    incident.ed_socialsecuritynumberformat = tempHoldingSocSec;
+                }
+
+            }
+        }
+
         internal ServerConnection ServerConnection
         {
             get

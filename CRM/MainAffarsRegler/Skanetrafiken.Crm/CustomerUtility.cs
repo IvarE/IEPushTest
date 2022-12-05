@@ -505,6 +505,26 @@ namespace Skanetrafiken.Crm
                     //}
                     break;
                 #endregion
+                #region SR Post
+                case (int)Generated.ed_informationsource.SRInkommenPost:
+                    //if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
+                    //    string.IsNullOrWhiteSpace(customerInfo.LastName))
+                    //{
+                    //    error = true;
+                    //    messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                    //}
+                    break;
+                #endregion
+                #region 1177
+                case (int)Generated.ed_informationsource._1177:
+                    //if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
+                    //    string.IsNullOrWhiteSpace(customerInfo.LastName))
+                    //{
+                    //    error = true;
+                    //    messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                    //}
+                    break;
+                #endregion
 
                 default:
                     return new StatusBlock()

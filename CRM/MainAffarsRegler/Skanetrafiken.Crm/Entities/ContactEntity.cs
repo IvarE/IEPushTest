@@ -928,6 +928,11 @@ namespace Skanetrafiken.Crm.Entities
                 throw new InvalidPluginExecutionException(errorMess);
             }
 
+            if(info.Source == 700000000 || info.Source == 700000001)
+            {
+                this.ed_Serviceresor = true;
+            }
+
             //[2020-09-06]: Added validaton by contact Type
             bool wasAlreadyValidated = ValidateDuplicatesByContactType(localContext, true);
 
@@ -954,11 +959,6 @@ namespace Skanetrafiken.Crm.Entities
                 ed_CalculateClassification = false;
                 localContext.Trace($"CalculateClassification = {ed_CalculateClassification}");
                 return;
-            }
-
-            if ((!string.IsNullOrEmpty(this.ed_MklId) || !string.IsNullOrEmpty(preImage.ed_MklId)) && ((this.ed_Kundresan == null) || (preImage.ed_Kundresan == null)))
-            {
-                ed_Kundresan = new OptionSetValue((int)899310000);
             }
 
             string postalCode = this.Address1_PostalCode != null ? this.Address1_PostalCode : preImage.Address1_PostalCode;
@@ -1024,10 +1024,8 @@ namespace Skanetrafiken.Crm.Entities
             FilterExpression filterThisContact = new FilterExpression();
             filterThisContact.AddCondition(ContactEntity.Fields.Id, ConditionOperator.Equal, this.Id);
 
-            ContactEntity thisContact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, new ColumnSet(ContactEntity.Fields.ed_Address1_Country), filterThisContact);
-
-            if (ed_InformationSource == Generated.ed_informationsource.RGOL && thisContact.ed_Address1_Country == null)
-                ed_Address1_Country = CountryEntity.GetEntityRefForCountryCode(localContext, "SE");
+            if (ed_InformationSource == Generated.ed_informationsource.RGOL)
+                return;  
 
             ContactEntity combined = new ContactEntity();
             if (preImage != null)
