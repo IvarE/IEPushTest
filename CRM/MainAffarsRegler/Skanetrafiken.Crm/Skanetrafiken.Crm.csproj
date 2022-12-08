@@ -335,6 +335,7 @@
     <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.CreditSafe.SolutionConfigurationPage.js" />
     <Content Include="WebResource\script\Endeavor.Library.formscriptfunctions.js" />
     <Content Include="WebResource\script\Endeavor.Library.OData_Querys.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.ContactAnnons.js" />
     <Content Include="WebResource\script\SDK.Rest.js" />
     <None Include="bin\Dev\Skanetrafiken.Crm.dll.config" />
     <None Include="ColumnBlockSchemas\NotificationInfoBlock.xsd">
