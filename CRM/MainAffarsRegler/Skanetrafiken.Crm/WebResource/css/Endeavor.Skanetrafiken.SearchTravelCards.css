@@ -2,40 +2,44 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
+    font-family: 'SegoeUI', 'Segoe UI';
     font-size: 0.99em;
-}
-
-.container {
-    width: 90%;
-    margin-left: 1%;
 }
 
 .grid {
     display: grid;
-    column-gap: 50px;
+    column-gap: 25px;
     justify-content: start;
-    grid-template-columns: 125px 250px max-content;
-    grid-template-rows: repeat(5, 25px);
-    padding-left: 15px;
+    grid-template-columns: 150px 250px max-content;
+    grid-template-rows: repeat(4, fit-content()) 35px;
+    padding-left: 30px;
 }
 
-.grid-row {
-
+.header-grid {
+    display: grid;
+    column-gap: 25px;
+    justify-content: start;
+    grid-template-columns: 150px 250px max-content;
+    grid-template-rows: 50px fit-content();
+    padding-left: 30px;
 }
 
 .row {
-    margin: 5px;
+    height: 41px;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+
+    border-bottom: 1px solid rgb(216, 216, 216);
+}
+
+.no-border {
+    border-bottom: none!important;
 }
 
 .row-position {
     grid-row: var(--row);
     grid-column: var(--col);
 }
-
-
-
-
 
 .row-header {
     width: 100%;
@@ -45,17 +49,44 @@
     margin-top: 10px;
 }
 
-.col-1 {
-    width: 16.5%;
+.content-bucket {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    
+    padding-left: 1rem;
+ 
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5em;
+}
 }
 
-/* 1/6 */
-.col-2 {
-    width: 16.5%;
+.dynamics-button-active {
+    height: 35px;
+
+    margin-left: 0.285714rem;
+    margin-right: 0.285714rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-width: 2px;
+    
+    color: rgb(255, 255, 255);
+    background-color: rgb(41, 117, 178);
+    border-color: transparent;
+    
+    align-items: center;
+    justify-content: center;
+
+    font-family: 'SegoeUI', 'Segoe UI';
+    font-size: 14px;
+    font-weight: normal;
+    font-variant: normal;
+    font-style: normal;
 }
 
-.col-3 {
-    width: 33%;
+.dynamics-button-active:hover {
+    background-color: rgb(31, 90, 137);
 }
 
 .label {
@@ -73,22 +104,6 @@
     height: 24px;
     float: right;
     margin-right: 5px;
-}
-
-#block {
-    padding: 5px;
-    border-radius: 5px;
-    background: none;
-    background-color: white;
-    border-color: #e0e0e0;
-}
-
-#searchBtn {
-    padding: 5px;
-    border-radius: 5px;
-    background: none;
-    background-color: white;
-    border-color: #e0e0e0;
 }
 
 #cardId {

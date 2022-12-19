@@ -170,35 +170,31 @@
 </head>
 <body style="overflow-wrap: break-word;">
 
-    <div class="container" style="font-family: undefined;">
-
-        <div class="row">
-            <div class="col-1"><div class="label" id="headerLabel">Sök Jojo-kort:</div></div>
-            <div class="col-2"><input style="width:100%;" type="text" id="cardId"></div>
-            <div class="col-1"><button onclick="Endeavor.Skanetrafiken.SearchTravelCards.getInfoFromCardId()" id="searchBtn" type="button" style="width:50px;margin-left:5px;">Sök</button></div>
-            <div class="col-3" id="messageSpace"></div>
-        </div>
+    <div class="header-grid">
+        <div class="row row-position no-border" style="--row: 1; --col: 1" id="headerLabel">Sök Jojo-kort:</div>
+        <div class="row row-position no-border" style="--row: 2; --col: 1"><input style="width:100%;" type="text" id="cardId"></div>
+        <div class="row row-position no-border" style="--row: 2; --col: 2" id="messageSpace"></div>
     </div>
 
-    <hr style="width:100%;text-align:left;margin-left:0;margin-bottom: 10px;">
+    <hr style="width:100%;text-align:left;margin-left:20px;margin-bottom: 10px;">
 
     <div class="grid">
-        <div class="row row-position" style="--row: 1; --col: 1">Belopp:</div>
-        <div class="row" style="grid-row: 1; grid-column: 2" id="belopp">-</div>
+        <div class="row row-position content-bucket" style="--row: 1; --col: 1">Belopp:</div>
+        <div class="row row-position content-bucket" style="--row: 1; --col: 2" id="belopp">-</div>
 
-        <div class="row" style="grid-row: 2; grid-column: 1">Är Spärrat:</div>
-        <div class="row" style="grid-row: 2; grid-column: 2">
+        <div class="row row-position content-bucket" style="--row: 2; --col: 1">Är Spärrat:</div>
+        <div class="row row-position content-bucket" style="--row: 2; --col: 2">
             <p id="isBlockedYes" style="display: none">Ja</p>
             <p id="isBlockedNo">Nej</p>
         </div>
 
-        <div class="row" style="grid-row: 3; grid-column: 1">Spärrad av:</div>
-        <div class="row" style="grid-row: 3; grid-column: 2" id="sparradav"></div>
+        <div class="row row-position content-bucket" style="--row: 3; --col: 1">Spärrad av:</div>
+        <div class="row row-position content-bucket" style="--row: 3; --col: 2" id="sparradav"></div>
 
-        <div class="row" style="grid-row: 4; grid-column: 1; display: none;">Reserverad:</div>
-        <div class="row" style="grid-row: 4; grid-column: 2"><input type="checkbox" id="reserveread" style="display: none;"></div>
+        <div class="row row-position content-bucket" style="--row: 4; --col: 1; display: none;">Reserverad:</div>
+        <div class="row row-position" style="--row: 4; --col: 2"><input type="checkbox" id="reserveread" style="display: none;"></div>
 
-        <div class="row" style="grid-row: 5; grid-column: 2"><button onclick="blockTravelCardWithConfirmDialog()" id="block" type="button" disabled="">SPÄRRA KORT</button></div>
+        <div class="row row-position no-border" style="--row: 5; --col: 1"><button class="dynamics-button-active" onclick="blockTravelCardWithConfirmDialog()" id="block" type="button" disabled="">Spärra Kort</button></div>
     </div>
 
     <script>
