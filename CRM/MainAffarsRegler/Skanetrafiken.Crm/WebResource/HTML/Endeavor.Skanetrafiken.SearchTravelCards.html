@@ -171,7 +171,7 @@
 <body style="overflow-wrap: break-word;">
 
     <div class="header-grid">
-        <div class="row row-position no-border" style="--row: 1; --col: 1" id="headerLabel">Sök Jojo-kort:</div>
+        <div class="row row-position no-border" style="--row: 1; --col: 1" id="headerLabel">Sök Jojo-kort</div>
         <div class="row row-position no-border" style="--row: 2; --col: 1"><input style="width:100%;" type="text" id="cardId"></div>
         <div class="row row-position no-border" style="--row: 2; --col: 2" id="messageSpace"></div>
     </div>
@@ -182,7 +182,7 @@
         <div class="row row-position content-bucket" style="--row: 1; --col: 1">Belopp:</div>
         <div class="row row-position content-bucket" style="--row: 1; --col: 2" id="belopp">-</div>
 
-        <div class="row row-position content-bucket" style="--row: 2; --col: 1">Är Spärrat:</div>
+        <div class="row row-position content-bucket" style="--row: 2; --col: 1">Är spärrat:</div>
         <div class="row row-position content-bucket" style="--row: 2; --col: 2">
             <p id="isBlockedYes" style="display: none">Ja</p>
             <p id="isBlockedNo">Nej</p>
@@ -191,10 +191,10 @@
         <div class="row row-position content-bucket" style="--row: 3; --col: 1">Spärrad av:</div>
         <div class="row row-position content-bucket" style="--row: 3; --col: 2" id="sparradav"></div>
 
-        <div class="row row-position content-bucket" style="--row: 4; --col: 1; display: none;">Reserverad:</div>
-        <div class="row row-position" style="--row: 4; --col: 2"><input type="checkbox" id="reserveread" style="display: none;"></div>
+        <div class="row row-position content-bucket no-border" style="--row: 4; --col: 1; display: none;">Reserverad:</div>
+        <div class="row row-position content-bucket no-border" style="--row: 4; --col: 2"><input type="checkbox" id="reserveread" style="display: none;"></div>
 
-        <div class="row row-position no-border" style="--row: 5; --col: 1"><button class="dynamics-button-active" onclick="blockTravelCardWithConfirmDialog()" id="block" type="button" disabled="">Spärra Kort</button></div>
+        <div class="row row-position no-border" style="--row: 5; --col: 1"><button onclick="blockTravelCardWithConfirmDialog()" id="block" type="button" disabled="">Spärra Kort</button></div>
     </div>
 
     <script>
