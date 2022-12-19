@@ -17,6 +17,14 @@
                 });
         }
 
+        function deactivateCloseButton() {
+            document.getElementById("block").disabled = true;
+        }
+
+        function activateCloseButton() {
+            document.getElementById("block").disabled = false;
+        }
+
         // Begin scoping
         if (typeof (Endeavor) == "undefined") {
             var Endeavor = {
@@ -55,9 +63,11 @@
                                 if (isClosed) {
                                     document.getElementById("isBlockedYes").style.display = "block";
                                     document.getElementById("isBlockedNo").style.display = "none";
+                                    deactivateCloseButton();
                                 } else {
                                     document.getElementById("isBlockedYes").style.display = "none";
                                     document.getElementById("isBlockedNo").style.display = "block";
+                                    activateCloseButton();
                                 }
 
                                 //document.getElementById("arsparrat").checked = isClosed;
@@ -65,8 +75,8 @@
                                 document.getElementById("sparradav").innerText = closedReason;
                                 document.getElementById("reserveread").checked = isReserved;
 
-                                if (amount > 0 || isClosed)
-                                    document.getElementById("block").disabled = false;
+                                //if (amount > 0 || isClosed)
+                                //    activateCloseButton();
                             },
                             function (error) {
                                 var errorMessage = "Något gick fel. Vänligen försök igen. Details: " + error.message;
@@ -80,9 +90,8 @@
                     }
                 },
 
-                blockButtonPlaceCaptureOrder: async function () {
+                blockButtonPlaceCaptureOrder: function () {
                     try {
-
                         var cardId = document.getElementById("cardId").value;
 
                         if (cardId == null || cardId == "") {
@@ -111,6 +120,7 @@
                                 if (isClosed) {
                                     document.getElementById("isBlockedYes").style.display = "block";
                                     document.getElementById("isBlockedNo").style.display = "none";
+                                    deactivateCloseButton();
                                 } else {
                                     document.getElementById("isBlockedYes").style.display = "none";
                                     document.getElementById("isBlockedNo").style.display = "block";
@@ -123,8 +133,6 @@
 
                                 Endeavor.formscriptfunctions.callGlobalAction("ed_CaptureOrder", inputParameters,
                                     function (result) {
-
-                                        debugger;
                                         result = JSON.parse(result.responseText);
                                         var captureOrderResponse = result.CaptureOrderResponse;
 
@@ -134,7 +142,7 @@
                                             document.getElementById("messageSpace").innerText = captureOrderResponse;
 
                                         document.getElementById("belopp").innerText = "0 kr";
-                                        document.getElementById("block").disabled = true;
+                                        deactivateCloseButton();
 
                                         if (isClosed == true) {
                                             document.getElementById("isBlockedYes").style.display = "block";
@@ -145,15 +153,17 @@
                                         }
                                     },
                                     function (error) {
-                                        var errorMessage = "Något gick fel. Vänligen försök igen. Details: " + error.message;
+                                        var errorMessage = "Något gick fel. Vänligen försök igen.";
+                                        document.getElementById("messageSpace").innerText = errorMessage;
                                         console.error(errorMessage);
-                                        Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
+                                        //Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
                                     });
                             },
                             function (error) {
-                                var errorMessage = "Något gick fel. Vänligen försök igen. Details: " + error.message;
+                                var errorMessage = "Något gick fel. Vänligen försök igen.";
+                                document.getElementById("messageSpace").innerText = errorMessage;
                                 console.error(errorMessage);
-                                Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
+                                //Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
                             });
                     }
                     catch (error) {
@@ -173,7 +183,7 @@
     <div class="header-grid">
         <div class="row row-position no-border" style="--row: 1; --col: 1" id="headerLabel">Sök Jojo-kort</div>
         <div class="row row-position no-border" style="--row: 2; --col: 1"><input style="width:100%;" type="text" id="cardId"></div>
-        <div class="row row-position no-border" style="--row: 2; --col: 2" id="messageSpace"></div>
+        <div class="row row-position content-bucket no-border" style="--row: 2; --col: 2" id="messageSpace"></div>
     </div>
 
     <hr style="width:100%;text-align:left;margin-left:20px;margin-bottom: 10px;">
