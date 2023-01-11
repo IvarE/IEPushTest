@@ -108172,7 +108172,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 
 		dagarsbiljett = 206290000,
 
-		dagar = 899310018,
+		_dagar = 899310018,
 
 		dagarsbiljettmomsfri = 899310019,
 

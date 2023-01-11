@@ -91,8 +91,8 @@ namespace Skanetrafiken.Crm.Models
         public int voucherType { get; set; } //ed_valuecodetypeglobal
         public decimal? remainingAmount { get; set; } //Skip
         public DateTime? disabled { get; set; } //Redeemed
-        public long? eanCode { get; set; } //EanCode
-        public int? couponId { get; set; } //Skip
+        //public long? eanCode { get; set; } //EanCode
+        //public int? couponId { get; set; } //Skip
         public string ticketId { get; set; }
         public int status { get; set; } //Kommer sen för uppdateringsflödet
 
@@ -351,7 +351,7 @@ namespace Skanetrafiken.Crm.Models
                                 ed_LastRedemptionDate = validToDate,
                                 ed_ValidUntil = validToDate,
                                 ed_CodeId = voucherCode,
-                                ed_Ean = eanCode?.ToString(),
+                                //ed_Ean = eanCode?.ToString(), //CK - Changed in VoucherService 2.0
                                 ed_OriginalAmount = amount,
                                 ed_ValueCodeVoucherId = voucherId.ToString()
                             };
@@ -386,17 +386,12 @@ namespace Skanetrafiken.Crm.Models
                                 _log.Debug($"Th={threadId} - UpdateValueCodeInCRM: ValueCode name updated.");
                             }
 
-                            //_log.Debug($"Creating value code type 5 (Presentkort) with values:");
-                            //_log.Debug($"{ValueCodeEntity.Fields.Id}: '{newValueCode.Id}', " +
-                            //    $"{ValueCodeEntity.Fields.ed_Amount}: '{newValueCode.ed_Amount}', " +
-                            //    $"{ValueCodeEntity.Fields.ed_CreatedTimestamp}: '{newValueCode.ed_CreatedTimestamp ?? DateTime.MinValue}', " +
-                            //    $"{ValueCodeEntity.Fields.ed_LastRedemptionDate}: '{newValueCode.ed_LastRedemptionDate ?? DateTime.MinValue}', " +
-                            //    $"{ValueCodeEntity.Fields.ed_CodeId}: '{newValueCode.ed_CodeId}', " +
-                            //    $"{ValueCodeEntity.Fields.ed_Ean}: '{newValueCode.ed_Ean}', " +
-                            //    $"{ValueCodeEntity.Fields.ed_OriginalAmount}: '{newValueCode.ed_OriginalAmount ?? -1}'");
-
                             //Handle updates where ValueCode has been canceled by Voucher Service (status 4 = Canceled) 29/10-20
-                            if (this.status == 4)
+                            //1 = Activated
+                            //2 = Expired
+                            //3 = Used Up
+                            //4 = Cancelled
+                            if (this.status == 3 || this.status == 4)
                             {
                                 var updateValueCode = new ValueCodeEntity()
                                 {
