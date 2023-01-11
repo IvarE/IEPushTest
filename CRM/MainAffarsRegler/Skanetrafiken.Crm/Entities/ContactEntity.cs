@@ -892,6 +892,14 @@ namespace Skanetrafiken.Crm.Entities
                     localContext.Trace($"Year, Month or Day is 0. Birthday is still null.");
             }
 
+            if (!string.IsNullOrEmpty(cgi_socialsecuritynumber) && cgi_socialsecuritynumber.Length == 12)
+            {
+                var socialSecurityNumberFormat = cgi_socialsecuritynumber;
+                var socialSecurityNumberWithHifen = socialSecurityNumberFormat.Insert(8, "-");
+
+                this.ed_SocialSecurityNumberFormat = socialSecurityNumberWithHifen;
+            }
+
             if (this.ed_Address1_Country != null)
                 localContext.Trace(CountryEntity.GetIsoCodeForCountry(localContext, this.ed_Address1_Country.Id));
 
@@ -1037,6 +1045,14 @@ namespace Skanetrafiken.Crm.Entities
             preImage.Trace(localContext.TracingService);
 
             SyncSwedishSocialSecurityNumber(combined.ed_HasSwedishSocialSecurityNumber);
+
+            if (!string.IsNullOrEmpty(preImage.cgi_socialsecuritynumber) && preImage.cgi_socialsecuritynumber.Length == 12)
+            {
+                var socialSecurityNumberFormat = preImage.cgi_socialsecuritynumber;
+                var socialSecurityNumberWithHifen = socialSecurityNumberFormat.Insert(8, "-");
+
+                this.ed_SocialSecurityNumberFormat = socialSecurityNumberWithHifen;
+            }
 
             // ---- Validering av information ----
             // Är något av de fält som valideras med i target?       

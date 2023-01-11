@@ -637,6 +637,15 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
         onBlockContactShow: function (formContext) {
 
+            var currForm = formContext.ui.formSelector.getCurrentItem();
+            var currFormId = currForm.getId();
+
+         
+
+            if (currFormId == "a218c7a7-167d-408a-8e0d-5f077636c463") { // Annons form
+                return false;
+            }
+
             var lockedPortal = formContext.getAttribute("ed_islockedportal").getValue();
             var showButton = false;
 
@@ -650,6 +659,15 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         },
 
         onUnblockContactShow: function (formContext) {
+
+            var currForm = formContext.ui.formSelector.getCurrentItem();
+            var currFormId = currForm.getId();
+
+
+
+            if (currFormId == "a218c7a7-167d-408a-8e0d-5f077636c463") { // Annons form
+                return false;
+            }
 
             var lockedPortal = formContext.getAttribute("ed_islockedportal").getValue();
             var showButton = false;
