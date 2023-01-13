@@ -72,7 +72,7 @@
                             function (results) {
 
                                 debugger;
-                                if (!results.includes("Kund har nu ett extra byte.") ) {
+                                if (!results.responseText.includes("Kund har nu ett extra byte.") ) {
                                     document.getElementById("errorMessageSpace").innerText = ("Oväntat fel: " + results);
                                 }
                                 else {
