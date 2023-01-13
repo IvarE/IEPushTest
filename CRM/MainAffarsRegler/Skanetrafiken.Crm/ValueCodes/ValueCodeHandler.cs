@@ -122,7 +122,7 @@ namespace Skanetrafiken.Crm.ValueCodes
             httpWebRequest.ServicePoint.Expect100Continue = true;
 
             localContext.Trace($"(CreateValueCodeGeneric) Create Token for Voucher Service");
-            ApiHelper.CreateTokenForVoucherService(localContext, httpWebRequest);
+            ApiHelper.CreateTokenForVoucherService(localContext, httpWebRequest); //New auth method for VoucherService 
             localContext.Trace($"(CreateValueCodeGeneric) Created Token for Voucher Service");
 
             localContext.Trace($"(CreateValueCodeGeneric) Fetch Value Code Template");
@@ -470,9 +470,9 @@ namespace Skanetrafiken.Crm.ValueCodes
                 valueCode.contactType = 1;
             }
 
-            valueCode.validFromDate = DateTime.Now;
-
-            valueCode.validToDate = validTo;
+            //CK - This might have changed
+            //valueCode.validFromDate = DateTime.Now;
+            //valueCode.validToDate = validTo;
 
             valueCode.voucherType = voucherType;
 
@@ -609,95 +609,6 @@ namespace Skanetrafiken.Crm.ValueCodes
 
             localContext.TracingService.Trace($"<--- Exiting {nameof(CreateInputJSONVoucherServiceGeneric)}.");
             return json;
-
-            #region old
-            //if (valueCodeType == Generated.ed_valuecodetype.Utansaldo)
-            //{
-            //    localContext.TracingService.Trace($"Setting up ValueCodeCouponRequest.------\nclearon:{clearOnTemplate}\tapi_token:{apiToken}\ttype:{type}\namount:{amount}\tdelivery_type:{deliverType}\t" +
-            //        $"email:{clientsEmailAddress}:\tmobile:{clientsPhoneNumber}\nvaliddays:{validDays}\tcustom_Text:{customText}\n-------");
-
-            //    ValueCodeCouponVoucherServiceRequest valueCode = new ValueCodeCouponVoucherServiceRequest();
-
-            //    // Amount
-            //    valueCode.amount = Convert.ToInt32(amount);
-
-            //    if (clientsEmailAddress != null && clientsEmailAddress != "")
-            //    {
-            //        valueCode.contactAddress = clientsEmailAddress;
-            //        // contactType 2 = Email
-            //        valueCode.contactType = 2;
-            //    }
-            //    else if (clientsPhoneNumber != null && clientsPhoneNumber != "")
-            //    {
-            //        valueCode.contactAddress = clientsPhoneNumber;
-            //        // contactType 1 = SMS
-            //        valueCode.contactType = 1;
-            //    }
-
-            //    // TODO - Set MKL-id from Contact (not necessary)
-            //    //valueCode.travellerId = "";
-
-            //    // Valid From
-            //    valueCode.validFromDate = DateTime.Now;
-
-            //    // Valid To
-            //    valueCode.validToDate = DateTime.Now.AddDays(validDays);
-
-            //    // 1 = förseningsersätting, 2 = presentkort (med saldo), 3 = förlustgaranti
-            //    valueCode.voucherType = 1;
-
-
-            //    js = new DataContractJsonSerializer(typeof(ValueCodeCouponRequest));
-            //    js.WriteObject(msObj, valueCode);
-            //}
-
-            //else
-            //{
-            //    localContext.TracingService.Trace($"Setting up ValueCodeVoucherRequest.");
-
-            //    ValueCodeCouponVoucherServiceRequest valueCode = new ValueCodeCouponVoucherServiceRequest();
-
-            //    // Amount
-            //    valueCode.amount = Convert.ToInt32(amount);
-
-            //    if (clientsEmailAddress != null && clientsEmailAddress != "")
-            //    {
-            //        valueCode.contactAddress = clientsEmailAddress;
-            //        // contactType 2 = Email
-            //        valueCode.contactType = 2;
-            //    }
-            //    else if (clientsPhoneNumber != null && clientsPhoneNumber != "")
-            //    {
-            //        valueCode.contactAddress = clientsPhoneNumber;
-            //        // contactType 1 = SMS
-            //        valueCode.contactType = 1;
-            //    }
-
-            //    // TODO - Set MKL-id from Contact (not necessary)
-            //    //valueCode.travellerId = "";
-
-            //    // Valid From
-            //    valueCode.validFromDate = DateTime.Now;
-
-            //    // Valid To
-            //    valueCode.validToDate = DateTime.Now.AddDays(validDays);
-
-            //    // 1 = förseningsersätting, 2 = presentkort (med saldo), 3 = förlustgaranti
-            //    valueCode.voucherType = 2;
-
-            //    js = new DataContractJsonSerializer(typeof(ValueCodeVoucherRequest));
-            //    js.WriteObject(msObj, valueCode);
-            //}
-
-
-            //msObj.Position = 0;
-            //StreamReader sr = new StreamReader(msObj);
-            //string json = sr.ReadToEnd();
-            //sr.Close();
-            //msObj.Close();
-
-            //return json;
-            #endregion
 
         }
 
@@ -1119,23 +1030,6 @@ namespace Skanetrafiken.Crm.ValueCodes
 
             localContext.TracingService.Trace($"{response}");
 
-            //// No Campaign connected to Value Code from Voucher Service
-            //QueryExpression queryCampaign = new QueryExpression
-            //{
-            //    EntityName = CampaignEntity.EntityLogicalName,
-            //    ColumnSet = new ColumnSet(true),
-            //    Criteria = new FilterExpression(LogicalOperator.And)
-            //    {
-            //        Conditions =
-            //            {
-            //                new ConditionExpression(CampaignEntity.Fields.CodeName, ConditionOperator.Equal, response.couponDetails.template.coupon_templates_campaign_number)
-            //            }
-            //    }
-            //};
-
-            //CampaignEntity campaign = XrmRetrieveHelper.RetrieveFirst<CampaignEntity>(localContext, queryCampaign);
-            //localContext.TracingService.Trace($"Fetched campaign: {campaign?.Id}");
-
             DateTime lastDate = new DateTime();
             if (response.validToDate != null)
                 lastDate = Convert.ToDateTime(response.validToDate);
@@ -1201,11 +1095,6 @@ namespace Skanetrafiken.Crm.ValueCodes
                 if (voucherType == (int)Generated.ed_valuecodetypeglobal.InlostReskassa)
                     valueCode.ed_ValueCodeTypeGlobal = Generated.ed_valuecodetypeglobal.InlostReskassa;
 
-                //if (amount == 0 && periodPrice > 0)
-                //    valueCode.ed_Amount = new Money((decimal)amount);
-                //else if ((amount > 0 && periodPrice == 0) || (amount > 0 && periodPrice > 0) || (amount == 0 && periodPrice == 0))
-                //    valueCode.ed_Amount = new Money((decimal)amount);
-
                 valueCode.ed_Amount = new Money((decimal)amount);
 
                 if (response.voucherCode != null)
@@ -1216,13 +1105,15 @@ namespace Skanetrafiken.Crm.ValueCodes
                 valueCode.ed_CustomImage = "";
                 valueCode.ed_CustomText = "";
 
+                //CK - Detta skickar de till oss
                 if (response.validToDate != null)
                 {
                     valueCode.ed_LastRedemptionDate = Convert.ToDateTime(response.validToDate);
                     valueCode.ed_ValidUntil = Convert.ToDateTime(response.validToDate);
                 }
 
-                valueCode.ed_Status = response.eanCode.ToString();
+                //CK - Changed
+                //valueCode.ed_Status = response.eanCode.ToString();
 
                 valueCode.ed_TicketReference = "";
 
@@ -1436,8 +1327,11 @@ namespace Skanetrafiken.Crm.ValueCodes
             public string created { get; set; }
             [DataMember]
             public string tag { get; set; }
+
+            //CK - De kommer skicka det till oss
             [DataMember]
             public string validFromDate { get; set; }
+            //CK - De kommer skicka det till oss
             [DataMember]
             public string validToDate { get; set; }
             [DataMember]
@@ -1450,10 +1344,12 @@ namespace Skanetrafiken.Crm.ValueCodes
             public decimal? remainingAmount { get; set; }
             [DataMember]
             public DateTime? disabled { get; set; }
-            [DataMember]
-            public long eanCode { get; set; }
-            [DataMember]
-            public string redeemStoreId { get; set; }
+            
+            //CK - This has been changed
+            //[DataMember]
+            //public long eanCode { get; set; }
+            //[DataMember]
+            //public string redeemStoreId { get; set; }
         }
 
 

@@ -205,29 +205,6 @@ namespace Skanetrafiken.Crm.Entities
 
             XrmHelper.CreateAndSendEmail(localContext, email, IssueSend: true);
 
-            // Bortkommenterad av JOHAN 190711!!! Varför uppdatera en kund?????
-            //if (this.exisitingEmailAddress != null)
-            //{
-            //    if (valueCode.ed_Lead != null)
-            //    {
-            //        LeadEntity lead = new LeadEntity()
-            //        {
-            //            Id = valueCode.ed_Lead.Id,
-            //            EMailAddress1 = exisitingEmailAddress
-            //        };
-            //        XrmHelper.Update(localContext, lead);
-            //    }
-            //    else if (valueCode.ed_Contact != null)
-            //    {
-            //        ContactEntity contact = new ContactEntity()
-            //        {
-            //            Id = valueCode.ed_Contact.Id,
-            //            EMailAddress1 = exisitingEmailAddress
-            //        };
-            //        XrmHelper.Update(localContext, contact);
-            //    }
-            //}
-
             // Only update the fields we are changing!
             ValueCodeEntity updValueCode = new ValueCodeEntity() {
                 statuscode = Generated.ed_valuecode_statuscode.Skickad,
