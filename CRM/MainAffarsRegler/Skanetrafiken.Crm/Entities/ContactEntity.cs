@@ -969,6 +969,11 @@ namespace Skanetrafiken.Crm.Entities
                 return;
             }
 
+            if ((!string.IsNullOrEmpty(preImage.ed_MklId)) && (preImage.ed_Kundresan == null) || (!string.IsNullOrEmpty(this.ed_MklId)) && (this.ed_Kundresan == null))
+            {
+                ed_Kundresan = new OptionSetValue((int)899310000);
+            }
+
             string postalCode = this.Address1_PostalCode != null ? this.Address1_PostalCode : preImage.Address1_PostalCode;
             string city = this.Address1_City != null ? this.Address1_City : preImage.Address1_City;
             localContext.Trace($"Entered HandlePreContactUpdate() Postal Code: {postalCode} and City: {city}");

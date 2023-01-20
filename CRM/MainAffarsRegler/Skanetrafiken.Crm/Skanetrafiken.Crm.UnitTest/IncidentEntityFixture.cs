@@ -337,13 +337,14 @@ namespace Endeavor.Crm.UnitTest
                 QueryExpression query = new QueryExpression
                 {
                     EntityName = IncidentEntity.EntityLogicalName,
-                    ColumnSet = new ColumnSet(IncidentEntity.Fields.cgi_soc_sec_number, IncidentEntity.Fields.ed_socialsecuritynumberformat), // needs to be generated
+                    ColumnSet = new ColumnSet(IncidentEntity.Fields.cgi_soc_sec_number, IncidentEntity.Fields.ed_socialsecuritynumberformat),
                     Criteria =
                     {
                         Conditions =
                         {
                             new ConditionExpression(IncidentEntity.Fields.cgi_soc_sec_number, ConditionOperator.NotNull),
-                            new ConditionExpression(IncidentEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.IncidentState.Active)
+                            new ConditionExpression(IncidentEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.IncidentState.Active),
+                            new ConditionExpression(IncidentEntity.Fields.CreatedOn, ConditionOperator.OnOrAfter, DateTime.UtcNow)
                         }
                     }
                 };
