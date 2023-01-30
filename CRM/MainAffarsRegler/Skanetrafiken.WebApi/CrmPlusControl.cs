@@ -4075,7 +4075,7 @@ namespace Skanetrafiken.Crm.Controllers
                         };
 
                         if (collection.Count > 0)
-                        {
+                        { // bugg 23191 - Här bör vi ev. lägga till att om land ska uppdateras till null vill vi inte uppdatera land. 
                             updContact.ed_InformationSource = Generated.ed_informationsource.UppdateraMittKonto;
                             contact.ed_InformationSource = Generated.ed_informationsource.UppdateraMittKonto;
                             localContext.OrganizationService.Update(updContact);
