@@ -32,25 +32,29 @@ namespace Skanetrafiken.Crm.Entities
             //};
 
             //CalculateRollupFieldResponse response = (CalculateRollupFieldResponse)localContext.OrganizationService.Execute(request);
-
+            localContext.Trace("Inside HandleQuoteEntityUpdate");
             #region slot removal
             var opportunityId = Guid.Empty;
-
-            if (quote.OpportunityId == null)
+            
+            if(quote.OpportunityId == null && preImage.OpportunityId == null)
             {
+                opportunityId = Guid.Empty;
+            }
+            else if(quote.OpportunityId == null)
+            {
+                localContext.Trace("1");
                 opportunityId = preImage.OpportunityId.Id;
             }
             else
             {
+                localContext.Trace("2");
                 opportunityId = quote.OpportunityId.Id;
 
             }
             //localContext.Trace($"Quote Opp id: {quote.OpportunityId}");
             // localContext.Trace($"Quote Opp id.id: {quote.OpportunityId.Id}");
-            localContext.Trace($"preImageQuote Opp id: {preImage.OpportunityId}");
 
-            localContext.Trace($"preImageQuote Opp id.id: {preImage.OpportunityId.Id}");
-            if (opportunityId != null)
+            if (opportunityId != null && opportunityId != Guid.Empty)
             {
                 localContext.Trace($"Quote.QuoteId: {quote.QuoteId}");
                 IList<QuoteEntity> quotes = XrmRetrieveHelper.RetrieveMultiple<QuoteEntity>(localContext,
