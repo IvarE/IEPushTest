@@ -42,12 +42,10 @@ namespace Skanetrafiken.Crm.Entities
             }
             else if(quote.OpportunityId == null)
             {
-                localContext.Trace("1");
                 opportunityId = preImage.OpportunityId.Id;
             }
             else
             {
-                localContext.Trace("2");
                 opportunityId = quote.OpportunityId.Id;
 
             }
