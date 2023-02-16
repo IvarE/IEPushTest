@@ -213,199 +213,247 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         resetRequiredLevel: function (executionContext, formIsOnLoad) {
             
             var formContext = executionContext.getFormContext();
-            
+
+            debugger;
             var stateCode = formContext.getAttribute("statecode");
             if (stateCode == null || (stateCode != null && stateCode.getValue() == 0)) {
 
-                var businessContact = formContext.getAttribute("ed_businesscontact");
-                var agentContact = formContext.getAttribute("ed_agentcontact");
-                var kontaktPerson = formContext.getAttribute("ed_kontaktperson");
-                var epostMottagare = formContext.getAttribute("ed_epostmottagare");
-                var infotainmentContact = formContext.getAttribute("ed_infotainmentcontact");
-                var privateContact = formContext.getAttribute("ed_privatecustomercontact");
-                var collaborationContact = formContext.getAttribute("ed_collaborationcontact");
+                var businessContactAttribute = formContext.getAttribute("ed_businesscontact");
+                var agentContactAttribute = formContext.getAttribute("ed_agentcontact");
+                var kontaktPersonAttribute = formContext.getAttribute("ed_kontaktperson");
+                var epostMottagareAttribute = formContext.getAttribute("ed_epostmottagare");
+                var infotainmentContactAttribute = formContext.getAttribute("ed_infotainmentcontact");
+                var privateContactAttribute = formContext.getAttribute("ed_privatecustomercontact");
+                var collaborationContactAttribute = formContext.getAttribute("ed_collaborationcontact");
+                var serviceresorAttribute = formContext.getAttribute("ed_serviceresor");
 
-                if (businessContact != null && agentContact != null && kontaktPerson != null &&
-                    epostMottagare != null && infotainmentContact != null && privateContact != null
-                    && collaborationContact != null) {
+                if (businessContactAttribute != null && agentContactAttribute != null && kontaktPersonAttribute != null &&
+                    epostMottagareAttribute != null && infotainmentContactAttribute != null && privateContactAttribute != null
+                    && collaborationContactAttribute != null && serviceresorAttribute != null) {
 
-                    var businessValue = businessContact.getValue();
-                    var agentValue = agentContact.getValue();
-                    var kontaktPersonValue = kontaktPerson.getValue();
-                    var epostMottagareValue = epostMottagare.getValue();
-                    var infotainmentValue = infotainmentContact.getValue();
-                    var privateValue = privateContact.getValue();
-                    var collaborationValue = collaborationContact.getValue();
+                    var businessValue = businessContactAttribute.getValue();
+                    var agentValue = agentContactAttribute.getValue();
+                    var kontaktPersonValue = kontaktPersonAttribute.getValue();
+                    var epostMottagareValue = epostMottagareAttribute.getValue();
+                    var infotainmentValue = infotainmentContactAttribute.getValue();
+                    var privateValue = privateContactAttribute.getValue();
+                    var collaborationValue = collaborationContactAttribute.getValue();
+                    var serviceresorValue = serviceresorAttribute.getValue();
 
                     if (stateCode == null && formIsOnLoad == true)
                     {
-                        privateContact.setValue(true);
+                        privateContactAttribute.setValue(true);
                         privateValue = true;
                     }
 
                     if (businessValue != false || agentValue != false || kontaktPersonValue != false ||
                         epostMottagareValue != false || infotainmentValue != false || privateValue != false
-                        || collaborationValue != false) {
+                        || collaborationValue != false || serviceresorValue != false) {
 
-                        businessContact.setRequiredLevel("none");
-                        agentContact.setRequiredLevel("none");
-                        kontaktPerson.setRequiredLevel("none");
-                        epostMottagare.setRequiredLevel("none");
-                        infotainmentContact.setRequiredLevel("none");
-                        privateContact.setRequiredLevel("none");
-                        collaborationContact.setRequiredLevel("none");
+                        businessContactAttribute.setRequiredLevel("none");
+                        agentContactAttribute.setRequiredLevel("none");
+                        kontaktPersonAttribute.setRequiredLevel("none");
+                        epostMottagareAttribute.setRequiredLevel("none");
+                        infotainmentContactAttribute.setRequiredLevel("none");
+                        privateContactAttribute.setRequiredLevel("none");
+                        collaborationContactAttribute.setRequiredLevel("none");
+                        serviceresorAttribute.setRequiredLevel("none");
 
                         if (privateValue != null && privateValue != false) {
 
-                            businessContact.setValue(false);
+                            businessContactAttribute.setValue(false);
                             formContext.getControl("ed_businesscontact").setDisabled(true);
 
-                            agentContact.setValue(false);
+                            agentContactAttribute.setValue(false);
                             formContext.getControl("ed_agentcontact").setDisabled(true);
 
-                            kontaktPerson.setValue(false);
+                            kontaktPersonAttribute.setValue(false);
                             formContext.getControl("ed_kontaktperson").setDisabled(true);
 
-                            epostMottagare.setValue(false);
+                            epostMottagareAttribute.setValue(false);
                             formContext.getControl("ed_epostmottagare").setDisabled(true);
 
-                            infotainmentContact.setValue(false);
+                            infotainmentContactAttribute.setValue(false);
                             formContext.getControl("ed_infotainmentcontact").setDisabled(true);
 
-                            collaborationContact.setValue(false);
+                            collaborationContactAttribute.setValue(false);
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
+
+                            serviceresorAttribute.setValue(false);
+                            formContext.getControl("ed_serviceresor").setDisabled(true);
 
                         }
                         else if (businessValue != null && businessValue != false)
                         {
-                            privateContact.setValue(false);
+                            privateContactAttribute.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
 
-                            agentContact.setValue(false);
+                            agentContactAttribute.setValue(false);
                             formContext.getControl("ed_agentcontact").setDisabled(true);
 
-                            kontaktPerson.setValue(false);
+                            kontaktPersonAttribute.setValue(false);
                             formContext.getControl("ed_kontaktperson").setDisabled(true);
 
-                            epostMottagare.setValue(false);
+                            epostMottagareAttribute.setValue(false);
                             formContext.getControl("ed_epostmottagare").setDisabled(true);
 
-                            infotainmentContact.setValue(false);
+                            infotainmentContactAttribute.setValue(false);
                             formContext.getControl("ed_infotainmentcontact").setDisabled(true);
 
-                            collaborationContact.setValue(false);
+                            collaborationContactAttribute.setValue(false);
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
+
+                            serviceresorAttribute.setValue(false);
+                            formContext.getControl("ed_serviceresor").setDisabled(true);
 
                         }
                         else if (kontaktPersonValue != null && kontaktPersonValue != false) {
 
-                            privateContact.setValue(false);
+                            privateContactAttribute.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
 
-                            businessContact.setValue(false);
+                            businessContactAttribute.setValue(false);
                             formContext.getControl("ed_businesscontact").setDisabled(true);
 
-                            agentContact.setValue(false);
+                            agentContactAttribute.setValue(false);
                             formContext.getControl("ed_agentcontact").setDisabled(true);
 
-                            epostMottagare.setValue(false);
+                            epostMottagareAttribute.setValue(false);
                             formContext.getControl("ed_epostmottagare").setDisabled(true);
 
-                            infotainmentContact.setValue(false);
+                            infotainmentContactAttribute.setValue(false);
                             formContext.getControl("ed_infotainmentcontact").setDisabled(true);
 
-                            collaborationContact.setValue(false);
+                            collaborationContactAttribute.setValue(false);
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
+
+                            serviceresorAttribute.setValue(false);
+                            formContext.getControl("ed_serviceresor").setDisabled(true);
 
                         }
                         else if (epostMottagareValue != null && epostMottagareValue != false) {
 
-                            privateContact.setValue(false);
+                            privateContactAttribute.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
 
-                            businessContact.setValue(false);
+                            businessContactAttribute.setValue(false);
                             formContext.getControl("ed_businesscontact").setDisabled(true);
 
-                            agentContact.setValue(false);
+                            agentContactAttribute.setValue(false);
                             formContext.getControl("ed_agentcontact").setDisabled(true);
 
-                            kontaktPerson.setValue(false);
+                            kontaktPersonAttribute.setValue(false);
                             formContext.getControl("ed_kontaktperson").setDisabled(true);
 
-                            infotainmentContact.setValue(false);
+                            infotainmentContactAttribute.setValue(false);
                             formContext.getControl("ed_infotainmentcontact").setDisabled(true);
 
-                            collaborationContact.setValue(false);
+                            collaborationContactAttribute.setValue(false);
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
+
+                            serviceresorAttribute.setValue(false);
+                            formContext.getControl("ed_serviceresor").setDisabled(true);
 
                         }
                         else if (infotainmentValue != null && infotainmentValue != false) {
 
-                            privateContact.setValue(false);
+                            privateContactAttribute.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
 
-                            businessContact.setValue(false);
+                            businessContactAttribute.setValue(false);
                             formContext.getControl("ed_businesscontact").setDisabled(true);
 
-                            agentContact.setValue(false);
+                            agentContactAttribute.setValue(false);
                             formContext.getControl("ed_agentcontact").setDisabled(true);
 
-                            kontaktPerson.setValue(false);
+                            kontaktPersonAttribute.setValue(false);
                             formContext.getControl("ed_kontaktperson").setDisabled(true);
 
-                            epostMottagare.setValue(false);
+                            epostMottagareAttribute.setValue(false);
                             formContext.getControl("ed_epostmottagare").setDisabled(true);
 
-                            collaborationContact.setValue(false);
+                            collaborationContactAttribute.setValue(false);
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
+
+                            serviceresorAttribute.setValue(false);
+                            formContext.getControl("ed_serviceresor").setDisabled(true);
 
                         }
                         else if (agentValue != null && agentValue != false) {
 
-                            privateContact.setValue(false);
+                            privateContactAttribute.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
 
-                            businessContact.setValue(false);
+                            businessContactAttribute.setValue(false);
                             formContext.getControl("ed_businesscontact").setDisabled(true);
 
-                            kontaktPerson.setValue(false);
+                            kontaktPersonAttribute.setValue(false);
                             formContext.getControl("ed_kontaktperson").setDisabled(true);
 
-                            epostMottagare.setValue(false);
+                            epostMottagareAttribute.setValue(false);
                             formContext.getControl("ed_epostmottagare").setDisabled(true);
 
-                            infotainmentContact.setValue(false);
+                            infotainmentContactAttribute.setValue(false);
                             formContext.getControl("ed_infotainmentcontact").setDisabled(true);
 
-                            collaborationContact.setValue(false);
+                            collaborationContactAttribute.setValue(false);
                             formContext.getControl("ed_collaborationcontact").setDisabled(true);
+
+                            serviceresorAttribute.setValue(false);
+                            formContext.getControl("ed_serviceresor").setDisabled(true);
 
                         }
                         else if (collaborationValue != null && collaborationValue != false) {
 
-                            privateContact.setValue(false);
+                            privateContactAttribute.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
 
-                            businessContact.setValue(false);
+                            businessContactAttribute.setValue(false);
                             formContext.getControl("ed_businesscontact").setDisabled(true);
 
-                            agentContact.setValue(false);
+                            agentContactAttribute.setValue(false);
                             formContext.getControl("ed_agentcontact").setDisabled(true);
 
-                            kontaktPerson.setValue(false);
+                            kontaktPersonAttribute.setValue(false);
                             formContext.getControl("ed_kontaktperson").setDisabled(true);
 
-                            epostMottagare.setValue(false);
+                            epostMottagareAttribute.setValue(false);
                             formContext.getControl("ed_epostmottagare").setDisabled(true);
 
-                            infotainmentContact.setValue(false);
+                            infotainmentContactAttribute.setValue(false);
                             formContext.getControl("ed_infotainmentcontact").setDisabled(true);
+
+                            serviceresorAttribute.setValue(false);
+                            formContext.getControl("ed_serviceresor").setDisabled(true);
+                        }
+                        else if (serviceresorValue == true) {
+
+                            privateContactAttribute.setValue(false);
+                            formContext.getControl("ed_privatecustomercontact").setDisabled(true);
+
+                            businessContactAttribute.setValue(false);
+                            formContext.getControl("ed_businesscontact").setDisabled(true);
+
+                            agentContactAttribute.setValue(false);
+                            formContext.getControl("ed_agentcontact").setDisabled(true);
+
+                            kontaktPersonAttribute.setValue(false);
+                            formContext.getControl("ed_kontaktperson").setDisabled(true);
+
+                            epostMottagareAttribute.setValue(false);
+                            formContext.getControl("ed_epostmottagare").setDisabled(true);
+
+                            infotainmentContactAttribute.setValue(false);
+                            formContext.getControl("ed_infotainmentcontact").setDisabled(true);
+
+                            collaborationContactAttribute.setValue(false);
+                            formContext.getControl("ed_collaborationcontact").setDisabled(true);
                         }
                     }
                     else if (businessValue == false && agentValue == false
                         && kontaktPersonValue == false && epostMottagareValue == false
                         && infotainmentValue == false && privateValue == false
-                        && collaborationValue == false) {
+                        && collaborationValue == false && serviceresorValue  == false) {
 
                         formContext.getControl("ed_businesscontact").setDisabled(false);
                         formContext.getControl("ed_agentcontact").setDisabled(false);
@@ -414,14 +462,16 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         formContext.getControl("ed_infotainmentcontact").setDisabled(false);
                         formContext.getControl("ed_privatecustomercontact").setDisabled(false);
                         formContext.getControl("ed_collaborationcontact").setDisabled(false);
+                        formContext.getControl("ed_serviceresor").setDisabled(false);
 
-                        businessContact.setRequiredLevel("required");
-                        agentContact.setRequiredLevel("required");
-                        kontaktPerson.setRequiredLevel("required");
-                        epostMottagare.setRequiredLevel("required");
-                        infotainmentContact.setRequiredLevel("required");
-                        privateContact.setRequiredLevel("required");
-                        collaborationContact.setRequiredLevel("required");
+                        businessContactAttribute.setRequiredLevel("required");
+                        agentContactAttribute.setRequiredLevel("required");
+                        kontaktPersonAttribute.setRequiredLevel("required");
+                        epostMottagareAttribute.setRequiredLevel("required");
+                        infotainmentContactAttribute.setRequiredLevel("required");
+                        privateContactAttribute.setRequiredLevel("required");
+                        collaborationContactAttribute.setRequiredLevel("required");
+                        serviceresorAttribute.setRequiredLevel("required");
                     }
                 }
             }
