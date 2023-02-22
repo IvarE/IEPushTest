@@ -35,7 +35,7 @@ namespace Endeavor.Crm.UnitTest
                 
                 // CallGetDirectJourneys(localContext, "9021012007013000", "9021012093004000", "2016-02-09T10:33:02.447Z", "", "TRAIN");
 
-                string str = GetDirectJourneys.ExecuteCodeActivity(localContext, "9021012007013000", "9021012093004000", "2016-02-09T10:33:02.447Z", "", "TRAIN");
+                //string str = GetDirectJourneys.ExecuteCodeActivity(localContext, "9021012007013000", "9021012093004000", "2016-02-09T10:33:02.447Z", "", "TRAIN");
 
             }
         }

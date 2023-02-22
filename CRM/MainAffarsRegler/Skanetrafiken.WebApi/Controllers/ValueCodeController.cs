@@ -215,7 +215,7 @@ namespace Skanetrafiken.Crm.Controllers
                 ValueCodeEvent valueCodeMsg = jsonMessage;// JsonConvert.DeserializeObject<ValueCodeEvent>(jsonMessage);
                 _log.Debug($"Th={threadId} - POST Call Input log - Amount: '{jsonMessage?.amount}', Created: {jsonMessage?.created}, Tag: {jsonMessage?.tag}, ValidFromDate: {jsonMessage?.validFromDate}, " +
                     $"ValidToDate: {jsonMessage?.validToDate}, VoucherCode: {jsonMessage?.voucherCode}, VoucherId: {jsonMessage?.voucherId}, VoucherType: {jsonMessage?.voucherType}, " +
-                    $"RemainingAmount: {jsonMessage?.remainingAmount}, Disabled: {jsonMessage?.disabled}, EanCode: {jsonMessage?.eanCode}, CouponId: {jsonMessage?.couponId}, Status: {jsonMessage?.status}");
+                    $"RemainingAmount: {jsonMessage?.remainingAmount}, Disabled: {jsonMessage?.disabled}, Status: {jsonMessage?.status}");
 
                 if (string.IsNullOrWhiteSpace(jsonMessage.voucherCode))
                     return response = Request.CreateResponse(HttpStatusCode.BadRequest, "VoucherCode cannot be empty.");

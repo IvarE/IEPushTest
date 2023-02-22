@@ -3139,8 +3139,8 @@ namespace Endeavor.Crm.UnitTest
                 voucherType = voucherType,
                 remainingAmount = null,
                 disabled = redeemed,
-                eanCode = eanCode,
-                couponId = couponId,
+                //eanCode = eanCode,
+                //couponId = couponId,
                 
             };
 
