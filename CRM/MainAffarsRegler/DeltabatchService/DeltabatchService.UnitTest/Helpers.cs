@@ -4,7 +4,7 @@ using System.Security;
 
 using Microsoft.Xrm.Sdk;
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTest
 {
     class Configuration
     {

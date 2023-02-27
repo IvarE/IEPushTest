@@ -18,7 +18,7 @@ using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using NUnit.Framework;
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTest
 {
     [SetUpFixture]
     public class TestSetup

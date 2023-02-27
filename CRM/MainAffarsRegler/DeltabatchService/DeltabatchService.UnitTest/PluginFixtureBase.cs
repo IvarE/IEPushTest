@@ -11,7 +11,7 @@ using Microsoft.Xrm.Sdk.Query;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTest
 {
     public class PluginFixtureBase
     {

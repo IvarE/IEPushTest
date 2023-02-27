@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiHelper.cs" />
+    <Compile Include="ColumnBlockSchemas\CustomerInfoExtensions.cs" />
     <Compile Include="Entities\InvoiceEntity.cs" />
     <Compile Include="Entities\InvoiceProductEntity.cs" />
     <Compile Include="Entities\MarketingListEntity.cs" />

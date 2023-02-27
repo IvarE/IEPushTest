@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Endeavor.Crm.Extensions;
-using Microsoft.Xrm.Sdk.Client;
-using Microsoft.Xrm.Sdk.Messages;
-using Microsoft.Xrm.Sdk.Metadata;
-using Microsoft.Crm.Sdk;
 using Microsoft.Crm.Sdk.Messages;
 using Generated = Skanetrafiken.Crm.Schema.Generated;
 using Endeavor.Crm;
@@ -16,11 +12,7 @@ using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text.RegularExpressions;
 using System.Globalization;
-using Skanetrafiken.Crm;
 using System.Linq;
-using Skanetrafiken.Crm.Entities;
-using System.Net.Http;
-using System.IdentityModel;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -740,6 +732,8 @@ namespace Skanetrafiken.Crm.Entities
                 UtvandradSpecified = true,
                 Avliden = Generated.ed_creditsaferejectcodes.Deceased == this.ed_CreditsafeRejectionCode,
                 AvlidenSpecified = true,
+                Skyddad = Generated.ed_creditsaferejectcodes.Protected == this.ed_CreditsafeRejectionCode,
+                SkyddadSpecified = true,
                 CreditsafeOk = this.ed_CreditsafeRejectionCode != null,
                 CreditsafeOkSpecified = true,
             };

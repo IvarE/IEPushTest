@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Endeavor.Crm.DeltabatchService;
 using NUnit.Framework;
 using Microsoft.Crm.Sdk.Samples;
@@ -8,14 +7,12 @@ using System.Collections.Generic;
 using Skanetrafiken.Crm.Entities;
 using Microsoft.Xrm.Sdk.Query;
 using Generated = Skanetrafiken.Crm.Schema.Generated;
-using System.Text.RegularExpressions;
-using System.Globalization;
 using Microsoft.Xrm.Sdk;
 using System.Linq;
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTest
 {
-    [TestClass]
+    [TestFixture]
     public class DeltabatchServiceFixture : PluginFixtureBase
     {
         private ServerConnection _serverConnection;
