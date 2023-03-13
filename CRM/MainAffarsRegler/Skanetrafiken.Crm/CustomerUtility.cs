@@ -270,7 +270,6 @@ namespace Skanetrafiken.Crm
                 countryRef = CountryEntity.GetEntityRefForCountryCode(localContext, customerInfo.AddressBlock.CountryISO);
             }
 
-            localContext.Trace("BEFORE SWITCH ########################");
             List<string> messages = new List<string>();
             bool error = false;
             switch (customerInfo.Source)
