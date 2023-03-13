@@ -18,7 +18,6 @@ namespace Endeavor.Crm.UnitTest.CancellationCodes
         public void InitTests()
         {
             _fixture = AutoFixtureFactory.CreateFixture();
-
             _dateTimeProvider = new Mock<IDateTimeProvider>();
             _dateTimeProvider.Setup(dtp => dtp.Now()).Returns(DateTime.Now);
         }
@@ -173,9 +172,9 @@ namespace Endeavor.Crm.UnitTest.CancellationCodes
             handler.HandleStatusCode(contact, row);
 
             // Assert
-            Assert.AreEqual("SKYDDAD", contact.FirstName);
-            Assert.AreEqual("SKYDDAD", contact.LastName);
-            Assert.AreEqual("SKYDDAD", contact.Address1_Line2);
+            Assert.AreEqual("x", contact.FirstName);
+            Assert.AreEqual("y", contact.LastName);
+            Assert.IsTrue(string.IsNullOrEmpty(contact.Address1_Line2));
             Assert.AreEqual(ed_creditsaferejectcodes.Protected, contact.ed_CreditsafeRejectionCode);
             Assert.AreEqual("Skyddad", contact.ed_CreditsafeRejectionText);
             Assert.AreEqual(now.ToString("yyyy-MM-dd"), contact.ed_CreditsafeRejectionComment);

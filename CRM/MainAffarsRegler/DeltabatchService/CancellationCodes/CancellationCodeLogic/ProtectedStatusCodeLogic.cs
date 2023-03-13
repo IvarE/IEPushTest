@@ -112,9 +112,8 @@ namespace Endeavor.Crm.DeltabatchService.CancellationCodes.CancellationCodeLogic
                 contact[field] = null;
             }
 
-            contact.FirstName = "SKYDDAD";
-            contact.LastName = "SKYDDAD";
-            contact.Address1_Line2 = "SKYDDAD";
+            contact.FirstName = "x";
+            contact.LastName = "y";
             contact.ed_CreditsafeRejectionCode = ed_creditsaferejectcodes.Protected;
             contact.ed_CreditsafeRejectionText = "Skyddad";
             contact.ed_CreditsafeRejectionComment = _dateTimeProvider.Now().ToString("yyyy-MM-dd");
