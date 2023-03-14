@@ -519,7 +519,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 if (currFormId == "aa39956c-0a06-4963-873a-2b3e574dbea5") {//dont lock email field when using form "Tre Kolumner (Test)" or "Labbvy Admin (4b94250e-b88f-4439-9184-750d56a84fcf)"   
                     Endeavor.formscriptfunctions.SetState("emailaddress1", false, formContext); //always unlocked. 
                 }
-                else if (currFormId == "c2cd73d5-94d8-428e-8efe-4fa7d9ba05b4" || currFormId == "ec6a06d0-d3e3-4085-b231-c2e20dac64ac" || currFormId == "293c878f-f068-40a0-ae48-4297e060871c") { // if form: Organisation, ClickDimension or Sales insight apply MKL rule.
+                else if (currFormId == "c2cd73d5-94d8-428e-8efe-4fa7d9ba05b4" || currFormId == "ec6a06d0-d3e3-4085-b231-c2e20dac64ac" || currFormId == "293c878f-f068-40a0-ae48-4297e060871c" || "a218c7a7-167d-408a-8e0d-5f077636c463") { // if form: Organisation, ClickDimension, Annons or Sales insight apply MKL rule.
 
                         if (MKLid != "undefined" && MKLid.getValue() != null) { //lock if MKLid exist
 
