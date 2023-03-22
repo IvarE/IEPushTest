@@ -471,8 +471,8 @@ namespace Skanetrafiken.Crm.ValueCodes
             }
 
             //CK - This might have changed
-            //valueCode.validFromDate = DateTime.Now;
-            //valueCode.validToDate = validTo;
+            valueCode.validFromDate = DateTime.Now;
+            valueCode.validToDate = validTo;
 
             valueCode.voucherType = voucherType;
 
@@ -1113,7 +1113,7 @@ namespace Skanetrafiken.Crm.ValueCodes
                 }
 
                 //CK - Changed
-                //valueCode.ed_Status = response.eanCode.ToString();
+                valueCode.ed_Status = response.eanCode.ToString();
 
                 valueCode.ed_TicketReference = "";
 
@@ -1344,12 +1344,12 @@ namespace Skanetrafiken.Crm.ValueCodes
             public decimal? remainingAmount { get; set; }
             [DataMember]
             public DateTime? disabled { get; set; }
-            
+
             //CK - This has been changed
-            //[DataMember]
-            //public long eanCode { get; set; }
-            //[DataMember]
-            //public string redeemStoreId { get; set; }
+            [DataMember]
+            public long eanCode { get; set; }
+            [DataMember]
+            public string redeemStoreId { get; set; }
         }
 
 

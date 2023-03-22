@@ -351,7 +351,7 @@ namespace Skanetrafiken.Crm.Models
                                 ed_LastRedemptionDate = validToDate,
                                 ed_ValidUntil = validToDate,
                                 ed_CodeId = voucherCode,
-                                //ed_Ean = eanCode?.ToString(), //CK - Changed in VoucherService 2.0
+                                /*ed_Ean = eanCode?.ToString(),*/ //CK - Changed in VoucherService 2.0
                                 ed_OriginalAmount = amount,
                                 ed_ValueCodeVoucherId = voucherId.ToString()
                             };
