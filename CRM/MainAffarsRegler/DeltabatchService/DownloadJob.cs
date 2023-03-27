@@ -103,7 +103,9 @@ namespace Endeavor.Crm.DeltabatchService
 
                 UpdateContactsWithNewInfo(localContext);
 
+#if !DEBUG
                 ArchiveFile();
+#endif
 
                 _log.Info("DownloadJob Done!");
             }
