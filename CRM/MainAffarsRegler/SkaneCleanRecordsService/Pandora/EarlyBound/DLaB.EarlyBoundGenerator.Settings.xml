@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Config xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <AudibleCompletionNotification>false</AudibleCompletionNotification>
+  <CrmSvcUtilRelativePath>DLaB.EarlyBoundGenerator\crmsvcutil.exe</CrmSvcUtilRelativePath>
+  <IncludeCommandLine>true</IncludeCommandLine>
+  <MaskPassword>true</MaskPassword>
+  <SettingsVersion>1.2022.5.3</SettingsVersion>
+  <Version>1.2022.5.3</Version>
+  <ExtensionConfig>
+    <ActionPrefixesWhitelist>abssr</ActionPrefixesWhitelist>
+    <ActionsWhitelist />
+    <ActionsToSkip>_CloneRoutingRuleSet|
+_EvaluateRuleAndRoute|
+_EvaluateSearchRequest|
+_GetServiceTreeData|
+_MoveRoutingRuleItemAt|
+_RemoveMarketingListMembersByIds|
+_ResourcesAddUpdateAction|
+_ResourcesRemoveUpdateAction|
+_RetrieveActivitiesByResources|
+_RoutingRuleSetValidation|
+_SaveServiceTreeData|
+_ServiceCalendarAction|
+abssr_AddressLookup|
+abssr_CreatePermit|
+AlmHandler|
+AnalyzeSentiment|
+BatchPrediction|
+CancelTraining|
+CategorizeText|
+DetectLanguage|
+ed_AllowOneMoreTicketMove|
+ed_ApproveValueCode|
+ed_ApproveValueCodeApproval|
+ed_BlockAccountPortal|
+ed_BlockCardBiztalk|
+ed_BlockCompanyRolePortal|
+ed_BlockContactAction_Test|
+ed_BlockCustomerPortal|
+ed_CancelOrder|
+ed_CancelValueCode|
+ed_CaptureOrder|
+ed_CreateCreditOrder|
+ed_CreateValueCodeApprovalTemp|
+ed_CreateValueCodeGeneric|
+ed_DeclineValueCode|
+ed_DecryptAttachmentFile|
+ed_GenerateCampaignCodesAction|
+ed_GenerateSlots|
+ed_GetCard|
+ed_GetCardDetails|
+ed_GetCardTransactions|
+ed_GetContractors|
+ed_GetDirectJourneys|
+ed_GetExcelDatafromSlots|
+ed_GetLineDetails|
+ed_GetOrders|
+ed_GetOrganisationalUnits|
+ed_GetOutstandingCharges|
+ed_GetServiceJourney|
+ed_GetTicketMoveDataFromMKL|
+ed_GetValueCode|
+ed_MergeAccountsPortalen|
+ed_ParseBiztalkResponse|
+ed_ParseBlockCardResponseFromBiztalk|
+ed_PlaceOrder|
+ed_PrintRefundReports|
+ed_RechargeCard|
+ed_SendEmailFromRibbon|
+ed_SendMarketingInfo|
+ed_SendTextMessage|
+ed_SendValueCode|
+edp_CasCompany|
+edp_ExportCreditsafeConfiguration|
+edp_GetCredentials|
+edp_GetLicenseInformation|
+edp_HandleCompanyData|
+edp_ImportCreditsafeConfiguration|
+edp_IsCompanyStakeholder|
+edp_PortfolioUpdate|
+edp_SearchCompany|
+ExtractKeyPhrases|
+ExtractTextEntities|
+GetJobStatus|
+install|
+IsPaiEnabled|
+msdyn_AddSuggestedCards|
+msdyn_cesinvoke|
+msdyn_CheckAnyUserIsIntegrationUser|
+msdyn_CheckFetchXmlAndLayoutXmlOfSavedQueries|
+msdyn_CheckIfSalesFormsFromUnmanagedLayer|
+msdyn_CheckOrgSettingIsSOPIntegrationEnabled|
+msdyn_CheckOrgSettingOOBPriceCalculationEnabled|
+msdyn_CheckReqRibbonCommandDef|
+msdyn_CheckReqWebResourceOnSystemForm|
+msdyn_ConditionXmlConversion|
+msdyn_CreateSimilarOpportunitiyPredictionModel|
+msdyn_CreateSuggestedActivity|
+msdyn_CreateSuggestedContact|
+msdyn_DataValidationApi|
+msdyn_DeleteCalendar|
+msdyn_DeleteFlow|
+msdyn_DismissEmailInfraActionCard|
+msdyn_DismissSuggestedActivity|
+msdyn_DismissSuggestedContact|
+msdyn_EditAndSaveSuggestedContact|
+msdyn_EnableLinkedInDataValidation|
+msdyn_EnableSharePoint|
+msdyn_ExecuteARC|
+msdyn_ExecutePrimaryCreatePostActions|
+msdyn_ExecuteSIRequest|
+msdyn_ExecuteSISampleDataRequest|
+msdyn_Feedback|
+msdyn_GDPROptoutContact|
+msdyn_GDPROptoutLead|
+msdyn_GDPROptoutUser|
+msdyn_GetACIMarsConnectorStatus|
+msdyn_GetAutoCaptureUri|
+msdyn_GetKAObjectFromTemplate|
+msdyn_GetLegalAcceptanceStatus|
+msdyn_GetNotesAnalysis|
+msdyn_GetOrganizationProvisioningStatus|
+msdyn_GetRecordUsers|
+msdyn_GetRICommonFCBStatus|
+msdyn_GetRIProvisioningStatus|
+msdyn_GetRITenantEndpoint|
+msdyn_GetServiceBaseUrl|
+msdyn_getsifeatureconfiguration|
+msdyn_GetSIFeatureConfiguration|
+msdyn_GetSILicenseStatus|
+msdyn_GetSIPackageStatus|
+msdyn_GetTalkingPoints|
+msdyn_GetTimeLineRecords|
+msdyn_GetUserConsentStatus|
+msdyn_InstallSalesInsightsSolution|
+msdyn_InvokeServiceStoredProc|
+msdyn_IsLinkedInDataValidationEnabled|
+msdyn_IsMSTeamsUserSyncFeatureEnabled|
+msdyn_IsSharePointEnabled|
+msdyn_MarketingListMetadataUpdate|
+msdyn_MarketingMetadataUpdate|
+msdyn_MarketingMetadataUpdatePostImport|
+msdyn_PerformNotesAnalysisAction|
+msdyn_PostOperationRevokeUsrConsent|
+msdyn_PostOrganizationProvisioningStatus|
+msdyn_PostRetrieveRealTimeSuggestedActivities|
+msdyn_ProvisionSharePointDocumentLibraries|
+msdyn_QueryExchange|
+msdyn_RetrieveActivities|
+msdyn_RetrieveKnowledgeSuggestions|
+msdyn_RetrieveKPIvaluesfromDCI|
+msdyn_RetrieveKpiValuesFromRI|
+msdyn_RetrieveSearchProviders|
+msdyn_RetrieveTypeValuesFromDCI|
+msdyn_SaveCalendar|
+msdyn_SetFeatureStatus|
+msdyn_SetLegalAcceptanceStatus|
+msdyn_SetSharePointDocumentStatus|
+msdyn_SetTalkingPointLikedStatus|
+msdyn_SetTeamsDocumentStatus|
+msdyn_SIGetFCBStatus|
+msdyn_SnoozeEmailInfraActionCard|
+msdyn_StartODOSProvisioning|
+msdyn_StartRIProvisioning|
+msdyn_TrackExchangeActivity|
+msdyn_UpdateAutoCaptureSettings|
+msdyn_Updatefeatureconfig|
+msdyn_UpdateRITenantInfo|
+msdyn_UpdateUserConsentBasedonSecurityRoles|
+msdyn_UpgradeTelemetry|
+new_CreateValueCodeGenericTemp2|
+PowerAutomateProxy|
+Predict|
+PredictByReference|
+PredictionSchema|
+PublishAIConfiguration|
+PvaAuthorize|
+PvaCreateBotComponents|
+PvaCreateContentSnapshot|
+PvaDeleteBot|
+PvaGetDirectLineEndpoint|
+PvaGetFeatureControlSet|
+PvaGetUserBots|
+PvaPublish|
+QuickTest|
+RecognizeText|
+retrieveappsetting|
+retrieveappsettinglist|
+saveappsetting|
+SchedulePrediction|
+ScheduleRetrain|
+ScheduleTraining|
+Train|
+UnpublishAIConfiguration|
+UnschedulePrediction|
+UnscheduleTraining|
+ValidateAIConfiguration</ActionsToSkip>
+    <AddDebuggerNonUserCode>true</AddDebuggerNonUserCode>
+    <AddNewFilesToProject>false</AddNewFilesToProject>
+    <AddOptionSetMetadataAttribute>true</AddOptionSetMetadataAttribute>
+    <CamelCaseClassNames>false</CamelCaseClassNames>
+    <CamelCaseMemberNames>false</CamelCaseMemberNames>
+    <CreateOneFilePerAction>true</CreateOneFilePerAction>
+    <CreateOneFilePerEntity>true</CreateOneFilePerEntity>
+    <CreateOneFilePerOptionSet>true</CreateOneFilePerOptionSet>
+    <DeleteFilesFromOutputFolders>false</DeleteFilesFromOutputFolders>
+    <EntitiesToSkip />
+    <EntitiesWhitelist>abssr_permit|
+abssr_permittype</EntitiesWhitelist>
+    <EntityAttributeSpecifiedNames />
+    <EntityPrefixesToSkip />
+    <EntityPrefixesWhitelist />
+    <GenerateActionAttributeNameConsts>false</GenerateActionAttributeNameConsts>
+    <GenerateAttributeNameConsts>true</GenerateAttributeNameConsts>
+    <GenerateAnonymousTypeConstructor>true</GenerateAnonymousTypeConstructor>
+    <GenerateConstructorsSansLogicalName>false</GenerateConstructorsSansLogicalName>
+    <GenerateEntityRelationships>true</GenerateEntityRelationships>
+    <GenerateEntityTypeCode>false</GenerateEntityTypeCode>
+    <GenerateEnumProperties>true</GenerateEnumProperties>
+    <GenerateOnlyReferencedOptionSets>true</GenerateOnlyReferencedOptionSets>
+    <GenerateOptionSetMetadataAttribute>true</GenerateOptionSetMetadataAttribute>
+    <GroupLocalOptionSetsByEntity>false</GroupLocalOptionSetsByEntity>
+    <InvalidCSharpNamePrefix>_</InvalidCSharpNamePrefix>
+    <MakeAllFieldsEditable>false</MakeAllFieldsEditable>
+    <MakeReadonlyFieldsEditable>false</MakeReadonlyFieldsEditable>
+    <MakeResponseActionsEditable>false</MakeResponseActionsEditable>
+    <LocalOptionSetFormat>{0}_{1}</LocalOptionSetFormat>
+    <OptionSetLanguageCodeOverride
+      xsi:nil="true" />
+    <OptionSetPrefixesToSkip />
+    <OptionSetsToSkip />
+    <OptionSetNames />
+    <ProjectNameForEarlyBoundFiles />
+    <PropertyEnumMappings />
+    <ReadSerializedMetadata>false</ReadSerializedMetadata>
+    <RemoveRuntimeVersionComment>true</RemoveRuntimeVersionComment>
+    <ReplaceOptionSetPropertiesWithEnum>true</ReplaceOptionSetPropertiesWithEnum>
+    <SerializeMetadata>false</SerializeMetadata>
+    <TokenCapitalizationOverrides>AccessTeam|
+ActiveState|
+BusinessAs|
+CardUci|
+DefaultOnCase|
+EmailAnd|
+FeatureSet|
+IsMsTeams|
+IsPaiEnabled|
+IsSopIntegration|
+MsDyUsd|
+O365Admin|
+OnHold|
+OwnerOnAssign|
+ParticipatesIn|
+PartiesOnEmail|
+PauseStates|
+SentOn|
+SlaId|
+SlaKpi|
+SyncOptIn|
+Timeout|
+UserPuid|
+Weblink|
+VoiceMail</TokenCapitalizationOverrides>
+    <UnmappedProperties>duplicaterule:BaseEntityTypeCode,MatchingEntityTypeCode|
+invoicedetail:InvoiceStateCode|
+leadaddress:AddressTypeCode,ShippingMethodCode|
+organization:CurrencyFormatCode,DateFormatCode,TimeFormatCode,WeekStartDayCode|
+quote:StatusCode|
+quotedetail:QuoteStateCode|
+salesorderdetail:SalesOrderStateCode</UnmappedProperties>
+    <UseDeprecatedOptionSetNaming>false</UseDeprecatedOptionSetNaming>
+    <UseLogicalNames>false</UseLogicalNames>
+    <UseTfsToCheckoutFiles>false</UseTfsToCheckoutFiles>
+    <WaitForAttachedDebugger>false</WaitForAttachedDebugger>
+  </ExtensionConfig>
+  <ExtensionArguments>
+    <Argument>
+      <SettingType>Actions</SettingType>
+      <Name>codecustomization</Name>
+      <Value>DLaB.CrmSvcUtilExtensions.Action.CustomizeCodeDomService,DLaB.CrmSvcUtilExtensions</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>Actions</SettingType>
+      <Name>codegenerationservice</Name>
+      <Value>DLaB.CrmSvcUtilExtensions.Action.CustomCodeGenerationService,DLaB.CrmSvcUtilExtensions</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>Actions</SettingType>
+      <Name>codewriterfilter</Name>
+      <Value>DLaB.CrmSvcUtilExtensions.Action.CodeWriterFilterService,DLaB.CrmSvcUtilExtensions</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>Actions</SettingType>
+      <Name>metadataproviderservice</Name>
+      <Value>DLaB.CrmSvcUtilExtensions.BaseMetadataProviderService,DLaB.CrmSvcUtilExtensions</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>Entities</SettingType>
+      <Name>codecustomization</Name>
+      <Value>DLaB.CrmSvcUtilExtensions.Entity.CustomizeCodeDomService,DLaB.CrmSvcUtilExtensions</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>Entities</SettingType>
+      <Name>codegenerationservice</Name>
+      <Value>DLaB.CrmSvcUtilExtensions.Entity.CustomCodeGenerationService,DLaB.CrmSvcUtilExtensions</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>Entities</SettingType>
+      <Name>codewriterfilter</Name>
+      <Value>DLaB.CrmSvcUtilExtensions.Entity.CodeWriterFilterService,DLaB.CrmSvcUtilExtensions</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>Entities</SettingType>
+      <Name>namingservice</Name>
+      <Value>DLaB.CrmSvcUtilExtensions.NamingService,DLaB.CrmSvcUtilExtensions</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>Entities</SettingType>
+      <Name>metadataproviderservice</Name>
+      <Value>DLaB.CrmSvcUtilExtensions.Entity.MetadataProviderService,DLaB.CrmSvcUtilExtensions</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>OptionSets</SettingType>
+      <Name>codecustomization</Name>
+      <Value>DLaB.CrmSvcUtilExtensions.OptionSet.CustomizeCodeDomService,DLaB.CrmSvcUtilExtensions</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>OptionSets</SettingType>
+      <Name>codegenerationservice</Name>
+      <Value>DLaB.CrmSvcUtilExtensions.OptionSet.CustomCodeGenerationService,DLaB.CrmSvcUtilExtensions</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>OptionSets</SettingType>
+      <Name>codewriterfilter</Name>
+      <Value>DLaB.CrmSvcUtilExtensions.OptionSet.CodeWriterFilterService,DLaB.CrmSvcUtilExtensions</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>OptionSets</SettingType>
+      <Name>namingservice</Name>
+      <Value>DLaB.CrmSvcUtilExtensions.NamingService,DLaB.CrmSvcUtilExtensions</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>OptionSets</SettingType>
+      <Name>metadataproviderservice</Name>
+      <Value>DLaB.CrmSvcUtilExtensions.BaseMetadataProviderService,DLaB.CrmSvcUtilExtensions</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+  </ExtensionArguments>
+  <UserArguments>
+    <Argument>
+      <SettingType>Actions</SettingType>
+      <Name>generateActions</Name>
+      <Value>true</Value>
+      <Valueless>true</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>Actions</SettingType>
+      <Name>out</Name>
+      <Value>Actions\</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>All</SettingType>
+      <Name>namespace</Name>
+      <Value>SR.Generated</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>All</SettingType>
+      <Name>SuppressGeneratedCodeAttribute</Name>
+      <Value>true</Value>
+      <Valueless>true</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>Entities</SettingType>
+      <Name>out</Name>
+      <Value>Entities\</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>Entities</SettingType>
+      <Name>servicecontextname</Name>
+      <Value>CrmServiceContext</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+    <Argument>
+      <SettingType>OptionSets</SettingType>
+      <Name>out</Name>
+      <Value>OptionSets\</Value>
+      <Valueless>false</Valueless>
+    </Argument>
+  </UserArguments>
+  <WorkflowlessActions>msdyn_GetSIFeatureConfiguration|
+RetrieveAppSetting|
+RetrieveAppSettingList|
+SaveAppSetting</WorkflowlessActions>
+</Config>
