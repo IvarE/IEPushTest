@@ -25,6 +25,10 @@
             document.getElementById("block").disabled = false;
         }
 
+        function clearMessageField() {
+            document.getElementById("messageSpace").innerText = "";
+        }
+
         // Begin scoping
         if (typeof (Endeavor) == "undefined") {
             var Endeavor = {
@@ -210,6 +214,7 @@
     <script>
         document.getElementById("cardId").addEventListener('keydown', function (event) {
             if (event.code === 'Enter') {
+                clearMessageField();
                 Endeavor.Skanetrafiken.SearchTravelCards.getInfoFromCardId();
             }
         });
