@@ -3998,6 +3998,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Number of users or conversations followed the record
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("teamsfollowed")]
+		public System.Nullable<int> TeamsFollowed
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("teamsfollowed");
+			}
+			set
+			{
+				this.SetAttributeValue("teamsfollowed", value);
+			}
+		}
+		
+		/// <summary>
 		/// Type the main phone number for this account.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("telephone1")]
@@ -4170,18 +4186,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Version number of the account.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
-		public System.Nullable<long> VersionNumber
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
-			}
-		}
-		
-		/// <summary>
 		/// Type the account's website URL to get quick details about the company profile.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("websiteurl")]
@@ -4194,6 +4198,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("websiteurl", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the account.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
 			}
 		}
 		
@@ -5586,6 +5602,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string StockExchange = "stockexchange";
 			
+			public const string TeamsFollowed = "teamsfollowed";
+			
 			public const string Telephone1 = "telephone1";
 			
 			public const string Telephone2 = "telephone2";
@@ -5608,9 +5626,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
 			
-			public const string VersionNumber = "versionnumber";
-			
 			public const string WebSiteURL = "websiteurl";
+			
+			public const string VersionNumber = "versionnumber";
 			
 			public const string YomiName = "yominame";
 		}
@@ -6828,6 +6846,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Prefix of the file pointer in blob storage.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("prefix")]
+		public string Prefix
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("prefix");
+			}
+		}
+		
+		/// <summary>
 		/// workflow step id associated with the note.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stepid")]
@@ -7745,6 +7775,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string OwningUser = "owninguser";
 			
+			public const string Prefix = "prefix";
+			
 			public const string StepId = "stepid";
 			
 			public const string Subject = "subject";
@@ -7763,7 +7795,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const int MimeType = 256;
 			
-			public const int NoteText = 100000;
+			public const int NoteText = 1073741823;
+			
+			public const int Prefix = 10;
 			
 			public const int StepId = 32;
 			
@@ -7817,6 +7851,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		public const string EntityLogicalName = "appointment";
 		
 		public const int EntityTypeCode = 4201;
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_contactid")]
+		public Microsoft.Xrm.Sdk.EntityReference abssr_contactid
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("abssr_contactid");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_contactid", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_socialsecuritynumber")]
+		public string abssr_SocialSecurityNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("abssr_socialsecuritynumber");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_socialsecuritynumber", value);
+			}
+		}
 		
 		/// <summary>
 		/// For internal use only.
@@ -8938,6 +9004,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 abssr_contact_appointment_contactid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_contactid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("abssr_contact_appointment_contactid")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact abssr_contact_appointment_contactid
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("abssr_contact_appointment_contactid", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("abssr_contact_appointment_contactid", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 Account_Appointments
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -9562,6 +9645,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		public struct Fields
 		{
 			
+			public const string abssr_contactid = "abssr_contactid";
+			
+			public const string abssr_SocialSecurityNumber = "abssr_socialsecuritynumber";
+			
 			public const string ActivityAdditionalParams = "activityadditionalparams";
 			
 			public const string ActivityId = "activityid";
@@ -9696,6 +9783,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		public struct FieldLengths
 		{
 			
+			public const int abssr_SocialSecurityNumber = 4000;
+			
 			public const int ActivityAdditionalParams = 8192;
 			
 			public const int Category = 250;
@@ -9803,6 +9892,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.AsyncOperationId = value;
+			}
+		}
+		
+		/// <summary>
+		/// The breadcrumb record ID.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("breadcrumbid")]
+		public System.Nullable<System.Guid> BreadcrumbId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("breadcrumbid");
+			}
+			set
+			{
+				this.SetAttributeValue("breadcrumbid", value);
+			}
+		}
+		
+		/// <summary>
+		/// The origin of the caller.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("callerorigin")]
+		public string CallerOrigin
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("callerorigin");
+			}
+			set
+			{
+				this.SetAttributeValue("callerorigin", value);
 			}
 		}
 		
@@ -9955,6 +10076,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetAttributeValue<System.Nullable<double>>("executiontimespan");
+			}
+		}
+		
+		/// <summary>
+		/// The datetime when the Expander pipeline started.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("expanderstarttime")]
+		public System.Nullable<System.DateTime> ExpanderStartTime
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("expanderstarttime");
+			}
+			set
+			{
+				this.SetAttributeValue("expanderstarttime", value);
 			}
 		}
 		
@@ -10279,6 +10416,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Retain job history.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("retainjobhistory")]
+		public System.Nullable<bool> RetainJobHistory
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("retainjobhistory");
+			}
+			set
+			{
+				this.SetAttributeValue("retainjobhistory", value);
+			}
+		}
+		
+		/// <summary>
 		/// Number of times to retry the system job.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("retrycount")]
@@ -10461,6 +10614,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetAttributeValue<string>("workflowstagename");
+			}
+		}
+		
+		/// <summary>
+		/// The workload name.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("workload")]
+		public string Workload
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("workload");
+			}
+			set
+			{
+				this.SetAttributeValue("workload", value);
 			}
 		}
 		
@@ -11212,6 +11381,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 ed_ticketpurchasespercustomerdata_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_ticketpurchasespercustomerdata_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata ed_ticketpurchasespercustomerdata_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata>("ed_ticketpurchasespercustomerdata_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata>("ed_ticketpurchasespercustomerdata_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 ed_valuecode_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -11840,6 +12026,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string Id = "asyncoperationid";
 			
+			public const string BreadcrumbId = "breadcrumbid";
+			
+			public const string CallerOrigin = "callerorigin";
+			
 			public const string CompletedOn = "completedon";
 			
 			public const string CorrelationId = "correlationid";
@@ -11861,6 +12051,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ErrorCode = "errorcode";
 			
 			public const string ExecutionTimeSpan = "executiontimespan";
+			
+			public const string ExpanderStartTime = "expanderstarttime";
 			
 			public const string FriendlyMessage = "friendlymessage";
 			
@@ -11906,6 +12098,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string RequestId = "requestid";
 			
+			public const string RetainJobHistory = "retainjobhistory";
+			
 			public const string RetryCount = "retrycount";
 			
 			public const string RootExecutionContext = "rootexecutioncontext";
@@ -11927,10 +12121,14 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string WorkflowActivationId = "workflowactivationid";
 			
 			public const string WorkflowStageName = "workflowstagename";
+			
+			public const string Workload = "workload";
 		}
 		
 		public struct FieldLengths
 		{
+			
+			public const int CallerOrigin = 256;
 			
 			public const int Data = 1073741823;
 			
@@ -11951,6 +12149,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int RootExecutionContext = 1073741823;
 			
 			public const int WorkflowStageName = 256;
+			
+			public const int Workload = 256;
 		}
 	}
 	
@@ -13640,6 +13840,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("tmpregardingobjectid")]
+		public string TmpRegardingObjectId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("tmpregardingobjectid");
+			}
+			set
+			{
+				this.SetAttributeValue("tmpregardingobjectid", value);
+			}
+		}
+		
+		/// <summary>
 		/// Shows the sum of the amounts entered in the Total Cost of Campaign Activities and Miscellaneous Costs fields.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totalactualcost")]
@@ -14485,6 +14701,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
 			
+			public const string TmpRegardingObjectId = "tmpregardingobjectid";
+			
 			public const string TotalActualCost = "totalactualcost";
 			
 			public const string TotalActualCost_Base = "totalactualcost_base";
@@ -14538,6 +14756,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int Objective = 2000;
 			
 			public const int PromotionCodeName = 128;
+			
+			public const int TmpRegardingObjectId = 100;
 			
 			public const int TraversedPath = 1250;
 		}
@@ -29210,6 +29430,422 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		public const int EntityTypeCode = 2;
 		
 		/// <summary>
+		/// Option set for additional passenger type.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_additionalpassengertype")]
+		public Microsoft.Xrm.Sdk.OptionSetValue abssr_AdditionalPassengerType
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("abssr_additionalpassengertype");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_additionalpassengertype", value);
+			}
+		}
+		
+		/// <summary>
+		/// Option set for additional space type
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_additionalspacetype")]
+		public Microsoft.Xrm.Sdk.OptionSetValue abssr_Additionalspacetype
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("abssr_additionalspacetype");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_additionalspacetype", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_age")]
+		public System.Nullable<int> abssr_age
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("abssr_age");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_certcustomerid")]
+		public System.Nullable<int> abssr_CERTCustomerID
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("abssr_certcustomerid");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_certcustomerid", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_contactfullname")]
+		public string abssr_ContactFullname
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("abssr_contactfullname");
+			}
+		}
+		
+		/// <summary>
+		/// Option set for default space type.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_defaultspacetype")]
+		public Microsoft.Xrm.Sdk.OptionSetValue abssr_DefaultSpaceType
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("abssr_defaultspacetype");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_defaultspacetype", value);
+			}
+		}
+		
+		/// <summary>
+		/// hidden field used to calculate Age from Birthday
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_diffindays")]
+		public System.Nullable<int> abssr_DiffInDays
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("abssr_diffindays");
+			}
+		}
+		
+		/// <summary>
+		/// hidden field used to calculate Age from Birthday, Contact Birthday
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_dob")]
+		public System.Nullable<System.DateTime> abssr_DOB
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("abssr_dob");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_dob", value);
+			}
+		}
+		
+		/// <summary>
+		/// hidden field used to calculate Age from Birthday
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_dobinthisyear")]
+		public System.Nullable<System.DateTime> abssr_DOBinthisyear
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("abssr_dobinthisyear");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_guardianonename")]
+		public string abssr_GuardianOneName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("abssr_guardianonename");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_guardianonename", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_guardiantwoname")]
+		public string abssr_GuardianTwoName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("abssr_guardiantwoname");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_guardiantwoname", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_hastrustee")]
+		public System.Nullable<bool> abssr_hastrustee
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("abssr_hastrustee");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_hastrustee", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_highcostamount")]
+		public System.Nullable<int> abssr_HighCostAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("abssr_highcostamount");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_highcostamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_loadtime")]
+		public System.Nullable<int> abssr_LoadTime
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("abssr_loadtime");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_loadtime", value);
+			}
+		}
+		
+		/// <summary>
+		/// The date of when the ID card got lost.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_lostidcard")]
+		public System.Nullable<System.DateTime> abssr_LostIDCard
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("abssr_lostidcard");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_lostidcard", value);
+			}
+		}
+		
+		/// <summary>
+		/// Number of space for the transport.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_numberofspace")]
+		public System.Nullable<int> abssr_Numberofspace
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("abssr_numberofspace");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_numberofspace", value);
+			}
+		}
+		
+		/// <summary>
+		/// The date of when the ID card was ordered.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_orderidcard")]
+		public System.Nullable<System.DateTime> abssr_OrderIDCard
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("abssr_orderidcard");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_orderidcard", value);
+			}
+		}
+		
+		/// <summary>
+		/// Anger om kunden måste betala via bokning eller får faktura skickad i efterhand.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_paymentoptions")]
+		public Microsoft.Xrm.Sdk.OptionSetValue abssr_PaymentOptions
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("abssr_paymentoptions");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_paymentoptions", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_powerofattorney")]
+		public Microsoft.Xrm.Sdk.OptionSetValue abssr_powerofattorney
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("abssr_powerofattorney");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_powerofattorney", value);
+			}
+		}
+		
+		/// <summary>
+		/// Checkbox that describes if the ID card was printed out.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_printidcard")]
+		public System.Nullable<bool> abssr_PrintIDcard
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("abssr_printidcard");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_printidcard", value);
+			}
+		}
+		
+		/// <summary>
+		/// Private Comment.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_privatecomment")]
+		public string abssr_PrivateComment
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("abssr_privatecomment");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_privatecomment", value);
+			}
+		}
+		
+		/// <summary>
+		/// Belopp kvar till högkostnadstaket. Dvs kunden ska bara betala det belopp som undersiger detta belopp
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_remaininghighcostamount")]
+		public System.Nullable<int> abssr_RemainingHighCostAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("abssr_remaininghighcostamount");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_remaininghighcostamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Types of shipping addresses
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_shippingaddress")]
+		public Microsoft.Xrm.Sdk.OptionSetValue abssr_shippingaddress
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("abssr_shippingaddress");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_shippingaddress", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_smartcardid")]
+		public System.Nullable<int> abssr_SmartcardID
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("abssr_smartcardid");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_smartcardid", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_unloadtime")]
+		public System.Nullable<int> abssr_Unloadtime
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("abssr_unloadtime");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_unloadtime", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_validfromdate")]
+		public System.Nullable<System.DateTime> abssr_validfromdate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("abssr_validfromdate");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_validfromdate", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_validtodate")]
+		public System.Nullable<System.DateTime> abssr_validtodate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("abssr_validtodate");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_validtodate", value);
+			}
+		}
+		
+		/// <summary>
 		/// Unique identifier of the account with which the contact is associated.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("accountid")]
@@ -30573,6 +31209,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Stores Image of the Business Card
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("businesscard")]
+		public string BusinessCard
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("businesscard");
+			}
+			set
+			{
+				this.SetAttributeValue("businesscard", value);
+			}
+		}
+		
+		/// <summary>
+		/// Stores Business Card Control Properties.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("businesscardattributes")]
+		public string BusinessCardAttributes
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("businesscardattributes");
+			}
+			set
+			{
+				this.SetAttributeValue("businesscardattributes", value);
+			}
+		}
+		
+		/// <summary>
 		/// Type a callback phone number for this contact.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("callback")]
@@ -31722,6 +32390,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_businesscontact", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_calculateclassification")]
+		public System.Nullable<bool> ed_CalculateClassification
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_calculateclassification");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_calculateclassification", value);
 			}
 		}
 		
@@ -33080,6 +33764,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("msdyn_gdproptout", value);
+			}
+		}
+		
+		/// <summary>
+		/// Whether or not the contact belongs to the associated account
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("msdyn_orgchangestatus")]
+		public Microsoft.Xrm.Sdk.OptionSetValue msdyn_orgchangestatus
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("msdyn_orgchangestatus");
+			}
+			set
+			{
+				this.SetAttributeValue("msdyn_orgchangestatus", value);
 			}
 		}
 		
@@ -34502,6 +35202,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Number of users or conversations followed the record
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("teamsfollowed")]
+		public System.Nullable<int> TeamsFollowed
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("teamsfollowed");
+			}
+			set
+			{
+				this.SetAttributeValue("teamsfollowed", value);
+			}
+		}
+		
+		/// <summary>
 		/// Type the main phone number for this contact.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("telephone1")]
@@ -34642,18 +35358,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Version number of the contact.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
-		public System.Nullable<long> VersionNumber
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
-			}
-		}
-		
-		/// <summary>
 		/// Type the contact's professional or personal website or blog URL.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("websiteurl")]
@@ -34666,6 +35370,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("websiteurl", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the contact.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
 			}
 		}
 		
@@ -34726,6 +35442,54 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("yomimiddlename", value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N abssr_contact_appointment_contactid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("abssr_contact_appointment_contactid")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> abssr_contact_appointment_contactid
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("abssr_contact_appointment_contactid", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("abssr_contact_appointment_contactid", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N abssr_contact_email_customer
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("abssr_contact_email_customer")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Email> abssr_contact_email_customer
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("abssr_contact_email_customer", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("abssr_contact_email_customer", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N abssr_contact_phonecall_contactid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("abssr_contact_phonecall_contactid")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> abssr_contact_phonecall_contactid
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("abssr_contact_phonecall_contactid", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("abssr_contact_phonecall_contactid", null, value);
 			}
 		}
 		
@@ -35859,6 +36623,60 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		public struct Fields
 		{
 			
+			public const string abssr_AdditionalPassengerType = "abssr_additionalpassengertype";
+			
+			public const string abssr_Additionalspacetype = "abssr_additionalspacetype";
+			
+			public const string abssr_age = "abssr_age";
+			
+			public const string abssr_CERTCustomerID = "abssr_certcustomerid";
+			
+			public const string abssr_ContactFullname = "abssr_contactfullname";
+			
+			public const string abssr_DefaultSpaceType = "abssr_defaultspacetype";
+			
+			public const string abssr_DiffInDays = "abssr_diffindays";
+			
+			public const string abssr_DOB = "abssr_dob";
+			
+			public const string abssr_DOBinthisyear = "abssr_dobinthisyear";
+			
+			public const string abssr_GuardianOneName = "abssr_guardianonename";
+			
+			public const string abssr_GuardianTwoName = "abssr_guardiantwoname";
+			
+			public const string abssr_hastrustee = "abssr_hastrustee";
+			
+			public const string abssr_HighCostAmount = "abssr_highcostamount";
+			
+			public const string abssr_LoadTime = "abssr_loadtime";
+			
+			public const string abssr_LostIDCard = "abssr_lostidcard";
+			
+			public const string abssr_Numberofspace = "abssr_numberofspace";
+			
+			public const string abssr_OrderIDCard = "abssr_orderidcard";
+			
+			public const string abssr_PaymentOptions = "abssr_paymentoptions";
+			
+			public const string abssr_powerofattorney = "abssr_powerofattorney";
+			
+			public const string abssr_PrintIDcard = "abssr_printidcard";
+			
+			public const string abssr_PrivateComment = "abssr_privatecomment";
+			
+			public const string abssr_RemainingHighCostAmount = "abssr_remaininghighcostamount";
+			
+			public const string abssr_shippingaddress = "abssr_shippingaddress";
+			
+			public const string abssr_SmartcardID = "abssr_smartcardid";
+			
+			public const string abssr_Unloadtime = "abssr_unloadtime";
+			
+			public const string abssr_validfromdate = "abssr_validfromdate";
+			
+			public const string abssr_validtodate = "abssr_validtodate";
+			
 			public const string AccountId = "accountid";
 			
 			public const string AccountRoleCode = "accountrolecode";
@@ -36033,6 +36851,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string Business2 = "business2";
 			
+			public const string BusinessCard = "businesscard";
+			
+			public const string BusinessCardAttributes = "businesscardattributes";
+			
 			public const string Callback = "callback";
 			
 			public const string cdi_age = "cdi_age";
@@ -36178,6 +37000,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_analysdata3 = "ed_analysdata3";
 			
 			public const string ed_BusinessContact = "ed_businesscontact";
+			
+			public const string ed_CalculateClassification = "ed_calculateclassification";
 			
 			public const string ed_CollaborationContact = "ed_collaborationcontact";
 			
@@ -36350,6 +37174,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
 			
 			public const string msdyn_gdproptout = "msdyn_gdproptout";
+			
+			public const string msdyn_orgchangestatus = "msdyn_orgchangestatus";
 			
 			public const string new_2nd_LastTravelDate = "new_2nd_lasttraveldate";
 			
@@ -36543,6 +37369,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string Suffix = "suffix";
 			
+			public const string TeamsFollowed = "teamsfollowed";
+			
 			public const string Telephone1 = "telephone1";
 			
 			public const string Telephone2 = "telephone2";
@@ -36561,9 +37389,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
 			
-			public const string VersionNumber = "versionnumber";
-			
 			public const string WebSiteUrl = "websiteurl";
+			
+			public const string VersionNumber = "versionnumber";
 			
 			public const string YomiFirstName = "yomifirstname";
 			
@@ -36576,6 +37404,14 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public struct FieldLengths
 		{
+			
+			public const int abssr_ContactFullname = 4000;
+			
+			public const int abssr_GuardianOneName = 100;
+			
+			public const int abssr_GuardianTwoName = 100;
+			
+			public const int abssr_PrivateComment = 100;
 			
 			public const int Address1_City = 80;
 			
@@ -36684,6 +37520,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int AssistantPhone = 50;
 			
 			public const int Business2 = 50;
+			
+			public const int BusinessCard = 1073741823;
+			
+			public const int BusinessCardAttributes = 4000;
 			
 			public const int Callback = 50;
 			
@@ -58624,6 +59464,502 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 	}
 	
+	public enum ed_ticketpurchasespercustomerdataState
+	{
+		
+		Active = 0,
+		
+		Inactive = 1,
+	}
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("ed_ticketpurchasespercustomerdata")]
+	public partial class ed_ticketpurchasespercustomerdata : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public ed_ticketpurchasespercustomerdata() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "ed_ticketpurchasespercustomerdata";
+		
+		public const int EntityTypeCode = 10341;
+		
+		/// <summary>
+		/// Unique identifier of the user who created the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who created the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_contactnumber")]
+		public string ed_ContactNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_contactnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_contactnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mklid")]
+		public string ed_MKLid
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_mklid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mklid", value);
+			}
+		}
+		
+		/// <summary>
+		/// The name of the custom entity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_name")]
+		public string ed_name
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_name");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_name", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_numberoftickets")]
+		public System.Nullable<int> ed_NumberOfTickets
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("ed_numberoftickets");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_numberoftickets", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_offername")]
+		public string ed_OfferName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_offername");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_offername", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for entity instances
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_ticketpurchasespercustomerdataid")]
+		public System.Nullable<System.Guid> ed_ticketpurchasespercustomerdataId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("ed_ticketpurchasespercustomerdataid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_ticketpurchasespercustomerdataid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_ticketpurchasespercustomerdataid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.ed_ticketpurchasespercustomerdataId = value;
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totalsumticketoffer")]
+		public System.Nullable<int> ed_TotalSumTicketOffer
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("ed_totalsumticketoffer");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_totalsumticketoffer", value);
+			}
+		}
+		
+		/// <summary>
+		/// Sequence number of the import that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who modified the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the record was modified.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who modified the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for the organization
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("organizationid")]
+		public Microsoft.Xrm.Sdk.EntityReference OrganizationId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("organizationid");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Status of the Ticket Purchases Per Customer Data
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdataState> statecode
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdataState)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdataState), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("statecode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statecode", new Microsoft.Xrm.Sdk.OptionSetValue(((int)(value))));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Reason for the status of the Ticket Purchases Per Customer Data
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue statuscode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+			}
+			set
+			{
+				this.SetAttributeValue("statuscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timezoneruleversionnumber")]
+		public System.Nullable<int> TimeZoneRuleVersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("timezoneruleversionnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Time zone code that was in use when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("utcconversiontimezonecode")]
+		public System.Nullable<int> UTCConversionTimeZoneCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("utcconversiontimezonecode");
+			}
+			set
+			{
+				this.SetAttributeValue("utcconversiontimezonecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version Number
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_ticketpurchasespercustomerdata_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_ticketpurchasespercustomerdata_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> ed_ticketpurchasespercustomerdata_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("ed_ticketpurchasespercustomerdata_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("ed_ticketpurchasespercustomerdata_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_ed_ticketpurchasespercustomerdata_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_ticketpurchasespercustomerdata_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_ed_ticketpurchasespercustomerdata_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_ticketpurchasespercustomerdata_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_ed_ticketpurchasespercustomerdata_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_ticketpurchasespercustomerdata_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_ed_ticketpurchasespercustomerdata_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_ticketpurchasespercustomerdata_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_ed_ticketpurchasespercustomerdata_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_ticketpurchasespercustomerdata_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_ed_ticketpurchasespercustomerdata_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_ticketpurchasespercustomerdata_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_ed_ticketpurchasespercustomerdata_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_ticketpurchasespercustomerdata_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_ed_ticketpurchasespercustomerdata_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_ticketpurchasespercustomerdata_modifiedonbehalfby", null);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string ed_ContactNumber = "ed_contactnumber";
+			
+			public const string ed_MKLid = "ed_mklid";
+			
+			public const string ed_name = "ed_name";
+			
+			public const string ed_NumberOfTickets = "ed_numberoftickets";
+			
+			public const string ed_OfferName = "ed_offername";
+			
+			public const string ed_ticketpurchasespercustomerdataId = "ed_ticketpurchasespercustomerdataid";
+			
+			public const string Id = "ed_ticketpurchasespercustomerdataid";
+			
+			public const string ed_TotalSumTicketOffer = "ed_totalsumticketoffer";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string OrganizationId = "organizationid";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string statecode = "statecode";
+			
+			public const string statuscode = "statuscode";
+			
+			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
+			
+			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
+			
+			public const string VersionNumber = "versionnumber";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int ed_ContactNumber = 100;
+			
+			public const int ed_MKLid = 100;
+			
+			public const int ed_name = 100;
+			
+			public const int ed_OfferName = 100;
+		}
+	}
+	
 	public enum ed_valuecode_ed_typeoption
 	{
 		
@@ -64467,6 +65803,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		public const int EntityTypeCode = 4202;
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_contactid")]
+		public Microsoft.Xrm.Sdk.EntityReference abssr_contactid
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("abssr_contactid");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_contactid", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_socialsecuritynumber")]
+		public string abssr_socialsecuritynumber
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("abssr_socialsecuritynumber");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_socialsecuritynumber", value);
+			}
+		}
+		
+		/// <summary>
 		/// For internal use only.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("activityadditionalparams")]
@@ -64900,6 +66268,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("conversationtrackingid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Correlated Activity Id
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("correlatedactivityid")]
+		public Microsoft.Xrm.Sdk.EntityReference CorrelatedActivityId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("correlatedactivityid");
+			}
+			set
+			{
+				this.SetAttributeValue("correlatedactivityid", value);
 			}
 		}
 		
@@ -65685,6 +67069,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// For internal use only
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("reservedforinternaluse")]
+		public string ReservedForInternalUse
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("reservedforinternaluse");
+			}
+			set
+			{
+				this.SetAttributeValue("reservedforinternaluse", value);
+			}
+		}
+		
+		/// <summary>
 		/// Scheduled duration of the email activity, specified in minutes.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("scheduleddurationminutes")]
@@ -66187,6 +67587,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N email_email_CorrelatedActivityId
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("email_email_CorrelatedActivityId", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Email> Referencedemail_email_CorrelatedActivityId
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("email_email_CorrelatedActivityId", Microsoft.Xrm.Sdk.EntityRole.Referenced);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("email_email_CorrelatedActivityId", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N email_email_parentactivityid
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("email_email_parentactivityid", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
@@ -66215,6 +67631,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.QueueItem>("Email_QueueItem", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 abssr_contact_email_customer
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_contactid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("abssr_contact_email_customer")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact abssr_contact_email_customer
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("abssr_contact_email_customer", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("abssr_contact_email_customer", null, value);
 			}
 		}
 		
@@ -66683,6 +68116,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 email_email_CorrelatedActivityId
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("correlatedactivityid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("email_email_CorrelatedActivityId", Microsoft.Xrm.Sdk.EntityRole.Referencing)]
+		public Skanetrafiken.Crm.Schema.Generated.Email Referencingemail_email_CorrelatedActivityId
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Email>("email_email_CorrelatedActivityId", Microsoft.Xrm.Sdk.EntityRole.Referencing);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Email>("email_email_CorrelatedActivityId", Microsoft.Xrm.Sdk.EntityRole.Referencing, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 email_email_parentactivityid
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentactivityid")]
@@ -66972,6 +68422,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		public struct Fields
 		{
 			
+			public const string abssr_contactid = "abssr_contactid";
+			
+			public const string abssr_socialsecuritynumber = "abssr_socialsecuritynumber";
+			
 			public const string ActivityAdditionalParams = "activityadditionalparams";
 			
 			public const string ActivityId = "activityid";
@@ -67023,6 +68477,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ConversationIndex = "conversationindex";
 			
 			public const string ConversationTrackingId = "conversationtrackingid";
+			
+			public const string CorrelatedActivityId = "correlatedactivityid";
 			
 			public const string CorrelationMethod = "correlationmethod";
 			
@@ -67130,6 +68586,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ReplyCount = "replycount";
 			
+			public const string ReservedForInternalUse = "reservedforinternaluse";
+			
 			public const string ScheduledDurationMinutes = "scheduleddurationminutes";
 			
 			public const string ScheduledEnd = "scheduledend";
@@ -67186,6 +68644,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		public struct FieldLengths
 		{
 			
+			public const int abssr_socialsecuritynumber = 4000;
+			
 			public const int ActivityAdditionalParams = 8192;
 			
 			public const int Category = 250;
@@ -67208,11 +68668,13 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const int MimeType = 256;
 			
+			public const int ReservedForInternalUse = 40000;
+			
 			public const int Sender = 250;
 			
 			public const int Subcategory = 250;
 			
-			public const int Subject = 200;
+			public const int Subject = 400;
 			
 			public const int SubmittedBy = 250;
 			
@@ -67343,7 +68805,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 	}
 	
 	/// <summary>
-	/// Service request case associated with a account.
+	/// Service request case associated with an account.
 	/// </summary>
 	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("incident")]
 	public partial class Incident : Microsoft.Xrm.Sdk.Entity
@@ -70426,6 +71888,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_socialsecuritynumberformat")]
+		public string ed_socialsecuritynumberformat
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_socialsecuritynumberformat");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_socialsecuritynumberformat", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_timetomeetingstart")]
 		public System.Nullable<int> ed_TimeToMeetingStart
 		{
@@ -71324,7 +72802,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// sla_cases
+		/// Last SLA that was applied to this case. This field is for internal use only.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("slainvokedid")]
 		public Microsoft.Xrm.Sdk.EntityReference SLAInvokedId
@@ -72883,6 +74361,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_MeetingStart = "ed_meetingstart";
 			
+			public const string ed_socialsecuritynumberformat = "ed_socialsecuritynumberformat";
+			
 			public const string ed_TimeToMeetingStart = "ed_timetomeetingstart";
 			
 			public const string ed_UnregisterdSKACard = "ed_unregisterdskacard";
@@ -73254,6 +74734,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_DetailedDescription = 20000;
 			
 			public const int ed_DriverId = 100;
+			
+			public const int ed_socialsecuritynumberformat = 100;
 			
 			public const int ed_UnregisterdSKACard = 100;
 			
@@ -74166,6 +75648,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("resolutiontypecode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ResolutionTypeCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("resolutiontypecode");
+			}
+			set
+			{
+				this.SetAttributeValue("resolutiontypecode", value);
+			}
+		}
+		
+		/// <summary>
 		/// Users or facility/equipment that are required for the activity.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("resources")]
@@ -74493,6 +75991,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 				{
 					this.SetAttributeValue("to", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
 				}
+			}
+		}
+		
+		/// <summary>
+		/// Total time spent on the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totaltimespent")]
+		public System.Nullable<int> TotalTimeSpent
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("totaltimespent");
+			}
+			set
+			{
+				this.SetAttributeValue("totaltimespent", value);
 			}
 		}
 		
@@ -74902,6 +76416,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string RequiredAttendees = "requiredattendees";
 			
+			public const string ResolutionTypeCode = "resolutiontypecode";
+			
 			public const string Resources = "resources";
 			
 			public const string ScheduledDurationMinutes = "scheduleddurationminutes";
@@ -74939,6 +76455,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
 			
 			public const string To = "to";
+			
+			public const string TotalTimeSpent = "totaltimespent";
 			
 			public const string TransactionCurrencyId = "transactioncurrencyid";
 			
@@ -75840,6 +77358,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 	public enum ed_informationsource
 	{
 		
+		SRInkommenPost = 700000000,
+		
+		_1177 = 700000001,
+		
 		Annons = 899310000,
 		
 		Tillagg = 19,
@@ -76735,6 +78257,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("budgetstatus", value);
+			}
+		}
+		
+		/// <summary>
+		/// Stores Image of the Business Card
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("businesscard")]
+		public string BusinessCard
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("businesscard");
+			}
+			set
+			{
+				this.SetAttributeValue("businesscard", value);
+			}
+		}
+		
+		/// <summary>
+		/// Stores Business Card Control Properties.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("businesscardattributes")]
+		public string BusinessCardAttributes
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("businesscardattributes");
+			}
+			set
+			{
+				this.SetAttributeValue("businesscardattributes", value);
 			}
 		}
 		
@@ -78956,6 +80510,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Number of users or conversations followed the record
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("teamsfollowed")]
+		public System.Nullable<int> TeamsFollowed
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("teamsfollowed");
+			}
+			set
+			{
+				this.SetAttributeValue("teamsfollowed", value);
+			}
+		}
+		
+		/// <summary>
 		/// Type the work phone number for the primary contact for the lead.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("telephone1")]
@@ -79080,18 +80650,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Version number of the lead.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
-		public System.Nullable<long> VersionNumber
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
-			}
-		}
-		
-		/// <summary>
 		/// Type the website URL for the company associated with this lead.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("websiteurl")]
@@ -79104,6 +80662,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("websiteurl", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the lead.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
 			}
 		}
 		
@@ -79996,6 +81566,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string BudgetStatus = "budgetstatus";
 			
+			public const string BusinessCard = "businesscard";
+			
+			public const string BusinessCardAttributes = "businesscardattributes";
+			
 			public const string CampaignId = "campaignid";
 			
 			public const string cdi_age = "cdi_age";
@@ -80276,6 +81850,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string Subject = "subject";
 			
+			public const string TeamsFollowed = "teamsfollowed";
+			
 			public const string Telephone1 = "telephone1";
 			
 			public const string Telephone2 = "telephone2";
@@ -80292,9 +81868,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
 			
-			public const string VersionNumber = "versionnumber";
-			
 			public const string WebSiteUrl = "websiteurl";
+			
+			public const string VersionNumber = "versionnumber";
 			
 			public const string YomiCompanyName = "yomicompanyname";
 			
@@ -80373,6 +81949,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int Address2_Telephone3 = 50;
 			
 			public const int Address2_UPSZone = 4;
+			
+			public const int BusinessCard = 1073741823;
+			
+			public const int BusinessCardAttributes = 4000;
 			
 			public const int cdi_facebook = 500;
 			
@@ -80811,7 +82391,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Type of the members that can be stored in the marketing list.
+		/// Type of the members that can be stored in the marketing list. Please do not remove from form!
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("membertype")]
 		public System.Nullable<int> MemberType
@@ -80927,6 +82507,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owninguser");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("processedmembercount")]
+		public System.Nullable<int> processedMemberCount
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("processedmembercount");
+			}
+			set
+			{
+				this.SetAttributeValue("processedmembercount", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("processfetchxml")]
+		public string processFetchXML
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("processfetchxml");
+			}
+			set
+			{
+				this.SetAttributeValue("processfetchxml", value);
 			}
 		}
 		
@@ -81434,6 +83046,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string OwningUser = "owninguser";
 			
+			public const string processedMemberCount = "processedmembercount";
+			
+			public const string processFetchXML = "processfetchxml";
+			
 			public const string ProcessId = "processid";
 			
 			public const string Purpose = "purpose";
@@ -81467,6 +83083,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int Description = 2000;
 			
 			public const int ListName = 128;
+			
+			public const int processFetchXML = 10000;
 			
 			public const int Purpose = 512;
 			
@@ -82048,6 +83666,50 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscount")]
+		public System.Nullable<decimal> ed_MediaAgencyDiscount
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("ed_mediaagencydiscount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscount", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_MediaAgencyDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Media Agency Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_mediaagencydiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount_base");
+			}
+		}
+		
+		/// <summary>
 		/// Indikerar om affärsmöjligheten är kopplad till en kund som är mediabyrå
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediabusiness")]
@@ -82172,6 +83834,34 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_totalamountforcalculation", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_TotalDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_totaldiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Total Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_totaldiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount_base");
 			}
 		}
 		
@@ -83160,6 +84850,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Number of users or conversations followed the record
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("teamsfollowed")]
+		public System.Nullable<int> TeamsFollowed
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("teamsfollowed");
+			}
+			set
+			{
+				this.SetAttributeValue("teamsfollowed", value);
+			}
+		}
+		
+		/// <summary>
 		/// Select when the opportunity is likely to be closed.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timeline")]
@@ -83978,6 +85684,12 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_infotainmentcustomer = "ed_infotainmentcustomer";
 			
+			public const string ed_MediaAgencyDiscount = "ed_mediaagencydiscount";
+			
+			public const string ed_MediaAgencyDiscountAmount = "ed_mediaagencydiscountamount";
+			
+			public const string ed_mediaagencydiscountamount_Base = "ed_mediaagencydiscountamount_base";
+			
 			public const string ed_mediabusiness = "ed_mediabusiness";
 			
 			public const string ed_priceinctax = "ed_priceinctax";
@@ -83995,6 +85707,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_taxcalculation_Base = "ed_taxcalculation_base";
 			
 			public const string ed_totalamountforcalculation = "ed_totalamountforcalculation";
+			
+			public const string ed_TotalDiscountAmount = "ed_totaldiscountamount";
+			
+			public const string ed_totaldiscountamount_Base = "ed_totaldiscountamount_base";
 			
 			public const string ed_volymcustomer = "ed_volymcustomer";
 			
@@ -84121,6 +85837,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string StepId = "stepid";
 			
 			public const string StepName = "stepname";
+			
+			public const string TeamsFollowed = "teamsfollowed";
 			
 			public const string TimeLine = "timeline";
 			
@@ -84318,6 +86036,30 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_todate", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totalamountwithoutdiscount")]
+		public Microsoft.Xrm.Sdk.Money ed_TotalAmountwithoutDiscount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totalamountwithoutdiscount");
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Total Amount (without Discount) in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totalamountwithoutdiscount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_totalamountwithoutdiscount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totalamountwithoutdiscount_base");
 			}
 		}
 		
@@ -84542,7 +86284,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// product_opportunities
+		/// Unique identifier of the opportunity with which the opportunity product is associated.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunityid")]
 		public Microsoft.Xrm.Sdk.EntityReference OpportunityId
@@ -84595,7 +86337,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Opportunity Product Name. Added for 1:n Referential relationship
+		/// Opportunity Product Name. Added for 1:n referential relationship (internal purposes only)
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunityproductname")]
 		public string OpportunityProductName
@@ -85297,6 +87039,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_ToDate = "ed_todate";
 			
+			public const string ed_TotalAmountwithoutDiscount = "ed_totalamountwithoutdiscount";
+			
+			public const string ed_totalamountwithoutdiscount_Base = "ed_totalamountwithoutdiscount_base";
+			
 			public const string EntityImage = "entityimage";
 			
 			public const string EntityImage_Timestamp = "entityimage_timestamp";
@@ -85403,7 +87149,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const int EntityImage_URL = 200;
 			
-			public const int OpportunityProductName = 250;
+			public const int OpportunityProductName = 500;
 			
 			public const int ProductDescription = 500;
 			
@@ -85451,6 +87197,86 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		public const string EntityLogicalName = "phonecall";
 		
 		public const int EntityTypeCode = 4210;
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_calltodescription")]
+		public string abssr_calltodescription
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("abssr_calltodescription");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_calltodescription", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_contactid")]
+		public Microsoft.Xrm.Sdk.EntityReference abssr_contactid
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("abssr_contactid");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_contactid", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_phonecalltype")]
+		public Microsoft.Xrm.Sdk.OptionSetValue abssr_phonecalltype
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("abssr_phonecalltype");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_phonecalltype", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_reasonfornocontact")]
+		public Microsoft.Xrm.Sdk.OptionSetValue abssr_reasonfornocontact
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("abssr_reasonfornocontact");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_reasonfornocontact", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_socialsecuritynumber")]
+		public string abssr_SocialSecurityNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("abssr_socialsecuritynumber");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_socialsecuritynumber", value);
+			}
+		}
 		
 		/// <summary>
 		/// For internal use only.
@@ -86432,6 +88258,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 abssr_contact_phonecall_contactid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_contactid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("abssr_contact_phonecall_contactid")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact abssr_contact_phonecall_contactid
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("abssr_contact_phonecall_contactid", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("abssr_contact_phonecall_contactid", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 Account_Phonecalls
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -87056,6 +88899,16 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		public struct Fields
 		{
 			
+			public const string abssr_calltodescription = "abssr_calltodescription";
+			
+			public const string abssr_contactid = "abssr_contactid";
+			
+			public const string abssr_phonecalltype = "abssr_phonecalltype";
+			
+			public const string abssr_reasonfornocontact = "abssr_reasonfornocontact";
+			
+			public const string abssr_SocialSecurityNumber = "abssr_socialsecuritynumber";
+			
 			public const string ActivityAdditionalParams = "activityadditionalparams";
 			
 			public const string ActivityId = "activityid";
@@ -87171,6 +89024,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public struct FieldLengths
 		{
+			
+			public const int abssr_calltodescription = 2000;
+			
+			public const int abssr_SocialSecurityNumber = 4000;
 			
 			public const int ActivityAdditionalParams = 8192;
 			
@@ -87945,6 +89802,86 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// The connector associated with the stage.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("connector")]
+		public string Connector
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("connector");
+			}
+			set
+			{
+				this.SetAttributeValue("connector", value);
+			}
+		}
+		
+		/// <summary>
+		/// Whether the stage is a trigger
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("istrigger")]
+		public System.Nullable<bool> IsTrigger
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("istrigger");
+			}
+			set
+			{
+				this.SetAttributeValue("istrigger", value);
+			}
+		}
+		
+		/// <summary>
+		/// The operation id of the stage
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("operationid")]
+		public string OperationId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("operationid");
+			}
+			set
+			{
+				this.SetAttributeValue("operationid", value);
+			}
+		}
+		
+		/// <summary>
+		/// The operation kind
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("operationkind")]
+		public Microsoft.Xrm.Sdk.OptionSetValue OperationKind
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("operationkind");
+			}
+			set
+			{
+				this.SetAttributeValue("operationkind", value);
+			}
+		}
+		
+		/// <summary>
+		/// The type of the operation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("operationtype")]
+		public Microsoft.Xrm.Sdk.OptionSetValue OperationType
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("operationtype");
+			}
+			set
+			{
+				this.SetAttributeValue("operationtype", value);
+			}
+		}
+		
+		/// <summary>
 		/// Enter the user or team who is assigned to manage the record. This field is updated every time the record is assigned to a different user.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ownerid")]
@@ -88373,6 +90310,16 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ClientData = "clientdata";
 			
+			public const string Connector = "connector";
+			
+			public const string IsTrigger = "istrigger";
+			
+			public const string OperationId = "operationid";
+			
+			public const string OperationKind = "operationkind";
+			
+			public const string OperationType = "operationtype";
+			
 			public const string OwnerId = "ownerid";
 			
 			public const string OwningBusinessUnit = "owningbusinessunit";
@@ -88396,6 +90343,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		{
 			
 			public const int ClientData = 1073741823;
+			
+			public const int Connector = 100;
+			
+			public const int OperationId = 100;
 			
 			public const int StageName = 100;
 		}
@@ -88757,6 +90708,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("iskit", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isreparented")]
+		public System.Nullable<bool> IsReparented
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isreparented");
+			}
+			set
+			{
+				this.SetAttributeValue("isreparented", value);
 			}
 		}
 		
@@ -89185,22 +91152,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Stock volume of the product.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stockvolume")]
-		public System.Nullable<decimal> StockVolume
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<decimal>>("stockvolume");
-			}
-			set
-			{
-				this.SetAttributeValue("stockvolume", value);
-			}
-		}
-		
-		/// <summary>
 		/// Stock weight of the product.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stockweight")]
@@ -89213,6 +91164,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("stockweight", value);
+			}
+		}
+		
+		/// <summary>
+		/// Stock volume of the product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stockvolume")]
+		public System.Nullable<decimal> StockVolume
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("stockvolume");
+			}
+			set
+			{
+				this.SetAttributeValue("stockvolume", value);
 			}
 		}
 		
@@ -89815,6 +91782,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string IsKit = "iskit";
 			
+			public const string IsReparented = "isreparented";
+			
 			public const string IsStockItem = "isstockitem";
 			
 			public const string ModifiedBy = "modifiedby";
@@ -89869,9 +91838,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string StatusCode = "statuscode";
 			
-			public const string StockVolume = "stockvolume";
-			
 			public const string StockWeight = "stockweight";
+			
+			public const string StockVolume = "stockvolume";
 			
 			public const string SubjectId = "subjectid";
 			
@@ -91792,6 +93761,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_description")]
+		public string abssr_description
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("abssr_description");
+			}
+			set
+			{
+				this.SetAttributeValue("abssr_description", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cgi_action_date")]
 		public string cgi_action_date
 		{
@@ -92921,6 +94906,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		public struct Fields
 		{
 			
+			public const string abssr_description = "abssr_description";
+			
 			public const string cgi_action_date = "cgi_action_date";
 			
 			public const string cgi_arrival_date = "cgi_arrival_date";
@@ -93036,6 +95023,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public struct FieldLengths
 		{
+			
+			public const int abssr_description = 1000;
 			
 			public const int cgi_action_date = 100;
 			
@@ -93573,6 +95562,50 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscount")]
+		public System.Nullable<decimal> ed_mediaagencydiscount
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("ed_mediaagencydiscount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscount", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_mediaagencydiscountamount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Media Agency Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_mediaagencydiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount_base");
+			}
+		}
+		
+		/// <summary>
 		/// Indikerar om affärsmöjligheten är kopplad till en kund som är mediabyrå
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediabusiness")]
@@ -93677,6 +95710,34 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_totalamountforcalculation", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_TotalDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_totaldiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Total Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_totaldiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount_base");
 			}
 		}
 		
@@ -95277,6 +97338,12 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_infotainmentcustomer = "ed_infotainmentcustomer";
 			
+			public const string ed_mediaagencydiscount = "ed_mediaagencydiscount";
+			
+			public const string ed_mediaagencydiscountamount = "ed_mediaagencydiscountamount";
+			
+			public const string ed_mediaagencydiscountamount_Base = "ed_mediaagencydiscountamount_base";
+			
 			public const string ed_mediabusiness = "ed_mediabusiness";
 			
 			public const string ed_Mediabyrprovision = "ed_mediabyrprovision";
@@ -95292,6 +97359,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_taxcalculation_Base = "ed_taxcalculation_base";
 			
 			public const string ed_TotalAmountForCalculation = "ed_totalamountforcalculation";
+			
+			public const string ed_TotalDiscountAmount = "ed_totaldiscountamount";
+			
+			public const string ed_totaldiscountamount_Base = "ed_totaldiscountamount_base";
 			
 			public const string ed_TotalExtendedAmount = "ed_totalextendedamount";
 			
@@ -96127,6 +98198,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// User-defined product ID.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productnumber")]
+		public string ProductNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("productnumber");
+			}
+		}
+		
+		/// <summary>
 		/// Product Type
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("producttypecode")]
@@ -96632,6 +98715,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Select whether the quote product should be shipped to the specified address or held until the customer calls with further pick up or delivery instructions.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("willcall")]
+		public System.Nullable<bool> WillCall
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("willcall");
+			}
+			set
+			{
+				this.SetAttributeValue("willcall", value);
+			}
+		}
+		
+		/// <summary>
 		/// Shows the discount amount per unit if a specified volume is purchased. Configure volume discounts in the Product Catalog in the Settings area.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("volumediscountamount")]
@@ -96652,22 +98751,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("volumediscountamount_base");
-			}
-		}
-		
-		/// <summary>
-		/// Select whether the quote product should be shipped to the specified address or held until the customer calls with further pick up or delivery instructions.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("willcall")]
-		public System.Nullable<bool> WillCall
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<bool>>("willcall");
-			}
-			set
-			{
-				this.SetAttributeValue("willcall", value);
 			}
 		}
 		
@@ -97051,6 +99134,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ProductName = "productname";
 			
+			public const string ProductNumber = "productnumber";
+			
 			public const string ProductTypeCode = "producttypecode";
 			
 			public const string PropertyConfigurationStatus = "propertyconfigurationstatus";
@@ -97115,11 +99200,11 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string VersionNumber = "versionnumber";
 			
+			public const string WillCall = "willcall";
+			
 			public const string VolumeDiscountAmount = "volumediscountamount";
 			
 			public const string VolumeDiscountAmount_Base = "volumediscountamount_base";
-			
-			public const string WillCall = "willcall";
 		}
 		
 		public struct FieldLengths
@@ -97132,6 +99217,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ProductDescription = 500;
 			
 			public const int ProductName = 500;
+			
+			public const int ProductNumber = 100;
 			
 			public const int QuoteDetailName = 250;
 			
@@ -97287,6 +99374,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("iscustomizable", value);
+			}
+		}
+		
+		/// <summary>
+		/// Role is inherited by users from team membership, if role associated with team.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isinherited")]
+		public Microsoft.Xrm.Sdk.OptionSetValue IsInherited
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("isinherited");
+			}
+			set
+			{
+				this.SetAttributeValue("isinherited", value);
 			}
 		}
 		
@@ -97695,6 +99798,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ImportSequenceNumber = "importsequencenumber";
 			
 			public const string IsCustomizable = "iscustomizable";
+			
+			public const string IsInherited = "isinherited";
 			
 			public const string IsManaged = "ismanaged";
 			
@@ -98329,6 +100434,50 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscount")]
+		public System.Nullable<decimal> ed_mediaagencydiscount
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("ed_mediaagencydiscount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscount", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_mediaagencydiscountamount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Media Agency Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_mediaagencydiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount_base");
+			}
+		}
+		
+		/// <summary>
 		/// Indikerar om affärsmöjligheten är kopplad till en kund som är mediabyrå
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediabusiness")]
@@ -98341,6 +100490,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_mediabusiness", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_orderfakturerad")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ed_Orderfakturerad
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("ed_orderfakturerad");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_orderfakturerad", value);
 			}
 		}
 		
@@ -98453,6 +100618,34 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_totalamountforcalculation", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_TotalDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_totaldiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Total Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_totaldiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount_base");
 			}
 		}
 		
@@ -100181,7 +102374,15 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_infotainmentcustomer = "ed_infotainmentcustomer";
 			
+			public const string ed_mediaagencydiscount = "ed_mediaagencydiscount";
+			
+			public const string ed_mediaagencydiscountamount = "ed_mediaagencydiscountamount";
+			
+			public const string ed_mediaagencydiscountamount_Base = "ed_mediaagencydiscountamount_base";
+			
 			public const string ed_mediabusiness = "ed_mediabusiness";
+			
+			public const string ed_Orderfakturerad = "ed_orderfakturerad";
 			
 			public const string ed_peppolnr = "ed_peppolnr";
 			
@@ -100198,6 +102399,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_tax_Base = "ed_tax_base";
 			
 			public const string ed_totalamountforcalculation = "ed_totalamountforcalculation";
+			
+			public const string ed_TotalDiscountAmount = "ed_totaldiscountamount";
+			
+			public const string ed_totaldiscountamount_Base = "ed_totaldiscountamount_base";
 			
 			public const string ed_TotalExtendedAmount = "ed_totalextendedamount";
 			
@@ -101077,6 +103282,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// User-defined product ID.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productnumber")]
+		public string ProductNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("productnumber");
+			}
+		}
+		
+		/// <summary>
 		/// Product Type
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("producttypecode")]
@@ -101658,6 +103875,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Select whether the order product should be shipped to the specified address or held until the customer calls with further pick up or delivery instructions.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("willcall")]
+		public System.Nullable<bool> WillCall
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("willcall");
+			}
+			set
+			{
+				this.SetAttributeValue("willcall", value);
+			}
+		}
+		
+		/// <summary>
 		/// Shows the discount amount per unit if a specified volume is purchased. Configure volume discounts in the Product Catalog in the Settings area.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("volumediscountamount")]
@@ -101678,22 +103911,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("volumediscountamount_base");
-			}
-		}
-		
-		/// <summary>
-		/// Select whether the order product should be shipped to the specified address or held until the customer calls with further pick up or delivery instructions.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("willcall")]
-		public System.Nullable<bool> WillCall
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<bool>>("willcall");
-			}
-			set
-			{
-				this.SetAttributeValue("willcall", value);
 			}
 		}
 		
@@ -102080,6 +104297,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ProductName = "productname";
 			
+			public const string ProductNumber = "productnumber";
+			
 			public const string ProductTypeCode = "producttypecode";
 			
 			public const string PropertyConfigurationStatus = "propertyconfigurationstatus";
@@ -102154,11 +104373,11 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string VersionNumber = "versionnumber";
 			
+			public const string WillCall = "willcall";
+			
 			public const string VolumeDiscountAmount = "volumediscountamount";
 			
 			public const string VolumeDiscountAmount_Base = "volumediscountamount_base";
-			
-			public const string WillCall = "willcall";
 		}
 		
 		public struct FieldLengths
@@ -102171,6 +104390,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ProductDescription = 500;
 			
 			public const int ProductName = 500;
+			
+			public const int ProductNumber = 100;
 			
 			public const int SalesOrderDetailName = 250;
 			
@@ -102200,6 +104421,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 	
 	public enum st_singaporetickettype
 	{
+		
+		Provapakampanj = 100000000,
 		
 		enkla5 = 206290003,
 		
@@ -102247,6 +104470,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		dagarsbiljett = 206290000,
 		
+		_dagar = 899310018,
+		
 		dagarsbiljettmomsfri = 899310019,
 		
 		Dygnsbiljettmomsfri = 899310020,
@@ -102266,6 +104491,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		SkolaSpecial = 899310024,
 		
 		Sportlovsbiljett = 899310025,
+		
+		_Provapakampanj = 899310028,
 	}
 	
 	public enum st_singaporeticketState
@@ -105523,6 +107750,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		///  User PUID User Identifiable Information
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("userpuid")]
+		public string UserPuid
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("userpuid");
+			}
+		}
+		
+		/// <summary>
 		/// Time zone code that was in use when the record was created.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("utcconversiontimezonecode")]
@@ -108551,6 +110790,70 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_ticketinfo>("lk_ed_ticketinfo_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_ed_ticketpurchasespercustomerdata_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_ticketpurchasespercustomerdata_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata> lk_ed_ticketpurchasespercustomerdata_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata>("lk_ed_ticketpurchasespercustomerdata_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata>("lk_ed_ticketpurchasespercustomerdata_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_ed_ticketpurchasespercustomerdata_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_ticketpurchasespercustomerdata_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata> lk_ed_ticketpurchasespercustomerdata_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata>("lk_ed_ticketpurchasespercustomerdata_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata>("lk_ed_ticketpurchasespercustomerdata_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_ed_ticketpurchasespercustomerdata_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_ticketpurchasespercustomerdata_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata> lk_ed_ticketpurchasespercustomerdata_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata>("lk_ed_ticketpurchasespercustomerdata_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata>("lk_ed_ticketpurchasespercustomerdata_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_ed_ticketpurchasespercustomerdata_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_ticketpurchasespercustomerdata_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata> lk_ed_ticketpurchasespercustomerdata_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata>("lk_ed_ticketpurchasespercustomerdata_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata>("lk_ed_ticketpurchasespercustomerdata_modifiedonbehalfby", null, value);
 			}
 		}
 		
@@ -112055,6 +114358,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string UserLicenseType = "userlicensetype";
 			
+			public const string UserPuid = "userpuid";
+			
 			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
 			
 			public const string VersionNumber = "versionnumber";
@@ -112167,7 +114472,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const int EntityImage_URL = 200;
 			
-			public const int FirstName = 64;
+			public const int FirstName = 256;
 			
 			public const int FullName = 200;
 			
@@ -112179,7 +114484,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const int JobTitle = 100;
 			
-			public const int LastName = 64;
+			public const int LastName = 256;
 			
 			public const int MiddleName = 50;
 			
@@ -112202,6 +114507,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int Title = 128;
 			
 			public const int TraversedPath = 1250;
+			
+			public const int UserPuid = 100;
 			
 			public const int WindowsLiveID = 1024;
 			
@@ -112378,6 +114685,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// The Azure active directory object Id for a group.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("azureactivedirectoryobjectid")]
+		public System.Nullable<System.Guid> AzureActiveDirectoryObjectId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("azureactivedirectoryobjectid");
+			}
+			set
+			{
+				this.SetAttributeValue("azureactivedirectoryobjectid", value);
+			}
+		}
+		
+		/// <summary>
 		/// Unique identifier of the business unit with which the team is associated.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("businessunitid")]
@@ -112530,6 +114853,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetAttributeValue<System.Nullable<bool>>("isdefault");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("membershiptype")]
+		public Microsoft.Xrm.Sdk.OptionSetValue MembershipType
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("membershiptype");
+			}
+			set
+			{
+				this.SetAttributeValue("membershiptype", value);
 			}
 		}
 		
@@ -114161,6 +116500,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string AdministratorId = "administratorid";
 			
+			public const string AzureActiveDirectoryObjectId = "azureactivedirectoryobjectid";
+			
 			public const string BusinessUnitId = "businessunitid";
 			
 			public const string cgi_PrintDetails = "cgi_printdetails";
@@ -114182,6 +116523,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ImportSequenceNumber = "importsequencenumber";
 			
 			public const string IsDefault = "isdefault";
+			
+			public const string MembershipType = "membershiptype";
 			
 			public const string ModifiedBy = "modifiedby";
 			
@@ -114337,6 +116680,58 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("description", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the default image for the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage")]
+		public byte[] EntityImage
+		{
+			get
+			{
+				return this.GetAttributeValue<byte[]>("entityimage");
+			}
+			set
+			{
+				this.SetAttributeValue("entityimage", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage_timestamp")]
+		public System.Nullable<long> EntityImage_Timestamp
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("entityimage_timestamp");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage_url")]
+		public string EntityImage_URL
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("entityimage_url");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimageid")]
+		public System.Nullable<System.Guid> EntityImageId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("entityimageid");
 			}
 		}
 		
@@ -114641,6 +117036,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Safe html of email template.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("safehtml")]
+		public string SafeHtml
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("safehtml");
+			}
+			set
+			{
+				this.SetAttributeValue("safehtml", value);
+			}
+		}
+		
+		/// <summary>
 		/// Unique identifier of the associated solution.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("solutionid")]
@@ -114681,6 +117092,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("subjectpresentationxml", value);
+			}
+		}
+		
+		/// <summary>
+		/// Safe html of email template subject.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("subjectsafehtml")]
+		public string SubjectSafeHtml
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("subjectsafehtml");
+			}
+			set
+			{
+				this.SetAttributeValue("subjectsafehtml", value);
 			}
 		}
 		
@@ -114914,6 +117341,14 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string Description = "description";
 			
+			public const string EntityImage = "entityimage";
+			
+			public const string EntityImage_Timestamp = "entityimage_timestamp";
+			
+			public const string EntityImage_URL = "entityimage_url";
+			
+			public const string EntityImageId = "entityimageid";
+			
 			public const string GenerationTypeCode = "generationtypecode";
 			
 			public const string ImportSequenceNumber = "importsequencenumber";
@@ -114958,11 +117393,15 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ReplyRate = "replyrate";
 			
+			public const string SafeHtml = "safehtml";
+			
 			public const string SolutionId = "solutionid";
 			
 			public const string Subject = "subject";
 			
 			public const string SubjectPresentationXml = "subjectpresentationxml";
+			
+			public const string SubjectSafeHtml = "subjectsafehtml";
 			
 			public const string TemplateId = "templateid";
 			
@@ -114986,15 +117425,21 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const int Description = 2000;
 			
+			public const int EntityImage_URL = 200;
+			
 			public const int IntroducedVersion = 48;
 			
 			public const int MimeType = 256;
 			
 			public const int PresentationXml = 1073741823;
 			
+			public const int SafeHtml = 1073741823;
+			
 			public const int Subject = 1000;
 			
 			public const int SubjectPresentationXml = 1073741823;
+			
+			public const int SubjectSafeHtml = 1073741823;
 			
 			public const int Title = 200;
 		}
@@ -117290,6 +119735,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Set user status for ADC Suggestions
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("autocaptureuserstatus")]
+		public System.Nullable<int> AutoCaptureUserStatus
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("autocaptureuserstatus");
+			}
+			set
+			{
+				this.SetAttributeValue("autocaptureuserstatus", value);
+			}
+		}
+		
+		/// <summary>
 		/// Auto-create contact on client promote
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("autocreatecontactonpromote")]
@@ -117797,6 +120258,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("isduplicatedetectionenabledwhengoingonline", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enable or disable email conversation view on timeline wall selection.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isemailconversationviewenabled")]
+		public System.Nullable<bool> IsEmailConversationViewEnabled
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isemailconversationviewenabled");
+			}
+			set
+			{
+				this.SetAttributeValue("isemailconversationviewenabled", value);
 			}
 		}
 		
@@ -118879,6 +121356,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string AMDesignator = "amdesignator";
 			
+			public const string AutoCaptureUserStatus = "autocaptureuserstatus";
+			
 			public const string AutoCreateContactOnPromote = "autocreatecontactonpromote";
 			
 			public const string BusinessUnitId = "businessunitid";
@@ -118944,6 +121423,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string IsDefaultCountryCodeCheckEnabled = "isdefaultcountrycodecheckenabled";
 			
 			public const string IsDuplicateDetectionEnabledWhenGoingOnline = "isduplicatedetectionenabledwhengoingonline";
+			
+			public const string IsEmailConversationViewEnabled = "isemailconversationviewenabled";
 			
 			public const string IsGuidedHelpEnabled = "isguidedhelpenabled";
 			
@@ -119621,6 +122102,17 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.ed_ticketinfo>();
+			}
+		}
+		
+		/// <summary>
+		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata> ed_ticketpurchasespercustomerdataSet
+		{
+			get
+			{
+				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdata>();
 			}
 		}
 		
