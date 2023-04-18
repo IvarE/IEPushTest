@@ -198,7 +198,21 @@ namespace Skanetrafiken.Crm {
         private bool isAddressInformationCompleteField;
         
         private bool isAddressInformationCompleteFieldSpecified;
-        
+
+        private int ServiceTypeField;
+
+        public int ServiceType
+        {
+            get
+            {
+                return this.ServiceTypeField;
+            }
+            set
+            {
+                this.ServiceTypeField = value;
+            }
+        }
+
         /// <remarks/>
         public int Source {
             get {

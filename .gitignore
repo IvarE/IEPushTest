@@ -24,3 +24,5 @@ bin
 *.vspscc
 /DK/Development/Main/UpgradeLog2.htm
 /CRM/MainAffarsRegler/Skanetrafiken.Crm/UpgradeLog3.htm
+*.tfb
+/CRM/MainAffarsRegler/Skanetrafiken.Crm/UpgradeLog2.htm
