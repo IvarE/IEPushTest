@@ -4822,6 +4822,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N st_account_ed_deltabatchqueue_ContactLookup
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("st_account_ed_deltabatchqueue_ContactLookup")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue> st_account_ed_deltabatchqueue_ContactLookup
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue>("st_account_ed_deltabatchqueue_ContactLookup", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue>("st_account_ed_deltabatchqueue_ContactLookup", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:N accountleads_association
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("accountleads_association")]
@@ -9856,7 +9872,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const int Category = 250;
 			
-			public const int Description = 1048576;
+			public const int Description = 2000;
 			
 			public const int ed_UpsalesId = 100;
 			
@@ -13811,42 +13827,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// 
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_test")]
-		public System.Nullable<int> st_Test
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<int>>("st_test");
-			}
-		}
-		
-		/// <summary>
-		/// Last Updated time of rollup field Test.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_test_date")]
-		public System.Nullable<System.DateTime> st_Test_Date
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<System.DateTime>>("st_test_date");
-			}
-		}
-		
-		/// <summary>
-		/// State of rollup field Test.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_test_state")]
-		public System.Nullable<int> st_Test_State
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<int>>("st_test_state");
-			}
-		}
-		
-		/// <summary>
 		/// processstage_campaigns
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
@@ -14787,12 +14767,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ProposedEnd = "proposedend";
 			
 			public const string ProposedStart = "proposedstart";
-			
-			public const string st_Test = "st_test";
-			
-			public const string st_Test_Date = "st_test_date";
-			
-			public const string st_Test_State = "st_test_state";
 			
 			public const string StageId = "stageid";
 			
@@ -16260,7 +16234,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// Choose the parent campaign so that the campaign's response rate is tracked correctly.
+		/// Campaign_CampaignResponses
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
 		public Microsoft.Xrm.Sdk.EntityReference RegardingObjectId
@@ -25767,6 +25741,54 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// ClientID used when accessing attachments from Azure
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_attachmentclientid")]
+		public string ed_AttachmentClientID
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_attachmentclientid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_attachmentclientid", value);
+			}
+		}
+		
+		/// <summary>
+		/// ClientSecret used when accessing attachemnts from Azure
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_attachmentclientsecret")]
+		public string ed_AttachmentClientSecret
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_attachmentclientsecret");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_attachmentclientsecret", value);
+			}
+		}
+		
+		/// <summary>
+		/// StorageAccountName used when accessing attachments from Azure
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_attachmentstorageaccountname")]
+		public string ed_AttachmentStorageAccountName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_attachmentstorageaccountname");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_attachmentstorageaccountname", value);
+			}
+		}
+		
+		/// <summary>
 		/// Tidsintervall när Biff-tjänst skall köras. T.ex. 23-03.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_biffintegrationruntime")]
@@ -26247,7 +26269,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// 
+		/// General TenentID. This field was created with missleading name "ed_jojocarddetailstenentid". This is the general tenentId.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_jojocarddetailstenentid")]
 		public string ed_JojoCardDetailsTenentId
@@ -27316,6 +27338,12 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_AllowedToInactivate = "ed_allowedtoinactivate";
 			
+			public const string ed_AttachmentClientID = "ed_attachmentclientid";
+			
+			public const string ed_AttachmentClientSecret = "ed_attachmentclientsecret";
+			
+			public const string ed_AttachmentStorageAccountName = "ed_attachmentstorageaccountname";
+			
 			public const string ed_BiffIntegrationRuntime = "ed_biffintegrationruntime";
 			
 			public const string ed_BizTalkBlockTravelCard = "ed_biztalkblocktravelcard";
@@ -27525,6 +27553,12 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int cgi_synccustomerservice = 100;
 			
 			public const int cgi_TravelcardFilepath = 100;
+			
+			public const int ed_AttachmentClientID = 100;
+			
+			public const int ed_AttachmentClientSecret = 100;
+			
+			public const int ed_AttachmentStorageAccountName = 100;
 			
 			public const int ed_BiffIntegrationRuntime = 100;
 			
@@ -31616,22 +31650,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cdi_timezones")]
-		public System.Nullable<int> cdi_timezones
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<int>>("cdi_timezones");
-			}
-			set
-			{
-				this.SetAttributeValue("cdi_timezones", value);
-			}
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cdi_totalscore")]
 		public System.Nullable<int> cdi_totalscore
 		{
@@ -34331,22 +34349,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_agecontact")]
-		public string st_AgeContact
-		{
-			get
-			{
-				return this.GetAttributeValue<string>("st_agecontact");
-			}
-			set
-			{
-				this.SetAttributeValue("st_agecontact", value);
-			}
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_campaignlink")]
 		public string st_CampaignLink
 		{
@@ -34373,22 +34375,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("st_deltabatch_lookup", value);
-			}
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_emailrecipient")]
-		public System.Nullable<bool> st_emailrecipient
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<bool>>("st_emailrecipient");
-			}
-			set
-			{
-				this.SetAttributeValue("st_emailrecipient", value);
 			}
 		}
 		
@@ -35069,42 +35055,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("st_ssn_2", value);
-			}
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_sumtravelcardbalance")]
-		public System.Nullable<decimal> st_SumTravelCardBalance
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<decimal>>("st_sumtravelcardbalance");
-			}
-		}
-		
-		/// <summary>
-		/// Last Updated time of rollup field SumTravelCardBalance.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_sumtravelcardbalance_date")]
-		public System.Nullable<System.DateTime> st_SumTravelCardBalance_Date
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<System.DateTime>>("st_sumtravelcardbalance_date");
-			}
-		}
-		
-		/// <summary>
-		/// State of rollup field SumTravelCardBalance.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_sumtravelcardbalance_state")]
-		public System.Nullable<int> st_SumTravelCardBalance_State
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<int>>("st_sumtravelcardbalance_state");
 			}
 		}
 		
@@ -36347,22 +36297,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// 1:N st_contact_ed_deltabatchqueue_Contact_Lookup
-		/// </summary>
-		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("st_contact_ed_deltabatchqueue_Contact_Lookup")]
-		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue> st_contact_ed_deltabatchqueue_Contact_Lookup
-		{
-			get
-			{
-				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue>("st_contact_ed_deltabatchqueue_Contact_Lookup", null);
-			}
-			set
-			{
-				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_DeltabatchQueue>("st_contact_ed_deltabatchqueue_Contact_Lookup", null, value);
-			}
-		}
-		
-		/// <summary>
 		/// 1:N st_contact_ed_salesorderline_contact
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("st_contact_ed_salesorderline_contact")]
@@ -37054,8 +36988,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string cdi_TalDoNotDisplay = "cdi_taldonotdisplay";
 			
-			public const string cdi_timezones = "cdi_timezones";
-			
 			public const string cdi_totalscore = "cdi_totalscore";
 			
 			public const string cdi_twitter = "cdi_twitter";
@@ -37402,13 +37334,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string SpousesName = "spousesname";
 			
-			public const string st_AgeContact = "st_agecontact";
-			
 			public const string st_CampaignLink = "st_campaignlink";
 			
 			public const string st_DeltaBatch_Lookup = "st_deltabatch_lookup";
-			
-			public const string st_emailrecipient = "st_emailrecipient";
 			
 			public const string st_LastOrderDate = "st_lastorderdate";
 			
@@ -37505,12 +37433,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string st_ret_nyinfl_sep = "st_ret_nyinfl_sep";
 			
 			public const string st_SSN_2 = "st_ssn_2";
-			
-			public const string st_SumTravelCardBalance = "st_sumtravelcardbalance";
-			
-			public const string st_SumTravelCardBalance_Date = "st_sumtravelcardbalance_date";
-			
-			public const string st_SumTravelCardBalance_State = "st_sumtravelcardbalance_state";
 			
 			public const string st_Tjanstenummer = "st_tjanstenummer";
 			
@@ -37819,8 +37741,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int Salutation = 100;
 			
 			public const int SpousesName = 100;
-			
-			public const int st_AgeContact = 100;
 			
 			public const int st_CampaignLink = 100;
 			
@@ -38910,7 +38830,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_companyrole";
 		
-		public const int EntityTypeCode = 10146;
+		public const int EntityTypeCode = 10144;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -42405,16 +42325,16 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_contact_lookup")]
-		public Microsoft.Xrm.Sdk.EntityReference st_Contact_Lookup
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_contactlookup")]
+		public Microsoft.Xrm.Sdk.EntityReference st_ContactLookup
 		{
 			get
 			{
-				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("st_contact_lookup");
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("st_contactlookup");
 			}
 			set
 			{
-				this.SetAttributeValue("st_contact_lookup", value);
+				this.SetAttributeValue("st_contactlookup", value);
 			}
 		}
 		
@@ -42722,19 +42642,19 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
-		/// N:1 st_contact_ed_deltabatchqueue_Contact_Lookup
+		/// N:1 st_account_ed_deltabatchqueue_ContactLookup
 		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_contact_lookup")]
-		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("st_contact_ed_deltabatchqueue_Contact_Lookup")]
-		public Skanetrafiken.Crm.Schema.Generated.Contact st_contact_ed_deltabatchqueue_Contact_Lookup
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_contactlookup")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("st_account_ed_deltabatchqueue_ContactLookup")]
+		public Skanetrafiken.Crm.Schema.Generated.Account st_account_ed_deltabatchqueue_ContactLookup
 		{
 			get
 			{
-				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("st_contact_ed_deltabatchqueue_Contact_Lookup", null);
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("st_account_ed_deltabatchqueue_ContactLookup", null);
 			}
 			set
 			{
-				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("st_contact_ed_deltabatchqueue_Contact_Lookup", null, value);
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("st_account_ed_deltabatchqueue_ContactLookup", null, value);
 			}
 		}
 		
@@ -42805,7 +42725,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string OwningUser = "owninguser";
 			
-			public const string st_Contact_Lookup = "st_contact_lookup";
+			public const string st_ContactLookup = "st_contactlookup";
 			
 			public const string statecode = "statecode";
 			
@@ -42854,7 +42774,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_emailtemplateproxy";
 		
-		public const int EntityTypeCode = 10166;
+		public const int EntityTypeCode = 10161;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -43458,7 +43378,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_featuretoggling";
 		
-		public const int EntityTypeCode = 10188;
+		public const int EntityTypeCode = 10180;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -46899,7 +46819,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_orderpurchasetype";
 		
-		public const int EntityTypeCode = 10201;
+		public const int EntityTypeCode = 10192;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -47427,7 +47347,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_orderstatus";
 		
-		public const int EntityTypeCode = 10179;
+		public const int EntityTypeCode = 10170;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -47959,7 +47879,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_paymentmethod";
 		
-		public const int EntityTypeCode = 10202;
+		public const int EntityTypeCode = 10194;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -48561,7 +48481,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_postnummer";
 		
-		public const int EntityTypeCode = 10215;
+		public const int EntityTypeCode = 10206;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -49101,7 +49021,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_returnmessagewebapi";
 		
-		public const int EntityTypeCode = 10167;
+		public const int EntityTypeCode = 10166;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -49616,6 +49536,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_okcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_outstandingchargesexists")]
+		public string ed_OutstandingChargesExists
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_outstandingchargesexists");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_outstandingchargesexists", value);
 			}
 		}
 		
@@ -50236,6 +50172,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_OKCode = "ed_okcode";
 			
+			public const string ed_OutstandingChargesExists = "ed_outstandingchargesexists";
+			
 			public const string ed_PendingCharge = "ed_pendingcharge";
 			
 			public const string ed_ReturnMessageWebAPIId = "ed_returnmessagewebapiid";
@@ -50341,6 +50279,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_NoInformationAboutTravelCard = 100;
 			
 			public const int ed_OK = 200;
+			
+			public const int ed_OutstandingChargesExists = 1000;
 			
 			public const int ed_PendingCharge = 1000;
 			
@@ -51377,7 +51317,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_salesorderline";
 		
-		public const int EntityTypeCode = 10147;
+		public const int EntityTypeCode = 10145;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -51693,6 +51633,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Exchange rate for the currency associated with the entity with respect to the base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+		}
+		
+		/// <summary>
 		/// Sequence number of the import that created this record.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
@@ -51895,22 +51847,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_tempamount")]
-		public System.Nullable<decimal> st_TempAmount
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<decimal>>("st_tempamount");
-			}
-			set
-			{
-				this.SetAttributeValue("st_tempamount", value);
-			}
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_travelcard")]
 		public Microsoft.Xrm.Sdk.EntityReference st_TravelCard
 		{
@@ -51984,6 +51920,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the currency associated with the entity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public Microsoft.Xrm.Sdk.EntityReference TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
 			}
 		}
 		
@@ -52344,6 +52296,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 TransactionCurrency_ed_salesorderline
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_ed_salesorderline")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency TransactionCurrency_ed_salesorderline
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_ed_salesorderline", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("TransactionCurrency_ed_salesorderline", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 user_ed_salesorderline
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
@@ -52399,6 +52368,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string ed_TicketOfferTypeName = "ed_ticketoffertypename";
 			
+			public const string ExchangeRate = "exchangerate";
+			
 			public const string ImportSequenceNumber = "importsequencenumber";
 			
 			public const string ModifiedBy = "modifiedby";
@@ -52427,8 +52398,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string st_Tax = "st_tax";
 			
-			public const string st_TempAmount = "st_tempamount";
-			
 			public const string st_TravelCard = "st_travelcard";
 			
 			public const string statecode = "statecode";
@@ -52436,6 +52405,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string statuscode = "statuscode";
 			
 			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
 			
 			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
 			
@@ -52492,7 +52463,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_salesorderlinepayment";
 		
-		public const int EntityTypeCode = 10203;
+		public const int EntityTypeCode = 10193;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -53148,7 +53119,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_salesorderlinetraveller";
 		
-		public const int EntityTypeCode = 10148;
+		public const int EntityTypeCode = 10146;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -53827,7 +53798,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_senttextmessage";
 		
-		public const int EntityTypeCode = 10168;
+		public const int EntityTypeCode = 10153;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -54580,7 +54551,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_skakort";
 		
-		public const int EntityTypeCode = 10180;
+		public const int EntityTypeCode = 10172;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -55245,7 +55216,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_slots";
 		
-		public const int EntityTypeCode = 10214;
+		public const int EntityTypeCode = 10203;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -56222,7 +56193,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_textmessage";
 		
-		public const int EntityTypeCode = 10169;
+		public const int EntityTypeCode = 10151;
 		
 		/// <summary>
 		/// Additional information provided by the external application as JSON. For internal use only.
@@ -58385,7 +58356,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_textmessagetemplate";
 		
-		public const int EntityTypeCode = 10170;
+		public const int EntityTypeCode = 10152;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -58989,7 +58960,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_ticketinfo";
 		
-		public const int EntityTypeCode = 10213;
+		public const int EntityTypeCode = 10205;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -59688,7 +59659,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_ticketpurchasespercustomerdata";
 		
-		public const int EntityTypeCode = 10341;
+		public const int EntityTypeCode = 10354;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -60212,7 +60183,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_valuecode";
 		
-		public const int EntityTypeCode = 10171;
+		public const int EntityTypeCode = 10156;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -62112,7 +62083,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_valuecodeapproval";
 		
-		public const int EntityTypeCode = 10172;
+		public const int EntityTypeCode = 10167;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -63054,7 +63025,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_valuecodetemplate";
 		
-		public const int EntityTypeCode = 10173;
+		public const int EntityTypeCode = 10157;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -63942,7 +63913,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		public const string EntityLogicalName = "ed_valuecodetransaction";
 		
-		public const int EntityTypeCode = 10187;
+		public const int EntityTypeCode = 10179;
 		
 		/// <summary>
 		/// Unique identifier of the user who created the record.
@@ -68905,6 +68876,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 	public enum incident_caseorigincode
 	{
 		
+		Vardguidensetjanster = 899310000,
+		
 		Phone = 1,
 		
 		Customercenter = 285050004,
@@ -68922,8 +68895,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		Internal = 285050005,
 		
 		Twitter = 3986,
-		
-		Vardguidensetjanster = 899310000,
 		
 		SecurityLine = 285050003,
 		
@@ -72164,22 +72135,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("edp_incomingremittence")]
-		public string edp_IncomingRemittence
-		{
-			get
-			{
-				return this.GetAttributeValue<string>("edp_incomingremittence");
-			}
-			set
-			{
-				this.SetAttributeValue("edp_incomingremittence", value);
-			}
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("edp_remittancedate")]
 		public System.Nullable<System.DateTime> edp_RemittanceDate
 		{
@@ -74585,8 +74540,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string edp_EmailRecipientId = "edp_emailrecipientid";
 			
-			public const string edp_IncomingRemittence = "edp_incomingremittence";
-			
 			public const string edp_RemittanceDate = "edp_remittancedate";
 			
 			public const string EmailAddress = "emailaddress";
@@ -74954,8 +74907,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_socialsecuritynumberformat = 100;
 			
 			public const int ed_UnregisterdSKACard = 100;
-			
-			public const int edp_IncomingRemittence = 100;
 			
 			public const int EmailAddress = 100;
 			
@@ -82967,22 +82918,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cdi_timezones")]
-		public System.Nullable<int> cdi_timezones
-		{
-			get
-			{
-				return this.GetAttributeValue<System.Nullable<int>>("cdi_timezones");
-			}
-			set
-			{
-				this.SetAttributeValue("cdi_timezones", value);
-			}
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("cdi_totalscore")]
 		public System.Nullable<int> cdi_totalscore
 		{
@@ -86032,8 +85967,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string cdi_social = "cdi_social";
 			
-			public const string cdi_timezones = "cdi_timezones";
-			
 			public const string cdi_totalscore = "cdi_totalscore";
 			
 			public const string cdi_twitter = "cdi_twitter";
@@ -86324,7 +86257,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const int Address1_Country = 80;
 			
-			public const int Address1_County = 100;
+			public const int Address1_County = 50;
 			
 			public const int Address1_Fax = 50;
 			
@@ -108967,8 +108900,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 	public enum st_singaporetickettype
 	{
 		
-		Provapakampanj = 100000000,
-		
 		enkla5 = 206290003,
 		
 		out30 = 899310027,
@@ -109036,8 +108967,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		SkolaSpecial = 899310024,
 		
 		Sportlovsbiljett = 899310025,
-		
-		_Provapakampanj = 899310028,
 	}
 	
 	public enum st_singaporeticketState
@@ -122824,6 +122753,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_SalesOrder>("TransactionCurrency_ed_SalesOrder", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N TransactionCurrency_ed_salesorderline
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_ed_salesorderline")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline> TransactionCurrency_ed_salesorderline
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("TransactionCurrency_ed_salesorderline", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_salesorderline>("TransactionCurrency_ed_salesorderline", null, value);
 			}
 		}
 		
