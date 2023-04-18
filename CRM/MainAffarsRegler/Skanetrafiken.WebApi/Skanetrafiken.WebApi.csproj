@@ -170,6 +170,9 @@
     <Compile Include="..\Skanetrafiken.Crm\ColumnBlockSchemas\CustomerInfoBlock.cs">
       <Link>Entities\CustomerInfoBlock.cs</Link>
     </Compile>
+    <Compile Include="..\Skanetrafiken.Crm\ColumnBlockSchemas\CustomerInfoExtensions.cs">
+      <Link>CustomerInfoExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Skanetrafiken.Crm\ColumnBlockSchemas\NotificationInfoBlock.cs">
       <Link>Entities\NotificationInfoBlock.cs</Link>
     </Compile>

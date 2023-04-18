@@ -22,20 +22,25 @@ namespace Skanetrafiken.Crm.Entities
         public static void HandleQuoteEntityUpdate(Plugin.LocalPluginContext localContext, QuoteEntity quote, QuoteEntity preImage)
         {
 
-            CalculateRollupFieldRequest request = new CalculateRollupFieldRequest
-            {
+            //CalculateRollupFieldRequest request = new CalculateRollupFieldRequest
+            //{
 
-                Target = new EntityReference("quote", quote.QuoteId.Value), // Entity Reference of record that needs updating
+            //    Target = new EntityReference("quote", quote.QuoteId.Value), // Entity Reference of record that needs updating
 
-                FieldName = "ed_totalextendedamount" // Rollup Field Name
+            //    FieldName = "ed_totalextendedamount" // Rollup Field Name
 
-            };
+            //};
 
-            CalculateRollupFieldResponse response = (CalculateRollupFieldResponse)localContext.OrganizationService.Execute(request);
-
+            //CalculateRollupFieldResponse response = (CalculateRollupFieldResponse)localContext.OrganizationService.Execute(request);
+            localContext.Trace("Inside HandleQuoteEntityUpdate");
+            #region slot removal
             var opportunityId = Guid.Empty;
-
-            if (quote.OpportunityId == null)
+            
+            if(quote.OpportunityId == null && preImage.OpportunityId == null)
+            {
+                opportunityId = Guid.Empty;
+            }
+            else if(quote.OpportunityId == null)
             {
                 opportunityId = preImage.OpportunityId.Id;
             }
@@ -45,11 +50,9 @@ namespace Skanetrafiken.Crm.Entities
 
             }
             //localContext.Trace($"Quote Opp id: {quote.OpportunityId}");
-           // localContext.Trace($"Quote Opp id.id: {quote.OpportunityId.Id}");
-            localContext.Trace($"preImageQuote Opp id: {preImage.OpportunityId}");
-            
-            localContext.Trace($"preImageQuote Opp id.id: {preImage.OpportunityId.Id}");
-            if (opportunityId != null)
+            // localContext.Trace($"Quote Opp id.id: {quote.OpportunityId.Id}");
+
+            if (opportunityId != null && opportunityId != Guid.Empty)
             {
                 localContext.Trace($"Quote.QuoteId: {quote.QuoteId}");
                 IList<QuoteEntity> quotes = XrmRetrieveHelper.RetrieveMultiple<QuoteEntity>(localContext,
@@ -72,13 +75,13 @@ namespace Skanetrafiken.Crm.Entities
 
                 DateTime? quoteCreatedOn;
 
-                if(quote.CreatedOn == null)
+                if (quote.CreatedOn == null)
                 {
                     quoteCreatedOn = preImage.CreatedOn;
                 }
                 else
                 {
-                    quoteCreatedOn = quote.CreatedOn; 
+                    quoteCreatedOn = quote.CreatedOn;
                 }
 
                 foreach (QuoteEntity listQuote in quotes)
@@ -109,17 +112,17 @@ namespace Skanetrafiken.Crm.Entities
 
                     Money quoteTotalAmount;
 
-                    if (quote.TotalAmount == null)
+                    if (quote.TotalAmount == null) 
                     {
                         quoteTotalAmount = preImage.TotalAmount;
                     }
-                    else if(preImage.TotalAmount == null)
+                    else if (preImage.TotalAmount == null)
                     {
                         quoteTotalAmount = quote.TotalAmount;
                     }
                     else
                     {
-                        return; 
+                        return;
                     }
 
                     localContext.Trace($"quoteTotalAmount: {quoteTotalAmount}");
@@ -133,7 +136,7 @@ namespace Skanetrafiken.Crm.Entities
                             EstimatedValue = quoteTotalAmount
                         };
 
-                        
+
                         //localContext.Trace($"opportunityToUpdate: {thisOpportunity.Id}");
                         //localContext.Trace($"opportunityToUpdate.EstimatedValue: {opportunityToUpdate.EstimatedValue.Value}");
 
@@ -141,26 +144,28 @@ namespace Skanetrafiken.Crm.Entities
                         XrmHelper.Update(localContext, opportunityToUpdate);
                     }
                 }
-            }
-
-            FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
-            if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
-            {
-                if (quote != null && quote.StateCode != null && quote.StateCode == Generated.QuoteState.Closed)
-                {
-                    QuoteEntity.UpdateSlotsInfo(localContext, quote);
-                }
-
-                //if (quote.IsAttributeModified(preImage, QuoteEntity.Fields.DiscountPercentage) || quote.IsAttributeModified(preImage, QuoteEntity.Fields.DiscountAmount))
-                //{
-                    //Note Change logic (maybe remove this call) after using orderProduct and quoteProduct discounts instead
-                    //Quote discount % - remove if Skåne wants. 
-                    QuoteEntity.UpdateSlotsCustomPrice(localContext, quote, preImage);
-                //}
-
 
             }
-            
+
+            //FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
+            //if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
+            //{
+            //    if (quote != null && quote.StateCode != null && quote.StateCode == Generated.QuoteState.Closed)
+            //    {
+            //        QuoteEntity.UpdateSlotsInfo(localContext, quote);
+            //    }
+
+            //    //if (quote.IsAttributeModified(preImage, QuoteEntity.Fields.DiscountPercentage) || quote.IsAttributeModified(preImage, QuoteEntity.Fields.DiscountAmount))
+            //    //{
+            //        //Note Change logic (maybe remove this call) after using orderProduct and quoteProduct discounts instead
+            //        //Quote discount % - remove if Skåne wants. 
+            //        QuoteEntity.UpdateSlotsCustomPrice(localContext, quote, preImage);
+            //    //}
+
+
+            //}
+            #endregion
+
         }
 
         public static void UpdateSlotsCustomPrice(Plugin.LocalPluginContext localContext, QuoteEntity quote, QuoteEntity preImage)

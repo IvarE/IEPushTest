@@ -140,6 +140,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiHelper.cs" />
+    <Compile Include="ColumnBlockSchemas\CustomerInfoExtensions.cs" />
+    <Compile Include="Entities\InvoiceEntity.cs" />
+    <Compile Include="Entities\InvoiceProductEntity.cs" />
     <Compile Include="Entities\MarketingListEntity.cs" />
     <Compile Include="Entities\OpportunityEntity.cs" />
     <Compile Include="Entities\OpportunityProductEntity.cs" />
@@ -156,9 +159,13 @@
     <Compile Include="Helper\MarketingInfo.cs" />
     <Compile Include="Helper\PhoneNumberUtility.cs" />
     <Compile Include="JsonHelper.cs" />
+    <Compile Include="PostCalculatePrice.cs" />
     <Compile Include="PostOrderProductCreate.cs" />
     <Compile Include="PostOrderProductDelete.cs" />
     <Compile Include="PostQuoteProductDelete.cs" />
+    <Compile Include="PostTicketInfoCreate.cs" />
+    <Compile Include="PostTicketInfoDelete.cs" />
+    <Compile Include="PostTicketInfoUpdate.cs" />
     <Compile Include="PreValidationOrderProductDelete.cs" />
     <Compile Include="PostOrderProductUpdate.cs" />
     <Compile Include="PostOrderUpdate.cs" />
@@ -166,8 +173,6 @@
     <Compile Include="PostQuoteUpdate.cs" />
     <Compile Include="PostQuoteProductCreate.cs" />
     <Compile Include="PostQuoteProductUpdate.cs" />
-    <Compile Include="PostSlotCreate.cs" />
-    <Compile Include="PostSlotUpdate.cs" />
     <Compile Include="PreAccountUpdate.cs" />
     <Compile Include="PreAccountCreate.cs" />
     <Compile Include="CountryUtility.cs" />
@@ -253,8 +258,6 @@
     <Compile Include="PreLeadCreate.cs" />
     <Compile Include="PreContactSetState.cs" />
     <Compile Include="PreQuoteProductUpdate.cs" />
-    <Compile Include="PreSlotCreate.cs" />
-    <Compile Include="PreSlotUpdate.cs" />
     <Compile Include="PreTemplateDelete.cs" />
     <Compile Include="PreValidationContactDelete.cs" />
     <Compile Include="PreValueCodeApprovalCreate.cs" />
@@ -333,6 +336,7 @@
     <Content Include="WebResource\script\EndeavorCreditsafe\Endeavor.CreditSafe.SolutionConfigurationPage.js" />
     <Content Include="WebResource\script\Endeavor.Library.formscriptfunctions.js" />
     <Content Include="WebResource\script\Endeavor.Library.OData_Querys.js" />
+    <Content Include="WebResource\script\Endeavor.Skanetrafiken.ContactAnnons.js" />
     <Content Include="WebResource\script\SDK.Rest.js" />
     <None Include="bin\Dev\Skanetrafiken.Crm.dll.config" />
     <None Include="ColumnBlockSchemas\NotificationInfoBlock.xsd">

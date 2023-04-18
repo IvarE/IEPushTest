@@ -4046,9 +4046,6 @@ namespace Skanetrafiken.Crm.Controllers
                         }
                     }
 
-                    // TODO - Marcus, nedan måste testas!
-                    // Done 20190719 /Marcus
-
                     ContactEntity newInfo = new ContactEntity(localContext, customer);
                     if (newInfo.IsAnyAttributeModified(contact, ContactEntity.ContactInfoBlock.Columns.ToArray()))
                     {
@@ -4075,7 +4072,12 @@ namespace Skanetrafiken.Crm.Controllers
                         };
 
                         if (collection.Count > 0)
-                        {
+                        {  
+                            if(updContact.Address1_Country == null)
+                            {
+                                updContact.Address1_Country = contact.Address1_Country;
+                            }
+
                             updContact.ed_InformationSource = Generated.ed_informationsource.UppdateraMittKonto;
                             contact.ed_InformationSource = Generated.ed_informationsource.UppdateraMittKonto;
                             localContext.OrganizationService.Update(updContact);

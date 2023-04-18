@@ -92,6 +92,8 @@ namespace Skanetrafiken.Crm.Entities
 
             refund.SetTransactionFailed(localContext, errorMessage);
 
+            throw new InvalidPluginExecutionException("Kunde inte skicka ut värdekod. Vänligen kontakta kundtjänst: " + errorMessage);
+
         }
 
         public static string ExecuteCodeActivity(Plugin.LocalPluginContext localContext, EntityReference valueCodeRef)

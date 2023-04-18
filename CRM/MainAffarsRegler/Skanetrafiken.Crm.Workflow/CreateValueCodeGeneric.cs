@@ -245,6 +245,7 @@ namespace Skanetrafiken.Crm.Entities
                     localContext.Trace($"(ExecuteCodeActivity) Retrieving Approval finished.");
                 }
 
+                //CK - This might be changed
                 int validTo_Months = CgiSettingEntity.GetSettingInt(localContext, CgiSettingEntity.Fields.cgi_ValueCodeValidForMonths);//DateTime.Now.AddDays(365);
                 DateTime validTo_Date = CgiSettingEntity.GetSettingDate(localContext, CgiSettingEntity.Fields.ed_ValueCodeValidDate).Date;
 

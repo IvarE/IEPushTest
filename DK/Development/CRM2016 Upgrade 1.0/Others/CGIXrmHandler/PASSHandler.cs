@@ -352,7 +352,7 @@ namespace CGIXrmHandler
                     Target = new EntityReference(entity.LogicalName, entity.Id)
                 };
                 _xrmManager.Service.Execute(assign);
-                LogMessage("E:\\Logs\\CRM\\CRMExtIntegrationPortal\\CGIXrmHandlers\\PASSLog.txt", "Assign to team.");
+                LogMessage("E:\\Logs\\CRM\\CRMExtIntegrationPortal\\PASSLog.txt", "Assign to team.");
             }
 
             return new EntityReference(entity.LogicalName, entity.Id);
@@ -360,7 +360,7 @@ namespace CGIXrmHandler
 
         private Guid CreatePASSTravelInformation(PASSTravelInformation passTravelInformation, EntityReference IncidentReference)
         {
-            LogMessage("E:\\Logs\\CRM\\CRMExtIntegrationPortal\\CGIXrmHandlers\\PASSLog.txt", "CreatePASSTravelInformation");
+            LogMessage("E:\\Logs\\CRM\\CRMExtIntegrationPortal\\PASSLog.txt", "CreatePASSTravelInformation");
             passTravelInformation.Case = IncidentReference;
             Entity entity = _xrmManager.Create<PASSTravelInformation>(passTravelInformation);
             return entity.Id;
@@ -453,7 +453,7 @@ namespace CGIXrmHandler
 
         public Guid ExecutePASSRequest(Incident incident, PASSTravelInformation[] passTravelInformations)
         {
-            LogMessage("E:\\Logs\\CRM\\CRMExtIntegrationPortal\\CGIXrmHandlers\\PASSLog.txt", "Create incident");
+            LogMessage("E:\\Logs\\CRM\\CRMExtIntegrationPortal\\PASSLog.txt", "Create incident");
             EntityReference incidentReference = CreateIncident(incident);
 
             foreach (PASSTravelInformation passTravelInformation in passTravelInformations)
@@ -469,15 +469,15 @@ namespace CGIXrmHandler
             ObservableCollection<Contact> contacts;
             try
             {
-                LogMessage("E:\\Logs\\CRM\\CRMExtIntegrationPortal\\CGIXrmHandlers\\PASSLog.txt", "Fetch contact");
+                LogMessage("E:\\Logs\\CRM\\CRMExtIntegrationPortal\\PASSLog.txt", "Fetch contact");
 
                 Guid g = GetOrCreateContactPASSIncident(incident);
 
                 if (g != Guid.Empty)
                 {
-                    LogMessage("E:\\Logs\\CRM\\CRMExtIntegrationPortal\\CGIXrmHandlers\\PASSLog.txt", "Fetch incident is not empty");
+                    LogMessage("E:\\Logs\\CRM\\CRMExtIntegrationPortal\\PASSLog.txt", "Fetch incident is not empty");
                     contacts = _xrmManager.Get<Contact>(new FetchExpression(FetchContactsXML(incident.sSSN, incident.sEM)));
-                    LogMessage("E:\\Logs\\CRM\\CRMExtIntegrationPortal\\CGIXrmHandlers\\PASSLog.txt", "Fetch contact finished");
+                    LogMessage("E:\\Logs\\CRM\\CRMExtIntegrationPortal\\PASSLog.txt", "Fetch contact finished");
                     return contacts;
                 }
 
@@ -497,7 +497,7 @@ namespace CGIXrmHandler
             }
             catch (Exception ex)
             {
-                LogMessage("E:\\Logs\\CRM\\CRMExtIntegrationPortal\\CGIXrmHandlers\\PASSLog.txt", ex.Message);
+                LogMessage("E:\\Logs\\CRM\\CRMExtIntegrationPortal\\PASSLog.txt", ex.Message);
                 throw new Exception(ex.Message);
             }
 

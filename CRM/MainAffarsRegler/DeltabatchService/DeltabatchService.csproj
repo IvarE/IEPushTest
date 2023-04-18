@@ -34,6 +34,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -139,8 +140,8 @@
     <Reference Include="Microsoft.Xrm.Tooling.Connector, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.0.0.7\lib\net452\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\Skanetrafiken.Crm\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Org.Mentalis.Security, Version=1.0.13.715, Culture=neutral">
       <HintPath>..\Skanetrafiken.Crm\packages\Org.Mentalis.Security.1.0.0\lib\net40\Org.Mentalis.Security.dll</HintPath>
@@ -182,9 +183,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CancellationCodes\CancellationCodeLogic\DeceasedStatusCodeLogic.cs" />
+    <Compile Include="CancellationCodes\CancellationCodeLogic\EmigratedStatusCodeLogic.cs" />
     <Compile Include="CrmConnection.cs" />
     <Compile Include="DeltabatchJobHelper.cs" />
+    <Compile Include="DeltaBatchUpdateRow.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="CancellationCodes\CancellationCodeInfrastructure\CancellationCodeLogicFactory.cs" />
+    <Compile Include="CancellationCodes\CancellationCodeLogic\DateTimeProvider.cs" />
+    <Compile Include="CancellationCodes\CancellationCodeInfrastructure\ICancellationCodeLogic.cs" />
+    <Compile Include="CancellationCodes\CancellationCodeInfrastructure\ICancellationCodeLogicFactory.cs" />
+    <Compile Include="CancellationCodes\CancellationCodeInfrastructure\IDateTimeProvider.cs" />
+    <Compile Include="CancellationCodes\CancellationCodeLogic\ProtectedStatusCodeLogic.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -272,6 +282,7 @@
     <None Include="quartz.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

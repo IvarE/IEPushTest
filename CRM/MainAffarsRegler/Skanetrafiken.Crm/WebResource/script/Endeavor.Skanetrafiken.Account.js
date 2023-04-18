@@ -100,6 +100,20 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 infotainment.setRequiredLevel("none");
             }
 
+            var roles = [];
+            roles[0] = "Skånetrafiken Annons";
+
+            var isUserCheck = Endeavor.Skanetrafiken.Account.currentUserHasSecurityRole(roles);
+
+            if (isUserCheck) {
+
+                if ((seniorCustomer.getValue() == false || seniorCustomer.getValue() == null) && (schoolCustomer.getValue() == false || schoolCustomer.getValue() == null) && (reseller.getValue() == false || reseller.getValue() == null) && (collaborationCustomer.getValue() == false || collaborationCustomer.getValue() == null) && (customer.getValue() == false || customer.getValue() == null) && (portalCustomer.getValue() == false || portalCustomer.getValue() == null) && (agent.getValue() == false || agent.getValue() == null) && (infotainment.getValue() == false || infotainment.getValue() == null)) {
+
+                    if (infotainment != null) {
+                        infotainment.setValue(true);
+                    }
+                }
+            }
 
             Endeavor.Skanetrafiken.Account.hideTabIfInfotainment(executionContext);
 
@@ -310,7 +324,11 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
         // ORGANISATION (TOP LEVEL) - Show/hide Block button
         onBlockAccountShow: function (formContext) {
+            var currForm = formContext.ui.formSelector.getCurrentItem();
+            var currFormId = currForm.getId();
 
+            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70")
+                return false;
             // Only show button if TypeOfAccount = Företagskund (Portal)
             var accountType = formContext.getAttribute("ed_typeofaccount");
             if (accountType != null) {
@@ -333,7 +351,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             // If Account = Organization (top level) and 
             // if ed_isLockedPortal = false
             // => Show button "Block Organization"
-            if (parentAccount == null && lockedPortal == false && showButton != true)
+            if (parentAccount == null && lockedPortal == false && showButton != false)
                 return true;
             // If Account = CostSite (bottom level) and
             // if ed_isLockedPortal = true
@@ -343,7 +361,11 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
         // ORGANISATION (TOP LEVEL) - Show/hide Unblock button
         onUnblockAccountShow: function (formContext) {
+            var currForm = formContext.ui.formSelector.getCurrentItem();
+            var currFormId = currForm.getId();
 
+            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70")
+                return false;
             // Only show button if TypeOfAccount = Företagskund (Portal)
             var accountType = formContext.getAttribute("ed_typeofaccount");
             if (accountType != null) {
@@ -365,7 +387,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             // If Account = Organization (top level) and 
             // if ed_isLockedPortal = false
             // => Show button "Block Organization"
-            if (parentAccount == null && lockedPortal == true && showButton != true)
+            if (parentAccount == null && lockedPortal == true && showButton != false)
                 return true;
             // If Account = CostSite (bottom level) and
             // if ed_isLockedPortal = true
@@ -375,7 +397,11 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
         // COST SITE (BOTTOM LEVEL) - Show/hide Block button
         onBlockCostSiteShow: function (formContext) {
+            var currForm = formContext.ui.formSelector.getCurrentItem();
+            var currFormId = currForm.getId();
 
+            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70")
+                return false;
             // Only show button if TypeOfAccount = Företagskund (Portal)
             var accountType = formContext.getAttribute("ed_typeofaccount");
             if (accountType != null) {
@@ -393,12 +419,12 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             var lockedPortal = formContext.getAttribute("ed_islockedportal").getValue();
             var showButton = false;
 
-            showButton = Endeavor.Skanetrafiken.Account.showBlockButton();
+            showButton = Endeavor.Skanetrafiken.Account.showBlockButton(); 
 
             // If Account = Cost Site (bottom level) and 
             // if ed_isLockedPortal = false
             // => Show button "Block Cost Site"
-            if (parentAccount != null && lockedPortal == false && showButton != true)
+            if (parentAccount != null && lockedPortal == false && showButton != false)
                 return true;
             // If Account = Cost Site (bottom level) and
             // if ed_isLockedPortal = true
@@ -408,6 +434,12 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
         // COST SITE (BOTTOM LEVEL) - Show/hide Unblock button
         onUnblockCostSiteShow: function (formContext) {
+            var currForm = formContext.ui.formSelector.getCurrentItem();
+            var currFormId = currForm.getId();
+
+            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70")
+                return false;
+
             // Only show button if TypeOfAccount = Företagskund (Portal)
             var accountType = formContext.getAttribute("ed_typeofaccount");
             if (accountType != null) {
@@ -430,7 +462,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             // If Account = Cost Site (bottom level) and 
             // if ed_isLockedPortal = false
             // => Show button "Block Cost Site"
-            if (parentAccount != null && lockedPortal == true && showButton != true)
+            if (parentAccount != null && lockedPortal == true && showButton != false)
                 return true;
             // If Account = CostSite (bottom level) and
             // if ed_isLockedPortal = true
@@ -715,9 +747,11 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
         onFormLoad: function (executionContext) {
             try {
                 var formContext = executionContext.getFormContext();
+                var formType = formContext.ui.getFormType();
 
-                switch (formContext.ui.getFormType()) {
+                switch (formType) {
                     case FORM_TYPE_CREATE:
+
                         break;
                     case FORM_TYPE_UPDATE:
                         Endeavor.Skanetrafiken.Account.checkIfUserHasSecRole(formContext);
@@ -915,6 +949,36 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             } catch (e) {
                 alert("Exception caught in Endeavor.Skanetrafiken.Account.openMigration_WebResource");
             }
+        },
+
+        currentUserHasSecurityRole: function (roles) {
+            var fetchXml =
+                "<fetch mapping='logical'>" +
+                "<entity name='systemuser'>" +
+                "<attribute name='systemuserid' />" +
+                "<filter type='and'>" +
+                "<condition attribute='systemuserid' operator='eq-userid' />" +
+                "</filter>" +
+                "<link-entity name='systemuserroles' from='systemuserid' to='systemuserid' visible='false' intersect='true'>" +
+                "<link-entity name='role' from='roleid' to='roleid' alias='r'>" +
+                "<filter type='or'>";
+
+            for (var i = 0; i < roles.length; i++) {
+                fetchXml += "<condition attribute='name' operator='eq' value='" + roles[i] + "' />";
+            }
+
+            fetchXml += "            </filter>" +
+                "</link-entity>" +
+                "</link-entity>" +
+                "</entity>" +
+                "</fetch>";
+            var modifiedFetchXml = fetchXml.replace("&", "&amp;");
+
+            var users = Endeavor.formscriptfunctions.executeFetchGetCount(modifiedFetchXml, "systemusers");
+            if (users > 0)
+                return true;
+            else
+                return false;
         },
 
         hideMigration_Button: function () {

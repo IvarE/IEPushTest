@@ -17,12 +17,22 @@ namespace CGIXrmWin
         private static List<Tuple<int, string>> bookingList = new List<Tuple<int, string>>();
         private static int lockedByThreadId = -1;
 
-        public static CrmServiceClient GetConnectionFromConfig(string connectionStringName)
+        public static CrmServiceClient GetConnectionFromConfig(string connectionStringName, string connectionString)
         {
-            if (string.IsNullOrWhiteSpace(connectionStringName))
+            if (string.IsNullOrWhiteSpace(connectionStringName) && string.IsNullOrWhiteSpace(connectionString))
                 throw new Exception($"Argument '{nameof(connectionStringName)}' is empty.");
 
-            var connString = System.Configuration.ConfigurationManager.ConnectionStrings[connectionStringName].ConnectionString;
+            string connString = string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(connectionString))
+            {
+                connString = connectionString;
+            }
+            else
+            {
+                connString = System.Configuration.ConfigurationManager.ConnectionStrings[connectionStringName].ConnectionString;
+            }
+            
             if (string.IsNullOrWhiteSpace(connString))
                 throw new Exception($"Could not find given connection string name '{connectionStringName}'.");
 

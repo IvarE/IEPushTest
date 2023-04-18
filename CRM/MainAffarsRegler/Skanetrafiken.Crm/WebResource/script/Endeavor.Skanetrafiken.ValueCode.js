@@ -70,11 +70,12 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
                 },
                 function (e, t) {
                     // Error
-                    formContext.ui.setFormNotification("Någonting gick fel: " + e, "INFO");
+                    formContext.data.refresh();
+                    formContext.ui.setFormNotification("Någonting gick fel: " + e.message, "INFO");
 
                     // Write the trace log to the dev console
                     if (window.console && console.error) {
-                        console.error(e + "\n" + t);
+                        console.error(e.message + "\n" + t);
                     }
                 });
         },

@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Endeavor.Crm.CleanRecordsService.PandoraExtensions;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Endeavor.Crm.CleanRecordsService
 {
@@ -21,8 +20,9 @@ namespace Endeavor.Crm.CleanRecordsService
                 string runCloseCases = ConfigurationManager.AppSettings["runCloseCases"];
                 string runInactivateContacts = ConfigurationManager.AppSettings["runInactivateContacts"];
                 string runDeleteAudits = ConfigurationManager.AppSettings["runDeleteAudits"];
+                string runInactivatePermits = ConfigurationManager.AppSettings["runInactivatePermits"];
 
-                string passwordArgument = null; //passwordplace holder
+                string passwordArgument = null; //password place holder
 
                 string[] args = Environment.GetCommandLineArgs();
                 if (args != null)
@@ -56,6 +56,14 @@ namespace Endeavor.Crm.CleanRecordsService
                     CrmConnection.SaveCredentials(AuditsService.CredentialFilePath, password, AuditsService.Entropy);
                 }
 
+                if (!string.IsNullOrEmpty(passwordArgument) && runInactivatePermits == "true")
+                {
+                    _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
+                    string password = passwordArgument.Substring(passwordArgument.IndexOf(":") + 1);
+
+                    CrmConnection.SaveCredentials(PermitsService.CredentialFilePath, password, PermitsService.Entropy);
+                }
+
 #if DEBUG
                 //Workaround to make it possible to debug a service.
                 if (runCloseCases == "true")
@@ -76,6 +84,13 @@ namespace Endeavor.Crm.CleanRecordsService
                 {
                     _log.Info($"Running Audits Service...");
                     AuditsService service = new AuditsService();
+                    service.Execute();
+                }
+
+                if(runInactivatePermits == "true")
+                {
+                    _log.Info($"Running Permits Service...");
+                    PermitsService service = new PermitsService();
                     service.Execute();
                 }
 
@@ -101,6 +116,12 @@ namespace Endeavor.Crm.CleanRecordsService
                     servicesToRun.Add(new AuditsService());
                 }
 
+                if(runInactivatePermits == "true")
+                {
+                    _log.Info($"Running Permits Service...");
+                    servicesToRun.Add(new PermitsService());
+                }
+
                 ServiceBase.Run(servicesToRun.ToArray());
 #endif
             }
@@ -109,8 +130,6 @@ namespace Endeavor.Crm.CleanRecordsService
                 _log.Error(ex.Message, ex);
                 throw;
             }
-
-            //test
         }
     }
 }

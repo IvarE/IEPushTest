@@ -21,7 +21,14 @@ if (typeof (Endeavor.Skanetrafiken.Lead) == "undefined") {
 
             var formContext = executionContext.getFormContext();
 
-            
+            var roles = [];
+            roles[0] = "Skånetrafiken Annons"; 
+
+            var isUserCheck = Endeavor.Skanetrafiken.Lead.currentUserHasSecurityRole(roles);
+
+            if (isUserCheck) {
+                Endeavor.Skanetrafiken.Lead.setInfotainmentValues(formContext);
+            }
 
             //var url = parent.parent.formContext.getUrl();
             //var recordId = url.split('&id=')[1];
@@ -53,6 +60,8 @@ if (typeof (Endeavor.Skanetrafiken.Lead) == "undefined") {
             //        Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
             //    }
             //);
+
+
 
             Endeavor.Skanetrafiken.Lead.updateFullNameField(executionContext);
             Endeavor.Skanetrafiken.Lead.setCompanyFieldValue(executionContext);
@@ -93,14 +102,17 @@ if (typeof (Endeavor.Skanetrafiken.Lead) == "undefined") {
 
         },
 
+        setInfotainmentValues: function (formContext) {
+            formContext.getAttribute("ed_organizationtype").setValue(899310004);
+
+        },
+
         updateFullNameField: function (executionContext) {
             var formContext = executionContext.getFormContext();
             var name = Endeavor.formscriptfunctions.GetValue("fullname", formContext);
             var lastname = formContext.getAttribute("lastname").getValue();
             if (name == null) {
                 formContext.getAttribute("lastname").setValue(lastname + " ");
-
-                formContext.data.entity.save();
             }
         },
 
@@ -128,6 +140,36 @@ if (typeof (Endeavor.Skanetrafiken.Lead) == "undefined") {
                 Endeavor.formscriptfunctions.SetState("companyname", true, formContext);
             else
                 Endeavor.formscriptfunctions.SetState("companyname", false, formContext);
+        },
+
+        currentUserHasSecurityRole: function (roles) {
+            var fetchXml =
+                "<fetch mapping='logical'>" +
+                "<entity name='systemuser'>" +
+                "<attribute name='systemuserid' />" +
+                "<filter type='and'>" +
+                "<condition attribute='systemuserid' operator='eq-userid' />" +
+                "</filter>" +
+                "<link-entity name='systemuserroles' from='systemuserid' to='systemuserid' visible='false' intersect='true'>" +
+                "<link-entity name='role' from='roleid' to='roleid' alias='r'>" +
+                "<filter type='or'>";
+
+            for (var i = 0; i < roles.length; i++) {
+                fetchXml += "<condition attribute='name' operator='eq' value='" + roles[i] + "' />";
+            }
+
+            fetchXml += "            </filter>" +
+                "</link-entity>" +
+                "</link-entity>" +
+                "</entity>" +
+                "</fetch>";
+            var modifiedFetchXml = fetchXml.replace("&", "&amp;");
+
+            var users = Endeavor.formscriptfunctions.executeFetchGetCount(modifiedFetchXml, "systemusers");
+            if (users > 0)
+                return true;
+            else
+                return false;
         },
 
         onChangeParentContactId: function (executionContext) {

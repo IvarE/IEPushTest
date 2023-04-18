@@ -1032,9 +1032,16 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     return;
                 }
 
+                //var category = Endeavor.formscriptfunctions.GetValue("cgi_casdet_row1_cat3id", formContext);
+                var cgi_casdet_row1_cat3idLookup = Endeavor.formscriptfunctions.GetValue("cgi_casdet_row1_cat3id", formContext);
+                if (!cgi_casdet_row1_cat3idLookup) {
+                    alert("Kan inte avsluta ärendet: första kategorin saknas.");
+                    return;
+                }
+
                 //START validera trafikinfo START
                 //fortsätt valideringen endast ifall användaren INTE explicit angivit att ingen trafikinformation ska registreras
-                if (formContext.getAttribute("cgi_notravelinfo").getValue() != 1) {
+                if (formContext.getAttribute("cgi_notravelinfo").getValue() != 1 && cgi_casdet_row1_cat3idLookup) {
                     if (caseid != null)
                     {
                         var caseid = Endeavor.formscriptfunctions.cleanIdField(caseid);
@@ -1055,9 +1062,6 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                         var travelInformations = Endeavor.formscriptfunctions.fetchJSONResults(url);
 
                         if (travelInformations.length === 0) {
-                            
-                            var cgi_casdet_row1_cat3idLookup = formContext.getAttribute("cgi_casdet_row1_cat3id").getValue();
-
                             var categoryId = cgi_casdet_row1_cat3idLookup[0].id.replace("{", "").replace("}", "");
                             url = clientUrl + "/api/data/v9.0/cgi_categorydetails(" + categoryId + ")?$select=cgi_requirestravelinfo";
                             var categoryDetail = Endeavor.formscriptfunctions.fetchJSONResults(url);
@@ -1347,7 +1351,9 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 var formContext = primaryControl;
 
                 var _cgi_accountid = Endeavor.formscriptfunctions.GetLookupid("cgi_accountid", formContext),
-                    _representative = Endeavor.formscriptfunctions.GetLookupid("cgi_representativid", formContext);
+                    _representative = Endeavor.formscriptfunctions.GetLookupid("cgi_representativid", formContext),
+                    _cgi_contactid = Endeavor.formscriptfunctions.GetLookupid("cgi_contactid", formContext);
+                
 
                 // If the customer as a representative all communication should go through the representative.
                 if (_representative != null) {
@@ -1355,16 +1361,17 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     param["parameter_customername"] = Endeavor.formscriptfunctions.GetLookupName("cgi_representativid", formContext);
                     param["parameter_customertype"] = "cgi_representative";
                 }
-                else if (_cgi_accountid != null) {
+                else if (_cgi_contactid != null) {
+                    param["parameter_customerid"] = Endeavor.formscriptfunctions.GetLookupid("cgi_contactid", formContext);
+                    param["parameter_customername"] = Endeavor.formscriptfunctions.GetLookupName("cgi_contactid", formContext);
+                    param["parameter_customertype"] = "contact";
+                
+                }
+                else {
                     //cgi_accountid
                     param["parameter_customerid"] = Endeavor.formscriptfunctions.GetLookupid("cgi_accountid", formContext);
                     param["parameter_customername"] = Endeavor.formscriptfunctions.GetLookupName("cgi_accountid", formContext);
                     param["parameter_customertype"] = "account";
-                }
-                else {
-                    param["parameter_customerid"] = Endeavor.formscriptfunctions.GetLookupid("cgi_contactid", formContext);
-                    param["parameter_customername"] = Endeavor.formscriptfunctions.GetLookupName("cgi_contactid", formContext);
-                    param["parameter_customertype"] = "contact";
                 }
             }
             catch (e) {

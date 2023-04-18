@@ -5,6 +5,7 @@ using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Linq;
 using Skanetrafiken.Crm.Schema.Generated;
+using System.Collections.Generic;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -60,7 +61,20 @@ namespace Skanetrafiken.Crm.Entities
 
                 string mklId = string.IsNullOrEmpty(ed_MklId) ? preImage.ed_MklId : ed_MklId;
                 string contactNumber = string.IsNullOrEmpty(this.ed_CRMNumber) ? preImage.ed_CRMNumber : this.ed_CRMNumber;
-                string offerName = string.IsNullOrEmpty(this.FormattedValues["ed_offername"]) ? preImage.FormattedValues["ed_offername"] : this.FormattedValues["ed_offername"];
+
+                //string offerName = string.IsNullOrEmpty(this.FormattedValues["ed_offername"]) ? preImage.FormattedValues["ed_offername"] : this.FormattedValues["ed_offername"];
+
+                string offerName = string.Empty;
+                if (this.ed_OfferName != null)
+                {
+                    offerName = $"{this.ed_OfferName}";
+                    localContext.Trace($"OfferName (this):" + offerName);
+                }
+                else if (preImage.ed_OfferName != null)
+                {
+                    offerName = $"{preImage.ed_OfferName}";
+                    localContext.Trace($"OfferName (preImage):" + offerName);
+                }
 
                 string nName = contactNumber + "_" + offerName;
                 if (preImage.ed_name != nName)
@@ -76,7 +90,7 @@ namespace Skanetrafiken.Crm.Entities
                     if (lContacts.Count == 1)
                     {
                         var eContact = lContacts.FirstOrDefault();
-                        if(eContact.Id != preImage.ed_Contact?.Id)
+                        if (eContact.Id != preImage.ed_Contact?.Id)
                         {
                             uTicketInfo.ed_Contact = eContact.ToEntityReference();
                             needsUpdate = true;
@@ -95,6 +109,217 @@ namespace Skanetrafiken.Crm.Entities
                 localContext.Trace($"HandlePostTicketPurchasesUpdateAsync threw an unexpected exception: {e.Message}");
                 throw e;
             }
+        }
+
+        public static void HandlePostTicketInfoEntityCreate(Plugin.LocalPluginContext localContext, TicketInfoEntity ticketInfo)
+        {
+            string mklId = ticketInfo.ed_MklId;
+
+            if (!string.IsNullOrEmpty(mklId))
+            {
+                CalculateClassification(localContext, mklId, ticketInfo);
+            }
+        }
+
+        public static void HandlePostTicketInfoEntityUpdate(Plugin.LocalPluginContext localContext, TicketInfoEntity ticketInfo, TicketInfoEntity preImage)
+        {
+            string mklId = null;
+
+            if(ticketInfo.ed_MklId != null)
+            {
+                mklId = ticketInfo.ed_MklId;
+            }
+            else if(preImage.ed_MklId != null)
+            {
+                mklId = preImage.ed_MklId;
+            }
+
+            if (!string.IsNullOrEmpty(mklId))
+            {
+                CalculateClassification(localContext, mklId, null);
+            }
+
+        }
+
+        public static void HandlePostTicketInfoEntityDelete(Plugin.LocalPluginContext localContext, TicketInfoEntity preImage)
+        {
+            string mklId = preImage.ed_MklId;
+
+            if (!string.IsNullOrEmpty(mklId))
+            {
+                CalculateClassification(localContext, mklId, null);
+            }
+        }
+
+        public static void CalculateClassification(Plugin.LocalPluginContext localContext, string mklId, TicketInfoEntity ticketInfo)
+        {
+            var lContacts = GetActiveContactMklIdQuery(localContext, mklId);
+            if (lContacts.Count == 1)
+            {
+                var eContact = lContacts.FirstOrDefault();
+
+                if (eContact.Id != null)
+                {
+                    var everyTicketInfo = GetEveryTicketInfoQuery(localContext, eContact.Id);
+                    //var ticketListWithAmount = new List<Tuple<int, int>>();
+                    var trettioDagarsbiljett = 0; //206290000
+                    var trettioDagarsbiljettMetro = 0; // 	899310002
+                    var tioTrettioDagarsbiljett = 0; // 899310001
+                    var tioTrettioDagarsbiljettDKMetro = 0; // 	899310003
+                    var enkelbiljett = 0; // 	206290002
+                    var tioEnklaFem = 0; //  	206290003 //motsvarar 10 enkelbiljetter
+                    var dygnsbiljett = 0; // 	206290001
+                    
+
+                    if(ticketInfo != null)
+                    {
+                        var offerName = Convert.ToInt32(ticketInfo.ed_OfferName.Value);
+
+                        if (offerName == 206290000)
+                        {
+                            trettioDagarsbiljett = trettioDagarsbiljett + Convert.ToInt32(ticketInfo.ed_NumberofTickets);
+                        }
+                        else if (offerName == 899310002)
+                        {
+                            trettioDagarsbiljettMetro = trettioDagarsbiljettMetro + Convert.ToInt32(ticketInfo.ed_NumberofTickets);
+                        }
+                        else if (offerName == 899310001)
+                        {
+                            tioTrettioDagarsbiljett = tioTrettioDagarsbiljett + Convert.ToInt32(ticketInfo.ed_NumberofTickets);
+                        }
+                        else if (offerName == 899310003)
+                        {
+                            tioTrettioDagarsbiljettDKMetro = tioTrettioDagarsbiljettDKMetro + Convert.ToInt32(ticketInfo.ed_NumberofTickets);
+                        }
+                        else if (offerName == 206290002)
+                        {
+                            enkelbiljett = enkelbiljett + Convert.ToInt32(ticketInfo.ed_NumberofTickets);
+                        }
+                        else if (offerName == 206290003)
+                        {
+                            tioEnklaFem = tioEnklaFem + Convert.ToInt32(ticketInfo.ed_NumberofTickets);
+                        }
+                        else if (offerName == 206290001)
+                        {
+                            dygnsbiljett = dygnsbiljett + Convert.ToInt32(ticketInfo.ed_NumberofTickets);
+                        }
+
+                    }
+
+                
+
+                    var isSallanresenar = false;
+                    var isVaxlare = false;
+                    var isPendlare = false;
+                    var isForloradKund = false; 
+
+                    foreach (TicketInfoEntity ticket in everyTicketInfo)
+                    {
+                        var ticketOfferNameValue = Convert.ToInt32(ticket.ed_OfferName.Value);
+
+                        if (ticketOfferNameValue == 206290000)
+                        {
+                            trettioDagarsbiljett = trettioDagarsbiljett + Convert.ToInt32(ticket.ed_NumberofTickets);
+                        }
+                        else if(ticketOfferNameValue == 899310002)
+                        {
+                            trettioDagarsbiljettMetro = trettioDagarsbiljettMetro + Convert.ToInt32(ticket.ed_NumberofTickets);
+                        }
+                        else if (ticketOfferNameValue == 899310001)
+                        {
+                            tioTrettioDagarsbiljett = tioTrettioDagarsbiljett + Convert.ToInt32(ticket.ed_NumberofTickets);
+                        }
+                        else if (ticketOfferNameValue == 899310003)
+                        {
+                            tioTrettioDagarsbiljettDKMetro = tioTrettioDagarsbiljettDKMetro + Convert.ToInt32(ticket.ed_NumberofTickets);
+                        }
+                        else if (ticketOfferNameValue == 206290002)
+                        {
+                            enkelbiljett = enkelbiljett + Convert.ToInt32(ticket.ed_NumberofTickets);
+                        }
+                        else if (ticketOfferNameValue == 206290003)
+                        {
+                            tioEnklaFem = tioEnklaFem + Convert.ToInt32(ticket.ed_NumberofTickets);
+                        }
+                        else if (ticketOfferNameValue == 206290001) 
+                        {
+                            dygnsbiljett = dygnsbiljett + Convert.ToInt32(ticket.ed_NumberofTickets);
+                        }
+                        
+                    }
+
+                    //Sällanresnär
+                    if((enkelbiljett > 0 || dygnsbiljett > 0 || tioEnklaFem > 0) && trettioDagarsbiljett == 0 && tioTrettioDagarsbiljett == 0 && trettioDagarsbiljettMetro == 0)
+                    {
+                        isSallanresenar = true; 
+                    }
+
+                    //Växlare
+                    var manadsbiljetter = trettioDagarsbiljett + tioTrettioDagarsbiljett + tioTrettioDagarsbiljettDKMetro + trettioDagarsbiljettMetro;
+                    if (manadsbiljetter != 0 && manadsbiljetter < 7)
+                    {
+                        isVaxlare = true;
+                    }
+
+                    //Pendlare
+                    if(manadsbiljetter > 6)
+                    {
+                        isPendlare = true;
+                    }
+
+                    //Förlorad kund
+                    if(trettioDagarsbiljett == 0 && trettioDagarsbiljettMetro == 0 && tioTrettioDagarsbiljett == 0 && tioTrettioDagarsbiljettDKMetro == 0 && enkelbiljett == 0 && tioEnklaFem == 0 && dygnsbiljett == 0)
+                    {
+                        isForloradKund = true;
+                    }
+
+                    if(isForloradKund)
+                    {
+                        eContact.ed_Kundresan = new OptionSetValue((int)899310004);
+                    }
+                    else if(isPendlare)
+                    {
+                        eContact.ed_Kundresan = new OptionSetValue((int)899310003);
+                    }
+                    else if(isVaxlare)
+                    {
+                        eContact.ed_Kundresan = new OptionSetValue((int)899310002);
+                    }
+                    else if(isSallanresenar)
+                    {
+                        eContact.ed_Kundresan = new OptionSetValue((int)899310001);
+                    }
+
+                    Contact updateContact = new Contact
+                    {
+                        ed_CalculateClassification = true,
+                        Id = eContact.Id,
+                        ed_Kundresan = eContact.ed_Kundresan
+                    };
+
+
+                    XrmHelper.Update(localContext, updateContact);
+                }
+
+            }
+
+        }
+
+        public static List<Contact> GetActiveContactMklIdQuery(Plugin.LocalPluginContext localContext, string mklId)
+        {
+            QueryExpression queryContacts = new QueryExpression(Contact.EntityLogicalName);
+            queryContacts.ColumnSet = new ColumnSet(Contact.Fields.ContactId, Contact.Fields.ed_Kundresan);
+            queryContacts.Criteria.AddCondition(Contact.Fields.ed_MklId, ConditionOperator.Equal, mklId);
+            queryContacts.Criteria.AddCondition(Contact.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
+            return XrmRetrieveHelper.RetrieveMultiple<Contact>(localContext, queryContacts);
+        }
+
+        public static List<TicketInfoEntity> GetEveryTicketInfoQuery(Plugin.LocalPluginContext localContext, Guid contactId)
+        {
+            QueryExpression queryTicketInfo = new QueryExpression(TicketInfoEntity.EntityLogicalName);
+            queryTicketInfo.ColumnSet = new ColumnSet(TicketInfoEntity.Fields.ed_OfferName, TicketInfoEntity.Fields.ed_NumberofTickets);
+            queryTicketInfo.Criteria.AddCondition(TicketInfoEntity.Fields.ed_Contact, ConditionOperator.Equal, contactId);
+            return XrmRetrieveHelper.RetrieveMultiple<TicketInfoEntity>(localContext, queryTicketInfo);
         }
     }
 }

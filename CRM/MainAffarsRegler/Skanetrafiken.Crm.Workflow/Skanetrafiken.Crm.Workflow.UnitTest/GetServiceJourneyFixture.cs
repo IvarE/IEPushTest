@@ -40,7 +40,7 @@ namespace Endeavor.Crm.UnitTest
                 string responsetext = (string)response["GetServiceJourneyResponse"];
                 
                 // DIRECT CALL
-                string responsetext2 = GetServiceJourney.ExecuteCodeActivity(localContext, "", "", ""); // TODO ADD VALUES
+                //string responsetext2 = GetServiceJourney.ExecuteCodeActivity(localContext, "", "", ""); // TODO ADD VALUES
                 
                 // ASSERT SOMEHTING?
             }

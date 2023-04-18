@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Endeavor.Crm.Extensions;
-using Microsoft.Xrm.Sdk.Client;
-using Microsoft.Xrm.Sdk.Messages;
-using Microsoft.Xrm.Sdk.Metadata;
-using Microsoft.Crm.Sdk;
 using Microsoft.Crm.Sdk.Messages;
 using Generated = Skanetrafiken.Crm.Schema.Generated;
 using Endeavor.Crm;
@@ -16,11 +12,7 @@ using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text.RegularExpressions;
 using System.Globalization;
-using Skanetrafiken.Crm;
 using System.Linq;
-using Skanetrafiken.Crm.Entities;
-using System.Net.Http;
-using System.IdentityModel;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -740,6 +732,8 @@ namespace Skanetrafiken.Crm.Entities
                 UtvandradSpecified = true,
                 Avliden = Generated.ed_creditsaferejectcodes.Deceased == this.ed_CreditsafeRejectionCode,
                 AvlidenSpecified = true,
+                Skyddad = Generated.ed_creditsaferejectcodes.Protected == this.ed_CreditsafeRejectionCode,
+                SkyddadSpecified = true,
                 CreditsafeOk = this.ed_CreditsafeRejectionCode != null,
                 CreditsafeOkSpecified = true,
             };
@@ -844,6 +838,11 @@ namespace Skanetrafiken.Crm.Entities
         {
             this.Trace(localContext.TracingService);
 
+            if((!string.IsNullOrEmpty(this.ed_MklId)) && (this.ed_Kundresan == null))
+            {
+                    ed_Kundresan = new OptionSetValue((int)899310000);
+            }
+
             localContext.Trace($"Entered HandlePreContactCreate() Postal Code: {Address1_PostalCode} and City: {Address1_City}");
             if (!string.IsNullOrEmpty(Address1_PostalCode))
             {
@@ -887,6 +886,14 @@ namespace Skanetrafiken.Crm.Entities
                     localContext.Trace($"Year, Month or Day is 0. Birthday is still null.");
             }
 
+            if (!string.IsNullOrEmpty(cgi_socialsecuritynumber) && cgi_socialsecuritynumber.Length == 12)
+            {
+                var socialSecurityNumberFormat = cgi_socialsecuritynumber;
+                var socialSecurityNumberWithHifen = socialSecurityNumberFormat.Insert(8, "-");
+
+                this.ed_SocialSecurityNumberFormat = socialSecurityNumberWithHifen;
+            }
+
             if (this.ed_Address1_Country != null)
                 localContext.Trace(CountryEntity.GetIsoCodeForCountry(localContext, this.ed_Address1_Country.Id));
 
@@ -923,6 +930,11 @@ namespace Skanetrafiken.Crm.Entities
                 throw new InvalidPluginExecutionException(errorMess);
             }
 
+            if(info.Source == 700000000 || info.Source == 700000001)
+            {
+                this.ed_Serviceresor = true;
+            }
+
             //[2020-09-06]: Added validaton by contact Type
             bool wasAlreadyValidated = ValidateDuplicatesByContactType(localContext, true);
 
@@ -942,6 +954,19 @@ namespace Skanetrafiken.Crm.Entities
         {
             if (preImage == null)
                 throw new InvalidPluginExecutionException("PreImage not registered correctly");
+
+            if (preImage.ed_CalculateClassification == true || this.ed_CalculateClassification == true)
+            {
+                localContext.Trace($"CalculateClassification = true");
+                ed_CalculateClassification = false;
+                localContext.Trace($"CalculateClassification = {ed_CalculateClassification}");
+                return;
+            }
+
+            if ((!string.IsNullOrEmpty(preImage.ed_MklId)) && (preImage.ed_Kundresan == null) || (!string.IsNullOrEmpty(this.ed_MklId)) && (this.ed_Kundresan == null))
+            {
+                ed_Kundresan = new OptionSetValue((int)899310000);
+            }
 
             string postalCode = this.Address1_PostalCode != null ? this.Address1_PostalCode : preImage.Address1_PostalCode;
             string city = this.Address1_City != null ? this.Address1_City : preImage.Address1_City;
@@ -1003,8 +1028,11 @@ namespace Skanetrafiken.Crm.Entities
             if (!string.IsNullOrWhiteSpace(Telephone3))
                 Telephone3 = Telephone3.Replace(" ", "");
 
-            if(ed_InformationSource == Generated.ed_informationsource.RGOL && ed_Address1_Country == null)
-                ed_Address1_Country = CountryEntity.GetEntityRefForCountryCode(localContext, "SE");
+            FilterExpression filterThisContact = new FilterExpression();
+            filterThisContact.AddCondition(ContactEntity.Fields.Id, ConditionOperator.Equal, this.Id);
+
+            if (ed_InformationSource == Generated.ed_informationsource.RGOL)
+                return;  
 
             ContactEntity combined = new ContactEntity();
             if (preImage != null)
@@ -1016,6 +1044,14 @@ namespace Skanetrafiken.Crm.Entities
             preImage.Trace(localContext.TracingService);
 
             SyncSwedishSocialSecurityNumber(combined.ed_HasSwedishSocialSecurityNumber);
+
+            if (!string.IsNullOrEmpty(preImage.cgi_socialsecuritynumber) && preImage.cgi_socialsecuritynumber.Length == 12)
+            {
+                var socialSecurityNumberFormat = preImage.cgi_socialsecuritynumber;
+                var socialSecurityNumberWithHifen = socialSecurityNumberFormat.Insert(8, "-");
+
+                this.ed_SocialSecurityNumberFormat = socialSecurityNumberWithHifen;
+            }
 
             // ---- Validering av information ----
             // Är något av de fält som valideras med i target?       

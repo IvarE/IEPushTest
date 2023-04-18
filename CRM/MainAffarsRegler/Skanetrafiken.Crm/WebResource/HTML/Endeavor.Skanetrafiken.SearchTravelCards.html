@@ -6,6 +6,29 @@
 
     <script type="text/javascript">
 
+        function blockTravelCardWithConfirmDialog() {
+            var confirmStrings = { text: "Vill du verkligen spärra detta Jojokort?", title: "Spära Jojokort" };
+            var confirmOptions = { height: 200, width: 450 };
+            return window.parent.Xrm.Navigation.openConfirmDialog(confirmStrings, confirmOptions).then(
+                function (success) {
+                    if (success.confirmed) {
+                        Endeavor.Skanetrafiken.SearchTravelCards.blockButtonPlaceCaptureOrder();
+                    }
+                });
+        }
+
+        function deactivateCloseButton() {
+            document.getElementById("block").disabled = true;
+        }
+
+        function activateCloseButton() {
+            document.getElementById("block").disabled = false;
+        }
+
+        function clearMessageField() {
+            document.getElementById("messageSpace").innerText = "";
+        }
+
         // Begin scoping
         if (typeof (Endeavor) == "undefined") {
             var Endeavor = {
@@ -21,8 +44,6 @@
             Endeavor.Skanetrafiken.SearchTravelCards = {
 
                 getInfoFromCardId: function () {
-
-                    debugger;
                     try {
 
                         var cardId = document.getElementById("cardId").value;
@@ -36,8 +57,6 @@
 
                         Endeavor.formscriptfunctions.callGlobalAction("ed_GetCard", inputParameters,
                             function (result) {
-
-                                debugger;
                                 result = JSON.parse(result.responseText);
                                 var cardNumberResp = result.CardNumberResp;
                                 var isClosed = result.IsClosed;
@@ -48,9 +67,11 @@
                                 if (isClosed) {
                                     document.getElementById("isBlockedYes").style.display = "block";
                                     document.getElementById("isBlockedNo").style.display = "none";
+                                    deactivateCloseButton();
                                 } else {
                                     document.getElementById("isBlockedYes").style.display = "none";
                                     document.getElementById("isBlockedNo").style.display = "block";
+                                    activateCloseButton();
                                 }
 
                                 //document.getElementById("arsparrat").checked = isClosed;
@@ -58,8 +79,8 @@
                                 document.getElementById("sparradav").innerText = closedReason;
                                 document.getElementById("reserveread").checked = isReserved;
 
-                                if (amount > 0 || isClosed)
-                                    document.getElementById("block").disabled = false;
+                                //if (amount > 0 || isClosed)
+                                //    activateCloseButton();
                             },
                             function (error) {
                                 var errorMessage = "Något gick fel. Vänligen försök igen. Details: " + error.message;
@@ -74,10 +95,7 @@
                 },
 
                 blockButtonPlaceCaptureOrder: function () {
-
-                    debugger;
                     try {
-
                         var cardId = document.getElementById("cardId").value;
 
                         if (cardId == null || cardId == "") {
@@ -89,8 +107,6 @@
 
                         Endeavor.formscriptfunctions.callGlobalAction("ed_PlaceOrder", inputParameters,
                             function (result) {
-
-                                debugger;
                                 result = JSON.parse(result.responseText);
 
                                 var cardNumberResp = result.CardNumberResp;
@@ -108,6 +124,7 @@
                                 if (isClosed) {
                                     document.getElementById("isBlockedYes").style.display = "block";
                                     document.getElementById("isBlockedNo").style.display = "none";
+                                    deactivateCloseButton();
                                 } else {
                                     document.getElementById("isBlockedYes").style.display = "none";
                                     document.getElementById("isBlockedNo").style.display = "block";
@@ -120,8 +137,6 @@
 
                                 Endeavor.formscriptfunctions.callGlobalAction("ed_CaptureOrder", inputParameters,
                                     function (result) {
-
-                                        debugger;
                                         result = JSON.parse(result.responseText);
                                         var captureOrderResponse = result.CaptureOrderResponse;
 
@@ -131,7 +146,7 @@
                                             document.getElementById("messageSpace").innerText = captureOrderResponse;
 
                                         document.getElementById("belopp").innerText = "0 kr";
-                                        document.getElementById("block").disabled = true;
+                                        deactivateCloseButton();
 
                                         if (isClosed == true) {
                                             document.getElementById("isBlockedYes").style.display = "block";
@@ -142,15 +157,17 @@
                                         }
                                     },
                                     function (error) {
-                                        var errorMessage = "Något gick fel. Vänligen försök igen. Details: " + error.message;
+                                        var errorMessage = "Något gick fel. Vänligen försök igen.";
+                                        document.getElementById("messageSpace").innerText = errorMessage;
                                         console.error(errorMessage);
-                                        Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
+                                        //Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
                                     });
                             },
                             function (error) {
-                                var errorMessage = "Något gick fel. Vänligen försök igen. Details: " + error.message;
+                                var errorMessage = "Något gick fel. Vänligen försök igen.";
+                                document.getElementById("messageSpace").innerText = errorMessage;
                                 console.error(errorMessage);
-                                Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
+                                //Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
                             });
                     }
                     catch (error) {
@@ -160,71 +177,47 @@
             };
         }
 
+
     </script>
 
     <meta>
 </head>
 <body style="overflow-wrap: break-word;">
 
-    <div class="container" style="font-family: undefined;">
-
-        <div class="row">
-            <div class="col-1"><div class="label" id="headerLabel">Sök Jojo-kort:</div></div>
-            <div class="col-2"><input style="width:100%;" type="text" id="cardId"></div>
-            <div class="col-1"><button onclick="Endeavor.Skanetrafiken.SearchTravelCards.getInfoFromCardId()" id="searchBtn" type="button" style="width:50px;margin-left:5px;">Sök</button></div>
-            <div class="col-3" id="messageSpace"></div>
-        </div>
-
-        <hr style="width:100%;text-align:left;margin-left:0;margin-bottom: 10px;">
-
-        <div class="row">
-            <div class="col-2"><div class="label">Belopp:</div><div class="info" id="belopp"></div></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-        </div>
-
-        <div class="row">
-            <div class="col-2">
-                <div class="label">Är Spärrat:</div>
-                <!--<input type="radio" id="isBlockedYes" name="isBlocked" value="Nej" checked />
-                <input type="radio" id="isBlockedNo" name="isBlocked" value="Ja" />-->
-            </div>
-            <div class="col-2">
-                <p id="isBlockedYes" style="display: none">Ja</p>
-                <p id="isBlockedNo">Nej</p>
-            </div>
-            <!--<div class="col-2"><div class="label">Är Spärrat:</div><input type="checkbox" id="arsparrat" /></div>-->
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-        </div>
-
-        <div class="row">
-            <div class="col-2"><div class="label">Spärrad av:</div><div class="info" id="sparradav"></div></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-        </div>
-
-        <div class="row">
-            <div class="col-2"><div class="label" style="display: none;">Reserverad:</div><input type="checkbox" id="reserveread" style="display: none;"></div>
-            <div class="col-2"><button onclick="Endeavor.Skanetrafiken.SearchTravelCards.blockButtonPlaceCaptureOrder()" id="block" type="button" disabled="">SPÄRRA KORT</button></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-        </div>
-
+    <div class="header-grid">
+        <div class="row row-position no-border" style="--row: 1; --col: 1" id="headerLabel">Sök Jojo-kort</div>
+        <div class="row row-position no-border" style="--row: 2; --col: 1"><input style="width:100%;" type="text" id="cardId"></div>
+        <div class="row row-position content-bucket no-border" style="--row: 2; --col: 2" id="messageSpace"></div>
     </div>
 
+    <hr style="width:100%;text-align:left;margin-left:20px;margin-bottom: 10px;">
 
+    <div class="grid">
+        <div class="row row-position content-bucket" style="--row: 1; --col: 1">Belopp:</div>
+        <div class="row row-position content-bucket" style="--row: 1; --col: 2" id="belopp">-</div>
+
+        <div class="row row-position content-bucket" style="--row: 2; --col: 1">Är spärrat:</div>
+        <div class="row row-position content-bucket" style="--row: 2; --col: 2">
+            <p id="isBlockedYes" style="display: none">Ja</p>
+            <p id="isBlockedNo">Nej</p>
+        </div>
+
+        <div class="row row-position content-bucket" style="--row: 3; --col: 1">Spärrad av:</div>
+        <div class="row row-position content-bucket" style="--row: 3; --col: 2" id="sparradav"></div>
+
+        <div class="row row-position content-bucket no-border" style="--row: 4; --col: 1; display: none;">Reserverad:</div>
+        <div class="row row-position content-bucket no-border" style="--row: 4; --col: 2"><input type="checkbox" id="reserveread" style="display: none;"></div>
+
+        <div class="row row-position no-border" style="--row: 5; --col: 1"><button onclick="blockTravelCardWithConfirmDialog()" id="block" type="button" disabled="">Spärra Kort</button></div>
+    </div>
+
+    <script>
+        document.getElementById("cardId").addEventListener('keydown', function (event) {
+            if (event.code === 'Enter') {
+                clearMessageField();
+                Endeavor.Skanetrafiken.SearchTravelCards.getInfoFromCardId();
+            }
+        });
+    </script>
 </body>
 </html>

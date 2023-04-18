@@ -13,6 +13,7 @@ using Microsoft.Xrm.Sdk.Query;
 using NUnit.Framework;
 using Rhino.Mocks;
 
+
 namespace Endeavor.Crm.UnitTest
 {
     public class PluginFixtureBase
@@ -230,5 +231,7 @@ namespace Endeavor.Crm.UnitTest
             PreImage = null;
             PostImage = null;
         }
+
+      
     }
 }

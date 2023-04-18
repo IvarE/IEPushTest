@@ -4710,6 +4710,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N invoice_customer_accounts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoice_customer_accounts")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> invoice_customer_accounts
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("invoice_customer_accounts", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("invoice_customer_accounts", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N lead_customer_accounts
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lead_customer_accounts")]
@@ -6322,6 +6338,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 invoice_activity_parties
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("partyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoice_activity_parties")]
+		public Skanetrafiken.Crm.Schema.Generated.Invoice invoice_activity_parties
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("invoice_activity_parties", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("invoice_activity_parties", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 lead_activity_parties
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("partyid")]
@@ -7505,6 +7538,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("IncidentResolution_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Invoice_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("objectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Invoice_Annotation")]
+		public Skanetrafiken.Crm.Schema.Generated.Invoice Invoice_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("Invoice_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("Invoice_Annotation", null, value);
 			}
 		}
 		
@@ -9021,6 +9071,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 abssr_contact_appointment_contactid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_contactid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("abssr_contact_appointment_contactid")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact abssr_contact_appointment_contactid
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("abssr_contact_appointment_contactid", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("abssr_contact_appointment_contactid", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 Account_Appointments
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -9442,6 +9509,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("Incident_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Invoice_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Invoice_Appointments")]
+		public Skanetrafiken.Crm.Schema.Generated.Invoice Invoice_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("Invoice_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("Invoice_Appointments", null, value);
 			}
 		}
 		
@@ -10634,6 +10718,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// The workload name.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("workload")]
+		public string Workload
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("workload");
+			}
+			set
+			{
+				this.SetAttributeValue("workload", value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N AsyncOperation_Emails
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("AsyncOperation_Emails")]
@@ -11547,6 +11647,40 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("IncidentResolution_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Invoice_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Invoice_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.Invoice Invoice_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("Invoice_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("Invoice_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 InvoiceDetail_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("InvoiceDetail_AsyncOperations")]
+		public Skanetrafiken.Crm.Schema.Generated.InvoiceDetail InvoiceDetail_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("InvoiceDetail_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("InvoiceDetail_AsyncOperations", null, value);
 			}
 		}
 		
@@ -13836,6 +13970,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("tmpregardingobjectid")]
+		public string TmpRegardingObjectId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("tmpregardingobjectid");
+			}
+			set
+			{
+				this.SetAttributeValue("tmpregardingobjectid", value);
 			}
 		}
 		
@@ -35218,6 +35368,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Number of users or conversations followed the record
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("teamsfollowed")]
+		public System.Nullable<int> TeamsFollowed
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("teamsfollowed");
+			}
+			set
+			{
+				this.SetAttributeValue("teamsfollowed", value);
+			}
+		}
+		
+		/// <summary>
 		/// Type the main phone number for this contact.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("telephone1")]
@@ -35370,6 +35536,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("websiteurl", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the contact.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
 			}
 		}
 		
@@ -35990,6 +36168,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N ed_contact_invoice_contact
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_contact_invoice_contact")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> ed_contact_invoice_contact
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("ed_contact_invoice_contact", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("ed_contact_invoice_contact", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_contact_invoice_Invoicees
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_contact_invoice_Invoicees")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> ed_contact_invoice_Invoicees
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("ed_contact_invoice_Invoicees", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("ed_contact_invoice_Invoicees", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N ed_contact_opportunity_contact
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_contact_opportunity_contact")]
@@ -36082,6 +36292,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Incident>("incident_customer_contacts", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N invoice_customer_contacts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoice_customer_contacts")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> invoice_customer_contacts
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("invoice_customer_contacts", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("invoice_customer_contacts", null, value);
 			}
 		}
 		
@@ -36258,6 +36484,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Account>("cgi_account_contact", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:N contactinvoices_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("contactinvoices_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> contactinvoices_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("contactinvoices_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("contactinvoices_association", null, value);
 			}
 		}
 		
@@ -46429,6 +46671,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("incident_ed_notifymkls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 invoice_ed_notifymkls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoice_ed_notifymkls")]
+		public Skanetrafiken.Crm.Schema.Generated.Invoice invoice_ed_notifymkls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("invoice_ed_notifymkls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("invoice_ed_notifymkls", null, value);
 			}
 		}
 		
@@ -57908,6 +58167,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 invoice_ed_TextMessages
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoice_ed_TextMessages")]
+		public Skanetrafiken.Crm.Schema.Generated.Invoice invoice_ed_TextMessages
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("invoice_ed_TextMessages", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("invoice_ed_TextMessages", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 lead_ed_TextMessages
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -59461,6 +59737,502 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_name = 100;
 			
 			public const int ed_Offer_Name = 100;
+		}
+	}
+	
+	public enum ed_ticketpurchasespercustomerdataState
+	{
+		
+		Active = 0,
+		
+		Inactive = 1,
+	}
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("ed_ticketpurchasespercustomerdata")]
+	public partial class ed_ticketpurchasespercustomerdata : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public ed_ticketpurchasespercustomerdata() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "ed_ticketpurchasespercustomerdata";
+		
+		public const int EntityTypeCode = 10341;
+		
+		/// <summary>
+		/// Unique identifier of the user who created the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who created the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_contactnumber")]
+		public string ed_ContactNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_contactnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_contactnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mklid")]
+		public string ed_MKLid
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_mklid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mklid", value);
+			}
+		}
+		
+		/// <summary>
+		/// The name of the custom entity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_name")]
+		public string ed_name
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_name");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_name", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_numberoftickets")]
+		public System.Nullable<int> ed_NumberOfTickets
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("ed_numberoftickets");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_numberoftickets", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_offername")]
+		public string ed_OfferName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_offername");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_offername", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for entity instances
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_ticketpurchasespercustomerdataid")]
+		public System.Nullable<System.Guid> ed_ticketpurchasespercustomerdataId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("ed_ticketpurchasespercustomerdataid");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_ticketpurchasespercustomerdataid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_ticketpurchasespercustomerdataid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.ed_ticketpurchasespercustomerdataId = value;
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totalsumticketoffer")]
+		public System.Nullable<int> ed_TotalSumTicketOffer
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("ed_totalsumticketoffer");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_totalsumticketoffer", value);
+			}
+		}
+		
+		/// <summary>
+		/// Sequence number of the import that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who modified the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time when the record was modified.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the delegate user who modified the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for the organization
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("organizationid")]
+		public Microsoft.Xrm.Sdk.EntityReference OrganizationId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("organizationid");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Status of the Ticket Purchases Per Customer Data
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdataState> statecode
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdataState)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.ed_ticketpurchasespercustomerdataState), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("statecode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statecode", new Microsoft.Xrm.Sdk.OptionSetValue(((int)(value))));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Reason for the status of the Ticket Purchases Per Customer Data
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue statuscode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+			}
+			set
+			{
+				this.SetAttributeValue("statuscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timezoneruleversionnumber")]
+		public System.Nullable<int> TimeZoneRuleVersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("timezoneruleversionnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Time zone code that was in use when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("utcconversiontimezonecode")]
+		public System.Nullable<int> UTCConversionTimeZoneCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("utcconversiontimezonecode");
+			}
+			set
+			{
+				this.SetAttributeValue("utcconversiontimezonecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version Number
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N ed_ticketpurchasespercustomerdata_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_ticketpurchasespercustomerdata_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> ed_ticketpurchasespercustomerdata_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("ed_ticketpurchasespercustomerdata_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("ed_ticketpurchasespercustomerdata_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_ed_ticketpurchasespercustomerdata_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_ticketpurchasespercustomerdata_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_ed_ticketpurchasespercustomerdata_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_ticketpurchasespercustomerdata_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_ed_ticketpurchasespercustomerdata_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_ticketpurchasespercustomerdata_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_ed_ticketpurchasespercustomerdata_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_ticketpurchasespercustomerdata_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_ed_ticketpurchasespercustomerdata_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_ticketpurchasespercustomerdata_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_ed_ticketpurchasespercustomerdata_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_ticketpurchasespercustomerdata_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_ed_ticketpurchasespercustomerdata_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_ed_ticketpurchasespercustomerdata_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_ed_ticketpurchasespercustomerdata_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_ed_ticketpurchasespercustomerdata_modifiedonbehalfby", null);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string ed_ContactNumber = "ed_contactnumber";
+			
+			public const string ed_MKLid = "ed_mklid";
+			
+			public const string ed_name = "ed_name";
+			
+			public const string ed_NumberOfTickets = "ed_numberoftickets";
+			
+			public const string ed_OfferName = "ed_offername";
+			
+			public const string ed_ticketpurchasespercustomerdataId = "ed_ticketpurchasespercustomerdataid";
+			
+			public const string Id = "ed_ticketpurchasespercustomerdataid";
+			
+			public const string ed_TotalSumTicketOffer = "ed_totalsumticketoffer";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string OrganizationId = "organizationid";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string statecode = "statecode";
+			
+			public const string statuscode = "statuscode";
+			
+			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
+			
+			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
+			
+			public const string VersionNumber = "versionnumber";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int ed_ContactNumber = 100;
+			
+			public const int ed_MKLid = 100;
+			
+			public const int ed_name = 100;
+			
+			public const int ed_OfferName = 100;
 		}
 	}
 	
@@ -67085,6 +67857,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// For internal use only
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("reservedforinternaluse")]
+		public string ReservedForInternalUse
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("reservedforinternaluse");
+			}
+			set
+			{
+				this.SetAttributeValue("reservedforinternaluse", value);
+			}
+		}
+		
+		/// <summary>
 		/// Scheduled duration of the email activity, specified in minutes.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("scheduleddurationminutes")]
@@ -67583,6 +68371,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.CampaignResponse>("email_campaignresponse", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N email_email_CorrelatedActivityId
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("email_email_CorrelatedActivityId", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Email> Referencedemail_email_CorrelatedActivityId
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("email_email_CorrelatedActivityId", Microsoft.Xrm.Sdk.EntityRole.Referenced);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("email_email_CorrelatedActivityId", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
 			}
 		}
 		
@@ -68180,6 +68984,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("Incident_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Invoice_Emails
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Invoice_Emails")]
+		public Skanetrafiken.Crm.Schema.Generated.Invoice Invoice_Emails
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("Invoice_Emails", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("Invoice_Emails", null, value);
 			}
 		}
 		
@@ -71882,6 +72703,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_meetingstart", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_socialsecuritynumberformat")]
+		public string ed_socialsecuritynumberformat
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_socialsecuritynumberformat");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_socialsecuritynumberformat", value);
 			}
 		}
 		
@@ -75664,6 +76501,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("resolutiontypecode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ResolutionTypeCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("resolutiontypecode");
+			}
+			set
+			{
+				this.SetAttributeValue("resolutiontypecode", value);
+			}
+		}
+		
+		/// <summary>
 		/// Users or facility/equipment that are required for the activity.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("resources")]
@@ -75991,6 +76844,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 				{
 					this.SetAttributeValue("to", new Microsoft.Xrm.Sdk.EntityCollection(new System.Collections.Generic.List<Microsoft.Xrm.Sdk.Entity>(value)));
 				}
+			}
+		}
+		
+		/// <summary>
+		/// Total time spent on the case resolution activity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totaltimespent")]
+		public System.Nullable<int> TotalTimeSpent
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("totaltimespent");
+			}
+			set
+			{
+				this.SetAttributeValue("totaltimespent", value);
 			}
 		}
 		
@@ -76485,6 +77354,4222 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int Subject = 200;
 			
 			public const int TraversedPath = 1250;
+		}
+	}
+	
+	public enum InvoiceState
+	{
+		
+		Active = 0,
+		
+		Closed = 1,
+		
+		Paid = 2,
+		
+		Canceled = 3,
+	}
+	
+	/// <summary>
+	/// Order that has been billed.
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("invoice")]
+	public partial class Invoice : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public Invoice() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "invoice";
+		
+		public const int EntityTypeCode = 1090;
+		
+		/// <summary>
+		/// Unique identifier of the account with which the invoice is associated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("accountid")]
+		public Microsoft.Xrm.Sdk.EntityReference AccountId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("accountid");
+			}
+		}
+		
+		/// <summary>
+		/// Type the city for the customer's billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_city")]
+		public string BillTo_City
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_city");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_city", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the complete Bill To address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_composite")]
+		public string BillTo_Composite
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_composite");
+			}
+		}
+		
+		/// <summary>
+		/// Type the country or region for the customer's billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_country")]
+		public string BillTo_Country
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_country");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_country", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the fax number for the customer's billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_fax")]
+		public string BillTo_Fax
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_fax");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_fax", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the first line of the customer's billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_line1")]
+		public string BillTo_Line1
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_line1");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_line1", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the second line of the customer's billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_line2")]
+		public string BillTo_Line2
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_line2");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_line2", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the third line of the billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_line3")]
+		public string BillTo_Line3
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_line3");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_line3", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a name for the customer's billing address, such as "Headquarters" or "Field office", to identify the address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_name")]
+		public string BillTo_Name
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_name");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_name", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the ZIP Code or postal code for the billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_postalcode")]
+		public string BillTo_PostalCode
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_postalcode");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_postalcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the state or province for the billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_stateorprovince")]
+		public string BillTo_StateOrProvince
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_stateorprovince");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_stateorprovince", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the phone number for the customer's billing address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("billto_telephone")]
+		public string BillTo_Telephone
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("billto_telephone");
+			}
+			set
+			{
+				this.SetAttributeValue("billto_telephone", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the contact associated with the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("contactid")]
+		public Microsoft.Xrm.Sdk.EntityReference ContactId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("contactid");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who created the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was created. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who created the record on behalf of another user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Select the customer account or contact to provide a quick link to additional customer details, such as account information, activities, and opportunities.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customerid")]
+		public Microsoft.Xrm.Sdk.EntityReference CustomerId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("customerid");
+			}
+			set
+			{
+				this.SetAttributeValue("customerid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the date when the products included in the invoice were delivered.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("datedelivered")]
+		public System.Nullable<System.DateTime> DateDelivered
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("datedelivered");
+			}
+			set
+			{
+				this.SetAttributeValue("datedelivered", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type additional information to describe the invoice, such as shipping details or product substitutions.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("description")]
+		public string Description
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("description");
+			}
+			set
+			{
+				this.SetAttributeValue("description", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the discount amount for the invoice if the customer is eligible for special savings.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("discountamount")]
+		public Microsoft.Xrm.Sdk.Money DiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("discountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("discountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Invoice Discount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("discountamount_base")]
+		public Microsoft.Xrm.Sdk.Money DiscountAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("discountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Type the discount rate that should be applied to the Detail Amount field, for use in calculating the Pre-Freight Amount and Total Amount values for the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("discountpercentage")]
+		public System.Nullable<decimal> DiscountPercentage
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("discountpercentage");
+			}
+			set
+			{
+				this.SetAttributeValue("discountpercentage", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the date by which the invoice should be paid by the customer.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("duedate")]
+		public System.Nullable<System.DateTime> DueDate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("duedate");
+			}
+			set
+			{
+				this.SetAttributeValue("duedate", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_antalmnader")]
+		public string ed_Antalmnader
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_antalmnader");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_antalmnader", value);
+			}
+		}
+		
+		/// <summary>
+		/// Kampanjens slutdatum för Infotainment
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_campaigndateend")]
+		public System.Nullable<System.DateTime> ed_campaigndateend
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_campaigndateend");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_campaigndateend", value);
+			}
+		}
+		
+		/// <summary>
+		/// Kampanjens startdatum för Infotainment
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_campaigndatestart")]
+		public System.Nullable<System.DateTime> ed_campaigndatestart
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_campaigndatestart");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_campaigndatestart", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_contact")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_contact
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_contact");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_contact", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_department")]
+		public string ed_Department
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_department");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_department", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_fakturanskallperiodiseras")]
+		public System.Nullable<bool> ed_Fakturanskallperiodiseras
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_fakturanskallperiodiseras");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_fakturanskallperiodiseras", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_fakturatext")]
+		public string ed_Fakturatext
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_fakturatext");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_fakturatext", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_gln")]
+		public string ed_GLN
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_gln");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_gln", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_infotainmentcustomer")]
+		public System.Nullable<bool> ed_infotainmentcustomer
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_infotainmentcustomer");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_infotainmentcustomer", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_invoicedelivery")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ed_invoicedelivery
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("ed_invoicedelivery");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_invoicedelivery", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_invoicees")]
+		public Microsoft.Xrm.Sdk.EntityReference ed_Invoicees
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ed_invoicees");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_invoicees", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_invoicetocredit")]
+		public string ed_invoicetocredit
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_invoicetocredit");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_invoicetocredit", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_invoicetype")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ed_invoicetype
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("ed_invoicetype");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_invoicetype", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_kostnadsstalle")]
+		public string ed_Kostnadsstalle
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_kostnadsstalle");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_kostnadsstalle", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_krediteringsstatus")]
+		public string ed_krediteringsstatus
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_krediteringsstatus");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_krediteringsstatus", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscount")]
+		public System.Nullable<decimal> ed_mediaagencydiscount
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("ed_mediaagencydiscount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscount", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_mediaagencydiscountamount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Media Agency Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_mediaagencydiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Indikerar om affärsmöjligheten är kopplad till en kund som är mediabyrå
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediabusiness")]
+		public System.Nullable<bool> ed_mediabusiness
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_mediabusiness");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediabusiness", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_peppolnr")]
+		public string ed_Peppolnr
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_peppolnr");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_peppolnr", value);
+			}
+		}
+		
+		/// <summary>
+		/// Totalt pris inklusive moms
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_priceinctax")]
+		public Microsoft.Xrm.Sdk.Money ed_priceinctax
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_priceinctax");
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Pris inkl. moms in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_priceinctax_base")]
+		public Microsoft.Xrm.Sdk.Money ed_priceinctax_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_priceinctax_base");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_reference")]
+		public string ed_Reference
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_reference");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_reference", value);
+			}
+		}
+		
+		/// <summary>
+		/// Total moms i kronor
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_tax")]
+		public Microsoft.Xrm.Sdk.Money ed_tax
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_tax");
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Moms in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_tax_base")]
+		public Microsoft.Xrm.Sdk.Money ed_tax_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_tax_base");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_TotalDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_totaldiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Total Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_totaldiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_ubussiness")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ed_ubussiness
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("ed_ubussiness");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_ubussiness", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_useinvoicee")]
+		public System.Nullable<bool> ed_UseInvoicee
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ed_useinvoicee");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_useinvoicee", value);
+			}
+		}
+		
+		/// <summary>
+		/// The primary email address for the entity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("emailaddress")]
+		public string EmailAddress
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("emailaddress");
+			}
+			set
+			{
+				this.SetAttributeValue("emailaddress", value);
+			}
+		}
+		
+		/// <summary>
+		/// The default image for the entity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage")]
+		public byte[] EntityImage
+		{
+			get
+			{
+				return this.GetAttributeValue<byte[]>("entityimage");
+			}
+			set
+			{
+				this.SetAttributeValue("entityimage", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage_timestamp")]
+		public System.Nullable<long> EntityImage_Timestamp
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("entityimage_timestamp");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimage_url")]
+		public string EntityImage_URL
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("entityimage_url");
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("entityimageid")]
+		public System.Nullable<System.Guid> EntityImageId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("entityimageid");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the conversion rate of the record's currency. The exchange rate is used to convert all money fields in the record from the local currency to the system's default currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+		}
+		
+		/// <summary>
+		/// Type the cost of freight or shipping for the products included in the invoice for use in calculating the total amount due.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("freightamount")]
+		public Microsoft.Xrm.Sdk.Money FreightAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("freightamount");
+			}
+			set
+			{
+				this.SetAttributeValue("freightamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Freight Amount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("freightamount_base")]
+		public Microsoft.Xrm.Sdk.Money FreightAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("freightamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data import or data migration that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("invoiceid")]
+		public System.Nullable<System.Guid> InvoiceId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("invoiceid");
+			}
+			set
+			{
+				this.SetAttributeValue("invoiceid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("invoiceid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.InvoiceId = value;
+			}
+		}
+		
+		/// <summary>
+		/// Shows the identifying number or code of the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("invoicenumber")]
+		public string InvoiceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("invoicenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("invoicenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether prices specified on the invoice are locked from any further updates.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ispricelocked")]
+		public System.Nullable<bool> IsPriceLocked
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ispricelocked");
+			}
+			set
+			{
+				this.SetAttributeValue("ispricelocked", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the date and time when the invoice was last submitted to an accounting or ERP system for processing.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("lastbackofficesubmit")]
+		public System.Nullable<System.DateTime> LastBackofficeSubmit
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("lastbackofficesubmit");
+			}
+			set
+			{
+				this.SetAttributeValue("lastbackofficesubmit", value);
+			}
+		}
+		
+		/// <summary>
+		/// Contains the date time stamp of the last on hold time.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("lastonholdtime")]
+		public System.Nullable<System.DateTime> LastOnHoldTime
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("lastonholdtime");
+			}
+			set
+			{
+				this.SetAttributeValue("lastonholdtime", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows who last updated the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was last updated. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// Shows who last updated the record on behalf of another user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Type a descriptive name for the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("name")]
+		public string Name
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("name");
+			}
+			set
+			{
+				this.SetAttributeValue("name", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the duration in minutes for which the invoice was on hold.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("onholdtime")]
+		public System.Nullable<int> OnHoldTime
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("onholdtime");
+			}
+		}
+		
+		/// <summary>
+		/// Choose the opportunity that the invoice is related to for reporting and analytics.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunityid")]
+		public Microsoft.Xrm.Sdk.EntityReference OpportunityId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("opportunityid");
+			}
+			set
+			{
+				this.SetAttributeValue("opportunityid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enter the user or team who is assigned to manage the record. This field is updated every time the record is assigned to a different user.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ownerid")]
+		public Microsoft.Xrm.Sdk.EntityReference OwnerId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ownerid");
+			}
+			set
+			{
+				this.SetAttributeValue("ownerid", value);
+			}
+		}
+		
+		/// <summary>
+		/// business_unit_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningbusinessunit")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningBusinessUnit
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningbusinessunit");
+			}
+		}
+		
+		/// <summary>
+		/// team_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningTeam
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningteam");
+			}
+		}
+		
+		/// <summary>
+		/// system_user_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningUser
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owninguser");
+			}
+		}
+		
+		/// <summary>
+		/// Select the payment terms to indicate when the customer needs to pay the total amount.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("paymenttermscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PaymentTermsCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("paymenttermscode");
+			}
+			set
+			{
+				this.SetAttributeValue("paymenttermscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the price list associated with this record to make sure the products associated with the campaign are offered at the correct prices.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pricelevelid")]
+		public Microsoft.Xrm.Sdk.EntityReference PriceLevelId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("pricelevelid");
+			}
+			set
+			{
+				this.SetAttributeValue("pricelevelid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type of pricing error for the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pricingerrorcode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PricingErrorCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("pricingerrorcode");
+			}
+			set
+			{
+				this.SetAttributeValue("pricingerrorcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select the priority so that preferred customers or critical issues are handled quickly.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("prioritycode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PriorityCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("prioritycode");
+			}
+			set
+			{
+				this.SetAttributeValue("prioritycode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the process.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("processid")]
+		public System.Nullable<System.Guid> ProcessId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("processid");
+			}
+			set
+			{
+				this.SetAttributeValue("processid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the order related to the invoice to make sure the order is fulfilled and invoiced correctly.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("salesorderid")]
+		public Microsoft.Xrm.Sdk.EntityReference SalesOrderId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("salesorderid");
+			}
+			set
+			{
+				this.SetAttributeValue("salesorderid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select a shipping method for deliveries sent to this address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shippingmethodcode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ShippingMethodCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("shippingmethodcode");
+			}
+			set
+			{
+				this.SetAttributeValue("shippingmethodcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the city for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_city")]
+		public string ShipTo_City
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_city");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_city", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the complete Ship To address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_composite")]
+		public string ShipTo_Composite
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_composite");
+			}
+		}
+		
+		/// <summary>
+		/// Type the country or region for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_country")]
+		public string ShipTo_Country
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_country");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_country", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the fax number for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_fax")]
+		public string ShipTo_Fax
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_fax");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_fax", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select the freight terms to make sure shipping orders are processed correctly.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_freighttermscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ShipTo_FreightTermsCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("shipto_freighttermscode");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_freighttermscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the first line of the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_line1")]
+		public string ShipTo_Line1
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_line1");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_line1", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the second line of the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_line2")]
+		public string ShipTo_Line2
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_line2");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_line2", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the third line of the shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_line3")]
+		public string ShipTo_Line3
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_line3");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_line3", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a name for the customer's shipping address, such as "Headquarters" or "Field office", to identify the address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_name")]
+		public string ShipTo_Name
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_name");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_name", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the ZIP Code or postal code for the shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_postalcode")]
+		public string ShipTo_PostalCode
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_postalcode");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_postalcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the state or province for the shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_stateorprovince")]
+		public string ShipTo_StateOrProvince
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_stateorprovince");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_stateorprovince", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the phone number for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_telephone")]
+		public string ShipTo_Telephone
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_telephone");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_telephone", value);
+			}
+		}
+		
+		/// <summary>
+		/// Skip Price Calculation (For Internal Use)
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("skippricecalculation")]
+		public Microsoft.Xrm.Sdk.OptionSetValue SkipPriceCalculation
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("skippricecalculation");
+			}
+			set
+			{
+				this.SetAttributeValue("skippricecalculation", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the service level agreement (SLA) that you want to apply to the invoice record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("slaid")]
+		public Microsoft.Xrm.Sdk.EntityReference SLAId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("slaid");
+			}
+			set
+			{
+				this.SetAttributeValue("slaid", value);
+			}
+		}
+		
+		/// <summary>
+		/// sla_invoice
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("slainvokedid")]
+		public Microsoft.Xrm.Sdk.EntityReference SLAInvokedId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("slainvokedid");
+			}
+		}
+		
+		/// <summary>
+		/// processstage_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		public System.Nullable<System.Guid> StageId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("stageid");
+			}
+			set
+			{
+				this.SetAttributeValue("stageid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows whether the invoice is active, paid, or canceled. Paid and canceled invoices are read-only and can't be edited unless they are reactivated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
+		public System.Nullable<Skanetrafiken.Crm.Schema.Generated.InvoiceState> StateCode
+		{
+			get
+			{
+				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
+				if ((optionSet != null))
+				{
+					return ((Skanetrafiken.Crm.Schema.Generated.InvoiceState)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.InvoiceState), optionSet.Value)));
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if ((value == null))
+				{
+					this.SetAttributeValue("statecode", null);
+				}
+				else
+				{
+					this.SetAttributeValue("statecode", new Microsoft.Xrm.Sdk.OptionSetValue(((int)(value))));
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Select the invoice's status.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statuscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue StatusCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statuscode");
+			}
+			set
+			{
+				this.SetAttributeValue("statuscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timezoneruleversionnumber")]
+		public System.Nullable<int> TimeZoneRuleVersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("timezoneruleversionnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total amount due, calculated as the sum of the products, discount, freight, and taxes for the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totalamount")]
+		public Microsoft.Xrm.Sdk.Money TotalAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totalamount");
+			}
+			set
+			{
+				this.SetAttributeValue("totalamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Total Amount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totalamount_base")]
+		public Microsoft.Xrm.Sdk.Money TotalAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totalamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total product amount due, minus any discounts. This value is added to freight and tax amounts in the calculation for the total amount due for the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totalamountlessfreight")]
+		public Microsoft.Xrm.Sdk.Money TotalAmountLessFreight
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totalamountlessfreight");
+			}
+			set
+			{
+				this.SetAttributeValue("totalamountlessfreight", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Pre-Freight Amount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totalamountlessfreight_base")]
+		public Microsoft.Xrm.Sdk.Money TotalAmountLessFreight_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totalamountlessfreight_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total discount amount, based on the discount price and rate entered on the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totaldiscountamount")]
+		public Microsoft.Xrm.Sdk.Money TotalDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totaldiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("totaldiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Total Discount Amount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totaldiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money TotalDiscountAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totaldiscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the sum of all existing and write-in products included on the invoice, based on the specified price list and quantities.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totallineitemamount")]
+		public Microsoft.Xrm.Sdk.Money TotalLineItemAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totallineitemamount");
+			}
+			set
+			{
+				this.SetAttributeValue("totallineitemamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Detail Amount field converted to the system's default base currency. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totallineitemamount_base")]
+		public Microsoft.Xrm.Sdk.Money TotalLineItemAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totallineitemamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Manual Discount amounts specified on all products included in the invoice. This value is reflected in the Detail Amount field on the invoice and is added to any discount amount or rate specified on the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totallineitemdiscountamount")]
+		public Microsoft.Xrm.Sdk.Money TotalLineItemDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totallineitemdiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("totallineitemdiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total of the Manual Discount amounts specified on all products included in the invoice. This value is reflected in the Detail Amount field on the invoice and is added to any discount amount or rate specified on the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totallineitemdiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money TotalLineItemDiscountAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totallineitemdiscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total of the Tax amounts specified on all products included in the invoice, included in the Total Amount due calculation for the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totaltax")]
+		public Microsoft.Xrm.Sdk.Money TotalTax
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totaltax");
+			}
+			set
+			{
+				this.SetAttributeValue("totaltax", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Total Tax field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("totaltax_base")]
+		public Microsoft.Xrm.Sdk.Money TotalTax_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("totaltax_base");
+			}
+		}
+		
+		/// <summary>
+		/// Choose the local currency for the record to make sure budgets are reported in the correct currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public Microsoft.Xrm.Sdk.EntityReference TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("traversedpath")]
+		public string TraversedPath
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("traversedpath");
+			}
+			set
+			{
+				this.SetAttributeValue("traversedpath", value);
+			}
+		}
+		
+		/// <summary>
+		/// Time zone code that was in use when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("utcconversiontimezonecode")]
+		public System.Nullable<int> UTCConversionTimeZoneCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("utcconversiontimezonecode");
+			}
+			set
+			{
+				this.SetAttributeValue("utcconversiontimezonecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the products included in the invoice should be shipped to the specified address or held until the customer calls with further pick up or delivery instructions.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("willcall")]
+		public System.Nullable<bool> WillCall
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("willcall");
+			}
+			set
+			{
+				this.SetAttributeValue("willcall", value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N invoice_activity_parties
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoice_activity_parties")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ActivityParty> invoice_activity_parties
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ActivityParty>("invoice_activity_parties", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ActivityParty>("invoice_activity_parties", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Invoice_Annotation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Invoice_Annotation")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Annotation> Invoice_Annotation
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Invoice_Annotation", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Annotation>("Invoice_Annotation", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Invoice_Appointments
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Invoice_Appointments")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Appointment> Invoice_Appointments
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Invoice_Appointments", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Appointment>("Invoice_Appointments", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Invoice_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Invoice_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> Invoice_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("Invoice_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("Invoice_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N invoice_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoice_details")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail> invoice_details
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("invoice_details", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("invoice_details", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N invoice_ed_notifymkls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoice_ed_notifymkls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl> invoice_ed_notifymkls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl>("invoice_ed_notifymkls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_notifymkl>("invoice_ed_notifymkls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N invoice_ed_TextMessages
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoice_ed_TextMessages")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage> invoice_ed_TextMessages
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage>("invoice_ed_TextMessages", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.ed_TextMessage>("invoice_ed_TextMessages", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Invoice_Emails
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Invoice_Emails")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Email> Invoice_Emails
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("Invoice_Emails", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("Invoice_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N Invoice_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Invoice_Phonecalls")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.PhoneCall> Invoice_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Invoice_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.PhoneCall>("Invoice_Phonecalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N invoice_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoice_Teams")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> invoice_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("invoice_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("invoice_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:N contactinvoices_association
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("contactinvoices_association")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Contact> contactinvoices_association
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Contact>("contactinvoices_association", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Contact>("contactinvoices_association", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_contact_invoice_contact
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_contact")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_contact_invoice_contact")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact ed_contact_invoice_contact
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("ed_contact_invoice_contact", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("ed_contact_invoice_contact", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 ed_contact_invoice_Invoicees
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_invoicees")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("ed_contact_invoice_Invoicees")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact ed_contact_invoice_Invoicees
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("ed_contact_invoice_Invoicees", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("ed_contact_invoice_Invoicees", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 invoice_customer_accounts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customerid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoice_customer_accounts")]
+		public Skanetrafiken.Crm.Schema.Generated.Account invoice_customer_accounts
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("invoice_customer_accounts", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Account>("invoice_customer_accounts", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 invoice_customer_contacts
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("customerid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoice_customer_contacts")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact invoice_customer_contacts
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("invoice_customer_contacts", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("invoice_customer_contacts", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_invoice_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoice_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_invoice_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_invoice_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_invoice_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoice_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_invoice_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_invoice_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_invoicebase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoicebase_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_invoicebase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_invoicebase_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_invoicebase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoicebase_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_invoicebase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_invoicebase_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 opportunity_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("opportunityid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_invoices")]
+		public Skanetrafiken.Crm.Schema.Generated.Opportunity opportunity_invoices
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_invoices", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Opportunity>("opportunity_invoices", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 order_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("salesorderid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("order_invoices")]
+		public Skanetrafiken.Crm.Schema.Generated.SalesOrder order_invoices
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SalesOrder>("order_invoices", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SalesOrder>("order_invoices", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 price_level_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pricelevelid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("price_level_invoices")]
+		public Skanetrafiken.Crm.Schema.Generated.PriceLevel price_level_invoices
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PriceLevel>("price_level_invoices", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.PriceLevel>("price_level_invoices", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 processstage_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("stageid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_invoices")]
+		public Skanetrafiken.Crm.Schema.Generated.ProcessStage processstage_invoices
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_invoices", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.ProcessStage>("processstage_invoices", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 system_user_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("system_user_invoices")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser system_user_invoices
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("system_user_invoices", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_invoices")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_invoices
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_invoices", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 transactioncurrency_invoice
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_invoice")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_invoice
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_invoice", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_invoice", null, value);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string AccountId = "accountid";
+			
+			public const string BillTo_City = "billto_city";
+			
+			public const string BillTo_Composite = "billto_composite";
+			
+			public const string BillTo_Country = "billto_country";
+			
+			public const string BillTo_Fax = "billto_fax";
+			
+			public const string BillTo_Line1 = "billto_line1";
+			
+			public const string BillTo_Line2 = "billto_line2";
+			
+			public const string BillTo_Line3 = "billto_line3";
+			
+			public const string BillTo_Name = "billto_name";
+			
+			public const string BillTo_PostalCode = "billto_postalcode";
+			
+			public const string BillTo_StateOrProvince = "billto_stateorprovince";
+			
+			public const string BillTo_Telephone = "billto_telephone";
+			
+			public const string ContactId = "contactid";
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string CustomerId = "customerid";
+			
+			public const string DateDelivered = "datedelivered";
+			
+			public const string Description = "description";
+			
+			public const string DiscountAmount = "discountamount";
+			
+			public const string DiscountAmount_Base = "discountamount_base";
+			
+			public const string DiscountPercentage = "discountpercentage";
+			
+			public const string DueDate = "duedate";
+			
+			public const string ed_Antalmnader = "ed_antalmnader";
+			
+			public const string ed_campaigndateend = "ed_campaigndateend";
+			
+			public const string ed_campaigndatestart = "ed_campaigndatestart";
+			
+			public const string ed_contact = "ed_contact";
+			
+			public const string ed_Department = "ed_department";
+			
+			public const string ed_Fakturanskallperiodiseras = "ed_fakturanskallperiodiseras";
+			
+			public const string ed_Fakturatext = "ed_fakturatext";
+			
+			public const string ed_GLN = "ed_gln";
+			
+			public const string ed_infotainmentcustomer = "ed_infotainmentcustomer";
+			
+			public const string ed_invoicedelivery = "ed_invoicedelivery";
+			
+			public const string ed_Invoicees = "ed_invoicees";
+			
+			public const string ed_invoicetocredit = "ed_invoicetocredit";
+			
+			public const string ed_invoicetype = "ed_invoicetype";
+			
+			public const string ed_Kostnadsstalle = "ed_kostnadsstalle";
+			
+			public const string ed_krediteringsstatus = "ed_krediteringsstatus";
+			
+			public const string ed_mediaagencydiscount = "ed_mediaagencydiscount";
+			
+			public const string ed_mediaagencydiscountamount = "ed_mediaagencydiscountamount";
+			
+			public const string ed_mediaagencydiscountamount_Base = "ed_mediaagencydiscountamount_base";
+			
+			public const string ed_mediabusiness = "ed_mediabusiness";
+			
+			public const string ed_Peppolnr = "ed_peppolnr";
+			
+			public const string ed_priceinctax = "ed_priceinctax";
+			
+			public const string ed_priceinctax_Base = "ed_priceinctax_base";
+			
+			public const string ed_Reference = "ed_reference";
+			
+			public const string ed_tax = "ed_tax";
+			
+			public const string ed_tax_Base = "ed_tax_base";
+			
+			public const string ed_TotalDiscountAmount = "ed_totaldiscountamount";
+			
+			public const string ed_totaldiscountamount_Base = "ed_totaldiscountamount_base";
+			
+			public const string ed_ubussiness = "ed_ubussiness";
+			
+			public const string ed_UseInvoicee = "ed_useinvoicee";
+			
+			public const string EmailAddress = "emailaddress";
+			
+			public const string EntityImage = "entityimage";
+			
+			public const string EntityImage_Timestamp = "entityimage_timestamp";
+			
+			public const string EntityImage_URL = "entityimage_url";
+			
+			public const string EntityImageId = "entityimageid";
+			
+			public const string ExchangeRate = "exchangerate";
+			
+			public const string FreightAmount = "freightamount";
+			
+			public const string FreightAmount_Base = "freightamount_base";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string InvoiceId = "invoiceid";
+			
+			public const string Id = "invoiceid";
+			
+			public const string InvoiceNumber = "invoicenumber";
+			
+			public const string IsPriceLocked = "ispricelocked";
+			
+			public const string LastBackofficeSubmit = "lastbackofficesubmit";
+			
+			public const string LastOnHoldTime = "lastonholdtime";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string Name = "name";
+			
+			public const string OnHoldTime = "onholdtime";
+			
+			public const string OpportunityId = "opportunityid";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string OwnerId = "ownerid";
+			
+			public const string OwningBusinessUnit = "owningbusinessunit";
+			
+			public const string OwningTeam = "owningteam";
+			
+			public const string OwningUser = "owninguser";
+			
+			public const string PaymentTermsCode = "paymenttermscode";
+			
+			public const string PriceLevelId = "pricelevelid";
+			
+			public const string PricingErrorCode = "pricingerrorcode";
+			
+			public const string PriorityCode = "prioritycode";
+			
+			public const string ProcessId = "processid";
+			
+			public const string SalesOrderId = "salesorderid";
+			
+			public const string ShippingMethodCode = "shippingmethodcode";
+			
+			public const string ShipTo_City = "shipto_city";
+			
+			public const string ShipTo_Composite = "shipto_composite";
+			
+			public const string ShipTo_Country = "shipto_country";
+			
+			public const string ShipTo_Fax = "shipto_fax";
+			
+			public const string ShipTo_FreightTermsCode = "shipto_freighttermscode";
+			
+			public const string ShipTo_Line1 = "shipto_line1";
+			
+			public const string ShipTo_Line2 = "shipto_line2";
+			
+			public const string ShipTo_Line3 = "shipto_line3";
+			
+			public const string ShipTo_Name = "shipto_name";
+			
+			public const string ShipTo_PostalCode = "shipto_postalcode";
+			
+			public const string ShipTo_StateOrProvince = "shipto_stateorprovince";
+			
+			public const string ShipTo_Telephone = "shipto_telephone";
+			
+			public const string SkipPriceCalculation = "skippricecalculation";
+			
+			public const string SLAId = "slaid";
+			
+			public const string SLAInvokedId = "slainvokedid";
+			
+			public const string StageId = "stageid";
+			
+			public const string StateCode = "statecode";
+			
+			public const string StatusCode = "statuscode";
+			
+			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
+			
+			public const string TotalAmount = "totalamount";
+			
+			public const string TotalAmount_Base = "totalamount_base";
+			
+			public const string TotalAmountLessFreight = "totalamountlessfreight";
+			
+			public const string TotalAmountLessFreight_Base = "totalamountlessfreight_base";
+			
+			public const string TotalDiscountAmount = "totaldiscountamount";
+			
+			public const string TotalDiscountAmount_Base = "totaldiscountamount_base";
+			
+			public const string TotalLineItemAmount = "totallineitemamount";
+			
+			public const string TotalLineItemAmount_Base = "totallineitemamount_base";
+			
+			public const string TotalLineItemDiscountAmount = "totallineitemdiscountamount";
+			
+			public const string TotalLineItemDiscountAmount_Base = "totallineitemdiscountamount_base";
+			
+			public const string TotalTax = "totaltax";
+			
+			public const string TotalTax_Base = "totaltax_base";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
+			
+			public const string TraversedPath = "traversedpath";
+			
+			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
+			
+			public const string VersionNumber = "versionnumber";
+			
+			public const string WillCall = "willcall";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int BillTo_City = 80;
+			
+			public const int BillTo_Composite = 1000;
+			
+			public const int BillTo_Country = 80;
+			
+			public const int BillTo_Fax = 50;
+			
+			public const int BillTo_Line1 = 250;
+			
+			public const int BillTo_Line2 = 250;
+			
+			public const int BillTo_Line3 = 250;
+			
+			public const int BillTo_Name = 200;
+			
+			public const int BillTo_PostalCode = 20;
+			
+			public const int BillTo_StateOrProvince = 50;
+			
+			public const int BillTo_Telephone = 50;
+			
+			public const int Description = 2000;
+			
+			public const int ed_Antalmnader = 100;
+			
+			public const int ed_Department = 2000;
+			
+			public const int ed_Fakturatext = 2000;
+			
+			public const int ed_GLN = 100;
+			
+			public const int ed_invoicetocredit = 100;
+			
+			public const int ed_Kostnadsstalle = 100;
+			
+			public const int ed_krediteringsstatus = 100;
+			
+			public const int ed_Peppolnr = 100;
+			
+			public const int ed_Reference = 100;
+			
+			public const int EmailAddress = 100;
+			
+			public const int EntityImage_URL = 200;
+			
+			public const int InvoiceNumber = 100;
+			
+			public const int Name = 300;
+			
+			public const int ShipTo_City = 80;
+			
+			public const int ShipTo_Composite = 1000;
+			
+			public const int ShipTo_Country = 80;
+			
+			public const int ShipTo_Fax = 50;
+			
+			public const int ShipTo_Line1 = 250;
+			
+			public const int ShipTo_Line2 = 250;
+			
+			public const int ShipTo_Line3 = 250;
+			
+			public const int ShipTo_Name = 200;
+			
+			public const int ShipTo_PostalCode = 20;
+			
+			public const int ShipTo_StateOrProvince = 50;
+			
+			public const int ShipTo_Telephone = 50;
+			
+			public const int TraversedPath = 1250;
+		}
+	}
+	
+	/// <summary>
+	/// Line item in an invoice containing detailed billing information for a product.
+	/// </summary>
+	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("invoicedetail")]
+	public partial class InvoiceDetail : Microsoft.Xrm.Sdk.Entity
+	{
+		
+		/// <summary>
+		/// Default Constructor.
+		/// </summary>
+		public InvoiceDetail() : 
+				base(EntityLogicalName)
+		{
+		}
+		
+		public const string EntityLogicalName = "invoicedetail";
+		
+		public const int EntityTypeCode = 1091;
+		
+		/// <summary>
+		/// Enter the date when the invoiced product was delivered to the customer.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("actualdeliveryon")]
+		public System.Nullable<System.DateTime> ActualDeliveryOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("actualdeliveryon");
+			}
+			set
+			{
+				this.SetAttributeValue("actualdeliveryon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total price of the invoice product, based on the price per unit, volume discount, and quantity.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("baseamount")]
+		public Microsoft.Xrm.Sdk.Money BaseAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("baseamount");
+			}
+			set
+			{
+				this.SetAttributeValue("baseamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Amount field converted to the system's default base currency. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("baseamount_base")]
+		public Microsoft.Xrm.Sdk.Money BaseAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("baseamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// lk_invoicedetailbase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was created. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+		public System.Nullable<System.DateTime> CreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("createdon");
+			}
+		}
+		
+		/// <summary>
+		/// lk_invoicedetail_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference CreatedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("createdonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Type additional information to describe the product line item of the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("description")]
+		public string Description
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("description");
+			}
+			set
+			{
+				this.SetAttributeValue("description", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_fromdate")]
+		public System.Nullable<System.DateTime> ed_fromdate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_fromdate");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_fromdate", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_todate")]
+		public System.Nullable<System.DateTime> ed_todate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("ed_todate");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_todate", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totalamountwithoutdiscount")]
+		public Microsoft.Xrm.Sdk.Money ed_TotalAmountwithoutDiscount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totalamountwithoutdiscount");
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Total Amount (without Discount) in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totalamountwithoutdiscount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_totalamountwithoutdiscount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totalamountwithoutdiscount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the conversion rate of the record's currency. The exchange rate is used to convert all money fields in the record from the local currency to the system's default currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("exchangerate")]
+		public System.Nullable<decimal> ExchangeRate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("exchangerate");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the total amount due for the invoice product, based on the sum of the unit price, quantity, discounts, and tax.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("extendedamount")]
+		public Microsoft.Xrm.Sdk.Money ExtendedAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("extendedamount");
+			}
+			set
+			{
+				this.SetAttributeValue("extendedamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Extended Amount field converted to the system's default base currency. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("extendedamount_base")]
+		public Microsoft.Xrm.Sdk.Money ExtendedAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("extendedamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the data import or data migration that created this record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("importsequencenumber")]
+		public System.Nullable<int> ImportSequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("importsequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("importsequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the invoice product line item.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("invoicedetailid")]
+		public System.Nullable<System.Guid> InvoiceDetailId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("invoicedetailid");
+			}
+			set
+			{
+				this.SetAttributeValue("invoicedetailid", value);
+				if (value.HasValue)
+				{
+					base.Id = value.Value;
+				}
+				else
+				{
+					base.Id = System.Guid.Empty;
+				}
+			}
+		}
+		
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("invoicedetailid")]
+		public override System.Guid Id
+		{
+			get
+			{
+				return base.Id;
+			}
+			set
+			{
+				this.InvoiceDetailId = value;
+			}
+		}
+		
+		/// <summary>
+		/// Invoice Detail Name. Added for 1:n referential relationship (internal purposes only)
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("invoicedetailname")]
+		public string InvoiceDetailName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("invoicedetailname");
+			}
+			set
+			{
+				this.SetAttributeValue("invoicedetailname", value);
+			}
+		}
+		
+		/// <summary>
+		/// invoice_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("invoiceid")]
+		public Microsoft.Xrm.Sdk.EntityReference InvoiceId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("invoiceid");
+			}
+			set
+			{
+				this.SetAttributeValue("invoiceid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Information about whether invoice product pricing is locked.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("invoiceispricelocked")]
+		public System.Nullable<bool> InvoiceIsPriceLocked
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("invoiceispricelocked");
+			}
+		}
+		
+		/// <summary>
+		/// Status of the invoice product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("invoicestatecode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue InvoiceStateCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("invoicestatecode");
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the invoice product is copied from another item or data source.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("iscopied")]
+		public System.Nullable<bool> IsCopied
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("iscopied");
+			}
+			set
+			{
+				this.SetAttributeValue("iscopied", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the price per unit is fixed at the value in the specified price list or can be overridden by users who have edit rights to the invoice product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ispriceoverridden")]
+		public System.Nullable<bool> IsPriceOverridden
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("ispriceoverridden");
+			}
+			set
+			{
+				this.SetAttributeValue("ispriceoverridden", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the product exists in the Microsoft Dynamics 365 product catalog or is a write-in product specific to the parent invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isproductoverridden")]
+		public System.Nullable<bool> IsProductOverridden
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isproductoverridden");
+			}
+			set
+			{
+				this.SetAttributeValue("isproductoverridden", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the line item number for the invoice product to easily identify the product in the invoice and make sure it's listed in the correct order.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("lineitemnumber")]
+		public System.Nullable<int> LineItemNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("lineitemnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("lineitemnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the manual discount amount for the invoice product to deduct any negotiated or other savings from the product total.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("manualdiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ManualDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("manualdiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("manualdiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Manual Discount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("manualdiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ManualDiscountAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("manualdiscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// lk_invoicedetailbase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedby");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the date and time when the record was last updated. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedon")]
+		public System.Nullable<System.DateTime> ModifiedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("modifiedon");
+			}
+		}
+		
+		/// <summary>
+		/// lk_invoicedetail_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		public Microsoft.Xrm.Sdk.EntityReference ModifiedOnBehalfBy
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("modifiedonbehalfby");
+			}
+		}
+		
+		/// <summary>
+		/// Date and time that the record was migrated.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("overriddencreatedon")]
+		public System.Nullable<System.DateTime> OverriddenCreatedOn
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("overriddencreatedon");
+			}
+			set
+			{
+				this.SetAttributeValue("overriddencreatedon", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user or team who owns the invoice detail.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ownerid")]
+		public Microsoft.Xrm.Sdk.EntityReference OwnerId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("ownerid");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the business unit that owns the invoice product line item.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningbusinessunit")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningBusinessUnit
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningbusinessunit");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for the team that owns the record.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		public Microsoft.Xrm.Sdk.EntityReference OwningTeam
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("owningteam");
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier of the user who owns the invoice product line item.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		public System.Nullable<System.Guid> OwningUser
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("owninguser");
+			}
+		}
+		
+		/// <summary>
+		/// invoicedetail_parent_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentbundleid")]
+		public System.Nullable<System.Guid> ParentBundleId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("parentbundleid");
+			}
+			set
+			{
+				this.SetAttributeValue("parentbundleid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Choose the parent bundle associated with this product
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentbundleidref")]
+		public Microsoft.Xrm.Sdk.EntityReference ParentBundleIdRef
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("parentbundleidref");
+			}
+			set
+			{
+				this.SetAttributeValue("parentbundleidref", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the price per unit of the invoice product. The default is the value in the price list specified on the parent invoice for existing products.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("priceperunit")]
+		public Microsoft.Xrm.Sdk.Money PricePerUnit
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("priceperunit");
+			}
+			set
+			{
+				this.SetAttributeValue("priceperunit", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Price Per Unit field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("priceperunit_base")]
+		public Microsoft.Xrm.Sdk.Money PricePerUnit_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("priceperunit_base");
+			}
+		}
+		
+		/// <summary>
+		/// Pricing error for the invoice product line item.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("pricingerrorcode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PricingErrorCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("pricingerrorcode");
+			}
+			set
+			{
+				this.SetAttributeValue("pricingerrorcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// productAssociation_invoice_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productassociationid")]
+		public System.Nullable<System.Guid> ProductAssociationId
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.Guid>>("productassociationid");
+			}
+			set
+			{
+				this.SetAttributeValue("productassociationid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a name or description to identify the type of write-in product included in the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productdescription")]
+		public string ProductDescription
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("productdescription");
+			}
+			set
+			{
+				this.SetAttributeValue("productdescription", value);
+			}
+		}
+		
+		/// <summary>
+		/// product_invoice_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productid")]
+		public Microsoft.Xrm.Sdk.EntityReference ProductId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("productid");
+			}
+			set
+			{
+				this.SetAttributeValue("productid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Calculated field that will be populated by name and description of the product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productname")]
+		public string ProductName
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("productname");
+			}
+			set
+			{
+				this.SetAttributeValue("productname", value);
+			}
+		}
+		
+		/// <summary>
+		/// User-defined product ID.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productnumber")]
+		public string ProductNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("productnumber");
+			}
+		}
+		
+		/// <summary>
+		/// Product Type
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("producttypecode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ProductTypeCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("producttypecode");
+			}
+			set
+			{
+				this.SetAttributeValue("producttypecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Status of the property configuration.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("propertyconfigurationstatus")]
+		public Microsoft.Xrm.Sdk.OptionSetValue PropertyConfigurationStatus
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("propertyconfigurationstatus");
+			}
+			set
+			{
+				this.SetAttributeValue("propertyconfigurationstatus", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the amount or quantity of the product included in the invoice's total amount due.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quantity")]
+		public System.Nullable<decimal> Quantity
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("quantity");
+			}
+			set
+			{
+				this.SetAttributeValue("quantity", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the amount or quantity of the product that is back ordered for the invoice.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quantitybackordered")]
+		public System.Nullable<decimal> QuantityBackordered
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("quantitybackordered");
+			}
+			set
+			{
+				this.SetAttributeValue("quantitybackordered", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the amount or quantity of the product that was canceled for the invoice line item.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quantitycancelled")]
+		public System.Nullable<decimal> QuantityCancelled
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("quantitycancelled");
+			}
+			set
+			{
+				this.SetAttributeValue("quantitycancelled", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the amount or quantity of the product that was shipped.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("quantityshipped")]
+		public System.Nullable<decimal> QuantityShipped
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("quantityshipped");
+			}
+			set
+			{
+				this.SetAttributeValue("quantityshipped", value);
+			}
+		}
+		
+		/// <summary>
+		/// Unique identifier for Order Line associated with Invoice Line.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("salesorderdetailid")]
+		public Microsoft.Xrm.Sdk.EntityReference SalesOrderDetailId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("salesorderdetailid");
+			}
+			set
+			{
+				this.SetAttributeValue("salesorderdetailid", value);
+			}
+		}
+		
+		/// <summary>
+		/// system_user_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("salesrepid")]
+		public Microsoft.Xrm.Sdk.EntityReference SalesRepId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("salesrepid");
+			}
+			set
+			{
+				this.SetAttributeValue("salesrepid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the ID of the data that maintains the sequence.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("sequencenumber")]
+		public System.Nullable<int> SequenceNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("sequencenumber");
+			}
+			set
+			{
+				this.SetAttributeValue("sequencenumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a tracking number for shipment of the invoiced product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shippingtrackingnumber")]
+		public string ShippingTrackingNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shippingtrackingnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("shippingtrackingnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the city for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_city")]
+		public string ShipTo_City
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_city");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_city", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the country or region for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_country")]
+		public string ShipTo_Country
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_country");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_country", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the fax number for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_fax")]
+		public string ShipTo_Fax
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_fax");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_fax", value);
+			}
+		}
+		
+		/// <summary>
+		/// Select the freight terms to make sure shipping orders are processed correctly.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_freighttermscode")]
+		public Microsoft.Xrm.Sdk.OptionSetValue ShipTo_FreightTermsCode
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("shipto_freighttermscode");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_freighttermscode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the first line of the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_line1")]
+		public string ShipTo_Line1
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_line1");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_line1", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the second line of the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_line2")]
+		public string ShipTo_Line2
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_line2");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_line2", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the third line of the shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_line3")]
+		public string ShipTo_Line3
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_line3");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_line3", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type a name for the customer's shipping address, such as "Headquarters" or "Field office",  to identify the address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_name")]
+		public string ShipTo_Name
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_name");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_name", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the ZIP Code or postal code for the shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_postalcode")]
+		public string ShipTo_PostalCode
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_postalcode");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_postalcode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the state or province for the shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_stateorprovince")]
+		public string ShipTo_StateOrProvince
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_stateorprovince");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_stateorprovince", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the phone number for the customer's shipping address.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("shipto_telephone")]
+		public string ShipTo_Telephone
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("shipto_telephone");
+			}
+			set
+			{
+				this.SetAttributeValue("shipto_telephone", value);
+			}
+		}
+		
+		/// <summary>
+		/// Skip Price Calculation
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("skippricecalculation")]
+		public Microsoft.Xrm.Sdk.OptionSetValue SkipPriceCalculation
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("skippricecalculation");
+			}
+			set
+			{
+				this.SetAttributeValue("skippricecalculation", value);
+			}
+		}
+		
+		/// <summary>
+		/// Type the tax amount for the invoice product.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("tax")]
+		public Microsoft.Xrm.Sdk.Money Tax
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("tax");
+			}
+			set
+			{
+				this.SetAttributeValue("tax", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Tax field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("tax_base")]
+		public Microsoft.Xrm.Sdk.Money Tax_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("tax_base");
+			}
+		}
+		
+		/// <summary>
+		/// For internal use only.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timezoneruleversionnumber")]
+		public System.Nullable<int> TimeZoneRuleVersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("timezoneruleversionnumber");
+			}
+			set
+			{
+				this.SetAttributeValue("timezoneruleversionnumber", value);
+			}
+		}
+		
+		/// <summary>
+		/// transactioncurrency_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		public Microsoft.Xrm.Sdk.EntityReference TransactionCurrencyId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("transactioncurrencyid");
+			}
+			set
+			{
+				this.SetAttributeValue("transactioncurrencyid", value);
+			}
+		}
+		
+		/// <summary>
+		/// unit_of_measurement_invoice_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("uomid")]
+		public Microsoft.Xrm.Sdk.EntityReference UoMId
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.EntityReference>("uomid");
+			}
+			set
+			{
+				this.SetAttributeValue("uomid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Time zone code that was in use when the record was created.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("utcconversiontimezonecode")]
+		public System.Nullable<int> UTCConversionTimeZoneCode
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("utcconversiontimezonecode");
+			}
+			set
+			{
+				this.SetAttributeValue("utcconversiontimezonecode", value);
+			}
+		}
+		
+		/// <summary>
+		/// Version number of the invoice product line item.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
+			}
+		}
+		
+		/// <summary>
+		/// Select whether the invoice product should be shipped to the specified address or held until the customer calls with further pick up or delivery instructions.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("willcall")]
+		public System.Nullable<bool> WillCall
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("willcall");
+			}
+			set
+			{
+				this.SetAttributeValue("willcall", value);
+			}
+		}
+		
+		/// <summary>
+		/// Shows the discount amount per unit if a specified volume is purchased. Configure volume discounts in the Product Catalog in the Settings area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("volumediscountamount")]
+		public Microsoft.Xrm.Sdk.Money VolumeDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("volumediscountamount");
+			}
+		}
+		
+		/// <summary>
+		/// Shows the Volume Discount field converted to the system's default base currency for reporting purposes. The calculation uses the exchange rate specified in the Currencies area.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("volumediscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money VolumeDiscountAmount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("volumediscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// 1:N InvoiceDetail_AsyncOperations
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("InvoiceDetail_AsyncOperations")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.AsyncOperation> InvoiceDetail_AsyncOperations
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("InvoiceDetail_AsyncOperations", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.AsyncOperation>("InvoiceDetail_AsyncOperations", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N invoicedetail_parent_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoicedetail_parent_invoicedetail", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail> Referencedinvoicedetail_parent_invoicedetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("invoicedetail_parent_invoicedetail", Microsoft.Xrm.Sdk.EntityRole.Referenced);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("invoicedetail_parent_invoicedetail", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N invoicedetail_parentref_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoicedetail_parentref_invoicedetail", Microsoft.Xrm.Sdk.EntityRole.Referenced)]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail> Referencedinvoicedetail_parentref_invoicedetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("invoicedetail_parentref_invoicedetail", Microsoft.Xrm.Sdk.EntityRole.Referenced);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("invoicedetail_parentref_invoicedetail", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N invoicedetail_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoicedetail_Teams")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Team> invoicedetail_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("invoicedetail_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Team>("invoicedetail_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 invoice_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("invoiceid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoice_details")]
+		public Skanetrafiken.Crm.Schema.Generated.Invoice invoice_details
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("invoice_details", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("invoice_details", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 invoicedetail_parent_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentbundleid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoicedetail_parent_invoicedetail", Microsoft.Xrm.Sdk.EntityRole.Referencing)]
+		public Skanetrafiken.Crm.Schema.Generated.InvoiceDetail Referencinginvoicedetail_parent_invoicedetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("invoicedetail_parent_invoicedetail", Microsoft.Xrm.Sdk.EntityRole.Referencing);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("invoicedetail_parent_invoicedetail", Microsoft.Xrm.Sdk.EntityRole.Referencing, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 invoicedetail_parentref_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("parentbundleidref")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoicedetail_parentref_invoicedetail", Microsoft.Xrm.Sdk.EntityRole.Referencing)]
+		public Skanetrafiken.Crm.Schema.Generated.InvoiceDetail Referencinginvoicedetail_parentref_invoicedetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("invoicedetail_parentref_invoicedetail", Microsoft.Xrm.Sdk.EntityRole.Referencing);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("invoicedetail_parentref_invoicedetail", Microsoft.Xrm.Sdk.EntityRole.Referencing, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_invoicedetail_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoicedetail_createdonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_invoicedetail_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_invoicedetail_createdonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_invoicedetail_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedonbehalfby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoicedetail_modifiedonbehalfby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_invoicedetail_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_invoicedetail_modifiedonbehalfby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_invoicedetailbase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoicedetailbase_createdby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_invoicedetailbase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_invoicedetailbase_createdby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 lk_invoicedetailbase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoicedetailbase_modifiedby")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser lk_invoicedetailbase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("lk_invoicedetailbase_modifiedby", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 msdyn_salesorderdetail_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("salesorderdetailid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("msdyn_salesorderdetail_invoicedetail")]
+		public Skanetrafiken.Crm.Schema.Generated.SalesOrderDetail msdyn_salesorderdetail_invoicedetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SalesOrderDetail>("msdyn_salesorderdetail_invoicedetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SalesOrderDetail>("msdyn_salesorderdetail_invoicedetail", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 product_invoice_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("productid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("product_invoice_details")]
+		public Skanetrafiken.Crm.Schema.Generated.Product product_invoice_details
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Product>("product_invoice_details", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Product>("product_invoice_details", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 system_user_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("salesrepid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("system_user_invoicedetail")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser system_user_invoicedetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("system_user_invoicedetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("system_user_invoicedetail", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 team_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owningteam")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_invoicedetail")]
+		public Skanetrafiken.Crm.Schema.Generated.Team team_invoicedetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Team>("team_invoicedetail", null);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 transactioncurrency_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("transactioncurrencyid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_invoicedetail")]
+		public Skanetrafiken.Crm.Schema.Generated.TransactionCurrency transactioncurrency_invoicedetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_invoicedetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.TransactionCurrency>("transactioncurrency_invoicedetail", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 unit_of_measurement_invoice_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("uomid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("unit_of_measurement_invoice_details")]
+		public Skanetrafiken.Crm.Schema.Generated.UoM unit_of_measurement_invoice_details
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.UoM>("unit_of_measurement_invoice_details", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.UoM>("unit_of_measurement_invoice_details", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 user_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("owninguser")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_invoicedetail")]
+		public Skanetrafiken.Crm.Schema.Generated.SystemUser user_invoicedetail
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.SystemUser>("user_invoicedetail", null);
+			}
+		}
+		
+		public struct Fields
+		{
+			
+			public const string ActualDeliveryOn = "actualdeliveryon";
+			
+			public const string BaseAmount = "baseamount";
+			
+			public const string BaseAmount_Base = "baseamount_base";
+			
+			public const string CreatedBy = "createdby";
+			
+			public const string CreatedOn = "createdon";
+			
+			public const string CreatedOnBehalfBy = "createdonbehalfby";
+			
+			public const string Description = "description";
+			
+			public const string ed_fromdate = "ed_fromdate";
+			
+			public const string ed_todate = "ed_todate";
+			
+			public const string ed_TotalAmountwithoutDiscount = "ed_totalamountwithoutdiscount";
+			
+			public const string ed_totalamountwithoutdiscount_Base = "ed_totalamountwithoutdiscount_base";
+			
+			public const string ExchangeRate = "exchangerate";
+			
+			public const string ExtendedAmount = "extendedamount";
+			
+			public const string ExtendedAmount_Base = "extendedamount_base";
+			
+			public const string ImportSequenceNumber = "importsequencenumber";
+			
+			public const string InvoiceDetailId = "invoicedetailid";
+			
+			public const string Id = "invoicedetailid";
+			
+			public const string InvoiceDetailName = "invoicedetailname";
+			
+			public const string InvoiceId = "invoiceid";
+			
+			public const string InvoiceIsPriceLocked = "invoiceispricelocked";
+			
+			public const string InvoiceStateCode = "invoicestatecode";
+			
+			public const string IsCopied = "iscopied";
+			
+			public const string IsPriceOverridden = "ispriceoverridden";
+			
+			public const string IsProductOverridden = "isproductoverridden";
+			
+			public const string LineItemNumber = "lineitemnumber";
+			
+			public const string ManualDiscountAmount = "manualdiscountamount";
+			
+			public const string ManualDiscountAmount_Base = "manualdiscountamount_base";
+			
+			public const string ModifiedBy = "modifiedby";
+			
+			public const string ModifiedOn = "modifiedon";
+			
+			public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
+			
+			public const string OverriddenCreatedOn = "overriddencreatedon";
+			
+			public const string OwnerId = "ownerid";
+			
+			public const string OwningBusinessUnit = "owningbusinessunit";
+			
+			public const string OwningTeam = "owningteam";
+			
+			public const string OwningUser = "owninguser";
+			
+			public const string ParentBundleId = "parentbundleid";
+			
+			public const string ParentBundleIdRef = "parentbundleidref";
+			
+			public const string PricePerUnit = "priceperunit";
+			
+			public const string PricePerUnit_Base = "priceperunit_base";
+			
+			public const string PricingErrorCode = "pricingerrorcode";
+			
+			public const string ProductAssociationId = "productassociationid";
+			
+			public const string ProductDescription = "productdescription";
+			
+			public const string ProductId = "productid";
+			
+			public const string ProductName = "productname";
+			
+			public const string ProductNumber = "productnumber";
+			
+			public const string ProductTypeCode = "producttypecode";
+			
+			public const string PropertyConfigurationStatus = "propertyconfigurationstatus";
+			
+			public const string Quantity = "quantity";
+			
+			public const string QuantityBackordered = "quantitybackordered";
+			
+			public const string QuantityCancelled = "quantitycancelled";
+			
+			public const string QuantityShipped = "quantityshipped";
+			
+			public const string SalesOrderDetailId = "salesorderdetailid";
+			
+			public const string SalesRepId = "salesrepid";
+			
+			public const string SequenceNumber = "sequencenumber";
+			
+			public const string ShippingTrackingNumber = "shippingtrackingnumber";
+			
+			public const string ShipTo_City = "shipto_city";
+			
+			public const string ShipTo_Country = "shipto_country";
+			
+			public const string ShipTo_Fax = "shipto_fax";
+			
+			public const string ShipTo_FreightTermsCode = "shipto_freighttermscode";
+			
+			public const string ShipTo_Line1 = "shipto_line1";
+			
+			public const string ShipTo_Line2 = "shipto_line2";
+			
+			public const string ShipTo_Line3 = "shipto_line3";
+			
+			public const string ShipTo_Name = "shipto_name";
+			
+			public const string ShipTo_PostalCode = "shipto_postalcode";
+			
+			public const string ShipTo_StateOrProvince = "shipto_stateorprovince";
+			
+			public const string ShipTo_Telephone = "shipto_telephone";
+			
+			public const string SkipPriceCalculation = "skippricecalculation";
+			
+			public const string Tax = "tax";
+			
+			public const string Tax_Base = "tax_base";
+			
+			public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
+			
+			public const string TransactionCurrencyId = "transactioncurrencyid";
+			
+			public const string UoMId = "uomid";
+			
+			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
+			
+			public const string VersionNumber = "versionnumber";
+			
+			public const string WillCall = "willcall";
+			
+			public const string VolumeDiscountAmount = "volumediscountamount";
+			
+			public const string VolumeDiscountAmount_Base = "volumediscountamount_base";
+		}
+		
+		public struct FieldLengths
+		{
+			
+			public const int Description = 2000;
+			
+			public const int InvoiceDetailName = 500;
+			
+			public const int ProductDescription = 500;
+			
+			public const int ProductName = 500;
+			
+			public const int ProductNumber = 100;
+			
+			public const int ShippingTrackingNumber = 100;
+			
+			public const int ShipTo_City = 80;
+			
+			public const int ShipTo_Country = 80;
+			
+			public const int ShipTo_Fax = 50;
+			
+			public const int ShipTo_Line1 = 250;
+			
+			public const int ShipTo_Line2 = 250;
+			
+			public const int ShipTo_Line3 = 250;
+			
+			public const int ShipTo_Name = 200;
+			
+			public const int ShipTo_PostalCode = 20;
+			
+			public const int ShipTo_StateOrProvince = 50;
+			
+			public const int ShipTo_Telephone = 50;
 		}
 	}
 	
@@ -78257,6 +83342,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("budgetstatus", value);
+			}
+		}
+		
+		/// <summary>
+		/// Stores Image of the Business Card
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("businesscard")]
+		public string BusinessCard
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("businesscard");
+			}
+			set
+			{
+				this.SetAttributeValue("businesscard", value);
 			}
 		}
 		
@@ -80526,6 +85627,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Number of users or conversations followed the record
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("teamsfollowed")]
+		public System.Nullable<int> TeamsFollowed
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("teamsfollowed");
+			}
+			set
+			{
+				this.SetAttributeValue("teamsfollowed", value);
+			}
+		}
+		
+		/// <summary>
 		/// Type the work phone number for the primary contact for the lead.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("telephone1")]
@@ -80652,16 +85769,12 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// Type the website URL for the company associated with this lead.
 		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("websiteurl")]
-		public string WebSiteUrl
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("versionnumber")]
+		public System.Nullable<long> VersionNumber
 		{
 			get
 			{
-				return this.GetAttributeValue<string>("websiteurl");
-			}
-			set
-			{
-				this.SetAttributeValue("websiteurl", value);
+				return this.GetAttributeValue<System.Nullable<long>>("versionnumber");
 			}
 		}
 		
@@ -82543,6 +87656,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("processedmembercount")]
+		public System.Nullable<int> processedMemberCount
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("processedmembercount");
+			}
+			set
+			{
+				this.SetAttributeValue("processedmembercount", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("processfetchxml")]
+		public string processFetchXML
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("processfetchxml");
+			}
+			set
+			{
+				this.SetAttributeValue("processfetchxml", value);
+			}
+		}
+		
+		/// <summary>
 		/// Shows the ID of the process.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("processid")]
@@ -83662,6 +88807,50 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_infotainmentcustomer", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscount")]
+		public System.Nullable<decimal> ed_MediaAgencyDiscount
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<decimal>>("ed_mediaagencydiscount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscount", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_MediaAgencyDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_mediaagencydiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Media Agency Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_mediaagencydiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_mediaagencydiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_mediaagencydiscountamount_base");
 			}
 		}
 		
@@ -84866,6 +90055,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Number of users or conversations followed the record
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("teamsfollowed")]
+		public System.Nullable<int> TeamsFollowed
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<int>>("teamsfollowed");
+			}
+			set
+			{
+				this.SetAttributeValue("teamsfollowed", value);
+			}
+		}
+		
+		/// <summary>
 		/// Select when the opportunity is likely to be closed.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("timeline")]
@@ -85278,6 +90483,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Email>("Opportunity_Emails", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N opportunity_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("opportunity_invoices")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> opportunity_invoices
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("opportunity_invoices", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("opportunity_invoices", null, value);
 			}
 		}
 		
@@ -88275,6 +93496,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// N:1 abssr_contact_phonecall_contactid
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("abssr_contactid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("abssr_contact_phonecall_contactid")]
+		public Skanetrafiken.Crm.Schema.Generated.Contact abssr_contact_phonecall_contactid
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("abssr_contact_phonecall_contactid", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Contact>("abssr_contact_phonecall_contactid", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// N:1 Account_Phonecalls
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
@@ -88696,6 +93934,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Incident>("Incident_Phonecalls", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 Invoice_Phonecalls
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("Invoice_Phonecalls")]
+		public Skanetrafiken.Crm.Schema.Generated.Invoice Invoice_Phonecalls
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("Invoice_Phonecalls", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("Invoice_Phonecalls", null, value);
 			}
 		}
 		
@@ -89491,6 +94746,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N price_level_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("price_level_invoices")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> price_level_invoices
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("price_level_invoices", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("price_level_invoices", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N price_level_opportunties
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("price_level_opportunties")]
@@ -89850,6 +95121,54 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// The connector associated with the stage.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("connector")]
+		public string Connector
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("connector");
+			}
+			set
+			{
+				this.SetAttributeValue("connector", value);
+			}
+		}
+		
+		/// <summary>
+		/// Whether the stage is a trigger
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("istrigger")]
+		public System.Nullable<bool> IsTrigger
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("istrigger");
+			}
+			set
+			{
+				this.SetAttributeValue("istrigger", value);
+			}
+		}
+		
+		/// <summary>
+		/// The operation id of the stage
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("operationid")]
+		public string OperationId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("operationid");
+			}
+			set
+			{
+				this.SetAttributeValue("operationid", value);
+			}
+		}
+		
+		/// <summary>
 		/// The operation kind
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("operationkind")]
@@ -90142,6 +95461,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Incident>("processstage_incident", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N processstage_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("processstage_invoices")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> processstage_invoices
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("processstage_invoices", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("processstage_invoices", null, value);
 			}
 		}
 		
@@ -90708,6 +96043,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("iskit", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isreparented")]
+		public System.Nullable<bool> IsReparented
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isreparented");
+			}
+			set
+			{
+				this.SetAttributeValue("isreparented", value);
 			}
 		}
 		
@@ -91448,6 +96799,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Incident>("product_incidents", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N product_invoice_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("product_invoice_details")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail> product_invoice_details
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("product_invoice_details", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("product_invoice_details", null, value);
 			}
 		}
 		
@@ -95710,6 +101077,34 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("ed_totalamountforcalculation", value);
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_TotalDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_totaldiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Total Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_totaldiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount_base");
 			}
 		}
 		
@@ -100652,6 +106047,34 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		/// <summary>
 		/// 
 		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount")]
+		public Microsoft.Xrm.Sdk.Money ed_TotalDiscountAmount
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_totaldiscountamount", value);
+			}
+		}
+		
+		/// <summary>
+		/// Value of the Total Discount Amount in base currency.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totaldiscountamount_base")]
+		public Microsoft.Xrm.Sdk.Money ed_totaldiscountamount_Base
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.Money>("ed_totaldiscountamount_base");
+			}
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_totalextendedamount")]
 		public Microsoft.Xrm.Sdk.Money ed_TotalExtendedAmount
 		{
@@ -101909,6 +107332,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.SalesOrderDetail>("order_details", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N order_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("order_invoices")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> order_invoices
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("order_invoices", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("order_invoices", null, value);
 			}
 		}
 		
@@ -103931,6 +109370,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N msdyn_salesorderdetail_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("msdyn_salesorderdetail_invoicedetail")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail> msdyn_salesorderdetail_invoicedetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("msdyn_salesorderdetail_invoicedetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("msdyn_salesorderdetail_invoicedetail", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N SalesOrderDetail_AsyncOperations
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("SalesOrderDetail_AsyncOperations")]
@@ -104470,7 +109925,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		dagarsbiljett = 206290000,
 		
-		_dagar = 899310018,
+		dagar = 899310018,
 		
 		dagarsbiljettmomsfri = 899310019,
 		
@@ -104492,7 +109947,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		Sportlovsbiljett = 899310025,
 		
-		_Provapakampanj = 899310028,
+		Provapakampanj = 899310028,
 	}
 	
 	public enum st_singaporeticketState
@@ -111434,6 +116889,134 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N lk_invoice_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoice_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> lk_invoice_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("lk_invoice_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("lk_invoice_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_invoice_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoice_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> lk_invoice_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("lk_invoice_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("lk_invoice_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_invoicebase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoicebase_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> lk_invoicebase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("lk_invoicebase_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("lk_invoicebase_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_invoicebase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoicebase_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> lk_invoicebase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("lk_invoicebase_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("lk_invoicebase_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_invoicedetail_createdonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoicedetail_createdonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail> lk_invoicedetail_createdonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("lk_invoicedetail_createdonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("lk_invoicedetail_createdonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_invoicedetail_modifiedonbehalfby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoicedetail_modifiedonbehalfby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail> lk_invoicedetail_modifiedonbehalfby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("lk_invoicedetail_modifiedonbehalfby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("lk_invoicedetail_modifiedonbehalfby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_invoicedetailbase_createdby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoicedetailbase_createdby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail> lk_invoicedetailbase_createdby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("lk_invoicedetailbase_createdby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("lk_invoicedetailbase_createdby", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N lk_invoicedetailbase_modifiedby
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_invoicedetailbase_modifiedby")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail> lk_invoicedetailbase_modifiedby
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("lk_invoicedetailbase_modifiedby", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("lk_invoicedetailbase_modifiedby", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N lk_kbarticle_createdonbehalfby
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("lk_kbarticle_createdonbehalfby")]
@@ -113146,6 +118729,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N system_user_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("system_user_invoicedetail")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail> system_user_invoicedetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("system_user_invoicedetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("system_user_invoicedetail", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N system_user_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("system_user_invoices")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> system_user_invoices
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("system_user_invoices", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("system_user_invoices", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N system_user_orders
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("system_user_orders")]
@@ -113798,6 +119413,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("user_incidentresolution", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N user_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("user_invoicedetail")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail> user_invoicedetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("user_invoicedetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("user_invoicedetail", null, value);
 			}
 		}
 		
@@ -114873,6 +120504,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("membershiptype")]
+		public Microsoft.Xrm.Sdk.OptionSetValue MembershipType
+		{
+			get
+			{
+				return this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("membershiptype");
+			}
+			set
+			{
+				this.SetAttributeValue("membershiptype", value);
+			}
+		}
+		
+		/// <summary>
 		/// Unique identifier of the user who last modified the team.
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("modifiedby")]
@@ -115878,6 +121525,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N team_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_invoicedetail")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail> team_invoicedetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("team_invoicedetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("team_invoicedetail", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N team_invoices
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_invoices")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> team_invoices
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("team_invoices", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("team_invoices", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N team_list
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("team_list")]
@@ -116151,6 +121830,40 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>("incidentresolution_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 invoice_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoice_Teams")]
+		public Skanetrafiken.Crm.Schema.Generated.Invoice invoice_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("invoice_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.Invoice>("invoice_Teams", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// N:1 invoicedetail_Teams
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("regardingobjectid")]
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("invoicedetail_Teams")]
+		public Skanetrafiken.Crm.Schema.Generated.InvoiceDetail invoicedetail_Teams
+		{
+			get
+			{
+				return this.GetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("invoicedetail_Teams", null);
+			}
+			set
+			{
+				this.SetRelatedEntity<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("invoicedetail_Teams", null, value);
 			}
 		}
 		
@@ -117032,6 +122745,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.GetAttributeValue<System.Nullable<int>>("replyrate");
+			}
+		}
+		
+		/// <summary>
+		/// Safe html of email template.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("safehtml")]
+		public string SafeHtml
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("safehtml");
+			}
+			set
+			{
+				this.SetAttributeValue("safehtml", value);
 			}
 		}
 		
@@ -118121,6 +123850,38 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// 1:N transactioncurrency_invoice
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_invoice")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.Invoice> transactioncurrency_invoice
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("transactioncurrency_invoice", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.Invoice>("transactioncurrency_invoice", null, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N transactioncurrency_invoicedetail
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("transactioncurrency_invoicedetail")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail> transactioncurrency_invoicedetail
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("transactioncurrency_invoicedetail", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("transactioncurrency_invoicedetail", null, value);
+			}
+		}
+		
+		/// <summary>
 		/// 1:N TransactionCurrency_KbArticle
 		/// </summary>
 		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("TransactionCurrency_KbArticle")]
@@ -118868,6 +124629,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.UoM>("unit_of_measurement_base_unit", Microsoft.Xrm.Sdk.EntityRole.Referenced, value);
+			}
+		}
+		
+		/// <summary>
+		/// 1:N unit_of_measurement_invoice_details
+		/// </summary>
+		[Microsoft.Xrm.Sdk.RelationshipSchemaNameAttribute("unit_of_measurement_invoice_details")]
+		public System.Collections.Generic.IEnumerable<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail> unit_of_measurement_invoice_details
+		{
+			get
+			{
+				return this.GetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("unit_of_measurement_invoice_details", null);
+			}
+			set
+			{
+				this.SetRelatedEntities<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>("unit_of_measurement_invoice_details", null, value);
 			}
 		}
 		
@@ -120258,6 +126035,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("isduplicatedetectionenabledwhengoingonline", value);
+			}
+		}
+		
+		/// <summary>
+		/// Enable or disable email conversation view on timeline wall selection.
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("isemailconversationviewenabled")]
+		public System.Nullable<bool> IsEmailConversationViewEnabled
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<bool>>("isemailconversationviewenabled");
+			}
+			set
+			{
+				this.SetAttributeValue("isemailconversationviewenabled", value);
 			}
 		}
 		
@@ -122212,6 +128005,28 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			get
 			{
 				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.IncidentResolution>();
+			}
+		}
+		
+		/// <summary>
+		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.Invoice"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.Invoice> InvoiceSet
+		{
+			get
+			{
+				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.Invoice>();
+			}
+		}
+		
+		/// <summary>
+		/// Gets a binding to the set of all <see cref="Skanetrafiken.Crm.Schema.Generated.InvoiceDetail"/> entities.
+		/// </summary>
+		public System.Linq.IQueryable<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail> InvoiceDetailSet
+		{
+			get
+			{
+				return this.CreateQuery<Skanetrafiken.Crm.Schema.Generated.InvoiceDetail>();
 			}
 		}
 		

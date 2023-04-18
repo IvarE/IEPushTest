@@ -42,8 +42,9 @@
     <entity>salesorderdetail</entity>
     <entity>transactioncurrency</entity>
     <entity>kbarticle</entity>
-	  <entity>ed_ticketpurchasespercustomerdata</entity>
-
+	  <entity>invoice</entity>
+      <entity>invoicedetail</entity>
+	<entity>ed_ticketpurchasespercustomerdata</entity>
     <entity>cgi_categorydetail</entity>
     <entity>cgi_creditorderrow</entity>
     <entity>cgi_setting</entity>

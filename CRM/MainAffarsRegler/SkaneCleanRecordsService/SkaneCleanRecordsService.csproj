@@ -66,8 +66,8 @@
     <Reference Include="Microsoft.Xrm.Tooling.Connector, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\Skanetrafiken.Crm\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.1.0.51\lib\net462\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\Skanetrafiken.Crm\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\Skanetrafiken.Crm\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="Quartz, Version=2.3.3.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
@@ -121,6 +121,29 @@
       <DependentUpon>CasesService.cs</DependentUpon>
     </Compile>
     <Compile Include="CloseCases.cs" />
+    <Compile Include="Pandora\EarlyBound\Entities\abssr_permit.cs" />
+    <Compile Include="Pandora\EarlyBound\Entities\abssr_permittype.cs" />
+    <Compile Include="Pandora\EarlyBound\Entities\CrmServiceContext.cs" />
+    <Compile Include="Pandora\EarlyBound\OptionSets\abssr_Globalyesno.cs" />
+    <Compile Include="Pandora\EarlyBound\OptionSets\abssr_patienttransport_abssr_AccomodationType.cs" />
+    <Compile Include="Pandora\EarlyBound\OptionSets\abssr_PermitType1.cs" />
+    <Compile Include="Pandora\EarlyBound\OptionSets\abssr_permittype1_StatusCode.cs" />
+    <Compile Include="Pandora\EarlyBound\OptionSets\abssr_permit_abssr_periodtypes.cs" />
+    <Compile Include="Pandora\EarlyBound\OptionSets\abssr_permit_StatusCode.cs" />
+    <Compile Include="Pandora\EarlyBound\OptionSets\abssr_transportservice_abssr_AccommodationType.cs" />
+    <Compile Include="Pandora\EarlyBound\OptionSets\abssr_transportservice_abssr_mobilityaidswhentransfer.cs" />
+    <Compile Include="Pandora\EarlyBound\OptionSets\abssr_transportservice_abssr_needofhelpduringtravel.cs" />
+    <Compile Include="Pandora\EarlyBound\OptionSets\abssr_transportservice_abssr_traveltypes.cs" />
+    <Compile Include="Pandora\EarlyBound\OptionSets\abssr_transportservice_abssr_verdict.cs" />
+    <Compile Include="Pandora\EarlyBound\OptionSets\abssr_travelallowance_abssr_missingdocuments.cs" />
+    <Compile Include="Pandora\EarlyBound\OptionSets\OptionSets.cs" />
+    <Compile Include="Pandora\Helpers\HelperWrapper.cs" />
+    <Compile Include="Pandora\PermitsService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Pandora\PermitsService.Designer.cs">
+      <DependentUpon>PermitsService.cs</DependentUpon>
+    </Compile>
     <Compile Include="ContactsService.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -131,6 +154,8 @@
     <Compile Include="DeleteAudits.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="InactivateContacts.cs" />
+    <Compile Include="Pandora\InactivatePermits.cs" />
+    <Compile Include="Pandora\Helpers\RetrieveHelperWrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
@@ -154,6 +179,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="connections.debug.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="connections.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -54,6 +54,8 @@ namespace Skanetrafiken.Crm.Controllers
     {
         protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        #region New Authentication Method (must be fixed to be Dynamic)
+
         public static string applicationId = "";
         public static string tenentId = "";
         public static string jojoCertificateName = "";
@@ -70,13 +72,9 @@ namespace Skanetrafiken.Crm.Controllers
         private static Lazy<IConfidentialClientApplication> _msalApplicationFactory =
             new Lazy<IConfidentialClientApplication>(() =>
             {
-                //var certificate = Identity.GetCertToUse("crm-sekundfasaden-acc-sp");
-                //var certificate = Identity.GetCertToUse("crm-sekundfasaden-prod-sp");
                 var certificate = Identity.GetCertToUse(jojoCertificateName);
                 _log.DebugFormat($"<----- Initializing: Cert - {certificate?.Subject} ----->");
 
-                //var TentantId = "e1fcb9f3-e5f9-496f-a583-e495dfd57497";
-                //var authority = string.Format(CultureInfo.InvariantCulture, "https://login.microsoftonline.com/e1fcb9f3-e5f9-496f-a583-e495dfd57497");
                 var authority = string.Format(CultureInfo.InvariantCulture, "https://login.microsoftonline.com/" + tenentId);
 
                 _log.DebugFormat($"<----- Initializing: Authority - {authority} ----->");
@@ -89,20 +87,9 @@ namespace Skanetrafiken.Crm.Controllers
                     .WithAuthority(new Uri(authority))
                     .Build();
 
-                //// PROD
-                //return ConfidentialClientApplicationBuilder
-                //    .Create("64c45900-b2dc-4818-8f29-a4b41cbcc21f")
-                //    .WithCertificate(certificate)
-                //    .WithAuthority(new Uri(authority))
-                //    .Build();
-
-                // ACC
-                //return ConfidentialClientApplicationBuilder
-                //    .Create("9e84b58e-20aa-4ceb-aa89-abd98253afd2")
-                //    .WithCertificate(certificate)
-                //    .WithAuthority(new Uri(authority))
-                //    .Build();
             });
+
+        #endregion
 
         /// <summary>
         /// Method to be used for retrieving all active/not used value codes for a specific MklId
@@ -228,7 +215,7 @@ namespace Skanetrafiken.Crm.Controllers
                 ValueCodeEvent valueCodeMsg = jsonMessage;// JsonConvert.DeserializeObject<ValueCodeEvent>(jsonMessage);
                 _log.Debug($"Th={threadId} - POST Call Input log - Amount: '{jsonMessage?.amount}', Created: {jsonMessage?.created}, Tag: {jsonMessage?.tag}, ValidFromDate: {jsonMessage?.validFromDate}, " +
                     $"ValidToDate: {jsonMessage?.validToDate}, VoucherCode: {jsonMessage?.voucherCode}, VoucherId: {jsonMessage?.voucherId}, VoucherType: {jsonMessage?.voucherType}, " +
-                    $"RemainingAmount: {jsonMessage?.remainingAmount}, Disabled: {jsonMessage?.disabled}, EanCode: {jsonMessage?.eanCode}, CouponId: {jsonMessage?.couponId}, Status: {jsonMessage?.status}");
+                    $"RemainingAmount: {jsonMessage?.remainingAmount}, Disabled: {jsonMessage?.disabled}, Status: {jsonMessage?.status}");
 
                 if (string.IsNullOrWhiteSpace(jsonMessage.voucherCode))
                     return response = Request.CreateResponse(HttpStatusCode.BadRequest, "VoucherCode cannot be empty.");

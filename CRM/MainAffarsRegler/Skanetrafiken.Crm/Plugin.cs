@@ -37,6 +37,7 @@ namespace Endeavor.Crm
             public const string SetState = "SetState";
             public const string SetStateDynamicEntity = "SetStateDynamicEntity";
             public const string Update = "Update";
+            public const string CalculatePrice = "CalculatePrice"; //Contact Svensson - need to update nuget. 
         };
 
         public class LocalPluginContext

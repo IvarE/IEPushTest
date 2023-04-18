@@ -13,6 +13,7 @@ using Generated = Skanetrafiken.Crm.Schema.Generated;
 using Skanetrafiken.Crm.Entities;
 using Microsoft.Xrm.Sdk;
 using Skanetrafiken.Crm.Properties;
+using Skanetrafiken.Crm.ColumnBlockSchemas;
 
 namespace Skanetrafiken.Crm
 {
@@ -268,6 +269,7 @@ namespace Skanetrafiken.Crm
             {
                 countryRef = CountryEntity.GetEntityRefForCountryCode(localContext, customerInfo.AddressBlock.CountryISO);
             }
+
             List<string> messages = new List<string>();
             bool error = false;
             switch (customerInfo.Source)
@@ -402,28 +404,21 @@ namespace Skanetrafiken.Crm
                 #endregion
                 #region Folkbokföring
                 case (int)Schema.Generated.ed_informationsource.Folkbokforing:
-                    if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.LastName) ||
-                        string.IsNullOrWhiteSpace(customerInfo.SocialSecurityNumber) ||
-
-                        (
-                        ((!customerInfo.UtvandradSpecified || !customerInfo.Utvandrad) &&
-                        customerInfo.AddressBlock == null ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.Line1) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.PostalCode) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.City) ||
-                        string.IsNullOrWhiteSpace(customerInfo.AddressBlock.CountryISO))
-                        //&&
-                        //((customerInfo.UtvandradSpecified && customerInfo.Utvandrad) &&
-                        //customerInfo.SpecAddressBlock == null ||
-                        //string.IsNullOrWhiteSpace(customerInfo.SpecAddressBlock.Line1) ||
-                        //string.IsNullOrWhiteSpace(customerInfo.SpecAddressBlock.CountryName))
-                        )
-                        )
+                    localContext.Trace("Update has source folkbokföring.");
+                    if (customerInfo.AreNameFieldsEmpty() || customerInfo.IsSocialSecurityNumberEmpty())
                     {
                         error = true;
                         messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                        localContext.Trace("Name or social security number is empty.");
                     }
+
+                    if (!customerInfo.IsRejected() && customerInfo.IsNullOrEmptyAddress())
+                    {
+                        error = true;
+                        messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                        localContext.Trace("Contact is not rejected and address is null.");
+                    }
+
                     break;
                 #endregion
                 #region AdmÄndraKund
@@ -497,6 +492,26 @@ namespace Skanetrafiken.Crm
                 #endregion
                 #region Annons
                 case (int)Generated.ed_informationsource.Annons: 
+                    //if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
+                    //    string.IsNullOrWhiteSpace(customerInfo.LastName))
+                    //{
+                    //    error = true;
+                    //    messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                    //}
+                    break;
+                #endregion
+                #region SR Post
+                case (int)Generated.ed_informationsource.SRInkommenPost:
+                    //if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
+                    //    string.IsNullOrWhiteSpace(customerInfo.LastName))
+                    //{
+                    //    error = true;
+                    //    messages.Add(ReturnMissingFields(localContext, customerInfo).ErrorMessage);
+                    //}
+                    break;
+                #endregion
+                #region 1177
+                case (int)Generated.ed_informationsource._1177:
                     //if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
                     //    string.IsNullOrWhiteSpace(customerInfo.LastName))
                     //{
@@ -585,8 +600,6 @@ namespace Skanetrafiken.Crm
                 StatusBlockCode = (int)StatusBlockCode.DataValid
             };
         }
-
-
 
         //ValidateBlockContactInfo
         internal static StatusBlock ValidateBlockContactInfo(Plugin.LocalPluginContext localContext, CustomerInfo customerInfo)

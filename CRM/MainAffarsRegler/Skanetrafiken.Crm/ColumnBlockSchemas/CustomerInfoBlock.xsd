@@ -29,6 +29,7 @@
             <xs:element minOccurs="0" name="CompanyRole" type="xs:int" />
             <xs:element minOccurs="0" name="Email" type="xs:string" />
             <xs:element minOccurs="0" name="Telephone" type="xs:string" />
+			<xs:element minOccurs="0" name="deleteCompanyRole" type="xs:boolean" />
             <xs:element minOccurs="0" name="isLockedPortal" type="xs:boolean" />
           </xs:sequence>
         </xs:complexType>
@@ -40,6 +41,7 @@
       <xs:element minOccurs="0" name="Email" type="xs:string" />
       <xs:element minOccurs="0" name="CreditsafeOk" type="xs:boolean" />
       <xs:element minOccurs="0" name="Avliden" type="xs:boolean" />
+	  <xs:element minOccurs="0" name="Skyddad" type="xs:boolean" />
       <xs:element minOccurs="0" name="Utvandrad" type="xs:boolean" />
       <xs:element minOccurs="0" name="EmailInvalid" type="xs:boolean" />
       <xs:element minOccurs="0" name="NewEmail" type="xs:string" />

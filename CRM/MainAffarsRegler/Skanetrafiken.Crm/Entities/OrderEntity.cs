@@ -28,26 +28,28 @@ namespace Skanetrafiken.Crm.Entities
 
             CalculateRollupFieldResponse response = (CalculateRollupFieldResponse)localContext.OrganizationService.Execute(request);
 
-            FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
-            if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
-            {
-                if (order != null && order.StateCode != null && order.StateCode == Generated.SalesOrderState.Canceled)
-                {
+            #region slot removal
+            //FeatureTogglingEntity feature = FeatureTogglingEntity.GetFeatureToggling(localContext, FeatureTogglingEntity.Fields.ed_bookingsystem);
+            //if (feature != null && feature.ed_bookingsystem != null && feature.ed_bookingsystem == true)
+            //{
+            //    if (order != null && order.StateCode != null && order.StateCode == Generated.SalesOrderState.Canceled)
+            //    {
 
-                    OrderEntity.UpdateSlotsInfo(localContext, order);
-                }
-                else if (order != null && order.StateCode != null && order.StateCode == Generated.SalesOrderState.Fulfilled)
-                {
-                    OrderEntity.UpdateSlotsInfo(localContext, order,true);
-                }
+            //        OrderEntity.UpdateSlotsInfo(localContext, order);
+            //    }
+            //    else if (order != null && order.StateCode != null && order.StateCode == Generated.SalesOrderState.Fulfilled)
+            //    {
+            //        OrderEntity.UpdateSlotsInfo(localContext, order,true);
+            //    }
 
-                //if (order.IsAttributeModified(preImage, OrderEntity.Fields.DiscountPercentage) || order.IsAttributeModified(preImage, OrderEntity.Fields.DiscountAmount))
-                //{
-                //    //Note Change logic (maybe remove this call) after using orderProduct and quoteProduct discounts instead
+            //    //if (order.IsAttributeModified(preImage, OrderEntity.Fields.DiscountPercentage) || order.IsAttributeModified(preImage, OrderEntity.Fields.DiscountAmount))
+            //    //{
+            //    //    //Note Change logic (maybe remove this call) after using orderProduct and quoteProduct discounts instead
 
-                   // OrderEntity.UpdateSlotsCustomPrice(localContext, order, preImage);
-                //}
-            }
+            //       // OrderEntity.UpdateSlotsCustomPrice(localContext, order, preImage);
+            //    //}
+            //}
+            #endregion
 
         }
 

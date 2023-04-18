@@ -7,6 +7,7 @@ using Endeavor.Crm;
 using System.Net;
 using System.IO;
 using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk.Query;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -52,11 +53,17 @@ namespace Skanetrafiken.Crm.Entities
         {
             try
             {
+                //TEST 22-02-23 CK ------
+
+                EmailEntity tstEmail = XrmRetrieveHelper.Retrieve<EmailEntity>(localContext, email.Id, new ColumnSet(true));
+
+                //TEST 22-02-23 CK ------
 
                 SendEmailRequest emailRequest = new SendEmailRequest();
                 emailRequest.EmailId = email.Id;
                 emailRequest.IssueSend = true;
-                emailRequest.TrackingToken = "";
+                //emailRequest.TrackingToken = "";
+                emailRequest.TrackingToken = !string.IsNullOrWhiteSpace(tstEmail.TrackingToken) ? tstEmail.TrackingToken : "";
 
                 SendEmailResponse sendEmailresp = (SendEmailResponse)localContext.OrganizationService.Execute(emailRequest);
 

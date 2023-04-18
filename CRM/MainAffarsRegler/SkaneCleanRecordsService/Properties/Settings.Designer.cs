@@ -103,7 +103,29 @@ namespace Endeavor.Crm.CleanRecordsService.Properties {
                 return ((string)(this["CredentialsFilePathAudits"]));
             }
         }
-        
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\Endeavor\\InactivatePermitsService.Credential.xml")]
+        public string CredentialsFilePathPermits
+        {
+            get
+            {
+                return ((string)(this["CredentialsFilePathPermits"]));
+            }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("* 2 ? * 1/1 *")]
+        public string InactivatePermitsCronExpression
+        {
+            get
+            {
+                return ((string)(this["InactivatePermitsCronExpression"]));
+            }
+        }
+
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("6")]

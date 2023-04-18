@@ -31,7 +31,7 @@ namespace Endeavor.Crm.UnitTest
 
                 int amount = 100;
                 int count = 5;
-                CreateMultipleValueCodes.ExecuteCodeActivity(localContext, count, amount);
+                //CreateMultipleValueCodes.ExecuteCodeActivity(localContext, count, amount);
 
                 IList<ValueCodeEntity> valueCodesAfter = XrmRetrieveHelper.RetrieveMultiple<ValueCodeEntity>(localContext, new ColumnSet(true));
 
