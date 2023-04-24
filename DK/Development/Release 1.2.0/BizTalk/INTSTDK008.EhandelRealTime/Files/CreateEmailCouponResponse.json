@@ -1,7 +1,0 @@
-{
-    "OrderNumber": "PO123456789",
-    "OrderCreated": true,
-    "Message": "OrderSucessfullyCreated",
-    "ErrorMessage": null,
-    "StatusCode": 200
-}
