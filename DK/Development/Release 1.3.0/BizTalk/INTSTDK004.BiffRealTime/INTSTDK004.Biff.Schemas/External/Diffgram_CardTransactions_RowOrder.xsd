@@ -1,8 +1,0 @@
-<?xml version="1.0" standalone="yes"?>
-<xs:schema targetNamespace="urn:schemas-microsoft-com:xml-msdata" xmlns:mstns="http://cubic.com" xmlns="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified" xmlns:app1="urn:schemas-microsoft-com:xml-msdata" xmlns:app3="http://Biff.com/CardTransactions.xsd" xmlns:app2="urn:schemas-microsoft-com:xml-diffgram-v1">
-  <xs:import namespace="urn:schemas-microsoft-com:xml-diffgram-v1" schemaLocation="Diffgram_CardTransactions.xsd" />
-  <xs:import namespace="http://cubic.com" schemaLocation="GetCardTransactionsResponse.xsd" />
-  <xs:import namespace="http://Biff.com/CardTransactions.xsd" schemaLocation="CardTransactions.xsd" />
-  <xs:attribute name="SchemaSerializationMode" app1:Prefix="msdata" type="xs:string" />
-  <xs:attribute name="rowOrder" app1:Prefix="msdata" type="xs:string" />
-</xs:schema>
