@@ -1,5 +1,0 @@
-﻿<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-  <s:Body>
-    <RequestCreateCaseResponse xmlns="http://tempuri.org/"/>
-  </s:Body>
-</s:Envelope>
