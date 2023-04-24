@@ -1,5 +1,0 @@
-﻿CREATE TABLE [dbo].[OptionSetIds] (
-    [OptionSetId] UNIQUEIDENTIFIER NOT NULL,
-    CONSTRAINT [XPKOptionSetIds] PRIMARY KEY CLUSTERED ([OptionSetId] ASC)
-);
-
