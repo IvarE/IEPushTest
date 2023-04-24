@@ -1,1 +1,0 @@
-CREATE NONCLUSTERED INDEX IX_ED_QueueItemBase_Id_StateCode_StageCode_ObjectId ON QueueItemBase (QueueId, StateCode, cgi_incidentstagecode, ObjectId);
