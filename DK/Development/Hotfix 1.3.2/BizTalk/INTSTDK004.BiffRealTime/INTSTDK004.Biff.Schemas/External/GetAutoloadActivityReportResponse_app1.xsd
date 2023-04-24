@@ -1,8 +1,0 @@
-<?xml version="1.0" standalone="yes"?>
-<xs:schema targetNamespace="urn:schemas-microsoft-com:xml-msdata" xmlns:mstns="http://cubic.com" xmlns="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified" xmlns:app1="urn:schemas-microsoft-com:xml-msdata" xmlns:app2="urn:schemas-microsoft-com:xml-diffgram-v1" xmlns:app3="http://BIFF.org/AutoloadActivity.xsd">
-  <xs:import namespace="http://BIFF.org/AutoloadActivity.xsd" schemaLocation="GetAutoloadActivityReportResponse_app3.xsd" />
-  <xs:import namespace="urn:schemas-microsoft-com:xml-diffgram-v1" schemaLocation="GetAutoloadActivityReportResponse_app2.xsd" />
-  <xs:import namespace="http://cubic.com" schemaLocation="GetAutoloadActivityReportResponse.xsd" />
-  <xs:attribute name="SchemaSerializationMode" app1:Prefix="msdata" type="xs:string" />
-  <xs:attribute name="rowOrder" app1:Prefix="msdata" type="xs:string" />
-</xs:schema>
