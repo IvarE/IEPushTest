@@ -72,30 +72,20 @@ namespace Endeavor.Crm.CleanRecordsService
 
                 string runFullData = ConfigurationManager.AppSettings["runFullData"];
 
-                ExecuteTransactionResponse responseWithResults = null;
-
                 if (runFullData == "true")
                 {
                     _log.Debug($"This is a Production Run.");
-                    responseWithResults = RunCloseCasesProduction(localContext);
+                    RunCloseCasesProduction(localContext);
                 }
                 else if (runFullData == "false")
                 {
                     _log.Debug($"This is a Test Run.");
-                    responseWithResults = RunCloseCasesTest(localContext);
+                    RunCloseCasesTest(localContext);
                 }
                 else
+                {
                     _log.Debug($"The App Setting 'runFullData' is neither 'true' or 'false'.");
-
-                // process the results returned in the responses
-                //if (responseWithResults != null && responseWithResults.IsFaulted == true)
-                //{
-                //    _log.Error(String.Join("; ", responseWithResults.Responses.ToList().FindAll(x => x.Fault != null).Select(x => x.Fault.Message)));
-                //}
-                //else if (responseWithResults != null && responseWithResults.IsFaulted == false)
-                //{
-
-                //}
+                }
 
                 _log.Info($"CloseCases Done");
             }
@@ -105,48 +95,54 @@ namespace Endeavor.Crm.CleanRecordsService
             }
         }
 
-        public static ExecuteTransactionResponse RunCloseCasesProduction(Plugin.LocalPluginContext localContext)
+        public static void RunCloseCasesProduction(Plugin.LocalPluginContext localContext)
         {
             QueryExpression queryCases = new QueryExpression(IncidentEntity.EntityLogicalName);
+            queryCases.ColumnSet = new ColumnSet(IncidentEntity.Fields.TicketNumber);
             queryCases.NoLock = true;
-            queryCases.ColumnSet = new ColumnSet(IncidentEntity.Fields.StateCode, IncidentEntity.Fields.IncidentStageCode, IncidentEntity.Fields.CreatedOn, IncidentEntity.Fields.TicketNumber);
             queryCases.Criteria.AddCondition(IncidentEntity.Fields.StateCode, ConditionOperator.Equal, (int)IncidentState.Active);
             queryCases.Criteria.AddCondition(IncidentEntity.Fields.IncidentStageCode, ConditionOperator.Equal, (int)incident_incidentstagecode.NotAnswered);
             queryCases.Criteria.AddCondition(IncidentEntity.Fields.CreatedOn, ConditionOperator.OlderThanXYears, 1); //Cases Older than 1 Year
 
+            #if DEBUG
+            queryCases.ColumnSet.AddColumns(IncidentEntity.Fields.StateCode, IncidentEntity.Fields.IncidentStageCode, IncidentEntity.Fields.CreatedOn);
+            #endif
+
             List<IncidentEntity> lUnansweredCases = XrmRetrieveHelper.RetrieveMultiple<IncidentEntity>(localContext, queryCases);
-            _log.Info($"Found " + lUnansweredCases.Count + " Unanswered Cases.");
+            _log.Info($"Found " + lUnansweredCases.Count + " unanswered Cases.");
 
-            List<OrganizationRequest> requestsLst = new List<OrganizationRequest>();
-
+            List<OrganizationRequest> requestsList = new List<OrganizationRequest>();
             foreach (IncidentEntity incident in lUnansweredCases)
             {
+                #if DEBUG
                 _log.Debug($"Processing Incident: {incident.TicketNumber} CreatedOn: {incident.CreatedOn} StateCode: {incident.StateCode} IncidentStageCode: {incident.IncidentStageCode}");
+                #endif
                 try
                 {
-                    IncidentEntity nIncident = new IncidentEntity();
-                    nIncident.Id = incident.Id;
-                    nIncident.IncidentStageCode = incident_incidentstagecode.Resolved;
-
                     UpdateRequest updateCase = new UpdateRequest()
                     {
-                        Target = nIncident
-                    };
-
-                    IncidentResolution incidentResolution = new IncidentResolution
-                    {
-                        Subject = "Resolved Incident " + incident.Id,
-                        IncidentId = new EntityReference(Incident.EntityLogicalName, incident.Id)
+                        Target = new IncidentEntity()
+                        {
+                            IncidentId = incident.Id,
+                            IncidentStageCode = incident_incidentstagecode.Resolved
+                        }
                     };
 
                     CloseIncidentRequest closeIncidentRequest = new CloseIncidentRequest
                     {
-                        IncidentResolution = incidentResolution,
+                        IncidentResolution = new IncidentResolution
+                        {
+                            Subject = "Resolved Incident " + incident.Id,
+                            IncidentId = new EntityReference(Incident.EntityLogicalName, incident.Id)
+                        },
                         Status = new OptionSetValue((int)incident_statuscode.ProblemSolved)
                     };
 
-                    requestsLst.Add(updateCase);
-                    requestsLst.Add(closeIncidentRequest);
+                    requestsList.Add(new ExecuteTransactionRequest
+                    {
+                        Requests = new OrganizationRequestCollection() { updateCase, closeIncidentRequest },
+                        ReturnResponses = false
+                    });
 
                     _log.InfoFormat($"Incident: {incident.TicketNumber} added to Request Batch to be Resolved.");
                 }
@@ -156,10 +152,11 @@ namespace Endeavor.Crm.CleanRecordsService
                 }
             }
 
-            return Helper.ExecuteMultipleRequestsTransaction(localContext, requestsLst, true);
+            
+            Helper.ExecuteMultipleRequests(localContext, requestsList, true, true, 100);
         }
 
-        public static ExecuteTransactionResponse RunCloseCasesTest(Plugin.LocalPluginContext localContext)
+        public static void RunCloseCasesTest(Plugin.LocalPluginContext localContext)
         {
             bool runSpecificDate = true;
 
@@ -198,7 +195,7 @@ namespace Endeavor.Crm.CleanRecordsService
             {
                 try
                 {
-                    if(incident.StateCode.Value != IncidentState.Active || incident.IncidentStageCode.Value != incident_incidentstagecode.NotAnswered ||
+                    if (incident.StateCode.Value != IncidentState.Active || incident.IncidentStageCode.Value != incident_incidentstagecode.NotAnswered ||
                         (DateTime.Now - incident.CreatedOn.Value).TotalDays < 365)
                     {
                         _log.Debug($"Irrelevant Incident: {incident.TicketNumber} CreatedOn: {incident.CreatedOn} StateCode: {incident.StateCode} IncidentStageCode: {incident.IncidentStageCode}");
@@ -242,7 +239,7 @@ namespace Endeavor.Crm.CleanRecordsService
 
             _log.Debug($"Added {unansweredCases} Cases to be Resolved.");
 
-            return Helper.ExecuteMultipleRequestsTransaction(localContext, requestsLst, true);
+            Helper.ExecuteMultipleRequestsTransaction(localContext, requestsLst, true);
         }
     }
 }

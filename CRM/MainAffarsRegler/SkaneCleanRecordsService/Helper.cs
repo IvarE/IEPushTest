@@ -17,7 +17,7 @@ namespace Endeavor.Crm.CleanRecordsService
         /// <param name="continueOnError">Indicates whether further execution of message requests should continue if a fault is returned for the current request being processed.</param>
         /// <param name="returnResponses">Indicates if a response for each message request processed should be returned. </param>
         /// <returns></returns>
-        public static ExecuteMultipleResponse ExecuteMultipleRequests(Plugin.LocalPluginContext localContext, List<OrganizationRequest> requestsLst, Boolean continueOnError, Boolean returnResponses, int defaultBatchSize = 250)
+        public static ExecuteMultipleResponse ExecuteMultipleRequests(Plugin.LocalPluginContext localContext, List<OrganizationRequest> requestsLst, bool continueOnError, bool returnResponses, int defaultBatchSize = 250)
         {
             // return reponses
             ExecuteMultipleResponse responseWithResults = null;
@@ -47,7 +47,7 @@ namespace Endeavor.Crm.CleanRecordsService
             int offset = 0;
             while (organizationRequestsList.Count > offset)
             {
-                var tempRequestSet = organizationRequestsList.Skip(offset).Take(batchSize);
+                var tempRequestSet = organizationRequestsList.Skip(offset).Take(batchSize).ToList();
 
                 // Create an empty organization request collection.
                 requestWithResults.Requests = new OrganizationRequestCollection();
@@ -58,6 +58,8 @@ namespace Endeavor.Crm.CleanRecordsService
                 {
                     responseWithResults =
                         (ExecuteMultipleResponse)localContext.OrganizationService.Execute(requestWithResults);
+
+                    localContext.Trace($"Batch no. {offset / batchSize + 1}: Processed {tempRequestSet.Count + offset} of {organizationRequestsList.Count}.");
                 }
                 catch (FaultException<OrganizationServiceFault> fault)
                 {
@@ -74,6 +76,19 @@ namespace Endeavor.Crm.CleanRecordsService
                             batchSize = maxBatchSize;
                             continue;
                         }
+                    }
+                }
+                catch (TimeoutException timeoutException)
+                {
+                    if (continueOnError)
+                    {
+                        localContext.Trace("Timeout caught. Continuing with next batch.");
+                        localContext.Trace(timeoutException.Message);
+                        continue;
+                    }
+                    else
+                    {
+                        throw;
                     }
                 }
 
