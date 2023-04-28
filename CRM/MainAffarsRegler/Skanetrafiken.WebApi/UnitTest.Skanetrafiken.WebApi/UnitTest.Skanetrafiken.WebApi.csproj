@@ -204,6 +204,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="spkl.json" />
     <None Include="TestMessages\Pass_duplicateContactCreated.json" />
   </ItemGroup>
   <ItemGroup>

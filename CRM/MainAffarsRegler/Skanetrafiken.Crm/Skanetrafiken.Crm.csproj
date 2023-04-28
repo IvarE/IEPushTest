@@ -424,6 +424,7 @@
     <None Include="Service References\OCTest.Kassagirot\Skanetrafiken.Crm.OCTest.Kassagirot.singleResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="spkl.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Generators\GenerateEntities.cmd" />

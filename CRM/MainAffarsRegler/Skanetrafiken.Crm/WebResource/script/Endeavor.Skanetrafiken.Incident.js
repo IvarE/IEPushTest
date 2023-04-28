@@ -78,12 +78,12 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
             var reportUrl = serverUrl + "/crmreports/viewer/viewer.aspx?action=run&context=records&helpID=" +
                 reportName + "&id=" + reportGuid + "&records=" + entityId + "&recordstype=" + entityType;
-                
+
             Xrm.Navigation.openUrl(reportUrl, urlOptions);
         },
 
         onLoad: function (executionContext) {
-            
+
             var formContext = executionContext.getFormContext();
 
             var contactAttribute = formContext.getAttribute("cgi_contactid")
@@ -92,7 +92,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             if (contactAttribute && customerEmailAttribute && customerEmailAttribute.getValue && !customerEmailAttribute.getValue() &&
                 contactAttribute.getValue && contactAttribute.getValue() && contactAttribute.getValue().length > 0) {
 
-                
+
                 var contactId = contactAttribute.getValue()[0].id.replace("{", "").replace("}", "");
                 var columnSet = "emailaddress1,emailaddress2";
                 Xrm.WebApi.retrieveMultipleRecords("contact", "?$select=" + columnSet + "&$filter=contactid eq " + contactId).then(
@@ -117,6 +117,8 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         //Form Methods CGI Incident (from incidentLibrary.js)
         onFormLoad: function (executionContext) {
             var formContext = executionContext.getFormContext();
+
+
 
             Endeavor.Skanetrafiken.Incident.setVisibilityOnLoad(formContext);
             Endeavor.Skanetrafiken.Incident.setDefaultOnCreate(formContext);
@@ -157,6 +159,10 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
             if (_cgi_contactid != null)
                 Endeavor.Skanetrafiken.Incident.setCustomerFromContact(formContext);
+
+
+
+
         },
 
         onLoadHideShowTypeOfContactFields: function (executionContext) {
@@ -339,7 +345,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 var src = webResourceControl.getSrc();
                 webResourceControl.setSrc(null);
                 webResourceControl.setSrc(src);
-                
+
             } catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Incident.onChangeActionDateTime\n\n" + e.message);
             }
@@ -351,7 +357,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
          * */
         hideOrShowTypeOfContactFields: function (formContext) {
             try {
-               
+
                 var contactId = formContext.getAttribute("cgi_contactid");
                 if (contactId && contactId.getValue()) {
                     var contactValue = contactId.getValue();
@@ -395,7 +401,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
                                 } else
                                     setTimeout(function () { Endeavor.Skanetrafiken.Incident.hideOrShowTypeOfContactFields(formContext); }, 300);
-                            
+
                             } else
                                 setTimeout(function () { Endeavor.Skanetrafiken.Incident.hideOrShowTypeOfContactFields(formContext); }, 300);
                         },
@@ -472,6 +478,30 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         setDefaultOnCreate: function (formContext) {
             try {
                 var _currentdate = new Date();
+                var incidentFormId = Xrm.Page.ui.formSelector.getCurrentItem().getId();
+
+                if (incidentFormId == "d7a7581b-70d0-45a0-93ab-2e3561513ce2" || incidentFormId == "04aa6ce6-bf13-4a0c-a4d1-9072d469e42b") {
+                    var title = formContext.getAttribute("title").getValue();
+                    if (title == null)
+                        formContext.getAttribute("title").setRequiredLevel("none");
+
+                    var description = formContext.getAttribute("description").getValue();
+                    if (description == null)
+                        formContext.getAttribute("description").setRequiredLevel("none");
+
+                    var casetypecode = formContext.getAttribute("casetypecode").getValue();
+                    if (casetypecode == null)
+                        formContext.getAttribute("casetypecode").setValue(285050004);
+
+                    var caseorigincode = formContext.getAttribute("caseorigincode").getValue();
+                    if (caseorigincode == null)
+                        formContext.getAttribute("caseorigincode").setValue(1);
+
+                    var prioritycode = formContext.getAttribute("prioritycode").getValue();
+                    if (prioritycode == null)
+                        formContext.getAttribute("prioritycode").setValue(2);
+                }
+
                 var arrivalDate = formContext.getAttribute("cgi_arrival_date").getValue();
                 if (arrivalDate == null)
                     formContext.getAttribute("cgi_arrival_date").setValue(_currentdate);
@@ -518,7 +548,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                         "cgi_passhasbeenopenedatleastonce": true,
                         "ownerid@odata.bind": "/systemusers(" + currentUserId + ")"
                     }
-                    
+
                     Xrm.WebApi.updateRecord("incident", entityId, updateDTO).then(
                         function success(result) {
 
@@ -565,7 +595,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
         setCustomerOnLoad_callback: function (result, formContext) {
             try {
-                if (result == null || result.entities == null || result.entities.length < 1 ||result.entities[0] == null) {
+                if (result == null || result.entities == null || result.entities.length < 1 || result.entities[0] == null) {
                     alert("Det finns ingen default kund definerad!");
                 }
                 else {
@@ -634,8 +664,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     var lookUpObjectValue = lookupObject.getValue();
                     if ((lookUpObjectValue != null)) {
                         var _categoryid = formContext.getAttribute(_fieldName).getValue()[0].id;
-                        if (_categoryid != null)
-                        {
+                        if (_categoryid != null) {
                             var _categoryidClean = Endeavor.formscriptfunctions.cleanIdField(_categoryid);
                             Endeavor.OData_Querys.GetParentCategory(_categoryidClean, formContext);
                         }
@@ -717,12 +746,11 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
                         var _categoryid = formContext.getAttribute(_fieldName).getValue()[0].id;
 
-                        if (_categoryid != null)
-                        {
+                        if (_categoryid != null) {
                             var _categoryidClean = Endeavor.formscriptfunctions.cleanIdField(_categoryid);
                             Endeavor.OData_Querys.GetParentCategory3(_categoryidClean, formContext);
                         }
-                        
+
                     }
                     else {
                         var _update_fieldname_cat1 = "cgi_casdet_row" + _category3_onchange_rownr + "_cat1id";
@@ -832,8 +860,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         //  Endeavor.OData_Querys.GetParentCategory2 - does not exist
         category3_onchange_get_cat1: function (_id) {
             try {
-                if (_id != null)
-                {
+                if (_id != null) {
                     var _idClean = Endeavor.formscriptfunctions.cleanIdField(_id);
 
                     Endeavor.OData_Querys.GetParentCategory2(_idClean, Endeavor.Skanetrafiken.Incident.category3_sub_onchange_callback, Endeavor.Skanetrafiken.Incident.category3_sub_onchange_completed);
@@ -1032,18 +1059,24 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     return;
                 }
 
-                //var category = Endeavor.formscriptfunctions.GetValue("cgi_casdet_row1_cat3id", formContext);
+                var title = formContext.getAttribute("title").getValue();
+                var description = formContext.getAttribute("description").getValue();
                 var cgi_casdet_row1_cat3idLookup = Endeavor.formscriptfunctions.GetValue("cgi_casdet_row1_cat3id", formContext);
                 if (!cgi_casdet_row1_cat3idLookup) {
-                    alert("Kan inte avsluta ärendet: första kategorin saknas.");
+                    alert("Kan inte avsluta ärendet: första kategori saknas.");
                     return;
-                }
+                } else if (title == null) {
+                    alert("Kan inte avsluta ärendet: ärendetitel saknas.");
+                    return;
+                } else if (description == null) {
+                    alert("Kan inte avsluta ärendet: beskrivning saknas.");
+                    return;
+                } 
 
                 //START validera trafikinfo START
                 //fortsätt valideringen endast ifall användaren INTE explicit angivit att ingen trafikinformation ska registreras
                 if (formContext.getAttribute("cgi_notravelinfo").getValue() != 1 && cgi_casdet_row1_cat3idLookup) {
-                    if (caseid != null)
-                    {
+                    if (caseid != null) {
                         var caseid = Endeavor.formscriptfunctions.cleanIdField(caseid);
 
                         var globalContext = Xrm.Utility.getGlobalContext();
@@ -1066,7 +1099,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                             url = clientUrl + "/api/data/v9.0/cgi_categorydetails(" + categoryId + ")?$select=cgi_requirestravelinfo";
                             var categoryDetail = Endeavor.formscriptfunctions.fetchJSONResults(url);
 
-                            
+
                             if (categoryDetail["cgi_requirestravelinfo"] == 1) {
                                 //ge användaren en möljighet att avsluta ärendet ändå utan trafikinfo genom att klicka ok
                                 if (confirm("Ärenden i kategori " + cgi_casdet_row1_cat3idLookup[0].name + " förväntas innehålla trafikinformation, vilken saknas i detta ärende. Vill du verkligen avsluta ärendet utan trafikinformation? ")) {
@@ -1201,7 +1234,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 //    return;
                 //}
 
-                
+
                 var hasRep = null;
                 var cgi_representativ = formContext.getAttribute("cgi_representativid").getValue();
 
@@ -1301,7 +1334,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             try {
                 var _returnValue = "parameter_regardingid=" + Endeavor.formscriptfunctions.GetObjectID(formContext);
                 var title = Endeavor.formscriptfunctions.GetValue("title", formContext);
-                
+
                 title = title.replace("%", " procent");
                 _returnValue += "&parameter_regardingname=" + title;
                 _returnValue += "&parameter_regardingtype=incident";
@@ -1330,7 +1363,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     parameterValue += "&parameter_customername=" + Endeavor.formscriptfunctions.GetLookupName("cgi_contactid", formContext);
                     parameterValue += "&parameter_customertype=contact";
                     //cgi_contactid
-                   
+
                 }
                 else {
                     parameterValue += "parameter_customerid=" + Endeavor.formscriptfunctions.GetLookupid("cgi_accountid", formContext);
@@ -1353,7 +1386,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 var _cgi_accountid = Endeavor.formscriptfunctions.GetLookupid("cgi_accountid", formContext),
                     _representative = Endeavor.formscriptfunctions.GetLookupid("cgi_representativid", formContext),
                     _cgi_contactid = Endeavor.formscriptfunctions.GetLookupid("cgi_contactid", formContext);
-                
+
 
                 // If the customer as a representative all communication should go through the representative.
                 if (_representative != null) {
@@ -1365,7 +1398,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     param["parameter_customerid"] = Endeavor.formscriptfunctions.GetLookupid("cgi_contactid", formContext);
                     param["parameter_customername"] = Endeavor.formscriptfunctions.GetLookupName("cgi_contactid", formContext);
                     param["parameter_customertype"] = "contact";
-                
+
                 }
                 else {
                     //cgi_accountid
@@ -1478,7 +1511,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         onGridFileLinkRecordSelect: function (executionContext) {
 
             try {
-                
+
                 //DevOps 9168: Apply changes to the links in the section.
                 var formContext = executionContext.getFormContext();
                 var disableFields = ["cgi_url"];
@@ -1512,8 +1545,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
                                     parent.Xrm.Page.ui.clearFormNotification("attachmentInfo");
                                 }
-                                else
-                                {
+                                else {
                                     //alert(encryptedLink);
                                     parent.Xrm.Page.getControl("FileLinks").refresh();
 
@@ -1542,7 +1574,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         lockFields: function (executionContext, disableFields) {
 
             try {
-                
+
                 var formContext = executionContext.getFormContext();
                 var currentEntity = formContext.data.entity;
                 currentEntity.attributes.forEach(function (attribute, i) {
@@ -1586,4 +1618,6 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
         }
     };
+
+
 }
