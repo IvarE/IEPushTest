@@ -1057,16 +1057,20 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 var title = formContext.getAttribute("title").getValue();
                 var description = formContext.getAttribute("description").getValue();
                 if (title == null) {
-                    alert("Kan inte avsluta ärendet: ärendetitel saknas.");
+                    alert("Kan inte stänga ärendet: ärendetitel saknas.");
                     return;
                 } else if (description == null) {
-                    alert("Kan inte avsluta ärendet: beskrivning saknas.");
+                    alert("Kan inte stänga ärendet: beskrivning saknas.");
                     return;
-                } 
+                } else {
+                    Endeavor.formscriptfunctions.SaveAndCloseEntity(formContext);
+                }
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Incident.closeCase\n\n" + e.message);
             }
+
+
         },
 
         //Ribbon Methods CGI Incident (from incidentRibbon.js)
