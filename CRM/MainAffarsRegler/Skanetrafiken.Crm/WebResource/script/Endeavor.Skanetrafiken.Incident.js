@@ -1050,6 +1050,25 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             }
         },
 
+        //Ribbon Method
+        saveAndCloseCase: function (formContext) {
+            try {
+
+                var title = formContext.getAttribute("title").getValue();
+                var description = formContext.getAttribute("description").getValue();
+                if (title == null) {
+                    alert("Kan inte avsluta ärendet: ärendetitel saknas.");
+                    return;
+                } else if (description == null) {
+                    alert("Kan inte avsluta ärendet: beskrivning saknas.");
+                    return;
+                } 
+            }
+            catch (e) {
+                alert("Fel i Endeavor.Skanetrafiken.Incident.closeCase\n\n" + e.message);
+            }
+        },
+
         //Ribbon Methods CGI Incident (from incidentRibbon.js)
         resolveCase: function (formContext) {
             try {
