@@ -156,6 +156,7 @@
     <Compile Include="Entities\QuoteProductEntity.cs" />
     <Compile Include="Entities\SlotsEntity.cs" />
     <Compile Include="Entities\TicketInfoEntity.cs" />
+    <Compile Include="Entities\TicketPurchasesPerCustomerDataEntity.cs" />
     <Compile Include="Helper\MarketingInfo.cs" />
     <Compile Include="Helper\PhoneNumberUtility.cs" />
     <Compile Include="JsonHelper.cs" />
@@ -166,6 +167,9 @@
     <Compile Include="PostTicketInfoCreate.cs" />
     <Compile Include="PostTicketInfoDelete.cs" />
     <Compile Include="PostTicketInfoUpdate.cs" />
+    <Compile Include="PostTicketPurchasesPerCustomerDataCreate.cs" />
+    <Compile Include="PostTicketPurchasesPerCustomerDataDelete.cs" />
+    <Compile Include="PostTicketPurchasesPerCustomerDataUpdate.cs" />
     <Compile Include="PreValidationOrderProductDelete.cs" />
     <Compile Include="PostOrderProductUpdate.cs" />
     <Compile Include="PostOrderUpdate.cs" />
