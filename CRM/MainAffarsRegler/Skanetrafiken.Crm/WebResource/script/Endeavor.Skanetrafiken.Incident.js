@@ -1053,6 +1053,11 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         //Ribbon Method
         saveAndCloseCase: function (formContext) {
             try {
+                var caseid = formContext.data.entity.getId();
+                if (Endeavor.formscriptfunctions.MandatoryPopulated(formContext) == false) {
+                    alert("Ett eller flera obligatoriska fält saknar värde!");
+                    return;
+                }
 
                 var title = formContext.getAttribute("title").getValue();
                 var description = formContext.getAttribute("description").getValue();
