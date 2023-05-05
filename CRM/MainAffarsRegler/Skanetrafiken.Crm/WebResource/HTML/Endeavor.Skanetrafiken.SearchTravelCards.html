@@ -213,7 +213,7 @@
 
     <script>
         document.getElementById("cardId").addEventListener('keydown', function (event) {
-            if (event.code === 'Enter') {
+            if (event.key === 'Enter') {
                 clearMessageField();
                 Endeavor.Skanetrafiken.SearchTravelCards.getInfoFromCardId();
             }

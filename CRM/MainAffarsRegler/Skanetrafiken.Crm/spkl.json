@@ -13,9 +13,11 @@
         },
         {
           "uniquename": "ed_/script/Endeavor.Skanetrafiken.Incident.js",
-          "file": "/WebResource/script/Endeavor.Skanetrafiken.Incident.js",
-          "description": null,
-          "ts": null
+          "file": "/WebResource/script/Endeavor.Skanetrafiken.Incident.js"
+        },
+        {
+          "uniquename": "ed_/html/Endeavor.Skanetrafiken.SearchTravelCards.html",
+          "file": "/WebResource/HTML/Endeavor.Skanetrafiken.SearchTravelCards.html"
         }
       ]
     }
