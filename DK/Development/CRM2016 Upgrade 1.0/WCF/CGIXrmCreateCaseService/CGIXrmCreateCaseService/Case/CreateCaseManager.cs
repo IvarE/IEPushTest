@@ -147,9 +147,18 @@ namespace CGIXrmCreateCaseService.Case
             if (settings == null)
                 settings = GetSettings();
 
+            string countryISO = null;
             // RGOL Changed, now they send ISO-code.
             //string countryISO = CountryEntity.GetCountryCodeFromName(_xrmManager, request.CustomerAddress1Country);
-            string countryISO = request.CustomerAddress1Country != null ? request.CustomerAddress1Country : "SE";       // Default to SE.
+            if (request.CustomerAddress1Country != null)
+            {
+                countryISO = request.CustomerAddress1Country;
+            }
+            else if (request.CustomerAddress1Postalcode != null && request.CustomerAddress1Postalcode.Length == 5)
+            {
+                countryISO = "SE";
+            }
+
             if (countryISO == null)
             {
                 _log.Error($"RGOL:Warning:Failed to find countryISO code for country {request.CustomerAddress1Country}");

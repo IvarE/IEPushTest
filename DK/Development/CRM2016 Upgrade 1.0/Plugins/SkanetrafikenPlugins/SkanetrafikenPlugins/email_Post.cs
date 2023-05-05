@@ -24,7 +24,7 @@ namespace CRM2013.SkanetrafikenPlugins
                     {
                         EntityReference regarding = data.Target.Attributes["regardingobjectid"] as EntityReference;
                         string activitytype = data.Target.LogicalName;
-                        
+
                         if (regarding != null && regarding.LogicalName.Equals("incident"))
                         {
                             Entity incident = _getIncident(data, regarding.Id);
@@ -34,21 +34,16 @@ namespace CRM2013.SkanetrafikenPlugins
                                 description = incident.Attributes["description"].ToString();
                             }
 
-                            if (activitytype == "email" )
+                            if (activitytype == "email" && string.IsNullOrWhiteSpace(description))
                             {
                                 Entity activity = _getActivity(data, data.Target.Id);
                                 string activityDescription = "";
 
                                 if (activity.Attributes.Contains("description"))
                                     activityDescription = activity.Attributes["description"].ToString();
-                                string newdescription = "";
 
-                                if (description == null || description == "")
-                                {
-                                    newdescription = description + "\n\n" + activityDescription;
-                                    newdescription = Html2Plain(newdescription);
-                                }
-                              
+                                string newdescription = description + "\n\n" + activityDescription;
+                                newdescription = Html2Plain(newdescription);
 
                                 EntityReference refcustomerid = null;
                                 if (incident.Attributes.Contains("customerid"))
