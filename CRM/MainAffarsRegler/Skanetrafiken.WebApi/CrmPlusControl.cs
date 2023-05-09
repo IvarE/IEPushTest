@@ -5126,10 +5126,7 @@ namespace Skanetrafiken.Crm.Controllers
                                 updateSkaKort.Id = skakort.Id;
                                 updateSkaKort.ed_Contact = contact.ToEntityReference();
 
-                                if (skakort.ed_name != skaKortInfo.CardNumber)
-                                {
-                                    updateSkaKort.ed_name = skaKortInfo.CardNumber;
-                                }
+                                updateSkaKort.ed_name = !string.IsNullOrWhiteSpace(skaKortInfo.CardName) ? skaKortInfo.CardName : skaKortInfo.CardNumber;
 
                                 if (skakort.ed_CardNumber != skaKortInfo.CardNumber)
                                 {
@@ -5155,7 +5152,7 @@ namespace Skanetrafiken.Crm.Controllers
                             _log.Info($"Th={threadId} - RegisterBuyAndSendSkaKortPost: Creating new SkaKort with CardNumber {skaKortInfo.CardNumber}.");
 
                             SkaKortEntity newSkaKort = new SkaKortEntity();
-                            newSkaKort.ed_name = skaKortInfo.CardNumber;
+                            newSkaKort.ed_name = !string.IsNullOrWhiteSpace(skaKortInfo.CardName) ? skaKortInfo.CardName : skaKortInfo.CardNumber;
                             newSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
                             newSkaKort.ed_Contact = contact.ToEntityReference();
                             newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
@@ -5365,37 +5362,28 @@ namespace Skanetrafiken.Crm.Controllers
                     }
                     else
                     {
-                        if (skakort.statecode != Generated.ed_SKAkortState.Inactive)
+                        _log.Info($"Th={threadId} - RemoveSkaKortContactOrAccount: Found Inactive SkaKort. SkaKortId: {skakort.Id}.");
+                        SkaKortEntity updateSkakort = new SkaKortEntity();
+                        updateSkakort.Id = skakort.Id;
+
+                        if (skaKortInfo.InformationSource == (int)Generated.ed_informationsource.ForetagsPortal &&
+                            skakort.ed_Account != null)
                         {
-                            _log.Info($"Th={threadId} - RemoveSkaKortContactOrAccount: Found Inactive SkaKort. SkaKortId: {skakort.Id}.");
-                            SkaKortEntity updateSkakort = new SkaKortEntity();
-                            updateSkakort.Id = skakort.Id;
-
-                            if (skaKortInfo.InformationSource == (int)Generated.ed_informationsource.ForetagsPortal &&
-                                skakort.ed_Account != null)
-                            {
-                                updateSkakort.ed_Account = null;
-                            }
-                            else if (skaKortInfo.InformationSource == (int)Generated.ed_informationsource.KopOchSkicka &&
-                                skakort.ed_Contact != null)
-                            {
-                                updateSkakort.ed_Contact = null;
-                            }
-
-                            XrmHelper.Update(localContext, updateSkakort);
-
-                            _log.Info($"Th={threadId} - RemoveSkaKortContactOrAccount: SkaKort updated. SkaKortId: {skakort.Id}.");
-
-                            HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                            resp.Content = new StringContent("SkaKort updated.");
-                            return resp;
+                            updateSkakort.ed_Account = null;
                         }
-                        else
+                        else if (skaKortInfo.InformationSource == (int)Generated.ed_informationsource.KopOchSkicka &&
+                            skakort.ed_Contact != null)
                         {
-                            HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                            error.Content = new StringContent($"SkaKort with CardNumber {skaKortInfo.CardNumber} is not an active SkaKort.");
-                            return error;
+                            updateSkakort.ed_Contact = null;
                         }
+
+                        XrmHelper.Update(localContext, updateSkakort);
+
+                        _log.Info($"Th={threadId} - RemoveSkaKortContactOrAccount: SkaKort updated. SkaKortId: {skakort.Id}.");
+
+                        HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                        resp.Content = new StringContent("SkaKort updated.");
+                        return resp;
                     }
                 }
             }
@@ -5662,7 +5650,7 @@ namespace Skanetrafiken.Crm.Controllers
             return updated;
         }
 
-        private static async Task<string> GetAccessToken(string clientId, string clientSectret, string tenantId)
+        public static async Task<string> GetAccessToken(string clientId, string clientSectret, string tenantId)
         {
             var authContext = new Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext("https://login.windows.net/" + $"{tenantId}");
             var credential = new Microsoft.IdentityModel.Clients.ActiveDirectory.ClientCredential(clientId, clientSectret);
