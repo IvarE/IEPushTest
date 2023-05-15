@@ -170,7 +170,7 @@ namespace CRM2013.SkanetrafikenPlugins.Common
                     if (amount == 0 || cardSerialNumber == null)
                         return true;
 
-                    LoadCard(amount, cardSerialNumber, customerId.Id, emailAddress, erRefund, settingCgiChargeorderservice, ref ehOrderNumber, service, isAutomatic);
+                    //LoadCard(amount, cardSerialNumber, customerId.Id, emailAddress, erRefund, settingCgiChargeorderservice, ref ehOrderNumber, service, isAutomatic);
                 }
                 else if (reimbursementForm.RefundedViaGiftCard())
                 {
@@ -187,7 +187,7 @@ namespace CRM2013.SkanetrafikenPlugins.Common
                     //    cgiLastValid = refund.GetAttributeValue<DateTime>("cgi_last_valid");
 
 
-                    CreateGiftcard(customerId, emailAddress, IsEmailAdressIdenticalToCustomerEmailAddress, lastValid, amount, erRefund, settingCgiGiftcardservice, settingCgiSendvaluecodemailservice, ref valueCode, service, isAutomatic);
+                    //CreateGiftcard(customerId, emailAddress, IsEmailAdressIdenticalToCustomerEmailAddress, lastValid, amount, erRefund, settingCgiGiftcardservice, settingCgiSendvaluecodemailservice, ref valueCode, service, isAutomatic);
                 }
                 else if (reimbursementForm.RefundedViaSms() && reimbursementForm.RefundedViaClearon() == false) // Marcus Stenswed - Only send via SMS this way when not via Clearon
                 {
@@ -199,11 +199,11 @@ namespace CRM2013.SkanetrafikenPlugins.Common
 
                     string smstext = String.IsNullOrEmpty(emailAddress) ? "," : emailAddress; //Cannot send an empty string as argument to the service, see RedMine #2437
 
-                    CreateCouponSMS(amount, customerId.Id, smstext, cgiMobilenumber, "0", erRefund, settingCgiCreatecouponservice, ref ehOrderNumber, service, isAutomatic);
+                    //CreateCouponSMS(amount, customerId.Id, smstext, cgiMobilenumber, "0", erRefund, settingCgiCreatecouponservice, ref ehOrderNumber, service, isAutomatic);
                 }
                 else if (reimbursementForm.RefundedViaEmail() && reimbursementForm.RefundedViaClearon() == false) // Marcus Stenswed - Only send via Email this way when not via Clearon
                 {
-                    CreateEmailCoupon(amount, cardSerialNumber, customerId.Id, emailAddress, emailAddress, "0", erRefund, settingCgiCreateemailcouponservice, ref ehOrderNumber, service, isAutomatic);
+                    //CreateEmailCoupon(amount, cardSerialNumber, customerId.Id, emailAddress, emailAddress, "0", erRefund, settingCgiCreateemailcouponservice, ref ehOrderNumber, service, isAutomatic);
                 }
                 else if ((reimbursementForm.RefundedViaSms() || reimbursementForm.RefundedViaEmail()) && reimbursementForm.RefundedViaClearon() == true)
                 {
