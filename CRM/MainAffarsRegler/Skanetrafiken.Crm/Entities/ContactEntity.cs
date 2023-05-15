@@ -13,6 +13,7 @@ using System.Runtime.Serialization.Json;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Linq;
+using Skanetrafiken.Crm.Schema.Generated;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -1774,6 +1775,7 @@ namespace Skanetrafiken.Crm.Entities
         /// </summary>
         /// <param name="localContext"></param>
         /// <param name="contactId"></param>
+        /// <param name="contact"></param>
         /// <returns></returns>
         private static bool SendDeleteMessageToMKL(Plugin.LocalPluginContext localContext, EntityReference contactId, ContactEntity contact)
         {
@@ -1990,6 +1992,7 @@ namespace Skanetrafiken.Crm.Entities
         /// </summary>
         /// <param name="localContext"></param>
         /// <param name="customerInfo"></param>
+        /// <param name="account"></param>
         /// <returns></returns>
         public static ContactEntity FindOrCreateUnvalidatedContact(Plugin.LocalPluginContext localContext, CustomerInfo customerInfo, AccountEntity account = null)
         {
@@ -2335,11 +2338,12 @@ namespace Skanetrafiken.Crm.Entities
 
         /// <summary>
         /// Finds contact in CRM based on Social security number (primary key) and fallback on FirstName + LastName + Email (secondary key as specified by Håkan Tingström (Skånetrafiken)).
-        /// Company/School/Senior matching criteria:
-        /// Exact match on Social Security Number (ed_SocialSecurityNumberBlock) and Email (EMailAddress1). Also check for each flag (Business-, School- or Senior Contact)
+        /// Company/School/Senior/Service travel matching criteria:
+        /// Exact match on Social Security Number (ed_SocialSecurityNumberBlock) and Email (EMailAddress1). Also check for each flag (Business-, School-, Senior- or Service travel contact)
         /// </summary>
         /// <param name="localContext"></param>
         /// <param name="customerInfo"></param>
+        /// <param name="account"></param>
         /// <returns></returns>
         public static ContactEntity FindActiveContact(Plugin.LocalPluginContext localContext, CustomerInfo customerInfo, AccountEntity account = null)
         {
@@ -2348,25 +2352,16 @@ namespace Skanetrafiken.Crm.Entities
 
             ContactEntity contact = null;
 
-            #region New Code
-
-            //If "CustomerInfo" indicates that customer is PrivatKund (OptionSet) - Handle with social security Number, email + för.Namn + eft.Nman, address + namn
-            if (customerInfo.Source != (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal &&
-                customerInfo.Source != (int)Crm.Schema.Generated.ed_informationsource.SkolPortal &&
-                customerInfo.Source != (int)Crm.Schema.Generated.ed_informationsource.SeniorPortal)
+            // If "CustomerInfo" indicates that customer is PrivatKund (OptionSet) - Handle with social security Number, email + för.Namn + eft.Nman, address + namn
+            if (customerInfo.Source != (int)ed_informationsource.ForetagsPortal &&
+                customerInfo.Source != (int)ed_informationsource.SkolPortal &&
+                customerInfo.Source != (int)ed_informationsource.SeniorPortal &&
+                customerInfo.Source != (int)ed_informationsource.SRInkommenPost)
             {
                 // Find by social security number first. (NOTE: we are not using social security number for FTG/SCHOOL)
                 //Privat
-                if (contact == null /* && !string.IsNullOrWhiteSpace(customerInfo.Mobile) */ && !string.IsNullOrWhiteSpace(customerInfo.Email))
+                if (contact == null && !string.IsNullOrWhiteSpace(customerInfo.Email))
                 {
-
-                    //FilterExpression mobileFilter = new FilterExpression(LogicalOperator.And)
-                    //{
-                    //    Conditions =
-                    //    {
-                    //        new ConditionExpression(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, customerInfo.Mobile)
-                    //    }
-                    //};
                     FilterExpression emailFilterNew = new FilterExpression(LogicalOperator.Or)
                     {
                         Conditions =
@@ -2464,7 +2459,6 @@ namespace Skanetrafiken.Crm.Entities
                     {
                         contact = socseccontacts[0];
                         localContext.Trace($"Found multiple contacts by SocialSecurityNumber");
-                        //throw new Exception(string.Format("multiple contacts found with the same social security number: {0}", customerInfo.SocialSecurityNumber));
                     }
                     // Match by social security number END
                 }
@@ -2472,7 +2466,6 @@ namespace Skanetrafiken.Crm.Entities
                 // Contact still not found?
                 if (contact == null && !string.IsNullOrWhiteSpace(customerInfo.FirstName) && !string.IsNullOrWhiteSpace(customerInfo.LastName) && !string.IsNullOrWhiteSpace(customerInfo.Email))
                 {
-                    //ska vi även här gå efter companyrole - mail + telefon?
                     //Match by email + firstNmae + Last Name START
                     FilterExpression nameFilter = new FilterExpression(LogicalOperator.Or)
                     {
@@ -2505,17 +2498,6 @@ namespace Skanetrafiken.Crm.Entities
                             }
                     };
 
-                    //FilterExpression privateCustomerFilter = new FilterExpression(LogicalOperator.Or)
-                    //{
-                    //    Conditions =
-                    //    {
-                    //        // Null == true, fallback if no data
-                    //        new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true),
-                    //        new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Null),
-                    //    }
-                    //};
-
-
                     QueryExpression queryEmailAndName = new QueryExpression()
                     {
                         EntityName = ContactEntity.EntityLogicalName,
@@ -2531,8 +2513,6 @@ namespace Skanetrafiken.Crm.Entities
                             {
                                 nameFilter,
                                 emailFilterNew
-                                //,
-                                //privateCustomerFilter
                             }
                         }
                     };
@@ -2541,9 +2521,8 @@ namespace Skanetrafiken.Crm.Entities
                     localContext.Trace($"FindActiveContact found {possibleMatches.Count} matches on e-mail and name.");
 
                     // Check if list of possible matches contains any contact
-                    if (possibleMatches.Count() > 0)
+                    if (possibleMatches.Count > 0)
                     {
-                        // Loop trough possible matches of contacs
                         foreach (var possibleContactMatch in possibleMatches)
                         {
                             string firstnameContactMatch = Regex.Replace(possibleContactMatch.FirstName, @"[^\p{L}\p{N}]+", "");
@@ -2592,18 +2571,18 @@ namespace Skanetrafiken.Crm.Entities
                     //Match by email + firstNmae + Last Name END
                 }
             }
-            //If "CustomerInfo" indicates that customer is FTG/SKOL (OptionSet) - Handle with Email + Mobile
-            else if (customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal ||
-                customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.SkolPortal ||
-                customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.SeniorPortal)
+            // If "CustomerInfo" indicates that customer is FTG/SKOL (OptionSet) - Handle with Email + Mobile
+            else if (customerInfo.Source == (int)ed_informationsource.ForetagsPortal ||
+                customerInfo.Source == (int)ed_informationsource.SkolPortal ||
+                customerInfo.Source == (int)ed_informationsource.SeniorPortal ||
+                customerInfo.Source == (int)ed_informationsource.SRInkommenPost)
             {
-                //string email = customerInfo.CompanyRole[0].Email;
                 string socialSecurityNumber = customerInfo.SocialSecurityNumber;
 
                 /* 
-                    Check for matching Contacts (Company, School or Senior marked)
+                    Check for matching Contacts (Company, School, Senior or Service travels)
                     Based on Social Security Number
-                    */
+                 */
 
                 QueryExpression portalCustomerFilter = new QueryExpression()
                 {
@@ -2613,35 +2592,30 @@ namespace Skanetrafiken.Crm.Entities
                     {
                         Conditions =
                         {
-                            //new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, email),
-                            new ConditionExpression(ContactEntity.Fields.ed_SocialSecurityNumberBlock, ConditionOperator.Equal, socialSecurityNumber), //Add check for company contact
+                            new ConditionExpression(ContactEntity.Fields.ed_SocialSecurityNumberBlock, ConditionOperator.Equal, socialSecurityNumber),
                             new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active)
                         }
                     }
                 };
 
-                if (customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal)
+                var field = customerInfo.Source switch
                 {
-                    ConditionExpression companyCustomerExpression = new ConditionExpression(ContactEntity.Fields.ed_BusinessContact, ConditionOperator.Equal, true);
-                    portalCustomerFilter.Criteria.AddCondition(companyCustomerExpression);
-                }
-                else if (customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.SkolPortal)
+                    (int)ed_informationsource.ForetagsPortal => ContactEntity.Fields.ed_BusinessContact,
+                    (int)ed_informationsource.SkolPortal => ContactEntity.Fields.ed_SchoolContact,
+                    (int)ed_informationsource.SeniorPortal => ContactEntity.Fields.ed_SeniorContact,
+                    (int)ed_informationsource.SRInkommenPost => ContactEntity.Fields.ed_Serviceresor,
+                    _ => string.Empty
+                };
+
+                if(!string.IsNullOrEmpty(field))
                 {
-                    ConditionExpression schoolCustomerExpression = new ConditionExpression(ContactEntity.Fields.ed_SchoolContact, ConditionOperator.Equal, true);
-                    portalCustomerFilter.Criteria.AddCondition(schoolCustomerExpression);
-                }
-                else if (customerInfo.Source == (int)Crm.Schema.Generated.ed_informationsource.SeniorPortal)
-                {
-                    ConditionExpression seniorCustomerExpression = new ConditionExpression(ContactEntity.Fields.ed_SeniorContact, ConditionOperator.Equal, true);
-                    portalCustomerFilter.Criteria.AddCondition(seniorCustomerExpression);
+                    portalCustomerFilter.Criteria.AddCondition(new ConditionExpression(field, ConditionOperator.Equal, true));
                 }
 
                 List<ContactEntity> matchingContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, portalCustomerFilter);
-
-                // TODO - 2020-04-08 (Marcus Stenswed)
-                // How should we handle if there are more hits than one?
-                // Return first match (temporary)
-                //TODO - 2020-09-04 (Christian) - Använd accountets Parentaccount. Kolla relation med contact som vi hittar. Använd den som har en relation med Org.
+                
+                // If more than one contact, find the right one based on association to an account,
+                // or use the first one if no association exists
                 if (matchingContacts != null && matchingContacts.Count() > 0)
                 {
                     if (matchingContacts.Count == 1)
@@ -2650,7 +2624,6 @@ namespace Skanetrafiken.Crm.Entities
                     }
                     else if (matchingContacts.Count > 1)
                     {
-                        //TODO - 2020-09-04 (Christian) - Använd accountets Parentaccount. Kolla relation med contact som vi hittar. Använd den som har en relation med Org.
                         if (account != null && account.ParentAccountId != null)
                         {
                             bool foundContact = false;
@@ -2664,7 +2637,6 @@ namespace Skanetrafiken.Crm.Entities
                                 }
                             }
 
-                            //If none of the listed Contacts has an association with the Accounts Parent account - Return the first Contact.
                             if (foundContact == false)
                             {
                                 contact = matchingContacts[0];
@@ -2683,7 +2655,6 @@ namespace Skanetrafiken.Crm.Entities
                                 }
                             }
 
-                            //If none of the listed Contacts has an association with the Parent account - Return the first Contact.
                             if (foundContact2 == false)
                             {
                                 contact = matchingContacts[0];
@@ -2696,7 +2667,6 @@ namespace Skanetrafiken.Crm.Entities
                     }
                 }
             }
-            #endregion
 
             return contact;
         }
@@ -3213,7 +3183,6 @@ namespace Skanetrafiken.Crm.Entities
         /// Creates a contact if one doesn't exist in CRM or just bind existing contact with an existing travelcard.
         /// </summary>
         /// <param name="localContext"></param>
-        /// <param name="contact"></param>
         /// <param name="travelCard"></param>
         /// <param name="firstName"></param>
         /// <param name="lastName"></param>
@@ -3362,6 +3331,7 @@ namespace Skanetrafiken.Crm.Entities
         /// Create dummy contact for Cases where no contact could be found using e-mail address.
         /// </summary>
         /// <param name="localContext"></param>
+        /// <param name="emailFrom"></param>
         /// <returns></returns>
         public static ContactEntity CreateUnvalidatedContactFromEmailToCaseProcess(Plugin.LocalPluginContext localContext, string emailFrom)
         {
