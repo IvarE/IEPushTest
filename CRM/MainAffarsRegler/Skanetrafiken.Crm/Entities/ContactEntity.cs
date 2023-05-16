@@ -23,6 +23,11 @@ namespace Skanetrafiken.Crm.Entities
         //private static string MklEndpoint = "http://stmkltest.azurewebsites.net";
         public static string _NEWEMAILDONE = "_NEWEMAILDONE_";
 
+        /// <summary>
+        /// The free text field in the DeltaBatch plus and minus files is capped at 50 characters.
+        /// </summary>
+        private static readonly int DeltaBatchQueueNameMaxLength = 50;
+
         public static ColumnSet ContactInfoBlock = new ColumnSet(
             ContactEntity.Fields.ed_InformationSource,
             ContactEntity.Fields.FirstName,
@@ -169,7 +174,7 @@ namespace Skanetrafiken.Crm.Entities
                             ed_ContactGuid = this.ContactId?.ToString(),
                             ed_ContactNumber = this.cgi_socialsecuritynumber,
                             ed_DeltabatchOperation = Generated.ed_deltabatchqueue_ed_deltabatchoperation.Plus,
-                            ed_name = $"Create: {this.FullName}, {DateTime.Now.ToString()}".Length > 99 ? $"Create: {this.FullName}, {DateTime.Now.ToString()}".Substring(0, 99) : $"Create: {this.FullName}, {DateTime.Now.ToString()}"
+                            ed_name = $"Create: {this.FullName}, {DateTime.Now.ToString()}".Length > DeltaBatchQueueNameMaxLength ? $"Create: {this.FullName}, {DateTime.Now.ToString()}".Substring(0, DeltaBatchQueueNameMaxLength) : $"Create: {this.FullName}, {DateTime.Now.ToString()}"
                         };
                         queue.Id = XrmHelper.Create(localContext.OrganizationService, queue);
                     }
@@ -227,7 +232,7 @@ namespace Skanetrafiken.Crm.Entities
                             ed_ContactGuid = this.ContactId?.ToString(),
                             ed_ContactNumber = this.cgi_socialsecuritynumber,
                             ed_DeltabatchOperation = Generated.ed_deltabatchqueue_ed_deltabatchoperation.Minus,
-                            ed_name = $"Delete!: {this.FullName}, {DateTime.Now.ToString()}".Length > 99 ? $"Delete!: {this.FullName}, {DateTime.Now.ToString()}".Substring(0, 99) : $"Delete!: {this.FullName}, {DateTime.Now.ToString()}"
+                            ed_name = $"Delete!: {this.FullName}, {DateTime.Now.ToString()}".Length > DeltaBatchQueueNameMaxLength ? $"Delete!: {this.FullName}, {DateTime.Now.ToString()}".Substring(0, DeltaBatchQueueNameMaxLength) : $"Delete!: {this.FullName}, {DateTime.Now.ToString()}"
                         };
                         queue.Id = XrmHelper.Create(localContext.OrganizationService, queue);
                     }
@@ -296,7 +301,7 @@ namespace Skanetrafiken.Crm.Entities
                             ed_ContactGuid = combined.ContactId?.ToString(),
                             ed_ContactNumber = combined.cgi_socialsecuritynumber,
                             ed_DeltabatchOperation = Generated.ed_deltabatchqueue_ed_deltabatchoperation.Minus,
-                            ed_name = $"StopUpdate - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}".Length > 99 ? $"StopUpdate - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}".Substring(0, 99) : $"StopUpdate - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}"
+                            ed_name = $"StopUpdate - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}".Length > DeltaBatchQueueNameMaxLength ? $"StopUpdate - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}".Substring(0, DeltaBatchQueueNameMaxLength) : $"StopUpdate - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}"
                         };
                         minusQueue1.Id = XrmHelper.Create(localContext.OrganizationService, minusQueue1);
 
@@ -308,7 +313,7 @@ namespace Skanetrafiken.Crm.Entities
                                 ed_ContactGuid = preImage.ContactId?.ToString(),
                                 ed_ContactNumber = preImage.cgi_socialsecuritynumber,
                                 ed_DeltabatchOperation = Generated.ed_deltabatchqueue_ed_deltabatchoperation.Minus,
-                                ed_name = $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}".Length > 99 ? $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}".Substring(0, 99) : $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}"
+                                ed_name = $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}".Length > DeltaBatchQueueNameMaxLength ? $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}".Substring(0, DeltaBatchQueueNameMaxLength) : $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}"
                             };
                             minusQueue.Id = XrmHelper.Create(localContext.OrganizationService, minusQueue);
                         }
@@ -324,7 +329,7 @@ namespace Skanetrafiken.Crm.Entities
                             ed_ContactGuid = combined.ContactId?.ToString(),
                             ed_ContactNumber = combined.cgi_socialsecuritynumber,
                             ed_DeltabatchOperation = Generated.ed_deltabatchqueue_ed_deltabatchoperation.Plus,
-                            ed_name = $"Update - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}".Length > 99 ? $"Update - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}".Substring(0, 99) : $"Update - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}"
+                            ed_name = $"Update - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}".Length > DeltaBatchQueueNameMaxLength ? $"Update - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}".Substring(0, DeltaBatchQueueNameMaxLength) : $"Update - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}"
                         };
                         plusQueue.Id = XrmHelper.Create(localContext.OrganizationService, plusQueue);
                     }
@@ -336,7 +341,7 @@ namespace Skanetrafiken.Crm.Entities
                             ed_ContactGuid = preImage.ContactId?.ToString(),
                             ed_ContactNumber = preImage.cgi_socialsecuritynumber,
                             ed_DeltabatchOperation = Generated.ed_deltabatchqueue_ed_deltabatchoperation.Minus,
-                            ed_name = $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}".Length > 99 ? $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}".Substring(0, 99) : $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}"
+                            ed_name = $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}".Length > DeltaBatchQueueNameMaxLength ? $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}".Substring(0, DeltaBatchQueueNameMaxLength) : $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}"
                         };
                         minusQueue.Id = XrmHelper.Create(localContext.OrganizationService, minusQueue);
                     }
@@ -618,7 +623,7 @@ namespace Skanetrafiken.Crm.Entities
                                     ed_ContactGuid = contact.ContactId?.ToString(),
                                     ed_ContactNumber = contact.cgi_socialsecuritynumber,
                                     ed_DeltabatchOperation = Generated.ed_deltabatchqueue_ed_deltabatchoperation.Plus,
-                                    ed_name = $"Update - Activated: {contact.FullName}, {DateTime.Now.ToString()}".Length > 99 ? $"Update - Activated: {contact.FullName}, {DateTime.Now.ToString()}".Substring(0, 99) : $"Update - Activated: {contact.FullName}, {DateTime.Now.ToString()}"
+                                    ed_name = $"Update - Activated: {contact.FullName}, {DateTime.Now.ToString()}".Length > DeltaBatchQueueNameMaxLength ? $"Update - Activated: {contact.FullName}, {DateTime.Now.ToString()}".Substring(0, DeltaBatchQueueNameMaxLength) : $"Update - Activated: {contact.FullName}, {DateTime.Now.ToString()}"
                                 };
                                 plusQueue.Id = XrmHelper.Create(localContext.OrganizationService, plusQueue);
 
@@ -639,7 +644,7 @@ namespace Skanetrafiken.Crm.Entities
                                     ed_ContactGuid = contact.ContactId?.ToString(),
                                     ed_ContactNumber = contact.cgi_socialsecuritynumber,
                                     ed_DeltabatchOperation = Generated.ed_deltabatchqueue_ed_deltabatchoperation.Minus,
-                                    ed_name = $"Update - Deactivated: {contact.FullName}, {DateTime.Now.ToString()}".Length > 99 ? $"Update - Deactivated: {contact.FullName}, {DateTime.Now.ToString()}".Substring(0, 99) : $"Update - Deactivated: {contact.FullName}, {DateTime.Now.ToString()}"
+                                    ed_name = $"Update - Deactivated: {contact.FullName}, {DateTime.Now.ToString()}".Length > DeltaBatchQueueNameMaxLength ? $"Update - Deactivated: {contact.FullName}, {DateTime.Now.ToString()}".Substring(0, DeltaBatchQueueNameMaxLength) : $"Update - Deactivated: {contact.FullName}, {DateTime.Now.ToString()}"
                                 };
                                 minusQueue.Id = XrmHelper.Create(localContext.OrganizationService, minusQueue);
 

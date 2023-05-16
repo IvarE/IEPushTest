@@ -32,6 +32,8 @@ namespace Endeavor.Crm.DeltabatchService
         private string plusFileName;
         private string minusFileName;
 
+        private readonly int FreeTextFieldMaxLength = 50;
+
         private ILog _log = LogManager.GetLogger(typeof(UploadJob));
 
         public void Execute(IJobExecutionContext context)
@@ -152,6 +154,11 @@ namespace Endeavor.Crm.DeltabatchService
                         continue;
 
                     string fritext = q.ed_name.Split(":".ToCharArray())[0].Replace(" ","").Replace("-", "");
+                    if(fritext.Length > FreeTextFieldMaxLength)
+                    {
+                        fritext = fritext.Substring(0, FreeTextFieldMaxLength);
+                    }
+
                     if (Generated.ed_deltabatchqueue_ed_deltabatchoperation.Plus.Equals(q.ed_DeltabatchOperation))
                     {
                         plusFileBuilder.AppendLine($"{q.ed_ContactNumber};{q.ed_ContactGuid};{fritext}");
