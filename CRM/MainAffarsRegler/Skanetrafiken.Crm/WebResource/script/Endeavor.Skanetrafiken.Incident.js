@@ -160,7 +160,28 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             if (_cgi_contactid != null)
                 Endeavor.Skanetrafiken.Incident.setCustomerFromContact(formContext);
 
+            var incidentFormId = Xrm.Page.ui.formSelector.getCurrentItem().getId();
+            if (incidentFormId == "d7a7581b-70d0-45a0-93ab-2e3561513ce2" || incidentFormId == "04aa6ce6-bf13-4a0c-a4d1-9072d469e42b") {
 
+                var title = formContext.getAttribute("title").getValue();
+                var description = formContext.getAttribute("description").getValue();
+                if (title === null && description === null) {
+                    formContext.getAttribute("title").setRequiredLevel("none");
+                    formContext.getAttribute("description").setRequiredLevel("none");
+
+                    var casetypecode = formContext.getAttribute("casetypecode").getValue();
+                    if (casetypecode == null)
+                        formContext.getAttribute("casetypecode").setValue(285050004);
+
+                    var caseorigincode = formContext.getAttribute("caseorigincode").getValue();
+                    if (caseorigincode == null)
+                        formContext.getAttribute("caseorigincode").setValue(1);
+
+                    var prioritycode = formContext.getAttribute("prioritycode").getValue();
+                    if (prioritycode == null)
+                        formContext.getAttribute("prioritycode").setValue(2);
+                }
+            }
 
 
         },
@@ -478,30 +499,6 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         setDefaultOnCreate: function (formContext) {
             try {
                 var _currentdate = new Date();
-                var incidentFormId = Xrm.Page.ui.formSelector.getCurrentItem().getId();
-
-                if (incidentFormId == "d7a7581b-70d0-45a0-93ab-2e3561513ce2" || incidentFormId == "04aa6ce6-bf13-4a0c-a4d1-9072d469e42b") {
-                    var title = formContext.getAttribute("title").getValue();
-                    if (title == null)
-                        formContext.getAttribute("title").setRequiredLevel("none");
-
-                    var description = formContext.getAttribute("description").getValue();
-                    if (description == null)
-                        formContext.getAttribute("description").setRequiredLevel("none");
-
-                    var casetypecode = formContext.getAttribute("casetypecode").getValue();
-                    if (casetypecode == null)
-                        formContext.getAttribute("casetypecode").setValue(285050004);
-
-                    var caseorigincode = formContext.getAttribute("caseorigincode").getValue();
-                    if (caseorigincode == null)
-                        formContext.getAttribute("caseorigincode").setValue(1);
-
-                    var prioritycode = formContext.getAttribute("prioritycode").getValue();
-                    if (prioritycode == null)
-                        formContext.getAttribute("prioritycode").setValue(2);
-                }
-
                 var arrivalDate = formContext.getAttribute("cgi_arrival_date").getValue();
                 if (arrivalDate == null)
                     formContext.getAttribute("cgi_arrival_date").setValue(_currentdate);
