@@ -180,9 +180,10 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     var prioritycode = formContext.getAttribute("prioritycode").getValue();
                     if (prioritycode == null)
                         formContext.getAttribute("prioritycode").setValue(2);
-                }
 
                 Endeavor.formscriptfunctions.SaveEntity(formContext);
+                }
+              
             }
         },
 
