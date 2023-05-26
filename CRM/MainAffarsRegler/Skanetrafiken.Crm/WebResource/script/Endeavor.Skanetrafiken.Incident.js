@@ -181,9 +181,9 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     if (prioritycode == null)
                         formContext.getAttribute("prioritycode").setValue(2);
                 }
+
+                Endeavor.formscriptfunctions.SaveEntity(formContext);
             }
-
-
         },
 
         onLoadHideShowTypeOfContactFields: function (executionContext) {
