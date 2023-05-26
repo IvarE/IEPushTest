@@ -32,9 +32,6 @@
     <Setting Name="CreditsafeCredentialsFilePath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">%APPDATA%\Endeavor\CreditsafeCredential.xml</Value>
     </Setting>
-    <Setting Name="CreditsafeLoginUsername" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">5343362</Value>
-    </Setting>
     <Setting Name="DeltabatchQueueCount" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">80000</Value>
     </Setting>
@@ -46,6 +43,9 @@
     </Setting>
     <Setting Name="FileUploadScheduleCronExpression" Type="System.String" Scope="Application">
       <Value Profile="(Default)">0 0 23 1/1 * ? *</Value>
+    </Setting>
+    <Setting Name="CreditsafeLoginUsername" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">5343362_1</Value>
     </Setting>
   </Settings>
 </SettingsFile>
