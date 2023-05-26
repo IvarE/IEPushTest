@@ -12,7 +12,7 @@ namespace Endeavor.Crm.DeltabatchService.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -115,15 +115,6 @@ namespace Endeavor.Crm.DeltabatchService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5343362")]
-        public string CreditsafeLoginUsername {
-            get {
-                return ((string)(this["CreditsafeLoginUsername"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("80000")]
         public int DeltabatchQueueCount {
             get {
@@ -155,6 +146,15 @@ namespace Endeavor.Crm.DeltabatchService.Properties {
         public string FileUploadScheduleCronExpression {
             get {
                 return ((string)(this["FileUploadScheduleCronExpression"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5343362_1")]
+        public string CreditsafeLoginUsername {
+            get {
+                return ((string)(this["CreditsafeLoginUsername"]));
             }
         }
     }
