@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTests
 {
     public static class TestDataHelper
     {

@@ -16,15 +16,6 @@ namespace CGIXrmCreateCaseService
         {
             try
             {
-                //if (DateTime.Now < new DateTime(2019, 09, 06))
-                //{
-                //    _log.Debug(string.Format("debug. ============================================"));
-                //    _log.Debug(string.Format("debug. Start RequestCreateAutoRgCase"));
-                //}
-                
-                //_log.Debug(string.Format("debug. ============================================"));
-                //_log.Debug(string.Format("debug. Start RequestCreateCase"));
-
                 int threadId = Thread.CurrentThread.ManagedThreadId;
                 _log.Info($"Th={threadId} - ===================== RequestCreateCase called. =====================\n");
 
@@ -41,17 +32,6 @@ namespace CGIXrmCreateCaseService
         {
             try
             {
-                // Do debug-tracing. Johan Endeavor
-                //if (DateTime.Now < new DateTime(2017, 12, 14))
-                //{
-                //    _log.Debug(string.Format("============================================"));
-                //    _log.Debug(string.Format("Start RequestCreateAutoRgCase"));
-                //    //LogMessage(_logLocation, string.Format("============================================"));
-                //    //LogMessage(_logLocation, string.Format("Start RequestCreateAutoRgCase"));
-                //}
-                //_log.Debug(string.Format("============================================"));
-                //_log.Debug(string.Format("Start RequestCreateAutoRGCase"));
-
                 int threadId = Thread.CurrentThread.ManagedThreadId;
                 _log.Info($"Th={threadId} - ===================== RequestCreateAutoRGCase called. =====================\n");
 

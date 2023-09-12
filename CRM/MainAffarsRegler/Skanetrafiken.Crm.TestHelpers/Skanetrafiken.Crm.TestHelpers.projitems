@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>1615c5d3-6e1a-4e70-ae96-0726e1651aab</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Skanetrafiken.Crm.TestHelpers</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)OrganizationServiceMockFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)XrmFakedContextExtensions.cs" />
+  </ItemGroup>
+</Project>

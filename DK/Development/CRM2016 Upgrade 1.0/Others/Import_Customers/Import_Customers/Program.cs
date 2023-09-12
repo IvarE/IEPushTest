@@ -17,8 +17,8 @@ namespace Import_Customers
                 {
                     Authenticationtype = AuthenticationType.Default,
                     Crmtype = CRMType.OnPremis,
-                    Username = @"D1\CRMAdmin",
-                    Password = "uSEme2!nstal1",
+                    Username = @"D1\ ",
+                    Password = " ",
                     Domain = "D1"
                 };
                 var service = concrm.GetService();

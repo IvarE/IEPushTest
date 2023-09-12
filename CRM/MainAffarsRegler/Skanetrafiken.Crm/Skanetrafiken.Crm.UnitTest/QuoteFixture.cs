@@ -25,7 +25,7 @@ using System.Runtime.Serialization.Json;
 using Microsoft.Xrm.Sdk.Metadata;
 
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTests
 {
     public class QuoteFixture : PluginFixtureBase
     {

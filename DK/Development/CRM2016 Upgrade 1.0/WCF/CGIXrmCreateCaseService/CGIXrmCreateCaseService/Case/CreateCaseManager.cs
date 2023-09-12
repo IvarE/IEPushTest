@@ -2,22 +2,14 @@
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
-using System.Threading;
 using System.Xml.Serialization;
 using CGIXrmCreateCaseService.Case.Models;
 using CGIXrmWin;
 using CRM2013.SkanetrafikenPlugins.Common;
-using Microsoft.Azure;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Auth;
-using Microsoft.Azure.Storage.Blob;
-using Microsoft.Azure.KeyVault;
 using Microsoft.Crm.Sdk.Messages;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System.Collections.Generic;
@@ -28,11 +20,6 @@ using Endeavor.Extensions;
 using System.Text;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
-using System.Runtime.Serialization;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
-using Azure.Identity;
 
 namespace CGIXrmCreateCaseService.Case
 {
@@ -47,9 +34,10 @@ namespace CGIXrmCreateCaseService.Case
         private const string CgiBiffTransaction = "cgi_travelcardtransaction";
         private string _tokenCertName = "";
         private string _logLocation = @"E:\Logs\CRM\CGIXrmCreateCaseService\createcase.log";
-        private bool useFetchXml = true;
         private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         #endregion
+
+        private static readonly string CaseResolvedErrorMessage = "This case has already been resolved";
 
         #region Endeavor Helper Functions
 
@@ -207,14 +195,6 @@ namespace CGIXrmCreateCaseService.Case
                 string token = CreateTokenForWEBApi();
                 obj.HttpClient.DefaultRequestHeaders.Add("X-CRMPlusToken", token);
 
-                // Do debug-tracing. Johan Endeavor
-                //if (DateTime.Now < new DateTime(2017, 04, 18))
-                //{
-                //    _log.Debug(string.Format("Accuired token:{0}", token));
-                //    //LogMessage(_logLocation, string.Format("Accuired token:{0}", token));
-                //}
-                _log.Debug(string.Format("Accuired token:{0}", token));
-
                 // Skapa kundobjekt
                 string jsonResult = obj.Contacts.Post(customer);
                 DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(CRMPlusAPI.Models.CustomerInfo));
@@ -296,14 +276,6 @@ namespace CGIXrmCreateCaseService.Case
                 // Add token header to request
                 string token = CreateTokenForWEBApi();
                 obj.HttpClient.DefaultRequestHeaders.Add("X-CRMPlusToken", token);
-
-                // Do debug-tracing. Johan Endeavor
-                //if (DateTime.Now < new DateTime(2017, 03, 02))
-                //{
-                //    _log.Debug(string.Format($"Accuired token:{token}, accessing URL:{settings.ed_CRMPlusService}"));
-                //    //LogMessage(_logLocation, string.Format($"Accuired token:{token}, accessing URL:{settings.ed_CRMPlusService}"));
-                //}
-                _log.Debug(string.Format($"Accuired token:{token}, accessing URL:{settings.ed_CRMPlusService}"));
 
                 string jsonResult = obj.Contacts.Post(customer);
 
@@ -402,45 +374,6 @@ namespace CGIXrmCreateCaseService.Case
             }
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        private SqlConnection OpenSql()
-        {
-            //Removed to check that we can close the integrationDB....
-            /* 
-            lock (_lockSql)
-            {
-                var connectionString = ConfigurationManager.ConnectionStrings["IntegrationDB"].ConnectionString;
-                var sqlConnection = new SqlConnection(connectionString);
-                sqlConnection.Open();
-                return sqlConnection;
-            }
-            */
-            return null;
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        private void CloseSql(IDbConnection connection)
-        {
-            lock (_lockSql)
-            {
-                connection?.Close();
-            }
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="fileLink"></param>
-        /// <param name="incidentid"></param>
         private void CreateFileLink(FileLink fileLink, Guid incidentid)
         {
             if (string.IsNullOrEmpty(fileLink.Url)) return;
@@ -538,63 +471,27 @@ namespace CGIXrmCreateCaseService.Case
 
             if (string.IsNullOrEmpty(socialSecurityNumber)) return false;
 
-            if (useFetchXml)
-            {
-                var _fx = "";
-                _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
-                _fx += "<entity name='contact'>";
-                _fx += "<attribute name='contactid' />";
-                _fx += "<filter type='and'>";
-                _fx += "<condition attribute='statecode' operator='eq' value='0' />";
-                _fx += "<condition attribute='cgi_socialsecuritynumber' operator='eq' value='" + socialSecurityNumber + "' />";
-                //_fx += "<condition attribute='ed_socialsecuritynumber2' operator='eq' value='234' />";
-                //_fx += "<condition attribute='ed_hasswedishsocialsecuritynumber' operator='eq' value='1' />";
-                _fx += "</filter>";
-                _fx += "</entity>";
-                _fx += "</fetch>";
+            var _fx = "";
+            _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
+            _fx += "<entity name='contact'>";
+            _fx += "<attribute name='contactid' />";
+            _fx += "<filter type='and'>";
+            _fx += "<condition attribute='statecode' operator='eq' value='0' />";
+            _fx += "<condition attribute='cgi_socialsecuritynumber' operator='eq' value='" + socialSecurityNumber + "' />";
+            //_fx += "<condition attribute='ed_socialsecuritynumber2' operator='eq' value='234' />";
+            //_fx += "<condition attribute='ed_hasswedishsocialsecuritynumber' operator='eq' value='1' />";
+            _fx += "</filter>";
+            _fx += "</entity>";
+            _fx += "</fetch>";
 
-                EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
+            EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
 
-                if (_result == null || _result.Entities.Count <= 0) return false;
+            if (_result == null || _result.Entities.Count <= 0) return false;
 
-                contact = TransformEntityToAccount(_xrmManager.Service.Retrieve(_result.Entities[0].LogicalName, _result.Entities[0].Id, new ColumnSet(true)));
-                contact.RecordCount = _result.Entities.Count;
+            contact = TransformEntityToAccount(_xrmManager.Service.Retrieve(_result.Entities[0].LogicalName, _result.Entities[0].Id, new ColumnSet(true)));
+            contact.RecordCount = _result.Entities.Count;
 
-                return true;
-            }
-            else
-            {
-                // TODO regex check could be here
-                var sqlCon = OpenSql();
-                using (var command = new SqlCommand("sp_GetContactFromSocialSecurityNumber", sqlCon))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new SqlParameter
-                    {
-                        ParameterName = "@SocialSecurityNumber",
-                        SqlDbType = SqlDbType.VarChar,
-                        SqlValue = socialSecurityNumber
-                    });
-
-                    var reader = command.ExecuteXmlReader();
-
-                    AccountSqlList accounts;
-                    {
-                        var ser = new XmlSerializer(typeof(AccountSqlList));
-                        accounts = ser.Deserialize(reader) as AccountSqlList;
-                    }
-
-                    reader.Close();
-                    CloseSql(sqlCon);
-
-                    if (accounts?.Accounts == null || !accounts.Accounts.Any()) return false;
-
-                    contact = accounts.Accounts[0];
-                    contact.RecordCount = accounts.Accounts.Count;
-
-                    return true;
-                }
-            }
+            return true;
         }
 
 
@@ -625,96 +522,29 @@ namespace CGIXrmCreateCaseService.Case
             if (string.IsNullOrEmpty(addressPostalCode)) return false;
             if (string.IsNullOrEmpty(addressCity)) return false;
 
+            var _fx = "";
+            _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
+            _fx += "<entity name='contact'>";
+            _fx += "<attribute name='contactid' />";
+            _fx += "<filter type='and'>";
+            _fx += "<condition attribute='statecode' operator='eq' value='0' />";
+            _fx += "<condition attribute='firstname' operator='like' value='%" + firstName + "%' />";
+            _fx += "<condition attribute='lastname' operator='like' value='%" + lastName + "%' />";
+            _fx += "<condition attribute='address1_line2' operator='like' value='%" + addressLine2 + "%' />";
+            _fx += "<condition attribute='address1_postalcode' operator='like' value='%" + addressPostalCode + "%' />";
+            _fx += "<condition attribute='address1_city' operator='like' value='%" + addressCity + "%' />";
+            _fx += "</filter>";
+            _fx += "</entity>";
+            _fx += "</fetch>";
 
-            if (useFetchXml)
-            {
-                var _fx = "";
-                _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
-                _fx += "<entity name='contact'>";
-                _fx += "<attribute name='contactid' />";
-                _fx += "<filter type='and'>";
-                _fx += "<condition attribute='statecode' operator='eq' value='0' />";
-                _fx += "<condition attribute='firstname' operator='like' value='%" + firstName + "%' />";
-                _fx += "<condition attribute='lastname' operator='like' value='%" + lastName + "%' />";
-                _fx += "<condition attribute='address1_line2' operator='like' value='%" + addressLine2 + "%' />";
-                _fx += "<condition attribute='address1_postalcode' operator='like' value='%" + addressPostalCode + "%' />";
-                _fx += "<condition attribute='address1_city' operator='like' value='%" + addressCity + "%' />";
-                _fx += "</filter>";
-                _fx += "</entity>";
-                _fx += "</fetch>";
+            EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
 
-                EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
+            if (_result == null || _result.Entities.Count <= 0) return false;
 
-                if (_result == null || _result.Entities.Count <= 0) return false;
+            account = TransformEntityToAccount(_xrmManager.Service.Retrieve(_result.Entities[0].LogicalName, _result.Entities[0].Id, new ColumnSet(true)));
+            account.RecordCount = _result.Entities.Count;
 
-                account = TransformEntityToAccount(_xrmManager.Service.Retrieve(_result.Entities[0].LogicalName, _result.Entities[0].Id, new ColumnSet(true)));
-                account.RecordCount = _result.Entities.Count;
-
-                return true;
-            }
-            else
-            {
-
-                var sqlCon = OpenSql();
-
-                using (var command = new SqlCommand("sp_GetContactFromNameAndAddress", sqlCon))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new SqlParameter
-                    {
-                        ParameterName = "@FirstName",
-                        SqlDbType = SqlDbType.VarChar,
-                        SqlValue = firstName
-                    });
-
-                    command.Parameters.Add(new SqlParameter
-                    {
-                        ParameterName = "@LastName",
-                        SqlDbType = SqlDbType.VarChar,
-                        SqlValue = lastName
-                    });
-
-                    command.Parameters.Add(new SqlParameter
-                    {
-                        ParameterName = "@Address_Line2",
-                        SqlDbType = SqlDbType.VarChar,
-                        SqlValue = addressLine2
-                    });
-
-                    command.Parameters.Add(new SqlParameter
-                    {
-                        ParameterName = "@Address_PostalCode",
-                        SqlDbType = SqlDbType.VarChar,
-                        SqlValue = addressPostalCode
-                    });
-
-                    command.Parameters.Add(new SqlParameter
-                    {
-                        ParameterName = "@Address_City",
-                        SqlDbType = SqlDbType.VarChar,
-                        SqlValue = addressCity
-                    });
-
-                    var reader = command.ExecuteXmlReader();
-
-                    AccountSqlList accounts;
-                    {
-                        var ser = new XmlSerializer(typeof(AccountSqlList));
-                        accounts = ser.Deserialize(reader) as AccountSqlList;
-                    }
-
-                    reader.Close();
-                    CloseSql(sqlCon);
-
-                    if (accounts?.Accounts == null || !accounts.Accounts.Any()) return false;
-
-                    account = accounts.Accounts[0];
-                    account.RecordCount = accounts.Accounts.Count;
-
-                }
-
-                return true;
-            }
+            return true;
         }
 
 
@@ -728,54 +558,24 @@ namespace CGIXrmCreateCaseService.Case
         {
             Account returnValue = new Account();
 
-            if (useFetchXml)
-            {
-                var _fx = "";
-                _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
-                _fx += "<entity name='account'>";
-                _fx += "<attribute name='accountid' />";
-                _fx += "<filter type='and'>";
-                _fx += "<condition attribute='emailaddress1' operator='eq' value='" + emailAddress + "' />";
-                _fx += "<condition attribute='statecode' operator='eq' value='0' />";
-                _fx += "</filter>";
-                _fx += "</entity>";
-                _fx += "</fetch>";
+            var _fx = "";
+            _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
+            _fx += "<entity name='account'>";
+            _fx += "<attribute name='accountid' />";
+            _fx += "<filter type='and'>";
+            _fx += "<condition attribute='emailaddress1' operator='eq' value='" + emailAddress + "' />";
+            _fx += "<condition attribute='statecode' operator='eq' value='0' />";
+            _fx += "</filter>";
+            _fx += "</entity>";
+            _fx += "</fetch>";
 
-                EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
+            EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
 
-                if (_result == null || _result.Entities.Count <= 0) return null;
+            if (_result == null || _result.Entities.Count <= 0) return null;
 
-                returnValue = TransformEntityToAccount(_xrmManager.Service.Retrieve(_result.Entities[0].LogicalName, _result.Entities[0].Id, new ColumnSet(true)));
-                returnValue.RecordCount = _result.Entities.Count;
-            }
-            #region oldStoredprocedure
-            else
-            {
+            returnValue = TransformEntityToAccount(_xrmManager.Service.Retrieve(_result.Entities[0].LogicalName, _result.Entities[0].Id, new ColumnSet(true)));
+            returnValue.RecordCount = _result.Entities.Count;
 
-                var sqlCon = OpenSql();
-
-                using (var command = new SqlCommand("sp_GetAccountFromEmail", sqlCon))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new SqlParameter { ParameterName = "@emailaddress", SqlDbType = SqlDbType.VarChar, SqlValue = emailAddress });
-                    command.Parameters.Add(new SqlParameter { ParameterName = "@type", SqlDbType = SqlDbType.Int, SqlValue = (int)customerType });
-
-                    var reader = command.ExecuteXmlReader();
-                    AccountSqlList accounts;
-                    {
-                        var ser = new XmlSerializer(typeof(AccountSqlList));
-                        accounts = ser.Deserialize(reader) as AccountSqlList;
-                    }
-                    reader.Close();
-                    CloseSql(sqlCon);
-
-                    if (accounts?.Accounts == null || !accounts.Accounts.Any()) return null;
-
-                    returnValue = accounts.Accounts[0];
-                    returnValue.RecordCount = accounts.Accounts.Count;
-                }
-            }
-            #endregion  
             return returnValue;
         }
 
@@ -834,65 +634,22 @@ namespace CGIXrmCreateCaseService.Case
         private Account GetAccountFromId(Guid customerid, CustomerType customerType)
         {
             Account returnValue;
-
-            if (useFetchXml)
+            Entity _customer = null;
+            if (customerType == CustomerType.Organisation)
             {
-                Entity _customer = null;
-                if (customerType == CustomerType.Organisation)
-                {
 
-                    _customer = _xrmManager.Service.Retrieve("account", customerid, new ColumnSet(true));
+                _customer = _xrmManager.Service.Retrieve("account", customerid, new ColumnSet(true));
 
-                }
-                else if (customerType == CustomerType.Private)
-                {
-
-                    _customer = _xrmManager.Service.Retrieve("contact", customerid, new ColumnSet(true));
-                }
-
-                if (_customer == null) return null;
-
-                returnValue = TransformEntityToAccount(_customer);
             }
-            else
+            else if (customerType == CustomerType.Private)
             {
-                var sqlCon = OpenSql();
 
-                using (var command = new SqlCommand("sp_GetAccountFromAccountId", sqlCon))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    command.Parameters.Add(new SqlParameter
-                    {
-                        ParameterName = "@accountid",
-                        SqlDbType = SqlDbType.UniqueIdentifier,
-                        SqlValue = customerid
-                    });
-
-                    command.Parameters.Add(new SqlParameter
-                    {
-                        ParameterName = "@type",
-                        SqlDbType = SqlDbType.Int,
-                        SqlValue = (int)customerType
-                    });
-
-                    var reader = command.ExecuteXmlReader();
-
-                    AccountSqlList accounts;
-                    {
-                        var ser = new XmlSerializer(typeof(AccountSqlList));
-                        accounts = ser.Deserialize(reader) as AccountSqlList;
-                    }
-
-                    reader.Close();
-                    CloseSql(sqlCon);
-
-                    if (accounts?.Accounts == null || !accounts.Accounts.Any()) return null;
-
-                    returnValue = accounts.Accounts[0];
-                    returnValue.RecordCount = accounts.Accounts.Count;
-                }
+                _customer = _xrmManager.Service.Retrieve("contact", customerid, new ColumnSet(true));
             }
+
+            if (_customer == null) return null;
+
+            returnValue = TransformEntityToAccount(_customer);
 
             return returnValue;
         }
@@ -1095,162 +852,48 @@ namespace CGIXrmCreateCaseService.Case
             contactOrAccount = null;
             if (string.IsNullOrEmpty(emailAddress)) return false;
 
-            // TODO could do a regex check here
+            var _fx = "";
 
-            if (useFetchXml)
+            if (customerType == CustomerType.Organisation)
             {
-                var _fx = "";
-
-                if (customerType == CustomerType.Organisation)
-                {
-                    _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
-                    _fx += "<entity name='account'>";
-                    _fx += "<attribute name='accountid' />";
-                    _fx += "<filter type='and'>";
-                    _fx += "<filter type='or'>";
-                    _fx += "<condition attribute='emailaddress1' operator='eq' value= '" + emailAddress + "' />";
-                    _fx += "<condition attribute='emailaddress2' operator='eq' value= '" + emailAddress + "' />";
-                    _fx += "</filter>";
-                    _fx += "<condition attribute='statecode' operator='eq' value='0' />";
-                    _fx += "</filter>";
-                    _fx += "</entity>";
-                    _fx += "</fetch>";
-
-                    //_fx += "<filter type='and'>";
-                    //_fx += "<condition attribute='emailaddress1' operator='eq' value='" + emailAddress + "' />";
-                    //_fx += "<condition attribute='statecode' operator='eq' value='0' />";
-                    //_fx += "</filter>";
-
-                }
-                else if (customerType == CustomerType.Private)
-                {
-                    _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
-                    _fx += "<entity name='contact'>";
-                    _fx += "<attribute name='contactid' />";
-                    _fx += "<filter type='and'>";
-                    _fx += "<filter type='or'>";
-                    _fx += "<condition attribute='emailaddress1' operator='eq' value= '" + emailAddress + "' />";
-                    _fx += "<condition attribute='emailaddress2' operator='eq' value= '" + emailAddress + "' />";
-                    _fx += "</filter>";
-                    _fx += "<condition attribute='statecode' operator='eq' value='0' />";
-                    _fx += "</filter>";
-                    _fx += "</entity>";
-                    _fx += "</fetch>";
-
-                    //_fx += "<filter type='and'>";
-                    //_fx += "<condition attribute='emailaddress1' operator='eq' value='" + emailAddress + "' />";
-                    //_fx += "<condition attribute='statecode' operator='eq' value='0' />";
-                    //_fx += "</filter>";
-                }
-
-                EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
-
-                if (_result == null || _result.Entities.Count <= 0) return false;
-
-                contactOrAccount = TransformEntityToAccount(_xrmManager.Service.Retrieve(_result.Entities[0].LogicalName, _result.Entities[0].Id, new ColumnSet(true)));
-                contactOrAccount.RecordCount = _result.Entities.Count;
-
-                return true;
-
+                _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
+                _fx += "<entity name='account'>";
+                _fx += "<attribute name='accountid' />";
+                _fx += "<filter type='and'>";
+                _fx += "<filter type='or'>";
+                _fx += "<condition attribute='emailaddress1' operator='eq' value= '" + emailAddress + "' />";
+                _fx += "<condition attribute='emailaddress2' operator='eq' value= '" + emailAddress + "' />";
+                _fx += "</filter>";
+                _fx += "<condition attribute='statecode' operator='eq' value='0' />";
+                _fx += "</filter>";
+                _fx += "</entity>";
+                _fx += "</fetch>";
             }
-            else
+            else if (customerType == CustomerType.Private)
             {
-
-                var sqlCon = OpenSql();
-
-                using (var command = new SqlCommand("sp_GetAccountFromEmail", sqlCon))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    command.Parameters.Add(new SqlParameter
-                    {
-                        ParameterName = "@emailaddress",
-                        SqlDbType = SqlDbType.VarChar,
-                        SqlValue = emailAddress
-                    });
-
-                    command.Parameters.Add(new SqlParameter
-                    {
-                        ParameterName = "@type",
-                        SqlDbType = SqlDbType.Int,
-                        SqlValue = (int)customerType
-                    });
-
-                    var reader = command.ExecuteXmlReader();
-
-                    AccountSqlList accounts;
-                    {
-                        var ser = new XmlSerializer(typeof(AccountSqlList));
-                        accounts = ser.Deserialize(reader) as AccountSqlList;
-                    }
-
-                    reader.Close();
-                    CloseSql(sqlCon);
-
-                    if (accounts?.Accounts == null || !accounts.Accounts.Any()) return false;
-
-                    contactOrAccount = accounts.Accounts[0];
-                    contactOrAccount.RecordCount = accounts.Accounts.Count;
-
-                    return true;
-                }
+                _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
+                _fx += "<entity name='contact'>";
+                _fx += "<attribute name='contactid' />";
+                _fx += "<filter type='and'>";
+                _fx += "<filter type='or'>";
+                _fx += "<condition attribute='emailaddress1' operator='eq' value= '" + emailAddress + "' />";
+                _fx += "<condition attribute='emailaddress2' operator='eq' value= '" + emailAddress + "' />";
+                _fx += "</filter>";
+                _fx += "<condition attribute='statecode' operator='eq' value='0' />";
+                _fx += "</filter>";
+                _fx += "</entity>";
+                _fx += "</fetch>";
             }
+
+            EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
+
+            if (_result == null || _result.Entities.Count <= 0) return false;
+
+            contactOrAccount = TransformEntityToAccount(_xrmManager.Service.Retrieve(_result.Entities[0].LogicalName, _result.Entities[0].Id, new ColumnSet(true)));
+            contactOrAccount.RecordCount = _result.Entities.Count;
+
+            return true;
         }
-
-        #region Remove unused funciton
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="emailcount"></param>
-        /// <returns></returns>
-        /* private Account GetAccountFromEmailRgol(AutoRgCaseRequest request, out string emailcount) //TODO: This private method is never used? Delete (Last check 2016-03-13)
-         {
-             Account returnValue;
-             emailcount = "0";
-
-             var sqlCon = OpenSql();
-
-             using (var command = new SqlCommand("sp_GetAccountFromEmail", sqlCon))
-             {
-                 command.CommandType = CommandType.StoredProcedure;
-
-                 command.Parameters.Add(new SqlParameter
-                 {
-                     ParameterName = "@emailaddress",
-                     SqlDbType = SqlDbType.VarChar,
-                     SqlValue = request.EmailAddress
-                 });
-
-                 command.Parameters.Add(new SqlParameter
-                 {
-                     ParameterName = "@type",
-                     SqlDbType = SqlDbType.Int,
-                     SqlValue = request.CustomerType
-                 });
-
-                 var reader = command.ExecuteXmlReader();
-
-                 AccountSqlList accounts;
-                 {
-                     var ser = new XmlSerializer(typeof(AccountSqlList));
-                     accounts = ser.Deserialize(reader) as AccountSqlList;
-                 }
-
-                 reader.Close();
-                 CloseSql(sqlCon);
-
-                 if (accounts?.Accounts == null || !accounts.Accounts.Any()) return null;
-
-                 returnValue = accounts.Accounts[0];
-                 emailcount = accounts.Accounts.Count.ToString();
-             }
-
-             return returnValue;
-         }
-         */
-        #endregion
 
         /// <summary>
         /// 
@@ -1260,56 +903,26 @@ namespace CGIXrmCreateCaseService.Case
         {
             Setting returnValue = new Setting();
 
-            if (useFetchXml)
-            {
-                var _fx = "";
-                _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
-                _fx += "<entity name='cgi_setting'>";
-                _fx += "<all-attributes />";
-                _fx += "<filter type='and'>";
-                _fx += "<condition attribute='statecode' operator='eq' value='0' />";
-                _fx += "<filter type='or'>";
-                _fx += "<condition attribute='cgi_validto' operator='next-x-years' value='100' />";
-                _fx += "<condition attribute='cgi_validto' operator='null' />";
-                _fx += "</filter>";
-                _fx += "<condition attribute='cgi_validfrom' operator='last-x-years' value='100' />";
-                _fx += "</filter>";
-                _fx += "</entity>";
-                _fx += "</fetch>";
+            var _fx = "";
+            _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
+            _fx += "<entity name='cgi_setting'>";
+            _fx += "<all-attributes />";
+            _fx += "<filter type='and'>";
+            _fx += "<condition attribute='statecode' operator='eq' value='0' />";
+            _fx += "<filter type='or'>";
+            _fx += "<condition attribute='cgi_validto' operator='next-x-years' value='100' />";
+            _fx += "<condition attribute='cgi_validto' operator='null' />";
+            _fx += "</filter>";
+            _fx += "<condition attribute='cgi_validfrom' operator='last-x-years' value='100' />";
+            _fx += "</filter>";
+            _fx += "</entity>";
+            _fx += "</fetch>";
 
-                EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
+            EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
 
-                if (_result == null || _result.Entities.Count <= 0) return null;
+            if (_result == null || _result.Entities.Count <= 0) return null;
 
-                returnValue = TransformEntityToSetting(_result.Entities[0]);
-            }
-            #region oldStoredProcedure
-            else
-            {
-
-                var sqlCon = OpenSql();
-                using (var command = new SqlCommand("sp_GetDefaultCustomer", sqlCon))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    var reader = command.ExecuteXmlReader();
-
-                    SettingSqlList settings;
-                    {
-                        var ser = new XmlSerializer(typeof(SettingSqlList));
-                        settings = ser.Deserialize(reader) as SettingSqlList;
-                    }
-
-                    reader.Close();
-                    CloseSql(sqlCon);
-
-                    if (settings?.Settings != null && settings.Settings.Any())
-                    {
-                        returnValue = settings.Settings[0];
-                    }
-                }
-            }
-            #endregion
+            returnValue = TransformEntityToSetting(_result.Entities[0]);
 
             return returnValue;
 
@@ -1323,16 +936,19 @@ namespace CGIXrmCreateCaseService.Case
         /// <returns></returns>
         private Incident GetIncidentFromId(Guid incidentid)
         {
-            Entity ent = _xrmManager.Service.Retrieve(IncidentEntity.EntityLogicalName, incidentid, new ColumnSet(IncidentEntity.Fields.TicketNumber,
-                                                                                                                            IncidentEntity.Fields.AccountId,
-                                                                                                                            IncidentEntity.Fields.ContactId,
-                                                                                                                            IncidentEntity.Fields.Title,
-                                                                                                                            IncidentEntity.Fields.cgi_TravelCardNo,
-                                                                                                                            IncidentEntity.Fields.cgi_Accountid,
-                                                                                                                            IncidentEntity.Fields.cgi_Contactid,
-                                                                                                                            IncidentEntity.Fields.cgi_TelephoneNumber,
-                                                                                                                            IncidentEntity.Fields.cgi_rgol_delivery_email,
-                                                                                                                            IncidentEntity.Fields.cgi_rgol_telephonenumber));
+            Entity ent = _xrmManager.Service.Retrieve(
+                IncidentEntity.EntityLogicalName, 
+                incidentid, 
+                new ColumnSet(IncidentEntity.Fields.TicketNumber,
+                              IncidentEntity.Fields.AccountId,
+                              IncidentEntity.Fields.ContactId,
+                              IncidentEntity.Fields.Title,
+                              IncidentEntity.Fields.cgi_TravelCardNo,
+                              IncidentEntity.Fields.cgi_Accountid,
+                              IncidentEntity.Fields.cgi_Contactid,
+                              IncidentEntity.Fields.cgi_TelephoneNumber,
+                              IncidentEntity.Fields.cgi_rgol_delivery_email,
+                              IncidentEntity.Fields.cgi_rgol_telephonenumber));
 
             IncidentEntity incident = ent.ToEntity<IncidentEntity>();
             return new Incident
@@ -1393,61 +1009,23 @@ namespace CGIXrmCreateCaseService.Case
         {
             RgolSetting returnValue = new RgolSetting();
 
-            if (useFetchXml)
-            {
-                var _fx = "";
-                _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
-                _fx += "<entity name='cgi_rgolsetting'>";
-                _fx += "<all-attributes />";
-                _fx += "<filter type='and'>";
-                _fx += "<condition attribute='statecode' operator='eq' value='0' />";
-                _fx += "<condition attribute='cgi_rgolsettingno' operator='eq' value='" + refundType + "' />";
-                _fx += "</filter>";
-                _fx += "</entity>";
-                _fx += "</fetch>";
+            var _fx = "";
+            _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
+            _fx += "<entity name='cgi_rgolsetting'>";
+            _fx += "<all-attributes />";
+            _fx += "<filter type='and'>";
+            _fx += "<condition attribute='statecode' operator='eq' value='0' />";
+            _fx += "<condition attribute='cgi_rgolsettingno' operator='eq' value='" + refundType + "' />";
+            _fx += "</filter>";
+            _fx += "</entity>";
+            _fx += "</fetch>";
 
-                EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
+            EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
 
-                if (_result == null || _result.Entities.Count <= 0) return null;
+            if (_result == null || _result.Entities.Count <= 0) return null;
 
-                returnValue = TransformEntityToRgolSetting(_result.Entities[0]);
-            }
-            else
-            {
+            returnValue = TransformEntityToRgolSetting(_result.Entities[0]);
 
-                var sqlCon = OpenSql();
-
-                using (var command = new SqlCommand("sp_GetRGOLSetting", sqlCon))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add(new SqlParameter
-                    {
-                        ParameterName = "@rgolsetting",
-                        SqlDbType = SqlDbType.Int,
-                        SqlValue = refundType,
-                    });
-
-                    var reader = command.ExecuteXmlReader();
-
-                    RgolSettingSqlList rgolsettings;
-                    {
-                        var ser = new XmlSerializer(typeof(RgolSettingSqlList));
-                        rgolsettings = ser.Deserialize(reader) as RgolSettingSqlList;
-                    }
-
-                    reader.Close();
-                    CloseSql(sqlCon);
-
-                    if (rgolsettings?.RgolSettings != null && rgolsettings.RgolSettings.Any())
-                    {
-                        returnValue = rgolsettings.RgolSettings[0];
-                    }
-                    else
-                    {
-                        throw new Exception($"RGOL setting with refundType number {refundType} do not exist.");
-                    }
-                }
-            }
             return returnValue;
         }
 
@@ -1461,58 +1039,23 @@ namespace CGIXrmCreateCaseService.Case
         {
             string returnValue = null;
 
-            if (useFetchXml)
-            {
-                var _fx = "";
-                _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
-                _fx += "<entity name='cgi_travelcard'>";
-                _fx += "<all-attributes />";
-                _fx += "<filter type='and'>";
-                _fx += "<condition attribute='statecode' operator='eq' value='0' />";
-                _fx += "<condition attribute='cgi_travelcardnumber' operator='eq' value='" + cardnumber + "' />";
-                _fx += "</filter>";
-                _fx += "</entity>";
-                _fx += "</fetch>";
+            var _fx = "";
+            _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
+            _fx += "<entity name='cgi_travelcard'>";
+            _fx += "<all-attributes />";
+            _fx += "<filter type='and'>";
+            _fx += "<condition attribute='statecode' operator='eq' value='0' />";
+            _fx += "<condition attribute='cgi_travelcardnumber' operator='eq' value='" + cardnumber + "' />";
+            _fx += "</filter>";
+            _fx += "</entity>";
+            _fx += "</fetch>";
 
-                EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
+            EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
 
-                if (_result == null || _result.Entities.Count <= 0) return null;
+            if (_result == null || _result.Entities.Count <= 0) return null;
 
-                if (_result.Entities[0].Contains("cgi_travelcardid"))
-                    returnValue = _result.Entities[0].GetAttributeValue<EntityReference>("cgi_travelcardid").Id.ToString("D");
-            }
-            else
-            {
-                var sqlCon = OpenSql();
-
-                using (var command = new SqlCommand("sp_GetTravelCard", sqlCon))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    command.Parameters.Add(new SqlParameter
-                    {
-                        ParameterName = "@cardnumber",
-                        SqlDbType = SqlDbType.VarChar,
-                        SqlValue = cardnumber
-                    });
-
-                    var reader = command.ExecuteXmlReader();
-
-                    CardSqlList cards;
-                    {
-                        var ser = new XmlSerializer(typeof(CardSqlList));
-                        cards = ser.Deserialize(reader) as CardSqlList;
-                    }
-
-                    reader.Close();
-                    CloseSql(sqlCon);
-
-                    if (cards?.Cards != null && cards.Cards.Any())
-                    {
-                        returnValue = cards.Cards[0].TravelCardId;
-                    }
-                }
-            }
+            if (_result.Entities[0].Contains("cgi_travelcardid"))
+                returnValue = _result.Entities[0].GetAttributeValue<EntityReference>("cgi_travelcardid").Id.ToString("D");
 
             return returnValue;
         }
@@ -2134,46 +1677,19 @@ namespace CGIXrmCreateCaseService.Case
         {
             BaseCurrency returnValue = new BaseCurrency();
 
-            if (useFetchXml)
-            {
-                var _fx = "";
-                _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
-                _fx += "<entity name='transactioncurrency'>";
-                _fx += "<all-attributes />";
-                _fx += "<order attribute='createdon' descending='false' />";
-                _fx += "</entity>";
-                _fx += "</fetch>";
+            var _fx = "";
+            _fx += "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>";
+            _fx += "<entity name='transactioncurrency'>";
+            _fx += "<all-attributes />";
+            _fx += "<order attribute='createdon' descending='false' />";
+            _fx += "</entity>";
+            _fx += "</fetch>";
 
-                EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
+            EntityCollection _result = _xrmManager.Service.RetrieveMultiple(new FetchExpression(_fx));
 
-                if (_result == null || _result.Entities.Count <= 0) return null;
+            if (_result == null || _result.Entities.Count <= 0) return null;
 
-                returnValue = TransformEntityToBaseCurrency(_result.Entities[0]);
-
-            }
-            else
-            {
-
-                SqlConnection sqlCon = OpenSql();
-                using (var command = new SqlCommand("sp_GetBaseCurrency", sqlCon))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    var reader = command.ExecuteXmlReader();
-                    BaseCurrencySqlList currencies;
-                    {
-                        var ser = new XmlSerializer(typeof(BaseCurrencySqlList));
-                        currencies = ser.Deserialize(reader) as BaseCurrencySqlList;
-                    }
-                    reader.Close();
-                    CloseSql(sqlCon);
-
-                    if (currencies?.BaseCurrencies != null && currencies.BaseCurrencies.Any())
-                    {
-                        returnValue = currencies.BaseCurrencies[0];
-                    }
-                }
-            }
+            returnValue = TransformEntityToBaseCurrency(_result.Entities[0]);
 
             return returnValue;
         }
@@ -3767,7 +3283,7 @@ namespace CGIXrmCreateCaseService.Case
                     response.CaseNumber = (string)entityResults.Entities[0]["ticketnumber"];
 
                 response.Success = false;
-                response.ErrorMessage = "Duplicate RGOLIssueID";//Do not change this error message. Service consumer code may use it to identify duplicates.
+                response.ErrorMessage = CaseResolvedErrorMessage;
 
                 return response;
             }
@@ -3862,6 +3378,15 @@ namespace CGIXrmCreateCaseService.Case
                     response.Success = false;
                     response.ErrorMessage = "Guid is guid empty format";
                     return response;
+                }
+
+                if (IsCaseResolved(request.CaseID))
+                {
+                    return new UpdateAutoRgCaseResponse()
+                    {
+                        Success = false,
+                        ErrorMessage = CaseResolvedErrorMessage
+                    };
                 }
 
                 // Do debug-tracing. Johan Endeavor
@@ -3967,7 +3492,7 @@ namespace CGIXrmCreateCaseService.Case
                 }
 
                 // Delete all current biff transactions as this method could be called several times.
-                var guardErrorMessage = "More then 50 bifftransactions attached to case. Something is proberbly wrong.";
+                var guardErrorMessage = "Error: More than 50 bifftransactions attached to case.";
                 DeleteCurrentEntitiesAttachedToCase(CgiBiffTransaction, request.CaseID, guardErrorMessage);
 
                 foreach (var biffTrans in request.BiffTransactions)
@@ -4067,208 +3592,6 @@ namespace CGIXrmCreateCaseService.Case
             }
         }
 
-        #region OldRequestCreateTravelInformationLinkedToCase
-
-        /*
-        internal UpdateAutoRgResponse OldRequestCreateTravelInformationLinkedToCase(UpdateAutoRgCaseTravelInformationsRequest request)
-        {
-            var response = new UpdateAutoRgResponse()
-            {
-                Success = false,
-                ErrorMessage = string.Empty
-            };
-
-            try
-            {
-                if (request.CaseID == Guid.Empty)
-                {
-                    throw new Exception("Request parameter CaseId is guid empty format.");
-                }
-
-                // Delete all current travel informations as this method could be called several times.
-                var guardErrorMessage = "More then 50 travelinformations attached to case. Something is proberbly wrong.";
-                DeleteCurrentEntitiesAttachedToCase(CgiTravelInformation, request.CaseID, guardErrorMessage);
-
-                foreach (var travelInfo in request.TravelInformations)
-                {
-                    var travelInformation = new Entity(CgiTravelInformation)
-                    {
-                        Attributes = new AttributeCollection
-                        {
-                            {"cgi_caseid", new EntityReference("incident", request.CaseID)}
-                        }
-                    };
-
-                    if (!string.IsNullOrEmpty(travelInfo.Line))
-                    {
-                        travelInformation.Attributes.Add("cgi_line", travelInfo.Line);
-                    }
-
-                    if (!string.IsNullOrEmpty(travelInfo.Company))
-                    {
-                        travelInformation.Attributes.Add("cgi_contractor", travelInfo.Company);
-                    }
-
-                    if (travelInfo.StartPlanned != null)
-                    {
-                        travelInformation.Attributes.Add("cgi_startplanned", travelInfo.StartPlanned);
-                    }
-
-                    if (travelInfo.ArrivalPlanned != null)
-                    {
-                        travelInformation.Attributes.Add("cgi_arivalplanned", travelInfo.ArrivalPlanned);
-                    }
-
-                    if (!string.IsNullOrEmpty(travelInfo.Title))
-                    {
-                        travelInformation.Attributes.Add("cgi_travelinformation", travelInfo.Title);
-                    }
-
-                    if (!string.IsNullOrEmpty(travelInfo.ArrivalActual))
-                    {
-                        travelInformation.Attributes.Add("cgi_arivalactual", travelInfo.ArrivalActual);
-                    }
-                    if (!string.IsNullOrEmpty(travelInfo.City))
-                    {
-                        travelInformation.Attributes.Add("cgi_city", travelInfo.City);
-                    }
-
-                    if (!string.IsNullOrEmpty(travelInfo.DeviationMessage))
-                    {
-                        travelInformation.Attributes.Add("cgi_deviationmessage", travelInfo.DeviationMessage);
-                    }
-                    if (!string.IsNullOrEmpty(travelInfo.DirectionText))
-                    {
-                        travelInformation.Attributes.Add("cgi_directiontext", travelInfo.DirectionText);
-                    }
-
-                    if (!string.IsNullOrEmpty(travelInfo.DisplayText))
-                    {
-                        //Start time
-
-                        var plannedStartTime = string.Empty;
-                        string actualStartTime;
-                        var diffStartTime = string.Empty;
-
-                        try
-                        {
-                            actualStartTime = Convert.ToDateTime(travelInfo.StartActual).ToString("H:mm:ss");
-                            plannedStartTime = travelInfo.StartPlanned.Value.ToString("H:mm:ss");
-                            var diffStartTimeSpan = Convert.ToDateTime(travelInfo.StartActual) - travelInfo.StartPlanned.Value;
-
-                            if (diffStartTimeSpan.TotalMinutes > 0)
-                            {
-                                diffStartTime += "+";
-                            }
-
-                            if (diffStartTimeSpan.TotalDays > 364 || diffStartTimeSpan.TotalDays < -364)
-                            {
-                                diffStartTime = "X";
-                                actualStartTime = string.Empty;
-                            }
-                            else
-                            {
-                                diffStartTime += diffStartTimeSpan.TotalMinutes.ToString(CultureInfo.InvariantCulture);
-                            }
-                        }
-                        catch
-                        {
-                            diffStartTime = "X";
-                            actualStartTime = string.Empty;
-                        }
-
-
-                        //Arrive time
-                        var plannedEndTime = string.Empty;
-                        string actualEndTime;
-                        var diffEndTime = string.Empty;
-
-                        try
-                        {
-                            plannedEndTime = travelInfo.ArrivalPlanned.Value.ToString("H:mm:ss");
-                            actualEndTime = Convert.ToDateTime(travelInfo.ArrivalActual).ToString("H:mm:ss");
-                            var diffEndTimeSpan = Convert.ToDateTime(travelInfo.ArrivalActual) - travelInfo.ArrivalPlanned.Value;
-
-                            if (diffEndTimeSpan.TotalMinutes > 0)
-                            {
-                                diffEndTime += "+";
-                            }
-
-                            if (diffEndTimeSpan.TotalDays > 364 || diffEndTimeSpan.TotalDays < -364)
-                            {
-                                diffEndTime = "X";
-                                actualEndTime = "";
-                            }
-                            else
-                            {
-                                diffEndTime += diffEndTimeSpan.TotalMinutes.ToString(CultureInfo.InvariantCulture);
-                            }
-                        }
-                        catch
-                        {
-                            diffEndTime = "X";
-                            actualEndTime = "";
-                        }
-
-
-                        string travelCompany = "(ingen operatör)";
-                        if (!string.IsNullOrEmpty(travelInfo.DisplayText))
-                        {
-                            travelCompany = travelInfo.Company;
-                        }
-
-                        travelInformation.Attributes.Add("cgi_displaytext",
-                            $"Linje: [{travelInfo.Line}] Tur:{plannedStartTime}[{actualStartTime}({diffStartTime})] {travelInfo.Start} - {plannedEndTime}[{actualEndTime}({diffEndTime})] {travelInfo.Stop} Entreprenör: {travelCompany}");
-                    }
-                    else if (!string.IsNullOrEmpty(travelInfo.DisplayText))
-                    {
-
-                    }
-
-                    if (!string.IsNullOrEmpty(travelInfo.Start))
-                    {
-                        travelInformation.Attributes.Add("cgi_start", travelInfo.Start);
-                    }
-
-                    if (!string.IsNullOrEmpty(travelInfo.StartActual))
-                    {
-                        travelInformation.Attributes.Add("cgi_startactual", travelInfo.StartActual);
-                    }
-                    if (!string.IsNullOrEmpty(travelInfo.Stop))
-                    {
-                        travelInformation.Attributes.Add("cgi_stop", travelInfo.Stop);
-                    }
-
-                    if (!string.IsNullOrEmpty(travelInfo.Tour))
-                    {
-                        travelInformation.Attributes.Add("cgi_tour", travelInfo.Tour);
-                    }
-
-                    if (!string.IsNullOrEmpty(travelInfo.Transport))
-                    {
-                        travelInformation.Attributes.Add("cgi_transport", travelInfo.Transport);
-                    }
-
-                    _xrmManager.Create(travelInformation);
-                }
-
-                response.Success = true;
-
-            }
-            catch (FaultException faultex)
-            {
-                response.ErrorMessage = faultex.Message;
-            }
-            catch (Exception ex)
-            {
-                response.ErrorMessage = ex.Message;
-            }
-
-            return response;
-        }
-        */
-        #endregion OldRequestCreateTravelInformationLinkedToCase
-
         internal UpdateAutoRgResponse RequestCreateTravelInformationLinkedToCase(UpdateAutoRgCaseTravelInformationsRequest request)
         {
 
@@ -4336,8 +3659,17 @@ namespace CGIXrmCreateCaseService.Case
                     throw new Exception("Request parameter CaseId is guid empty format.");
                 }
 
+                if(IsCaseResolved(request.CaseID))
+                {
+                    return new UpdateAutoRgResponse()
+                    {
+                        Success = false,
+                        ErrorMessage = CaseResolvedErrorMessage
+                    };
+                }
+
                 // Delete all current travel informations as this method could be called several times.
-                var guardErrorMessage = "More then 50 travelinformations attached to case. Something is proberbly wrong.";
+                var guardErrorMessage = "Error: More than 50 travelinformation rows attached to case.";
                 DeleteCurrentEntitiesAttachedToCase(CgiTravelInformation, request.CaseID, guardErrorMessage);
 
                 foreach (var travelInfo in request.TravelInformations)
@@ -4415,119 +3747,11 @@ namespace CGIXrmCreateCaseService.Case
                             travelInformation.Attributes.Add("cgi_startactualdatetime", travelInfo.StartActualDateTime);
                     }
 
-                    //#region Times
-                    //var plannedStartTime = string.Empty;
-                    //string actualStartTime = string.Empty;
-                    //var diffStartTime = string.Empty;
-                    //bool failedToStart = true;
-
-                    //var plannedArriveTime = string.Empty;
-                    //string actualArriveTime = string.Empty;
-                    //var diffArriveTime = string.Empty;
-                    //bool failedToArrive = true;
-
-                    //#region Start time
-                    //try
-                    //{
-
-                    //    DateTime t_SA = Convert.ToDateTime(travelInfo.StartActual);
-                    //    DateTime t_SP = Convert.ToDateTime(travelInfo.StartPlanned);
-
-                    //    if (t_SA < new DateTime(9000, 1, 1))
-                    //    {
-                    //        var diffStartTimeSpan = t_SA - t_SP;
-
-                    //        actualStartTime = Convert.ToDateTime(travelInfo.StartActual).ToString("HH:mm:ss");
-                    //        plannedStartTime = travelInfo.StartPlanned.Value.ToString("HH:mm:ss");
-                    //        //var diffStartTimeSpan = Convert.ToDateTime(travelInfo.StartActual) - travelInfo.StartPlanned.Value;
-
-                    //        if (diffStartTimeSpan.Minutes == 0)
-                    //        {
-                    //            diffStartTime = string.Format("{0}", diffStartTimeSpan.Minutes.ToString());
-                    //        }
-
-                    //        else if (diffStartTimeSpan.Minutes > 0)
-                    //        {
-                    //            diffStartTime = string.Format("+{0}", diffStartTimeSpan.Minutes.ToString());
-                    //        }
-                    //        else if (diffStartTimeSpan.Minutes < 0)
-                    //        {
-                    //            diffStartTime = string.Format("{0}", diffStartTimeSpan.Minutes.ToString());
-                    //        }
-                    //        failedToStart = false;
-                    //    }
-                    //    else
-                    //    {
-                    //        failedToStart = true;
-                    //    }
-                    //}
-                    //catch
-                    //{
-                    //    diffStartTime = string.Empty;
-                    //    actualStartTime = string.Empty;
-                    //    failedToStart = true;
-                    //}
-
-                    //#endregion Start time
-
-                    //#region Arrive time
-                    //try
-                    //{
-
-                    //    DateTime t_AA = Convert.ToDateTime(travelInfo.ArrivalActual);
-                    //    DateTime t_AP = Convert.ToDateTime(travelInfo.ArrivalPlanned);
-
-                    //    if (t_AA < new DateTime(9000, 1, 1))
-                    //    {
-                    //        var diffStartTimeSpan = t_AA - t_AP;
-
-                    //        plannedArriveTime = travelInfo.ArrivalPlanned.Value.ToString("HH:mm:ss");
-                    //        actualArriveTime = Convert.ToDateTime(travelInfo.ArrivalActual).ToString("HH:mm:ss");
-                    //        var diffArriveTimeSpan = t_AA - t_AP;
-
-                    //        if (diffArriveTimeSpan.Minutes == 0)
-                    //        {
-                    //            diffArriveTime = string.Format("{0}", diffArriveTimeSpan.Minutes.ToString());
-                    //        }
-                    //        else if (diffArriveTimeSpan.Minutes > 0)
-
-                    //        {
-                    //            diffArriveTime = string.Format("+{0}", diffArriveTimeSpan.Minutes.ToString());
-
-                    //        }
-                    //        else if (diffArriveTimeSpan.Minutes < 0)
-                    //        {
-                    //            diffArriveTime = string.Format("{0}", diffArriveTimeSpan.Minutes.ToString());
-                    //        }
-
-                    //        failedToArrive = false;
-                    //        failedToStart = false;
-                    //    }
-                    //    else
-                    //    {
-                    //        failedToArrive = true;
-                    //    }
-                    //}
-                    //catch
-                    //{
-                    //    diffArriveTime = string.Empty;
-                    //    actualArriveTime = string.Empty;
-                    //    failedToArrive = true;
-                    //}
-
-
-                    //#endregion Arrive time
-                    //#endregion Times
-
                     string travelCompany = "(ingen operatör)";
                     if (!string.IsNullOrEmpty(travelInfo.DisplayText))
                     {
                         travelCompany = travelInfo.Company;
                     }
-
-                    //travelInformation.Attributes.Add("cgi_displaytext",
-                    //    $"Linje: [{travelInfo.Line}] Tur:{plannedStartTime}[{actualStartTime}({diffStartTime})] {travelInfo.Start} - {plannedArriveTime}[{actualArriveTime}({diffArriveTime})] {travelInfo.Stop} Entreprenör: {travelCompany}");
-
 
                     if (!string.IsNullOrEmpty(travelInfo.Start))
                     {
@@ -4553,30 +3777,14 @@ namespace CGIXrmCreateCaseService.Case
                     {
                         travelInformation.Attributes.Add("cgi_arrivaldifference", travelInfo.ArrivalDifference);
                     }
-                    //else if (!string.IsNullOrEmpty(diffArriveTime))
-                    //{
-                    //    travelInformation.Attributes.Add("cgi_arrivaldifference", diffArriveTime);
-                    //}
 
                     if (!string.IsNullOrEmpty(travelInfo.StartDifference))
                     {
                         travelInformation.Attributes.Add("cgi_startdifference", travelInfo.StartDifference);
                     }
-                    //else if (!string.IsNullOrEmpty(diffStartTime))
-                    //{
-                    //    travelInformation.Attributes.Add("cgi_startdifference", diffStartTime);
-                    //}
 
                     travelInformation.Attributes.Add("cgi_failedtoarrive", travelInfo.FailedToArrive);
                     travelInformation.Attributes.Add("cgi_failedtodepart", travelInfo.FailedToStart);
-
-
-                    /*
-                    if (!string.IsNullOrEmpty(travelInfo.lineType))
-                    {
-                        travelInformation.Attributes.Add("cgi_linetype", lineType); //Not in use
-                    }
-                    */
 
                     if (!string.IsNullOrEmpty(travelInfo.TrainNumber))
                     {
@@ -4596,13 +3804,9 @@ namespace CGIXrmCreateCaseService.Case
 
                     _log.Debug($"Creating travel information.");
                     _xrmManager.Create(travelInformation);
-
                 }
 
                 response.Success = true;
-
-
-
             }
             catch (FaultException faultex)
             {
@@ -4617,5 +3821,30 @@ namespace CGIXrmCreateCaseService.Case
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns true if a case with the given id exists in the system and the incident stage code is any of the three resolved stages: 
+        /// Resolved, Resolved-Approved or Resolved-Declined.
+        /// </summary>
+        private bool IsCaseResolved(Guid incidentId)
+        {
+            var query = new QueryExpression("incident");
+            query.ColumnSet.AddColumn("incidentid");
+
+            var idFilter = new FilterExpression();
+            idFilter.AddCondition("incidentid", ConditionOperator.Equal, incidentId);
+
+            var stageFilter = new FilterExpression();
+            stageFilter.FilterOperator = LogicalOperator.Or;
+            stageFilter.AddCondition("incidentstagecode", ConditionOperator.Equal, 285050004); // Resolved
+            stageFilter.AddCondition("incidentstagecode", ConditionOperator.Equal, 285050006); // Resolved-Approved
+            stageFilter.AddCondition("incidentstagecode", ConditionOperator.Equal, 285050007); // Resolved-Declined
+
+            query.Criteria.AddFilter(idFilter);
+            query.Criteria.AddFilter(stageFilter);
+
+            var entityResults = _xrmManager.Service.RetrieveMultiple(query);
+            return entityResults.Entities.Count > 0;
+        }
     }
 }

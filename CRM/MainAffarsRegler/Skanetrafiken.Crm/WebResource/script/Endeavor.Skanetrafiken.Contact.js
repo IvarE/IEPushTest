@@ -745,7 +745,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 var hifen = "-";
                 var position = 8;
 
-                if (vssNumber != null) {
+                if (vssNumber != null && vssNumber != "") {
                     var check = vssNumber.slice(position, position + 1);
                     if (check !== hifen)
                         ssNumber.setValue([vssNumber.slice(0, position), hifen, vssNumber.slice(position)].join(''));
@@ -1177,6 +1177,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
                 //Handle Composite fields
                 Endeavor.Skanetrafiken.Contact.handleAddressCompositeFields(formContext);
+                if (formContext.ui.getFormType() != FORM_TYPE_CREATE)
+                    Endeavor.formscriptfunctions.CustomizeTheNotesHeight(formContext);
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Contact.onFormLoad\n\n" + e.message);
@@ -1288,14 +1290,14 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     else {
                         var _sectrue = Endeavor.Skanetrafiken.Contact.validatePersonalNumber(_soc);
                         if (_sectrue == false) {
-                            alert("Personnummer är inte giltigt. Privatkunden kan inte sparas.");
+                            alert("Personnummer är inte giltigt. Kunden kan inte sparas.");
                             _return_save = false;
                         }
                         else {
                             var _soc_trim = _soc.replace('-', '');
                             var _soc_trim_length = _soc_trim.length;
                             if (_soc_trim_length != 12) {
-                                alert("Personnummer har fel längd. Privatkunden kan inte sparas");
+                                alert("Personnummer har fel längd. Kunden kan inte sparas");
                                 _return_save = false;
                             }
                             else
@@ -1455,5 +1457,6 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 alert("Fel i Endeavor.Skanetrafiken.Contact.format_ZIPCodeNumber\n\n" + e.message);
             }
         }
+        
     };
 }

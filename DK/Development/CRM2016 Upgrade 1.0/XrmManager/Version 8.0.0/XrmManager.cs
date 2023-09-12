@@ -21,10 +21,9 @@ using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Tooling.Connector;
 using System.Net;
-using Microsoft.Xrm.Client.Services;
+ 
 using System.Threading;
-using CGI.CRM2013.Skanetrafiken.CGIXrmLogger;
-
+ 
 namespace CGIXrmWin
 {
 
@@ -32,8 +31,7 @@ namespace CGIXrmWin
 
     public partial class XrmManager
     {
-
-        readonly LogToCrm _log2Crm = new LogToCrm();
+         
         #region constructors
 
         // -------------------------------------------------------------------------
@@ -45,7 +43,7 @@ namespace CGIXrmWin
 
         public XrmManager(IOrganizationService service)
         {
-            pService = InitService(service);
+            pService = service;
         }
 
         public XrmManager(string serverAddress = "", string domain = "", string username = "", string password = "")
@@ -54,23 +52,10 @@ namespace CGIXrmWin
             pService = InitService(serverAddress, domain, username, password);
         }
 
-        //public XrmManager(Uri uri, Uri homeRealmUri, System.ServiceModel.Description.ClientCredentials clientCredentials, System.ServiceModel.Description.ClientCredentials deviceCredential)
-        //{
-        //    pService = InitService(uri, homeRealmUri, clientCredentials, deviceCredential);
-        //}
-
+   
         #endregion constructors
 
-        #region init crm service 
-
-        // -------------------------------------------------------------------------
-
-        public IOrganizationService InitService(IOrganizationService service)
-        {
-            pService = null;
-            pService = new OrganizationService(service);
-            return pService;
-        }
+#region init crm service 
 
         // -------------------------------------------------------------------------
 
@@ -111,7 +96,7 @@ namespace CGIXrmWin
             }
             else if (!string.IsNullOrEmpty(domain) && !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
-                _crmConnectionString = string.Format("Url={0};Domain={1};Username={2};Password={3};", _serviceAddress.ToString(), domain, username, password);
+                _crmConnectionString = string.Format("Url={0};Username={1}\\{2};Password={3}; AuthType=AD", _serviceAddress.ToString(), domain, username, password);
             }
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -130,40 +115,18 @@ namespace CGIXrmWin
             IOrganizationService pService = (IOrganizationService)conn.OrganizationWebProxyClient != null ? (IOrganizationService)conn.OrganizationWebProxyClient : (IOrganizationService)conn.OrganizationServiceProxy;
             return pService;
         }
-
-        // -------------------------------------------------------------------------
-
-        //public OrganizationService InitService(Uri uri, Uri homeRealmUri, System.ServiceModel.Description.ClientCredentials clientCredentials, System.ServiceModel.Description.ClientCredentials deviceCredential)
-        //{
-        //    pService = null;
-        //    IOrganizationService service = new Microsoft.Xrm.Sdk.Client.OrganizationServiceProxy(uri, homeRealmUri, clientCredentials, deviceCredential);
-        //    pService = new OrganizationService(service);
-        //    return pService;
-        //}
-
-
+         
         // -------------------------------------------------------------------------
 
         private Uri _getServiceAddress(string serverAddress)
-        {
-            if (serverAddress.EndsWith("/"))
-                serverAddress += "XRMServices/2011/Organization.svc";
-            else
-                serverAddress += "/XRMServices/2011/Organization.svc";
-
+        { 
             return new Uri(serverAddress, UriKind.Absolute);
         }
 
         // -------------------------------------------------------------------------
 
 #endregion init crm service
-
-        // ===================================================================================
-
-#region private fields
-
-
-#endregion private fields
+         
 
         // ===================================================================================
 
@@ -182,10 +145,7 @@ namespace CGIXrmWin
                     _entity = pService.Retrieve(entityName, id, new ColumnSet(columns));
             }
             catch (Exception exc)
-            {
-                //pLog.StartSection("XrmManager_Get");
-                //pLog.Write(exc, "XrmManager_Get");
-                //pLog.EndSection("XrmManager_Get");
+            { 
                 if (pReThrowError) throw exc;
             }
             return _entity;
@@ -735,10 +695,7 @@ namespace CGIXrmWin
 
         // ===================================================================================
     }
-
-    // ********************************************************************
-
-
+ 
     // ***********************************************************************************
 
 #region class OptionSet and options

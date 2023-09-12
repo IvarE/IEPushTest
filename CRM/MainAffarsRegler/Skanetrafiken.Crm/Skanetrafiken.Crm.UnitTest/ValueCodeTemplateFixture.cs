@@ -25,7 +25,7 @@ using System.Runtime.Serialization.Json;
 using static Skanetrafiken.Crm.ValueCodes.ValueCodeHandler;
 using Skanetrafiken.Crm.ValueCodes;
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTests
 {
     [TestFixture]
     public class ValueCodeTemplateFixture : PluginFixtureBase

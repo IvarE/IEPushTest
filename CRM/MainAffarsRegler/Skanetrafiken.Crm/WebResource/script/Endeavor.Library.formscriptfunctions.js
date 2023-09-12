@@ -689,5 +689,100 @@ Endeavor.formscriptfunctions = {
         };
         req.send();
         return count;
+    },
+    IsUCI : function () {
+        var globalContext = Xrm.Utility.getGlobalContext();
+        var t1 = globalContext.getCurrentAppUrl(); //'https://sekund.skanetrafiken.se/DKCRM/main.aspx?appid=66cffcfb-901e-4469-ae48-73b7130dc663'
+        var t2 = globalContext.getClientUrl(); //'https://sekund.skanetrafiken.se/DKCRM'
+        return t1 !== t2;
+    },
+    CustomizeTheNotesHeightUCI: function (formContext) {
+        try {
+            let existNotes = parent.document.querySelectorAll(`div[id*="timeline_field_notetext"]`);
+            if (existNotes.length == 0) {
+                setTimeout(() => { this.CustomizeTheNotesHeightUCI(formContext); }, 1000);
+            }
+            else {
+                for (var x = 0; x < existNotes.length; x++)
+                    existNotes[x].parentElement.click();
+                     
+                let firstSectionId = "";
+                if (formContext.data.getEntity().getEntityName() == "abssr_transportservice") {
+                    firstSectionId = "Details";
+                }
+                if (formContext.data.getEntity().getEntityName() == "contact") {
+                    firstSectionId = "Contact Information";
+                }
+                //when note expaned and too long, it auto scroll to the last notes in the time line
+                let resetCounter = 0;
+                let resetScrollTop = setInterval(() => {
+                    resetCounter++;
+                    if (parent.document.querySelector('section[id="' + firstSectionId + '"]')
+                            && parent.document.querySelector('section[id="' + firstSectionId + '"]').parentElement.scrollTop != 0) {
+                        clearInterval(resetScrollTop);
+                        parent.document.querySelector('section[id="' + firstSectionId +'"]').parentElement.scrollTop = 0;
+                    }
+                    
+                    if (resetCounter >= 30) clearInterval(resetScrollTop);
+                }, 50);
+            }
+        } catch (error) {
+            console.log("CustomizeTheNotesHeightUCI - error: " + error.message);
+        }
+    },
+    CustomizeTheNotesHeight: function (formContext, noteExist) {
+        let entityId = formContext.data.entity.getId().slice(1, -1);
+        this.CheckIfNotesExist(entityId, noteExist, (isExist) => {
+            if (!isExist) return;
+
+            if (this.IsUCI()) {
+                this.CustomizeTheNotesHeightUCI(formContext);
+                return;
+            }
+            if (parent.document.getElementById("notesWall") == null) {
+                setTimeout(() => { this.CustomizeTheNotesHeight(formContext, isExist); }, 1000);
+                return;
+            }
+            try {
+                if (parent.document.getElementById("notesWallContainer")) {
+                    let xNotes = parent.document.getElementById("notesWallContainer").querySelectorAll(".notesTextBox");
+                    let rowHeight = 20, rowLength = formContext.data.getEntity().getEntityName() == "incident" ? 107 : 95; //95 char per row
+
+                    for (let x = 0; x < xNotes.length; x++) {
+                        let existNoteHeight = Number(xNotes[x].style.height.replace("px", ""));
+                        let nRow = Math.ceil(xNotes[x].value.length / rowLength); //always up round
+                        let nXRow = xNotes[x].value.trim().split('\n').length - 1; //new line and return is a empty row
+                        if (nXRow > 0) nRow = nRow + (nXRow * 0.75);
+                        let newHeight = nRow * rowHeight;
+
+                        if (existNoteHeight < newHeight)
+                            xNotes[x].style.height = newHeight.toString() + "px";
+                    }
+                    //make sure it has fit with the text, without white space at the end from above fix
+                    setTimeout(() => {
+                        for (let x = 0; x < xNotes.length; x++) {
+                            xNotes[x].onfocus();
+                            xNotes[x].parentElement.parentElement.querySelector("#postButton").click();
+                        }
+                    } , 1000);
+                }
+            } catch (error) {
+                console.log("CustomizeTheNotesHeight - error: " + error.message);
+                }
+        });
+    },
+    CheckIfNotesExist: function (entityId, noteExist, callBackFnc) {
+        if (noteExist === true || noteExist === false) { //check the exist values, do not fetch crm data again, calling from setTimeout
+            callBackFnc(noteExist); return;
+        }
+
+        Xrm.WebApi.retrieveMultipleRecords("annotation", "?$select=annotationid&$filter=isdocument eq false and notetext ne null and _objectid_value eq " + entityId, 1).then(
+            function success(results) {
+                callBackFnc(results.entities.length > 0);
+            },
+            function (error) {
+                console.log(error.message);
+                Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
+            } );
     }
 }

@@ -26,7 +26,7 @@ using Generated = Skanetrafiken.Crm.Schema.Generated;
 using System.Diagnostics;
 using Microsoft.Crm.Sdk.Samples;
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTests
 {
     [TestFixture]
     public class TicketInfoFixture : PluginFixtureBase

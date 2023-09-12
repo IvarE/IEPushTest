@@ -28,7 +28,7 @@ using System.Net;
 using Skanetrafiken.Crm;
 using System.Text.RegularExpressions;
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTests
 {
     [TestFixture]
     public class ContactFixture : PluginFixtureBase

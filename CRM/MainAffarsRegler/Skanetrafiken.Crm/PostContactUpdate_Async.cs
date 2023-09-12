@@ -1,18 +1,14 @@
 using System;
-using System.Collections;
 using Microsoft.Xrm.Sdk;
 using Endeavor.Crm;
-using Endeavor.Crm.Extensions;
-using Generated = Skanetrafiken.Crm.Schema.Generated;
 using Skanetrafiken.Crm.Entities;
 
 namespace Skanetrafiken.Crm
 {
     public class PostContactUpdate_Async : Plugin
     {
-        /// <summary>
-        /// </summary>
         private readonly string preImageAlias = "preImage";
+        private readonly string postImageAlias = "postImage";
 
         public PostContactUpdate_Async()
             : base(typeof(PostContactUpdate_Async))
@@ -65,23 +61,24 @@ namespace Skanetrafiken.Crm
                 ContactEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<ContactEntity>();
 
                 ContactEntity preImage = Plugin.GetPreImage<ContactEntity>(localContext, preImageAlias);
+                ContactEntity postImage = Plugin.GetPostImage<ContactEntity>(localContext, postImageAlias);
 
                 if (preImage == null)
                     throw new InvalidPluginExecutionException("Pre-Image not registered correctly.");
 
+                if (postImage == null)
+                    throw new InvalidPluginExecutionException("Post-Image not registered correctly.");
+
                 try
                 {
                     target.HandlePostContactUpdateAsync(localContext, preImage);
+                    target.ClearContactFieldsRelatedToSSN(localContext, postImage);
                 }
                 catch (Exception ex)
                 {
                     throw new InvalidPluginExecutionException(ex.Message, ex);
                 }
-                
-                //throw new InvalidPluginExecutionException("Debug @joan");
             }
         }
-
     }
 }
-//</snippetAccountNumberPlugin>

@@ -121,7 +121,8 @@ namespace Skanetrafiken.Crm.Entities
                         this.Address1_Line1 = customerInfo.AddressBlock.CO;
                         this.Address1_Line2 = customerInfo.AddressBlock.Line1;
                         this.Address1_City = customerInfo.AddressBlock.City;
-                        this.ed_Address1_Country = string.IsNullOrWhiteSpace(customerInfo.AddressBlock.CountryISO) ? null : CountryEntity.GetEntityRefForCountryCode(localContext, customerInfo.AddressBlock.CountryISO);
+                        if(!string.IsNullOrWhiteSpace(customerInfo.AddressBlock.CountryISO))
+                            this.ed_Address1_Country =  CountryEntity.GetEntityRefForCountryCode(localContext, customerInfo.AddressBlock.CountryISO);
                         this.Address1_PostalCode = customerInfo.AddressBlock.PostalCode;
                     }
                 }
@@ -145,7 +146,8 @@ namespace Skanetrafiken.Crm.Entities
                         this.Address1_Line1 = customerInfo.AddressBlock.CO;
                         this.Address1_Line2 = customerInfo.AddressBlock.Line1;
                         this.Address1_City = customerInfo.AddressBlock.City;
-                        this.ed_Address1_Country = string.IsNullOrWhiteSpace(customerInfo.AddressBlock.CountryISO) ? null : CountryEntity.GetEntityRefForCountryCode(localContext, customerInfo.AddressBlock.CountryISO);
+                        if(!string.IsNullOrWhiteSpace(customerInfo.AddressBlock.CountryISO))
+                            this.ed_Address1_Country = CountryEntity.GetEntityRefForCountryCode(localContext, customerInfo.AddressBlock.CountryISO);
                         this.Address1_PostalCode = customerInfo.AddressBlock.PostalCode;
                     }
                 }
@@ -351,6 +353,52 @@ namespace Skanetrafiken.Crm.Entities
             {
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Test if ssn has been cleared and then clears fields related to the contact. The method has been broken up into
+        /// one public and one private part, so that the fields that are cleared can be reused, and we have a public interface
+        /// to test against. This is a workaround for the PostContactUpdate_Async not being adapted to unit testing.
+        /// </summary>
+        public void ClearContactFieldsRelatedToSSN(Plugin.LocalPluginContext localContext, ContactEntity postImage)
+        {
+            if (localContext.PluginExecutionContext.Depth > 1) // Clearing the fields triggers pre contact update which in turns triggers this one again
+            {
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(postImage.ed_SocialSecurityNumberFormat))
+            {
+                return;
+            }
+
+            localContext.Trace($"{nameof(ClearContactFieldsRelatedToSSN)}: SSN empty, clearing fields on contact");
+
+            Contact updateContact = new Contact() { Id = this.Id };
+            _ClearContactFieldsRelatedToSSN(updateContact);
+            localContext.OrganizationService.Update(updateContact);
+        }
+
+        /// <summary>
+        /// Clears fields related to social security number when ssn i cleared on a contact row.
+        /// </summary>
+        private void _ClearContactFieldsRelatedToSSN(Contact contact)
+        {
+            contact.ed_CreditsafeRejectionCode = null;
+            contact.ed_CreditsafeRejectionComment = null;
+            contact.ed_CreditsafeRejectionText = null;
+            contact.ed_DeceasedDate = null;
+            contact.ed_Deceased = false;
+            
+            contact.ed_UpdatedFB = false; // Can cause a crash if set to null
+            contact.ed_UpdatedFBDate = null;
+            contact.ed_HasSwedishSocialSecurityNumber = false;
+            contact.ed_SocialSecurityNumberFormat = null;
+            contact.cgi_socialsecuritynumber = null;
+            contact.ed_SocialSecurityNumberBlock = null;
+            contact.ed_SocialSecurityNumber2 = null;
+            contact.BirthDate = null;
+            contact.abssr_DOB = null;
         }
 
         /// <summary>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Endeavor.Crm.UnitTest.Properties {
+namespace Endeavor.Crm.IntegrationTests.Properties {
     using System;
     
     

@@ -14,7 +14,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTests
 {
     public class PluginFixtureBase
     {

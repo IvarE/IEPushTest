@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TicketPurchaseService.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DefaultJobGroup" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Crm Group</Value>
+    </Setting>
+    <Setting Name="ScheduleCronExpression" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0 0 2 1/1 * ? *</Value>
+    </Setting>
+    <Setting Name="CredentialsFilePath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%APPDATA%\Endeavor\TicketPurchaseService.Credential.xml</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

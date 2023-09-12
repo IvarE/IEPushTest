@@ -5108,44 +5108,33 @@ namespace Skanetrafiken.Crm.Controllers
                             SkaKortEntity.Fields.ed_CardNumber,
                             SkaKortEntity.Fields.ed_name), skaKortFilter);
 
-                        if (skakort != null) //Vi ska inte hitta något Resekort med Contact
+                        if (skakort != null)
                         {
-                            // If SKÅ Kort is already registered to a Contact, return Bad Request
-                            if (skakort.ed_Contact != null)
+                            _log.Info($"Th={threadId} - RegisterBuyAndSendSkaKortPost: Updating SkaKort with CardNumber {skaKortInfo.CardNumber}.");
+
+                            SkaKortEntity updateSkaKort = new SkaKortEntity();
+                            updateSkaKort.Id = skakort.Id;
+                            updateSkaKort.ed_Contact = contact.ToEntityReference();
+
+                            updateSkaKort.ed_name = !string.IsNullOrWhiteSpace(skaKortInfo.CardName) ? skaKortInfo.CardName : skaKortInfo.CardNumber;
+
+                            if (skakort.ed_CardNumber != skaKortInfo.CardNumber)
                             {
-                                _log.Error($"Th={threadId} - RegisterBuyAndSendSkaKortPost: SkaKort-POST. SkaKort found with existing Account/Contact. CardNumber: {skaKortInfo.CardNumber}.");
-                                HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                error.Content = new StringContent($"SkaKort with CardNumber {skaKortInfo.CardNumber} already exists with Account/Contact.");
-                                return error;
+                                updateSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
                             }
-                            else
+
+                            if (skakort.ed_InformationSource != Crm.Schema.Generated.ed_informationsource.KopOchSkicka)
                             {
-                                _log.Info($"Th={threadId} - RegisterBuyAndSendSkaKortPost: Updating SkaKort with CardNumber {skaKortInfo.CardNumber}.");
-
-                                SkaKortEntity updateSkaKort = new SkaKortEntity();
-                                updateSkaKort.Id = skakort.Id;
-                                updateSkaKort.ed_Contact = contact.ToEntityReference();
-
-                                updateSkaKort.ed_name = !string.IsNullOrWhiteSpace(skaKortInfo.CardName) ? skaKortInfo.CardName : skaKortInfo.CardNumber;
-
-                                if (skakort.ed_CardNumber != skaKortInfo.CardNumber)
-                                {
-                                    updateSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
-                                }
-
-                                if (skakort.ed_InformationSource != Crm.Schema.Generated.ed_informationsource.KopOchSkicka)
-                                {
-                                    updateSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
-                                }
-
-                                XrmHelper.Update(localContext, updateSkaKort);
-
-                                _log.Info($"Th={threadId} - RegisterBuyAndSendSkaKortPost: SkaKort updated. SkaKortId: {skakort.Id}.");
-
-                                HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                                resp.Content = new StringContent("SkaKort updated.");
-                                return resp;
+                                updateSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
                             }
+
+                            XrmHelper.Update(localContext, updateSkaKort);
+
+                            _log.Info($"Th={threadId} - RegisterBuyAndSendSkaKortPost: SkaKort updated. SkaKortId: {skakort.Id}.");
+
+                            HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                            resp.Content = new StringContent("SkaKort updated.");
+                            return resp;
                         }
                         else //Create new
                         {

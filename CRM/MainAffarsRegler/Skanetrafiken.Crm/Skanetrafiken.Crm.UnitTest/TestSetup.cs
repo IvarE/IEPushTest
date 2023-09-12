@@ -20,7 +20,7 @@ using Microsoft.Xrm.Sdk.Query;
 using NUnit.Framework;
 using System.Net;
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTests
 {
     [SetUpFixture]
     public class TestSetup

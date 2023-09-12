@@ -23,7 +23,7 @@ using Endeavor.Crm;
 using Endeavor.Crm.Extensions;
 using System.Runtime.Serialization.Json;
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTests
 {
     [TestFixture]
     public class CampaignFixture : PluginFixtureBase

@@ -475,4 +475,7 @@
   <data name="MultipleContactsFound" xml:space="preserve">
     <value># Hittade flera kontakter med mklid-koden {0}</value>
   </data>
+  <data name="IncorrectOperation" xml:space="preserve">
+    <value>Incorrect Operation for this endpoint</value>
+  </data>
 </root>

@@ -29,7 +29,7 @@ using Skanetrafiken.Crm;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTests
 {
     [TestFixture(Category = "Plugin")]
     public class DeltabatchQueueFixture : PluginFixtureBase

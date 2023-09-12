@@ -895,10 +895,10 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     if (_cgi_payment_abroad) {
                         Endeavor.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none", formContext);
                         Endeavor.formscriptfunctions.HideOrDisplayField("cgi_accountno", false, formContext);
-                        Endeavor.formscriptfunctions.HideOrDisplayField("cgi_iban", true, formContext);
-                        Endeavor.formscriptfunctions.SetRequiredLevel("cgi_iban", "required", formContext);
                         Endeavor.formscriptfunctions.HideOrDisplayField("cgi_swift", true, formContext);
                         Endeavor.formscriptfunctions.SetRequiredLevel("cgi_swift", "required", formContext);
+                        Endeavor.formscriptfunctions.HideOrDisplayField("cgi_iban", true, formContext);
+                        Endeavor.formscriptfunctions.SetRequiredLevel("cgi_iban", "required", formContext);
                     }
                     else {
                         Endeavor.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none", formContext);
@@ -1068,10 +1068,18 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                     if (_cgi_payment_abroad) {
                         Endeavor.formscriptfunctions.SetRequiredLevel("cgi_accountno", "none", formContext);
                         Endeavor.formscriptfunctions.HideOrDisplayField("cgi_accountno", false, formContext);
-                        Endeavor.formscriptfunctions.HideOrDisplayField("cgi_iban", true, formContext);
-                        Endeavor.formscriptfunctions.SetRequiredLevel("cgi_iban", "required", formContext);
                         Endeavor.formscriptfunctions.HideOrDisplayField("cgi_swift", true, formContext);
                         Endeavor.formscriptfunctions.SetRequiredLevel("cgi_swift", "required", formContext);
+                        Endeavor.formscriptfunctions.HideOrDisplayField("cgi_iban", true, formContext);
+                        Endeavor.formscriptfunctions.SetRequiredLevel("cgi_iban", "required", formContext);
+
+                        // Attempt to set focus with a small delay, and once more in case it doesn't work
+                        setTimeout(() => {
+                            formContext.getControl("cgi_iban").setFocus();
+                            setTimeout(() => {
+                                formContext.getControl("cgi_iban").setFocus();
+                            }, 700);
+                        }, 250);
 
                         //MaxP 2016-04-20
                         Endeavor.Skanetrafiken.cgi_refund.SetBicIban(formContext);
@@ -1105,7 +1113,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
         },
 
         SetEmailVisibilityAndRequirement: function (result, formContext) {
-            debugger;
+
             var _emailRequiredAndVisible = result.entities[0].cgi_couponemail;
             var _phoneRequired = result.entities[0].cgi_couponsms;
             //var _reimbursementName = result.entities[0].cgi_reimbursementname;
@@ -1620,7 +1628,7 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
         },
 
         refundtypeNONE: function (formContext) {
-
+            debugger;
             try {
 
                 //Biocheck
@@ -2452,7 +2460,8 @@ if (typeof (Endeavor.Skanetrafiken.cgi_refund) == "undefined") {
                 formContext.getAttribute("cgi_calculated_amount").setValue();
 
                 ////Vidarefakturering
-                formContext.getAttribute("cgi_reinvoicing").setValue(false);
+                if (formContext.getAttribute("cgi_reinvoicing"))
+                    formContext.getAttribute("cgi_reinvoicing").setValue(false);
                 formContext.getAttribute("cgi_invoicerecipient").setValue(null);
 
                 //Kommentarer

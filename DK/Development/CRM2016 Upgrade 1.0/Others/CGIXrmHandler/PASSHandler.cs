@@ -590,6 +590,7 @@ namespace CGIXrmHandler
                 "<filter type='and'>" +
                   "<filter type='or'>" +
                     "<condition attribute='cgi_socialsecuritynumber' operator='eq' value='{0}' />" +
+                    "<condition attribute='ed_privatecustomercontact' operator='eq' value='1' />" +
                   "</filter>" +
                 "</filter>" +
               "</entity>" +

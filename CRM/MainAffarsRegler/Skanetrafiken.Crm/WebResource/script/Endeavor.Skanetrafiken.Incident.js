@@ -86,7 +86,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
 
             var formContext = executionContext.getFormContext();
 
-            var contactAttribute = formContext.getAttribute("cgi_contactid")
+            var contactAttribute = formContext.getAttribute("cgi_contactid");
             var customerEmailAttribute = formContext.getAttribute("cgi_customer_email");
 
             if (contactAttribute && customerEmailAttribute && customerEmailAttribute.getValue && !customerEmailAttribute.getValue() &&
@@ -118,7 +118,8 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         onFormLoad: function (executionContext) {
             var formContext = executionContext.getFormContext();
 
-
+            if (formContext.ui.getFormType() != FORM_TYPE_CREATE)
+                Endeavor.formscriptfunctions.CustomizeTheNotesHeight(formContext); 
 
             Endeavor.Skanetrafiken.Incident.setVisibilityOnLoad(formContext);
             Endeavor.Skanetrafiken.Incident.setDefaultOnCreate(formContext);
@@ -127,6 +128,11 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 case FORM_TYPE_CREATE:
                     Endeavor.Skanetrafiken.Incident.setCustomerOnLoad(formContext);
                     //Endeavor.Skanetrafiken.Incident.setAccountOrContactVisibility(formContext);
+                    var contactAttribute = formContext.getAttribute("cgi_contactid");
+                    if (contactAttribute && contactAttribute.getValue && contactAttribute.getValue() && contactAttribute.getValue().length > 0
+                        && formContext.getAttribute("cgi_representativid")) {
+                        Endeavor.Skanetrafiken.Incident.setRepresentativFromContact(formContext, contactAttribute.getValue()[0].id.slice(1, -1));
+                    }
                     break;
                 case FORM_TYPE_UPDATE:
                     Endeavor.Skanetrafiken.Incident.setOnUpdate(formContext);
@@ -181,10 +187,13 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                     if (prioritycode == null)
                         formContext.getAttribute("prioritycode").setValue(2);
 
-                Endeavor.formscriptfunctions.SaveEntity(formContext);
+                
                 }
-              
+                Endeavor.formscriptfunctions.SaveEntity(formContext);
+
             }
+            Endeavor.formscriptfunctions.SaveEntity(formContext);
+
         },
 
         onLoadHideShowTypeOfContactFields: function (executionContext) {
@@ -337,10 +346,34 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 if (__cgi_contactid == null)
                     Endeavor.Skanetrafiken.Incident.setCustomerOnLoad(formContext);
 
+                if (__cgi_contactid != null && formContext.getAttribute("cgi_representativid"))
+                    Endeavor.Skanetrafiken.Incident.setRepresentativFromContact(formContext, __cgi_contactid[0].id.slice(1, -1));
+                else {
+                    if (formContext.getAttribute("cgi_representativid") && formContext.getAttribute("cgi_representativid").getValue())
+                        formContext.getAttribute("cgi_representativid").setValue(null);
+                }
             }
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Incident.onChangeAccount\n\n" + e.message);
             }
+        },
+
+        setRepresentativFromContact: function (formContext, contactId) {
+            Xrm.WebApi.retrieveRecord("contact", contactId, "?$select=_cgi_representativeid_value").then(
+                function success(result) {
+                    if (result._cgi_representativeid_value)
+                        formContext.getAttribute("cgi_representativid").setValue([{
+                            id: result._cgi_representativeid_value,
+                            name: result["_cgi_representativeid_value@OData.Community.Display.V1.FormattedValue"].trim(),
+                            entityType: result["_cgi_representativeid_value@Microsoft.Dynamics.CRM.lookuplogicalname"]
+                        }]);
+                    else formContext.getAttribute("cgi_representativid").setValue(null);
+                },
+                function (error) {
+                    console.log(error.message);
+                    Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
+                }
+            );
         },
 
         onChangeTravelCard: function (executionContext) {
@@ -384,7 +417,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                 if (contactId && contactId.getValue()) {
                     var contactValue = contactId.getValue();
 
-                    var query = "?$select=ed_privatecustomercontact,ed_businesscontact,ed_infotainmentcontact,ed_schoolcontact,ed_seniorcontact,ed_agentcontact" +
+                    var query = "?$select=ed_privatecustomercontact,ed_businesscontact,ed_infotainmentcontact,ed_serviceresor,ed_schoolcontact,ed_seniorcontact,ed_agentcontact" +
                         "&$filter=contactid eq " + contactValue[0].id.replace(/[{}]/g, '');
 
 
@@ -416,6 +449,8 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
                                                     attr_ctrl.setVisible(results.entities[0].ed_seniorcontact || false);
                                                 else if (fieldName == "ed_agentcontact")
                                                     attr_ctrl.setVisible(results.entities[0].ed_agentcontact || false);
+                                                else if (fieldName == "ed_serviceresor")
+                                                    attr_ctrl.setVisible(results.entities[0].ed_serviceresor || false);
                                             }
                                         }
                                     }

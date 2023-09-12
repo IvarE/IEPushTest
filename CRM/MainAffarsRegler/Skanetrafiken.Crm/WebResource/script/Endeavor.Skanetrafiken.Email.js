@@ -22,7 +22,6 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
 		tempFormContext: function () { },
 
 		saveAndSendEmail: function (formContext) {
-			debugger;
 			formContext.data.save().then(function () {
 				Endeavor.Skanetrafiken.Email.SendEmail(formContext);
 			}, function () {
@@ -31,7 +30,6 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
 		},
 
 		SendEmail: function (formContext) {
-			debugger;
 			formContext.ui.setFormNotification("Skickar e-post. Vänligen vänta.", "INFO");
 
 			var idRecord = formContext.data.entity.getId().replace("{", "").replace("}", "");
@@ -47,12 +45,12 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
 		},
 
 		ErrorOnSave: function (formContext, error) {
-			debugger;
 			formContext.ui.setFormNotification("Fel vid mejlutskick: " + error);
 		},
 
 		//Form Methods CGI Email (from emailLibrary.js)
-		onFormLoad: function (executionContext) {
+		// set options to "no_sender_logic" from the form to skip the logic on email sender
+		onFormLoad: function (executionContext, options) {
 
 			var formContext = executionContext.getFormContext();
 
@@ -63,12 +61,11 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
 			switch (formContext.ui.getFormType()) {
 				case FORM_TYPE_CREATE:
 					Endeavor.Skanetrafiken.Email.removeMailToOnLoad(formContext);
-					Endeavor.Skanetrafiken.Email.SetSenderEmail(_form_type, formContext);
 					Endeavor.Skanetrafiken.Email.setToFromQuerystringParam(formContext);
 					Endeavor.Skanetrafiken.Email.setRegardingObjectidFromQuerystringParam(formContext);
-					break;
+
 				case FORM_TYPE_UPDATE:
-					Endeavor.Skanetrafiken.Email.SetSenderEmail(_form_type, formContext);
+					if (options !== "no_sender_logic") Endeavor.Skanetrafiken.Email.SetSenderEmail(_form_type, formContext);
 					break;
 				case FORM_TYPE_READONLY:
 				case FORM_TYPE_DISABLED:
@@ -315,10 +312,10 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
 			try {
 				var globalContext = Xrm.Utility.getGlobalContext();
 
-				var _directioncode = formContext.getAttribute("directioncode").getValue();
-				var _emailstatus = formContext.data.entity.attributes.get('statuscode').getValue();
-				var _infomail = formContext.data.entity.attributes.get('cgi_attention').getValue();
-				var _tocustomer = formContext.data.entity.attributes.get('cgi_button_customer').getValue();
+				var _directioncode = formContext.getAttribute("directioncode")?.getValue();
+				var _infomail = formContext.data.entity.attributes.get('cgi_attention')?.getValue();
+				var _emailstatus = formContext.data.entity.attributes.get('statuscode')?.getValue();
+				var _tocustomer = formContext.data.entity.attributes.get('cgi_button_customer')?.getValue();
 
 				if (_infomail == false && _tocustomer != 1) {
 					if (_form_type == 1 || (_form_type == 2 && _emailstatus == 1 && _directioncode == true)) {
@@ -338,7 +335,6 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
 
 		SetSenderEmail_callback: function (result, formContext) {
 			try {
-				debugger;
 				if (result == null || result.entities == null || result.entities[0] == null) {
 					alert("Ingen default kö är definierad på användaren!");
 				} else {

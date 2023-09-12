@@ -3,6 +3,7 @@ using Microsoft.Xrm.Sdk.Query;
 using Skanetrafiken.Crm.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Skanetrafiken.Crm
 {
@@ -59,6 +60,7 @@ namespace Skanetrafiken.Crm
         /// Number of Reskort
         /// </summary>
         /// <example>5927183216</example>
+        [Required]
         public string CardNumber
         {
             get
@@ -123,6 +125,7 @@ namespace Skanetrafiken.Crm
         /// Type of operation. 0 = Register | 1 = Delete | 2 = Revoke.
         /// </summary>
         /// <example>0 = Register | 1 = Delete | 2 = Revoke</example>
+        [Required]
         public Operation Operation
         {
             get

@@ -2,15 +2,11 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
-using Quartz;
 using Skanetrafiken.Crm.Entities;
 using System;
 using System.IO;
 
 using Renci.SshNet;
-using Renci.SshNet.Common;
-using System.Xml.Linq;
-using Endeavor.Crm.UnitTest;
 using Skanetrafiken.Crm.Schema.Generated;
 using Microsoft.Crm.Sdk.Messages;
 using System.Collections.Generic;
@@ -57,7 +53,7 @@ namespace Endeavor.Crm.DeltabatchService
             CrmServiceClient conn = new CrmServiceClient(CrmConnection.GetCrmConnectionString(DeltabatchService.CredentialFilePath, DeltabatchService.Entropy));
 
             // Cast the proxy client to the IOrganizationService interface.
-            IOrganizationService serviceProxy = (IOrganizationService)conn.OrganizationWebProxyClient != null ? (IOrganizationService)conn.OrganizationWebProxyClient : (IOrganizationService)conn.OrganizationServiceProxy;
+            IOrganizationService serviceProxy = conn.OrganizationWebProxyClient != null ? conn.OrganizationWebProxyClient : (IOrganizationService)conn.OrganizationServiceProxy;
 
             Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
 
@@ -66,57 +62,46 @@ namespace Endeavor.Crm.DeltabatchService
 
         internal static void SendErrorMailToDev(Plugin.LocalPluginContext localContext, Exception e)
         {
-
-            SystemUserEntity toUser2 = XrmRetrieveHelper.RetrieveFirst<SystemUserEntity>(localContext, new ColumnSet(SystemUser.Fields.InternalEMailAddress),
+            SystemUserEntity mls = XrmRetrieveHelper.RetrieveFirst<SystemUserEntity>(localContext, new ColumnSet(SystemUser.Fields.InternalEMailAddress),
                 new FilterExpression
                 {
                     Conditions =
                     {
-                                    new ConditionExpression(SystemUserEntity.Fields.DomainName, ConditionOperator.Equal, @"D1\EVSA") // Marie-Louise Sandberg
+                        new ConditionExpression(SystemUserEntity.Fields.DomainName, ConditionOperator.Equal, @"D1\EVSA") // Marie-Louise Sandberg
                     }
                 });
 
-
-            ActivityParty toParty2 = new ActivityParty
+            ActivityParty toParty = new ActivityParty
             {
-                PartyId = new EntityReference(SystemUserEntity.EntityLogicalName, toUser2.Id),
-                AddressUsed = toUser2.InternalEMailAddress
+                PartyId = new EntityReference(SystemUserEntity.EntityLogicalName, mls.Id),
+                AddressUsed = mls.InternalEMailAddress
             };
-
-            // Get a system user to send the email (From: field)
-            WhoAmIRequest systemUserRequest = new WhoAmIRequest();
-            WhoAmIResponse systemUserResponse = (WhoAmIResponse)localContext.OrganizationService.Execute(systemUserRequest);
-            Guid _userId = systemUserResponse.UserId;
 
             // Create the 'From:' activity party for the email
             ActivityParty fromParty = new ActivityParty
             {
-                PartyId = new EntityReference(SystemUserEntity.EntityLogicalName, _userId)
+                PartyId = mls.ToEntityReference()
             };
 
-    
-
-            EmailEntity errorMail2 = new EmailEntity
+            EmailEntity errorMail = new EmailEntity
             {
-                To = new List<ActivityParty> { toParty2 },
+                To = new List<ActivityParty> { toParty },
                 From = new List<ActivityParty> { fromParty },
                 Subject = "Exception in Deltabatch run",
                 Description = $"Exception Message:\n\n{e.Message}",
                 DirectionCode = true
             };
 
-            
-            errorMail2.Id = XrmHelper.Create(localContext, errorMail2);
-        
+            errorMail.Id = XrmHelper.Create(localContext, errorMail);
 
             SendEmailRequest sendEmailreq2 = new SendEmailRequest
             {
-                EmailId = errorMail2.Id,
+                EmailId = errorMail.Id,
                 TrackingToken = "",
                 IssueSend = true
             };
 
-            SendEmailResponse sendEmailresp2 = (SendEmailResponse)localContext.OrganizationService.Execute(sendEmailreq2);
+            localContext.OrganizationService.Execute(sendEmailreq2);
 
             Console.WriteLine("Sent the error-mail message.");
         }

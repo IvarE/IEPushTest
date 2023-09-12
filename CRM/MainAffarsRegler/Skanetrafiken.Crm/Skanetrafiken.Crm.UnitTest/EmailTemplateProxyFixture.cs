@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Generated = Skanetrafiken.Crm.Schema.Generated;
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTests
 {
     [TestFixture]
     public class EmailTemplateProxyFixture : PluginFixtureBase

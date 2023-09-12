@@ -1,4 +1,5 @@
-﻿using Skanetrafiken.Crm.Entities;
+﻿using log4net;
+using Skanetrafiken.Crm.Entities;
 using Skanetrafiken.Crm.Properties;
 using System;
 using System.Collections.Generic;
@@ -191,6 +192,27 @@ namespace Skanetrafiken.Crm.Controllers
                 if (!string.IsNullOrEmpty(leadInfo.Mobile))
                     leadInfo.Mobile = leadInfo.Mobile.Replace(" ", "");
             }
+        }
+
+        protected void LogResultOfOperation(HttpResponseMessage rm, int threadId, ILog log)
+        {
+            if (rm.StatusCode != HttpStatusCode.OK)
+            {
+                log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content?.ReadAsStringAsync()?.Result}\n");
+            }
+            else
+            {
+                log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
+                log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content?.ReadAsStringAsync()?.Result}\n");
+            }
+        }
+
+        protected HttpResponseMessage CreateErrorResponseWithStatusCode(HttpStatusCode statusCode, string message, int threadId, ILog log)
+        {
+            HttpResponseMessage response = new HttpResponseMessage(statusCode);
+            response.Content = new StringContent(message);
+            log.Warn($"Th={threadId} - Returning statuscode = {statusCode}, Content = {message}");
+            return response;
         }
     }
 }

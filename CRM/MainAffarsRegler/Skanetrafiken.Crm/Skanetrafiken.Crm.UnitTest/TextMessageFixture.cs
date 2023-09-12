@@ -12,7 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using Generated = Skanetrafiken.Crm.Schema.Generated;
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTests
 {
 	[TestFixture]
 	class TextMessageFixture : PluginFixtureBase

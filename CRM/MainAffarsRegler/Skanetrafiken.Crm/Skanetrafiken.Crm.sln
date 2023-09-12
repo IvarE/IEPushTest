@@ -51,6 +51,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{A5E7
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skanetrafiken.Crm.Plugins", "..\Skanetrafiken.Crm.Plugins\Skanetrafiken.Crm.Plugins.csproj", "{37F49606-BA0D-4501-B63F-3B49829099FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketPurchaseService", "..\TicketPurchaseService\TicketPurchaseService.csproj", "{177F320D-EAFA-4CD3-9C1E-770763103480}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Skanetrafiken.Crm.TestHelpers", "..\Skanetrafiken.Crm.TestHelpers\Skanetrafiken.Crm.TestHelpers.shproj", "{1615C5D3-6E1A-4E70-AE96-0726E1651AAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Acceptans|Any CPU = Acceptans|Any CPU
@@ -314,6 +318,20 @@ Global
 		{37F49606-BA0D-4501-B63F-3B49829099FC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{37F49606-BA0D-4501-B63F-3B49829099FC}.Test|Any CPU.ActiveCfg = Debug|Any CPU
 		{37F49606-BA0D-4501-B63F-3B49829099FC}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{177F320D-EAFA-4CD3-9C1E-770763103480}.Acceptans|Any CPU.ActiveCfg = Debug|Any CPU
+		{177F320D-EAFA-4CD3-9C1E-770763103480}.Acceptans|Any CPU.Build.0 = Debug|Any CPU
+		{177F320D-EAFA-4CD3-9C1E-770763103480}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{177F320D-EAFA-4CD3-9C1E-770763103480}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{177F320D-EAFA-4CD3-9C1E-770763103480}.Dev|Any CPU.ActiveCfg = Debug|Any CPU
+		{177F320D-EAFA-4CD3-9C1E-770763103480}.Dev|Any CPU.Build.0 = Debug|Any CPU
+		{177F320D-EAFA-4CD3-9C1E-770763103480}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{177F320D-EAFA-4CD3-9C1E-770763103480}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{177F320D-EAFA-4CD3-9C1E-770763103480}.Produktion|Any CPU.ActiveCfg = Debug|Any CPU
+		{177F320D-EAFA-4CD3-9C1E-770763103480}.Produktion|Any CPU.Build.0 = Debug|Any CPU
+		{177F320D-EAFA-4CD3-9C1E-770763103480}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{177F320D-EAFA-4CD3-9C1E-770763103480}.Release|Any CPU.Build.0 = Release|Any CPU
+		{177F320D-EAFA-4CD3-9C1E-770763103480}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{177F320D-EAFA-4CD3-9C1E-770763103480}.Test|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -323,5 +341,9 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E5940934-6B9B-49B5-9A82-89A5AD5B0318}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\Skanetrafiken.Crm.TestHelpers\Skanetrafiken.Crm.TestHelpers.projitems*{1615c5d3-6e1a-4e70-ae96-0726e1651aab}*SharedItemsImports = 13
+		..\Skanetrafiken.Crm.TestHelpers\Skanetrafiken.Crm.TestHelpers.projitems*{e63f833d-a756-473e-8040-f968e28b8672}*SharedItemsImports = 4
 	EndGlobalSection
 EndGlobal

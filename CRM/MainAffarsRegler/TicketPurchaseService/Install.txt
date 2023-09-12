@@ -1,0 +1,7 @@
+﻿
+Installation
+* Use the Release (not Debug) build to install the service.
+* Prefered installation folder is E:\Endeavor\TicketPurchaseService.
+* Installation of the service should be made in an Administrator Command Prompt.
+* Use "C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe" "E:\Endeavor\TicketPurchaseService\TicketPurchaseService.exe" to install the application.
+

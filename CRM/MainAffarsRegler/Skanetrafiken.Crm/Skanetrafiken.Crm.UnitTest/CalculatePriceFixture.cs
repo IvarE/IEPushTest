@@ -27,7 +27,7 @@ using System.Diagnostics;
 using Microsoft.Crm.Sdk.Samples;
 using Skanetrafiken.Crm;
 
-namespace Endeavor.Crm.UnitTest
+namespace Endeavor.Crm.IntegrationTests
 {
     [TestFixture]
     public class CalculatePriceFixture : PluginFixtureBase

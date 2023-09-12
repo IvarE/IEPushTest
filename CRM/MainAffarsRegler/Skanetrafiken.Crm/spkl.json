@@ -13,11 +13,27 @@
         },
         {
           "uniquename": "ed_/script/Endeavor.Skanetrafiken.Incident.js",
-          "file": "/WebResource/script/Endeavor.Skanetrafiken.Incident.js"
+          "file": "/WebResource/script/Endeavor.Skanetrafiken.Incident.js",
+          "description": null,
+          "ts": null
         },
         {
           "uniquename": "ed_/html/Endeavor.Skanetrafiken.SearchTravelCards.html",
-          "file": "/WebResource/HTML/Endeavor.Skanetrafiken.SearchTravelCards.html"
+          "file": "/WebResource/HTML/Endeavor.Skanetrafiken.SearchTravelCards.html",
+          "description": null,
+          "ts": null
+        },
+        {
+          "uniquename": "ed_/script/Endeavor.Skanetrafiken.Email",
+          "file": "/WebResource/script/Endeavor.Skanetrafiken.Email.js",
+          "description": null,
+          "ts": null
+        },
+        {
+          "uniquename": "ed_/script/Endeavor.Skanetrafiken.cgi_refund",
+          "file": "/WebResource/script/Endeavor.Skanetrafiken.cgi_refund.js",
+          "description": null,
+          "ts": null
         }
       ]
     }

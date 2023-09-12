@@ -31,11 +31,50 @@ namespace Skanetrafiken.Crm.Entities
             return XrmRetrieveHelper.RetrieveMultiple<Campaign>(localContext, queryCampaign);
         }
 
+        public void UpdateContactFromSingaporeTicket(Plugin.LocalPluginContext localContext, EntityReference contact, SingaporeTicketEntity singTick)
+        {
+            bool needsUpdate = false;
+
+            QueryExpression queryContact = new QueryExpression(Contact.EntityLogicalName);
+            queryContact.NoLock = true;
+            queryContact.ColumnSet = new ColumnSet(Contact.Fields.ed_SourceCampaignId, Contact.Fields.LastUsedInCampaign);
+            queryContact.Criteria.AddCondition(Contact.Fields.ContactId, ConditionOperator.Equal, contact.Id);
+            queryContact.Criteria.AddCondition(Contact.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
+            Contact currentContact = XrmRetrieveHelper.RetrieveFirst<Contact>(localContext, queryContact);
+
+            Contact updateContact = new Contact
+            {
+                Id = currentContact.Id
+            };
+
+            if(singTick.ed_SourceCampaignId != null && currentContact.ed_SourceCampaignId != singTick.ed_SourceCampaignId)
+            {
+                updateContact.ed_SourceCampaignId = singTick.ed_SourceCampaignId;
+                needsUpdate = true;
+            }
+            if(singTick.st_TicketCreated != null && currentContact.LastUsedInCampaign != singTick.st_TicketCreated)
+            {
+                updateContact.LastUsedInCampaign = singTick.st_TicketCreated;
+                needsUpdate = true;
+            }
+
+            if(needsUpdate)
+            {
+                XrmHelper.Update(localContext, updateContact);
+            }
+        }
+
         internal void HandlePostSingaporeTicketCreateAsync(Plugin.LocalPluginContext localContext)
         {
             try
             {
                 localContext.Trace($"Start Trace");
+                if(this.st_ContactID != null)
+                {
+                    UpdateContactFromSingaporeTicket(localContext, this.st_ContactID, this);
+                }
+
+
                 bool needsUpdate = false;
                 st_singaporeticket uSingaporeTicket = new st_singaporeticket();
 
@@ -112,6 +151,11 @@ namespace Skanetrafiken.Crm.Entities
             try
             {
                 localContext.Trace($"Start Trace");
+                if (this.st_ContactID != null)
+                {
+                    UpdateContactFromSingaporeTicket(localContext, this.st_ContactID, this);
+                }
+
                 bool needsUpdate = false;
                 st_singaporeticket uSingaporeTicket = new st_singaporeticket();
 
