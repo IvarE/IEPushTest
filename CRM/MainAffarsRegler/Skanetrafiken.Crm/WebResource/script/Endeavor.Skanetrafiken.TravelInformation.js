@@ -208,22 +208,41 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
             return finalStringDeviation;
         },
 
-        getContractorFromGid: function (gid) {
+        getContractorFromGid: function (gid, caseDate) {
 
             var contractorsdoc = Endeavor.Skanetrafiken.TravelInformation.contractors;
-
+            var xContractor = "X";
             if (contractorsdoc && contractorsdoc.firstChild && contractorsdoc.firstChild.childNodes && contractorsdoc.firstChild.childNodes.length > 0) {
-
+                /*
                 for (var i = 0; i < contractorsdoc.firstChild.childNodes.length; i++) {
 
                     var contractor = contractorsdoc.firstChild.childNodes[i];
 
                     if (gid == contractor.getAttribute("Gid"))
                         return Endeavor.Skanetrafiken.TravelInformation.getOrganisationFromId(contractor.getAttribute("IsOrganisationId"));
+                } */
+
+                var contractors = Array.from(contractorsdoc.firstChild.childNodes).filter(x => x.getAttribute && x.getAttribute("Gid") == gid);
+                if (contractors.length != 0) { //if multipe contractors found
+                    if (contractors.length > 1)
+                    {
+                        if (caseDate) { //check the exists from date and exists up to date with current Case date
+                            caseDate = new Date(caseDate.split(' ')[0]);
+                            var contractorFilter = contractors.filter(c => (c.getAttribute("ExistsUptoDate") == null
+                                                                                || new Date(c.getAttribute("ExistsUptoDate")) >= caseDate)
+                                                                                && (c.getAttribute("ExistsFromDate") == null
+                                                                                || new Date(c.getAttribute("ExistsFromDate")) <= caseDate));
+                            if (contractorFilter.length > 0)
+                                xContractor = Endeavor.Skanetrafiken.TravelInformation.getOrganisationFromId(contractorFilter[0].getAttribute("IsOrganisationId"));
+                        }
+                        else xContractor = Endeavor.Skanetrafiken.TravelInformation.getOrganisationFromId(contractors[0].getAttribute("IsOrganisationId"));
+                    }
+                    else xContractor = Endeavor.Skanetrafiken.TravelInformation.getOrganisationFromId(contractors[0].getAttribute("IsOrganisationId"));
                 }
+
             }
 
-            return "X";
+            return xContractor;
         },
 
         getContractorFromLine: function (cityGid, lineGid) {
@@ -393,7 +412,9 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                     var id = getElementValue(child, idTag);
 
                     var option = { name: name, value: id };
-                    options.push(option);
+                    var checkExist = options.filter(x => x.id == option.id && x.value == option.value);
+                    if (checkExist.length == 0)
+                        options.push(option);
                 }
             }
 
@@ -793,6 +814,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                     return "X";
             }
 
+            var caseDate = Endeavor.Skanetrafiken.TravelInformation.document.getElementById('timestamp').value;
             for (var i = 0; i < directjourneys.length; i++) {
 
                 var directjourney = directjourneys[i];
@@ -844,7 +866,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                 cell = journeyrow.insertCell();
                 var contractorGid = getElementValue(directjourney, "ContractorGid");
-                cell.innerHTML = Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(contractorGid);
+                cell.innerHTML = Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(contractorGid, caseDate);
 
                 var journeyNumber = getElementValue(directjourney, "JourneyNumber") + " ";
                 var directionOfLineDescription = getElementValue(directjourney, "DirectionOfLineDescription");
@@ -952,7 +974,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                     var document = Endeavor.Skanetrafiken.TravelInformation.document;
                     var line = Endeavor.Skanetrafiken.TravelInformation.currentLine;
                     var incidentId = Endeavor.Skanetrafiken.TravelInformation.formContext.data.entity.getId().substring(1, 37);
-
+                    var caseDate = Endeavor.Skanetrafiken.TravelInformation.document.getElementById('timestamp').value;
                     if (saveEntity.transporttype == "TRAIN") {
 
                         var travelinformation = ((new Date()).toISOString().substring(0, 19)).replace("T", " ") + " => " + getElementValue(saveEntity.directjourney, "DirectionOfLineDescription");
@@ -974,7 +996,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                             "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
 
                             "cgi_directiontext": getElementValue(saveEntity.directjourney, "DirectionOfLineDescription"),
-                            "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
+                            "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid"), caseDate), // NUMERICAL
                             "cgi_deviationmessage": saveEntity.deviationMessage,//getElementValue(saveEntity.directjourney, "Details"),
 
                             "cgi_startplanned": getISOStringDate(getElementValue(saveEntity.directjourney, "PlannedDepartureDateTime")),
@@ -1032,7 +1054,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
                                 "cgi_stop": Endeavor.Skanetrafiken.TravelInformation.getStopAreaFromGid(document.getElementById("tolist").value),
 
                                 "cgi_directiontext": getElementValue(saveEntity.directjourney, "DirectionOfLineDescription"),
-                                "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
+                                "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid"), caseDate), // NUMERICAL
                                 "cgi_deviationmessage": saveEntity.deviationMessage,//getElementValue(saveEntity.directjourney, "Details"),
 
                                 "cgi_startplanned": getISOStringDate(getElementValue(saveEntity.directjourney, "PlannedDepartureDateTime")),
@@ -1093,7 +1115,7 @@ if (typeof (Endeavor.Skanetrafiken.TravelInformation) == "undefined") {
 
                                 "cgi_directiontext": getElementValue(saveEntity.directjourney, "DirectionOfLineDescription"),
                                 "cgi_deviationmessage": saveEntity.deviationMessage, //getElementValue(saveEntity.directjourney, "Details"),
-                                "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid")), // NUMERICAL
+                                "cgi_contractor": Endeavor.Skanetrafiken.TravelInformation.getContractorFromGid(getElementValue(saveEntity.directjourney, "ContractorGid"), caseDate), // NUMERICAL
 
                                 "cgi_startplanned": getISOStringDate(getElementValue(saveEntity.directjourney, "PlannedDepartureDateTime")),
                                 "cgi_startactual": getElementValue(saveEntity.directjourney, 'ObservedDepartureDateTime'), //ActualDepartureTime

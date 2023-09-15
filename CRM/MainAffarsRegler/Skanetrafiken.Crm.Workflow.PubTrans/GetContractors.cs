@@ -49,7 +49,7 @@ namespace Skanetrafiken.Crm
 
         public static string ExecuteCodeActivity(Plugin.LocalPluginContext localContext)
         {
-            string query = "SELECT [Gid], [IsOrganisationId]" +
+            string query = "SELECT [Gid], [IsOrganisationId],[ExistsFromDate],[ExistsUptoDate] " +
                            "FROM [Contractor]" +
                            "FOR XML AUTO";
 
