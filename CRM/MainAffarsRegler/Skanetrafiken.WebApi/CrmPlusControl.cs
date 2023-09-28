@@ -4770,7 +4770,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                                 foreach (ContactEntity c in conflictContacts)
                                 {
-                                    if (lead.EMailAddress1 != null && lead.EMailAddress1.Equals(c.EMailAddress1))
+                                    if (lead.EMailAddress1 != null && lead.EMailAddress1.Equals(c.EMailAddress1) && c.ed_MklId != null)
                                     {
                                         HttpResponseMessage respMess2 = new HttpResponseMessage(HttpStatusCode.BadRequest);
                                         respMess2.Content = new StringContent("Duplicate Contact found with the same primary email.");
@@ -5559,7 +5559,8 @@ namespace Skanetrafiken.Crm.Controllers
                 {
                     new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
                     new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, lead.EMailAddress1),
-                    new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true)
+                    new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true),
+                    new ConditionExpression(ContactEntity.Fields.ed_MklId, ConditionOperator.NotNull)
                 }
             };
             contactConflictFilter.AddFilter(nameMailFilter);
