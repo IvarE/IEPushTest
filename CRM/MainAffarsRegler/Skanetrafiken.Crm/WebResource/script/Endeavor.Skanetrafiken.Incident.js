@@ -376,22 +376,6 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             );
         },
 
-        onChangeTravelCard: function (executionContext) {
-            try {
-                var formContext = executionContext.getFormContext();
-
-                // MaxP 2016-04-28 Har lagt till så att kortnummer inte sätts i BIFF kontrollen när den är kollapsad
-                var _tab_biffinformation = formContext.ui.tabs.get("tab_BIFFInformation").getDisplayState()
-                if (_tab_biffinformation == "expanded") {
-                    var arg = 'WebResource_BIFFTransactions';
-                    var obj = formContext.getControl(arg).getObject();
-                    var travelcardid = Endeavor.formscriptfunctions.GetValue("cgi_unregisterdtravelcard", formContext);
-                    obj.contentWindow.SetTravelCardNumber(travelcardid);
-                }
-            } catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Incident.onChangeTravelCard\n\n" + e.message);
-            }
-        },
 
         onChangeActionDateTime: function (executionContext) {
             try {
