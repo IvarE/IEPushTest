@@ -4657,10 +4657,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                             updContact.Attributes = attributesToUpdate;
                             localContext.OrganizationService.Update(updContact);
-                            _log.Debug($"Th={threadId} - ValidateEmail: Contact updated. Sending confirmation Email.");
-
-                            CrmPlusUtility.SendConfirmationEmail(localContext, threadId, contact);
-                            _log.Info($"Th={threadId} - ValidateEmail: Confirmation Email sent.");
+                            _log.Debug($"Th={threadId} - ValidateEmail: Contact updated.");
 
                             return new HttpResponseMessage(HttpStatusCode.OK)
                             {
@@ -4887,9 +4884,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                             localContext.OrganizationService.Update(updContact2);
 
-                            _log.Debug($"Th={threadId} - ValidateEmail: Contact updated. Sending confirmation Email.");
-                            CrmPlusUtility.SendConfirmationEmail(localContext, threadId, nContact);
-                            _log.Info($"Th={threadId} - ValidateEmail: Confirmation Email sent.");
+                            _log.Debug($"Th={threadId} - ValidateEmail: Contact updated.");
 
                             HttpResponseMessage rm4 = new HttpResponseMessage(HttpStatusCode.OK);
                             rm4.Content = new StringContent(SerializeNoNull(nContact.ToContactInfo(localContext)));
@@ -5036,9 +5031,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if(contact != null)
                     {
-                        _log.Debug($"Th={threadId} - ValidateEmail: Contact updated. Sending confirmation Email.");
-                        CrmPlusUtility.SendConfirmationEmail(localContext, threadId, contact);
-                        _log.Info($"Th={threadId} - ValidateEmail: Confirmation Email sent.");
+                        _log.Debug($"Th={threadId} - ValidateEmail: Contact updated.");
 
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.OK);
                         rm.Content = new StringContent(SerializeNoNull(contact.ToContactInfo(localContext)));

@@ -61,38 +61,6 @@ namespace Skanetrafiken.Crm
             return settingString;
         }
 
-        public static SendEmailResponse SendConfirmationEmail(Plugin.LocalPluginContext localContext, int threadId, ContactEntity contact)
-        {
-            _log.Debug($"Th={threadId} - ValidateEmail -> SendConfirmationEmail: Retrieving Email Confirmation Template.");
-            string emailCofnfirmationTemplateName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_TemplateTitleEmailConfirmation);
-            QueryExpression query = new QueryExpression()
-            {
-                EntityName = TemplateEntity.EntityLogicalName,
-                ColumnSet = new ColumnSet(TemplateEntity.Fields.Title),
-                Criteria =
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression(TemplateEntity.Fields.Title, ConditionOperator.Equal, emailCofnfirmationTemplateName)
-                    }
-                }
-            };
-
-            TemplateEntity template = XrmRetrieveHelper.RetrieveFirst<TemplateEntity>(localContext, query);
-            if (template == null)
-                throw new Exception(string.Format(Resources.CouldNotFindEmailTemplate, emailCofnfirmationTemplateName));
-
-            _log.Debug($"Th={threadId} - ValidateEmail -> SendConfirmationEmail: Email Confirmation Template retrieved.");
-
-            _log.Debug($"Th={threadId} - ValidateEmail -> SendConfirmationEmail: Creating Email object from template.");
-            EmailEntity email = EmailEntity.CreateEmailFromTemplate(localContext, template, contact.ToEntityReference());
-
-            email.RegardingObjectId = contact.ToEntityReference();
-            _log.Debug($"Th={threadId} - ValidateEmail -> SendConfirmationEmail: Email object created with regarding ref.");
-
-            return SetToFromAndSendEmail(localContext, threadId, contact.ToEntityReference(), email);
-        }
-
         public static SendEmailResponse SendValidationEmail(Plugin.LocalPluginContext localContext, int threadId, ContactEntity to)
         {
             string contactValidationTemplateName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_TemplateTitleEmailValidationContact);
