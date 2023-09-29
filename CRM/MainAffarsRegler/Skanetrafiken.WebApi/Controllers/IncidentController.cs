@@ -39,7 +39,7 @@ namespace Skanetrafiken.Crm.Controllers
 
         private const string StorageAccountName = "webpublicwebprod"; //PROD
         private const string ClientID = "73acce44-96d3-48a1-8c44-33185bc2f24f"; //PROD - App/Client ID
-        private const string ClientSecret = "mGJ7Q~4jEXcEgzoYd1IBc4tUYb4raX8XOXTJs"; //PROD
+        private const string ClientSecret = "Fns8Q~zPciVTCcUHPhPh75OhuhbL0blncWUXSaLA"; //PROD
 
 
         private const string FileName = "2021/9/20/ef05fe16-0f9d-43d8-909e-6c64f6394aac.jpg";
