@@ -117,6 +117,7 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         //Form Methods CGI Incident (from incidentLibrary.js)
         onFormLoad: function (executionContext) {
             var formContext = executionContext.getFormContext();
+            Endeavor.Skanetrafiken.Incident.OnLoadHideTwitter(formContext);
 
             if (formContext.ui.getFormType() != FORM_TYPE_CREATE)
                 Endeavor.formscriptfunctions.CustomizeTheNotesHeight(formContext); 
@@ -194,6 +195,13 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             }
             Endeavor.formscriptfunctions.SaveEntity(formContext);
 
+        },
+
+        OnLoadHideTwitter: function (formContext) {
+            var originOptionSet = formContext.getControl("caseorigincode");
+            if (originOptionSet !== null) {
+                originOptionSet.removeOption(3986);
+            }
         },
 
         onLoadHideShowTypeOfContactFields: function (executionContext) {
