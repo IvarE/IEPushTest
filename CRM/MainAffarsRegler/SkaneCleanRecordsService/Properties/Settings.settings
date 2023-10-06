@@ -32,5 +32,11 @@
     <Setting Name="MonthsDelete" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">6</Value>
     </Setting>
+    <Setting Name="InactivatePermitsCronExpression" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0 0 2 ? * * *</Value>
+    </Setting>
+    <Setting Name="CredentialsFilePathPermits" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%APPDATA%\Endeavor\InactivatePermitsService.Credential.xml</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

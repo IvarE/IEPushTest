@@ -14,6 +14,7 @@ using Microsoft.Crm.Sdk.Messages;
 using System.Xml;
 using Assert = NUnit.Framework.Assert;
 using System.Linq;
+using Endeavor.Crm.IntegrationTests;
 
 namespace Endeavor.Crm.UnitTest
 {

@@ -112,5 +112,23 @@ namespace Endeavor.Crm.CleanRecordsService.Properties {
                 return ((int)(this["MonthsDelete"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0 2 ? * * *")]
+        public string InactivatePermitsCronExpression {
+            get {
+                return ((string)(this["InactivatePermitsCronExpression"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\Endeavor\\InactivatePermitsService.Credential.xml")]
+        public string CredentialsFilePathPermits {
+            get {
+                return ((string)(this["CredentialsFilePathPermits"]));
+            }
+        }
     }
 }
