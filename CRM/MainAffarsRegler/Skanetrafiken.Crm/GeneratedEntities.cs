@@ -54800,7 +54800,22 @@ namespace Skanetrafiken.Crm.Schema.Generated
 				this.SetAttributeValue("overriddencreatedon", value);
 			}
 		}
-		
+
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_connectiondate")]
+		public System.Nullable<System.DateTime> st_ConnectionDate
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("st_connectiondate");
+			}
+			set
+			{
+				this.SetAttributeValue("st_connectiondate", value);
+			}
+		}
+
 		/// <summary>
 		/// Status för Reskort
 		/// </summary>
@@ -55156,7 +55171,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string OrganizationId = "organizationid";
 			
 			public const string OverriddenCreatedOn = "overriddencreatedon";
-			
+
+			public const string st_ConnectionDate = "st_connectiondate";
+
 			public const string statecode = "statecode";
 			
 			public const string statuscode = "statuscode";

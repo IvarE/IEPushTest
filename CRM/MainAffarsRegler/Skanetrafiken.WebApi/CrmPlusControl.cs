@@ -5121,7 +5121,12 @@ namespace Skanetrafiken.Crm.Controllers
                                 updateSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
                             }
 
-                            XrmHelper.Update(localContext, updateSkaKort);
+                            if (skaKortInfo.ConnectionDate != null || skaKortInfo.ConnectionDate != DateTime.MaxValue || skaKortInfo.ConnectionDate != DateTime.MinValue)
+                            {
+                                updateSkaKort.st_ConnectionDate = skaKortInfo.ConnectionDate;
+                            }
+
+                                XrmHelper.Update(localContext, updateSkaKort);
 
                             _log.Info($"Th={threadId} - RegisterBuyAndSendSkaKortPost: SkaKort updated. SkaKortId: {skakort.Id}.");
 
@@ -5138,6 +5143,11 @@ namespace Skanetrafiken.Crm.Controllers
                             newSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
                             newSkaKort.ed_Contact = contact.ToEntityReference();
                             newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
+
+                            if (skaKortInfo.ConnectionDate != null || skaKortInfo.ConnectionDate != DateTime.MaxValue || skaKortInfo.ConnectionDate != DateTime.MinValue)
+                            {
+                                newSkaKort.st_ConnectionDate = skaKortInfo.ConnectionDate;
+                            }
 
                             newSkaKort.Id = XrmHelper.Create(localContext, newSkaKort);
 
@@ -5248,6 +5258,11 @@ namespace Skanetrafiken.Crm.Controllers
                                     updateSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
                                 }
 
+                                if (skaKortInfo.ConnectionDate != null || skaKortInfo.ConnectionDate != DateTime.MaxValue || skaKortInfo.ConnectionDate != DateTime.MinValue)
+                                {
+                                    updateSkaKort.st_ConnectionDate = skaKortInfo.ConnectionDate;
+                                }
+
                                 XrmHelper.Update(localContext, updateSkaKort);
 
                                 _log.Info($"Th={threadId} - RegisterCompanySkaKortPost: SkaKort updated. SkaKortId: {skakort.Id}.");
@@ -5267,6 +5282,11 @@ namespace Skanetrafiken.Crm.Controllers
                             newSkaKort.ed_CardNumber = skaKortInfo.CardNumber;
                             newSkaKort.ed_Account = account.ToEntityReference();
                             newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
+
+                            if (skaKortInfo.ConnectionDate != null || skaKortInfo.ConnectionDate != DateTime.MaxValue || skaKortInfo.ConnectionDate != DateTime.MinValue)
+                            {
+                                newSkaKort.st_ConnectionDate = skaKortInfo.ConnectionDate;
+                            }
 
                             newSkaKort.Id = XrmHelper.Create(localContext, newSkaKort);
 

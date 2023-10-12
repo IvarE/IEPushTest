@@ -35,6 +35,11 @@ namespace Skanetrafiken.Crm
         private string portalIdField;
 
         /// <summary>
+        /// Connection Date
+        /// </summary>
+        private DateTime connectionDateField;
+
+        /// <summary>
         /// Type of operation
         /// </summary>
         /// <example>0 = Register | 1 = Delete | 2 = Revoke</example>
@@ -121,6 +126,17 @@ namespace Skanetrafiken.Crm
             }
         }
 
+        public DateTime ConnectionDate
+        {
+            get
+            {
+                return this.connectionDateField;
+            }
+            set
+            {
+                this.connectionDateField = value;
+            }
+        }
         /// <summary>
         /// Type of operation. 0 = Register | 1 = Delete | 2 = Revoke.
         /// </summary>
