@@ -188,6 +188,7 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
 		set_to_onchange: function (executionContext) {
 			try {
 				var formContext = executionContext.getFormContext();
+				Endeavor.Skanetrafiken.Email.validateEmailAddressFormat(executionContext);
 
 				var _id = Endeavor.formscriptfunctions.GetLookupid("cgi_email_recipient_id", formContext);
 				var _name = Endeavor.formscriptfunctions.GetLookupName("cgi_email_recipient_id", formContext);
@@ -203,6 +204,7 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
 		set_cc_onchange: function (executionContext) {
 			try {
 				var formContext = executionContext.getFormContext();
+				Endeavor.Skanetrafiken.Email.validateEmailAddressFormat(executionContext);
 
 				var id = Endeavor.formscriptfunctions.GetLookupid("cgi_cc_emailrecipient", formContext),
 					name = Endeavor.formscriptfunctions.GetLookupName("cgi_cc_emailrecipient", formContext),
@@ -217,6 +219,7 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
 		set_bcc_onchange: function (executionContext) {
 			try {
 				var formContext = executionContext.getFormContext();
+				Endeavor.Skanetrafiken.Email.validateEmailAddressFormat(executionContext);
 
 				var id = Endeavor.formscriptfunctions.GetLookupid("cgi_bcc_emailrecipient", formContext),
 					name = Endeavor.formscriptfunctions.GetLookupName("cgi_bcc_emailrecipient", formContext),
@@ -603,6 +606,33 @@ if (typeof (Endeavor.Skanetrafiken.Email) == "undefined") {
 				Xrm = parent.Xrm;
 
 			Xrm.WebApi.online.execute(req).then(sucessCallback, errorCallback);
+		},
+
+		validateEmailAddressFormat: function (executionContext) {
+			var formContext = executionContext.getFormContext();
+			var validationRegExp = new RegExp(/^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$/, "i");
+			var fieldName = executionContext.getEventSource().getName();
+			var fieldType = executionContext.getEventSource().getAttributeType();
+			var email = null;
+
+			if (fieldType === 'lookup'){
+				email = formContext.getAttribute(fieldName)?.getValue()?.[0]?.keyValues["cgi_emailaddress_Value"]?.value;
+			}
+			else if (fieldType === 'text') {
+				email = formContext.getAttribute(fieldName).getValue();
+			}
+			else {
+				return;
+			}
+
+			if (email == null || email.match(validationRegExp)) {
+				// remove error notification
+				formContext.getControl(fieldName).clearNotification("invalidEmail");
+			}
+			else {
+				// throw error notification
+				formContext.getControl(fieldName).setNotification("Ogiltig e-postadress!", "invalidEmail");
+			}
 		}
 	}
 }

@@ -1023,9 +1023,8 @@ namespace Skanetrafiken.Crm
             if (email == ContactEntity._NEWEMAILDONE)
                 return true;
             // Also accepts the letters [á, é, å, ä, ö].
-            return Regex.IsMatch(email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~\-áéåäö]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~\-áéåäö]+)*@(?:[a-z0-9áéåäö](?:[a-z0-9\-áéåäö]*[a-z0-9áéåäö])?\.)+[a-z0-9áéåäö](?:[a-z0-9\-áéåäö]*[a-z0-9áéåäö])?)\Z", RegexOptions.IgnoreCase);
-            //return Regex.IsMatch(email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~\-éåäö]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~\-éåäö]+)*@(?:[a-z0-9éåäö](?:[a-z0-9\-éåäö]*[a-z0-9éåäö])?\.)+[a-z0-9éåäö](?:[a-z0-9\-éåäö]*[a-z0-9éåäö])?)\Z", RegexOptions.IgnoreCase);
-            //return Regex.IsMatch(email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase);
+            //return Regex.IsMatch(email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~\-áéåäö]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~\-áéåäö]+)*@(?:[a-z0-9áéåäö](?:[a-z0-9\-áéåäö]*[a-z0-9áéåäö])?\.)+[a-z0-9áéåäö](?:[a-z0-9\-áéåäö]*[a-z0-9áéåäö])?)\Z", RegexOptions.IgnoreCase);
+            return Regex.IsMatch(email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase);
         }
 
         /// <summary>

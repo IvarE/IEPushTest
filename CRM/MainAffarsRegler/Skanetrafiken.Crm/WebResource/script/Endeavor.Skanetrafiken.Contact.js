@@ -1456,6 +1456,20 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Contact.format_ZIPCodeNumber\n\n" + e.message);
             }
+        },
+
+        validateEmailAddressFormat: function(executionContext){
+            var formContext = executionContext.getFormContext();
+            var validationRegExp = new RegExp(/^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$/, "i");
+            var fieldName = executionContext.getEventSource().getName();
+            var email = formContext.getAttribute(fieldName).getValue();
+            if (email === null || email.match(validationRegExp)){
+                // remove error notification
+                formContext.getControl(fieldName).clearNotification("invalidEmail");
+            }else{
+                // throw error notification
+                formContext.getControl(fieldName).setNotification("Ogiltig e-postadress!", "invalidEmail");
+            }
         }
         
     };

@@ -34,6 +34,12 @@
           "file": "/WebResource/script/Endeavor.Skanetrafiken.cgi_refund.js",
           "description": null,
           "ts": null
+        },
+        {
+          "uniquename": "ed_/script/Endeavor.Skanetrafiken.Contact.js",
+          "file": "/WebResource/script/Endeavor.Skanetrafiken.Contact.js",
+          "description": null,
+          "ts": null
         }
       ]
     }
