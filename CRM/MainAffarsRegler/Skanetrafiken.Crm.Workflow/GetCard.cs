@@ -99,7 +99,15 @@ namespace Skanetrafiken.Crm
             catch (Exception ex)
             {
                 //GetCardResponse.Set(activityContext, $"Kunde inte spärra kort för att få värdekod. Vänligen försök igen eller kontakta kundtjänst. StripError (GetCard): { ex.Message }");
-                throw new InvalidPluginExecutionException($"Kunde inte spärra kort för att få värdekod. Vänligen försök igen eller kontakta kundtjänst. StripError (GetCard): { ex.Message }");
+                if(ex.Message.Contains("404"))
+                {
+                    throw new InvalidPluginExecutionException("404");
+                }
+                else
+                {
+                    throw new InvalidPluginExecutionException($"Kunde inte spärra kort för att få värdekod. Vänligen försök igen eller kontakta kundtjänst. StripError (GetCard): { ex.Message }");
+                }
+                
             }
         }
 

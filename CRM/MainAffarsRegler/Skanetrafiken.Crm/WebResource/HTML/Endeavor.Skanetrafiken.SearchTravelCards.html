@@ -45,7 +45,6 @@
 
                 getInfoFromCardId: function () {
                     try {
-
                         var cardId = document.getElementById("cardId").value;
 
                         if (cardId == null || cardId == "") {
@@ -83,7 +82,14 @@
                                 //    activateCloseButton();
                             },
                             function (error) {
-                                var errorMessage = "Något gick fel. Vänligen försök igen. Details: " + error.message;
+                                var errorMessage = "";
+                                if (error.message.includes("404")) {
+                                    errorMessage = "JoJo-kort med kortnummer: " + cardId +" saknas.";
+
+                                } else {
+                                    errorMessage = "Något gick fel. Vänligen försök igen. Details: " + error.message;
+                                }
+                                
                                 console.error(errorMessage);
                                 Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
                             });

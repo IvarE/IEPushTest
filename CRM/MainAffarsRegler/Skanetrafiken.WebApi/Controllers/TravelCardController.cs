@@ -213,6 +213,14 @@ namespace Skanetrafiken.Crm.Controllers
                 _log.Info($"GetCardWithCardNumber: Exception cought -> {ex?.Message}, {ex?.InnerException}, {ex?.InnerException?.Message}");
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+
+                if (ex.Message.Contains("404"))
+                {
+                    rm = new HttpResponseMessage(HttpStatusCode.NotFound);
+                    rm.Content = new StringContent(string.Format(ex.Message));
+                }
+                
+                
                 _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 return rm;
             }
