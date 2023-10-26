@@ -20,7 +20,6 @@ namespace Endeavor.Crm.UnitTest.CancellationCodes
         }
 
         [Test]
-        [TestCase(ed_creditsaferejectcodes.Protected, typeof(ProtectedStatusCodeLogic))]
         [TestCase(ed_creditsaferejectcodes.Deceased, typeof(DeceasedStatusCodeLogic))]
         [TestCase(ed_creditsaferejectcodes.Emigrated, typeof(EmigratedStatusCodeLogic))]
         public void GetCancellationCodeHandler_ValidStatusCode_ReturnsValidLogicInstance(ed_creditsaferejectcodes code, Type logicType)

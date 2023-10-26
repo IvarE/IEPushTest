@@ -156,7 +156,6 @@
     <Compile Include="CancellationCodes\AutoFixtureFactory.cs" />
     <Compile Include="CancellationCodes\CancellationCodeLogicFactoryTests.cs" />
     <Compile Include="CancellationCodes\DeceasedStatusCodeLogicTests.cs" />
-    <Compile Include="CancellationCodes\ProtectedStatusCodeLogicTests.cs" />
     <Compile Include="CancellationCodes\EmigratedStatusCodeLogicTests.cs" />
     <Compile Include="crmservicehelpers.cs" />
     <Compile Include="deviceidmanager.cs" />

@@ -189,7 +189,7 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
-        internal void HandlePostContactDeleteAsync(Plugin.LocalPluginContext localContext, EntityReference target)
+        public void HandlePostContactDeleteAsync(Plugin.LocalPluginContext localContext, EntityReference target)
         {
             try
             {

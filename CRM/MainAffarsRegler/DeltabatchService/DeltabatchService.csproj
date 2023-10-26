@@ -185,6 +185,7 @@
   <ItemGroup>
     <Compile Include="CancellationCodes\CancellationCodeLogic\DeceasedStatusCodeLogic.cs" />
     <Compile Include="CancellationCodes\CancellationCodeLogic\EmigratedStatusCodeLogic.cs" />
+    <Compile Include="CancellationCodes\CancellationCodeLogic\SocialSecurityChangedCodeLogic.cs" />
     <Compile Include="CrmConnection.cs" />
     <Compile Include="DeltabatchJobHelper.cs" />
     <Compile Include="DeltaBatchUpdateRow.cs" />
@@ -194,7 +195,6 @@
     <Compile Include="CancellationCodes\CancellationCodeInfrastructure\ICancellationCodeLogic.cs" />
     <Compile Include="CancellationCodes\CancellationCodeInfrastructure\ICancellationCodeLogicFactory.cs" />
     <Compile Include="CancellationCodes\CancellationCodeInfrastructure\IDateTimeProvider.cs" />
-    <Compile Include="CancellationCodes\CancellationCodeLogic\ProtectedStatusCodeLogic.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
