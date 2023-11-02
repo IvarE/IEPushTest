@@ -5121,7 +5121,7 @@ namespace Skanetrafiken.Crm.Controllers
                                 updateSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
                             }
 
-                            if (skaKortInfo.ConnectionDate != null || skaKortInfo.ConnectionDate != DateTime.MaxValue || skaKortInfo.ConnectionDate != DateTime.MinValue)
+                            if (skaKortInfo.ConnectionDate != null && skaKortInfo.ConnectionDate > DateTime.MaxValue && skaKortInfo.ConnectionDate < DateTime.MinValue)
                             {
                                 updateSkaKort.st_ConnectionDate = skaKortInfo.ConnectionDate;
                             }
@@ -5144,7 +5144,7 @@ namespace Skanetrafiken.Crm.Controllers
                             newSkaKort.ed_Contact = contact.ToEntityReference();
                             newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
 
-                            if (skaKortInfo.ConnectionDate != null || skaKortInfo.ConnectionDate != DateTime.MaxValue || skaKortInfo.ConnectionDate != DateTime.MinValue)
+                            if (skaKortInfo.ConnectionDate != null && skaKortInfo.ConnectionDate > DateTime.MaxValue && skaKortInfo.ConnectionDate < DateTime.MinValue)
                             {
                                 newSkaKort.st_ConnectionDate = skaKortInfo.ConnectionDate;
                             }
@@ -5258,7 +5258,7 @@ namespace Skanetrafiken.Crm.Controllers
                                     updateSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
                                 }
 
-                                if (skaKortInfo.ConnectionDate != null || skaKortInfo.ConnectionDate != DateTime.MaxValue || skaKortInfo.ConnectionDate != DateTime.MinValue)
+                                if (skaKortInfo.ConnectionDate != null && skaKortInfo.ConnectionDate > DateTime.MaxValue && skaKortInfo.ConnectionDate < DateTime.MinValue)
                                 {
                                     updateSkaKort.st_ConnectionDate = skaKortInfo.ConnectionDate;
                                 }
@@ -5283,7 +5283,7 @@ namespace Skanetrafiken.Crm.Controllers
                             newSkaKort.ed_Account = account.ToEntityReference();
                             newSkaKort.ed_InformationSource = Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
 
-                            if (skaKortInfo.ConnectionDate != null || skaKortInfo.ConnectionDate != DateTime.MaxValue || skaKortInfo.ConnectionDate != DateTime.MinValue)
+                            if (skaKortInfo.ConnectionDate != null && skaKortInfo.ConnectionDate > DateTime.MaxValue && skaKortInfo.ConnectionDate < DateTime.MinValue)
                             {
                                 newSkaKort.st_ConnectionDate = skaKortInfo.ConnectionDate;
                             }
