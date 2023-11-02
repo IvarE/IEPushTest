@@ -3118,6 +3118,55 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
+        public static ContactEntity GetValidatedContactFromMklId(Plugin.LocalPluginContext localContext, string MklId)
+        {
+            if (string.IsNullOrWhiteSpace(MklId))
+            {
+                return null;
+            }
+
+            FilterExpression MklFilter = new FilterExpression(LogicalOperator.Or)
+            {
+                Conditions =
+                    {
+                        new ConditionExpression(ContactEntity.Fields.ed_MklId, ConditionOperator.Equal, MklId)
+                    }
+            };
+
+            QueryExpression query = new QueryExpression()
+            {
+                EntityName = ContactEntity.EntityLogicalName,
+                ColumnSet = ContactEntity.ContactInfoBlock,
+                Criteria = new FilterExpression()
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.ContactState.Active),
+
+                    },
+                    Filters =
+                    {
+                        MklFilter
+                    }
+                }
+            };
+
+            IList<ContactEntity> contacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, query);
+
+            if (contacts.Count == 0)
+            {
+                return null;
+            }
+            else if (contacts.Count == 1)
+            {
+                return contacts[0];
+            }
+            else
+            {
+                throw new Exception(string.Format("Inconsistency in database regarding MklId: {0}\nPlease contact administrator.", MklId));
+            }
+        }
+
         public static DateTime? UpdateBirthDateOnContact(string ssn)
         {
             //DevOps 9168

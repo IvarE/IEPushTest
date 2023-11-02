@@ -1847,7 +1847,7 @@ namespace Skanetrafiken.Crm.Controllers
             //}
         }
 
-        public static HttpResponseMessage GetContact(int threadId, string contactGuidOrEmailorSSN)
+        public static HttpResponseMessage GetContact(int threadId, string contactGuidOrEmailorSSNorMklId)
         {
             ContactEntity contact = null;
 
@@ -1866,9 +1866,10 @@ namespace Skanetrafiken.Crm.Controllers
                     _log.Info($"Th={threadId} - GetContact: ServiceProxy and LocalContext created Successfully.");
 
                     bool isSSN = false;
+                    bool isMklId = false;
                     Guid contactId = Guid.Empty;
                     // GUID
-                    if (Guid.TryParse(contactGuidOrEmailorSSN, out contactId))
+                    if (Guid.TryParse(contactGuidOrEmailorSSNorMklId, out contactId))
                     {
                         _log.Info($"Th={threadId} - GetContact: Retrieving Contact using ContactId.");
                         _log.Debug($"Th={threadId} - GetContact: Retrieving Contact using ContactId: {contactId.ToString()}.");
@@ -1882,10 +1883,10 @@ namespace Skanetrafiken.Crm.Controllers
                                 }
                             });
                     }
-                    else if (CustomerUtility.CheckPersonnummerFormat(contactGuidOrEmailorSSN)) //Pers.Nr
+                    else if (CustomerUtility.CheckPersonnummerFormat(contactGuidOrEmailorSSNorMklId)) //Pers.Nr
                     {
                         _log.Info($"Th={threadId} - GetContact: Retrieving Contact using SocialSecurityNumber(SSN).");
-                        _log.Debug($"Th={threadId} - GetContact: Retrieving Contact using SocialSecurityNumber(SSN): {contactGuidOrEmailorSSN}.");
+                        _log.Debug($"Th={threadId} - GetContact: Retrieving Contact using SocialSecurityNumber(SSN): {contactGuidOrEmailorSSNorMklId}.");
 
                         isSSN = true;
                         contact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, ContactEntity.ContactInfoBlock,
@@ -1893,17 +1894,25 @@ namespace Skanetrafiken.Crm.Controllers
                             {
                                 Conditions =
                                 {
-                                new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, contactGuidOrEmailorSSN)
+                                new ConditionExpression(ContactEntity.Fields.cgi_socialsecuritynumber, ConditionOperator.Equal, contactGuidOrEmailorSSNorMklId)
                                 }
                             });
                     }
                     // EMAIL (Should we add Mobile in some way?)
-                    else if (CustomerUtility.CheckEmailFormat(contactGuidOrEmailorSSN))
+                    else if (CustomerUtility.CheckEmailFormat(contactGuidOrEmailorSSNorMklId))
                     {
                         _log.Info($"Th={threadId} - GetContact: Retrieving Contact using Email.");
-                        _log.Debug($"Th={threadId} - GetContact: Retrieving Contact using Email: {contactGuidOrEmailorSSN}.");
+                        _log.Debug($"Th={threadId} - GetContact: Retrieving Contact using Email: {contactGuidOrEmailorSSNorMklId}.");
 
-                        contact = ContactEntity.GetValidatedContactFromEmail(localContext, contactGuidOrEmailorSSN);
+                        contact = ContactEntity.GetValidatedContactFromEmail(localContext, contactGuidOrEmailorSSNorMklId);
+                    }
+                    else // MKL id
+                    {
+                        isMklId = true;
+                        _log.Info($"Th={threadId} - GetContact: Retrieving Contact using MklId.");
+                        _log.Debug($"Th={threadId} - GetContact: Retrieving Contact using MklId: {contactGuidOrEmailorSSNorMklId}.");
+
+                        contact = ContactEntity.GetValidatedContactFromMklId(localContext, contactGuidOrEmailorSSNorMklId);
                     }
 
                     if (contact == null)
@@ -1913,12 +1922,18 @@ namespace Skanetrafiken.Crm.Controllers
                         {
                             respMess.Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, "SocialSecurityNumber"));
                         }
-                        else {
-                            respMess.Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, contactGuidOrEmailorSSN));
+                        else if (isMklId == true)
+                        {
+                            respMess.Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, "MKLid"));
+                        }
+                        else
+                        {
+                            respMess.Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, contactGuidOrEmailorSSNorMklId));
                         }
                         
                         return respMess;
                     }
+
                     if (contact.StateCode != Generated.ContactState.Active)
                     {
                         // TODD teo - Verify httpStatusCode usage
