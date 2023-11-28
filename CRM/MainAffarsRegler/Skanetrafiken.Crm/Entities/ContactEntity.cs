@@ -394,6 +394,7 @@ namespace Skanetrafiken.Crm.Entities
             contact.ed_UpdatedFBDate = null;
             contact.ed_HasSwedishSocialSecurityNumber = false;
             contact.ed_SocialSecurityNumberFormat = null;
+            contact.st_reservid = null;
             contact.cgi_socialsecuritynumber = null;
             contact.ed_SocialSecurityNumberBlock = null;
             contact.ed_SocialSecurityNumber2 = null;

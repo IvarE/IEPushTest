@@ -32,6 +32,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             var formIsOnLoad = true;
             Endeavor.Skanetrafiken.Contact.resetRequiredLevel(executionContext, formIsOnLoad);
             Endeavor.Skanetrafiken.Contact.setInfotainmentValues(executionContext);
+            Endeavor.Skanetrafiken.Contact.onReservIdandSSNChange(executionContext);
             //Endeavor.Skanetrafiken.Contact.lockEmailIfMKLidExistAndNotAdminForm(formContext);
 
             switch (formType) {
@@ -116,7 +117,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
             var formContext = executionContext.getFormContext();
             var roles = [];
-            roles[0] = "Skånetrafiken Annons"; 
+            roles[0] = "Skånetrafiken Annons";
 
             var isUserCheck = Endeavor.Skanetrafiken.Contact.currentUserHasSecurityRole(roles);
 
@@ -131,9 +132,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 Endeavor.formscriptfunctions.SetValue("ed_collaborationcontact", false, formContext);
                 Endeavor.formscriptfunctions.SetValue("ed_businesscontact", false, formContext);
 
-               
+
                 formContext.getControl("ed_privatecustomercontact").setDisabled(true);
-               // ed_informationsource = Annons
+                // ed_informationsource = Annons
                 //ed_infotainmentcontact = Yes
             }
 
@@ -211,7 +212,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         },
 
         resetRequiredLevel: function (executionContext, formIsOnLoad) {
-            
+
             var formContext = executionContext.getFormContext();
 
             debugger;
@@ -240,8 +241,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     var collaborationValue = collaborationContactAttribute.getValue();
                     var serviceresorValue = serviceresorAttribute.getValue();
 
-                    if (stateCode == null && formIsOnLoad == true)
-                    {
+                    if (stateCode == null && formIsOnLoad == true) {
                         privateContactAttribute.setValue(true);
                         privateValue = true;
                     }
@@ -283,8 +283,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                             formContext.getControl("ed_serviceresor").setDisabled(true);
 
                         }
-                        else if (businessValue != null && businessValue != false)
-                        {
+                        else if (businessValue != null && businessValue != false) {
                             privateContactAttribute.setValue(false);
                             formContext.getControl("ed_privatecustomercontact").setDisabled(true);
 
@@ -453,7 +452,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     else if (businessValue == false && agentValue == false
                         && kontaktPersonValue == false && epostMottagareValue == false
                         && infotainmentValue == false && privateValue == false
-                        && collaborationValue == false && serviceresorValue  == false) {
+                        && collaborationValue == false && serviceresorValue == false) {
 
                         formContext.getControl("ed_businesscontact").setDisabled(false);
                         formContext.getControl("ed_agentcontact").setDisabled(false);
@@ -480,7 +479,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         handleAddressCompositeFields: function (formContext) {
 
             try {
-                
+
                 var globalContext = Xrm.Utility.getGlobalContext();
                 var languageId = globalContext.userSettings.languageId;
                 switch (languageId) {
@@ -508,7 +507,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         lockEmailIfMKLidExistAndNotAdminForm: function (formContext) {
 
             try {
-                
+
 
                 var currForm = formContext.ui.formSelector.getCurrentItem();
                 var currFormId = currForm.getId();
@@ -521,21 +520,21 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
                 else if (currFormId == "c2cd73d5-94d8-428e-8efe-4fa7d9ba05b4" || currFormId == "ec6a06d0-d3e3-4085-b231-c2e20dac64ac" || currFormId == "293c878f-f068-40a0-ae48-4297e060871c" || currFormId == "a218c7a7-167d-408a-8e0d-5f077636c463") { // if form: Organisation, ClickDimension, Annons or Sales insight apply MKL rule.
 
-                        if (MKLid != "undefined" && MKLid.getValue() != null) { //lock if MKLid exist
+                    if (MKLid != "undefined" && MKLid.getValue() != null) { //lock if MKLid exist
 
                         Endeavor.formscriptfunctions.SetState("emailaddress1", true, formContext);
-                        }
-                        else if (MKLid == "undefined" || MKLid.getValue() == null) {
+                    }
+                    else if (MKLid == "undefined" || MKLid.getValue() == null) {
 
                         Endeavor.formscriptfunctions.SetState("emailaddress1", false, formContext);
-                        }
+                    }
                 }
                 else { // all other forms lock email1
                     Endeavor.formscriptfunctions.SetState("emailaddress1", true, formContext);
                 }
 
             }
-            catch (ex){
+            catch (ex) {
                 alert("Fel i Endeavor.Skanetrafiken.Contact.lockEmailIfMKLidExistAndNotAdminForm\n\n" + ex.message);
             }
 
@@ -545,8 +544,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             var socialSecurityNumber = Endeavor.formscriptfunctions.GetValue("cgi_socialsecuritynumber", formContext);
             var socialSecurityNumberFormat = Endeavor.formscriptfunctions.GetValue("ed_socialsecuritynumberformat", formContext);
 
-            if (socialSecurityNumber != null && socialSecurityNumberFormat == null)
-            {
+            if (socialSecurityNumber != null && socialSecurityNumberFormat == null) {
                 var hifen = "-";
                 var position = 8;
                 Endeavor.formscriptfunctions.SetValue("ed_socialsecuritynumberformat", [socialSecurityNumber.slice(0, position), hifen, socialSecurityNumber.slice(position)].join(''), formContext);
@@ -600,7 +598,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
         isMoreThanPrivateContact: function (formContext) {
 
-            
+
             formContext.ui.clearFormNotification("IsMoreThanPrivate")
 
             var checkPrivateAttribute = formContext.getAttribute("ed_privatecustomercontact");
@@ -690,7 +688,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             var currForm = formContext.ui.formSelector.getCurrentItem();
             var currFormId = currForm.getId();
 
-         
+
 
             if (currFormId == "a218c7a7-167d-408a-8e0d-5f077636c463") { // Annons form
                 return false;
@@ -731,12 +729,33 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             }
         },
 
+        onReservIdandSSNChange: function (executionContext) {
+            var formContext = executionContext.getFormContext();
+            var reservId = formContext.getAttribute("st_reservid");
+            var ssnNumber = formContext.getAttribute("ed_socialsecuritynumberformat");
+            reservId.setRequiredLevel("required");
+            ssnNumber.setRequiredLevel("required");
+            if (reservId.getValue() != null) {
+                ssnNumber.setRequiredLevel("none");
+                reservId.setRequiredLevel("required");
+            }
+            if (ssnNumber.getValue() != null) {
+                reservId.setRequiredLevel("none");
+                ssnNumber.setRequiredLevel("required");
+            }
+            if (ssnNumber.getValue() != null && reservId.getValue() != null) {
+                reservId.setRequiredLevel("none");
+                ssnNumber.setRequiredLevel("none");
+            }
+        },
+
         onSocialSecurityNumberChange: function (executionContext) {
             var formContext = executionContext.getFormContext();
             var contactNumberControlTag = "cgi_socialsecuritynumber";
             var socialSecurityNumberTag = "ed_socialsecuritynumberformat";
             var contactNumber = formContext.getAttribute(contactNumberControlTag);
             var ssNumber = formContext.getAttribute(socialSecurityNumberTag);
+            Endeavor.Skanetrafiken.Contact.onReservIdandSSNChange(executionContext);
 
             if (ssNumber != null) {
                 contactNumber.setValue(ssNumber.getValue());
@@ -755,7 +774,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             if (!(!contactNumber.getValue() || 0 === contactNumber.getValue().length)) {
                 if (!Endeavor.Skanetrafiken.Contact.checkSocSecNumber(formContext, contactNumber.getValue()))
                     formContext.getControl(socialSecurityNumberTag).setNotification("Ogiltigt Persnonnummer<BR>(giltiga format: ååmmdd, ååååmmdd, ååååmmddxxxx, ååååmmdd-xxxx)");
-                else 
+                else
                     formContext.getControl(socialSecurityNumberTag).clearNotification();
             }
             else
@@ -860,7 +879,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     var objectMKLResponse = object.GetTicketMoveDataFromMKLResponse;
                     objectMKLResponse = objectMKLResponse.replace("Ett fel uppstod vid kommunikation med MKL: ", "");
                     objectMKLResponse = JSON.parse(objectMKLResponse);
-                    
+
                     if (objectMKLResponse.message != null) {
                         if (!formContext.ui.setFormNotification(objectMKLResponse.message, "ERROR", Endeavor.Skanetrafiken.Contact._ticketMovesErrorHolder))
                             Endeavor.formscriptfunctions.AlertCustomDialog(objectMKLResponse.message);
@@ -938,11 +957,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             this.sex = parseInt(this.controldigits.substring(2, 3)) % 2;
 
             //DevOps 9168: Update birthdate
-            if (this.valid == true)
-            {
+            if (this.valid == true) {
                 var birthDateAtr = formContext.getAttribute("birthdate");
-                if (birthDateAtr != null && birthDateAtr != undefined)
-                {
+                if (birthDateAtr != null && birthDateAtr != undefined) {
                     //Create date obj
                     var monthValue = parseInt(this.month);
 
@@ -1028,7 +1045,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             if (SSN) {
 
                 var inputParameters = [{ "Field": "SSN", "Value": SSN, "TypeName": Endeavor.formscriptfunctions.getParameterType("string"), "StructuralProperty": 1 },
-                                    { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 }];
+                { "Field": "Blocked", "Value": !blocked, "TypeName": Endeavor.formscriptfunctions.getParameterType("bool"), "StructuralProperty": 1 }];
 
                 Endeavor.formscriptfunctions.callGlobalAction("ed_BlockCustomerPortal", inputParameters,
                     function (result) {
@@ -1048,16 +1065,13 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         var printMessageAvblockera = "";
                         var printMessageSparra = "";
 
-                        if (error.innerError)
-                        {
-                            if (error.innerError.message)
-                            {
+                        if (error.innerError) {
+                            if (error.innerError.message) {
                                 errorMessage = error.innerError.message;
                             }
                         }
 
-                        if (errorMessage != "")
-                        {
+                        if (errorMessage != "") {
                             parsedMessage = errorMessage.split(devider).pop();
                         }
 
@@ -1098,7 +1112,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
         //Senare fix med säkerhetsroller
         showBlockButton: function (formContext) {
 
-            
+
             var roles = [];
             roles[0] = "Skånetrafiken Handläggare"; //Borde heta "access block button" eller liknande
             roles[1] = "Skånetrafiken Handläggare Minus";
@@ -1114,36 +1128,36 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
             return isUserCheck && isContactOrgForm;
         },
-        
-            currentUserHasSecurityRole: function (roles) {
-                var fetchXml =
-                    "<fetch mapping='logical'>" +
-                    "<entity name='systemuser'>" +
-                    "<attribute name='systemuserid' />" +
-                    "<filter type='and'>" +
-                    "<condition attribute='systemuserid' operator='eq-userid' />" +
-                    "</filter>" +
-                    "<link-entity name='systemuserroles' from='systemuserid' to='systemuserid' visible='false' intersect='true'>" +
-                    "<link-entity name='role' from='roleid' to='roleid' alias='r'>" +
-                    "<filter type='or'>";
 
-                for (var i = 0; i < roles.length; i++) {
-                    fetchXml += "<condition attribute='name' operator='eq' value='" + roles[i] + "' />";
-                }
+        currentUserHasSecurityRole: function (roles) {
+            var fetchXml =
+                "<fetch mapping='logical'>" +
+                "<entity name='systemuser'>" +
+                "<attribute name='systemuserid' />" +
+                "<filter type='and'>" +
+                "<condition attribute='systemuserid' operator='eq-userid' />" +
+                "</filter>" +
+                "<link-entity name='systemuserroles' from='systemuserid' to='systemuserid' visible='false' intersect='true'>" +
+                "<link-entity name='role' from='roleid' to='roleid' alias='r'>" +
+                "<filter type='or'>";
 
-                fetchXml += "            </filter>" +
-                    "</link-entity>" +
-                    "</link-entity>" +
-                    "</entity>" +
-                    "</fetch>";
-                var modifiedFetchXml = fetchXml.replace("&", "&amp;");
+            for (var i = 0; i < roles.length; i++) {
+                fetchXml += "<condition attribute='name' operator='eq' value='" + roles[i] + "' />";
+            }
 
-                var users = Endeavor.formscriptfunctions.executeFetchGetCount(modifiedFetchXml, "systemusers");
-                if (users > 0)
-                    return true;
-                else
-                    return false;
-            },
+            fetchXml += "            </filter>" +
+                "</link-entity>" +
+                "</link-entity>" +
+                "</entity>" +
+                "</fetch>";
+            var modifiedFetchXml = fetchXml.replace("&", "&amp;");
+
+            var users = Endeavor.formscriptfunctions.executeFetchGetCount(modifiedFetchXml, "systemusers");
+            if (users > 0)
+                return true;
+            else
+                return false;
+        },
         // Senare fix
 
         //Form Methods CGI Contact (from contactLibrary.js)
@@ -1183,11 +1197,11 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             catch (e) {
                 alert("Fel i Endeavor.Skanetrafiken.Contact.onFormLoad\n\n" + e.message);
             }
-    },
+        },
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         onsave: function (executionContext) {
-            
+
             var eventArgs = executionContext.getEventArgs();
             var _check_soc = Endeavor.Skanetrafiken.Contact.SocSecNoOnChange(executionContext);
 
@@ -1243,7 +1257,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
                         //if (typeof (MKLid) == "undefined" && MKLid == null) 
                         //    return;
-                        
+
 
                         //if (currFormId == "aa39956c-0a06-4963-873a-2b3e574dbea5") //dont lock email field when using form "Tre Kolumner (Test)" or "Labbvy Admin (4b94250e-b88f-4439-9184-750d56a84fcf)"
                         //    //if (emailValue && emailValue.Length !== 0 && _roleName.indexOf("Handläggare") > 0)
@@ -1252,10 +1266,10 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         //    Endeavor.Skanetrafiken.Contact.lockEmailIfMKLidExist(formContext);
                         //}
 
-                         
 
 
-                        
+
+
                     }
                     catch (ex) {
                         alert("Fel i Endeavor.Skanetrafiken.Contact.checkIfUserHasRole_callback\n\n" + ex.message);
@@ -1458,19 +1472,19 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             }
         },
 
-        validateEmailAddressFormat: function(executionContext){
+        validateEmailAddressFormat: function (executionContext) {
             var formContext = executionContext.getFormContext();
             var validationRegExp = new RegExp(/^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$/, "i");
             var fieldName = executionContext.getEventSource().getName();
             var email = formContext.getAttribute(fieldName).getValue();
-            if (email === null || email.match(validationRegExp)){
+            if (email === null || email.match(validationRegExp)) {
                 // remove error notification
                 formContext.getControl(fieldName).clearNotification("invalidEmail");
-            }else{
+            } else {
                 // throw error notification
                 formContext.getControl(fieldName).setNotification("Ogiltig e-postadress!", "invalidEmail");
             }
         }
-        
+
     };
 }
