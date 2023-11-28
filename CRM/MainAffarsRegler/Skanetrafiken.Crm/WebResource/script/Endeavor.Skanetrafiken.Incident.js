@@ -198,9 +198,9 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
         },
 
         OnLoadHideTwitter: function (formContext) {
-            var originOptionSet = formContext.getControl("caseorigincode");
-            if (originOptionSet !== null) {
-                originOptionSet.removeOption(3986);
+            var originOptionSet = formContext.getAttribute("caseorigincode");
+            if (originOptionSet != null && originOptionSet.getValue() != 3986) {
+                formContext.getControl("caseorigincode").removeOption(3986);
             }
         },
 
