@@ -245,6 +245,8 @@
     <Compile Include="Case\CrmSqlClasses\RgolSettingSqlList.cs" />
     <Compile Include="Case\CrmSqlClasses\SettingSqlList.cs" />
     <Compile Include="Case\Models\Account.cs" />
+    <Compile Include="Case\Models\CloseCaseResponse.cs" />
+    <Compile Include="Case\Models\CloseCaseRequest.cs" />
     <Compile Include="Case\Models\BaseCurrency.cs" />
     <Compile Include="Case\Models\BiffTransaction.cs" />
     <Compile Include="Case\Models\Card.cs" />

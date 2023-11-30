@@ -23,6 +23,12 @@ namespace CGIXrmCreateCaseService
 
         [OperationContract]
         UpdateAutoRgCaseResponse RequestUpdateAutoRGCaseRefundDecision(UpdateAutoRgCaseRequest request);
+
+        [OperationContract]
+        UpdateAutoRgCaseResponse RequestCreateDecision(UpdateAutoRgCaseRequest request);
+
+        [OperationContract]
+        CloseCaseResponse RequestCloseCase(CloseCaseRequest request);
         #endregion
     }
 

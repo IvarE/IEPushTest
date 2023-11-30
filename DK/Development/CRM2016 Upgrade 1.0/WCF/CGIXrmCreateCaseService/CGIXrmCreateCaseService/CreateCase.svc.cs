@@ -94,6 +94,34 @@ namespace CGIXrmCreateCaseService
                 return new UpdateAutoRgCaseResponse() { ErrorMessage = ex.Message, Success = false };
             }
         }
+        public UpdateAutoRgCaseResponse RequestCreateDecision(UpdateAutoRgCaseRequest request)
+        {
+            // NOTE: its up to callers to make sure the following methods are called before this one ( we do not check )
+            // * a copy of RequestUpdateAutoRGCaseRefundDecision without CloseIncident call inside
+            try
+            {
+                CreateCaseManager caseManager = new CreateCaseManager();
+
+                return caseManager.RequestCreateDecision(request);
+            }
+            catch (Exception ex)
+            {
+                return new UpdateAutoRgCaseResponse() { ErrorMessage = ex.Message, Success = false };
+            }
+        }
+        public CloseCaseResponse RequestCloseCase(CloseCaseRequest request)
+        { 
+            try
+            {
+                CreateCaseManager caseManager = new CreateCaseManager();
+
+                return caseManager.RequestCloseCase(request);
+            }
+            catch (Exception ex)
+            {
+                return new CloseCaseResponse() { ErrorMessage = ex.Message, Success = false };
+            }
+        }
         #endregion
     }
 }

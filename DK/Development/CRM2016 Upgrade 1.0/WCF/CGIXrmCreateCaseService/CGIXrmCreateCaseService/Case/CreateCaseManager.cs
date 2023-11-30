@@ -3357,7 +3357,6 @@ namespace CGIXrmCreateCaseService.Case
             return response;
         }
 
-
         /// <summary>
         /// Create Incident from AutoRG
         /// </summary>
@@ -3448,7 +3447,7 @@ namespace CGIXrmCreateCaseService.Case
                     // update case with information needed for queueitem, views and quick form + incidentstagecode
                     UpdateCaseWithRgolData(request, incidentCase, setting, 285050007); // 285050007 | Resolved-Denied
                     SetRefundDescisionStatus(response.RefundID, 0, 285050006);// 0 = Active, Declined = 285 050 006
-                    CloseIncident(incidentCase.IncidentId);
+                    CloseIncident(incidentCase.IncidentId); //replace with this new method in svc: RequestCloseCase
                 }
                 else
                 {
@@ -3470,7 +3469,154 @@ namespace CGIXrmCreateCaseService.Case
 
             return response;
         }
+        /// <summary>
+        /// Create Incident from AutoRG, without call CloseIncident, (a copy of RequestCreateAutoRgRefundDecision without CloseIncident call inside)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        internal UpdateAutoRgCaseResponse RequestCreateDecision(UpdateAutoRgCaseRequest request)
+        {
+            UpdateAutoRgCaseResponse response = new UpdateAutoRgCaseResponse()
+            {
+                Success = false,
+                ErrorMessage = string.Empty
+            };
 
+            try
+            {
+                if (request.CaseID == Guid.Empty)
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "Guid is guid empty format";
+                    return response;
+                }
+
+                if (IsCaseResolved(request.CaseID))
+                {
+                    return new UpdateAutoRgCaseResponse()
+                    {
+                        Success = false,
+                        ErrorMessage = CaseResolvedErrorMessage
+                    };
+                }
+
+                // Do debug-tracing. Johan Endeavor
+                _log.Debug(string.Format("============================================"));
+                _log.Debug(string.Format("Start CreateDecision"));
+
+
+                Incident incidentCase = GetIncidentFromId(request.CaseID);
+                // TODO guard rule för fler än ett anrop till denna metod
+
+                RgolSetting setting = GetRgolSettingFromRefundType(request.RefundType);
+
+                BaseCurrency currency = GetCurrency();
+
+                if (!string.IsNullOrEmpty(request.QueueId))
+                {
+                    RouteIncidentToRgolQueue(request.CaseID, request.QueueId);
+                }
+
+                if (request.IsCompleted == false && request.ReqReceipt)
+                {
+                    _log.Debug(string.Format("1. CreateDecision"));
+
+                    // update case with information needed for queueitem, views and quick form + incidentstagecode
+                    UpdateCaseWithRgolData(request, incidentCase, setting, 285050002); // 285050002 | Not answered
+                    // Incident status  1    In Progress | 3    Waiting for details
+                    var stateRequest = CreateStateRequest("incident", incidentCase.IncidentId, 0, 3);
+                    _xrmManager.Service.Execute(stateRequest);
+                }
+                else if (request.IsCompleted == false && request.ReqReceipt == false)
+                {
+                    _log.Debug(string.Format("2. CreateDecision"));
+
+                    // update case with information needed for queueitem, views and quick form + incidentstagecode
+                    UpdateCaseWithRgolData(request, incidentCase, setting, 285050000); // 285050000 | Ongoing
+
+                    // Incident status  1    In Progress | 3    Waiting for details
+                    var stateRequest = CreateStateRequest("incident", incidentCase.IncidentId, 0, 1);
+
+                    _xrmManager.Service.Execute(stateRequest);
+                }
+                else if (request.IsCompleted && request.Approved)
+                {
+                    _log.Debug(string.Format("3. CreateDecision"));
+
+                    response.RefundID = CreateDecisionRgol(request.Value, setting, incidentCase, currency.BaseCurrencyId, request.InternalMessage, request.CustomerMessage);
+                    // update case with information needed for queueitem, views and quick form + incidentstagecode
+                    UpdateCaseWithRgolData(request, incidentCase, setting, 285050006); // 285050006 | Resolved-Approved
+                    SetRefundDescisionStatus(response.RefundID, 0, 285050005);// 285050005 = Approved
+                    ReimbursementHandler rh = new ReimbursementHandler();
+                    rh.ExecuteRefundAndUpdatesStatus(response.RefundID, _xrmManager.Service);
+                }
+                else if (request.IsCompleted && request.Approved == false)
+                {
+                    _log.Debug(string.Format("4. CreateDecision"));
+
+                    response.RefundID = CreateDecisionRgol(request.Value, setting, incidentCase, currency.BaseCurrencyId, request.InternalMessage, request.CustomerMessage);
+
+                    // update case with information needed for queueitem, views and quick form + incidentstagecode
+                    UpdateCaseWithRgolData(request, incidentCase, setting, 285050007); // 285050007 | Resolved-Denied
+                    SetRefundDescisionStatus(response.RefundID, 0, 285050006);// 0 = Active, Declined = 285 050 006
+                   
+                }
+                else
+                {
+                    throw new Exception($"IsCompleted {request.IsCompleted}, request.ReqReceipt {request.ReqReceipt}, IsApproved {request.Approved} is not a valid combination.");
+                }
+
+                response.Success = true;
+            }
+            catch (FaultException faultex)
+            {
+                response.RefundID = Guid.Empty;
+                response.ErrorMessage = faultex.Message;
+            }
+            catch (Exception ex)
+            {
+                response.RefundID = Guid.Empty;
+                response.ErrorMessage = ex.Message;
+            }
+
+            return response;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        internal CloseCaseResponse RequestCloseCase(CloseCaseRequest request)
+        {
+            var response = new CloseCaseResponse()
+            {
+                Success = false,
+                ErrorMessage = string.Empty
+            };
+
+            try
+            {
+                if (request.CaseId == Guid.Empty)
+                {
+                    throw new Exception("Request parameter CaseId is guid empty format.");
+                }
+
+                // Close case and set success
+                CloseIncident(request.CaseId);
+                response.Success = true;
+
+            }
+            catch (FaultException faultex)
+            {
+                response.ErrorMessage = faultex.Message;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = ex.Message;
+            }
+
+            return response;
+        }
         /// <summary>
         /// 
         /// </summary>
