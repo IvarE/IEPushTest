@@ -327,7 +327,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             var currForm = formContext.ui.formSelector.getCurrentItem();
             var currFormId = currForm.getId();
 
-            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70")
+            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70" || currFormId != "003f08c2-06d9-494b-926a-42020901c6b2")
                 return false;
             // Only show button if TypeOfAccount = Företagskund (Portal)
             var accountType = formContext.getAttribute("ed_typeofaccount");
