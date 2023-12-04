@@ -33145,27 +33145,41 @@ namespace Skanetrafiken.Crm.Schema.Generated
 				this.SetAttributeValue("ed_socialsecuritynumberblock", value);
 			}
 		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_socialsecuritynumberformat")]
-		public string ed_SocialSecurityNumberFormat
-		{
-			get
-			{
-				return this.GetAttributeValue<string>("ed_socialsecuritynumberformat");
-			}
-			set
-			{
-				this.SetAttributeValue("ed_socialsecuritynumberformat", value);
-			}
-		}
-		
-		/// <summary>
-		/// Choose the campaign that the Contact was generated from to track the effectiveness of marketing campaigns and identify  communications received by the lead.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_sourcecampaignid")]
+		 
+        /// <summary>
+        /// 
+        /// </summary>
+        [Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_socialsecuritynumberformat")]
+        public string ed_SocialSecurityNumberFormat
+        {
+            get
+            {
+                return this.GetAttributeValue<string>("ed_socialsecuritynumberformat");
+            }
+            set
+            {
+                this.SetAttributeValue("ed_socialsecuritynumberformat", value);
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_reservid")]
+        public string st_reservid
+        {
+            get
+            {
+                return this.GetAttributeValue<string>("st_reservid");
+            }
+            set
+            {
+                this.SetAttributeValue("st_reservid", value);
+            }
+        }
+        /// <summary>
+        /// Choose the campaign that the Contact was generated from to track the effectiveness of marketing campaigns and identify  communications received by the lead.
+        /// </summary>
+        [Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_sourcecampaignid")]
 		public Microsoft.Xrm.Sdk.EntityReference ed_SourceCampaignId
 		{
 			get
@@ -37175,8 +37189,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_SocialSecurityNumberBlock = "ed_socialsecuritynumberblock";
 			
 			public const string ed_SocialSecurityNumberFormat = "ed_socialsecuritynumberformat";
-			
-			public const string ed_SourceCampaignId = "ed_sourcecampaignid";
+            public const string st_reservid = "st_reservid";
+
+            public const string ed_SourceCampaignId = "ed_sourcecampaignid";
 			
 			public const string ed_title = "ed_title";
 			
@@ -37693,8 +37708,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_SocialSecurityNumberBlock = 100;
 			
 			public const int ed_SocialSecurityNumberFormat = 100;
-			
-			public const int ed_title = 200;
+            public const int st_reservid = 15;
+
+            public const int ed_title = 200;
 			
 			public const int ed_UpsalesId = 100;
 			
@@ -72104,11 +72120,25 @@ namespace Skanetrafiken.Crm.Schema.Generated
 				this.SetAttributeValue("ed_socialsecuritynumberformat", value);
 			}
 		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_timetomeetingstart")]
+        /// <summary>
+        /// 
+        /// </summary>
+        [Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_reservid")]
+        public string st_reservid
+        {
+            get
+            {
+                return this.GetAttributeValue<string>("st_reservid");
+            }
+            set
+            {
+                this.SetAttributeValue("st_reservid", value);
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_timetomeetingstart")]
 		public System.Nullable<int> ed_TimeToMeetingStart
 		{
 			get
@@ -74550,8 +74580,8 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_MeetingStart = "ed_meetingstart";
 			
 			public const string ed_socialsecuritynumberformat = "ed_socialsecuritynumberformat";
-			
-			public const string ed_TimeToMeetingStart = "ed_timetomeetingstart";
+            public const string st_reservid = "st_reservid";
+            public const string ed_TimeToMeetingStart = "ed_timetomeetingstart";
 			
 			public const string ed_UnregisterdSKACard = "ed_unregisterdskacard";
 			
@@ -74922,8 +74952,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_DriverId = 100;
 			
 			public const int ed_socialsecuritynumberformat = 100;
-			
-			public const int ed_UnregisterdSKACard = 100;
+            public const int st_reservid = 15;
+
+            public const int ed_UnregisterdSKACard = 100;
 			
 			public const int EmailAddress = 100;
 			
