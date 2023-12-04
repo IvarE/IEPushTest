@@ -31,7 +31,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
             var formIsOnLoad = true;
             Endeavor.Skanetrafiken.Contact.resetRequiredLevel(executionContext, formIsOnLoad);
-            Endeavor.Skanetrafiken.Contact.setInfotainmentValues(executionContext);
+            //Endeavor.Skanetrafiken.Contact.setInfotainmentValues(executionContext); //34573, this should run only for new create customer from quickcreate annons form
             Endeavor.Skanetrafiken.Contact.onReservIdandSSNChange(executionContext);
             //Endeavor.Skanetrafiken.Contact.lockEmailIfMKLidExistAndNotAdminForm(formContext);
 
@@ -115,6 +115,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
         setInfotainmentValues: function (executionContext) {
 
+            //34573, this should run only for new create customer from quickcreate annons form
+            /*
             var formContext = executionContext.getFormContext();
             var roles = [];
             roles[0] = "Skånetrafiken Annons";
@@ -137,7 +139,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 // ed_informationsource = Annons
                 //ed_infotainmentcontact = Yes
             }
-
+            */
+            
         },
 
         onChangePostalCodeCity: function (executionContext, postalCodeLogicalName, cityLogicalName) {
