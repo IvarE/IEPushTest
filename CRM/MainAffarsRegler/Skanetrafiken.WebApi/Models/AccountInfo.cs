@@ -303,7 +303,8 @@ namespace Skanetrafiken.Crm
             if (ai.Suborgname != null && ai.Suborgname != string.Empty)
             {
                 ae.Name = ai.Suborgname;
-                ae.ed_SubOrgNamn = ai.Suborgname; //Inget skickas från fasaden ännu
+                //ed_SubOrgNamn ska ej sättas längre, används av användare i systemet
+                //ae.ed_SubOrgNamn = ai.Suborgname; //Inget skickas från fasaden ännu
             }
             else
             {
@@ -416,7 +417,7 @@ namespace Skanetrafiken.Crm
                 newAccount.ed_ReferencePortal = accountInfo.ReferencePortal;
                 isChanged = true;
             }
-
+            /* //ed_SubOrgNamn ska ej sättas längre, används av användare i systemet
             if (accountInfo.Suborgname == null && !string.IsNullOrEmpty(oldAccount.ed_SubOrgNamn))
             {
                 newAccount.ed_SubOrgNamn = string.Empty;
@@ -427,7 +428,7 @@ namespace Skanetrafiken.Crm
                 newAccount.ed_SubOrgNamn = accountInfo.Suborgname;
                 isChanged = true;
             }
-
+            */
             if (!string.IsNullOrEmpty(accountInfo.ed_AccountDescription) && oldAccount.ed_AccountDescription != accountInfo.ed_AccountDescription)
             {
                 newAccount.ed_AccountDescription = accountInfo.ed_AccountDescription;
