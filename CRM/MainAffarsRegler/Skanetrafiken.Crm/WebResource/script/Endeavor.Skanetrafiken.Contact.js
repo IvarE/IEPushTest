@@ -752,6 +752,28 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             }
         },
 
+        onReservIdandSSNChange: function (executionContext) {
+            var formContext = executionContext.getFormContext();
+            var reservId = formContext.getAttribute("st_reservid");
+            var ssnNumber = formContext.getAttribute("ed_socialsecuritynumberformat");
+                if (reservId != null) {
+                    reservId.setRequiredLevel("required");
+                    ssnNumber.setRequiredLevel("required");
+                    if (reservId.getValue() != null) {
+                        ssnNumber.setRequiredLevel("none");
+                        reservId.setRequiredLevel("required");
+                    }
+                    if (ssnNumber.getValue() != null) {
+                        reservId.setRequiredLevel("none");
+                        ssnNumber.setRequiredLevel("required");
+                    }
+                    if (ssnNumber.getValue() != null && reservId.getValue() != null) {
+                        reservId.setRequiredLevel("none");
+                        ssnNumber.setRequiredLevel("none");
+                    }
+                }
+        },
+
         onSocialSecurityNumberChange: function (executionContext) {
             var formContext = executionContext.getFormContext();
             var contactNumberControlTag = "cgi_socialsecuritynumber";
