@@ -10440,6 +10440,16 @@ namespace Endeavor.Crm.UnitTest
                         //    CountryISO = "SE"
                         //},
                     };
+                case Generated.ed_informationsource.Servicereseportal:
+                    return new CustomerInfo()
+                    {
+                        Source = (int)Skanetrafiken.Crm.Schema.Generated.ed_informationsource.Servicereseportal,
+                    };
+                case Generated.ed_informationsource.Bokningsportal:
+                    return new CustomerInfo()
+                    {
+                        Source = (int)Skanetrafiken.Crm.Schema.Generated.ed_informationsource.Bokningsportal,
+                    };
                 default:
                     throw new NotImplementedException($"Source of type {source} not implemented");
             }

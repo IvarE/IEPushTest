@@ -81834,7 +81834,12 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		ForetagsPortal = 13,
 		
 		AdmAndraKund = 12,
-	}
+
+        Bokningsportal = 470380001,
+
+        Servicereseportal = 470380000
+
+    }
 	
 	public enum lead_leadsourcecode
 	{

@@ -510,6 +510,16 @@ namespace Skanetrafiken.Crm
                     //}
                     break;
                 #endregion
+                #region Bokningsportal
+                case (int)Generated.ed_informationsource.Bokningsportal:
+
+                    break;
+                #endregion
+                #region Servicereseportal
+                case (int)Generated.ed_informationsource.Servicereseportal:
+
+                    break;
+                #endregion
                 #region 1177
                 case (int)Generated.ed_informationsource._1177:
                     //if (string.IsNullOrWhiteSpace(customerInfo.FirstName) ||
