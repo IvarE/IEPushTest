@@ -89,6 +89,19 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             }
         },
 
+        onSaveHandleInformationSource: function (executionContext) {
+            var formContext = executionContext.getFormContext();
+            var formType = formContext.ui.getFormType();
+            if (formType == 1) { //Create
+                if (formContext.getAttribute("ed_informationsource") != null && formContext.getAttribute("ed_informationsource").getValue() == null)
+                    formContext.getAttribute("ed_informationsource").setValue(8); // 8-AdmSkapaKund
+
+            } else if (formType == 2) { //Update
+                if (formContext.getAttribute("ed_informationsource") != null && formContext.getAttribute("ed_informationsource").getValue() != 12)
+                    formContext.getAttribute("ed_informationsource").setValue(12); // 12-AdmAndraKund
+            }
+        },
+
         // Install on onSave
         onSave: function (executionContext) {
 
@@ -99,13 +112,13 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             if (formType == 1) { //Create
                 Endeavor.Skanetrafiken.Contact.isMoreThanPrivateContact(formContext);
 
-                if (formContext.getAttribute("ed_informationsource") != null)
+                if (ormContext.getAttribute("ed_informationsource") != null && formContext.getAttribute("ed_informationsource").getValue() == null)
                     formContext.getAttribute("ed_informationsource").setValue(8); // 8-AdmSkapaKund
 
             } else if (formType == 2) { //Update
                 Endeavor.Skanetrafiken.Contact.isMoreThanPrivateContact(formContext);
 
-                if (formContext.getAttribute("ed_informationsource") != null)
+                if (formContext.getAttribute("ed_informationsource") != null && formContext.getAttribute("ed_informationsource").getValue() != 12)
                     formContext.getAttribute("ed_informationsource").setValue(12); // 12-AdmAndraKund
 
             } else {
