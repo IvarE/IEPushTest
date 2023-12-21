@@ -366,6 +366,10 @@ namespace Skanetrafiken.Crm.Entities
             {
                 return;
             }
+            if (postImage.ed_Serviceresor == true)
+            {
+                return;
+            }
 
             if (!string.IsNullOrWhiteSpace(postImage.ed_SocialSecurityNumberFormat))
             {
