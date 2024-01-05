@@ -18,6 +18,11 @@ if (typeof (Endeavor.Skanetrafiken.MarketingList) == "undefined") {
             var accessButton = false;
             accessButton = Endeavor.Skanetrafiken.MarketingList.showSendMarketingListButton();
 
+            if (formContext?.getAttribute("st_ticket_sent")?.getValue() == true) {
+                confirm("Biljett har redan skickats för den här marknadslistan.");
+                return;
+            }
+
             if (accessButton == false) {
                 var validationConfirmation = confirm("Du har inte rätt rättigheter till att skicka Marknadslista. Kontakta administratör.");
                 if (validationConfirmation) {
@@ -72,7 +77,9 @@ if (typeof (Endeavor.Skanetrafiken.MarketingList) == "undefined") {
                                             }
                                         }
                                         else if (response.Ok == true) {
-
+                                            formContext?.getAttribute("st_ticket_sent")?.setValue(true);
+                                            formContext?.getAttribute("st_ticket_sent")?.setSubmitMode("always");
+                                            formContext?.data?.save();
                                             var confirmation = confirm("Marknadslista Skickad.");
                                             if (confirmation) {
                                                 console.log("Endeavor.Skanetrafiken.MarketingList: " + response.Message);
