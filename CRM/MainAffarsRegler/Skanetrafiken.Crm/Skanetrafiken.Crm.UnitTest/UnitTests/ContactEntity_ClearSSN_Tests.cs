@@ -56,9 +56,10 @@ namespace Skanetrafiken.Crm.Tests
             LocalPluginContext pluginContext = new LocalPluginContext(serviceProviderMock.Object, organizationServiceMock.Object, xrmFakeContext, tracerMock.Object);
 
             ContactEntity postImage = fixture.Create<ContactEntity>();
+            ContactEntity preImage = fixture.Create<ContactEntity>();
 
             // Act
-            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage);
+            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage, preImage);
 
             // Assert
             organizationServiceMock.Verify(service =>
@@ -85,9 +86,12 @@ namespace Skanetrafiken.Crm.Tests
             ContactEntity postImage = fixture.Build<ContactEntity>()
                                              .Without(c => c.ed_SocialSecurityNumberFormat)
                                              .Create();
+            ContactEntity preImage = fixture.Build<ContactEntity>()
+                                 .Without(c => c.ed_SocialSecurityNumberFormat)
+                                 .Create();
 
             // Act
-            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage);
+            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage, preImage);
 
             // Assert
             organizationServiceMock.Verify(service =>
@@ -110,9 +114,10 @@ namespace Skanetrafiken.Crm.Tests
             LocalPluginContext pluginContext = new LocalPluginContext(serviceProviderMock.Object, organizationServiceMock.Object, xrmFakeContext, tracerMock.Object);
 
             ContactEntity postImage = fixture.Create<ContactEntity>();
+            ContactEntity preImage = fixture.Create<ContactEntity>();
 
             // Act
-            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage);
+            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage, preImage);
 
             // Assert
             organizationServiceMock.Verify(service =>
@@ -139,9 +144,12 @@ namespace Skanetrafiken.Crm.Tests
             ContactEntity postImage = fixture.Build<ContactEntity>()
                                              .Without(c => c.ed_SocialSecurityNumberFormat)
                                              .Create();
+            ContactEntity preImage = fixture.Build<ContactEntity>()
+                                             .Without(c => c.ed_SocialSecurityNumberFormat)
+                                             .Create();
 
             // Act
-            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage);
+            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage, preImage);
 
             // Assert
             organizationServiceMock.Verify(service =>

@@ -360,7 +360,7 @@ namespace Skanetrafiken.Crm.Entities
         /// one public and one private part, so that the fields that are cleared can be reused, and we have a public interface
         /// to test against. This is a workaround for the PostContactUpdate_Async not being adapted to unit testing.
         /// </summary>
-        public void ClearContactFieldsRelatedToSSN(Plugin.LocalPluginContext localContext, ContactEntity postImage)
+        public void ClearContactFieldsRelatedToSSN(Plugin.LocalPluginContext localContext, ContactEntity postImage, ContactEntity preImage)
         {
             if (localContext.PluginExecutionContext.Depth > 1) // Clearing the fields triggers pre contact update which in turns triggers this one again
             {
@@ -376,11 +376,13 @@ namespace Skanetrafiken.Crm.Entities
                 return;
             }
 
-            localContext.Trace($"{nameof(ClearContactFieldsRelatedToSSN)}: SSN empty, clearing fields on contact");
-
-            Contact updateContact = new Contact() { Id = this.Id };
-            _ClearContactFieldsRelatedToSSN(updateContact);
-            localContext.OrganizationService.Update(updateContact);
+            if(String.IsNullOrEmpty(postImage.ed_SocialSecurityNumberFormat) && !String.IsNullOrEmpty(preImage.ed_SocialSecurityNumberFormat))
+            {
+                Contact updateContact = new Contact() { Id = this.Id };
+                _ClearContactFieldsRelatedToSSN(updateContact);
+                localContext.OrganizationService.Update(updateContact);
+                localContext.Trace($"{nameof(ClearContactFieldsRelatedToSSN)}: SSN empty, clearing fields on contact");
+            }
         }
 
         /// <summary>
