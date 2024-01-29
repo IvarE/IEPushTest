@@ -14,6 +14,8 @@ using Microsoft.Crm.Sdk.Messages;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 //using Tamir.SharpSsh;
+using Skanetrafiken.Crm.Schema.Generated;
+using Microsoft.Xrm.Sdk;
 
 namespace Endeavor.Crm.DeltabatchService
 {
@@ -54,32 +56,102 @@ namespace Endeavor.Crm.DeltabatchService
         public void ExecuteJob()
         {
             Plugin.LocalPluginContext localContext = null;
+            DeltabatchErrorLogEntity _DBErrorLog = new DeltabatchErrorLogEntity();
+            _DBErrorLog.ed_name = "Deltabatch UploadJob run Log " + DateTime.Now.ToString("u").Replace("Z", "");
+            DateTime _startTime = DateTime.Now;
+            Annotation _noteLogUpdate = new Annotation();
             try
             {
                 localContext = DeltabatchJobHelper.GenerateLocalContext();
+               
+                #region CREATE LOG ENTRY                
+                _DBErrorLog.Id = XrmHelper.Create(localContext, _DBErrorLog);
+
+                Annotation _noteLog = new Annotation();
+                _noteLog.ObjectId = _DBErrorLog.ToEntityReference();
+                _noteLog.ObjectTypeCode = _DBErrorLog.LogicalName;
+                #endregion
 
                 _log.Info($"Fetching max {Properties.Settings.Default.DeltabatchQueueCount} queues");
                 IList<DeltabatchQueueEntity> currentQueues = FetchABatchOfActiveQueuePosts(localContext);
 
+                #region ADD DETAILS TO LOG ENTRY
+                _noteLog.Subject = "Number of DeltabatchQueueEntity to process: " + currentQueues.Count;
+                _noteLog.NoteText = $"Generating Files for {currentQueues.Count} queue posts";
+                _noteLog.NoteText += "\r\nStart GenerateFiles... " + DateTime.Now.ToString("u").Replace("Z", "");
+                _noteLogUpdate.Id = XrmHelper.Create(localContext, _noteLog);
+                _noteLogUpdate.NoteText = _noteLog.NoteText;
+                #endregion
+
                 _log.Info($"Generating Files for {currentQueues.Count} queue posts");
                 GenerateFiles(localContext, currentQueues);
+
+                _noteLogUpdate.NoteText += "\r\n\tDone.\r\nUploadFiles... " + DateTime.Now.ToString("u").Replace("Z", "");
+                XrmHelper.Update(localContext, _noteLogUpdate);
 
                 _log.Info($"Upload Files");
                 UploadFiles();
 
+                _noteLogUpdate.NoteText += "\r\n\tDone.\r\nDeleteQueuePosts... " + DateTime.Now.ToString("u").Replace("Z", "");
+                XrmHelper.Update(localContext, _noteLogUpdate);
+
                 _log.Info($"Deleting used queues");
                 DeleteQueuePosts(localContext, currentQueues);
                 
-                _log.Info($"UploadJob Done");
+                _log.Info($"UploadJob Done!");
+
+                UpdateDeltabatchErrorLogAtTheJobEnd(localContext, _DBErrorLog, _noteLogUpdate, _startTime);
             }
             catch (Exception e)
             {
                 _log.Error($"Exception caught in ExecuteJob():\n{e.Message}\n\n{e}");
                 //if (localContext != null)
                 DeltabatchJobHelper.SendErrorMailToDev(localContext, e);
+
+                UpdateDeltabatchErrorLogAtTheEndWithError(localContext, e, _DBErrorLog, _noteLogUpdate, _startTime);
             }
         }
+        private void UpdateDeltabatchErrorLogAtTheJobEnd(Plugin.LocalPluginContext localContext, DeltabatchErrorLogEntity _DBErrorLog, Annotation _noteLogUpdate, DateTime _startTime)
+        {
+            _noteLogUpdate.NoteText += "\r\n\tDone.\r\nUploadJob Done!" + DateTime.Now.ToString("u").Replace("Z", "");
+            XrmHelper.Update(localContext, _noteLogUpdate);
+            TimeSpan _diff = DateTime.Now - _startTime;
+            _DBErrorLog.ed_name = _DBErrorLog.ed_name + " | " + DateTime.Now.ToString("u").Replace("Z", "") + " (" + Math.Round(_diff.TotalMinutes, 0, MidpointRounding.AwayFromZero) + ")";
+            _DBErrorLog.statecode = ed_DeltabatchErrorLogState.Inactive;
+            _DBErrorLog.statuscode = new OptionSetValue(-1);
+            XrmHelper.Update(localContext, _DBErrorLog);
+        }
+        private void UpdateDeltabatchErrorLogAtTheEndWithError(Plugin.LocalPluginContext localContext, Exception e, DeltabatchErrorLogEntity _DBErrorLog, Annotation _noteLogUpdate, DateTime _startTime)
+        {
+            #region add log, error throw then no file found on the server or somethings is wrong when connect to SFTP server
+            if (_noteLogUpdate.Id != null) //has note log to update
+            {
+                _noteLogUpdate.NoteText += "\r\nError - Exception caught in ExecuteJob(): " + e.Message ;
+                XrmHelper.Update(localContext, _noteLogUpdate);
+            }
+            else //no note to update, because other throw error
+            {
+                if (_DBErrorLog.Id != null)
+                {
+                    _noteLogUpdate.Subject = "Exception caught in ExecuteJob()";
+                    _noteLogUpdate.ObjectId = _DBErrorLog.ToEntityReference();
+                    _noteLogUpdate.ObjectTypeCode = _DBErrorLog.LogicalName;
+                    _noteLogUpdate.NoteText += "\r\nError - Exception caught in ExecuteJob(): " + e.Message ;
+                    XrmHelper.Create(localContext, _noteLogUpdate);
+                }
+            }
 
+            //if (_DBErrorLog.Id != null) 
+            //{
+            //    _DBErrorLog.statecode = ed_DeltabatchErrorLogState.Inactive;
+            //    _DBErrorLog.statuscode = new OptionSetValue(-1);
+            //    TimeSpan _diff = DateTime.Now - _startTime;
+            //    _DBErrorLog.ed_name = _DBErrorLog.ed_name + " | " + DateTime.Now.ToString("u").Replace("Z", "") + " (" + Math.Round(_diff.TotalMinutes, 0, MidpointRounding.AwayFromZero) + ")";
+            //    XrmHelper.Update(localContext, _DBErrorLog);
+            //}
+            #endregion
+
+        }
         //public IList<DeltabatchQueueEntity> FetchAllActiveQueuePosts(Plugin.LocalPluginContext localContext)
         //{
         //    return XrmRetrieveHelper.RetrieveMultiple<DeltabatchQueueEntity>(localContext, DeltabatchJobHelper.deltabatchQueueColumnSet,

@@ -11,6 +11,7 @@ using Renci.SshNet;
 using Endeavor.Crm.DeltabatchService.CancellationCodes.CancellationCodeLogic;
 using System.Globalization;
 using Skanetrafiken.Crm.Schema.Generated;
+using Microsoft.Xrm.Sdk;
 
 namespace Endeavor.Crm.DeltabatchService
 {
@@ -26,7 +27,8 @@ namespace Endeavor.Crm.DeltabatchService
 
         protected SftpClient sftpClient;
 
-        private string _currentOutputFileName;
+        private string _currentOutputFileName, _retrieveFileErrorLog;
+        private int _numberOfFileFound = 0; //nr of file found, if <0 then error codes: -10 is no file found
         private string[] _fieldNames = new string[0];
         private List<Tuple<string[], Exception>> _errors = new List<Tuple<string[], Exception>>();
 
@@ -93,30 +95,118 @@ namespace Endeavor.Crm.DeltabatchService
         public void ExecuteJob()
         {
             Plugin.LocalPluginContext localContext = null;
+            /*
+            DeltabatchErrorLogEntity is log record when job started and when done, this record will be inactived
+            Create a note attached to this job record with jobs details
+            If something is wrong and the job will not end, the DeltabatchErrorLogEntity record still active, 
+            There are a workflow in CRM will send an error email if the log record do not closed/inactive within 2 hours.
+             */
+            DeltabatchErrorLogEntity _DBErrorLog = new DeltabatchErrorLogEntity();
+            _DBErrorLog.ed_name = "Deltabatch DownloadJob run Log " + DateTime.Now.ToString("u").Replace("Z", "");
+            DateTime _startTime = DateTime.Now;
+            Annotation _noteLogUpdate = new Annotation();
+            string fileArchiveErrorLog = "";
             try
             {
                 localContext = DeltabatchJobHelper.GenerateLocalContext();
+                #region CREATE LOG ENTRY                
+                _DBErrorLog.Id = XrmHelper.Create(localContext, _DBErrorLog);
 
+                Annotation _noteLog = new Annotation();
+                _noteLog.ObjectId = _DBErrorLog.ToEntityReference();
+                _noteLog.ObjectTypeCode = _DBErrorLog.LogicalName;
+                #endregion
 #if !DEBUG
-                RetrieveFile();
+                RetrieveFile(); //throw error only when something, error with _numberOfFileFound = -10 >> succeeded connected but "no file found"
 #endif
+                #region ADD DETAILS TO LOG ENTRY
+                _noteLog.Subject = "Current file: " + _currentOutputFileName;
+                _noteLog.NoteText = "Has multipe files found in SFTP? " + (_numberOfFileFound > 1 ? "Yes ("+ _numberOfFileFound + ")" : "No");
+                _noteLog.NoteText += "\r\nStart UpdateContactsWithNewInfo... " + DateTime.Now.ToString("u").Replace("Z", "");
+                _noteLogUpdate.Id = XrmHelper.Create(localContext, _noteLog);
+                _noteLogUpdate.NoteText = _noteLog.NoteText;
+                #endregion
 
-                UpdateContactsWithNewInfo(localContext);
+                UpdateContactsWithNewInfo(localContext, _DBErrorLog);
 
+                _noteLogUpdate.NoteText += "\r\n\tDone.\r\nArchiveFile... " + _currentOutputFileName + " " + DateTime.Now.ToString("u").Replace("Z", "");
+                XrmHelper.Update(localContext, _noteLogUpdate);
 #if !DEBUG
-                ArchiveFile();
-#endif
+                try{
+                    ArchiveFile();
+                } catch (Exception e)
+                {
+                    fileArchiveErrorLog = e.Message;
+                }
+#endif 
 
                 _log.Info("DownloadJob Done!");
+
+                UpdateDeltabatchErrorLogAtTheJobEnd(localContext, _DBErrorLog, _noteLogUpdate, _startTime, fileArchiveErrorLog);
+
+                //run the ExecuteJob() again if there is a multipe files in SFTP
+                _currentOutputFileName = "";
+                if (_numberOfFileFound > 1)
+                {
+                    _numberOfFileFound = 0;
+                    _log.Info("Multipe files found on the SFPT folder, run the ExecuteJob again...");
+                    ExecuteJob();
+                }
             }
             catch (Exception e)
             {
                 _log.Error($"Exception caught in ExecuteJob():\n{e.Message}\n\n{e}");
                 //if (localContext != null)
                 DeltabatchJobHelper.SendErrorMailToDev(localContext, e);
+
+                _retrieveFileErrorLog = _retrieveFileErrorLog != "" ? "\r\nError retrieve file: " + _retrieveFileErrorLog : "";
+
+                UpdateDeltabatchErrorLogAtTheEndWithError(localContext, e, _DBErrorLog, _noteLogUpdate, _startTime);
             }
         }
+        private void UpdateDeltabatchErrorLogAtTheJobEnd(Plugin.LocalPluginContext localContext, DeltabatchErrorLogEntity _DBErrorLog, Annotation _noteLogUpdate, DateTime _startTime, string fileArchiveErrorLog)
+        {
+            TimeSpan _diff = DateTime.Now - _startTime;
+            _noteLogUpdate.NoteText += "\r\n\t" + (fileArchiveErrorLog == "" ? "Done." : "Error: " + fileArchiveErrorLog);
+            _noteLogUpdate.NoteText += "\r\n" + "DownloadJob Done! " + DateTime.Now.ToString("u").Replace("Z", "");
+            XrmHelper.Update(localContext, _noteLogUpdate);
+            //Update log to inactive, this record do not update to inactive within 2hours, and workflow will send an email to the responsible
+            _DBErrorLog.ed_name = _DBErrorLog.ed_name + " | " + DateTime.Now.ToString("u").Replace("Z", "") + " (" + Math.Round(_diff.TotalMinutes, 0, MidpointRounding.AwayFromZero) + ")";
+            _DBErrorLog.statecode = ed_DeltabatchErrorLogState.Inactive;
+            _DBErrorLog.statuscode = new OptionSetValue(-1);
+            XrmHelper.Update(localContext, _DBErrorLog);
+        }
+        private void UpdateDeltabatchErrorLogAtTheEndWithError(Plugin.LocalPluginContext localContext, Exception e, DeltabatchErrorLogEntity _DBErrorLog, Annotation _noteLogUpdate, DateTime _startTime)
+        {
+            #region add log, error throw then no file found on the server or somethings is wrong when connect to SFTP server
+            if (_noteLogUpdate.Id != null) //has note log to update
+            {
+                _noteLogUpdate.NoteText += "\r\nError - Exception caught in ExecuteJob(): " + e.Message + _retrieveFileErrorLog;
+                XrmHelper.Update(localContext, _noteLogUpdate);
+            }
+            else //no note to update, because RetrieveFile() throw error
+            {
+                if (_DBErrorLog.Id != null)
+                {
+                    _noteLogUpdate.Subject = "Current file: " + (_currentOutputFileName == "" ? "x" : _currentOutputFileName) + (_numberOfFileFound == -10 ? " - No file found on the SFPT" : "");
+                    _noteLogUpdate.ObjectId = _DBErrorLog.ToEntityReference();
+                    _noteLogUpdate.ObjectTypeCode = _DBErrorLog.LogicalName;
+                    _noteLogUpdate.NoteText += "\r\nError - Exception caught in ExecuteJob(): " + e.Message + _retrieveFileErrorLog;
+                    XrmHelper.Create(localContext, _noteLogUpdate);
+                }
+            }
 
+            if (_DBErrorLog.Id != null && _numberOfFileFound == -10) //no file found, end the job with completed
+            {
+                _DBErrorLog.statecode = ed_DeltabatchErrorLogState.Inactive;
+                _DBErrorLog.statuscode = new OptionSetValue(206290000); //Completed - No file found
+                TimeSpan _diff = DateTime.Now - _startTime;
+                _DBErrorLog.ed_name = _DBErrorLog.ed_name + " | " + DateTime.Now.ToString("u").Replace("Z", "") + " (" + Math.Round(_diff.TotalMinutes, 0, MidpointRounding.AwayFromZero) + ")";
+                XrmHelper.Update(localContext, _DBErrorLog);
+            }
+            #endregion
+
+        }
         /// <summary>
         /// Checks if the given contact should be updated by deltabatch. The contact should be updated if it has a MklId or if the service travels flag is set.
         /// </summary>
@@ -149,7 +239,7 @@ namespace Endeavor.Crm.DeltabatchService
         /// 
         /// </summary>
         /// <param name="localContext"></param>
-        public void UpdateContactsWithNewInfo(Plugin.LocalPluginContext localContext)
+        public void UpdateContactsWithNewInfo(Plugin.LocalPluginContext localContext, DeltabatchErrorLogEntity deltabatchErrorLogEntity)
         {
             _log.Info("Entered UpdateContactsWithNewInfo()");
             try
@@ -270,12 +360,12 @@ namespace Endeavor.Crm.DeltabatchService
                 }
 
                 _log.Info($"Creating Error log for {_errors.Count} errors");
-                DeltabatchErrorLogEntity errorLog = new DeltabatchErrorLogEntity()
-                {
-                    ed_name = "Deltabatch Error Log " + DateTime.Now.ToString("yyyy/MM/dd - hh:mm")
-                };
-                errorLog.Id = XrmHelper.Create(localContext, errorLog);
-                errorLog.ed_DeltabatchErrorLogId = errorLog.Id;
+                //DeltabatchErrorLogEntity errorLog = new DeltabatchErrorLogEntity()
+                //{
+                //    ed_name = "Deltabatch Error Log " + DateTime.Now.ToString("yyyy/MM/dd - hh:mm")
+                //};
+                //errorLog.Id = XrmHelper.Create(localContext, errorLog);
+                //errorLog.ed_DeltabatchErrorLogId = errorLog.Id;
                 foreach (Tuple<string[], Exception> tuple in _errors)
                 {
                     string errorSource = "";
@@ -291,7 +381,7 @@ namespace Endeavor.Crm.DeltabatchService
                     string errorMess = tuple.Item2?.Message != null ? (tuple.Item2.Message.Length > 199 ? tuple.Item2.Message.Substring(0, 199) : tuple.Item2.Message) : "Error Message missing";
                     DeltabatchErrorLogRowEntity errorRow = new DeltabatchErrorLogRowEntity
                     {
-                        ed_DeltabatchErrorLog = errorLog.ToEntityReference(),
+                        ed_DeltabatchErrorLog = deltabatchErrorLogEntity.ToEntityReference(),
                         ed_ErrorMessage = errorMess,
                         ed_ParameterString = errorSource,
                         ed_name = errorMess.Substring(0, 15) + "... " + errorSource.Substring(0, 12)
@@ -797,86 +887,68 @@ namespace Endeavor.Crm.DeltabatchService
             _log.Info("Entered RetrieveFile()");
             _log.InfoFormat($"Retrieved File Path is: " + Properties.Settings.Default.DeltabatchRetrievedFileLocation);
             sftpClient = null;
+            _currentOutputFileName = ""; _retrieveFileErrorLog = ""; _numberOfFileFound = 0;
             try
             {
                 sftpClient = DeltabatchJobHelper.CreateSftpConnectionToCreditsafe(_log);
                 sftpClient.Connect();
                 if (!sftpClient.IsConnected)
+                {
+                    _retrieveFileErrorLog = "Unable to connect to sftp-server";
+                    _numberOfFileFound = -1;
                     throw new Exception($"Unable to connect to sftp-server");
+                }
                 sftpClient.ChangeDirectory("/");
 
                 var fileList = sftpClient.ListDirectory("OUTFILE").ToList();
+                fileList = fileList.Where(o => o.Name != "History" && o.Name.StartsWith(Properties.Settings.Default.OutputFileNameStart) && o.Name.EndsWith(".txt"))
+                                    .OrderBy(o => o.Name).ToList(); //DO not get History file and other file that do not have correct name and format
 
                 _log.Info($"Files in OUTFILE: {fileList.Count}");
 
-                if (fileList.Count > 1)
+                if (fileList.Count > 0)
                 {
-                    _log.Info($"More than 0 files in OUTFILE");
-                    //if ("History".Equals(fileList[0].ToString()))
-                    //{
+                    _log.Info($"More than 0 files in OUTFILE ({fileList.Count})");
+
                     var x = 0;
+                    _numberOfFileFound = fileList.Count;
 
-                    if (fileList[0].Name.ToString() == "History")
+                    if (fileList[x].Name.StartsWith(Properties.Settings.Default.OutputFileNameStart) && fileList[x].Name.EndsWith(".txt")) //was fileList[1] when there is a history map
                     {
-                        x = 1;
-                    }
-                    else
-                    {
-                        x = 0;
-                    }
+                        _log.Info($"Found a file  {fileList[x].Name}");
 
-                    if (fileList[x].Name.ToString().StartsWith(Properties.Settings.Default.OutputFileNameStart) && fileList[x].Name.ToString().EndsWith(".txt")) //was fileList[1] when there is a history map
-                    {
-                        _log.Info($"Found a file  {fileList[x].Name.ToString()}");
-
-                        using (Stream RetrivedFile = File.OpenWrite(Properties.Settings.Default.DeltabatchRetrievedFileLocation + fileList[x].Name.ToString()))
+                        using (Stream RetrivedFile = File.OpenWrite(Properties.Settings.Default.DeltabatchRetrievedFileLocation + fileList[x].Name))
                         {
-                            sftpClient.DownloadFile($"OUTFILE/{fileList[x].Name.ToString()}", RetrivedFile);
+                            sftpClient.DownloadFile($"OUTFILE/{fileList[x].Name}", RetrivedFile);
                         }
 
                         _log.Info($"File downloaded");
-                        _currentOutputFileName = fileList[x].Name.ToString();
-
-                        //sftpClient.ChangeDirectory($"OUTFILE/History/");
-
-                        //using (var uplfileStream = System.IO.File.OpenRead(fileList[1].ToString()))
-                        //{
-                        //    sftpClient.UploadFile(uplfileStream, fileList[1].ToString(), true);
-                        //}
-
-                        //using (var fileStream = new FileStream(plusFileName, FileMode.Open))
-                        //{
-                        //    sftpClient.UploadFile(fileStream, Path.GetFileName(plusFileName));
-                        //}
-
-                        sftpClient.Delete($"OUTFILE/{fileList[x].Name.ToString()}");
+                        _currentOutputFileName = fileList[x].Name;
+                         
+                        sftpClient.Delete($"OUTFILE/{fileList[x].Name}");
 
                         _log.Info($"File deleted from server");
-                        //var prop = sftpClient.GetType().GetProperty("SftpChannel", BindingFlags.NonPublic | BindingFlags.Instance);
-                        //var methodInfo = prop.GetGetMethod(true);
-                        //var sftpChannel = methodInfo.Invoke(sftpClient, null);
-                        //((ChannelSftp)sftpChannel).rm($"/OUTFILE/{fileList[1].ToString()}");
+                     
                     }
-                    else
-                        throw new Exception($"Invalid file/folder structure in /Output folder in Creditsafe ftp-server.\nSecond item expected to be '{Properties.Settings.Default.OutputFileNameStart}*...*.txt', but was in fact '{fileList[1].ToString()}'");
-                    //}
-                    //else
-                    //  throw new Exception($"Invalid file/folder structure in /Output folder in Creditsafe ftp-server.\nFirst item expected to be 'History', but was in fact '{fileList[0].ToString()}'");
+                    else //newer com here because name check in the list.Where
+                    {
+                        _retrieveFileErrorLog = $"Invalid file/folder structure in /Output folder in Creditsafe ftp-server.\nSecond item expected to be '{Properties.Settings.Default.OutputFileNameStart}*...*.txt', but was in fact '{fileList[1].ToString()}'";
+                        throw new Exception(_retrieveFileErrorLog);
+                    }
                 }
                 else
                 {
-                    switch (fileList.Count)
-                    {
-                        case 0:
-                            throw new Exception("No Content found in /OUTFILE folder in Creditsafe ftp-server");
-                        default:
-                            throw new Exception($"Found only {fileList[0].Name.ToString()} in /OUTFILE folder in Creditsafe ftp-server");
-                    }
+                    _numberOfFileFound = -10;
+                    _retrieveFileErrorLog = "No Content found in /OUTFILE folder in Creditsafe ftp-server";
+                    throw new Exception("No Content found in /OUTFILE folder in Creditsafe ftp-server");
                 }
                 sftpClient.Disconnect();
             }
             catch (Exception e)
             {
+                _numberOfFileFound = -12;
+                _retrieveFileErrorLog = $"Exception caught in RetrieveFiles():\n{e.Message}\n\n{e}";
+
                 _log.Error($"Exception caught in RetrieveFiles():\n{e.Message}\n\n{e}");
                 throw e;
             }
