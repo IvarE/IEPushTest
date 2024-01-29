@@ -3283,8 +3283,8 @@ namespace CGIXrmCreateCaseService.Case
                     response.CaseNumber = (string)entityResults.Entities[0]["ticketnumber"];
 
                 response.Success = false;
-                response.ErrorMessage = CaseResolvedErrorMessage;
-
+                response.ErrorMessage = "Duplicate RGOLIssueID";//Do not change this error message. Service consumer code may use it to identify duplicates.
+                //IT MEAN DO NOT CHANGE THIS ERROR MESSAGE Above, else it will be failed in RGOL Case create process!!! #68110
                 return response;
             }
              
