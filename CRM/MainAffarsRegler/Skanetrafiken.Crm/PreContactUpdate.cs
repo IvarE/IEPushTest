@@ -56,22 +56,26 @@ namespace Skanetrafiken.Crm
             if (localContext.PluginExecutionContext.InputParameters.Contains("Target") &&
                 localContext.PluginExecutionContext.InputParameters["Target"] is Entity)
             {
-
-                // Obtain the target entity from the input parameters.
-                ContactEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<ContactEntity>();
-
-                ContactEntity preImage = Plugin.GetPreImage<ContactEntity>(localContext, preImageAlias);
-
-                if (preImage == null)
-                    throw new InvalidPluginExecutionException("Pre-Image not registered correctly.");
-
-                try
+                Entity currentEntity = (Entity)localContext.PluginExecutionContext.InputParameters["Target"];
+                //DO NOT RUN update check if entity contains these columns, these fields update from external API just for timestamp
+                if (!currentEntity.Contains("st_crmcustomerapi_sync_timestamp") && !currentEntity.Contains("st_customerprofile_sync_timestamp"))
                 {
-                    target.HandlePreContactUpdate(localContext, preImage);
-                }
-                catch (Exception ex)
-                {
-                    throw new InvalidPluginExecutionException(ex.Message, ex);
+                    // Obtain the target entity from the input parameters.
+                    ContactEntity target = ((Entity)localContext.PluginExecutionContext.InputParameters["Target"]).ToEntity<ContactEntity>();
+
+                    ContactEntity preImage = Plugin.GetPreImage<ContactEntity>(localContext, preImageAlias);
+
+                    if (preImage == null)
+                        throw new InvalidPluginExecutionException("Pre-Image not registered correctly.");
+
+                    try
+                    {
+                        target.HandlePreContactUpdate(localContext, preImage);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new InvalidPluginExecutionException(ex.Message, ex);
+                    }
                 }
             }
         }
