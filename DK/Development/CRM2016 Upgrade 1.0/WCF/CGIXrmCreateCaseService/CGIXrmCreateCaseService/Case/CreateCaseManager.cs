@@ -3502,7 +3502,7 @@ namespace CGIXrmCreateCaseService.Case
 
                 // Do debug-tracing. Johan Endeavor
                 _log.Debug(string.Format("============================================"));
-                _log.Debug(string.Format("Start CreateDecision"));
+                _log.Debug(string.Format("Start RequestCreateDecision"));
 
 
                 Incident incidentCase = GetIncidentFromId(request.CaseID);
@@ -3519,7 +3519,7 @@ namespace CGIXrmCreateCaseService.Case
 
                 if (request.IsCompleted == false && request.ReqReceipt)
                 {
-                    _log.Debug(string.Format("1. CreateDecision"));
+                    _log.Debug(string.Format("1. RequestCreateDecision"));
 
                     // update case with information needed for queueitem, views and quick form + incidentstagecode
                     UpdateCaseWithRgolData(request, incidentCase, setting, 285050002); // 285050002 | Not answered
@@ -3529,7 +3529,7 @@ namespace CGIXrmCreateCaseService.Case
                 }
                 else if (request.IsCompleted == false && request.ReqReceipt == false)
                 {
-                    _log.Debug(string.Format("2. CreateDecision"));
+                    _log.Debug(string.Format("2. RequestCreateDecision"));
 
                     // update case with information needed for queueitem, views and quick form + incidentstagecode
                     UpdateCaseWithRgolData(request, incidentCase, setting, 285050000); // 285050000 | Ongoing
@@ -3541,7 +3541,7 @@ namespace CGIXrmCreateCaseService.Case
                 }
                 else if (request.IsCompleted && request.Approved)
                 {
-                    _log.Debug(string.Format("3. CreateDecision"));
+                    _log.Debug(string.Format("3. RequestCreateDecision"));
 
                     response.RefundID = CreateDecisionRgol(request.Value, setting, incidentCase, currency.BaseCurrencyId, request.InternalMessage, request.CustomerMessage);
                     // update case with information needed for queueitem, views and quick form + incidentstagecode
@@ -3552,7 +3552,7 @@ namespace CGIXrmCreateCaseService.Case
                 }
                 else if (request.IsCompleted && request.Approved == false)
                 {
-                    _log.Debug(string.Format("4. CreateDecision"));
+                    _log.Debug(string.Format("4. RequestCreateDecision"));
 
                     response.RefundID = CreateDecisionRgol(request.Value, setting, incidentCase, currency.BaseCurrencyId, request.InternalMessage, request.CustomerMessage);
 
