@@ -51,7 +51,8 @@ namespace Endeavor.Crm.DeltabatchService
         {
             // Connect to the CRM web service using a connection string.
             CrmServiceClient conn = new CrmServiceClient(CrmConnection.GetCrmConnectionString(DeltabatchService.CredentialFilePath, DeltabatchService.Entropy));
-
+            if (conn.OrganizationWebProxyClient != null)
+                conn.OrganizationWebProxyClient.InnerChannel.OperationTimeout = new TimeSpan(10, 0, 0);
             // Cast the proxy client to the IOrganizationService interface.
             IOrganizationService serviceProxy = conn.OrganizationWebProxyClient != null ? conn.OrganizationWebProxyClient : (IOrganizationService)conn.OrganizationServiceProxy;
 
