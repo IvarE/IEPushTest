@@ -152,7 +152,9 @@ namespace Endeavor.Crm.CleanRecordsService
 
             var queryFilter6 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter6);
+            queryFilter6.FilterOperator = LogicalOperator.Or;
             queryFilter6.AddCondition("au", TravelCardEntity.Fields.cgi_Contactid, ConditionOperator.Null);
+            queryFilter6.AddCondition("au", TravelCardEntity.Fields.cgi_Blocked, ConditionOperator.Equal, true);
 
             var queryFilter7 = new FilterExpression();
             queryContacts.Criteria.AddFilter(queryFilter7);
@@ -217,6 +219,7 @@ namespace Endeavor.Crm.CleanRecordsService
             _log.Info($"'RunFullData': {bRunFullData}");
             QueryExpression queryContacts = GetQueryInactivateContacts(bRunFullData);
             List<ContactEntity> lContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, queryContacts);
+
             _log.Info($"Found { lContacts.Count } Contacts to be checked.");
 
             List<OrganizationRequest> requestsLst = new List<OrganizationRequest>();
