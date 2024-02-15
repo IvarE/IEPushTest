@@ -112,7 +112,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             if (formType == 1) { //Create
                 Endeavor.Skanetrafiken.Contact.isMoreThanPrivateContact(formContext);
 
-                if (ormContext.getAttribute("ed_informationsource") != null && formContext.getAttribute("ed_informationsource").getValue() == null)
+                if (formContext.getAttribute("ed_informationsource") != null && formContext.getAttribute("ed_informationsource").getValue() == null)
                     formContext.getAttribute("ed_informationsource").setValue(8); // 8-AdmSkapaKund
 
             } else if (formType == 2) { //Update
@@ -745,46 +745,94 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             }
         },
 
-        onReservIdandSSNChange: function (executionContext) {
-            var formContext = executionContext.getFormContext();
-            var reservId = formContext.getAttribute("st_reservid");
-            var ssnNumber = formContext.getAttribute("ed_socialsecuritynumberformat");
-            reservId.setRequiredLevel("required");
-            ssnNumber.setRequiredLevel("required");
-            if (reservId.getValue() != null) {
-                ssnNumber.setRequiredLevel("none");
-                reservId.setRequiredLevel("required");
-            }
-            if (ssnNumber.getValue() != null) {
-                reservId.setRequiredLevel("none");
-                ssnNumber.setRequiredLevel("required");
-            }
-            if (ssnNumber.getValue() != null && reservId.getValue() != null) {
-                reservId.setRequiredLevel("none");
-                ssnNumber.setRequiredLevel("none");
-            }
-        },
-
-        onReservIdandSSNChange: function (executionContext) {
-            var formContext = executionContext.getFormContext();
-            var reservId = formContext.getAttribute("st_reservid");
-            var ssnNumber = formContext.getAttribute("ed_socialsecuritynumberformat");
-                if (reservId != null) {
-                    reservId.setRequiredLevel("required");
-                    ssnNumber.setRequiredLevel("required");
-                    if (reservId.getValue() != null) {
-                        ssnNumber.setRequiredLevel("none");
-                        reservId.setRequiredLevel("required");
-                    }
-                    if (ssnNumber.getValue() != null) {
-                        reservId.setRequiredLevel("none");
-                        ssnNumber.setRequiredLevel("required");
-                    }
-                    if (ssnNumber.getValue() != null && reservId.getValue() != null) {
-                        reservId.setRequiredLevel("none");
-                        ssnNumber.setRequiredLevel("none");
-                    }
+        checkReservnummerAndSetBirthDate: function (formContext, nr) {
+            //Copy of checkPersonnummer()
+            try {
+                let fullYear = 0;
+                let year = 0;
+                let month = 0;
+                let day = 0;
+                formContext.getControl("st_reservid").clearNotification();
+                let valid = false;
+                if (nr.match(/^(\d{4})(\d{2})(\d{2})-(\*{4}|[a-zA-Z0-9])/)) { //ååååmmdd-xAxx
+                    nr = nr.replace("-", "");
+                    valid = true;
                 }
+                else if (nr.match(/^(\d{4})(\d{2})(\d{2})(\*{4}|[a-zA-Z0-9])/)) {//ååååmmddxAxx
+                    valid = true;
+                    
+                }
+                else if (nr.match(/^(\d{2})(\d{2})(\d{2})-(\*{4}|[a-zA-Z0-9])/)) {//ååmmdd-xAxx
+                    valid = true;
+                }
+
+                if (!valid || nr.length < 10) {
+                    formContext.getControl("st_reservid").setNotification("Ogiltigt Id<BR>(giltiga format: ååmmddxxxx, ååååmmddxxxx, ååååmmdd-xxxx)");
+
+                    return;
+                }
+                if (nr.match(/^(\d{4})(\d{2})(\d{2})/)) {
+                    fullYear = RegExp.$1;
+                    year = fullYear.substring(2, 4);
+                    month = RegExp.$2;
+                    day = RegExp.$3;
+                } else if (nr.match(/^(\d{2})(\d{2})(\d{2})/)) {
+                    year = RegExp.$1;
+                    fullYear = (parseInt(year) > ((new Date()).getFullYear() % 100)) ? "19" + year : "20" + year;
+                    month = RegExp.$2;
+                    day = RegExp.$3;
+                } else { 
+                    formContext.getControl("st_reservid").setNotification("Ogiltigt Id<BR>(giltiga format: ååmmddxxxx, ååååmmddxxxx, ååååmmdd-xxxx)");
+                    return false;
+                }
+                try {
+                    var monthValue = parseInt(month);
+                    var birthDateUpd = ""; //try to build date obj
+                    if (nr.charAt(1) == 9 && nr.length == 12) {
+                        birthDateUpd = new Date(fullYear, monthValue - 1, day);
+                    }
+                    else if (nr.charAt(1) == 0 && nr.length == 12) {
+                        birthDateUpd = new Date(fullYear, monthValue - 1, day);
+                    }
+                    else {
+                        birthDateUpd = new Date(fullYear, monthValue - 1, day);
+                    }
+
+                    if (birthDateUpd != "") {
+
+                        var ssNDate = fullYear + month + day;
+                        if (formContext.getAttribute("birthdate")) //try to get a valid date to a datefield
+                            formContext.getAttribute("birthdate").setValue(birthDateUpd);
+                        //set BirthDate with birthDateUpd
+                        //formContext.getAttribute("ed_socialsecuritynumberformat").setValue(ssNDate);
+                        //formContext.getAttribute("ed_socialsecuritynumberformat").fireOnChange();
+                    }
+                } catch (error) {
+                    formContext.getControl("st_reservid").setNotification("Ogiltigt Id<BR>(giltiga format: ååmmddxxxx, ååååmmddxxxx, ååååmmdd-xxxx)" +": " +error.message);
+                }
+            } catch(error) {/*DO NOTTHING, just try to extract date from ReserId and set date part to SSN*/ }
+        },
+        onReservIdandSSNChange: function (executionContext) {
+            var formContext = executionContext.getFormContext();
+            var reservId = formContext.getAttribute("st_reservid");
+            var ssnNumber = formContext.getAttribute("ed_socialsecuritynumberformat");
+            if (reservId != null) {
+                reservId.setRequiredLevel("required");
+                ssnNumber.setRequiredLevel("required");
+                if (reservId.getValue() != null) {
+                    ssnNumber.setRequiredLevel("none");
+                    reservId.setRequiredLevel("required");
+                    Endeavor.Skanetrafiken.Contact.checkReservnummerAndSetBirthDate(formContext, reservId.getValue());
+                }
+                if (ssnNumber.getValue() != null) {
+                    reservId.setRequiredLevel("none");
+                    ssnNumber.setRequiredLevel("required");
+                }
+                if (ssnNumber.getValue() != null && reservId.getValue() != null) {
+                    reservId.setRequiredLevel("none");
+                    ssnNumber.setRequiredLevel("none");
+                }
+            }
         },
 
         onSocialSecurityNumberChange: function (executionContext) {
@@ -1026,7 +1074,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 this.day = RegExp.$3;
             } else if (nr.match(/^(\d{2})(\d{2})(\d{2})$/)) {
                 this.year = RegExp.$1;
-                this.fullYear = parseInt(this.year > (new Date()).getFullYear() % 100) ? "19" : "20" + this.year;
+                this.fullYear = (parseInt(this.year) > ((new Date()).getFullYear() % 100)) ? "19"+this.year : "20" + this.year;
                 this.month = RegExp.$2;
                 this.day = RegExp.$3;
             } else {
