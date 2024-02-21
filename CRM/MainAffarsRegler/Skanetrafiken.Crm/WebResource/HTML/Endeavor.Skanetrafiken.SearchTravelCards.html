@@ -168,6 +168,42 @@
                                         console.error(errorMessage);
                                         //Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
                                     });
+
+                                if (placeOrderResponse.indexOf("200") > -1) {
+                                    var fetchXml = "?fetchXml=<fetch>" +
+                                        "<entity name='cgi_travelcard'>" +
+                                        "<filter type='and'>" +
+                                        "<condition attribute='cgi_travelcardnumber' operator='eq' value='" + cardId + "'/>" +
+                                        "<condition attribute='cgi_blocked' operator='eq' value='0'/>" +
+                                        "</filter>" +
+                                        "</entity>" +
+                                        "</fetch>";
+
+
+                                    Xrm.WebApi.retrieveMultipleRecords("cgi_travelcard", fetchXml).then(
+                                        function (result) {
+
+                                            var data =
+                                            {
+                                                "cgi_blocked": true
+                                            };
+
+                                            if (result.entities[0].cgi_travelcardid != null) {
+                                                Xrm.WebApi.updateRecord("cgi_travelcard", result.entities[0].cgi_travelcardid, data).then(
+                                                    function success(result) {
+                                                        console.log("Travelcard updated to blocked");
+
+                                                    },
+                                                    function (error) {
+                                                        console.log(error.message);
+                                                    }
+                                                );
+                                            }
+                                        },
+                                        function (e) {
+                                            console.log("Error when retrieving related travelcard" + e.message);
+                                        });
+                                }
                             },
                             function (error) {
                                 var errorMessage = "Något gick fel. Vänligen försök igen.";
@@ -175,6 +211,8 @@
                                 console.error(errorMessage);
                                 //Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
                             });
+
+                        
                     }
                     catch (error) {
                         document.getElementById("messageSpace").innerText = ("Oväntat fel: " + error.message);
