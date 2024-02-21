@@ -7,12 +7,127 @@ using Skanetrafiken.Crm.Properties;
 using System.Threading;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Microsoft.Identity.Client;
+using System.Globalization;
+using Endeavor.Crm;
+using Microsoft.Xrm.Tooling.Connector;
+using Microsoft.Xrm.Sdk.Client;
+using Microsoft.Xrm.Sdk.Query;
 
 namespace Skanetrafiken.Crm.Controllers
 {
     public class ContactsController : WrapperController
     {
         protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        [Route("api/Contacts/GetAccessToken/{process}")]
+        [HttpGet]
+        public async Task<HttpResponseMessage> GetAccessToken(string process)
+        {
+            int threadId = Thread.CurrentThread.ManagedThreadId;
+            _log.Info($"Th={threadId} - GetAccessToken called with parameter: {process}");
+
+            if (string.IsNullOrWhiteSpace(process))
+            {
+                HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                badReq.Content = new StringContent("Could not find value in 'process' parameter. Please provide a valid 'process'.");
+                _log.Warn($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
+                return badReq;
+            }
+
+            Plugin.LocalPluginContext localContext = null;
+
+            try
+            {
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                _log.DebugFormat($"Th={threadId} - GetAccessToken: Creating serviceProxy");
+                // Cast the proxy client to the IOrganizationService interface.
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                {
+                    localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                    _log.Info($"Th={threadId} - GetAccessToken: ServiceProxy and LocalContext created Successfully. Getting Info from Settings.");
+
+                    var clientId = string.Empty;
+                    var clientSecret = string.Empty;
+                    var tenentId = string.Empty;
+                    var audience = string.Empty;
+
+                    CgiSettingEntity settings = null;
+                    FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+
+
+                    if (process == "mkl")
+                    {
+                        _log.Info($"Th={threadId} - GetAccessToken: Process is - {process}");
+
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationClientId, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationClientSecret, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationTenantId, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.st_crmappmklaudience, ConditionOperator.NotNull);
+
+                        settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                        CgiSettingEntity.Fields.st_CrmAppRegistrationClientId,
+                        CgiSettingEntity.Fields.st_CrmAppRegistrationClientSecret,
+                        CgiSettingEntity.Fields.st_CrmAppRegistrationTenantId,
+                        CgiSettingEntity.Fields.st_crmappmklaudience), settingFilter);
+
+                        clientId = settings.st_CrmAppRegistrationClientId;
+                        _log.Debug($"Th={threadId} - GetAccessToken: Client Id - {clientId}");
+                        clientSecret = settings.st_CrmAppRegistrationClientSecret;
+                        _log.Debug($"Th={threadId} - GetAccessToken: Client Secret - {clientSecret}");
+                        tenentId = settings.st_CrmAppRegistrationTenantId;
+                        _log.Debug($"Th={threadId} - GetAccessToken: TenentId - {tenentId}");
+                        audience = settings.st_crmappmklaudience;
+                        _log.Debug($"Th={threadId} - GetAccessToken: Audience - {audience}");
+                    }
+                    else
+                    {
+                        //Throw an exception
+                        throw new Exception(string.Format("GetAccessToken: Provided 'Process' argument does not match any available processes. Please provide a valid 'Process'."));
+                    }
+
+                    if (settings == null || string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret) || string.IsNullOrEmpty(tenentId) || string.IsNullOrWhiteSpace(audience))
+                    {
+                        //Throw an exception
+                        throw new Exception(string.Format("GetAccessToken: Failed to aquire settings from CRM."));
+                    }
+                    else
+                    {
+                        _log.Debug($"Th={threadId} - GetAccessToken: Fetching Access Token.");
+                        
+                        var tokenResp = await CrmPlusControl.GetAccessToken(clientId, clientSecret, tenentId, audience);
+
+                        //Create a return OK with token in string
+                        return ReturnApiMessage(threadId, tokenResp, HttpStatusCode.OK);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                _log.Error($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+                return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
+            }
+        }
+
+        private static HttpResponseMessage ReturnApiMessage(int threadId, string errorMessage, HttpStatusCode code)
+        {
+            _log.DebugFormat($"Th={threadId} - Returning statuscode = {code}, Content = {errorMessage}\n");
+
+            HttpResponseMessage response = new HttpResponseMessage(code);
+            response.Content = new StringContent(errorMessage);
+            return response;
+        }
 
         //INFO: teo - Is not part of HttpRouting in Production-releases
         public HttpResponseMessage GetLatestLinkGuid(string email)

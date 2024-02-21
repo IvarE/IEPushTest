@@ -1408,7 +1408,7 @@ namespace Skanetrafiken.Crm.Entities
             {
                 localContext.Trace($"Calling user does not have privileges to inactivate Contacts even if they have a balance in MKL, proceeding to check balance.");
                 // Else call MKL to see if customer has an amount connected.
-                if (HasMKLBalance(localContext, subordinate.ToEntityReference()))
+                if (ContactMKLBalance(localContext, subordinate.ToEntityReference()))
                 {
                     // If so prevent the inactivation
                     localContext.Trace($"Target still has funds. No inactivation will take place.");
@@ -1418,7 +1418,7 @@ namespace Skanetrafiken.Crm.Entities
                 throw new Exception($"You do not have permissions to inactivate this contact.");
             }
 
-            SendDeleteMessageToMKL(localContext, subordinate.ToEntityReference(), contact);
+            HandleDeleteContactMessageMKL(localContext, subordinate.ToEntityReference(), contact);
 
 
         }
@@ -1697,7 +1697,7 @@ namespace Skanetrafiken.Crm.Entities
             {
                 localContext.Trace($"Calling user does not have privileges to inactivate Contacts even if they have a balance in MKL, proceeding to check balance.");
                 // Else call MKL to see if customer has an amount connected.
-                if (HasMKLBalance(localContext, entityId))
+                if (ContactMKLBalance(localContext, entityId))
                 {
                     // If so prevent the inactivation
                     localContext.Trace($"Target still has funds. No inactivation will take place.");
@@ -1707,7 +1707,7 @@ namespace Skanetrafiken.Crm.Entities
                 throw new Exception($"You do not have permissions to inactivate this contact.");
             }
 
-            SendDeleteMessageToMKL(localContext, entityId, contact);
+            HandleDeleteContactMessageMKL(localContext, entityId, contact);
         }
 
         /// <summary>
@@ -1830,147 +1830,289 @@ namespace Skanetrafiken.Crm.Entities
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="localContext"></param>
-        /// <param name="contactId"></param>
-        /// <param name="contact"></param>
-        /// <returns></returns>
-        private static bool SendDeleteMessageToMKL(Plugin.LocalPluginContext localContext, EntityReference contactId, ContactEntity contact)
+        public static bool HandleDeleteContactMessageMKL(Plugin.LocalPluginContext localContext, EntityReference contactId, ContactEntity contact)
         {
-            try
+
+            FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.st_MklEndpointToken, ConditionOperator.NotNull);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_CRMPlusService, ConditionOperator.NotNull);
+            CgiSettingEntity cgiSetting = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext,
+                new ColumnSet(CgiSettingEntity.Fields.st_MklEndpointToken, CgiSettingEntity.Fields.ed_CRMPlusService), settingFilter);
+
+            string MklEndpoint = cgiSetting?.st_MklEndpointToken;
+            string fasadEndpoint = cgiSetting.ed_CRMPlusService;
+
+            if (cgiSetting != null && !string.IsNullOrWhiteSpace(MklEndpoint) && !string.IsNullOrWhiteSpace(fasadEndpoint))
             {
-                string MklEndpoint = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_MklEndpoint);
 
-                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create($"{MklEndpoint}/admin/users/{contactId.Id}");
-                string clientCertName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_ClientCertName);
-                httpWebRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCertName));
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Method = "DELETE";
+                var requestToken = string.Empty;
 
-                HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                if (httpResponse.StatusCode != HttpStatusCode.NoContent)
+                #region AccessToken From Fasad
+
+                var tokenHttpWebReq = (HttpWebRequest)WebRequest.Create(string.Format("{0}/api/Contacts/GetAccessToken/mkl", fasadEndpoint));
+                tokenHttpWebReq.ContentType = "text/plain; charset=utf-8";
+                tokenHttpWebReq.Method = "GET";
+
+                try
                 {
-                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    var tokenHttpResponse = (HttpWebResponse)tokenHttpWebReq.GetResponse();
+                    if (tokenHttpResponse.StatusCode != HttpStatusCode.OK)
                     {
-                        // Result is 
-                        var result = streamReader.ReadToEnd();
-                        localContext.TracingService.Trace($"DeleteMessage to MKL returned StatusCode: {httpResponse.StatusCode} and results: {result}");
-                        throw new Exception($"Fel vid kommunikation med externt system: {result}");
+                        throw new Exception(string.Format("400 - Could not access required token for MKL endpoint. Response: " + tokenHttpResponse.StatusCode.ToString()));
+                    }
+                    else
+                    {
+                        using (var streamReader = new StreamReader(tokenHttpResponse.GetResponseStream()))
+                        {
+                            //Read response token
+                            requestToken = streamReader.ReadToEnd();
+                        }
+
+                        if (string.IsNullOrWhiteSpace(requestToken))
+                        {
+                            throw new Exception(string.Format("400 - Could not access required token for MKL endpoint. Returned token was null."));
+                        }
                     }
                 }
-                return true;
-            }
-            catch (WebException we)
-            {
-                HttpWebResponse response = (HttpWebResponse)we.Response;
-                if (response == null)
+                catch (Exception e)
                 {
-                    localContext.TracingService.Trace($"Attempted Delete-message to MKL returned an exeption. Content: {we.Message}");
-                    throw we;
+                    throw new InvalidPluginExecutionException($"Error while retrieving Token through Fasaden : {e.Message}", e);
+                }
+
+                #endregion
+
+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                //Trigger call to MKL
+                //Using the admin endpoint that uses a JSON Object in the body
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format($"{MklEndpoint}/api/v1/admin/users/{contactId.Id}"));
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "DELETE";
+                httpWebRequest.Headers.Add("channel", "crm");
+                httpWebRequest.Headers.Add("Authorization", "Bearer " + requestToken);
+
+                //Create stream so that you can send a JSON object as body of content 
+                ContactInactivateRequest inactivateContactRequestObj = new ContactInactivateRequest();
+                inactivateContactRequestObj.contactId = contactId.Id.ToString();
+                DataContractJsonSerializer js = null;
+                MemoryStream msObj = new MemoryStream();
+                js = new DataContractJsonSerializer(typeof(ContactInactivateRequest));
+                js.WriteObject(msObj, inactivateContactRequestObj);
+
+                msObj.Position = 0;
+                StreamReader sr = new StreamReader(msObj);
+                var InputJSON = sr.ReadToEnd(); //Create a JSON for CancelledBy and VoucherId
+                sr.Close();
+                msObj.Close();
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(InputJSON);
+                    streamWriter.Flush();
+                    streamWriter.Close();
                 }
 
                 try
                 {
-                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(MklErrorObject));
-                    MklErrorObject mklErr = (MklErrorObject)serializer.ReadObject(response.GetResponseStream());
+                    var result = string.Empty;
 
-                   if(response.StatusCode == HttpStatusCode.NotFound && contact.ed_OverrideMerge == true)
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+                    if (httpResponse != null && httpResponse.StatusCode != HttpStatusCode.NoContent)
                     {
-                        return true;
+                        using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                        {
+                            result = streamReader.ReadToEnd();
+                            localContext.TracingService.Trace($"DeleteMessage to MKL returned StatusCode: {httpResponse.StatusCode} and results: {result}");
+                            throw new Exception($"Fel vid kommunikation med externt system: {result}");
+                        }
                     }
-                   else if (response.StatusCode == HttpStatusCode.NotFound)
+                    return true;
+
+                }
+                catch (WebException we)
+                {
+                    HttpWebResponse response = (HttpWebResponse)we.Response;
+                    if (response == null)
                     {
-                        throw new InvalidPluginExecutionException($"Kontakten hittades ej hos Mitt Konto, vill du fortfarande inaktivera kontakten, sätt 'Mitt Konto Saknas' till Ja och utför åtgärden igen.");
+                        localContext.TracingService.Trace($"Attempted Delete-message to MKL returned an exeption. Content: {we.Message}");
+                        throw we;
                     }
 
-                    
-                    if (MklErrorObject.UserEntityNotFound.Equals(mklErr.code))
+                    try
                     {
-                        return true;
+                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(MklErrorObject));
+                        MklErrorObject mklErr = (MklErrorObject)serializer.ReadObject(response.GetResponseStream());
+
+                        if (response.StatusCode == HttpStatusCode.NotFound && contact.ed_OverrideMerge == true)
+                        {
+                            return true;
+                        }
+                        else if (response.StatusCode == HttpStatusCode.NotFound)
+                        {
+                            throw new InvalidPluginExecutionException($"Kontakten hittades ej hos Mitt Konto, vill du fortfarande inaktivera kontakten, sätt 'Mitt Konto Saknas' till Ja och utför åtgärden igen.");
+                        }
+
+
+                        if (MklErrorObject.UserEntityNotFound.Equals(mklErr.code))
+                        {
+                            return true;
+                        }
+
+                        localContext.TracingService.Trace("Attempted Delete-message to MKL returned an exeption httpCode: {0} Content: {1}", response.StatusCode, mklErr.localizedMessage);
+
+                        throw new InvalidPluginExecutionException($"Fel vid kommunikation med externt system: {(mklErr.localizedMessage ?? mklErr.message) ?? mklErr.httpStatus.ToString()}", mklErr.innerException ?? null);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new InvalidPluginExecutionException($"Fel vid kommunikation med externt system: {e.Message}", e);
                     }
 
-                    localContext.TracingService.Trace("Attempted Delete-message to MKL returned an exeption httpCode: {0} Content: {1}", response.StatusCode, mklErr.localizedMessage);
-
-                    throw new InvalidPluginExecutionException($"Fel vid kommunikation med externt system: {(mklErr.localizedMessage ?? mklErr.message) ?? mklErr.httpStatus.ToString()}", mklErr.innerException ?? null);
                 }
                 catch (Exception e)
                 {
-                    throw new InvalidPluginExecutionException($"Fel vid kommunikation med externt system: {e.Message}", e);
+                    throw new Exception("400 - Failed to Execute: " + e.Message);
                 }
 
+            }
+            else
+            {
+                throw new InvalidPluginExecutionException("400 - Did not find URI for inactivate contact!");
             }
         }
 
         /// <summary>
-        /// 
+        /// Call MKL to check for Contact Balance
         /// </summary>
-        /// <param name="localContext"></param>
-        /// <param name="contactId"></param>
-        /// <returns></returns>
-        public static bool HasMKLBalance(Plugin.LocalPluginContext localContext, EntityReference contactId)
+        public static bool ContactMKLBalance(Plugin.LocalPluginContext localContext, EntityReference contactId)
         {
-            try
+            FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.st_MklEndpointToken, ConditionOperator.NotNull);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_CRMPlusService, ConditionOperator.NotNull);
+            CgiSettingEntity cgiSetting = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext,
+                new ColumnSet(CgiSettingEntity.Fields.st_MklEndpointToken, CgiSettingEntity.Fields.ed_CRMPlusService), settingFilter);
+
+            string MklEndpoint = cgiSetting?.st_MklEndpointToken;
+            string fasadEndpoint = cgiSetting.ed_CRMPlusService;
+
+            if (cgiSetting != null && !string.IsNullOrWhiteSpace(MklEndpoint) && !string.IsNullOrWhiteSpace(fasadEndpoint))
             {
-                string MklEndpoint = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_MklEndpoint);
 
-                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create($"{MklEndpoint}/admin/users/{contactId.Id}/value");
-                //HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create($"{MklEndpoint}/admin/users/{new Guid("9A9D0B3B-0BBE-E611-8114-00155D0A6B01")}/value");
-                string clientCertName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_ClientCertName);
-                httpWebRequest.ClientCertificates.Add(Identity.GetCertToUse(clientCertName));
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Method = "GET";
+                var requestToken = string.Empty;
 
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                #region AccessToken From Fasad
+
+                var tokenHttpWebReq = (HttpWebRequest)WebRequest.Create(string.Format("{0}/api/Contacts/GetAccessToken/mkl", fasadEndpoint));
+                tokenHttpWebReq.ContentType = "text/plain; charset=utf-8";
+                tokenHttpWebReq.Method = "GET";
 
                 try
                 {
-                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(MklValuePlaceholder));
-                    MklValuePlaceholder mklValue = (MklValuePlaceholder)serializer.ReadObject(httpResponse.GetResponseStream());
-                    return mklValue.valueExists;
+                    var tokenHttpResponse = (HttpWebResponse)tokenHttpWebReq.GetResponse();
+                    if (tokenHttpResponse.StatusCode != HttpStatusCode.OK)
+                    {
+                        throw new Exception(string.Format("400 - Could not access required token for MKL endpoint. Response: " + tokenHttpResponse.StatusCode.ToString()));
+                    }
+                    else
+                    {
+                        using (var streamReader = new StreamReader(tokenHttpResponse.GetResponseStream()))
+                        {
+                            //Read response token
+                            requestToken = streamReader.ReadToEnd();
+                        }
+
+                        if (string.IsNullOrWhiteSpace(requestToken))
+                        {
+                            throw new Exception(string.Format("400 - Could not access required token for MKL endpoint. Returned token was null."));
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
-                    throw new Exception($"Exception caught when trying to parse return value from MKL to MklValuePlaceholder", e);
-                }
-            }
-            catch (WebException we)
-            {
-                HttpWebResponse response = (HttpWebResponse)we.Response;
-                if (response == null)
-                {
-                    localContext.TracingService.Trace($"MKL returned an exeption. Content: {we.Message}");
-                    throw we;
+                    throw new InvalidPluginExecutionException($"Error while retrieving Token through Fasaden : {e.Message}", e);
                 }
 
-                //using (var streamReader = new StreamReader(response.GetResponseStream()))
-                //{
-                //    var result = streamReader.ReadToEnd();
-                //}
+                #endregion
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                //Trigger call to MKL
+                //Using the admin endpoint that uses a JSON Object in the body
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format($"{MklEndpoint}/api/v1/admin/users/{contactId.Id}/value")); 
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "GET";
+                httpWebRequest.Headers.Add("channel", "crm");
+                httpWebRequest.Headers.Add("Authorization", "Bearer " + requestToken);
+
+                //Create stream so that you can send a JSON object as body of content 
+                ContactInactivateRequest inactivateContactRequestObj = new ContactInactivateRequest();
+                inactivateContactRequestObj.contactId = contactId.Id.ToString();
+                DataContractJsonSerializer js = null;
+                MemoryStream msObj = new MemoryStream();
+                js = new DataContractJsonSerializer(typeof(ContactInactivateRequest));
+                js.WriteObject(msObj, inactivateContactRequestObj);
+
+                msObj.Position = 0;
+                StreamReader sr = new StreamReader(msObj);
+                var InputJSON = sr.ReadToEnd(); //Create a JSON for CancelledBy and VoucherId
+                sr.Close();
+                msObj.Close();
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(InputJSON);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+
                 try
                 {
-                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(MklErrorObject));
-                    MklErrorObject mklErr = (MklErrorObject)serializer.ReadObject(response.GetResponseStream());
+                    var result = string.Empty;
 
-                    if (MklErrorObject.UserEntityNotFound.Equals(mklErr.code))
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(MklValuePlaceholder));
+                    MklValuePlaceholder mklValue = (MklValuePlaceholder)serializer.ReadObject(httpResponse.GetResponseStream());
+                    return mklValue.valueExists;
+
+                }
+                catch (WebException we)
+                {
+                    HttpWebResponse response = (HttpWebResponse)we.Response;
+                    if (response == null)
                     {
-                        return false;
+                        localContext.TracingService.Trace($"MKL returned an exeption. Content: {we.Message}");
+                        throw we;
                     }
-                    //serializer.WriteObject
 
-                    localContext.TracingService.Trace($"MKL returned an exeption httpCode: {response.StatusCode} Content: {(mklErr.localizedMessage ?? mklErr.message) ?? mklErr.httpStatus}\nSerialised object:\n{ mklErr}");
+                    try
+                    {
+                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(MklErrorObject));
+                        MklErrorObject mklErr = (MklErrorObject)serializer.ReadObject(response.GetResponseStream());
 
-                    throw new InvalidPluginExecutionException($"Fel vid kommunikation med externt system: {(mklErr.localizedMessage ?? mklErr.message) ?? mklErr.httpStatus}", mklErr.innerException);
+                        if (MklErrorObject.UserEntityNotFound.Equals(mklErr.code))
+                        {
+                            return false;
+                        }
+                        //serializer.WriteObject
+
+                        localContext.TracingService.Trace($"MKL returned an exeption httpCode: {response.StatusCode} Content: {(mklErr.localizedMessage ?? mklErr.message) ?? mklErr.httpStatus}\nSerialised object:\n{ mklErr}");
+
+                        throw new InvalidPluginExecutionException($"Fel vid kommunikation med externt system: {(mklErr.localizedMessage ?? mklErr.message) ?? mklErr.httpStatus}", mklErr.innerException);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new InvalidPluginExecutionException($"Fel vid kommunikation med externt system: {e.Message}", e);
+                    }
+
                 }
                 catch (Exception e)
                 {
                     throw new InvalidPluginExecutionException($"Fel vid kommunikation med externt system: {e.Message}", e);
                 }
             }
-            catch (Exception e)
+            else
             {
-                throw new InvalidPluginExecutionException($"Fel vid kommunikation med externt system: {e.Message}", e);
+                throw new InvalidPluginExecutionException("400 - Did not find URI for inactivate contact!");
             }
         }
 
@@ -3642,5 +3784,13 @@ namespace Skanetrafiken.Crm.Entities
         public bool mklError { get; set; }
 
         #endregion
+    }
+
+    [DataContract]
+    public class ContactInactivateRequest
+    {
+        [DataMember]
+        public string contactId { get; set; }
+
     }
 }

@@ -5666,12 +5666,29 @@ namespace Skanetrafiken.Crm.Controllers
 
             return updated;
         }
-
+        
         public static async Task<string> GetAccessToken(string clientId, string clientSectret, string tenantId)
         {
             var authContext = new Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext("https://login.windows.net/" + $"{tenantId}");
             var credential = new Microsoft.IdentityModel.Clients.ActiveDirectory.ClientCredential(clientId, clientSectret);
             var result = await authContext.AcquireTokenAsync("https://storage.azure.com", credential);
+            
+
+            if (result == null)
+            {
+                _log.Warn($"-- GetAccessToken Failed! --");
+                throw new Exception("Failed to authenticate via ADAL");
+            }
+
+            return result.AccessToken;
+        }
+
+        public static async Task<string> GetAccessToken(string clientId, string clientSectret, string tenantId, string audience)
+        {
+            var authContext = new Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext("https://login.windows.net/" + $"{tenantId}");
+            var credential = new Microsoft.IdentityModel.Clients.ActiveDirectory.ClientCredential(clientId, clientSectret);
+            //var result = await authContext.AcquireTokenAsync("https://storage.azure.com", credential);
+            var result = await authContext.AcquireTokenAsync(audience, credential);
 
             if (result == null)
             {

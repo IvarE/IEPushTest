@@ -26870,7 +26870,87 @@ namespace Skanetrafiken.Crm.Schema.Generated
 				this.SetAttributeValue("timezoneruleversionnumber", value);
 			}
 		}
-		
+
+		/// <summary>
+		/// Client ID used for CrmClientAppRegistration
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_crmappregistrationclientid")]
+		public string st_CrmAppRegistrationClientId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("st_crmappregistrationclientid");
+			}
+			set
+			{
+				this.SetAttributeValue("st_crmappregistrationclientid", value);
+			}
+		}
+
+		/// <summary>
+		/// Client Secret used for CRMClientAppRegistration
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_crmappregistrationclientsecret")]
+		public string st_CrmAppRegistrationClientSecret
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("st_crmappregistrationclientsecret");
+			}
+			set
+			{
+				this.SetAttributeValue("st_crmappregistrationclientsecret", value);
+			}
+		}
+
+		/// <summary>
+		/// Tenant Id used for CRMClientAppRegistration
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_crmappregistrationtenantid")]
+		public string st_CrmAppRegistrationTenantId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("st_crmappregistrationtenantid");
+			}
+			set
+			{
+				this.SetAttributeValue("st_crmappregistrationtenantid", value);
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_mklendpointtoken")]
+		public string st_MklEndpointToken
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("st_mklendpointtoken");
+			}
+			set
+			{
+				this.SetAttributeValue("st_mklendpointtoken", value);
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_crmappmklaudience")]
+		public string st_crmappmklaudience
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("st_crmappmklaudience");
+			}
+			set
+			{
+				this.SetAttributeValue("st_crmappmklaudience", value);
+			}
+		}
+
 		/// <summary>
 		/// Unique identifier of the currency associated with the entity.
 		/// </summary>
@@ -27485,6 +27565,16 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
 			
 			public const string VersionNumber = "versionnumber";
+
+			public const string st_crmappmklaudience = "st_crmappmklaudience";
+
+			public const string st_CrmAppRegistrationClientId = "st_crmappregistrationclientid";
+
+			public const string st_CrmAppRegistrationClientSecret = "st_crmappregistrationclientsecret";
+
+			public const string st_MklEndpointToken = "st_mklendpointtoken";
+
+			public const string st_CrmAppRegistrationTenantId = "st_crmappregistrationtenantid";
 		}
 		
 		public struct FieldLengths
@@ -27653,6 +27743,16 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_TravelInformationDBConnectionString = 300;
 			
 			public const int ed_VoucherService = 100;
+
+			public const int st_crmappmklaudience = 100;
+
+			public const int st_CrmAppRegistrationClientId = 100;
+
+			public const int st_CrmAppRegistrationClientSecret = 100;
+
+			public const int st_CrmAppRegistrationTenantId = 100;
+
+			public const int st_MklEndpointToken = 100;
 		}
 	}
 	
