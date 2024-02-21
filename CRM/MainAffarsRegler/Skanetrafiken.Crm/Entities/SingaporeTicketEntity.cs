@@ -37,7 +37,7 @@ namespace Skanetrafiken.Crm.Entities
 
             QueryExpression queryContact = new QueryExpression(Contact.EntityLogicalName);
             queryContact.NoLock = true;
-            queryContact.ColumnSet = new ColumnSet(Contact.Fields.ed_SourceCampaignId, Contact.Fields.LastUsedInCampaign);
+            queryContact.ColumnSet = new ColumnSet(Contact.Fields.ed_SourceCampaignId, Contact.Fields.LastUsedInCampaign, Contact.Fields.st_startdatesourcecampaign);
             queryContact.Criteria.AddCondition(Contact.Fields.ContactId, ConditionOperator.Equal, contact.Id);
             queryContact.Criteria.AddCondition(Contact.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
             Contact currentContact = XrmRetrieveHelper.RetrieveFirst<Contact>(localContext, queryContact);
@@ -55,6 +55,11 @@ namespace Skanetrafiken.Crm.Entities
             if(singTick.st_TicketCreated != null && currentContact.LastUsedInCampaign != singTick.st_TicketCreated)
             {
                 updateContact.LastUsedInCampaign = singTick.st_TicketCreated;
+                needsUpdate = true;
+            }
+            if(singTick.st_TicketCreated != null && currentContact.st_startdatesourcecampaign != singTick.st_TicketCreated)
+            {
+                updateContact.st_startdatesourcecampaign = singTick.st_TicketCreated;
                 needsUpdate = true;
             }
 

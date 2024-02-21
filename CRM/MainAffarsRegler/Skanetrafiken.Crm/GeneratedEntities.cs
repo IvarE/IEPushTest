@@ -35071,7 +35071,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 				this.SetAttributeValue("st_ssn_2", value);
 			}
 		}
-		
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_startdatesourcecampaign")]
+		public System.Nullable<System.DateTime> st_startdatesourcecampaign
+		{
+			get
+			{
+				return this.GetAttributeValue<System.Nullable<System.DateTime>>("st_startdatesourcecampaign");
+			}
+			set
+			{
+				this.SetAttributeValue("st_startdatesourcecampaign", value);
+			}
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -37448,7 +37464,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string st_ret_nyinfl_sep = "st_ret_nyinfl_sep";
 			
 			public const string st_SSN_2 = "st_ssn_2";
-			
+
+			public const string st_startdatesourcecampaign = "st_startdatesourcecampaign";
+
 			public const string st_Tjanstenummer = "st_tjanstenummer";
 			
 			public const string st_TotReskassa = "st_totreskassa";
