@@ -10,6 +10,7 @@ using Renci.SshNet;
 using Skanetrafiken.Crm.Schema.Generated;
 using Microsoft.Crm.Sdk.Messages;
 using System.Collections.Generic;
+using Microsoft.Xrm.Sdk.Client;
 
 namespace Endeavor.Crm.DeltabatchService
 {
@@ -52,9 +53,10 @@ namespace Endeavor.Crm.DeltabatchService
             // Connect to the CRM web service using a connection string.
             CrmServiceClient conn = new CrmServiceClient(CrmConnection.GetCrmConnectionString(DeltabatchService.CredentialFilePath, DeltabatchService.Entropy));
             if (conn.OrganizationWebProxyClient != null)
-                conn.OrganizationWebProxyClient.InnerChannel.OperationTimeout = new TimeSpan(10, 0, 0);
+                conn.OrganizationWebProxyClient.InnerChannel.OperationTimeout = new TimeSpan(3, 0, 0);
             // Cast the proxy client to the IOrganizationService interface.
             IOrganizationService serviceProxy = conn.OrganizationWebProxyClient != null ? conn.OrganizationWebProxyClient : (IOrganizationService)conn.OrganizationServiceProxy;
+            ((OrganizationServiceProxy)serviceProxy).Timeout = new TimeSpan(3, 0, 0);
 
             Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
 

@@ -124,14 +124,14 @@ namespace Endeavor.Crm.DeltabatchService
         private void UpdateDeltabatchErrorLogAtTheEndWithError(Plugin.LocalPluginContext localContext, Exception e, DeltabatchErrorLogEntity _DBErrorLog, Annotation _noteLogUpdate, DateTime _startTime)
         {
             #region add log, error throw then no file found on the server or somethings is wrong when connect to SFTP server
-            if (_noteLogUpdate.Id != null) //has note log to update
+            if (_noteLogUpdate.Id != null && _noteLogUpdate.Id != Guid.Empty) //has note log to update
             {
                 _noteLogUpdate.NoteText += "\r\nError - Exception caught in ExecuteJob(): " + e.Message ;
                 XrmHelper.Update(localContext, _noteLogUpdate);
             }
             else //no note to update, because other throw error
             {
-                if (_DBErrorLog.Id != null)
+                if (_DBErrorLog.Id != null && _DBErrorLog.Id != Guid.Empty)
                 {
                     _noteLogUpdate.Subject = "Exception caught in ExecuteJob()";
                     _noteLogUpdate.ObjectId = _DBErrorLog.ToEntityReference();

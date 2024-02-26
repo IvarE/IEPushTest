@@ -179,14 +179,14 @@ namespace Endeavor.Crm.DeltabatchService
         private void UpdateDeltabatchErrorLogAtTheEndWithError(Plugin.LocalPluginContext localContext, Exception e, DeltabatchErrorLogEntity _DBErrorLog, Annotation _noteLogUpdate, DateTime _startTime)
         {
             #region add log, error throw then no file found on the server or somethings is wrong when connect to SFTP server
-            if (_noteLogUpdate.Id != null) //has note log to update
+            if (_noteLogUpdate.Id != null && _noteLogUpdate.Id != Guid.Empty) //has note log to update
             {
                 _noteLogUpdate.NoteText += "\r\nError - Exception caught in ExecuteJob(): " + e.Message + _retrieveFileErrorLog;
                 XrmHelper.Update(localContext, _noteLogUpdate);
             }
             else //no note to update, because RetrieveFile() throw error
             {
-                if (_DBErrorLog.Id != null)
+                if (_DBErrorLog.Id != null && _DBErrorLog.Id != Guid.Empty)
                 {
                     _noteLogUpdate.Subject = "Current file: " + (_currentOutputFileName == "" ? "x" : _currentOutputFileName) + (_numberOfFileFound == -10 ? " - No file found on the SFPT" : "");
                     _noteLogUpdate.ObjectId = _DBErrorLog.ToEntityReference();
@@ -196,7 +196,7 @@ namespace Endeavor.Crm.DeltabatchService
                 }
             }
 
-            if (_DBErrorLog.Id != null && _numberOfFileFound == -10) //no file found, end the job with completed
+            if (_DBErrorLog.Id != null && _DBErrorLog.Id != Guid.Empty && _numberOfFileFound == -10) //no file found, end the job with completed
             {
                 _DBErrorLog.statecode = ed_DeltabatchErrorLogState.Inactive;
                 _DBErrorLog.statuscode = new OptionSetValue(206290000); //Completed - No file found
