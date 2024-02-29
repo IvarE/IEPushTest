@@ -67,9 +67,10 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                     infotainment.setRequiredLevel("required");
                 }
             }
-            else
+            else {
+                Endeavor.Skanetrafiken.Account.setCorrectFormForAccountPortal(formContext);
                 Endeavor.Skanetrafiken.Account.showInfoAccountPortal(formContext);
-
+            }
             var seniorCustomer = formContext.getAttribute("ed_seniorcustomer");
             var schoolCustomer = formContext.getAttribute("ed_schoolcustomer");
             var reseller = formContext.getAttribute("ed_reseller");
@@ -324,29 +325,18 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
         // ORGANISATION (TOP LEVEL) - Show/hide Block button
         onBlockAccountShow: function (formContext) {
-            var currForm = formContext.ui.formSelector.getCurrentItem();
-            var currFormId = currForm.getId();
-
-            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70" || currFormId != "003f08c2-06d9-494b-926a-42020901c6b2")
+            var currFormId = formContext.ui.formSelector.getCurrentItem().getId();
+            /*Account (Skånetrafiken)/Företag (Skånetrafiken) "003f08c2-06d9-494b-926a-42020901c6b2"
+                Account (Portal)/"Företag" "c88de51d-55b5-42ff-80c7-1774646b3b70" */
+            if ( currFormId != "003f08c2-06d9-494b-926a-42020901c6b2")/*currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70" &&*/ //Show only Block organization for organization form
                 return false;
             // Only show button if TypeOfAccount = Företagskund (Portal)
-            var accountType = formContext.getAttribute("ed_typeofaccount");
-            if (accountType != null) {
-                //Get OptionSet Val
-                var optionSetValue = accountType.getValue();
-
-                // if Account Portal (Ny företagskund)
-                if (optionSetValue == null || optionSetValue == 899310001)
-                    return false;
-            }
-            else
-                return false;
-
+            var accountType = formContext.getAttribute("ed_typeofaccount") != null ? formContext.getAttribute("ed_typeofaccount").getValue() : -1;
+            if (accountType == -1 || (accountType == null || accountType == 899310001)) return false;
+             
             var parentAccount = formContext.getAttribute("parentaccountid").getValue();
             var lockedPortal = formContext.getAttribute("ed_islockedportal").getValue();
-            var showButton = false;
-
-            showButton = Endeavor.Skanetrafiken.Account.showBlockButton();
+            var showButton = Endeavor.Skanetrafiken.Account.showBlockButton();//Block Portal Account role
 
             // If Account = Organization (top level) and 
             // if ed_isLockedPortal = false
@@ -361,65 +351,41 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
         // ORGANISATION (TOP LEVEL) - Show/hide Unblock button
         onUnblockAccountShow: function (formContext) {
-            var currForm = formContext.ui.formSelector.getCurrentItem();
-            var currFormId = currForm.getId();
-
-            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70")
+            var currFormId = formContext.ui.formSelector.getCurrentItem().getId();
+            /*Account (Skånetrafiken)/Företag (Skånetrafiken) "003f08c2-06d9-494b-926a-42020901c6b2"
+                Account (Portal)/"Företag" "c88de51d-55b5-42ff-80c7-1774646b3b70" */
+            if (currFormId != "003f08c2-06d9-494b-926a-42020901c6b2")/*currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70" && */ //Show only Block organization for organization form
                 return false;
             // Only show button if TypeOfAccount = Företagskund (Portal)
-            var accountType = formContext.getAttribute("ed_typeofaccount");
-            if (accountType != null) {
-                //Get OptionSet Val
-                var optionSetValue = accountType.getValue();
-
-                // if Account Portal (Ny företagskund)
-                if (optionSetValue == null || optionSetValue == 899310001)
-                    return false;
-            } else
-                return false;
-
+            var accountType = formContext.getAttribute("ed_typeofaccount") != null ? formContext.getAttribute("ed_typeofaccount").getValue() : -1;
+            if (accountType == -1 || (accountType == null || accountType == 899310001)) return false;
+             
             var parentAccount = formContext.getAttribute("parentaccountid").getValue();
             var lockedPortal = formContext.getAttribute("ed_islockedportal").getValue();
-            var showButton = false;
-
-            showButton = Endeavor.Skanetrafiken.Account.showBlockButton();
+            var showButton = Endeavor.Skanetrafiken.Account.showBlockButton(); //Block Portal Account role
 
             // If Account = Organization (top level) and 
             // if ed_isLockedPortal = false
             // => Show button "Block Organization"
-            if (parentAccount == null && lockedPortal == true && showButton != false)
-                return true;
+            if (parentAccount == null && lockedPortal == true && showButton != false) return true;
             // If Account = CostSite (bottom level) and
             // if ed_isLockedPortal = true
-            else
-                return false;
+            else return false;
         },
 
         // COST SITE (BOTTOM LEVEL) - Show/hide Block button
         onBlockCostSiteShow: function (formContext) {
-            var currForm = formContext.ui.formSelector.getCurrentItem();
-            var currFormId = currForm.getId();
+            var currFormId = formContext.ui.formSelector.getCurrentItem().getId();
 
-            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70")
+            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70") //Account (Portal)/"Företag"
                 return false;
             // Only show button if TypeOfAccount = Företagskund (Portal)
-            var accountType = formContext.getAttribute("ed_typeofaccount");
-            if (accountType != null) {
-                //Get OptionSet Val
-                var optionSetValue = accountType.getValue();
-
-                // if Account Portal (Ny företagskund)
-                if (optionSetValue == null || optionSetValue == 899310001)
-                    return false;
-            }
-            else
-                return false;
-
+            var accountType = formContext.getAttribute("ed_typeofaccount") != null ? formContext.getAttribute("ed_typeofaccount").getValue() : -1;
+            if (accountType == -1 || (accountType == null || accountType == 899310001)) return false;
+             
             var parentAccount = formContext.getAttribute("parentaccountid").getValue();
             var lockedPortal = formContext.getAttribute("ed_islockedportal").getValue();
-            var showButton = false;
-
-            showButton = Endeavor.Skanetrafiken.Account.showBlockButton(); 
+            var showButton = Endeavor.Skanetrafiken.Account.showBlockButton(); 
 
             // If Account = Cost Site (bottom level) and 
             // if ed_isLockedPortal = false
@@ -434,30 +400,18 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
 
         // COST SITE (BOTTOM LEVEL) - Show/hide Unblock button
         onUnblockCostSiteShow: function (formContext) {
-            var currForm = formContext.ui.formSelector.getCurrentItem();
-            var currFormId = currForm.getId();
+            var currFormId = formContext.ui.formSelector.getCurrentItem().getId();
 
-            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70")
+            if (currFormId != "c88de51d-55b5-42ff-80c7-1774646b3b70") //Account (Portal)/"Företag"
                 return false;
 
-            // Only show button if TypeOfAccount = Företagskund (Portal)
-            var accountType = formContext.getAttribute("ed_typeofaccount");
-            if (accountType != null) {
-                //Get OptionSet Val
-                var optionSetValue = accountType.getValue();
-
-                // if Account Portal (Ny företagskund)
-                if (optionSetValue == null || optionSetValue == 899310001)
-                    return false;
-            }
-            else
-                return false;
-
+            // Only show button if TypeOfAccount = Företagskund (Portal)            
+            var accountType = formContext.getAttribute("ed_typeofaccount") != null ? formContext.getAttribute("ed_typeofaccount").getValue() : -1;
+            if (accountType == -1 || (accountType == null || accountType == 899310001)) return false;
+            
             var parentAccount = formContext.getAttribute("parentaccountid").getValue();
             var lockedPortal = formContext.getAttribute("ed_islockedportal").getValue();
-            var showButton = false;
-
-            showButton = Endeavor.Skanetrafiken.Account.showBlockButton();
+            var showButton = Endeavor.Skanetrafiken.Account.showBlockButton();
 
             // If Account = Cost Site (bottom level) and 
             // if ed_isLockedPortal = false
@@ -470,6 +424,24 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                 return false;
         },
 
+        setCorrectFormForAccountPortal: function (formContext) {
+            // Only for TypeOfAccount = Företagskund (Portal)
+           
+            var accountType = formContext.getAttribute("ed_typeofaccount") != null ? formContext.getAttribute("ed_typeofaccount").getValue() : null;
+            if (accountType == 899310000) {
+                var parentAccount = formContext.getAttribute("parentaccountid") ? formContext.getAttribute("parentaccountid").getValue(): -1;
+                var setFormId = "003f08c2-06d9-494b-926a-42020901c6b2"; //Account (Skånetrafiken)
+                if (parentAccount != -1 && parentAccount != null) //account has parent is Företagskonto/Cost site and should have this form
+                    setFormId = "c88de51d-55b5-42ff-80c7-1774646b3b70"; //Account(Portal) / "Företag"
+                     
+                var currFormId = formContext.ui.formSelector.getCurrentItem().getId();
+                var forms = formContext.ui.formSelector.items.get();
+                for (var f = 0; f < forms.length; f++) {
+                    if (currFormId != setFormId && forms[f].getId() == setFormId)
+                        formContext.ui.formSelector.items.get(f).navigate();  
+                }
+            }
+        },
         //showOvrigInformation: function (formContext) {
 
         //    var infotaimentCustomer = formContext.getAttribute("ed_infotainmentcustomer");
@@ -502,35 +474,34 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
         //},
 
         showInfoAccountPortal: function (formContext) {
-
-            var parentAccount = formContext.getAttribute("parentaccountid").getValue();
+            var xMsg = "företagskonto"; //for cost sites
+            var parentAccount = formContext.getAttribute("parentaccountid") ? formContext.getAttribute("parentaccountid").getValue():null;
             if (parentAccount === null) {
-                if (formContext.ui.tabs.get("Cost Sites") !== null && formContext.ui.tabs.get("Cost Sites") !== 'undefined')
+                xMsg = "företag"; //Organisation = no parent
+                if (formContext.ui.tabs.get("Cost Sites") !== null)
                     formContext.ui.tabs.get("Cost Sites").setVisible(true);
 
-                if (formContext.ui.tabs.get("Sales History") !== null && formContext.ui.tabs.get("Sales History") !== 'undefined')
+                if (formContext.ui.tabs.get("Sales History") !== null)
                     formContext.ui.tabs.get("Sales History").setVisible(false);
             }
             else {
-                if (formContext.ui.tabs.get("Cost Sites") !== null && formContext.ui.tabs.get("Cost Sites") !== 'undefined')
+                if (formContext.ui.tabs.get("Cost Sites") !== null)
                     formContext.ui.tabs.get("Cost Sites").setVisible(false);
 
-                if (formContext.ui.tabs.get("Sales History") !== null && formContext.ui.tabs.get("Sales History") !== 'undefined')
+                if (formContext.ui.tabs.get("Sales History") !== null)
                     formContext.ui.tabs.get("Sales History").setVisible(true);
+            } 
+
+            if (formContext.getControl("ed_islockedportal")) formContext.getControl("ed_islockedportal").setDisabled(true);
+
+            var isLocked = formContext.getAttribute("ed_islockedportal") ? formContext.getAttribute("ed_islockedportal").getValue() : false;
+            if (isLocked == true) {
+                formContext.ui.setFormNotification("Detta " + xMsg + " är låst från företagssidan", "WARNING", "2");
             }
 
-            var isLocked = formContext.getAttribute("ed_islockedportal");
-            if (isLocked != null) {
-                var isLockedBool = isLocked.getValue();
-                if (isLockedBool == true)
-                    formContext.ui.setFormNotification("Detta företag är låst från företagssidan", "WARNING", "2");
-            }
-
-            var AllowCreate = formContext.getAttribute("ed_allowcreate");
-            if (AllowCreate != null) {
-                var allowCreateBool = AllowCreate.getValue();
-                if (allowCreateBool == false)
-                    formContext.ui.setFormNotification("OBS - Detta företag kan inte skapa upp nya administratörer via företagssidan", "INFO", "1");
+            var allowCreate = formContext.getAttribute("ed_allowcreate") ? formContext.getAttribute("ed_allowcreate").getValue() : null;
+            if (allowCreate != null && allowCreate == false) {
+                formContext.ui.setFormNotification("OBS - Detta företag kan inte skapa upp nya administratörer via företagssidan", "INFO", "1");
             }
         },
 
@@ -545,9 +516,9 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             else if (parentAccount == null && blocked === true)
                 msgText = "Är du säker på att du vill avblockera hela organisationen och ge åtkomst till företagsportalen?";
             else if (parentAccount != null && blocked === false)
-                msgText = "Är du säker på att du vill spärra detta kostnadsställe från åtkomst till företagsportalen?";
+                msgText = "Är du säker på att du vill spärra detta företagskonto från åtkomst till företagsportalen?";
             else
-                msgText = "Är du säker på att du vill avblockera detta kostnadsställe och ge åtkomst till företagsportalen?";
+                msgText = "Är du säker på att du vill avblockera detta företagskonto och ge åtkomst till företagsportalen?";
 
             Endeavor.formscriptfunctions.ConfirmCustomDialog(msgText,
                 function () {
@@ -669,21 +640,21 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                                             if (blocked) {
                                                 if (parsedMessage != "") {
                                                     //printMessageAvblockera = "Kunde inte avblockera företag. Var god försök igen senare. (Fel => " + parsedMessage + ").";
-                                                    printMessageAvblockera = "Avblockering av kostnadsställe(n) misslyckades " + account.accountnumber + " (Fel => " + parsedMessage + ").";
+                                                    printMessageAvblockera = "Avblockering av företagskonto(n) misslyckades " + account.accountnumber + " (Fel => " + parsedMessage + ").";
                                                     Endeavor.formscriptfunctions.AlertCustomDialog(printMessageAvblockera);
                                                 }
                                                 else {
-                                                    Endeavor.formscriptfunctions.AlertCustomDialog("Avblockering av kostnadsställe(n) misslyckades " + account.accountnumber);
+                                                    Endeavor.formscriptfunctions.AlertCustomDialog("Avblockering av företagskonto(n) misslyckades " + account.accountnumber);
                                                 }
                                             }
                                             else {
                                                 if (parsedMessage != "") {
                                                     //printMessageSparra = "Kunde inte spärra företag. Var god försök igen senare. (Fel => " + parsedMessage + ").";
-                                                    printMessageSparra = "Spärr av kostnadsställe(n) misslyckades " + account.accountnumber + " (Fel => " + parsedMessage + ").";
+                                                    printMessageSparra = "Spärr av företagskonto(n) misslyckades " + account.accountnumber + " (Fel => " + parsedMessage + ").";
                                                     Endeavor.formscriptfunctions.AlertCustomDialog(printMessageSparra);
                                                 }
                                                 else {
-                                                    Endeavor.formscriptfunctions.AlertCustomDialog("Spärr av kostnadsställe(n) misslyckades " + account.accountnumber);
+                                                    Endeavor.formscriptfunctions.AlertCustomDialog("Spärr av företagskonto(n) misslyckades " + account.accountnumber);
                                                 }
                                             }
                                         });
@@ -748,7 +719,7 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
             try {
                 var formContext = executionContext.getFormContext();
                 var formType = formContext.ui.getFormType();
-
+                var currFormId = formContext.ui.formSelector.getCurrentItem().getId();
                 switch (formType) {
                     case FORM_TYPE_CREATE:
 
@@ -756,6 +727,13 @@ if (typeof (Endeavor.Skanetrafiken.Account) == "undefined") {
                     case FORM_TYPE_UPDATE:
                         Endeavor.Skanetrafiken.Account.checkIfUserHasSecRole(formContext);
                         Endeavor.Skanetrafiken.Account.timerfunction_eHandel(formContext);
+
+                        Endeavor.Skanetrafiken.Account.setCorrectFormForAccountPortal(formContext);
+                        if (currFormId == "003f08c2-06d9-494b-926a-42020901c6b2") //Account (Skånetrafiken)/Företag (Skånetrafiken)
+                        {
+                            Endeavor.Skanetrafiken.Account.showInfoAccountPortal(formContext);
+                        }
+
                         break;
                     case FORM_TYPE_READONLY:
                     case FORM_TYPE_DISABLED:
