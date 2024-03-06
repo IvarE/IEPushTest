@@ -729,6 +729,8 @@ namespace Skanetrafiken.Crm.ValueCodes
             getCardProperties.Amount = (decimal)response["Amount"];
             getCardProperties.ClosedReason = (string)response["ClosedReason"];
             getCardProperties.IsReserved = (bool)response["IsReserved"];
+            getCardProperties.IsExpired = (bool)response["IsExpired"];
+            getCardProperties.LastTransactionDate = (DateTime)response["LastTransactionDate"];
 
             return getCardProperties;
         }
@@ -1504,6 +1506,12 @@ namespace Skanetrafiken.Crm.ValueCodes
 
             [DataMember(Name = "isReserved")]
             public bool IsReserved { get; set; }
+
+            [DataMember(Name = "isExpired")]
+            public bool IsExpired { get; set; }
+
+            [DataMember(Name = "lastTransactionDate")]
+            public DateTime LastTransactionDate { get; set; }
         }
 
         /// <summary>

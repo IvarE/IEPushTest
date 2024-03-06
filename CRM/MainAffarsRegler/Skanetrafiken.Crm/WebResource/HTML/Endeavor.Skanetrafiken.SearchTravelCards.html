@@ -62,6 +62,8 @@
                                 var amount = result.Amount;
                                 var closedReason = result.ClosedReason;
                                 var isReserved = result.IsReserved;
+                                var isExpired = result.IsExpired;
+                                if (typeof (isExpired) == 'undefined' || isExpired == null) isExpired = false;
 
                                 if (isClosed) {
                                     document.getElementById("isBlockedYes").style.display = "block";
@@ -72,12 +74,19 @@
                                     document.getElementById("isBlockedNo").style.display = "block";
                                     activateCloseButton();
                                 }
-
+                                if (isExpired) {
+                                    document.getElementById("isExpiredYes").style.display = "block";
+                                    document.getElementById("isExpiredNo").style.display = "none";
+                                   
+                                } else {
+                                    document.getElementById("isExpiredYes").style.display = "none";
+                                    document.getElementById("isExpiredNo").style.display = "block";
+                                }
                                 //document.getElementById("arsparrat").checked = isClosed;
                                 document.getElementById("belopp").innerText = amount + " kr";
                                 document.getElementById("sparradav").innerText = closedReason;
                                 document.getElementById("reserveread").checked = isReserved;
-
+                                document.getElementById("isexpiredread").checked = isExpired; 
                                 //if (amount > 0 || isClosed)
                                 //    activateCloseButton();
                             },
@@ -121,6 +130,8 @@
                                 var amount = result.Amount;
                                 var closedReason = result.ClosedReason;
                                 var isReserved = result.IsReserved;
+                                var isExpired = result.IsExpired;
+                                if (typeof (isExpired) == 'undefined' || isExpired == null) isExpired = false;
 
                                 if (placeOrderResponse.indexOf("200") > -1)
                                     document.getElementById("messageSpace").innerText = "Kortet är spärrat";
@@ -135,11 +146,19 @@
                                     document.getElementById("isBlockedYes").style.display = "none";
                                     document.getElementById("isBlockedNo").style.display = "block";
                                 }
+                                if (isExpired) {
+                                    document.getElementById("isExpiredYes").style.display = "block";
+                                    document.getElementById("isExpiredNo").style.display = "none";
 
+                                } else {
+                                    document.getElementById("isExpiredYes").style.display = "none";
+                                    document.getElementById("isExpiredNo").style.display = "block";
+                                }
                                 //document.getElementById("arsparrat").checked = isClosed;
                                 document.getElementById("belopp").innerText = amount;
                                 document.getElementById("sparradav").innerText = closedReason;
                                 document.getElementById("reserveread").checked = isReserved;
+                                document.getElementById("isexpiredread").checked = isExpired; 
 
                                 Endeavor.formscriptfunctions.callGlobalAction("ed_CaptureOrder", inputParameters,
                                     function (result) {
@@ -161,6 +180,14 @@
                                             document.getElementById("isBlockedYes").style.display = "none";
                                             document.getElementById("isBlockedNo").style.display = "block";
                                         }
+                                        if (isExpired) {
+                                            document.getElementById("isExpiredYes").style.display = "block";
+                                            document.getElementById("isExpiredNo").style.display = "none";
+
+                                        } else {
+                                            document.getElementById("isExpiredYes").style.display = "none";
+                                            document.getElementById("isExpiredNo").style.display = "block";
+                                        }
                                     },
                                     function (error) {
                                         var errorMessage = "Något gick fel. Vänligen försök igen.";
@@ -172,6 +199,7 @@
                                 if (placeOrderResponse.indexOf("200") > -1) {
                                     var fetchXml = "?fetchXml=<fetch>" +
                                         "<entity name='cgi_travelcard'>" +
+                                        "<attribute name='cgi_travelcardid' />" +
                                         "<filter type='and'>" +
                                         "<condition attribute='cgi_travelcardnumber' operator='eq' value='" + cardId + "'/>" +
                                         "<condition attribute='cgi_blocked' operator='eq' value='0'/>" +
@@ -180,16 +208,17 @@
                                         "</fetch>";
 
 
-                                    Xrm.WebApi.retrieveMultipleRecords("cgi_travelcard", fetchXml).then(
+                                    parent.Xrm.WebApi.retrieveMultipleRecords("cgi_travelcard", fetchXml).then(
                                         function (result) {
 
                                             var data =
                                             {
-                                                "cgi_blocked": true
+                                                "cgi_blocked": true,
+                                                "st_isexpired": isExpired
                                             };
 
                                             if (result.entities[0].cgi_travelcardid != null) {
-                                                Xrm.WebApi.updateRecord("cgi_travelcard", result.entities[0].cgi_travelcardid, data).then(
+                                                parent.Xrm.WebApi.updateRecord("cgi_travelcard", result.entities[0].cgi_travelcardid, data).then(
                                                     function success(result) {
                                                         console.log("Travelcard updated to blocked");
 
@@ -245,14 +274,18 @@
             <p id="isBlockedYes" style="display: none">Ja</p>
             <p id="isBlockedNo">Nej</p>
         </div>
+        <div class="row row-position content-bucket" style="--row: 3; --col: 1">Har gått ut:</div>
+        <div class="row row-position content-bucket" style="--row: 3; --col: 2">
+            <p id="isExpiredYes" style="display: none">Ja</p>
+            <p id="isExpiredNo">Nej</p>
+        </div>
+        <div class="row row-position content-bucket" style="--row: 4; --col: 1">Spärrad av:</div>
+        <div class="row row-position content-bucket" style="--row: 4; --col: 2" id="sparradav"></div>
 
-        <div class="row row-position content-bucket" style="--row: 3; --col: 1">Spärrad av:</div>
-        <div class="row row-position content-bucket" style="--row: 3; --col: 2" id="sparradav"></div>
+        <div class="row row-position content-bucket no-border" style="--row: 5; --col: 1; display: none;">Reserverad:</div>
+        <div class="row row-position content-bucket no-border" style="--row: 5; --col: 2"><input type="checkbox" id="reserveread" style="display: none;"><input type="checkbox" id="isexpiredread" style="display: none;"></div>
 
-        <div class="row row-position content-bucket no-border" style="--row: 4; --col: 1; display: none;">Reserverad:</div>
-        <div class="row row-position content-bucket no-border" style="--row: 4; --col: 2"><input type="checkbox" id="reserveread" style="display: none;"></div>
-
-        <div class="row row-position no-border" style="--row: 5; --col: 1"><button onclick="blockTravelCardWithConfirmDialog()" id="block" type="button" disabled="">Spärra Kort</button></div>
+        <div class="row row-position no-border" style="--row: 6; --col: 1"><button onclick="blockTravelCardWithConfirmDialog()" id="block" type="button" disabled="">Spärra Kort</button></div>
     </div>
 
     <script>

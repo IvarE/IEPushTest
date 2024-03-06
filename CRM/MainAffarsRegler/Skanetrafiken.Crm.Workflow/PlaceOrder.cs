@@ -37,6 +37,12 @@ namespace Skanetrafiken.Crm
         [Output("IsReserved")]
         public OutArgument<bool> IsReserved { get; set; }
 
+        [Output("IsExpired")]
+        public OutArgument<bool> IsExpired { get; set; }
+
+        [Output("LastTransactionDate")]
+        public OutArgument<DateTime> LastTransactionDate { get; set; }
+
         private Plugin.LocalPluginContext GetLocalContext(CodeActivityContext activityContext)
         {
             IWorkflowContext workflowContext = activityContext.GetExtension<IWorkflowContext>();
@@ -72,6 +78,8 @@ namespace Skanetrafiken.Crm
                 Amount.Set(activityContext, 0);
                 ClosedReason.Set(activityContext, "");
                 IsReserved.Set(activityContext, false);
+                IsExpired.Set(activityContext, false);
+                LastTransactionDate.Set(activityContext, DateTime.MinValue);
 
                 if (getCardProperties != null)
                 {
@@ -102,6 +110,14 @@ namespace Skanetrafiken.Crm
                         if (getCardProperties.IsReserved != null)
                         {
                             IsReserved.Set(activityContext, getCardProperties.IsReserved);
+                        }
+                        if (getCardProperties.IsExpired != null)
+                        {
+                            IsExpired.Set(activityContext, getCardProperties.IsExpired);
+                        }
+                        if (getCardProperties.LastTransactionDate != null)
+                        {
+                            LastTransactionDate.Set(activityContext, getCardProperties.LastTransactionDate);
                         }
                     }
                 }
