@@ -231,7 +231,6 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
             var formContext = executionContext.getFormContext();
 
-            debugger;
             var stateCode = formContext.getAttribute("statecode");
             if (stateCode == null || (stateCode != null && stateCode.getValue() == 0)) {
 
@@ -516,7 +515,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
             }
             catch (ex) {
-                alert("Fel i Endeavor.Skanetrafiken.Contact.handleAddressCompositeFields\n\n" + ex.message);
+                Xrm.Navigation.openAlertDialog({ text: "Fel i Endeavor.Skanetrafiken.Contact.handleAddressCompositeFields\n\n" + ex.message, confirmButtonLabel: "OK" }
+                    , { height: 200, width: 500 });
             }
         },
 
@@ -551,7 +551,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
             }
             catch (ex) {
-                alert("Fel i Endeavor.Skanetrafiken.Contact.lockEmailIfMKLidExistAndNotAdminForm\n\n" + ex.message);
+                Xrm.Navigation.openAlertDialog({ text: "Fel i Endeavor.Skanetrafiken.Contact.lockEmailIfMKLidExistAndNotAdminForm\n\n" + ex.message, confirmButtonLabel: "OK" }
+                    , { height: 200, width: 500 });
             }
 
         },
@@ -685,10 +686,13 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
 
                     if (results == null || results.entities.length == 0) {
                         // Hide Company Engagement tab
-                        formContext.ui.tabs.get("Portal roles").setVisible(false);
+                        if (formContext.ui.tabs.get("Portal roles"))
+                            formContext.ui.tabs.get("Portal roles").setVisible(false);
+                        if (formContext.ui.controls.get("ed_islockedportal"))
                         formContext.ui.controls.get("ed_islockedportal").setVisible(false);
                     } else {
                         // Show Company Engagement tab
+                        if (formContext.ui.tabs.get("Portal roles"))
                         formContext.ui.tabs.get("Portal roles").setVisible(true);
                     }
                 },
@@ -710,7 +714,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 return false;
             }
 
-            var lockedPortal = formContext.getAttribute("ed_islockedportal").getValue();
+            var lockedPortal = formContext.getAttribute("ed_islockedportal") ? formContext.getAttribute("ed_islockedportal").getValue() : false;
             var showButton = false;
 
             showButton = Endeavor.Skanetrafiken.Contact.showBlockButton(formContext);
@@ -733,7 +737,7 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 return false;
             }
 
-            var lockedPortal = formContext.getAttribute("ed_islockedportal").getValue();
+            var lockedPortal = lockedPortal = formContext.getAttribute("ed_islockedportal") ? formContext.getAttribute("ed_islockedportal").getValue() : false;
             var showButton = false;
 
             showButton = Endeavor.Skanetrafiken.Contact.showBlockButton(formContext);
@@ -839,8 +843,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             var formContext = executionContext.getFormContext();
             var contactNumberControlTag = "cgi_socialsecuritynumber";
             var socialSecurityNumberTag = "ed_socialsecuritynumberformat";
-            var contactNumber = formContext.getAttribute(contactNumberControlTag);
-            var ssNumber = formContext.getAttribute(socialSecurityNumberTag);
+            var contactNumber = formContext.getAttribute("cgi_socialsecuritynumber");
+            var ssNumber = formContext.getAttribute("ed_socialsecuritynumberformat");
             Endeavor.Skanetrafiken.Contact.onReservIdandSSNChange(executionContext);
 
             if (ssNumber != null) {
@@ -855,6 +859,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     if (check !== hifen)
                         ssNumber.setValue([vssNumber.slice(0, position), hifen, vssNumber.slice(position)].join(''));
                 }
+
+                if (ssNumber.getValue() == null && formContext.getAttribute("birthdate"))
+                    formContext.getAttribute("birthdate").setValue(null);
             }
 
             if (!(!contactNumber.getValue() || 0 === contactNumber.getValue().length)) {
@@ -991,8 +998,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 if (sweSocSec != null) {
                     sweSocSec.setValue(true);
                     sweSocSec.setSubmitMode("always");
-                } else {
-                    alert("Fel i formulär, dolt fält saknas. Vänligen kontakta Administratör");
+                } else { 
+                    Xrm.Navigation.openAlertDialog({ text: "Fel i formulär, dolt fält saknas. Vänligen kontakta Administratör", confirmButtonLabel: "OK" }
+                        , { height: 200, width: 460 });
                 }
                 return true;
             } else if (Endeavor.Skanetrafiken.Contact.checkNonSwedishSocSecNumber(formContext, nr)) {
@@ -1000,8 +1008,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 if (sweSocSec != null) {
                     sweSocSec.setValue(false);
                     sweSocSec.setSubmitMode("always");
-                } else {
-                    alert("Fel i formulär, dolt fält saknas. Vänligen kontakta Administratör");
+                } else { 
+                    Xrm.Navigation.openAlertDialog({ text: "Fel i formulär, dolt fält saknas. Vänligen kontakta Administratör", confirmButtonLabel: "OK" }
+                        , { height: 200, width: 460 });
                 }
                 return true;
             }
@@ -1191,7 +1200,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
             try {
                 formContext.getControl("firstname").setFocus();
             } catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Contact.setFocusQuickCreateContactFirstName\n\n" + e.message);
+               
+                Xrm.Navigation.openAlertDialog({ text: "Fel i Endeavor.Skanetrafiken.Contact.setFocusQuickCreateContactFirstName\n\n" + e.message, confirmButtonLabel: "OK" }
+                    , { height: 200, width: 500 });
             }
         },
 
@@ -1270,18 +1281,23 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     case FORM_TYPE_QUICKCREATE:
                     case FORM_TYPE_BULKEDIT:
                         break;
-                    default:
-                        alert("Form type error!");
+                    default: 
+                        Xrm.Navigation.openAlertDialog({ text: "Form type error!", confirmButtonLabel: "OK" }
+                            , { height: 200, width: 460 });
                         break;
                 }
 
                 //Handle Composite fields
                 Endeavor.Skanetrafiken.Contact.handleAddressCompositeFields(formContext);
-                if (formContext.ui.getFormType() != FORM_TYPE_CREATE)
+                if (formContext.ui.getFormType() != FORM_TYPE_CREATE) {
                     Endeavor.formscriptfunctions.CustomizeTheNotesHeight(formContext);
+                    Endeavor.formscriptfunctions.CheckServiceresorContactForm(formContext);
+
+                }
             }
-            catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Contact.onFormLoad\n\n" + e.message);
+            catch (e) { 
+                Xrm.Navigation.openAlertDialog({ text: "Fel i Endeavor.Skanetrafiken.Contact.onFormLoad\n\n" + e.message, confirmButtonLabel: "OK" }
+                    , { height: 200, width: 500 });
             }
         },
 
@@ -1312,15 +1328,17 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     Endeavor.Skanetrafiken.Contact.checkIfUserHasRole_callback(results, formContext);
                 }
             }
-            catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Contact.checkIfUserHasRole\n\n" + e.message);
+            catch (e) { 
+                Xrm.Navigation.openAlertDialog({ text: "Fel i Endeavor.Skanetrafiken.Contact.checkIfUserHasRole\n\n" + e.message, confirmButtonLabel: "OK" }
+                    , { height: 200, width: 500 });
             }
         },
 
         checkIfUserHasRole_callback: function (result, formContext) {
             try {
-                if (result == null) {
-                    alert("Inga säkerhetsroller definierade!");
+                if (result == null) { 
+                    Xrm.Navigation.openAlertDialog({ text: "Inga säkerhetsroller definierade!", confirmButtonLabel: "OK" }
+                        , { height: 200, width: 460 });
                 }
                 else {
                     var _handlingOfficer = "Skånetrafiken Handläggare";
@@ -1351,19 +1369,18 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                         //else {
                         //    Endeavor.Skanetrafiken.Contact.lockEmailIfMKLidExist(formContext);
                         //}
-
-
-
-
+                         
 
                     }
-                    catch (ex) {
-                        alert("Fel i Endeavor.Skanetrafiken.Contact.checkIfUserHasRole_callback\n\n" + ex.message);
+                    catch (ex) { 
+                        Xrm.Navigation.openAlertDialog({ text: "Fel i Endeavor.Skanetrafiken.Contact.checkIfUserHasRole_callback\n\n" + ex.message, confirmButtonLabel: "OK" }
+                            , { height: 200, width: 500 });
                     }
                 }
             }
-            catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Contact.checkIfUserHasRole_callback\n\n" + e.message);
+            catch (e) { 
+                Xrm.Navigation.openAlertDialog({ text: "Fel i Endeavor.Skanetrafiken.Contact.checkIfUserHasRole_callback\n\n" + e.message, confirmButtonLabel: "OK" }
+                    , { height: 200, width: 500 });
             }
         },
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1390,14 +1407,16 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                     else {
                         var _sectrue = Endeavor.Skanetrafiken.Contact.validatePersonalNumber(_soc);
                         if (_sectrue == false) {
-                            alert("Personnummer är inte giltigt. Kunden kan inte sparas.");
+                            Xrm.Navigation.openAlertDialog({ text: "Personnummer är inte giltigt. Kunden kan inte sparas.", confirmButtonLabel: "OK" }
+                                , { height: 200, width: 480 });
                             _return_save = false;
                         }
                         else {
                             var _soc_trim = _soc.replace('-', '');
                             var _soc_trim_length = _soc_trim.length;
                             if (_soc_trim_length != 12) {
-                                alert("Personnummer har fel längd. Kunden kan inte sparas");
+                                Xrm.Navigation.openAlertDialog({ text: "Personnummer är inte giltigt. Kunden kan inte sparas.", confirmButtonLabel: "OK" }
+                                    , { height: 200, width: 480 });
                                 _return_save = false;
                             }
                             else
@@ -1479,8 +1498,9 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 //    setTimeout(function () { Endeavor.Skanetrafiken.Contact.timerfunction_eHandel(formContext); }, TIMEOUT_COUNTER);
                 //}
             }
-            catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Contact.timerfunction_eHandel\n\n" + e.message);
+            catch (e) { 
+                Xrm.Navigation.openAlertDialog({ text: "Fel i Endeavor.Skanetrafiken.Contact.timerfunction_eHandel\n\n" + e.message, confirmButtonLabel: "OK" }
+                    , { height: 200, width: 500 });
             }
         },
 
@@ -1509,7 +1529,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Contact.format_phonenumber\n\n" + e.message);
+                Xrm.Navigation.openAlertDialog({ text: "Fel i Endeavor.Skanetrafiken.Contact.format_phonenumber\n\n" + e.message, confirmButtonLabel: "OK" }
+                    , { height: 200, width: 500 });
             }
         },
 
@@ -1533,7 +1554,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Contact.format_ZIPCodeNumber\n\n" + e.message);
+                Xrm.Navigation.openAlertDialog({ text: "Fel i Endeavor.Skanetrafiken.Contact.format_ZIPCodeNumber\n\n" + e.message, confirmButtonLabel: "OK" }
+                    , { height: 200, width: 500 });
             }
         },
 
@@ -1554,7 +1576,8 @@ if (typeof (Endeavor.Skanetrafiken.Contact) == "undefined") {
                 }
             }
             catch (e) {
-                alert("Fel i Endeavor.Skanetrafiken.Contact.format_ZIPCodeNumber\n\n" + e.message);
+                Xrm.Navigation.openAlertDialog({ text: "Fel i Endeavor.Skanetrafiken.Contact.format_ZIPCodeNumber\n\n" + e.message, confirmButtonLabel: "OK" }
+                    , { height: 200, width: 500 });
             }
         },
 

@@ -784,5 +784,56 @@ Endeavor.formscriptfunctions = {
                 console.log(error.message);
                 Endeavor.formscriptfunctions.AlertCustomDialog(error.message);
             } );
+    }, 
+
+    CheckServiceresorContactForm: function(formContext) {
+        this.CheckIfServiceresorContact(formContext, (isServiceResor) => {
+            if (isServiceResor) {
+                var formServiceresorId = "91f35f59-5099-40c9-90ef-1a7de4cd8397"; //Serviceresor contact main form
+                
+                if (formServiceresorId != formContext.ui.formSelector.getCurrentItem().getId()) {
+                    var foundForms = false;
+                    var forms = formContext.ui.formSelector.items.get();
+                    for (var f = 0; f < forms.length; f++) {
+                        if (forms[f].getId() == formServiceresorId) {
+                            foundForms = true;
+                            formContext.ui.formSelector.items.get(f).navigate();
+                        }
+                    }
+                    if (!foundForms) {
+                        Xrm.Navigation.openAlertDialog({ text: "Du saknas rättigheter att visa Serviceresor kunden.", confirmButtonLabel: "OK" }
+                            , { height: 200, width: 460 }).then(
+                            function success(result) {
+
+                                formContext.ui.close();
+                            },
+                            function (error) {
+                                formContext.ui.close();
+                            }
+                        );
+                        
+                    }
+                }
+            }
+        });
+    }, 
+    CheckIfServiceresorContact: function (formContext, callBackFnc) {
+
+        if (formContext.getAttribute("ed_serviceresor") != null) {
+            var isService = formContext.getAttribute("ed_serviceresor").getValue() == null ? false : formContext.getAttribute("ed_serviceresor").getValue();
+            callBackFnc(isService);
+        }
+        else {
+            Xrm.WebApi.retrieveRecord("contact", formContext.data.entity.getId(), "?$select=ed_serviceresor").then(
+                function success(result) {
+                    var isService = result.ed_serviceresor == null ? false : result.ed_serviceresor;
+                    callBackFnc(isService);
+                },
+                function (error) {
+                    console.log(error.message);
+                    callBackFnc(false);
+                }
+            );
+        }
     }
 }

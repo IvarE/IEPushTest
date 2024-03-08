@@ -952,6 +952,9 @@ namespace Skanetrafiken.Crm.Entities
                 var socialSecurityNumberFormat = cgi_socialsecuritynumber;
                 var socialSecurityNumberWithHifen = socialSecurityNumberFormat.Insert(8, "-");
 
+                var currentSSNF = !string.IsNullOrEmpty(ed_SocialSecurityNumberFormat) ? ed_SocialSecurityNumberFormat : "";
+
+                if(currentSSNF != socialSecurityNumberWithHifen)
                 this.ed_SocialSecurityNumberFormat = socialSecurityNumberWithHifen;
             }
 
@@ -1105,15 +1108,38 @@ namespace Skanetrafiken.Crm.Entities
             preImage.Trace(localContext.TracingService);
 
             SyncSwedishSocialSecurityNumber(combined.ed_HasSwedishSocialSecurityNumber);
-
+             
             if (!string.IsNullOrEmpty(preImage.cgi_socialsecuritynumber) && preImage.cgi_socialsecuritynumber.Length == 12)
-            {
+            {//If SSN exist, get it first from pre
                 var socialSecurityNumberFormat = preImage.cgi_socialsecuritynumber;
                 var socialSecurityNumberWithHifen = socialSecurityNumberFormat.Insert(8, "-");
+                //IF SSN has changed
+                if (Contains(ContactEntity.Fields.cgi_socialsecuritynumber) && !string.IsNullOrEmpty(cgi_socialsecuritynumber))
+                {   //If SSN exist and has changed, try to set SSNformat if not same
+                    socialSecurityNumberFormat = cgi_socialsecuritynumber;
+                    socialSecurityNumberWithHifen = socialSecurityNumberFormat.Insert(8, "-");
 
-                this.ed_SocialSecurityNumberFormat = socialSecurityNumberWithHifen;
+                    if (!Contains(ContactEntity.Fields.ed_SocialSecurityNumberFormat))
+                    {
+                        var preSSNF = !string.IsNullOrEmpty(preImage.ed_SocialSecurityNumberFormat) ? preImage.ed_SocialSecurityNumberFormat : "";
+                        if(preSSNF != socialSecurityNumberFormat)
+                            this.ed_SocialSecurityNumberFormat = socialSecurityNumberWithHifen;
+                    }
+                }
             }
-
+            else
+            {//If SSN do not exist yet - new SSN and SSNformat with - do not set, set it
+                var socialSecurityNumberWithHifen = "";
+                if (Contains(ContactEntity.Fields.cgi_socialsecuritynumber)&& !string.IsNullOrEmpty(cgi_socialsecuritynumber))
+                {
+                    var socialSecurityNumberFormat = cgi_socialsecuritynumber;
+                    socialSecurityNumberWithHifen = socialSecurityNumberFormat.Insert(8, "-");
+                }
+                if (!Contains(ContactEntity.Fields.ed_SocialSecurityNumberFormat) && socialSecurityNumberWithHifen != "")
+                {
+                    this.ed_SocialSecurityNumberFormat = socialSecurityNumberWithHifen;
+                }
+            }
             // ---- Validering av information ----
             // Är något av de fält som valideras med i target?       
             bool doValidation = false;
