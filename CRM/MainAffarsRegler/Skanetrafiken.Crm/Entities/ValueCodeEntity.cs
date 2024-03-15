@@ -20,6 +20,10 @@ using System.Web.Script.Serialization;
 using System.IO;
 using Skanetrafiken.Crm.TextMessageSender;
 using System.Text.RegularExpressions;
+using System.Workflow.ComponentModel.Compiler;
+using System.Web;
+using System.Runtime.Serialization.Json;
+using System.Drawing;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -60,10 +64,10 @@ namespace Skanetrafiken.Crm.Entities
 
             if (userId == null || userId == Guid.Empty)
                 throw new InvalidPluginExecutionException("UserId is null");
-            
+
             EntityReference defaultSender = CgiSettingEntity.GetSettingEntRef(localContext, CgiSettingEntity.Fields.ed_DefaultSenderValueCodes);
 
-            if(defaultSender != null && defaultSender.Id != null)
+            if (defaultSender != null && defaultSender.Id != null)
             {
                 return new ActivityPartyEntity[]
                 {
@@ -206,10 +210,11 @@ namespace Skanetrafiken.Crm.Entities
             XrmHelper.CreateAndSendEmail(localContext, email, IssueSend: true);
 
             // Only update the fields we are changing!
-            ValueCodeEntity updValueCode = new ValueCodeEntity() {
+            ValueCodeEntity updValueCode = new ValueCodeEntity()
+            {
                 statuscode = Generated.ed_valuecode_statuscode.Skickad,
                 Id = valueCode.Id
-             };
+            };
 
             XrmHelper.Update(localContext, updValueCode);
         }
@@ -410,29 +415,68 @@ namespace Skanetrafiken.Crm.Entities
             {
                 string[] valueCodeArray = { };
 
-                if (valueCodeId.Contains(";") == true) 
+                if (valueCodeId.Contains(";") == true)
                     valueCodeArray = valueCodeId.Split(';').Select(sValue => sValue.Trim()).ToArray();
 
                 //Get settings entity
                 FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
                 settingFilter.AddCondition(CgiSettingEntity.Fields.ed_VoucherService, ConditionOperator.NotNull);
-                CgiSettingEntity cgiSetting = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_VoucherService), settingFilter);
-                //settingFilter.AddCondition(CgiSettingEntity.Fields.ed_CancelValueCodeAPIEndpoint, ConditionOperator.NotNull);
-                //CgiSettingEntity cgiSetting = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(CgiSettingEntity.Fields.ed_CancelValueCodeAPIEndpoint), settingFilter);
+                settingFilter.AddCondition(CgiSettingEntity.Fields.ed_CRMPlusService, ConditionOperator.NotNull);
+                CgiSettingEntity cgiSetting = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, 
+                    new ColumnSet(CgiSettingEntity.Fields.ed_VoucherService, CgiSettingEntity.Fields.ed_CRMPlusService), settingFilter);
 
-                //string cancelValueCodeEndpoint = cgiSetting.ed_CancelValueCodeAPIEndpoint;
-                string cancelValueCodeEndpoint = cgiSetting.ed_VoucherService;
+                string cancelValueCodeEndpoint = cgiSetting?.ed_VoucherService;
+                string fasadEndpoint = cgiSetting.ed_CRMPlusService;
 
-                if (cgiSetting != null && !string.IsNullOrWhiteSpace(cancelValueCodeEndpoint))
+                if (cgiSetting != null && !string.IsNullOrWhiteSpace(cancelValueCodeEndpoint) && !string.IsNullOrWhiteSpace(fasadEndpoint))
                 {
-                    string successValueCodes = "";
-                    string errorValueCodes = "";
+                    string successValueCodes = string.Empty;
+                    string errorValueCodes = string.Empty;
 
                     int nrCanceled = 0;
                     int nrFailed = 0;
 
-                    string responseCodes = "";
-                    string returnString = "";
+                    string responseCodes = string.Empty;
+                    string returnString = string.Empty;
+
+                    string cancelledBy = string.Empty;
+                    var requestToken = string.Empty;
+
+                    //Function that calls the new AccessToken method from Fasad [CK]
+                    #region AccessToken From Fasad
+
+                    //Create a mthod for reuse
+                    var tokenHttpWebReq = (HttpWebRequest)WebRequest.Create(string.Format("{0}/api/ValueCode/GetAccessToken/voucher", fasadEndpoint));
+                    tokenHttpWebReq.ContentType = "text/plain; charset=utf-8";
+                    tokenHttpWebReq.Method = "GET";
+
+                    try
+                    {
+                        var tokenHttpResponse = (HttpWebResponse)tokenHttpWebReq.GetResponse();
+                        if (tokenHttpResponse.StatusCode != HttpStatusCode.OK)
+                        {
+                            throw new Exception(string.Format("400 - Could not access required token for VoucherService. Response: " + tokenHttpResponse.StatusCode.ToString()));
+                        }
+                        else
+                        {
+                            using (var streamReader = new StreamReader(tokenHttpResponse.GetResponseStream()))
+                            {
+                                //Read response token
+                                requestToken = streamReader.ReadToEnd();
+                            }
+
+                            if (string.IsNullOrWhiteSpace(requestToken))
+                            {
+                                throw new Exception(string.Format("400 - Could not access required token for VoucherService. Returned token was null."));
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        return e.Message;
+                    }
+
+                    #endregion
 
                     if (valueCodeArray != null && valueCodeArray.Length > 0)
                     {
@@ -450,7 +494,7 @@ namespace Skanetrafiken.Crm.Entities
                                             ValueCodeEntity.Fields.statecode,
                                             ValueCodeEntity.Fields.statuscode));
 
-                                if (valueCode != null && !string.IsNullOrWhiteSpace(valueCode.ed_ValueCodeVoucherId)) 
+                                if (valueCode != null && !string.IsNullOrWhiteSpace(valueCode.ed_ValueCodeVoucherId))
                                 {
                                     //Update canceled on / Canceled By
                                     ValueCodeEntity updateValueCode = new ValueCodeEntity();
@@ -458,64 +502,59 @@ namespace Skanetrafiken.Crm.Entities
                                     updateValueCode.ed_CanceledOn = (DateTime?)DateTime.Now;
 
                                     if (userGuid != null)
+                                    {
                                         updateValueCode.ed_CanceledBy = new EntityReference(SystemUserEntity.EntityLogicalName, (Guid)userGuid);
+                                        SystemUserEntity systemUser = XrmRetrieveHelper.Retrieve<SystemUserEntity>(localContext, (Guid)userGuid, new ColumnSet(SystemUserEntity.Fields.FullName));
+                                        if (systemUser != null && !string.IsNullOrWhiteSpace(systemUser.FullName)) 
+                                        {
+                                            cancelledBy = systemUser.FullName;
+                                        }
+                                    }
 
                                     XrmHelper.Update(localContext, updateValueCode);
 
                                     //Trigger call to VoucherService
-                                    var httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}/{1}", cancelValueCodeEndpoint, valueCode.ed_ValueCodeVoucherId));
+                                    //Using the admin endpoint that uses a JSON Object in the body
+                                    //var httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}/{1}", cancelValueCodeEndpoint, valueCode.ed_ValueCodeVoucherId));
+                                    var httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}", cancelValueCodeEndpoint));
                                     httpWebRequest.ContentType = "application/json";
                                     httpWebRequest.Method = "DELETE";
                                     httpWebRequest.Headers.Add("channel", "crm");
-                                    ApiHelper.CreateTokenForVoucherService(localContext, httpWebRequest);
+
+                                    //Changed with VoucherService 2.0
+                                    //ApiHelper.CreateTokenForVoucherService(localContext, httpWebRequest);
+                                    httpWebRequest.Headers.Add("Authorization", "Bearer " + requestToken);
+
+                                    //Create stream so that you can send a JSON object as body of content so that you include CancelledBy and VoucherId
+                                    Skanetrafiken.Crm.ValueCodes.ValueCodeHandler.ValueCodeCancelRequest cancelValueCodeRequestObj = new ValueCodes.ValueCodeHandler.ValueCodeCancelRequest();
+                                    cancelValueCodeRequestObj.voucherId = valueCode.Id.ToString();
+                                    cancelValueCodeRequestObj.cancelledBy = cancelledBy;
+                                    DataContractJsonSerializer js = null;
+                                    MemoryStream msObj = new MemoryStream();
+                                    js = new DataContractJsonSerializer(typeof(Skanetrafiken.Crm.ValueCodes.ValueCodeHandler.ValueCodeCancelRequest));
+                                    js.WriteObject(msObj, cancelValueCodeRequestObj);
+
+                                    msObj.Position = 0;
+                                    StreamReader sr = new StreamReader(msObj);
+                                    var InputJSON = sr.ReadToEnd(); //Create a JSON for CancelledBy and VoucherId
+                                    sr.Close();
+                                    msObj.Close();
+                                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                                    {
+                                        streamWriter.Write(InputJSON);
+                                        streamWriter.Flush();
+                                        streamWriter.Close();
+                                    }
 
                                     try
                                     {
 
                                         var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                                        //using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                                        //{
-                                        //    var result = streamReader.ReadToEnd();
-                                        //    //returnMessage += " streamReader-OK,";
-
-                                        //    //If result is ok -> Update value code to inactive and so on
-
-                                        //    return result;
-                                        //}
-
                                         responseCodes += httpResponse.StatusCode.ToString() + ";";
 
                                         //if (httpResponse != null && httpResponse.StatusCode == HttpStatusCode.OK)
                                         if (httpResponse != null && httpResponse.StatusCode == HttpStatusCode.NoContent)
                                         {
-                                            //var test = localContext.
-                                            //ValueCodeEntity updateValueCode = new ValueCodeEntity();
-                                            //updateValueCode.Id = valueCode.Id;
-                                            //updateValueCode.ed_CanceledOn = (DateTime?)DateTime.Now;
-
-                                            //if (userGuid != null)
-                                            //{
-                                            //    updateValueCode.ed_CanceledBy = new EntityReference(SystemUserEntity.EntityLogicalName, (Guid)userGuid);
-                                            //}
-
-                                            //XrmHelper.Update(localContext, updateValueCode);
-
-                                            //SetStateRequest setStateRequest = new SetStateRequest()
-                                            //{
-                                            //    EntityMoniker = new EntityReference
-                                            //    {
-
-                                            //        Id = new Guid(valueCodeArray[i]),
-                                            //        LogicalName = ValueCodeEntity.EntityLogicalName,
-
-                                            //    },
-
-                                            //    State = new OptionSetValue(1),
-                                            //    Status = new OptionSetValue(899310004)
-                                            //};
-
-                                            //localContext.OrganizationService.Execute(setStateRequest);
-
                                             nrCanceled++;
                                             successValueCodes += valueCodeArray[i] + ";";
                                             //return "200";
@@ -538,17 +577,6 @@ namespace Skanetrafiken.Crm.Entities
                                     }
                                     catch (WebException we)
                                     {
-                                        //string resultFromService = "";
-
-                                        //HttpWebResponse response = (HttpWebResponse)we.Response;
-
-                                        //using (var streamReader = new StreamReader(response.GetResponseStream()))
-                                        //{
-                                        //    resultFromService = streamReader.ReadToEnd();
-                                        //    //localContext.TracingService.Trace($"got http error: {response.StatusCode} Content: {resultFromService}");
-                                        //}
-                                        //throw new WebException($"Error when trying to create Value Code. Ex:{we.Message}, message:{resultFromService}");
-
                                         ValueCodeEntity updateValueCodeBack = new ValueCodeEntity();
                                         updateValueCodeBack.Id = valueCode.Id;
                                         updateValueCodeBack.ed_CanceledOn = null;
@@ -561,8 +589,6 @@ namespace Skanetrafiken.Crm.Entities
                                     }
                                     catch (Exception e)
                                     {
-                                        //throw new Exception("Failed to Execute: " + e.Message);
-
                                         ValueCodeEntity updateValueCodeBack = new ValueCodeEntity();
                                         updateValueCodeBack.Id = valueCode.Id;
                                         updateValueCodeBack.ed_CanceledOn = null;
@@ -591,19 +617,53 @@ namespace Skanetrafiken.Crm.Entities
                     }
                     else
                     {
-                        //ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+                        if (userGuid != null)
+                        {
+                            SystemUserEntity systemUser = XrmRetrieveHelper.Retrieve<SystemUserEntity>(localContext, (Guid)userGuid, new ColumnSet(SystemUserEntity.Fields.FullName));
+                            if (systemUser != null && !string.IsNullOrWhiteSpace(systemUser.FullName))
+                            {
+                                cancelledBy = systemUser.FullName;
+                            }
+                        }
+
                         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                         //Trigger call to VoucherService
-                        var httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}/{1}", cancelValueCodeEndpoint, valueCodeId));
+                        //Using the admin endpoint that uses a JSON Object in the body
+                        //var httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}/{1}", cancelValueCodeEndpoint, valueCodeId));
+                        var httpWebRequest = (HttpWebRequest)WebRequest.Create(string.Format("{0}/", cancelValueCodeEndpoint)); 
                         httpWebRequest.ContentType = "application/json";
                         httpWebRequest.Method = "DELETE";
                         httpWebRequest.Headers.Add("channel", "crm");
-                        ApiHelper.CreateTokenForVoucherService(localContext, httpWebRequest);
+                        //Changed with VoucherService 2.0
+                        //ApiHelper.CreateTokenForVoucherService(localContext, httpWebRequest);
+                        httpWebRequest.Headers.Add("Authorization", "Bearer " + requestToken);
+
+                        //Create stream so that you can send a JSON object as body of content so that you include CancelledBy and VoucherId
+                        Skanetrafiken.Crm.ValueCodes.ValueCodeHandler.ValueCodeCancelRequest cancelValueCodeRequestObj = new ValueCodes.ValueCodeHandler.ValueCodeCancelRequest();
+                        cancelValueCodeRequestObj.voucherId = valueCodeId;
+                        cancelValueCodeRequestObj.cancelledBy = cancelledBy;
+                        DataContractJsonSerializer js = null;
+                        MemoryStream msObj = new MemoryStream();
+                        js = new DataContractJsonSerializer(typeof(Skanetrafiken.Crm.ValueCodes.ValueCodeHandler.ValueCodeCancelRequest));
+                        js.WriteObject(msObj, cancelValueCodeRequestObj);
+
+                        msObj.Position = 0;
+                        StreamReader sr = new StreamReader(msObj);
+                        var InputJSON = sr.ReadToEnd(); //Create a JSON for CancelledBy and VoucherId
+                        sr.Close();
+                        msObj.Close();
+
+                        using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                        {
+                            streamWriter.Write(InputJSON);
+                            streamWriter.Flush();
+                            streamWriter.Close();
+                        }
 
                         try
                         {
-                            var result = "";
+                            var result = string.Empty;
 
                             var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
                             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
@@ -623,7 +683,7 @@ namespace Skanetrafiken.Crm.Entities
                         }
                         catch (WebException we)
                         {
-                            string resultFromService = "";
+                            string resultFromService = string.Empty;
                             HttpWebResponse response = (HttpWebResponse)we.Response;
 
                             using (var streamReader = new StreamReader(response.GetResponseStream()))
@@ -632,7 +692,7 @@ namespace Skanetrafiken.Crm.Entities
                                 localContext.TracingService.Trace($"got http error: {response.StatusCode} Content: {resultFromService}");
                             }
 
-                            throw new WebException($"400 - Error when trying to create Value Code. Ex:{we.Message}, message:{resultFromService}");
+                            throw new WebException($"400 - Error when trying to cancel Value Code. Ex:{we.Message}, message:{resultFromService}");
                         }
                         catch (Exception e)
                         {
@@ -640,13 +700,15 @@ namespace Skanetrafiken.Crm.Entities
                         }
                     }
                 }
-                else {
+                else
+                {
                     //return returnMessage;
                     var missingSettingsError = "400 - Did not find URI for Valuecode Cancel!";
                     return missingSettingsError;
                 }
             }
-            else {
+            else
+            {
                 //Throw error handling
                 //return "Error!";
                 //throw new InvalidPluginExecutionException("Did not find any ValueCode!");

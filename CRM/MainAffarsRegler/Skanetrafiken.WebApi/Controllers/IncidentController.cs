@@ -1,70 +1,52 @@
 ﻿using Endeavor.Crm;
-using Microsoft.WindowsAzure.Storage.Auth;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Xrm.Tooling.Connector;
 using Skanetrafiken.Crm.Entities;
 using Skanetrafiken.Crm.Properties;
 using System;
-using System.Globalization;
-using System.IO;
-using System.Linq;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Security;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
-using System.Xml.Linq;
 
 namespace Skanetrafiken.Crm.Controllers
 {
     public class IncidentController : WrapperController
     {
-        protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private string _prefix = "Incident";
+        private static Dictionary<string, string> _exceptionCustomProperties = new Dictionary<string, string>()
+        {
+            { "source", "" }
+        };
 
         internal static byte[] Entropy = System.Text.Encoding.Unicode.GetBytes("Wood attachment would a woodchuck chuck");
 
-        private const string TenantID = "e1fcb9f3-e5f9-496f-a583-e495dfd57497"; //Tenent
+        private const string TenantID = "e1fcb9f3-e5f9-496f-a583-e495dfd57497"; //Tenent (ed_jojocarddetailstenentid)
 
         //private const string StorageAccountName = "webstpublicwebtest"; //TEST (OLD?)
-        //private const string StorageAccountName = "webpublicwebtest"; //TEST
-        //private const string ClientID = "635555fe-6cb2-4a48-9b54-8d5d6472b00f"; //TEST - App/Client ID
-        //private const string ClientSecret = "czv7Q~iQuUCRwkryVp6FqHvmSAhbA_I2XidG_"; //TEST
+        private const string StorageAccountName = "webpublicwebtest"; //TEST
+        private const string ClientID = "635555fe-6cb2-4a48-9b54-8d5d6472b00f"; //TEST - App/Client ID
+        private const string ClientSecret = "czv7Q~iQuUCRwkryVp6FqHvmSAhbA_I2XidG_"; //TEST
 
         //private const string StorageAccountName = "webstpublicwebacc"; //ACC (OLD)
         //private const string StorageAccountName = "webpublicwebacc"; //ACC
         //private const string ClientID = "7450a67c-038e-4b43-b4a1-b5bbd2961912"; //ACC - App/Client ID
         //private const string ClientSecret = "gf57Q~2TGjcsESRX~20ohxZ-Xg3JhX2C55XKc"; //ACC
 
-        private const string StorageAccountName = "webpublicwebprod"; //PROD
-        private const string ClientID = "73acce44-96d3-48a1-8c44-33185bc2f24f"; //PROD - App/Client ID
-        private const string ClientSecret = "Fns8Q~zPciVTCcUHPhPh75OhuhbL0blncWUXSaLA"; //PROD
+        //private const string StorageAccountName = "webpublicwebprod"; //PROD
+        //private const string ClientID = "73acce44-96d3-48a1-8c44-33185bc2f24f"; //PROD - App/Client ID
+        //private const string ClientSecret = "mGJ7Q~4jEXcEgzoYd1IBc4tUYb4raX8XOXTJs"; //PROD
 
 
         private const string FileName = "2021/9/20/ef05fe16-0f9d-43d8-909e-6c64f6394aac.jpg";
-
-        private static async Task<string> GetAccessToken(string clientId, string clientSectret, string tenantId)
-        {
-            var authContext = new Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext("https://login.windows.net/" + $"{tenantId}");
-            var credential = new Microsoft.IdentityModel.Clients.ActiveDirectory.ClientCredential(clientId, clientSectret);
-            var result = await authContext.AcquireTokenAsync("https://storage.azure.com", credential);
-
-            if (result == null)
-            {
-                _log.Warn($"-- GetAccessToken Failed! --");
-                throw new Exception("Failed to authenticate via ADAL");
-            }
-
-            return result.AccessToken;
-        }
 
         [HttpGet]
         public HttpResponseMessage Get()
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - GET IncidentController called.\n");
-            return CrmPlusControl.PingConnection(threadId);
+            return CrmPlusControl.PingConnection(threadId, _prefix);
         }
 
         //public static string ToInsecureString(SecureString input)
@@ -100,7 +82,7 @@ namespace Skanetrafiken.Crm.Controllers
         //        throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "The credentials file \"{0}\" cannot be found. Use the /Password: parameter to create the credential file.", filePath));
         //    }
         //    XDocument doc = XDocument.Load(filePath);
-         
+
         //    return ToInsecureString(DecryptString(doc.Root.Element("Password").Value, entropy));
         //}
 
@@ -123,183 +105,191 @@ namespace Skanetrafiken.Crm.Controllers
         [HttpGet]
         public HttpResponseMessage GetAttachmentFromAzure(string encryptedUrl)
         {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - Get called.\n");
-            _log.Info($"Th={threadId} - GetAttachmentFromAzure called with Payload:\n {encryptedUrl}");
-            _log.DebugFormat($"Th={threadId} - Get called with Payload:\n {encryptedUrl}");
-
-            if (encryptedUrl == string.Empty)
+            using (var _logger = new AppInsightsLogger())
             {
-                HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                erm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-                _log.Warn($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
-                return erm;
-            }
+                _logger.SetGlobalProperty("source", _prefix);
+                int threadId = Thread.CurrentThread.ManagedThreadId;
 
-            //var keyString = LoadCredentials("filepath - Saved in the Properties.Settings", Entropy);
-
-            string clientId = ClientID;
-            string clientSecret = ClientSecret;
-            string tenantId = TenantID;
-            string storageAccountName = StorageAccountName;
-
-            if (string.IsNullOrWhiteSpace(clientId) ||
-                    string.IsNullOrWhiteSpace(clientSecret) ||
-                    string.IsNullOrWhiteSpace(tenantId) ||
-                    string.IsNullOrWhiteSpace(storageAccountName))
-            {
-                HttpResponseMessage keysError = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                keysError.Content = new StringContent($"GetAttachmentFromAzure: Could not retrieve the relevant keys.");
-                _log.Warn($"Th={threadId} - Returning statuscode = {keysError.StatusCode}, Content = {keysError.Content.ReadAsStringAsync().Result}\n");
-                return keysError;
-            }
-
-            HttpResponseMessage rm = new HttpResponseMessage();
-
-            try
-            {
-                Guid? emailGuid = null;
-                //Check if string contains semi-colons
-                if (encryptedUrl.Contains(";") == true)
+                if (encryptedUrl == string.Empty)
                 {
-                    //TODO: Split the string into sections based on the semi-colon
-                    string[] links = encryptedUrl.Split(';');
-                    emailGuid = (Guid?)Guid.Parse(links[links.Length - 1]);
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetAttachmentFromAzure", Resources.IncomingDataCannotBeNull, _logger);
+                }
 
-                    if (emailGuid != null)
+                Plugin.LocalPluginContext localContext = null;
+                HttpResponseMessage rm = new HttpResponseMessage();
+
+                try
+                {
+                    CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                    // Cast the proxy client to the IOrganizationService interface.
+                    using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                     {
-                        int count = 0;
-                        int failedCount = 0;
-                        int createFailedCount = 0;
-                        //Handle Loop of all string values
-                        for (int i = 0; i < links.Length - 1; i++)
+                        localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                        if (localContext.OrganizationService == null)
+                            throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                        FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_AttachmentClientID, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_AttachmentClientSecret, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_AttachmentStorageAccountName, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.st_AttachmentAudience, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
+                        CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                            CgiSettingEntity.Fields.ed_AttachmentClientID,
+                            CgiSettingEntity.Fields.ed_AttachmentClientSecret,
+                            CgiSettingEntity.Fields.ed_AttachmentStorageAccountName,
+                            CgiSettingEntity.Fields.st_AttachmentAudience,
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
+                            CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
+
+                        if (settings == null)
                         {
-                            //main Function
-                            //var containerName = "crm-attachments"; //Skriv till oss
-                            //var containerName = "rgolreceiptinformation"; //RGOL
-                            string fileUrl = string.Empty;
-                            string containerName = "";
-                            if (links[i].Contains("rgolreceiptinformation"))
+                            //Throw an exception
+                            throw new Exception(string.Format("GetAttachmentFromAzure: Failed to aquire settings from CRM."));
+                        }
+                        else
+                        {
+                            string clientId = settings.ed_AttachmentClientID;
+                            string clientSecret = settings.ed_AttachmentClientSecret;
+                            string tenantId = settings.ed_JojoCardDetailsTenentId;
+                            string storageAccountName = settings.ed_AttachmentStorageAccountName;
+                            string audience = settings.st_AttachmentAudience;
+
+                            if (string.IsNullOrWhiteSpace(clientId) ||
+                                    string.IsNullOrWhiteSpace(clientSecret) ||
+                                    string.IsNullOrWhiteSpace(tenantId) ||
+                                    string.IsNullOrWhiteSpace(storageAccountName) ||
+                                    string.IsNullOrWhiteSpace(audience))
                             {
-                                containerName = "rgolreceiptinformation";
-                                fileUrl = links[i].Substring("rgolreceiptinformation/".Length);
+                                throw new Exception(string.Format("GetAttachmentFromAzure: Could not retrieve the relevant keys from CgiSettings."));
                             }
-                            else if (links[i].Contains("crm-attachments"))
+
+                            Guid? emailGuid = null;
+                            //Check if string contains semi-colons
+                            if (encryptedUrl.Contains(";") == true)
                             {
-                                containerName = "crm-attachments";
-                                fileUrl = links[i].Substring("crm-attachments/".Length);
+                                //TODO: Split the string into sections based on the semi-colon
+                                string[] links = encryptedUrl.Split(';');
+                                emailGuid = (Guid?)Guid.Parse(links[links.Length - 1]);
+
+                                if (emailGuid != null)
+                                {
+                                    int count = 0;
+                                    int failedCount = 0;
+                                    int createFailedCount = 0;
+                                    //Handle Loop of all string values
+                                    for (int i = 0; i < links.Length - 1; i++)
+                                    {
+                                        //main Function
+                                        //var containerName = "crm-attachments"; //Skriv till oss
+                                        //var containerName = "rgolreceiptinformation"; //RGOL
+                                        string fileUrl = string.Empty;
+                                        string containerName = "";
+                                        if (links[i].Contains("rgolreceiptinformation"))
+                                        {
+                                            containerName = "rgolreceiptinformation";
+                                            fileUrl = links[i].Substring("rgolreceiptinformation/".Length);
+                                        }
+                                        else if (links[i].Contains("crm-attachments"))
+                                        {
+                                            containerName = "crm-attachments";
+                                            fileUrl = links[i].Substring("crm-attachments/".Length);
+                                        }
+                                        else
+                                        {
+                                            containerName = "crm-attachments";
+                                            fileUrl = links[i];
+                                        }
+
+                                        //TODO: Create email attachment using GUID passed in the API and attachmentBase64String
+                                        string attachmentBase64String = "";
+                                        if (!string.IsNullOrWhiteSpace(fileUrl))
+                                        {
+                                            attachmentBase64String = CrmPlusControl.HandleAttachemntFilesFromAzure(threadId, clientId, clientSecret, audience, tenantId, storageAccountName, containerName, fileUrl, emailGuid, _prefix);
+                                            if (attachmentBase64String.Contains("(FailedCreate)"))
+                                            {
+                                                //Highlight that all attachments couldnt be created
+                                                failedCount++;
+                                            }
+                                            else if (attachmentBase64String.Contains("(SuccessCreate)"))
+                                            {
+                                                //Highlight that all attachments couldnt be created
+                                                createFailedCount++;
+                                            }
+                                            else
+                                            {
+                                                count++;
+                                            }
+                                        }
+                                    }
+
+                                    //Return success
+                                    rm.StatusCode = HttpStatusCode.OK;
+                                    rm.Content = new StringContent($"Created Attachments. Failed count:{failedCount}");
+                                }
+
                             }
                             else
                             {
-                                containerName = "crm-attachments";
-                                fileUrl = links[i];
-                            }
-                            _log.Info($"Th={threadId} - GetAttachmentFromAzure: Container Name => {containerName}");
-
-                            //TODO: Create email attachment using GUID passed in the API and attachmentBase64String
-                            string attachmentBase64String = "";
-                            if (!string.IsNullOrWhiteSpace(fileUrl))
-                            {
-                                attachmentBase64String = CrmPlusControl.HandleAttachemntFilesFromAzure(threadId, clientId, clientSecret, tenantId, storageAccountName, containerName, fileUrl, emailGuid);
-                                if (attachmentBase64String.Contains("(FailedCreate)"))
+                                //Handle the return values
+                                //var containerName = "crm-attachments"; //Skriv till oss
+                                //var containerName = "rgolreceiptinformation"; //RGOL
+                                string containerName = "";
+                                if (encryptedUrl.Contains("rgolreceiptinformation"))
                                 {
-                                    //Highlight that all attachments couldnt be created
-                                    failedCount++;
-                                    _log.Info($"Th={threadId} - GetAttachmentFromAzure: {failedCount} Attachments failed to create");
+                                    containerName = "rgolreceiptinformation";
+                                    encryptedUrl = encryptedUrl.Substring("rgolreceiptinformation/".Length);
                                 }
-                                else if (attachmentBase64String.Contains("(SuccessCreate)"))
+                                else if (encryptedUrl.Contains("crm-attachments"))
                                 {
-                                    //Highlight that all attachments couldnt be created
-                                    createFailedCount++;
-                                    _log.Info($"Th={threadId} - GetAttachmentFromAzure: {createFailedCount} Attachments Created with exception thrown");
+                                    containerName = "crm-attachments";
+                                    encryptedUrl = encryptedUrl.Substring("crm-attachments/".Length);
                                 }
                                 else
                                 {
-                                    count++;
-                                    _log.Info($"Th={threadId} - GetAttachmentFromAzure: {count} Attachments Created");
+                                    containerName = "crm-attachments";
+                                }
+
+                                string attachmentBase64String = CrmPlusControl.HandleAttachemntFilesFromAzure(threadId, clientId, clientSecret, audience, tenantId, storageAccountName, containerName, encryptedUrl, emailGuid, _prefix);
+
+                                if (!string.IsNullOrWhiteSpace(attachmentBase64String) && attachmentBase64String.Contains("Exception") == false)
+                                {
+                                    rm.StatusCode = HttpStatusCode.OK;
+                                    rm.Content = new StringContent(attachmentBase64String);
+                                }
+                                else
+                                {
+                                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "GetAttachmentFromAzure", attachmentBase64String, _logger);
                                 }
                             }
-                            else
+
+                            //Return Logg
+                            if (rm == null)
                             {
-                                _log.Warn($"Th={threadId} - GetAttachmentFromAzure: {failedCount} Attachments failed to create - Missing URL");
+                                return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "GetAttachmentFromAzure", "Return Value was never set!", _logger);
                             }
+
+                            return rm;
                         }
-
-                        _log.Info($"Th={threadId} - GetAttachmentFromAzure: {count} Attachments Created");
-                        //Return success
-                        rm.StatusCode = HttpStatusCode.OK;
-                        rm.Content = new StringContent($"Created Attachments. Failed count:{failedCount}");
-                    }
-                    else 
-                    {
-                        _log.Warn($"Th={threadId} - GetAttachmentFromAzure: Attachments failed to create - Missing Email Guid");
-                    }
-                    
-                }
-                else
-                {
-                    //Handle the return values
-                    //var containerName = "crm-attachments"; //Skriv till oss
-                    //var containerName = "rgolreceiptinformation"; //RGOL
-                    string containerName = "";
-                    if (encryptedUrl.Contains("rgolreceiptinformation"))
-                    {
-                        containerName = "rgolreceiptinformation";
-                        encryptedUrl = encryptedUrl.Substring("rgolreceiptinformation/".Length);
-                    }
-                    else if (encryptedUrl.Contains("crm-attachments"))
-                    {
-                        containerName = "crm-attachments";
-                        encryptedUrl = encryptedUrl.Substring("crm-attachments/".Length);
-                    }
-                    else
-                    {
-                        containerName = "crm-attachments";
-                    }
-
-                    _log.Info($"Th={threadId} - GetAttachmentFromAzure: Container Name => {containerName}");
-                    string attachmentBase64String = CrmPlusControl.HandleAttachemntFilesFromAzure(threadId, clientId, clientSecret, tenantId, storageAccountName, containerName, encryptedUrl, emailGuid);
-
-                    if (!string.IsNullOrWhiteSpace(attachmentBase64String) && attachmentBase64String.Contains("Exception") == false)
-                    {
-                        rm.StatusCode = HttpStatusCode.OK;
-                        rm.Content = new StringContent(attachmentBase64String);
-                    }
-                    else 
-                    {
-                        rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                        rm.Content = new StringContent($"Th={threadId} - GetAttachmentFromAzure: {attachmentBase64String}");
                     }
                 }
-
-                //Return Logg
-                if (rm == null)
+                catch (Exception ex)
                 {
-                    rm.StatusCode = HttpStatusCode.InternalServerError;
-                    rm.Content = new StringContent($"Th={threadId} - GetAttachmentFromAzure: Return Value was never set!");
+                    rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.InnerException?.Message));
+
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
+
                     return rm;
                 }
-
-                if (rm.StatusCode != HttpStatusCode.OK)
+                finally
                 {
-                    _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+                    ConnectionCacheManager.ReleaseConnection(threadId);
                 }
-                else
-                {
-                    _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
-                    _log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-                }
-
-                return rm;
             }
-            catch (Exception ex)
-            {
-                rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.InnerException?.Message));
-                _log.Error($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-                return rm;
-            }
-
         }
     }
 }

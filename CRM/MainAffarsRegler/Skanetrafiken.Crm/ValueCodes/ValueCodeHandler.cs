@@ -106,7 +106,54 @@ namespace Skanetrafiken.Crm.ValueCodes
             //}
             #endregion
 
-            string apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_VoucherService);
+            //string apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_VoucherService);
+            //Get settings entity
+            FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_VoucherService, ConditionOperator.NotNull);
+            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_CRMPlusService, ConditionOperator.NotNull);
+            CgiSettingEntity cgiSetting = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext,
+                new ColumnSet(CgiSettingEntity.Fields.ed_VoucherService, CgiSettingEntity.Fields.ed_CRMPlusService), settingFilter);
+
+            string apiUrl = cgiSetting.ed_VoucherService;
+            string fasadEndpoint = cgiSetting.ed_CRMPlusService;
+            var requestToken = string.Empty;
+
+            #region GetAccessToken from Fasad
+
+            //-- Create mthod for reuse --
+            var tokenHttpWebReq = (HttpWebRequest)WebRequest.Create(string.Format("{0}/api/ValueCode/GetAccessToken/voucher", fasadEndpoint));
+            tokenHttpWebReq.ContentType = "text/plain; charset=utf-8";
+            tokenHttpWebReq.Method = "GET";
+
+            try
+            {
+                var tokenHttpResponse = (HttpWebResponse)tokenHttpWebReq.GetResponse();
+                if (tokenHttpResponse.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new Exception(string.Format("Error - Could not access required token for VoucherService. Response: " + tokenHttpResponse.StatusCode.ToString()));
+                }
+                else
+                {
+                    using (var streamReader = new StreamReader(tokenHttpResponse.GetResponseStream()))
+                    {
+                        //Read response token
+                        requestToken = streamReader.ReadToEnd();
+                    }
+
+                    if (string.IsNullOrWhiteSpace(requestToken))
+                    {
+                        throw new Exception(string.Format("Error - Could not access required token for VoucherService. Returned token was null."));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new InvalidPluginExecutionException(e.Message);
+            }
+            //-- Create mthod for reuse --
+
+            #endregion
+
             localContext.Trace($"(CreateValueCodeGeneric) API: {apiUrl}");
 
             string InputJSON = string.Empty;
@@ -122,7 +169,10 @@ namespace Skanetrafiken.Crm.ValueCodes
             httpWebRequest.ServicePoint.Expect100Continue = true;
 
             localContext.Trace($"(CreateValueCodeGeneric) Create Token for Voucher Service");
-            ApiHelper.CreateTokenForVoucherService(localContext, httpWebRequest); //New auth method for VoucherService 
+            //Changed with VoucherService 2.0
+            //ApiHelper.CreateTokenForVoucherService(localContext, httpWebRequest);
+            httpWebRequest.Headers.Add("Authorization", "Bearer " + requestToken);
+
             localContext.Trace($"(CreateValueCodeGeneric) Created Token for Voucher Service");
 
             localContext.Trace($"(CreateValueCodeGeneric) Fetch Value Code Template");
@@ -476,12 +526,24 @@ namespace Skanetrafiken.Crm.ValueCodes
 
             valueCode.voucherType = voucherType;
 
+            //Created By
+            RefundEntity refundInfo = XrmRetrieveHelper.Retrieve<RefundEntity>(localContext, refund.Id, new ColumnSet(
+                    RefundEntity.Fields.CreatedBy, RefundEntity.Fields.cgi_Caseid));
+            if (refundInfo != null && refundInfo.CreatedBy != null) 
+            {
+                //Fetch the SystemUser
+                SystemUserEntity createdByUser = XrmRetrieveHelper.Retrieve<SystemUserEntity>(localContext, refundInfo.CreatedBy.Id, 
+                    new ColumnSet(SystemUserEntity.Fields.FullName));
+
+                if (createdByUser != null && !string.IsNullOrWhiteSpace(createdByUser.FullName)) 
+                {
+                    valueCode.CreatedBy = createdByUser.FullName;
+                }
+            }
+
             // 1 = förseningsersätting
             if (voucherType == 1)
             {
-                RefundEntity refundInfo = XrmRetrieveHelper.Retrieve<RefundEntity>(localContext, refund.Id, new ColumnSet(
-                    RefundEntity.Fields.cgi_Caseid));
-
                 IncidentEntity incidentInfo = XrmRetrieveHelper.Retrieve<IncidentEntity>(localContext, refundInfo.cgi_Caseid.Id, new ColumnSet(
                     IncidentEntity.Fields.TicketNumber,
                     IncidentEntity.Fields.cgi_RGOLIssueId,
@@ -563,9 +625,6 @@ namespace Skanetrafiken.Crm.ValueCodes
             // 4 = ersättning
             else if (voucherType == 4)
             {
-                RefundEntity refundInfo = XrmRetrieveHelper.Retrieve<RefundEntity>(localContext, refund.Id, new ColumnSet(
-                    RefundEntity.Fields.cgi_Caseid));
-
                 IncidentEntity incidentInfo = XrmRetrieveHelper.Retrieve<IncidentEntity>(localContext, refundInfo.cgi_Caseid.Id, new ColumnSet(
                     IncidentEntity.Fields.TicketNumber,
                     IncidentEntity.Fields.cgi_RGOLIssueId,
@@ -1033,8 +1092,6 @@ namespace Skanetrafiken.Crm.ValueCodes
             localContext.TracingService.Trace($"{response}");
 
             DateTime lastDate = new DateTime();
-            if (response.validToDate != null)
-                lastDate = Convert.ToDateTime(response.validToDate);
 
             string rgolId = "";
             string caseNumber = "";
@@ -1056,6 +1113,9 @@ namespace Skanetrafiken.Crm.ValueCodes
 
             if (response != null)
             {
+                if (response.validToDate != null)
+                    lastDate = Convert.ToDateTime(response.validToDate);
+
                 ValueCodeEntity valueCode = new ValueCodeEntity();
 
                 if (totalAmountSentToVoucherService != null)
@@ -1207,6 +1267,16 @@ namespace Skanetrafiken.Crm.ValueCodes
         }
 
         [DataContract]
+        public class ValueCodeCancelRequest
+        {
+            [DataMember]
+            public string voucherId { get; set; }
+            [DataMember]
+            public string cancelledBy { get; set; }
+
+        }
+
+        [DataContract]
         [KnownType(typeof(Skanetrafiken.Crm.ValueCodes.ValueCodeHandler.ValueCodeCouponVoucherServiceRequest))]
         public class ValueCodeCouponVoucherServiceRequest
         {
@@ -1228,6 +1298,8 @@ namespace Skanetrafiken.Crm.ValueCodes
             public int voucherType { get; set; }
             [DataMember]
             public string voucherText { get; set; }
+            [DataMember]
+            public string CreatedBy { get; set; }
         }
 
 

@@ -10,23 +10,21 @@ using Microsoft.Xrm.Sdk.Query;
 using System.Threading;
 using Generated = Skanetrafiken.Crm.Schema.Generated;
 using Skanetrafiken.Crm.Properties;
+using System.Collections.Generic;
 
 namespace Skanetrafiken.Crm.Controllers
 {
     public class AccountsController : WrapperController
     {
-        protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private string _prefix = "Account";
 
         [HttpGet]
         public HttpResponseMessage Get()
         {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Error($"Th={threadId} - Unsupported generic GET called.");
-
-            HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-            resp.Content = new StringContent(Resources.GenericGetNotSupported);
-            _log.Error($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
-            return resp;
+            using (var _logger = new AppInsightsLogger())
+            {
+                return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Get", Resources.GenericGetNotSupported, _logger);
+            }
         }
 
         /// <summary>
@@ -41,178 +39,130 @@ namespace Skanetrafiken.Crm.Controllers
         [HttpGet]
         public HttpResponseMessage GetWithId(string id)
         {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - GetOrganization called with: {id}");
-            if (string.IsNullOrWhiteSpace(id))
+            using (var _logger = new AppInsightsLogger())
             {
-                HttpResponseMessage guidResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                guidResp.Content = new StringContent("Could not find an 'id' parameter in url");
-                _log.Warn($"Th={threadId} - Returning statuscode = {guidResp.StatusCode}, Content = {guidResp.Content.ReadAsStringAsync().Result}\n");
-                return guidResp;
-            }
-
-            /*
-            // TOKEN VERIFICATION
-            try
-            {
-                HttpResponseMessage tokenResp = TokenValidation(id);
-                if (tokenResp.StatusCode != HttpStatusCode.OK)
+                if (string.IsNullOrWhiteSpace(id))
                 {
-                    _log.Info($"Th={threadId} - Returning statuscode = {tokenResp.StatusCode}, Content = {tokenResp.Content.ReadAsStringAsync().Result}\n");
-                    return tokenResp;
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetWithId", "Could not find an 'id' parameter in url", _logger);
                 }
-            }
-            catch (Exception ex)
-            {
-                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-                return rm;
-            }*/
 
-            HttpResponseMessage resp = CrmPlusControl.GetAccount(threadId, id);
-            //Return Logg
-            if (resp.StatusCode != HttpStatusCode.OK)
-            {
-                _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+                int threadId = Thread.CurrentThread.ManagedThreadId;
+
+                /*
+                // TOKEN VERIFICATION
+                try
+                {
+                    HttpResponseMessage tokenResp = TokenValidation(id);
+                    if (tokenResp.StatusCode != HttpStatusCode.OK)
+                    {
+                        return tokenResp;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                    return rm;
+                }*/
+
+                HttpResponseMessage resp = CrmPlusControl.GetAccount(threadId, id, _prefix);
+
+                return resp;
+
             }
-            else {
-                _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}.\n");
-                _log.Debug($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
-            }
-            
-            return resp;
-                        
         }
 
         [HttpPost]
         public HttpResponseMessage Post([FromBody] AccountInfo info)
         {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - Post called.\n");
-            _log.DebugFormat($"Th={threadId} - Post called with Payload:\n {CrmPlusControl.SerializeNoNull(info)}");
+            using (var _logger = new AppInsightsLogger())
+            {
+                if (info == null)
+                {
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Post", Resources.IncomingDataCannotBeNull, _logger);
+                }
 
-            if (info == null)
-            {
-                HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                erm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-                _log.Warn($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
-                return erm;
-            }
-            
-            HttpResponseMessage rm = null;
-            switch (info.InformationSource)
-            {
-                case (int)Generated.ed_informationsource.ForetagsPortal:
-                    rm = CrmPlusControl.AccountPost(threadId, info);
-                    break;
-                case (int)Generated.ed_informationsource.SkolPortal:
-                    rm = CrmPlusControl.AccountPost(threadId, info);
-                    break;
-                case (int)Generated.ed_informationsource.SeniorPortal:
-                    rm = CrmPlusControl.AccountPost(threadId, info);
-                    break;
-                default:
-                    rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    rm.Content = new StringContent(string.Format(Resources.InvalidSource, info.InformationSource));
-                    break;
-            }
+                int threadId = Thread.CurrentThread.ManagedThreadId;
 
-            //Return Logg
-            if (rm.StatusCode != HttpStatusCode.OK)
-            {
-                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-            }
-            else
-            {
-                _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
-                _log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-            }
+                HttpResponseMessage rm = null;
+                switch (info.InformationSource)
+                {
+                    case (int)Generated.ed_informationsource.ForetagsPortal:
+                        rm = CrmPlusControl.AccountPost(threadId, info, _prefix);
+                        break;
+                    case (int)Generated.ed_informationsource.SkolPortal:
+                        rm = CrmPlusControl.AccountPost(threadId, info, _prefix);
+                        break;
+                    case (int)Generated.ed_informationsource.SeniorPortal:
+                        rm = CrmPlusControl.AccountPost(threadId, info, _prefix);
+                        break;
+                    default:
+                        rm = CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Post", string.Format(Resources.InvalidSource, info.InformationSource), _logger);
+                        break;
+                }
 
-            return rm;
+                return rm;
+            }
         }
 
         [HttpPut]
         public HttpResponseMessage Put([FromUri] string id, [FromBody] AccountInfo info)
         {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - Put called.\n");
-            _log.DebugFormat($"Th={threadId} - Put called with Payload:\n {CrmPlusControl.SerializeNoNull(info)}");
+            using (var _logger = new AppInsightsLogger())
+            {
+                int threadId = Thread.CurrentThread.ManagedThreadId;
 
-            if (info == null)
-            {
-                HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                erm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-                _log.Warn($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
-                return erm;
-            }
-            Guid guid = Guid.Empty;
-            if (info.Guid == null || !Guid.TryParse(info.Guid, out guid))
-            {
-                HttpResponseMessage verm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                verm.Content = new StringContent(Resources.GuidNotValid);
-                _log.Warn($"Th={threadId} - Returning statuscode = {verm.StatusCode}, Content = {verm.Content.ReadAsStringAsync().Result}\n");
-                return verm;
-            }
-
-            /*
-            // TOKEN VERIFICATION
-            try
-            {
-                HttpResponseMessage tokenResp = TokenValidation(guid.ToString());
-                if (tokenResp.StatusCode != HttpStatusCode.OK)
+                if (info == null)
                 {
-                    _log.Info($"Th={threadId} - Returning statuscode = {tokenResp.StatusCode}, Content = {tokenResp.Content.ReadAsStringAsync().Result}\n");
-                    return tokenResp;
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.IncomingDataCannotBeNull, _logger);
                 }
-            }
-            catch (Exception ex)
-            {
-                HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                erm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                _log.Info($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
-                return erm;
-            } */
+                Guid guid = Guid.Empty;
+                if (info.Guid == null || !Guid.TryParse(info.Guid, out guid))
+                {
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.GuidNotValid, _logger);
+                }
 
-            if (!id.Equals(info.Guid))
-            {
-                HttpResponseMessage rm1 = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                rm1.Content = new StringContent(Resources.GuidMismatchBodyAndUrl);
-                _log.Warn($"Th={threadId} - Returning statuscode = {rm1.StatusCode}, Content = {rm1.Content.ReadAsStringAsync().Result}\n");
-                return rm1;
-            }
-            
-            HttpResponseMessage rm = null;
-            switch (info.InformationSource)
-            {
-                case (int)Generated.ed_informationsource.ForetagsPortal:
-                    rm = CrmPlusControl.AccountPut(threadId, info);
-                    break;
-                case (int)Generated.ed_informationsource.SkolPortal:
-                    rm = CrmPlusControl.AccountPut(threadId, info);
-                    break;
-                case (int)Generated.ed_informationsource.SeniorPortal:
-                    rm = CrmPlusControl.AccountPut(threadId, info);
-                    break;
-                default:
-                    rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    rm.Content = new StringContent(string.Format(Resources.InvalidSource, info.InformationSource));
-                    break;
-            }
-            
-            //Return Logg
-            if (rm.StatusCode != HttpStatusCode.OK)
-            {
-                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-            }
-            else
-            {
-                _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
-                _log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-            }
+                /*
+                // TOKEN VERIFICATION
+                try
+                {
+                    HttpResponseMessage tokenResp = TokenValidation(guid.ToString());
+                    if (tokenResp.StatusCode != HttpStatusCode.OK)
+                    {
+                        return tokenResp;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                    erm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                    return erm;
+                } */
 
-            return rm;
+                if (!id.Equals(info.Guid))
+                {
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.GuidMismatchBodyAndUrl, _logger);
+                }
 
+                HttpResponseMessage rm = null;
+                switch (info.InformationSource)
+                {
+                    case (int)Generated.ed_informationsource.ForetagsPortal:
+                        rm = CrmPlusControl.AccountPut(threadId, info, _prefix);
+                        break;
+                    case (int)Generated.ed_informationsource.SkolPortal:
+                        rm = CrmPlusControl.AccountPut(threadId, info, _prefix);
+                        break;
+                    case (int)Generated.ed_informationsource.SeniorPortal:
+                        rm = CrmPlusControl.AccountPut(threadId, info, _prefix);
+                        break;
+                    default:
+                        rm = CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", string.Format(Resources.InvalidSource, info.InformationSource), _logger);
+                        break;
+                }
+
+                return rm;
+            }
         }
         
         [NonAction]

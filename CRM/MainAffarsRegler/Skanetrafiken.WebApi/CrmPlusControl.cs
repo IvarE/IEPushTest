@@ -29,12 +29,15 @@ using System.IdentityModel;
 using Skanetrafiken.Crm.Models;
 using Skanetrafiken.Crm.Schema.Generated;
 using System.Threading.Tasks;
+using Swashbuckle.Swagger;
+using Contact = Skanetrafiken.Crm.Schema.Generated.Contact;
+using System.Web.UI.WebControls;
 
 namespace Skanetrafiken.Crm.Controllers
 {
     public class CrmPlusControl
     {
-        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly AppInsightsLogger _logger = new AppInsightsLogger();
         private static readonly string _generateContextString = "localContext";
         //private static readonly string _cacheErrorCountString = "cacheErrorCount";
         //private static readonly string _appPoolName = "CRMPlus";
@@ -46,12 +49,17 @@ namespace Skanetrafiken.Crm.Controllers
         private static string NonLoginRefillSubject = "Ladda Kort";
         private static string CreateAccountSubject = "Skapa mitt konto";
 
+        private static Dictionary<string, string> _exceptionCustomProperties = new Dictionary<string, string>()
+        {
+            { "source", "" }
+        };
+
         internal static HttpResponseMessage ConnectionHandlingTest(int threadId)
         {
+            var dictionary = new Dictionary<string, string>();
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -86,12 +94,13 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
-        internal static HttpResponseMessage PingConnection(int threadId)
+        internal static HttpResponseMessage PingConnection(int threadId, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, false);
-                //_log.DebugFormat("Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -100,42 +109,49 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - PingConnection: ServiceProxy and LocalContext created Successfully.");
-
                     if (localContext?.OrganizationService != null)
                     {
                         HttpResponseMessage resp1 = new HttpResponseMessage(HttpStatusCode.OK);
-                        _log.Info($"Th={threadId} - PingConnection: Returning statuscode = {resp1.StatusCode}.\n");
                         return resp1;
                     }
                     else
                     {
+
                         HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                         resp.Content = new StringContent("Could not connect to CRM");
                         return resp;
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                resp.Content = new StringContent(e.Message);
-                _log.Error($"Th={threadId} - PingConnection: Returning statuscode with message: {resp.StatusCode} - {e.Message}.\n");
+                string errorMessage = ex.Message;
+                resp.Content = new StringContent(ex.Message);
+
+                _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                 return resp;
             }
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
         internal static HttpResponseMessage SalesOrderPut(int threadId, SalesOrderInfo info)
         {
+            string prefix = "SalesOrderPut";
+            _logger.SetGlobalProperty("source", prefix);
+
             HttpResponseMessage resp = null;
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -211,10 +227,7 @@ namespace Skanetrafiken.Crm.Controllers
                             client.Headers.Add("Content-Type", "text/xml;charset=utf-8");
                             client.Headers.Add("SOAPAction", "\"" + soapActionAddressCardDetails + "");
                             client.Timeout = 120000;
-#if TEST
-                            _log.Info($"Th={threadId} - dataString = {data}");
-                            _log.Info($"Th={threadId} - adressString = {cardDetailsServiceAddressCardDetails}");
-#endif
+
                             responseStr = client.UploadString("" + cardDetailsServiceAddressCardDetails + "", data);
                         }
 #endif
@@ -226,7 +239,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                         if (!string.IsNullOrWhiteSpace(responseStr))
                         {
-                            _log.Debug($"Th={threadId} - Result of call to BIFF: {responseStr}");
                             XDocument doc = null;
                             try
                             {
@@ -234,7 +246,8 @@ namespace Skanetrafiken.Crm.Controllers
                             }
                             catch (Exception e)
                             {
-                                _log.Error($"Th={threadId} - Could not parse result to an XDocument, errorMessage: {e.Message}\nresult:\n{responseStr}");
+                                _exceptionCustomProperties["source"] = prefix;
+                                _logger.LogException(e, _exceptionCustomProperties);
                             }
                             if (doc != null)
                             {
@@ -251,7 +264,6 @@ namespace Skanetrafiken.Crm.Controllers
                                 {
                                     CardDetails2 cardDetails = (CardDetails2)serializer.Deserialize(memStream);
 
-                                    _log.Info($"Th={threadId} - CardDetails attained is = {cardDetails.ToString()}");
 
                                     // TODO: teo - Fill TravelCardEntity with information
                                 }
@@ -268,6 +280,9 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 resp = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 resp.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return resp;
@@ -275,15 +290,15 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
-        internal static HttpResponseMessage KopOchSkickaKund(int threadId, CustomerInfo customerInfo)
+        internal static HttpResponseMessage KopOchSkickaKund(int threadId, CustomerInfo customerInfo, string prefix)
         {
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - KopOchSkickaKund: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -292,20 +307,20 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - KopOchSkickaKund: ServiceProxy and LocalContext created Successfully.");
-
                     customerInfo.Source = (int)Generated.ed_informationsource.KopOchSkicka;
 
-                    _log.Info($"Th={threadId} - KopOchSkickaKund: Validating CustomerInfo.");
                     StatusBlock validateStatus = CustomerUtility.ValidateCustomerInfo(localContext, customerInfo);
                     if (!validateStatus.TransactionOk)
                     {
                         HttpResponseMessage responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        responseMessage.Content = new StringContent(validateStatus.ErrorMessage);
+                        string errorMessage = validateStatus.ErrorMessage;
+                        responseMessage.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                         return responseMessage;
                     }
 
-                    _log.Info($"Th={threadId} - KopOchSkickaKund: Calling FindOrCreateUnvalidatedContact.");
                     var contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo);
 
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
@@ -319,20 +334,27 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 return rm;
             }
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
         internal static HttpResponseMessage SalesOrderPost(int threadId, SalesOrderInfo salesOrderInfo)
         {
+            string prefix = "SalesOrderPost";
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -381,6 +403,9 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -388,6 +413,7 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
@@ -397,10 +423,11 @@ namespace Skanetrafiken.Crm.Controllers
         /// <param name="threadId"></param>
         /// <param name="salesOrderInfo"></param>
         /// <returns></returns>
-        internal static HttpResponseMessage KopOchSkickaSalesOrderPost(int threadId, SalesOrderInfo salesOrderInfo, bool isFTG)
+        internal static HttpResponseMessage KopOchSkickaSalesOrderPost(int threadId, SalesOrderInfo salesOrderInfo, bool isFTG, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-            _log.DebugFormat($"Th={threadId} - KopOchSkickaSalesOrderPost: Creating serviceProxy");
 
             // Cast the proxy client to the IOrganizationService interface.
             using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
@@ -410,10 +437,7 @@ namespace Skanetrafiken.Crm.Controllers
                 if (localContext.OrganizationService == null)
                     throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPost: ServiceProxy and LocalContext created Successfully.");
-
-                _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPost: Validating SalesOrderInfo.");
-                var response = ValidateKopOchSkickaSalesOrderInfo(localContext, salesOrderInfo, isFTG);
+                var response = ValidateKopOchSkickaSalesOrderInfo(localContext, salesOrderInfo, isFTG, prefix);
 
                 if (!HttpStatusCode.OK.Equals(response.StatusCode))
                     return response;
@@ -425,8 +449,6 @@ namespace Skanetrafiken.Crm.Controllers
                 #region Handle Account / Contact Flow
                 if (isFTG == false)
                 {
-                    _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPost: isFTG is FALSE.");
-
                     if (!string.IsNullOrEmpty(salesOrderInfo.ContactGuid))
                         contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, new Guid(salesOrderInfo.ContactGuid), new ColumnSet(ContactEntity.Fields.StateCode));
                     else if (!string.IsNullOrEmpty(salesOrderInfo.Customer.Guid))
@@ -451,12 +473,10 @@ namespace Skanetrafiken.Crm.Controllers
                     newSalesOrder.ed_ContactId = contact.ToEntityReference(); //check if FTG
 
                     newSalesOrder.Id = XrmHelper.Create(localContext, newSalesOrder);
-                    _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPost: SalesOrder Created.");
                     #endregion
                 }
                 else
                 {
-                    _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPost: isFTG is TRUE.");
 
                     account = AccountEntity.GetAccountByPortalId(localContext, new ColumnSet(AccountEntity.Fields.StateCode), salesOrderInfo.PortalId);
 
@@ -473,7 +493,6 @@ namespace Skanetrafiken.Crm.Controllers
                     newSalesOrder.ed_AccountId = account.ToEntityReference(); //check if FTG
 
                     newSalesOrder.Id = XrmHelper.Create(localContext, newSalesOrder);
-                    _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPost: SalesOrder Created.");
                     #endregion
                 }
 
@@ -483,7 +502,6 @@ namespace Skanetrafiken.Crm.Controllers
                 if (salesOrderInfo.SalesOrderLines != null)
                 {
                     #region Loop through all SalesOrderLines from SalesOrderinfo
-                    _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPost: Looping through all SalesOrderLines.");
                     foreach (SalesOrderLineInfo salesOrderLineInfo in salesOrderInfo.SalesOrderLines)
                     {
                         SkaKortEntity skaKortEnt = new SkaKortEntity();
@@ -547,7 +565,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                         #region Create SalesOrderLineEntity from SalesOrderLineInfo
 
-                        _log.Debug($"Check if OrderStatus '{salesOrderLineInfo.Status}' exists.");
                         var orderStatus = OrderStatusEntity.FindOrCreateOrderStatus(localContext, salesOrderLineInfo.Status);
 
                         var newSalesOrderLine = SalesOrderLineInfo.GetSalesOrderLineEntityFromKopOchSkicka(
@@ -610,7 +627,6 @@ namespace Skanetrafiken.Crm.Controllers
                     #endregion
                 }
 
-                _log.Debug($"Th={threadId} - KopOchSkickaSalesOrderPost: Exiting KopOchSkickaSalesOrderPost.");
 
                 HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                 resp.Content = new StringContent(SerializeNoNull(""));
@@ -618,10 +634,11 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
-        internal static HttpResponseMessage KopOchSkickaSalesOrderPut(int threadId, SalesOrderInfo salesOrderInfo, bool isFTG)
+        internal static HttpResponseMessage KopOchSkickaSalesOrderPut(int threadId, SalesOrderInfo salesOrderInfo, bool isFTG, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-            _log.DebugFormat($"Th={threadId} - KopOchSkickaSalesOrderPut: Creating serviceProxy");
             // Cast the proxy client to the IOrganizationService interface.
             using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
             {
@@ -630,10 +647,7 @@ namespace Skanetrafiken.Crm.Controllers
                 if (localContext.OrganizationService == null)
                     throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPut: ServiceProxy and LocalContext created Successfully.");
-
-                _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPut: Validating SalesOrderInfo.");
-                HttpResponseMessage response = ValidateKopOchSkickaSalesOrderInfo(localContext, salesOrderInfo, isFTG); //Will we always have portalID?
+                HttpResponseMessage response = ValidateKopOchSkickaSalesOrderInfo(localContext, salesOrderInfo, isFTG, prefix); //Will we always have portalID?
                 if (!HttpStatusCode.OK.Equals(response.StatusCode))
                     return response;
 
@@ -642,25 +656,21 @@ namespace Skanetrafiken.Crm.Controllers
 
                 if (isFTG == false)
                 {
-                    _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPut: isFTG is FALSE.");
                     //Since no Customer is sent into this model, we'll create a new one with contactid from call.
                     salesOrderInfo.Customer = new CustomerInfo() { Guid = salesOrderInfo.ContactGuid };
                     salesOrderFilter.AddCondition(SalesOrderEntity.Fields.ed_informationsource, ConditionOperator.Equal, (int)Generated.ed_informationsource.KopOchSkicka);
                 }
                 else
                 {
-                    _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPut: isFTG is TRUE.");
                     salesOrderFilter.AddCondition(SalesOrderEntity.Fields.ed_informationsource, ConditionOperator.Equal, (int)Generated.ed_informationsource.KopOchSkickaFTG);
                 }
 
                 //Fetch SalesOrder
-                _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPut: Fetching SalesOrderEntity '{salesOrderInfo.OrderNo}'");
                 //SalesOrderEntity salesOrderObj = XrmRetrieveHelper.RetrieveFirst<SalesOrderEntity>(localContext, query);
                 SalesOrderEntity salesOrderObj = XrmRetrieveHelper.RetrieveFirst<SalesOrderEntity>(localContext, new ColumnSet(SalesOrderEntity.Fields.ed_OrderNo), salesOrderFilter);
 
                 if (salesOrderObj != null)
                 {
-                    _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPut: Found SalesOrderEntity. Getting attributes from SalesOrderInfo.");
 
                     //SalesOrderEntity salesOrder = SalesOrderInfo.GetSalesOrderEntityFromKopAndSkicka(localContext, salesOrderInfo, true);
                     SalesOrderEntity salesOrder = null;
@@ -676,7 +686,6 @@ namespace Skanetrafiken.Crm.Controllers
                     salesOrder.Id = salesOrderObj.Id;
                     XrmHelper.Update(localContext, salesOrder);
 
-                    _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPut: SalesOrder Updated.");
 
                     QueryExpression salesOrderLineQuery = new QueryExpression()
                     {
@@ -691,10 +700,8 @@ namespace Skanetrafiken.Crm.Controllers
                         }
                     };
 
-                    _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPut: Fetching all related SalesOrderLines from SalesOrder.");
                     List<SalesOrderLineEntity> salesOrderLines = XrmRetrieveHelper.RetrieveMultiple<SalesOrderLineEntity>(localContext, salesOrderLineQuery);
 
-                    _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPut: Found {salesOrderLines.Count} SalesOrderLines.");
                     foreach (var salesOrderLineFromSeKund in salesOrderLines)
                     {
                         foreach (SalesOrderLineInfo salesOrderLineFromPUT in salesOrderInfo.SalesOrderLines)
@@ -704,17 +711,12 @@ namespace Skanetrafiken.Crm.Controllers
 
                             if (salesOrderLineFromPUT.OrderLineNo == salesOrderLineFromSeKund.st_SalesOrderLineID)
                             {
-                                _log.Debug($"Th={threadId} - KopOchSkickaSalesOrderPut: Fetching/Creating OrderStatus.");
                                 OrderStatusEntity orderStatus = OrderStatusEntity.FindOrCreateOrderStatus(localContext, salesOrderLineFromPUT.Status);
-                                _log.Debug($"Th={threadId} - KopOchSkickaSalesOrderPut: OrderStatus id '{orderStatus.Id}'.");
 
-                                _log.Debug($"Th={threadId} - KopOchSkickaSalesOrderPut: Fetching SkaKort.");
                                 SkaKortEntity skaKort = SkaKortEntity.FetchSkaKort(localContext, salesOrderLineFromPUT.CardNumber);
-                                //_log.Debug($"SkaKort card number '{skaKort.ed_CardNumber}'");
 
                                 if (skaKort == null)
                                 {
-                                    _log.Debug($"Th={threadId} - KopOchSkickaSalesOrderPut: SKÅ Kort not found. Create new.");
 
                                     skaKort = new SkaKortEntity();
                                     skaKort.ed_CardNumber = salesOrderLineFromPUT.CardNumber;
@@ -731,17 +733,13 @@ namespace Skanetrafiken.Crm.Controllers
                                         skaKort.ed_Account = salesOrder.ed_AccountId;
                                     }
 
-                                    _log.Debug($"Th={threadId} - KopOchSkickaSalesOrderPut: Creating new SKÅ Kort.");
-
                                     skaKort.Id = XrmHelper.Create(localContext, skaKort);
 
-                                    _log.Debug($"Th={threadId} - KopOchSkickaSalesOrderPut: Created new SKÅ Kort.");
                                 }
 
                                 SalesOrderLineEntity updatedSalesOrderLine = SalesOrderLineInfo.GetSalesOrderLineEntityFromKopOchSkicka(localContext, salesOrderLineFromPUT,
                                     salesOrder.ToEntityReference(), orderStatus.ToEntityReference(), skaKort.ToEntityReference());
 
-                                _log.Debug($"Th={threadId} - KopOchSkickaSalesOrderPut: Updating SalesOrderLine with data from SalesOrderLineInfo");
                                 updatedSalesOrderLine.Id = salesOrderLineFromSeKund.Id;
                                 XrmHelper.Update(localContext, updatedSalesOrderLine);
                                 continue;
@@ -749,29 +747,31 @@ namespace Skanetrafiken.Crm.Controllers
                         }
                     }
 
-                    _log.Info($"Th={threadId} - KopOchSkickaSalesOrderPut: Exiting KopOchSkickaSalesOrderPost.");
-
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                     resp.Content = new StringContent(SerializeNoNull(""));
                     return resp;
                 }
                 else
                 {
-                    _log.Debug($"Th={threadId} - KopOchSkickaSalesOrderPut: Exiting KopOchSkickaSalesOrderPost.");
 
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.NotFound);
-                    resp.Content = new StringContent($"Could not find SalesOrder with OrderNo '{salesOrderInfo.OrderNo}'.");
+                    string errorMessage = $"Could not find SalesOrder with OrderNo '{salesOrderInfo.OrderNo}'.";
+                    resp.Content = new StringContent(errorMessage);
+
+                    _logger.LogError($"KopOchSkickaSalesOrderPut: Failed - {errorMessage}");
+
                     return resp;
                 }
             }
         }
 
-        internal static HttpResponseMessage CompanySalesOrderPost(int threadId, SalesOrderInfo salesOrderInfo)
+        internal static HttpResponseMessage CompanySalesOrderPost(int threadId, SalesOrderInfo salesOrderInfo, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - CompanySalesOrderPost: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -780,37 +780,38 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - CompanySalesOrderPost: ServiceProxy and LocalContext created Successfully.");
-
-                    _log.Info($"Th={threadId} - CompanySalesOrderPost: Validating SalesOrderInfo.");
                     HttpResponseMessage validateInfoMess = ValidateCompanySalesOrderInfo(localContext, salesOrderInfo);
                     if (!HttpStatusCode.OK.Equals(validateInfoMess.StatusCode))
                         return validateInfoMess;
 
-                    _log.Debug($"Th={threadId} - CompanySalesOrderPost: Calling GetSalesOrderEntityFromSalesOrderInfo.");
                     SalesOrderEntity newSalesOrder = SalesOrderInfo.GetSalesOrderEntityFromSalesOrderInfo(localContext, salesOrderInfo);
-
 
                     if (salesOrderInfo.Customer != null && newSalesOrder.ed_CompanyRoleId == null)
                     {
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.NotFound);
-                        error.Content = new StringContent($"Could not find company role for SalesOrder {salesOrderInfo.OrderNo}.");
+                        string errorMessage = $"Could not find company role for SalesOrder {salesOrderInfo.OrderNo}.";
+                        error.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"CompanySalesOrderPost: Failed - {errorMessage}");
+
                         return error;
                     }
 
                     if (newSalesOrder.ed_AccountId == null)
                     {
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.NotFound);
-                        error.Content = new StringContent($"Could not find company {salesOrderInfo.PortalId}.");
+                        string errorMessage = $"Could not find company {salesOrderInfo.PortalId}.";
+                        error.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"CompanySalesOrderPost: Failed - {errorMessage}");
+
                         return error;
                     }
 
                     newSalesOrder.Id = XrmHelper.Create(localContext, newSalesOrder);
-                    _log.Info($"Th={threadId} - CompanySalesOrderPost: New SalesOrder Created.");
 
                     if (salesOrderInfo.SalesOrderLines != null)
                     {
-                        _log.Info($"Th={threadId} - CompanySalesOrderPost: Handle SalesOrderLines.");
                         foreach (SalesOrderLineInfo salesOrderLineInfo in salesOrderInfo.SalesOrderLines)
                         {
                             SalesOrderLineEntity newSalesOrderLine = SalesOrderLineInfo.GetSalesOrderLineEntityFromSalesOrderLineInfo(localContext, salesOrderLineInfo);
@@ -882,6 +883,9 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -889,6 +893,7 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
@@ -968,30 +973,38 @@ namespace Skanetrafiken.Crm.Controllers
             return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
-        private static HttpResponseMessage ValidateKopOchSkickaSalesOrderInfo(Plugin.LocalPluginContext localContext, SalesOrderInfo salesOrderInfo, bool isFTG)
+        private static HttpResponseMessage ValidateKopOchSkickaSalesOrderInfo(Plugin.LocalPluginContext localContext, SalesOrderInfo salesOrderInfo, bool isFTG, string prefix)
         {
-            _log.Debug($"Entering ValidateKopOchSkickaSalesOrderInfo.");
             HttpResponseMessage respMess;
             if (salesOrderInfo == null)
             {
-                _log.Debug($"{nameof(salesOrderInfo)} is empty.");
                 respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                respMess.Content = new StringContent(Resources.IncomingDataCannotBeNull);
+                string errorMessage = Resources.IncomingDataCannotBeNull;
+                respMess.Content = new StringContent(errorMessage);
+
+                _logger.LogError($"ValidateKopOchSkickaSalesOrderInfo: Failed - {errorMessage}");
+
                 return respMess;
             }
             if (isFTG == false && string.IsNullOrWhiteSpace(salesOrderInfo.ContactGuid))
             {
-                _log.Debug($"{nameof(salesOrderInfo.Customer)} is empty.");
                 respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                respMess.Content = new StringContent(Resources.NoContactGuidOnSalesOrderInfo);
+                string errorMessage = Resources.NoContactGuidOnSalesOrderInfo;
+                respMess.Content = new StringContent(errorMessage);
+
+                _logger.LogError($"ValidateKopOchSkickaSalesOrderInfo: Failed - {errorMessage}");
+
                 return respMess;
             }
 
             if (isFTG == true && string.IsNullOrWhiteSpace(salesOrderInfo.PortalId))
             {
-                _log.Debug($"{nameof(salesOrderInfo.PortalId)} is empty.");
                 respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                respMess.Content = new StringContent(Resources.NoContactGuidOnSalesOrderInfo);
+                string errorMessage = Resources.NoContactGuidOnSalesOrderInfo;
+                respMess.Content = new StringContent(errorMessage);
+
+                _logger.LogError($"ValidateKopOchSkickaSalesOrderInfo: Failed - {errorMessage}");
+
                 return respMess;
             }
 
@@ -1010,9 +1023,12 @@ namespace Skanetrafiken.Crm.Controllers
 
             if (salesOrderInfo.SalesOrderLines == null)
             {
-                _log.Debug($"{nameof(salesOrderInfo.SalesOrderLines)} is empty.");
                 respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                respMess.Content = new StringContent($"SalesOrderLines - {Resources.IncomingDataCannotBeNull}");
+                string errorMessage = Resources.IncomingDataCannotBeNull;
+                respMess.Content = new StringContent(errorMessage);
+
+                _logger.LogError($"ValidateKopOchSkickaSalesOrderInfo: Failed - {errorMessage}");
+
                 return respMess;
             }
             #endregion
@@ -1020,12 +1036,14 @@ namespace Skanetrafiken.Crm.Controllers
             //Check if it is required that order lines is needed.
             if (salesOrderInfo.SalesOrderLines.Length < 1)
             {
-                _log.Debug($"{nameof(salesOrderInfo.SalesOrderLines)} does not have any order lines.");
                 respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                respMess.Content = new StringContent(Resources.KopOchSkicka_MissingOrderLines);
+                string errorMessage = Resources.KopOchSkicka_MissingOrderLines;
+                respMess.Content = new StringContent(errorMessage);
+
+                _logger.LogError($"ValidateKopOchSkickaSalesOrderInfo: Failed - {errorMessage}");
+
                 return respMess;
             }
-            _log.Debug($"Exiting ValidateKopOchSkickaSalesOrderInfo.");
             return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
@@ -1190,7 +1208,6 @@ namespace Skanetrafiken.Crm.Controllers
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - RetrieveLeadLinkGuid: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -1199,7 +1216,6 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - RetrieveLeadLinkGuid: ServiceProxy and LocalContext created Successfully.");
 
                     IList<LeadEntity> leads = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, new ColumnSet(LeadEntity.Fields.StateCode, LeadEntity.Fields.ed_LatestLinkGuid),
                         new FilterExpression
@@ -1293,7 +1309,6 @@ namespace Skanetrafiken.Crm.Controllers
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - RetrieveContactLinkGuid: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -1301,8 +1316,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
-
-                    _log.Info($"Th={threadId} - RetrieveContactLinkGuid: ServiceProxy and LocalContext created Successfully");
 
                     IList<ContactEntity> contacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, new ColumnSet(ContactEntity.Fields.ed_LatestLinkGuid),
                         new FilterExpression
@@ -1353,12 +1366,14 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
-        internal static HttpResponseMessage PASS(int threadId, CustomerInfo customerInfo)
+        internal static HttpResponseMessage PASS(int threadId, CustomerInfo customerInfo, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - PASS: Creating serviceProxy");
+
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -1367,17 +1382,20 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - PASS: ServiceProxy and LocalContext created Successfully.");
+
 
                     if (customerInfo == null)
                     {
                         HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        respMess.Content = new StringContent(Resources.IncomingDataCannotBeNull);
+                        string errorMessage = Resources.IncomingDataCannotBeNull;
+                        respMess.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                         return respMess;
                     }
 
                     // Validate info
-                    _log.Info($"Th={threadId} - PASS: validating info");
                     customerInfo.Source = (int)Crm.Schema.Generated.ed_informationsource.PASS;
                     StatusBlock validateStatus = CustomerUtility.ValidateCustomerInfo(localContext, customerInfo);
                     if (!validateStatus.TransactionOk)
@@ -1388,10 +1406,7 @@ namespace Skanetrafiken.Crm.Controllers
                     }
 
                     // Find/ Create Customer
-                    _log.Info($"Th={threadId} - PASS: calling FindOrCreateUnvalidatedContact");
                     ContactEntity contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo);
-                    string contactString = contact == null ? "null" : contact.ContactId.ToString();
-                    _log.DebugFormat($"Th={threadId} - PASS: Found/created contact {contactString}");
 
                     // Attach Lead
                     IList<LeadEntity> leads = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, LeadEntity.LeadInfoBlock,
@@ -1445,20 +1460,27 @@ namespace Skanetrafiken.Crm.Controllers
 
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 return rm;
             }
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+
+                _logger.Dispose();
             }
         }
 
-        public static HttpResponseMessage ChangeEmailAddress(int threadId, CustomerInfo customer)
+        public static HttpResponseMessage ChangeEmailAddress(int threadId, CustomerInfo customer, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -1467,24 +1489,30 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - ChangeEmailAddress: ServiceProxy and LocalContext created Successfully.");
 
                     if (customer == null)
                     {
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        rm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
+                        string errorMessage = Resources.IncomingDataCannotBeNull;
+                        rm.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                         return rm;
                     }
 
                     // Validera att inkommande information är giltig (ValidateCustomerInfo)
-                    _log.Info($"Th={threadId} - ChangeEmailAddress: Validating CustomerInfo.");
                     customer.Source = (int)Crm.Schema.Generated.ed_informationsource.BytEpost;
                     StatusBlock validateStatus = CustomerUtility.ValidateCustomerInfo(localContext, customer);
                     if (!validateStatus.TransactionOk)
                     {
                         // Skicka vidare eventuellt felmeddelande
                         HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        respMess.Content = new StringContent(validateStatus.ErrorMessage);
+                        string errorMessage = validateStatus.ErrorMessage;
+                        respMess.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                         return respMess;
                     }
 
@@ -1497,14 +1525,18 @@ namespace Skanetrafiken.Crm.Controllers
                     if (customer.Mobile != null)
                     {
                         getMailConflictContact.AddCondition(ContactEntity.Fields.Telephone2, ConditionOperator.Equal, customer.Mobile);
-                    }                    
+                    }
 
                     IList<ContactEntity> mailConflicts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, new ColumnSet(false), getMailConflictContact);
 
                     if (mailConflicts.Count > 0)
                     {
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        rm.Content = new StringContent(Resources.EmailAlreadyInUse);
+                        string errorMessage = Resources.EmailAlreadyInUse;
+                        rm.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                         return rm;
                     }
 
@@ -1540,10 +1572,14 @@ namespace Skanetrafiken.Crm.Controllers
                     if (contact == null)
                     {
                         string customerMobileString = customer.Mobile == null ? "null" : customer.Mobile;
+                        string errorMessage = Resources.CouldNotFindContactWithInfo;
+
+                        _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                         return new HttpResponseMessage(HttpStatusCode.BadRequest)
                         {
                             //Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, string.Format("{0} + {1}", customer.SocialSecurityNumber, customer.Email)))
-                            Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, string.Format("{0} + {1}", customer.Email, customerMobileString)))
+                            Content = new StringContent(string.Format(errorMessage, string.Format("{0} + {1}", customer.Email, customerMobileString)))
                         };
                     }
 
@@ -1554,7 +1590,9 @@ namespace Skanetrafiken.Crm.Controllers
                     }
                     catch (MissingFieldException e)
                     {
-                        _log.Error($"Th={threadId} - Error caught when calling GetSettingInt() for {CgiSettingEntity.Fields.ed_LeadValidityHours}. Message = {e.Message}");
+                        _exceptionCustomProperties["source"] = prefix;
+                        _logger.LogException(e, _exceptionCustomProperties);
+
                         return new HttpResponseMessage(HttpStatusCode.InternalServerError)
                         {
                             Content = new StringContent(string.Format(Resources.SettingsFetchError, e.Message))
@@ -1581,6 +1619,9 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError)
                 {
                     Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message))
@@ -1589,6 +1630,7 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
@@ -1599,7 +1641,6 @@ namespace Skanetrafiken.Crm.Controllers
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -1638,14 +1679,15 @@ namespace Skanetrafiken.Crm.Controllers
         /// <param name="threadId"></param>
         /// <param name="customer"></param>
         /// <returns></returns>
-        public static HttpResponseMessage CreateCustomerLead(int threadId, CustomerInfo customer)
+        public static HttpResponseMessage CreateCustomerLead(int threadId, CustomerInfo customer, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 customer = (LeadInfo)customer;
                 LeadEntity newLead = null;
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - CreateCustomerLead: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -1654,14 +1696,16 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - CreateCustomerLead: ServiceProxy and LocalContext created Successfully.");
 
                     if (customer == null)
                     {
-                        return new HttpResponseMessage(HttpStatusCode.BadRequest)
-                        {
-                            Content = new StringContent(Resources.IncomingDataCannotBeNull)
-                        };
+                        HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        string errorMessage = Resources.IncomingDataCannotBeNull;
+                        erm.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"CreateCustomerLead: Failed - {errorMessage}");
+
+                        return erm;
                     }
                     //if (!customer.SwedishSocialSecurityNumberSpecified)
                     //{
@@ -1670,22 +1714,22 @@ namespace Skanetrafiken.Crm.Controllers
                     //    return respMess;
                     //}
 
-                    _log.Info($"Th={threadId} - CreateCustomerLead: Validating CustomerInfo.");
                     customer.Source = (int)Crm.Schema.Generated.ed_informationsource.SkapaMittKonto;
                     StatusBlock validationStatus = CustomerUtility.ValidateCustomerInfo(localContext, customer);
                     if (!validationStatus.TransactionOk)
                     {
-                        return new HttpResponseMessage(HttpStatusCode.BadRequest)
-                        {
-                            Content = new StringContent(validationStatus.ErrorMessage)
-                        };
+                        HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        string errorMessage = validationStatus.ErrorMessage;
+                        erm.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"CreateCustomerLead: Failed - {errorMessage}");
+
+                        return erm;
                     }
 
-                    _log.Info($"Th={threadId} - CreateCustomerLead: Checking if Lead can be created.");
                     StatusBlock canLeadBeCreated = LeadEntity.CanLeadBeCreated(localContext, customer);
                     if (canLeadBeCreated.TransactionOk)
                     {
-                        _log.Info($"Th={threadId} - CreateCustomerLead: Lead can be created.");
                         // Workaround!
                         // Issue during "Nya affärsregler". Was unable to qualify a lead if name was missing. Workaround is to add a lastname
                         if (string.IsNullOrWhiteSpace(customer.LastName))
@@ -1693,11 +1737,9 @@ namespace Skanetrafiken.Crm.Controllers
 
                         // Create a new lead.
                         newLead = LeadEntity.CreateLead(localContext, customer, CreateAccountSubject);
-                        _log.Info($"Th={threadId} - CreateCustomerLead: Lead created.");
                     }
                     else if (canLeadBeCreated.StatusBlockCode == (int)CustomerUtility.StatusBlockCode.OtherLeadFound)
                     {
-                        _log.Info($"Th={threadId} - CreateCustomerLead: Other Lead found.");
                         Guid leadGuid = Guid.Empty;
                         if (Guid.TryParse(canLeadBeCreated.Information, out leadGuid))
                         {
@@ -1709,26 +1751,36 @@ namespace Skanetrafiken.Crm.Controllers
                             {
                                 localContext.TracingService.Trace(string.Format("Inconcistency in Database. Unexpected exception caught:\n{0}", e.Message));
 
+                                _exceptionCustomProperties["source"] = prefix;
+                                _logger.LogException(e, _exceptionCustomProperties);
+
                                 HttpResponseMessage exceptionResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                                 exceptionResponse.Content = new StringContent(Resources.InconsistencyInDatabase);
                                 return exceptionResponse;
                             }
 
-                            
+
                             newLead.UpdateWithCustomerInfo(localContext, customer);
-                            _log.Info($"Th={threadId} - CreateCustomerLead: Lead updated with CustomerInfo (OtherLeadFound).");
                         }
                         else
                         {
                             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                            response.Content = new StringContent(Resources.InconsistencyInDatabase);
+                            string errorMessage = Resources.InconsistencyInDatabase;
+                            response.Content = new StringContent(errorMessage);
+
+                            _logger.LogError($"CreateCustomerLead: Failed - {errorMessage}");
+
                             return response;
                         }
                     }
                     else
                     {
                         HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        response.Content = new StringContent(canLeadBeCreated.ErrorMessage);
+                        string errorMessage = canLeadBeCreated.ErrorMessage;
+                        response.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"CreateCustomerLead: Failed - {errorMessage}");
+
                         return response;
                     }
 
@@ -1739,9 +1791,12 @@ namespace Skanetrafiken.Crm.Controllers
                     }
                     catch (MissingFieldException e)
                     {
-                        _log.Error($"Th={threadId} - Error caught when calling GetSettingInt() for {CgiSettingEntity.Fields.ed_LeadValidityHours}. Message = {e.Message}");
                         HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                        respMess.Content = new StringContent(string.Format(Resources.SettingsFetchError, e.Message));
+                        string errorMessage = string.Format(Resources.SettingsFetchError, e.Message);
+                        respMess.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"CreateCustomerLead: Failed - {errorMessage}");
+
                         return respMess;
                     }
 
@@ -1750,12 +1805,9 @@ namespace Skanetrafiken.Crm.Controllers
                     newLead.ed_InformationSource = Generated.ed_informationsource.SkapaMittKonto;
                     newLead.LeadSourceCode = Generated.lead_leadsourcecode.MittKonto;
                     localContext.OrganizationService.Update(newLead);
-                    _log.Info($"Th={threadId} - CreateCustomerLead: Lead updated successfully.");
 
-                    _log.Info($"Th={threadId} - CreateCustomerLead: Sending Validation Email.");
                     SendEmailResponse mailResponse = CrmPlusUtility.SendValidationEmail(localContext, threadId, newLead);
 
-                    _log.Debug($"Th={threadId} - CreateCustomerLead: Exiting CreateCustomerLead.");
                     HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.Created);
                     rm.Content = new StringContent(SerializeNoNull(newLead.ToCustomerInfo(localContext)));
                     return rm;
@@ -1763,6 +1815,9 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -1770,17 +1825,19 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
-        public static HttpResponseMessage GetContactTroubleshooting(int threadId, string contactGuidOrEmail)
+        public static HttpResponseMessage GetContactTroubleshooting(int threadId, string contactGuidOrEmail, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             //OrganizationServiceProxy serviceProxy = null;
             try
             {
 
                 HttpContext httpContext = HttpContext.Current;
-                _log.DebugFormat($"Th={threadId} - httpContext = {httpContext}");
 
                 CrmServiceClient _conn = null;
                 if (httpContext != null)
@@ -1789,13 +1846,10 @@ namespace Skanetrafiken.Crm.Controllers
                 }
                 if (_conn == null)
                 {
-                    _log.Debug($"Th={threadId} - Creating new connection from CRM (no cache found)");
                     string connectionString = CrmConnection.GetCrmConnectionString(CredentialFilePath);
-                    _log.DebugFormat($"Th={threadId} - connectionString = {connectionString}");
                     //  Connect to the CRM web service using a connection string.
                     _conn = new CrmServiceClient(connectionString);
 
-                    _log.DebugFormat($"Th={threadId} - Connection state: _conn.IsReady = {_conn.IsReady}");
                     if (_conn.IsReady)
                     {
                         httpContext.Cache.Insert(_generateContextString, _conn, null, DateTime.Now.AddMinutes(5), Cache.NoSlidingExpiration);
@@ -1813,12 +1867,10 @@ namespace Skanetrafiken.Crm.Controllers
                         //    }
                         //}
 
-                        //_log.Debug($"Acessing cache for error count");
                         //int? errorCount = httpContext.Cache.Get(_cacheErrorCountString) as int?;
                     }
                 }
 
-                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 //IOrganizationService serviceProxy = (IOrganizationService)_conn.OrganizationWebProxyClient != null ? (IOrganizationService)_conn.OrganizationWebProxyClient : (IOrganizationService)_conn.OrganizationServiceProxy;
                 OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)_conn.OrganizationServiceProxy;
@@ -1836,25 +1888,27 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
             }
-            //finally
-            //{
-            //    if (serviceProxy != null)
-            //        serviceProxy.Dispose();
-            //}
+            finally
+            {
+                _logger.Dispose();
+            }
         }
 
-        public static HttpResponseMessage GetContact(int threadId, string contactGuidOrEmailorSSNorMklId)
+        public static HttpResponseMessage GetContact(int threadId, string contactGuidOrEmailorSSNorMklId, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
             ContactEntity contact = null;
 
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - GetContact: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -1863,16 +1917,12 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - GetContact: ServiceProxy and LocalContext created Successfully.");
-
                     bool isSSN = false;
                     bool isMklId = false;
                     Guid contactId = Guid.Empty;
                     // GUID
                     if (Guid.TryParse(contactGuidOrEmailorSSNorMklId, out contactId))
                     {
-                        _log.Info($"Th={threadId} - GetContact: Retrieving Contact using ContactId.");
-                        _log.Debug($"Th={threadId} - GetContact: Retrieving Contact using ContactId: {contactId.ToString()}.");
 
                         contact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, ContactEntity.ContactInfoBlock,
                             new FilterExpression()
@@ -1885,8 +1935,6 @@ namespace Skanetrafiken.Crm.Controllers
                     }
                     else if (CustomerUtility.CheckPersonnummerFormat(contactGuidOrEmailorSSNorMklId)) //Pers.Nr
                     {
-                        _log.Info($"Th={threadId} - GetContact: Retrieving Contact using SocialSecurityNumber(SSN).");
-                        _log.Debug($"Th={threadId} - GetContact: Retrieving Contact using SocialSecurityNumber(SSN): {contactGuidOrEmailorSSNorMklId}.");
 
                         isSSN = true;
                         contact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, ContactEntity.ContactInfoBlock,
@@ -1901,22 +1949,18 @@ namespace Skanetrafiken.Crm.Controllers
                     // EMAIL (Should we add Mobile in some way?)
                     else if (CustomerUtility.CheckEmailFormat(contactGuidOrEmailorSSNorMklId))
                     {
-                        _log.Info($"Th={threadId} - GetContact: Retrieving Contact using Email.");
-                        _log.Debug($"Th={threadId} - GetContact: Retrieving Contact using Email: {contactGuidOrEmailorSSNorMklId}.");
-
                         contact = ContactEntity.GetValidatedContactFromEmail(localContext, contactGuidOrEmailorSSNorMklId);
                     }
                     else // MKL id
                     {
                         isMklId = true;
-                        _log.Info($"Th={threadId} - GetContact: Retrieving Contact using MklId.");
-                        _log.Debug($"Th={threadId} - GetContact: Retrieving Contact using MklId: {contactGuidOrEmailorSSNorMklId}.");
 
                         contact = ContactEntity.GetValidatedContactFromMklId(localContext, contactGuidOrEmailorSSNorMklId);
                     }
 
                     if (contact == null)
                     {
+                        string errorMessage = string.Empty;
                         HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.NotFound);
                         if (isSSN == true)
                         {
@@ -1937,7 +1981,11 @@ namespace Skanetrafiken.Crm.Controllers
                     {
                         // TODD teo - Verify httpStatusCode usage
                         HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.NotFound);
-                        respMess.Content = new StringContent(string.Format(Resources.ContactIsInactive));
+
+                        string errorMessage = string.Format(Resources.ContactIsInactive);
+                        _logger.LogError($"GetContact: Failed - {errorMessage}");
+
+                        respMess.Content = new StringContent(errorMessage);
                         return respMess;
                     }
                     ContactInfo info = contact.ToContactInfo(localContext);
@@ -1955,6 +2003,7 @@ namespace Skanetrafiken.Crm.Controllers
                     }
 
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                    _logger.LogInformation($"GetContact: Successfull");
                     resp.Content = new StringContent(SerializeNoNull(info));
                     return resp;
                 }
@@ -1963,20 +2012,26 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 return rm;
             }
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
-        public static HttpResponseMessage CreateExcelBase64(int threadId, string fromDate, string toDate)
+        public static HttpResponseMessage CreateExcelBase64(int threadId, string fromDate, string toDate, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - CreateExcelBase64: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -1984,8 +2039,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
-
-                    _log.Info($"Th={threadId} - CreateExcelBase64: ServiceProxy and LocalContext created Successfully.");
 
                     DateTime dtFromDate = DateTime.Parse(fromDate);
                     DateTime dtToDate = DateTime.Parse(toDate);
@@ -2032,7 +2085,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                     string base64 = SlotsUtility.CreateExcelFile(lSlots);
 
-                    _log.Info($"Th={threadId} - CreateExcelBase64: Base64: {base64}");
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                     resp.Content = new StringContent(SerializeNoNull(base64));
                     return resp;
@@ -2040,12 +2092,18 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (FormatException ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent($"Unable to convert dates: {ex.Message}");
                 return rm;
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -2053,6 +2111,7 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
@@ -2062,7 +2121,6 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
 
-                _log.DebugFormat($"Th={threadId} - ClearMKLIdContact: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -2070,10 +2128,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
-
-                    _log.Info($"Th={threadId} - ClearMKLIdContact: ServiceProxy and LocalContext created Successfully.");
-
-                    _log.Info($"Th={threadId} - ClearMKLIdContact: Retrieving Active Contact using MKLId: {mklId}.");
 
                     HttpResponseMessage respMess = null;
 
@@ -2085,7 +2139,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                     List<ContactEntity> lContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, queryContact);
 
-                    if(lContacts.Count == 1)
+                    if (lContacts.Count == 1)
                     {
                         Contact contact = lContacts.FirstOrDefault();
                         string email = contact.EMailAddress1;
@@ -2104,14 +2158,15 @@ namespace Skanetrafiken.Crm.Controllers
                         XrmHelper.Update(localContext, uContact);
 
                         respMess = new HttpResponseMessage(HttpStatusCode.OK);
+                        _logger.LogInformation($"ClearMKLIdContact: Successfull");
                         respMess.Content = new StringContent(SerializeNoNull(contact.Id));
                     }
-                    else if(lContacts.Count == 0)
+                    else if (lContacts.Count == 0)
                     {
                         respMess = new HttpResponseMessage(HttpStatusCode.NotFound);
                         respMess.Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, "MKLId"));
                     }
-                    else if(lContacts.Count > 1)
+                    else if (lContacts.Count > 1)
                     {
                         respMess = new HttpResponseMessage(HttpStatusCode.NotFound);
                         respMess.Content = new StringContent(string.Format(Resources.MultipleContactsFound, mklId));
@@ -2132,74 +2187,91 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
-        public static HttpResponseMessage GetLead(int threadId, string id)
+        public static HttpResponseMessage GetLead(int threadId, string id, string prefix)
         {
-            try
+            _logger.SetGlobalProperty("source", prefix);
+            using (var _logger = new AppInsightsLogger())
             {
-                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - GetLead: Creating serviceProxy");
-                // Cast the proxy client to the IOrganizationService interface.
-                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                try
                 {
-                    Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
-
-                    if (localContext.OrganizationService == null)
-                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
-
-                    _log.Info($"Th={threadId} - GetLead: ServiceProxy and LocalContext created Successfully.");
-
-                    if (string.IsNullOrWhiteSpace(id))
+                    CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                    // Cast the proxy client to the IOrganizationService interface.
+                    using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                     {
-                        HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        response.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-                        return response;
-                    }
-                    Guid guid = Guid.Empty;
-                    if (!Guid.TryParse(id, out guid))
-                    {
-                        HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        response.Content = new StringContent(Resources.GuidNotValid);
-                        return response;
-                    }
-                    LeadEntity lead = XrmRetrieveHelper.RetrieveFirst<LeadEntity>(localContext, LeadEntity.LeadInfoBlock,
-                        new FilterExpression()
+                        Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                        if (localContext.OrganizationService == null)
+                            throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                        if (string.IsNullOrWhiteSpace(id))
                         {
-                            Conditions =
+                            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                            string errorMessage = Resources.IncomingDataCannotBeNull;
+                            response.Content = new StringContent(errorMessage);
+
+                            _logger.LogError($"GetLead: Failed - {errorMessage}");
+
+                            return response;
+                        }
+                        Guid guid = Guid.Empty;
+                        if (!Guid.TryParse(id, out guid))
+                        {
+                            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                            string errorMessage = Resources.GuidNotValid;
+                            response.Content = new StringContent(errorMessage);
+
+                            _logger.LogError($"GetLead: Failed - {errorMessage}");
+
+                            return response;
+                        }
+                        LeadEntity lead = XrmRetrieveHelper.RetrieveFirst<LeadEntity>(localContext, LeadEntity.LeadInfoBlock,
+                            new FilterExpression()
                             {
+                                Conditions =
+                                {
                         new ConditionExpression(LeadEntity.Fields.Id, ConditionOperator.Equal, guid)
-                            }
-                        });
-                    if (lead == null)
-                    {
-                        HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NotFound);
-                        response.Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, guid));
-                        return response;
+                                }
+                            });
+                        if (lead == null)
+                        {
+                            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NotFound);
+                            string errorMessage = string.Format(Resources.CouldNotFindContactWithInfo, guid);
+                            response.Content = new StringContent(errorMessage);
+
+                            _logger.LogError($"GetLead: Failed - {errorMessage}");
+
+                            return response;
+                        }
+
+                        HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                        resp.Content = new StringContent(SerializeNoNull(lead.ToCustomerInfo(localContext)));
+                        return resp;
+
                     }
-
-                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                    resp.Content = new StringContent(SerializeNoNull(lead.ToCustomerInfo(localContext)));
-                    return resp;
-
                 }
-            }
-            catch (Exception ex)
-            {
-                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                return rm;
-            }
-            finally
-            {
-                ConnectionCacheManager.ReleaseConnection(threadId);
+                catch (Exception ex)
+                {
+                    _exceptionCustomProperties["source"] = prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
+
+                    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                    return rm;
+                }
+                finally
+                {
+                    ConnectionCacheManager.ReleaseConnection(threadId);
+                }
             }
         }
 
-        public static HttpResponseMessage GetValueCodesWithMklId(int threadId, string id)
+        public static HttpResponseMessage GetValueCodesWithMklId(int threadId, string id, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - GetValueCodesWithMklId: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -2208,16 +2280,16 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - GetValueCodesWithMklId: ServiceProxy and LocalContext created Successfully.");
-
                     if (string.IsNullOrWhiteSpace(id))
                     {
                         HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        response.Content = new StringContent(Resources.IncomingDataCannotBeNull);
+                        string errorMessage = Resources.IncomingDataCannotBeNull;
+                        response.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"GetValueCodesWithMklId: Failed - {errorMessage}");
+
                         return response;
                     }
-
-                    _log.Info($"Th={threadId} - GetValueCodesWithMklId: Get all active/not used value codes for MklId/ContactId (contact): {id}");
 
                     ContactEntity contact;
                     Guid newGuid;
@@ -2242,11 +2314,14 @@ namespace Skanetrafiken.Crm.Controllers
                     if (contact == null)
                     {
                         HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        response.Content = new StringContent($"No Contact found with Id = {id}");
+                        string errorMessage = $"No Contact found with Id = {id}";
+                        response.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"GetValueCodesWithMklId: Failed - {errorMessage}");
+
                         return response;
                     }
 
-                    _log.Info($"Th={threadId} - GetValueCodesWithMklId: Fetching Value Codes.");
                     IList<ValueCodeEntity> valueCodeCollection = XrmRetrieveHelper.RetrieveMultiple<ValueCodeEntity>(localContext, new ColumnSet(
                         ValueCodeEntity.Fields.ed_CodeId,
                         ValueCodeEntity.Fields.ed_LastRedemptionDate,
@@ -2266,11 +2341,14 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (valueCodeCollection == null)
                     {
-                        _log.Warn($"Th={threadId} - GetValueCodesWithMklId: ValueCodeCollection is null. Could not find any active value codes.");
                         if (valueCodeCollection.Count() < 1)
                         {
                             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NotFound);
-                            response.Content = new StringContent(string.Format("Could not find any active value codes", id));
+                            string errorMessage = string.Format("Could not find any active value codes", id);
+                            response.Content = new StringContent(errorMessage);
+
+                            _logger.LogError($"GetValueCodesWithMklId: Failed - {errorMessage}");
+
                             return response;
                         }
                     }
@@ -2282,6 +2360,9 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -2289,15 +2370,19 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
-        public static HttpResponseMessage GetAccount(int threadId, string accountId)
+        public static HttpResponseMessage GetAccount(int threadId, string accountId, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
+
+
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - GetAccount: Creating serviceProxy.");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -2306,12 +2391,12 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - GetAccount: ServiceProxy and LocalContext created Successfully.");
-
                     if (String.IsNullOrEmpty(accountId))
                     {
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        error.Content = new StringContent($"No Id entered.");
+                        string errorMessage = "No Id entered.";
+                        error.Content = new StringContent(errorMessage);
+                        _logger.LogError($"{prefix}: Failed - {errorMessage}");
                         return error;
                     }
 
@@ -2346,7 +2431,9 @@ namespace Skanetrafiken.Crm.Controllers
                     if (accounts == null || accounts.Count == 0)
                     {
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.NotFound);
-                        error.Content = new StringContent($"No active organization with Id {accountId} was found.");
+                        string errorMessage = $"No active organization with Id {accountId} was found.";
+                        error.Content = new StringContent(errorMessage);
+                        _logger.LogError($"{prefix}: Failed - {errorMessage}");
                         return error;
                     }
 
@@ -2384,7 +2471,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                     resp.Content = new StringContent(SerializeNoNull(accountInfo));
-                    _log.Info($"Th={threadId} - GetAccount: Returning statuscode = {resp.StatusCode}, Account PortalId = {accountInfo.PortalId}.\n");
                     return resp;
 
                 }
@@ -2394,12 +2480,17 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                _log.Error($"Th={threadId} - Exception Caught in Get Account: {ex.Message}");
+
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 return rm;
             }
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+
+                _logger.Dispose();
             }
         }
 
@@ -2409,12 +2500,13 @@ namespace Skanetrafiken.Crm.Controllers
         /// <param name="threadId"></param>
         /// <param name="probability"></param>
         /// <returns></returns>
-        public static HttpResponseMessage GetOrders(int threadId, int probability)
+        public static HttpResponseMessage GetOrders(int threadId, int probability, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - GetOrders: Creating serviceProxy");
 
                 if (serviceClient == null)
                     throw new Exception(string.Format("Failed to retrieve CrmServiceClient. Please check Available Connections. serviceClient is null."));
@@ -2427,7 +2519,6 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - GetOrders: ServiceProxy and LocalContext created Successfully.");
 
                     ColumnSet columnsOrder = new ColumnSet(OrderEntity.Fields.OrderNumber, OrderEntity.Fields.Name, OrderEntity.Fields.ed_DeliveryReportStatus,
                                                 OrderEntity.Fields.OwnerId, OrderEntity.Fields.CustomerId, OrderEntity.Fields.ed_Probability, OrderEntity.Fields.ed_campaigndatestart,
@@ -2439,18 +2530,17 @@ namespace Skanetrafiken.Crm.Controllers
                     queryOrders.Criteria.AddCondition(OrderEntity.Fields.ed_Probability, ConditionOperator.GreaterEqual, probability);
                     queryOrders.Criteria.AddCondition(OrderEntity.Fields.StatusCode, ConditionOperator.Equal, (int)salesorder_statuscode.Complete);
 
-                    _log.Debug($"Th={threadId} - GetOrders: Query Orders. query: {queryOrders}");
-
-                    _log.Info($"Th={threadId} - GetOrders: Retrieving Orders.");
                     List<OrderEntity> lOrders = XrmRetrieveHelper.RetrieveMultiple<OrderEntity>(localContext, queryOrders);
 
-                    if (lOrders != null)
-                        _log.Debug($"Th={threadId} - GetOrders: Number of orders retrieved - {lOrders.Count}");
 
                     if (lOrders == null || lOrders.Count == 0)
                     {
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.NoContent);
-                        rm.Content = new StringContent(string.Format(Resources.NoSalesOrderFoundWithInfo, ""));
+                        string errorMessage = string.Format(Resources.NoSalesOrderFoundWithInfo, "");
+                        rm.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"GetOrders: Failed - {errorMessage}");
+
                         return rm;
                     }
 
@@ -2461,11 +2551,10 @@ namespace Skanetrafiken.Crm.Controllers
 
                     foreach (OrderEntity order in lOrders)
                     {
-                        _log.Debug($"Th={threadId} - GetOrders: Looping orders. OrderId: {order.Id}");
 
                         try
                         {
-                            OrderMQ orderMQ = OrderMQ.GetOrderMQInfoFromOrderEntity(localContext, order, _log);
+                            OrderMQ orderMQ = OrderMQ.GetOrderMQInfoFromOrderEntity(localContext, order);
 
                             if (orderMQ != null)
                             {
@@ -2474,7 +2563,9 @@ namespace Skanetrafiken.Crm.Controllers
                         }
                         catch (Exception e)
                         {
-                            _log.Warn($"Th={threadId} - GetOrders: Error converting Order Info:\n " + e.Message);
+                            _exceptionCustomProperties["source"] = prefix;
+                            _logger.LogException(e, _exceptionCustomProperties);
+
                             orderMQInfo.error = e.Message;
                         }
                     }
@@ -2493,6 +2584,9 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -2500,15 +2594,18 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
         public static HttpResponseMessage PostDeliveryReport(int threadId, FileInfoMQ fileInfo)
         {
+            string prefix = "PostDeliveryReport";
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
 
                 if (serviceClient == null)
                     throw new Exception(string.Format("Failed to retrieve CrmServiceClient. Please check Available Connections. serviceClient is null."));
@@ -2528,20 +2625,24 @@ namespace Skanetrafiken.Crm.Controllers
 
                     List<OrderEntity> lOrders = XrmRetrieveHelper.RetrieveMultiple<OrderEntity>(localContext, queryOrder);
 
-                    _log.Debug("Found " + lOrders.Count + " Orders with Order Number " + fileInfo.OrderId);
-
                     if (lOrders.Count == 0)
                     {
-                        _log.Debug(string.Format(Resources.NoSalesOrderFoundWithInfo, fileInfo.OrderId));
                         HttpResponseMessage respNoOrders = new HttpResponseMessage(HttpStatusCode.NotFound);
-                        respNoOrders.Content = new StringContent(string.Format(Resources.NoSalesOrderFoundWithInfo, fileInfo.OrderId));
+                        string errorMessage = Resources.NoSalesOrderFoundWithInfo;
+                        respNoOrders.Content = new StringContent(string.Format(errorMessage, fileInfo.OrderId));
+
+                        _logger.LogError($"PostDeliveryReport: Failed - {errorMessage}");
+
                         return respNoOrders;
                     }
                     else if (lOrders.Count > 1)
                     {
-                        _log.Debug(string.Format(Resources.MultipleOrdersFound, fileInfo.OrderId));
                         HttpResponseMessage respNoOrders = new HttpResponseMessage(HttpStatusCode.NotFound);
-                        respNoOrders.Content = new StringContent(string.Format(Resources.MultipleOrdersFound, fileInfo.OrderId));
+                        string errorMessage = Resources.MultipleOrdersFound;
+                        respNoOrders.Content = new StringContent(string.Format(errorMessage, fileInfo.OrderId));
+
+                        _logger.LogError($"PostDeliveryReport: Failed - {errorMessage}");
+
                         return respNoOrders;
                     }
                     else
@@ -2552,9 +2653,8 @@ namespace Skanetrafiken.Crm.Controllers
                         salesorder_statuscode oldStatus = order.StatusCode.Value;
 
                         bool needsStateUpdate = false;
-                        if(oldState != SalesOrderState.Active || (oldStatus != salesorder_statuscode.Pending && oldStatus != salesorder_statuscode.New))
+                        if (oldState != SalesOrderState.Active || (oldStatus != salesorder_statuscode.Pending && oldStatus != salesorder_statuscode.New))
                         {
-                            _log.Debug("Order " + order.SalesOrderId + " needs to be open to perform the Update.");
 
                             SetStateRequest stateRequest = new SetStateRequest();
                             stateRequest.State = new OptionSetValue((int)SalesOrderState.Active);
@@ -2565,7 +2665,6 @@ namespace Skanetrafiken.Crm.Controllers
                             SetStateResponse stateSetResponse = (SetStateResponse)localContext.OrganizationService.Execute(stateRequest);
 
                             needsStateUpdate = true;
-                            _log.Debug("Order " + order.SalesOrderId + " was opened sucessfully.");
                         }
 
                         OrderEntity uOrder = new OrderEntity();
@@ -2574,11 +2673,9 @@ namespace Skanetrafiken.Crm.Controllers
                         uOrder.ed_DeliveryReportStatus = ed_deliveryreportstatus.Creatednotuploaded;
 
                         XrmHelper.Update(localContext, uOrder);
-                        _log.Debug("Order " + order.SalesOrderId + " was updated with File Name " + fileInfo.FileName + " and Report Status 'Created Not Uploaded'");
 
                         if (needsStateUpdate)
                         {
-                            _log.Debug("Close Order with the previous State Code and Status Code");
                             int newStatus = (int)salesorder_statuscode.Complete;
 
                             Entity orderClose = new Entity("orderclose");
@@ -2590,10 +2687,8 @@ namespace Skanetrafiken.Crm.Controllers
                             };
 
                             localContext.OrganizationService.Execute(request);
-                            _log.Debug("Order " + order.SalesOrderId + " was closed sucessfully.");
                         }
 
-                        _log.Debug("Delivery Report Information successfully updated on Sekund.");
                         HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                         resp.Content = new StringContent("Delivery Report Information successfully updated on Sekund.");
                         return resp;
@@ -2602,7 +2697,9 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
-                _log.Error("Unexpected error from PostDeliveryReport-POST");
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -2610,15 +2707,18 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
-        internal static HttpResponseMessage AccountPost(int threadId, AccountInfo accountInfo)
+        internal static HttpResponseMessage AccountPost(int threadId, AccountInfo accountInfo, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - AccountPost: Creating serviceProxy.");
+
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -2627,14 +2727,12 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - AccountPost: ServiceProxy and LocalContext created Successfully.");
-
-                    _log.Info($"Th={threadId} - AccountPost: Validating AccountInfo.");
                     StatusBlock validateStatus = AccountUtility.ValidateAccountInfo(localContext, accountInfo, true);
                     if (!validateStatus.TransactionOk)
                     {
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
                         rm.Content = new StringContent(validateStatus.ErrorMessage);
+                        _logger.LogError($"AccountPost Failed - {validateStatus.ErrorMessage}");
                         return rm;
                     }
 
@@ -2652,14 +2750,13 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (accounts != null && accounts.Count > 0) //Vi ska inte hitta någon account vid en post
                     {
-                        //_log.Error("Account-POST. Organization found with passed PortalId. PortalId: {accountInfo.PortalId}");
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        error.Content = new StringContent($"Organization with ID {accountInfo.PortalId} already exists.");
+                        string errorMessage = $"Organization with ID {accountInfo.PortalId} already exists.";
+                        error.Content = new StringContent(errorMessage);
+                        _logger.LogError($"AccountPost Failed - {errorMessage}");
                         return error;
                     }
 
-
-                    _log.Info($"Th={threadId} - AccountPost: Creating (at least) new Cost Site for {accountInfo.PortalId}");
 
                     // Create new Cost Site
                     AccountEntity newAccount = AccountInfo.GetAccountEntityFromAccountInfo(accountInfo); //Kontot skapas, matchning?, type of account
@@ -2685,7 +2782,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (parentAccounts == null || parentAccounts.Count == 0)
                     {
-                        _log.Info($"Th={threadId} - AccountPost: No parent account/organization found with org. nr: {accountInfo.OrganizationNumber}. Create new parent account.");
                         parentAccount = new AccountEntity()
                         {
                             Name = accountInfo.OrganizationName,
@@ -2714,7 +2810,6 @@ namespace Skanetrafiken.Crm.Controllers
                         }
 
                         parentAccount.Id = XrmHelper.Create(localContext, parentAccount);
-                        _log.Info($"Th={threadId} - AccountPost: Parent account/organization created with org. nr: {accountInfo.OrganizationNumber}.");
                     }
                     else
                     {
@@ -2726,7 +2821,6 @@ namespace Skanetrafiken.Crm.Controllers
                             return error;
                         } */
 
-                        _log.Info($"Th={threadId} - AccountPost: Existing parent account/organization found. Org. nr: {accountInfo.OrganizationNumber}");
                         parentAccount = parentAccounts[0];
 
                         AccountEntity uppdateParentAccount = new AccountEntity();
@@ -2734,21 +2828,18 @@ namespace Skanetrafiken.Crm.Controllers
                         //update parentaccount with type of contact
                         if (accountInfo.InformationSource == (int)Schema.Generated.ed_informationsource.ForetagsPortal && parentAccount.ed_PortalCustomer != true)
                         {
-                            _log.Info($"Th={threadId} - AccountPost: Updating found parent account/organization (Org. nr: {accountInfo.OrganizationNumber}) to PortalCustomer");
                             uppdateParentAccount.ed_PortalCustomer = true;
                             //parentAccount.AccountCategoryCode = //optionset
                             XrmHelper.Update(localContext, uppdateParentAccount);
                         }
                         else if (accountInfo.InformationSource == (int)Schema.Generated.ed_informationsource.SkolPortal && parentAccount.ed_SchoolCustomer != true)
                         {
-                            _log.Info($"Th={threadId} - AccountPost: Updating found parent account/organization (Org. nr: {accountInfo.OrganizationNumber}) to SchoolCustomer");
                             uppdateParentAccount.ed_SchoolCustomer = true;
                             //parentAccount.AccountCategoryCode = //optionset
                             XrmHelper.Update(localContext, uppdateParentAccount);
                         }
                         else if (accountInfo.InformationSource == (int)Schema.Generated.ed_informationsource.SeniorPortal && parentAccount.ed_SeniorCustomer != true)
                         {
-                            _log.Info($"Th={threadId} - AccountPost: Updating found parent account/organization (Org. nr: {accountInfo.OrganizationNumber}) to SeniorCustomer");
                             uppdateParentAccount.ed_SeniorCustomer = true;
                             //parentAccount.AccountCategoryCode = //optionset
                             XrmHelper.Update(localContext, uppdateParentAccount);
@@ -2758,7 +2849,6 @@ namespace Skanetrafiken.Crm.Controllers
                     newAccount.ParentAccountId = parentAccount.ToEntityReference();
                     newAccount.Id = XrmHelper.Create(localContext, newAccount);
 
-                    _log.Info($"Th={threadId} - AccountPost: New Cost Site (Account) created with parent account. AccountId: {newAccount.Id}");
 
                     IList<CustomerAddressEntity> addresses = XrmRetrieveHelper.RetrieveMultiple<CustomerAddressEntity>(localContext, CustomerAddressEntity.CustomerAddressInfoBlock,
                         new FilterExpression()
@@ -2771,7 +2861,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (accountInfo.Addresses != null && accountInfo.Addresses.Count > 0)
                     {
-                        _log.Info($"Th={threadId} - AccountPost: Searching for existing addresses on new account PortalId: {newAccount.cgi_organizational_number}.");
                         foreach (AddressInfo addressInfo in accountInfo.Addresses)
                         {
                             if (addressInfo.TypeCode.HasValue)
@@ -2793,28 +2882,28 @@ namespace Skanetrafiken.Crm.Controllers
 
                                 if (!found)
                                 {
-                                    _log.Info($"Th={threadId} - AccountPost: No existing addresses found on new account. Creating addresses for new account PortalId: {newAccount.cgi_organizational_number} ");
                                     CustomerAddressEntity cae = AddressInfo.GetCustomerAddressEntityFromAddressInfo(addressInfo);
                                     cae.ParentId = newAccount.ToEntityReference();
 
                                     XrmHelper.Create(localContext, cae);
-                                }
-                                else {
-                                    _log.Info($"Th={threadId} - AccountPost: Existing addresses found on new account PortalId: {newAccount.cgi_organizational_number}.");
                                 }
 
                             }
                             else
                             {
                                 HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                error.Content = new StringContent($"Address {addressInfo.Name} must contain valid TypeCode.");
+                                string errorMessage = $"Address {addressInfo.Name} must contain valid TypeCode.";
+                                error.Content = new StringContent(errorMessage);
+                                _logger.LogError($"{prefix}: Failed - {errorMessage}");
                                 return error;
                             }
                         }
                     }
 
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                    resp.Content = new StringContent("Account successfully created.");
+                    string okMessage = "Account successfully created.";
+                    _logger.LogInformation($"{prefix}: Sucessfull - {okMessage}");
+                    resp.Content = new StringContent(okMessage);
                     return resp;
 
                 }
@@ -2824,21 +2913,26 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                _log.Error($"Th={threadId} - Exception Caught in Account-POST: {ex.Message}");
+
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 return rm;
             }
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
-        public static HttpResponseMessage AccountPut(int threadId, AccountInfo accountInfo)
+        public static HttpResponseMessage AccountPut(int threadId, AccountInfo accountInfo, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - AccountPut: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -2847,9 +2941,6 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - AccountPut: ServiceProxy and LocalContext created Successfully.");
-
-                    _log.Info($"Th={threadId} - AccountPut: Validating AccountInfo.");
                     StatusBlock validateStatus = AccountUtility.ValidateAccountInfo(localContext, accountInfo, false); //Kontrollera så att detta stämmer med det vi har diskuterat
                     if (!validateStatus.TransactionOk)
                     {
@@ -2870,7 +2961,9 @@ namespace Skanetrafiken.Crm.Controllers
                     if (accounts == null || accounts.Count == 0)
                     {
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        error.Content = new StringContent($"Found no accounts with ID {accountInfo.Guid}.");
+                        string errorMessage = $"Found no accounts with ID {accountInfo.Guid}.";
+                        error.Content = new StringContent(errorMessage);
+                        _logger.LogError($"AccountPut: Failed - {errorMessage}");
                         return error;
                     }
 
@@ -2878,7 +2971,9 @@ namespace Skanetrafiken.Crm.Controllers
                     if (existingAccount.StateCode != Generated.AccountState.Active)
                     {
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.Forbidden);
-                        error.Content = new StringContent($"The requsted Account with ID {accountInfo.Guid} must be active.");
+                        string errorMessage = $"The requsted Account with ID {accountInfo.Guid} must be active.";
+                        error.Content = new StringContent(errorMessage);
+                        _logger.LogError($"AccountPut: Failed - {errorMessage}");
                         return error;
                     }
 
@@ -2888,13 +2983,13 @@ namespace Skanetrafiken.Crm.Controllers
                         if (!string.IsNullOrEmpty(newAccount.cgi_organizational_number))
                         {
                             HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                            error.Content = new StringContent($"Cannot change value of existing OrganizationNumber.");
+                            string errorMessage = "Cannot change value of existing OrganizationNumber.";
+                            error.Content = new StringContent(errorMessage);
+                            _logger.LogError($"AccountPut: Failed - {errorMessage}");
                             return error;
                         }
 
                         XrmHelper.Update(localContext, newAccount);
-
-                        _log.Info($"Th={threadId} - AccountPut: Account with ID {accountInfo.Guid} updated.");
 
                         IList<CustomerAddressEntity> addresses = XrmRetrieveHelper.RetrieveMultiple<CustomerAddressEntity>(localContext, CustomerAddressEntity.CustomerAddressInfoBlock,
                         new FilterExpression()
@@ -2928,21 +3023,19 @@ namespace Skanetrafiken.Crm.Controllers
 
                                     if (!found)
                                     {
-                                        _log.Info($"Th={threadId} - AccountPut: No existing addresses found on account. Creating addresses for account with Id: {newAccount.Id}.");
                                         CustomerAddressEntity cae = AddressInfo.GetCustomerAddressEntityFromAddressInfo(addressInfo);
                                         cae.ParentId = newAccount.ToEntityReference();
 
                                         XrmHelper.Create(localContext, cae);
-                                    }
-                                    else {
-                                        _log.Info($"Th={threadId} - AccountPut: Existing addresses found on account with Id: {newAccount.Id}.");
                                     }
 
                                 }
                                 else
                                 {
                                     HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                    error.Content = new StringContent($"Address {addressInfo.Name} must contain valid TypeCode.");
+                                    string errorMessage = $"Address {addressInfo.Name} must contain valid TypeCode.";
+                                    error.Content = new StringContent(errorMessage);
+                                    _logger.LogError($"{prefix}: Failed - {errorMessage}");
                                     return error;
                                 }
                             }
@@ -2960,11 +3053,16 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 return rm;
             }
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
@@ -2975,12 +3073,13 @@ namespace Skanetrafiken.Crm.Controllers
         /// <param name="threadId"></param>
         /// <param name="customerInfo"></param>
         /// <returns></returns>
-        public static HttpResponseMessage CreatePortalCustomer(int threadId, CustomerInfo customerInfo)
+        public static HttpResponseMessage CreatePortalCustomer(int threadId, CustomerInfo customerInfo, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - CreatePortalCustomer: Creating serviceProxy\n");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -2989,9 +3088,6 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - CreatePortalCustomer: ServiceProxy and LocalContext created Successfully.\n");
-
-                    _log.Info($"Th={threadId} - CreatePortalCustomer: Validating CustomerInfo.\n");
                     #region Validations
 
                     // Validates Email (from Company Role) and Social Security Number
@@ -3030,7 +3126,6 @@ namespace Skanetrafiken.Crm.Controllers
                     HttpResponseMessage resp = new HttpResponseMessage();
                     resp.StatusCode = HttpStatusCode.OK;
 
-                    _log.Info($"Th={threadId} - CreatePortalCustomer: Calling CreateNewCompanyRole.\n");
                     Guid? contactId = CompanyRoleEntity.CreateNewCompanyRole(localContext, customerInfo, ref resp); //This is where the Match happens
 
                     if (resp.StatusCode != HttpStatusCode.OK)
@@ -3052,26 +3147,36 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 rm.Content = new StringContent(ex.Message);
+
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 return rm;
             }
             catch (Exception ex)
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 return rm;
             }
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
-        public static HttpResponseMessage NonLoginCustomerIncident(int threadId, CustomerInfo customerInfo)
+        public static HttpResponseMessage NonLoginCustomerIncident(int threadId, CustomerInfo customerInfo, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - NonLoginCustomerIncident: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -3080,27 +3185,26 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - NonLoginCustomerIncident: ServiceProxy and LocalContext created Successfully.");
-
                     if (customerInfo == null)
                     {
                         HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        respMess.Content = new StringContent(Resources.IncomingDataCannotBeNull);
+                        string errorMessage = Resources.IncomingDataCannotBeNull;
+                        respMess.Content = new StringContent(errorMessage);
+                        _logger.LogError($"{prefix} NonLoginCustomerIncident: Failed - {errorMessage}");
                         return respMess;
                     }
 
                     // Validate info.
-                    _log.Info($"Th={threadId} - NonLoginCustomerIncident: Validating CustomerInfo.");
                     customerInfo.Source = (int)Crm.Schema.Generated.ed_informationsource.OinloggatKundArende;
                     StatusBlock validateStatus = CustomerUtility.ValidateCustomerInfo(localContext, customerInfo); //Check (Partially done)
                     if (!validateStatus.TransactionOk)
                     {
                         HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
                         respMess.Content = new StringContent(validateStatus.ErrorMessage);
+                        _logger.LogError($"{prefix} NonLoginCustomerIncident: Failed - {validateStatus.ErrorMessage}");
                         return respMess;
                     }
                     // Find customer according to rules
-                    _log.Info($"Th={threadId} - NonLoginCustomerIncident: Searching for Customer in CRM (NonLoginCustomerIncident should return null).");
                     ContactEntity contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo); // CHECK - Matchning
 
                     // Find possible Leads and connect possible purchaseInfo. //Ska det tas bort?
@@ -3152,20 +3256,27 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 return rm;
             }
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
-        public static HttpResponseMessage NonLoginPurchase(int threadId, CustomerInfo customerInfo)
+        public static HttpResponseMessage NonLoginPurchase(int threadId, CustomerInfo customerInfo, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - NonLoginPurchase: Creating serviceProxy");
+
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -3174,17 +3285,19 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - NonLoginPurchase: ServiceProxy and LocalContext created Successfully.");
 
                     if (customerInfo == null)
                     {
                         HttpResponseMessage invalidInputResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        invalidInputResp.Content = new StringContent(Resources.IncomingDataCannotBeNull);
+                        string errorMessage = Resources.IncomingDataCannotBeNull;
+                        invalidInputResp.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                         return invalidInputResp;
                     }
 
                     // Validate info
-                    _log.Info($"Th={threadId} - NonLoginPurchase: Validating CustomerInfo.");
                     customerInfo.Source = (int)Crm.Schema.Generated.ed_informationsource.OinloggatKop;
                     StatusBlock validateStatus = CustomerUtility.ValidateCustomerInfo(localContext, customerInfo);
                     if (!validateStatus.TransactionOk)
@@ -3195,10 +3308,8 @@ namespace Skanetrafiken.Crm.Controllers
                     }
 
                     // Find/ Create Customer
-                    _log.Info($"Th={threadId} - NonLoginPurchase: Calling FindOrCreateUnvalidatedContact");
+
                     ContactEntity contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo);
-                    string contactString = contact == null ? "null" : contact.ContactId.ToString();
-                    _log.DebugFormat($"Th={threadId} - NonLoginPurchase: Found/Created contact {contactString}");
 
                     // Attach Leads
                     IList<LeadEntity> leads = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, LeadEntity.LeadInfoBlock,
@@ -3243,20 +3354,25 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
                 return rm;
             }
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
-        public static HttpResponseMessage NonLoginRefill(int threadId, CustomerInfo customerInfo)
+        public static HttpResponseMessage NonLoginRefill(int threadId, CustomerInfo customerInfo, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - NonLoginRefill: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -3265,39 +3381,42 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - NonLoginRefill: ServiceProxy and LocalContext created Successfully.");
 
                     if (customerInfo == null)
                     {
                         HttpResponseMessage invalidInputResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        invalidInputResp.Content = new StringContent(Resources.IncomingDataCannotBeNull);
+                        string errorMessage = Resources.IncomingDataCannotBeNull;
+                        invalidInputResp.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"NonLoginRefill: Failed - {errorMessage}");
+
                         return invalidInputResp;
                     }
 
                     // Validate info
-                    _log.Info($"Th={threadId} - NonLoginRefill: Validating CustomerInfo.");
                     customerInfo.Source = (int)Crm.Schema.Generated.ed_informationsource.OinloggatLaddaKort;
                     StatusBlock validateStatus = CustomerUtility.ValidateCustomerInfo(localContext, customerInfo);
                     if (!validateStatus.TransactionOk)
                     {
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        rm.Content = new StringContent(validateStatus.ErrorMessage);
+                        string errorMessage = validateStatus.ErrorMessage;
+                        rm.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"NonLoginRefill: Failed - {errorMessage}");
+
                         return rm;
                     }
 
-                    _log.Debug($"Th={threadId} - NonLoginRefill: Searching for active Contact.");
                     ContactEntity contact = ContactEntity.FindActiveContact(localContext, customerInfo);
 
                     if (contact != null)
                     {
-                        _log.Debug($"Th={threadId} - NonLoginRefill: Found active Contact. Returning ContactInfo.");
                         HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.OK);
                         respMess.Content = new StringContent(SerializeNoNull(contact.ToContactInfo(localContext)));
                         return respMess;
                     }
                     else
                     {
-                        _log.Debug($"Th={threadId} - NonLoginRefill: Found no active Contact. Updating of Creating Lead.");
                         LeadEntity lead = null;
                         // INFO - har inte refaktoriserats på grund av att felmeddelanden ska vara HttpResponseMessage
                         StatusBlock canLeadBeCreated = LeadEntity.CanLeadBeCreated(localContext, customerInfo);
@@ -3307,7 +3426,6 @@ namespace Skanetrafiken.Crm.Controllers
                             lead.LeadSourceCode = Generated.lead_leadsourcecode.LaddaKort;
                             lead.Subject = NonLoginRefillSubject;
                             lead.Id = localContext.OrganizationService.Create(lead);
-                            _log.Debug($"Th={threadId} - NonLoginRefill: Lead created successfully.");
                         }
                         else if (canLeadBeCreated.StatusBlockCode == (int)CustomerUtility.StatusBlockCode.OtherLeadFound)
                         {
@@ -3330,13 +3448,15 @@ namespace Skanetrafiken.Crm.Controllers
                                 if (update)
                                 {
                                     XrmHelper.Update(localContext.OrganizationService, lead);
-                                    _log.Debug($"Th={threadId} - NonLoginRefill: Lead updated successfully.");
                                 }
-                                    
+
                             }
                             catch (Exception e)
                             {
-                                _log.DebugFormat($"Th={threadId} - NonLoginRefill: Unexpected Exception caught when retrieving Lead. Error messagee: {0}", e.Message);
+
+                                _exceptionCustomProperties["source"] = prefix;
+                                _logger.LogException(e, _exceptionCustomProperties);
+
                                 HttpResponseMessage errorResp = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                                 errorResp.Content = new StringContent(string.Format(Resources.UnexpectedException, e.Message));
                                 return errorResp;
@@ -3345,7 +3465,11 @@ namespace Skanetrafiken.Crm.Controllers
                         else
                         {
                             HttpResponseMessage errorResp = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                            errorResp.Content = new StringContent(canLeadBeCreated.ErrorMessage);
+                            string errorMessage = canLeadBeCreated.ErrorMessage;
+                            errorResp.Content = new StringContent(errorMessage);
+
+                            _logger.LogError($"NonLoginFailed: Failed - {errorMessage}");
+
                             return errorResp;
                         }
 
@@ -3358,6 +3482,9 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -3365,6 +3492,7 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
@@ -3373,12 +3501,13 @@ namespace Skanetrafiken.Crm.Controllers
         /// </summary>
         /// <param name="customerInfo"></param>
         /// <returns></returns>
-        public static HttpResponseMessage RGOL(int threadId, CustomerInfo customerInfo)
+        public static HttpResponseMessage RGOL(int threadId, CustomerInfo customerInfo, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - RGOL: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -3387,21 +3516,20 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - RGOL: ServiceProxy and LocalContext created Successfully.");
 
                     if (customerInfo == null)
                     {
                         HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        respMess.Content = new StringContent(Resources.IncomingDataCannotBeNull);
+                        string errorMessage = Resources.IncomingDataCannotBeNull;
+                        respMess.Content = new StringContent(errorMessage);
+                        _logger.LogError($"{prefix} RGOL: Failed - {errorMessage}");
                         return respMess;
                     }
 
                     //// Validate connection to server
                     //WhoAmIResponse whoAmI = (WhoAmIResponse)localContext.OrganizationService.Execute(new WhoAmIRequest());
-                    //_log.DebugFormat("RGOL, whoAmI:{0}", whoAmI.UserId.ToString());
 
                     // Validate info
-                    _log.Info($"Th={threadId} - RGOL: Validating info");
                     customerInfo.Source = (int)Crm.Schema.Generated.ed_informationsource.RGOL;
                     StatusBlock validateStatus = CustomerUtility.ValidateCustomerInfo(localContext, customerInfo);
                     if (!validateStatus.TransactionOk)
@@ -3412,9 +3540,7 @@ namespace Skanetrafiken.Crm.Controllers
                     }
 
                     // Find/ Create Customer
-                    _log.Info($"Th={threadId} - RGOL: Calling FindOrCreateUnvalidatedContact");
                     ContactEntity contact = ContactEntity.FindOrCreateUnvalidatedContact(localContext, customerInfo);
-                    _log.DebugFormat($"Th={threadId} - RGOL: Found/created contact {(contact == null ? "null" : contact.ContactId.ToString())}");
 
                     // Attach Lead if contains Email
                     if (!string.IsNullOrWhiteSpace(customerInfo.Email))
@@ -3460,14 +3586,18 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
-                return new HttpResponseMessage(HttpStatusCode.InternalServerError)
-                {
-                    Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message))
-                };
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
+                return rm;
             }
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose(); _logger.Dispose();
             }
         }
 
@@ -3521,7 +3651,6 @@ namespace Skanetrafiken.Crm.Controllers
         //    try
         //    {
         //        CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-        //        _log.DebugFormat("Creating serviceProxy");
         //        // Cast the proxy client to the IOrganizationService interface.
         //        using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
         //        {
@@ -3746,14 +3875,15 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
-        internal static HttpResponseMessage NotifyMKLsSent(int threadId, NotificationInfo[] notificationInfos)
+        internal static HttpResponseMessage NotifyMKLsSent(int threadId, NotificationInfo[] notificationInfos, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 List<StatusBlock> results = new List<StatusBlock>();
 
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - NotifyMKLsSent: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -3762,11 +3892,8 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - NotifyMKLsSent: ServiceProxy and LocalContext created Successfully.");
-
                     bool atLeastOneError = false, atLeastOneAccepted = false;
 
-                    _log.Debug($"Th={threadId} - NotifyMKLsSent: Entered NotifyMKLsSent for {notificationInfos.Length} notification Objects");
                     for (int i = 0; i < notificationInfos.Length; i++)
                     {
                         Guid guid = Guid.Empty;
@@ -3809,6 +3936,9 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -3816,6 +3946,7 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
@@ -3900,12 +4031,13 @@ namespace Skanetrafiken.Crm.Controllers
         /// <param name="threadId"></param>
         /// <param name="customer"></param>
         /// <returns></returns>
-        public static HttpResponseMessage UpdateContact(int threadId, CustomerInfo customer)
+        public static HttpResponseMessage UpdateContact(int threadId, CustomerInfo customer, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -3914,17 +4046,19 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - UpdateContact: ServiceProxy and LocalContext created Successfully.");
 
                     if (customer == null)
                     {
                         HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        respMess.Content = new StringContent(Resources.IncomingDataCannotBeNull);
+                        string errorMessage = Resources.IncomingDataCannotBeNull;
+                        respMess.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                         return respMess;
                     }
 
                     // Validera inkommande information (validateCustomerInfo)
-                    _log.Info($"Th={threadId} - UpdateContact: Validating CustomerInfo.");
                     customer.Source = (int)Generated.ed_informationsource.UppdateraMittKonto;
                     StatusBlock validateStatus = CustomerUtility.ValidateCustomerInfo(localContext, customer);
                     if (!validateStatus.TransactionOk)
@@ -3936,7 +4070,6 @@ namespace Skanetrafiken.Crm.Controllers
                     }
 
                     // Get contact and verify that it is active
-                    _log.Debug($"Th={threadId} - UpdateContact: Getting contact and verify that it is active.");
                     ContactEntity contact = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, ContactEntity.ContactInfoBlock,
                         new FilterExpression()
                         {
@@ -3950,13 +4083,16 @@ namespace Skanetrafiken.Crm.Controllers
                     if (contact == null)
                     {
                         HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        response.Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, customer.Email + " och " + customer.Guid));
+                        string errorMessage = Resources.CouldNotFindContactWithInfo;
+                        response.Content = new StringContent(string.Format(errorMessage, customer.Email + " och " + customer.Guid));
+
+                        _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                         return response;
                     }
 
                     // 2019-07-22 - Marcus Stenswed
                     // If updating Mobile, check for other conflicting Contacts
-                    _log.Debug($"Th={threadId} - UpdateContact: If updating Mobile, check for other conflicting Contacts.");
                     if (contact.Telephone2 != customer.Mobile)
                     {
                         FilterExpression privateCustomerFilter = new FilterExpression(LogicalOperator.Or)
@@ -3985,14 +4121,17 @@ namespace Skanetrafiken.Crm.Controllers
                         if (conflictContact != null)
                         {
                             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                            response.Content = new StringContent(string.Format(Resources.EmailAlreadyInUse, customer.Email + " och " + customer.Guid));
+                            string errorMessage = Resources.EmailAlreadyInUse;
+                            response.Content = new StringContent(string.Format(errorMessage, customer.Email + " och " + customer.Guid));
+
+                            _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                             return response;
                         }
                     }
 
 
                     // Validera att en eventuell uppdatering inte skulle bryta mot affärsregler (inga dubletter) - Om så returnera lämpligt felmeddelande
-                    _log.Info($"Th={threadId} - UpdateContact: Validate that update will not break businessprocess (Checking Conflicts).");
                     if (customer.SwedishSocialSecurityNumberSpecified && customer.SwedishSocialSecurityNumber)
                     {
 
@@ -4028,14 +4167,17 @@ namespace Skanetrafiken.Crm.Controllers
                         IList<ContactEntity> possibleConflicts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, query);
                         if (possibleConflicts.Count > 0)
                         {
-                            _log.Info($"Th={threadId} - UpdateContact: {possibleConflicts.Count} possible conflicts found.");
                             // Om kunden har fått ett nytt, svenskt personnummer som krockar med existerande kund
                             if (string.IsNullOrWhiteSpace(contact.cgi_socialsecuritynumber) && customer.SwedishSocialSecurityNumberSpecified && customer.SwedishSocialSecurityNumber && !string.IsNullOrWhiteSpace(customer.SocialSecurityNumber))
                             {
                                 if (possibleConflicts.Count > 1)
                                 {
                                     HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                                    response.Content = new StringContent(Resources.MultipleSocSecConflictsFound);
+                                    string errorMessage = Resources.MultipleSocSecConflictsFound;
+                                    response.Content = new StringContent(errorMessage);
+
+                                    _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                                     return response;
                                 }
                                 ContactEntity conflict = possibleConflicts[0];
@@ -4049,12 +4191,15 @@ namespace Skanetrafiken.Crm.Controllers
                                 };
                                 XrmHelper.Update(localContext.OrganizationService, conflictUpdate);
                                 contact.ed_ConflictConnectionGuid = conflictUpdate.ed_ConflictConnectionGuid;
-                                _log.Info($"Th={threadId} - UpdateContact: Conflict handled.");
                             }
                             else
                             {
                                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                response.Content = new StringContent(Resources.CouldNotUpdateCustomerSocialSecurityConflict);
+                                string errorMessage = Resources.CouldNotUpdateCustomerSocialSecurityConflict;
+                                response.Content = new StringContent(errorMessage);
+
+                                _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                                 return response;
                             }
                         }
@@ -4063,7 +4208,6 @@ namespace Skanetrafiken.Crm.Controllers
                     ContactEntity newInfo = new ContactEntity(localContext, customer);
                     if (newInfo.IsAnyAttributeModified(contact, ContactEntity.ContactInfoBlock.Columns.ToArray()))
                     {
-                        _log.Info($"Th={threadId} - UpdateContact: Updating Contact.");
                         //contact.CombineAttributes(newInfo);
 
                         string[] attrs = new string[newInfo.Attributes.Count];
@@ -4086,8 +4230,8 @@ namespace Skanetrafiken.Crm.Controllers
                         };
 
                         if (collection.Count > 0)
-                        {  
-                            if(updContact.Address1_Country == null)
+                        {
+                            if (updContact.Address1_Country == null)
                             {
                                 updContact.Address1_Country = contact.Address1_Country;
                             }
@@ -4095,7 +4239,6 @@ namespace Skanetrafiken.Crm.Controllers
                             updContact.ed_InformationSource = Generated.ed_informationsource.UppdateraMittKonto;
                             contact.ed_InformationSource = Generated.ed_informationsource.UppdateraMittKonto;
                             localContext.OrganizationService.Update(updContact);
-                            _log.Info($"Th={threadId} - UpdateContact: Updated Contact Successfully.");
                         }
                     }
 
@@ -4109,6 +4252,9 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError)
                 {
                     Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message))
@@ -4117,15 +4263,17 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
-        internal static HttpResponseMessage UpdatePortalCustomer(int threadId, CustomerInfo customerInfo)
+        internal static HttpResponseMessage UpdatePortalCustomer(int threadId, CustomerInfo customerInfo, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -4139,7 +4287,11 @@ namespace Skanetrafiken.Crm.Controllers
                     if (!validateCustomerStatus.TransactionOk)
                     {
                         HttpResponseMessage responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        responseMessage.Content = new StringContent(validateCustomerStatus.ErrorMessage);
+                        string errorMessage = validateCustomerStatus.ErrorMessage;
+                        responseMessage.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                         return responseMessage;
                     }
 
@@ -4162,7 +4314,11 @@ namespace Skanetrafiken.Crm.Controllers
                     if (customerInfo.CompanyRole != null && string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Email) /*|| string.IsNullOrWhiteSpace(customerInfo.CompanyRole[0].Telephone)*/) // Put control on Email and Mobile
                     {
                         HttpResponseMessage responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        responseMessage.Content = new StringContent("Email and Mobile for customer cannot be empty.");
+                        string errorMessage = "Email and Mobile for customer cannot be empty.";
+                        responseMessage.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                         return responseMessage;
                     }
 
@@ -4174,7 +4330,11 @@ namespace Skanetrafiken.Crm.Controllers
                         if (!validateBlockContactInfo.TransactionOk)
                         {
                             HttpResponseMessage responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                            responseMessage.Content = new StringContent(validateBlockContactInfo.ErrorMessage);
+                            string errorMessage = validateBlockContactInfo.ErrorMessage;
+                            responseMessage.Content = new StringContent(errorMessage);
+
+                            _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                             return responseMessage;
                         }
 
@@ -4202,7 +4362,11 @@ namespace Skanetrafiken.Crm.Controllers
                         if (!validateRoleStatus.TransactionOk)
                         {
                             HttpResponseMessage responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                            responseMessage.Content = new StringContent(validateRoleStatus.ErrorMessage);
+                            string errorMessage = validateRoleStatus.ErrorMessage;
+                            responseMessage.Content = new StringContent(errorMessage);
+
+                            _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                             return responseMessage;
                         }
 
@@ -4222,6 +4386,9 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -4229,6 +4396,7 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
@@ -4240,12 +4408,13 @@ namespace Skanetrafiken.Crm.Controllers
         /// <param name="portalId"></param>
         /// <param name="emailAddress"></param>
         /// <returns></returns>
-        public static HttpResponseMessage SynchronizeContactData(int threadId, string socialSecurityNumber, string portalId, string emailAddress)
+        public static HttpResponseMessage SynchronizeContactData(int threadId, string socialSecurityNumber, string portalId, string emailAddress, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - SynchronizeContactData: Creating serviceProxy");
 
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
@@ -4254,8 +4423,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
-
-                    _log.Info($"Th={threadId} - SynchronizeContactData: ServiceProxy and LocalContext created Successfully.");
 
                     //Handle update of records to indicate that these have been handled
                     //Get current time
@@ -4272,9 +4439,8 @@ namespace Skanetrafiken.Crm.Controllers
 
                     //ContactEntity contactToUpdate = XrmRetrieveHelper.RetrieveFirst<ContactEntity>(localContext, new ColumnSet(ContactEntity.Fields.Id, ContactEntity.Fields.Address2_UPSZone), getContactFilter);
                     List<ContactEntity> contactToUpdate = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, new ColumnSet(ContactEntity.Fields.Id, ContactEntity.Fields.Address2_UPSZone), getContactFilter).ToList();
-                    if (contactToUpdate != null && contactToUpdate.Count > 0) 
+                    if (contactToUpdate != null && contactToUpdate.Count > 0)
                     {
-                        _log.Info($"Th={threadId} - SynchronizeContactData: Uppdating {contactToUpdate.Count} Contacts.");
                         foreach (ContactEntity contactInList in contactToUpdate)
                         {
                             //Update the field on the contact with SyncData - Date
@@ -4291,16 +4457,14 @@ namespace Skanetrafiken.Crm.Controllers
                     getAccountFilter.AddCondition(AccountEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.AccountState.Active);
 
                     AccountEntity accountToUpdate = XrmRetrieveHelper.RetrieveFirst<AccountEntity>(localContext, new ColumnSet(AccountEntity.Fields.Id, AccountEntity.Fields.Address2_UPSZone), getAccountFilter);
-                    if (accountToUpdate != null) 
+                    if (accountToUpdate != null)
                     {
-                        _log.Info($"Th={threadId} - SynchronizeContactData: Uppdating Account with Id {accountToUpdate.Id}.");
                         AccountEntity updateAccount = new AccountEntity();
                         updateAccount.Id = accountToUpdate.Id;
                         updateAccount.Address2_UPSZone = dateToUse;
                         XrmHelper.Update(localContext, updateAccount);
                     }
 
-                    _log.Info($"Th={threadId} - SynchronizeContactData: Searching for Company Role!");
                     // Get Contact(-s)
                     QueryExpression contactQuery = new QueryExpression()
                     {
@@ -4358,33 +4522,35 @@ namespace Skanetrafiken.Crm.Controllers
                     };
 
                     List<ContactEntity> contacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactQuery);
-                    _log.Info($"Th={threadId} - SynchronizeContactData: Checking search result for Company Role!");
                     if (contacts == null || contacts.Count == 0 /*|| contacts.Count > 1*/)
                     {
-                        _log.Info($"Th={threadId} - SynchronizeContactData: Found no matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}. Returning 404 - Not Found!");
-                        //HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.BadRequest);
                         HttpResponseMessage rmNoContactFound = new HttpResponseMessage(HttpStatusCode.NotFound);
-                        rmNoContactFound.Content = new StringContent(string.Format(Resources.UnexpectedException,
-                            $"Found no matching contact for PortalId: {portalId} and SSN: {maskedSSN}"));
+                        string errorMessage = string.Format(Resources.UnexpectedException,
+                            $"Found no matching contact for PortalId: {portalId} and SSN: {maskedSSN}");
+                        rmNoContactFound.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"SynchronizeContactData: Failed - {errorMessage}");
+
                         return rmNoContactFound;
                     }
                     else if (contacts != null && contacts.Count > 1)
                     {
-                        _log.Info($"Th={threadId} - SynchronizeContactData: Found multiple matching contact for PortalId: {portalId} and SSN: {socialSecurityNumber}. Returning 409 - Conflict!");
                         HttpResponseMessage multipleContactFound = new HttpResponseMessage(HttpStatusCode.Conflict);
-                        multipleContactFound.Content = new StringContent(string.Format(Resources.UnexpectedException,
-                            $"Found multiple matching contact for PortalId: {portalId} and SSN: {maskedSSN}"));
+                        string errorMessage = string.Format(Resources.UnexpectedException,
+                            $"Found multiple matching contact for PortalId: {portalId} and SSN: {maskedSSN}");
+                        multipleContactFound.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"SynchronizeContactData: Failed - {errorMessage}");
+
                         return multipleContactFound;
                     }
 
-                    
+
                     ContactEntity contact = contacts.First();
-                    _log.Info($"Th={threadId} - SynchronizeContactData: Fetched single found Contact with Id {contact.ContactId}");
 
                     // Update Contact with new email
                     if (contact.EMailAddress1.ToLower() != emailAddress.ToLower())
                     {
-                        _log.Info($"Th={threadId} - SynchronizeContactData: Updating Contact with Id {contact.ContactId}");
                         contact.EMailAddress1 = emailAddress;
                         contact.ed_InformationSource = Generated.ed_informationsource.ForetagsPortal;
                         XrmHelper.Update(localContext, contact);
@@ -4399,6 +4565,9 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -4406,6 +4575,7 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
@@ -4418,13 +4588,14 @@ namespace Skanetrafiken.Crm.Controllers
         /// <param name="latestLinkGuid"></param>
         /// <param name="mklId"></param>
         /// <returns></returns>
-        public static HttpResponseMessage ValidateEmail(int threadId, Guid customerId, int entityTypeCode, string latestLinkGuid, string mklId)
+        public static HttpResponseMessage ValidateEmail(int threadId, Guid customerId, int entityTypeCode, string latestLinkGuid, string mklId, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
-                _log.DebugFormat($"Th={threadId} - ValidateEmail: Entered ValidateEmail(), customerId: {customerId}, entityTypeCode: {entityTypeCode}, latestLinkGuid: {latestLinkGuid}");
+
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - ValidateEmail: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -4433,20 +4604,25 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - ValidateEmail: ServiceProxy and LocalContext created Successfully.");
-
                     // validating indata
-                    _log.Info($"Th={threadId} - ValidateEmail: Validating InData.");
                     if (customerId == null || Guid.Empty.Equals(customerId))
                     {
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        rm.Content = new StringContent(Resources.GuidMissing);
+                        string errorMessage = Resources.GuidMissing;
+                        rm.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                         return rm;
                     }
                     if (string.IsNullOrWhiteSpace(mklId))
                     {
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        rm.Content = new StringContent(Resources.MklIdMissing);
+                        string errorMessage = Resources.MklIdMissing;
+                        rm.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                         return rm;
                     }
 
@@ -4454,7 +4630,6 @@ namespace Skanetrafiken.Crm.Controllers
                     {
                         #region Contact
                         case ContactEntity.EntityTypeCode:
-                            _log.Info($"Th={threadId} - ValidateEmail: Retrieving Contact with Id: {customerId}");
 
                             ColumnSet columnSet = ContactEntity.ContactInfoBlock;
                             columnSet.AddColumn(ContactEntity.Fields.ed_LatestLinkGuid);
@@ -4470,34 +4645,58 @@ namespace Skanetrafiken.Crm.Controllers
                             #region Mandatory Validations
                             if (contact == null)
                             {
-                                _log.Error($"Th={threadId} - ValidateEmail: Could not find a Contact with the provided Guid.");
                                 HttpResponseMessage rml = new HttpResponseMessage(HttpStatusCode.NotFound);
-                                rml.Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, customerId));
+                                string errMsg = Resources.CouldNotFindContactWithInfo;
+                                rml.Content = new StringContent(errMsg);
+
+                                _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
+                                rml.Content = new StringContent(string.Format(errMsg, customerId));
                                 return rml;
                             }
                             if (string.IsNullOrWhiteSpace(contact.ed_LatestLinkGuid))
                             {
                                 HttpResponseMessage rml = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                rml.Content = new StringContent(string.Format(Resources.NoLinkGuidFoundOnContact));
+                                string errMsg = Resources.NoLinkGuidFoundOnContact;
+                                rml.Content = new StringContent(errMsg);
+
+                                _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
+                                rml.Content = new StringContent(string.Format(errMsg, customerId));
                                 return rml;
                             }
                             //if (contact.ed_LinkExpiryDate.HasValue && contact.ed_LinkExpiryDate.Value.CompareTo(DateTime.Now) > 0)
                             if (contact.ed_LinkExpiryDate.HasValue && DateTime.Now.CompareTo(contact.ed_LinkExpiryDate.Value) > 0)
                             {
                                 HttpResponseMessage rml = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                rml.Content = new StringContent(string.Format(Resources.OldLinkUsed));
+                                string errMsg = Resources.OldLinkUsed;
+                                rml.Content = new StringContent(errMsg);
+
+                                _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
+                                rml.Content = new StringContent(string.Format(errMsg, customerId));
                                 return rml;
                             }
                             if (string.IsNullOrWhiteSpace(contact.ed_EmailToBeVerified))
                             {
                                 HttpResponseMessage rml = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                rml.Content = new StringContent(string.Format(Resources.NoEmailToBeVerifiedFoundOnContact));
+                                string errMsg = Resources.NoEmailToBeVerifiedFoundOnContact;
+                                rml.Content = new StringContent(errMsg);
+
+                                _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
+                                rml.Content = new StringContent(string.Format(errMsg, customerId));
                                 return rml;
                             }
                             if (!contact.ed_LatestLinkGuid.Equals(latestLinkGuid))
                             {
                                 HttpResponseMessage rml = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                rml.Content = new StringContent(string.Format(Resources.LinkNotMeantForThisContact));
+                                string errMsg = Resources.LinkNotMeantForThisContact;
+                                rml.Content = new StringContent(errMsg);
+
+                                _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
+                                rml.Content = new StringContent(string.Format(errMsg, customerId));
                                 return rml;
                             }
                             #endregion
@@ -4509,7 +4708,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                             ContactEntity firstRetrievedContact = (ContactEntity)contact;
 
-                            _log.Info($"Th={threadId} - ValidateEmail: Searching for conflicting Contacts.");
                             #region Conflicting Contacts Query using EmailAddress1
                             FilterExpression conflictFilter = new FilterExpression(LogicalOperator.Or);
                             FilterExpression mailFilter = new FilterExpression(LogicalOperator.And)
@@ -4536,17 +4734,19 @@ namespace Skanetrafiken.Crm.Controllers
                             #region Check for validated EmailAddress1
                             if (contactConflicts.Count > 0)
                             {
-                                    if (contact.ed_EmailToBeVerified.Equals(contactConflicts[0].EMailAddress1))
-                                    {
-                                        _log.Warn($"Th={threadId} - ValidateEmail: Found existing, validated contact with conflicting email {contact.ed_EmailToBeVerified}. Cannot validate this contact.");
-                                        HttpResponseMessage rm3 = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                        rm3.Content = new StringContent(Resources.CouldNotVerifyCustomerEmail);
-                                        return rm3;
-                                    }
+                                if (contact.ed_EmailToBeVerified.Equals(contactConflicts[0].EMailAddress1))
+                                {
+                                    HttpResponseMessage rm3 = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                    string errMsg = Resources.CouldNotVerifyCustomerEmail;
+                                    rm3.Content = new StringContent(errMsg);
+
+                                    _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
+                                    return rm3;
+                                }
                             }
                             #endregion
 
-                            _log.Debug($"Th={threadId} - ValidateEmail: Merge Contacts Query.");
                             #region MergeContacts: Confliting Contacts Query using EmailAddress2
                             FilterExpression mergeContactFilter = new FilterExpression(LogicalOperator.Or);
                             FilterExpression nameFilter = new FilterExpression(LogicalOperator.Or)
@@ -4596,16 +4796,13 @@ namespace Skanetrafiken.Crm.Controllers
                             };
                             #endregion
                             IList<ContactEntity> mergeContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, mergeContactQuery);
-                            _log.Info($"Th={threadId} - ValidateEmail: Found {mergeContacts.Count} conflicting contacts to merge with the one to be validated");
 
                             // Do merge if required
                             if (mergeContacts.Count > 0)
                             {
                                 contact.CombineContacts(localContext, mergeContacts);
-                                _log.Debug($"Th={threadId} - ValidateEmail: Contacts merged.");
                             }
 
-                            _log.Debug($"Th={threadId} - ValidateEmail: Conflicting Leads Query.");
                             #region Conflicting Leads Query using EmailAddress1
                             QueryExpression conflictLeadQuery = new QueryExpression()
                             {
@@ -4625,7 +4822,6 @@ namespace Skanetrafiken.Crm.Controllers
                             };
                             #endregion
                             IList<LeadEntity> leadConflicts = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, conflictLeadQuery);
-                            _log.Info($"Th={threadId} - ValidateEmail: Found {leadConflicts.Count} conflicting leads to merge with the one to be validated");
 
                             // Uppdatera bara det som är nödvändigt!
                             // Varför inte uppdatera bara det som är ändrat!
@@ -4640,8 +4836,6 @@ namespace Skanetrafiken.Crm.Controllers
                             {
                                 foreach (LeadEntity leadConflict in leadConflicts)
                                     ContactEntity.UpdateContactWithLead(ref contact, ref updContact, leadConflict);
-                                
-                                _log.Debug($"Th={threadId} - ValidateEmail: Contact updated with Lead.");
                             }
 
                             contact.EMailAddress1 = contact.ed_EmailToBeVerified;
@@ -4671,7 +4865,8 @@ namespace Skanetrafiken.Crm.Controllers
 
                             updContact.Attributes = attributesToUpdate;
                             localContext.OrganizationService.Update(updContact);
-                            _log.Debug($"Th={threadId} - ValidateEmail: Contact updated.");
+
+                            CrmPlusUtility.SendConfirmationEmail(localContext, threadId, contact);
 
                             return new HttpResponseMessage(HttpStatusCode.OK)
                             {
@@ -4683,7 +4878,6 @@ namespace Skanetrafiken.Crm.Controllers
                         case LeadEntity.EntityTypeCode:
 
                             ContactEntity nContact = null;
-                            _log.Info($"Th={threadId} - ValidateEmail: Retrieving Lead with Id: {customerId}");
 
                             ColumnSet columns = LeadEntity.LeadInfoBlock;
                             columns.AddColumn(LeadEntity.Fields.ed_LatestLinkGuid);
@@ -4700,58 +4894,69 @@ namespace Skanetrafiken.Crm.Controllers
                             #region Mandatory Validations
                             if (lead == null)
                             {
-                                _log.WarnFormat($"Th={threadId} - ValidateEmail: Could not find an Open Lead with the provided Guid: {customerId}");
                                 HttpResponseMessage rml = new HttpResponseMessage(HttpStatusCode.NotFound);
-                                rml.Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, customerId));
+                                string errMsg = Resources.CouldNotFindContactWithInfo;
+
+                                _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
+                                rml.Content = new StringContent(string.Format(errMsg, customerId));
                                 return rml;
                             }
                             if (string.IsNullOrWhiteSpace(lead.ed_LatestLinkGuid))
                             {
-                                _log.WarnFormat($"Th={threadId} - ValidateEmail: Could not find a LatestLinkGuid on the retrieved Lead");
                                 HttpResponseMessage rml = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                rml.Content = new StringContent(Resources.NoLinkGuidFoundOnLead);
+                                string errMsg = Resources.NoLinkGuidFoundOnLead;
+                                rml.Content = new StringContent(errMsg);
+
+                                _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
                                 return rml;
                             }
                             if (!lead.ed_LatestLinkGuid.Equals(latestLinkGuid))
                             {
-                                _log.WarnFormat($"Th={threadId} - ValidateEmail: LatestLinkGuid used is not the expected one");
                                 HttpResponseMessage rml = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                rml.Content = new StringContent(Resources.LinkNotMeantForThisLead);
+                                string errMsg = Resources.LinkNotMeantForThisLead;
+                                rml.Content = new StringContent(errMsg);
+
+                                _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
                                 return rml;
                             }
                             if (lead.ed_LinkExpiryDate.HasValue && lead.ed_LinkExpiryDate.Value.CompareTo(DateTime.Now) < 0)
                             {
-                                _log.WarnFormat($"Th={threadId} - ValidateEmail: LinkExpiryDate is less that DateTime.Now");
                                 HttpResponseMessage rml = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                rml.Content = new StringContent(Resources.OldLinkUsed);
+                                string errMsg = Resources.OldLinkUsed;
+                                rml.Content = new StringContent(errMsg);
+
+                                _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
                                 return rml;
                             }
                             if (string.IsNullOrWhiteSpace(lead.EMailAddress1))
                             {
-                                _log.WarnFormat($"Th={threadId} - ValidateEmail: Lead to be validated does not contain an email address");
                                 HttpResponseMessage rml = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                rml.Content = new StringContent(Resources.NoEmailToBeVerifiedFoundOnLead);
+                                string errMsg = Resources.NoEmailToBeVerifiedFoundOnLead;
+                                rml.Content = new StringContent(errMsg);
+
+                                _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
                                 return rml;
                             }
                             #endregion
 
                             // 2020-02-04 - Checking Social Security Number OR (EMailAddress2 & First-/LastName) (OLD)
                             // 2020-05-14 - Checking EMailAddress2 & Telephone2 & ed_PrivateCustomerContact
-                            _log.Debug($"Th={threadId} - ValidateEmail: Conflicting Contact Query.");
                             QueryExpression contactConflictQuery = CreateContactEMailAddress2ConflictQuery(lead);
                             IList<ContactEntity> conflictContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactConflictQuery);
-                            _log.Info($"Th={threadId} - ValidateEmail: Found {conflictContacts.Count} conflicting Contacts");
 
                             // 2020-02-04 - If no matches found, validate against EMailAddress1 & First-/LastName (OLD)
                             // 2020-05-14 - If no matches found, validate against EMailAddress1 & Telephone2 & ed_PrivateCustomerContact
                             if (conflictContacts == null || conflictContacts.Count() < 1)
                             {
-                                _log.Debug($"Th={threadId} - ValidateEmail: Conflicting EMailAddress1 Query.");
                                 contactConflictQuery = CreateContactEMailAddress1ConflictQuery(lead);
                                 conflictContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactConflictQuery);
                             }
 
-                            _log.Debug($"Th={threadId} - ValidateEmail: Conflicting Leads Query.");
                             #region Conflicting Leads Query using EmailAddress1
                             QueryExpression leadConflictQuery = new QueryExpression()
                             {
@@ -4771,12 +4976,10 @@ namespace Skanetrafiken.Crm.Controllers
                             #endregion
 
                             IList<LeadEntity> conflictLeads = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, leadConflictQuery);
-                            _log.Info($"Th={threadId} - ValidateEmail: Found {conflictLeads.Count} conflicting Leads");
 
                             #region Check for validated EmailAddress1
                             if (conflictContacts.Count > 0)
                             {
-                                _log.Info($"Th={threadId} - ValidateEmail: Contact conflicts found.");
                                 ContactEntity emailAddress1Conflict = null;
 
                                 foreach (ContactEntity c in conflictContacts)
@@ -4784,14 +4987,17 @@ namespace Skanetrafiken.Crm.Controllers
                                     if (lead.EMailAddress1 != null && lead.EMailAddress1.Equals(c.EMailAddress1) && c.ed_MklId != null)
                                     {
                                         HttpResponseMessage respMess2 = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                        respMess2.Content = new StringContent("Duplicate Contact found with the same primary email.");
+                                        string errMsg = "Duplicate Contact found with the same primary email.";
+                                        respMess2.Content = new StringContent(errMsg);
+
+                                        _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
                                         return respMess2;
                                     }
                                 }
 
                                 if (emailAddress1Conflict != null)
                                 {
-                                    _log.Debug($"Th={threadId} - ValidateEmail: Conflicting EMailAddress1 found.");
                                     conflictContacts.Remove(emailAddress1Conflict);
                                     nContact = emailAddress1Conflict;
 
@@ -4806,17 +5012,14 @@ namespace Skanetrafiken.Crm.Controllers
                                 }
                                 else
                                 {
-                                    _log.Info($"Th={threadId} - ValidateEmail: No EMailAddress1 conflict was found. Qualifying Lead.");
                                     nContact = QualifyLeadToContact(localContext, lead);
                                 }
 
-                                _log.Info($"Th={threadId} - ValidateEmail: Combining {conflictContacts.Count} conflicting contacts.");
                                 nContact.CombineContacts(localContext, conflictContacts);
                             }
                             else
                             {
                                 //Creating New Contact
-                                _log.Info($"Th={threadId} - ValidateEmail: No valid existing contact found, creating new from the Lead.");
                                 nContact = QualifyLeadToContact(localContext, lead);
                             }
                             #endregion
@@ -4824,7 +5027,11 @@ namespace Skanetrafiken.Crm.Controllers
                             if (nContact == null)
                             {
                                 HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                                respMess.Content = new StringContent(Resources.UnexpectedErrorWhenValidatingEmail);
+                                string errMsg = Resources.UnexpectedErrorWhenValidatingEmail;
+                                respMess.Content = new StringContent(errMsg);
+
+                                _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
                                 return respMess;
                             }
 
@@ -4837,11 +5044,8 @@ namespace Skanetrafiken.Crm.Controllers
 
                             if (conflictLeads.Count > 0)
                             {
-                                _log.DebugFormat($"Th={threadId} - ValidateEmail: Merging {conflictLeads.Count} Leads with the new Contact");
                                 foreach (LeadEntity leadConflict in conflictLeads)
                                     ContactEntity.UpdateContactWithLead(ref nContact, ref updContact2, leadConflict);
-
-                                _log.Debug($"Th={threadId} - ValidateEmail: Contact updated with Lead.");
                             }
 
                             #region Conflicting Kampanj Leads Query using EmailAddress1
@@ -4864,12 +5068,10 @@ namespace Skanetrafiken.Crm.Controllers
                             kampanjLeadConflictQuery.AddOrder(LeadEntity.Fields.CreatedOn, OrderType.Descending);
 
                             List<LeadEntity> conflictKampanjLeads = XrmRetrieveHelper.RetrieveMultiple<LeadEntity>(localContext, kampanjLeadConflictQuery);
-                            _log.Info($"Th={threadId} - ValidateEmail: Found {conflictKampanjLeads.Count} conflicting Kampanj Leads");
 
                             if (conflictKampanjLeads.Count > 0)
                             {
                                 LeadEntity recentLead = conflictKampanjLeads.FirstOrDefault();
-                                _log.DebugFormat($"Th={threadId} - ValidateEmail: Merging {conflictKampanjLeads.Count} Kampanj Leads with the new Contact");
                                 ContactEntity.UpdateContactWithLeadKampanj(ref updContact2, recentLead);
 
                                 QualifyLeadRequest req = new QualifyLeadRequest()
@@ -4882,7 +5084,6 @@ namespace Skanetrafiken.Crm.Controllers
                                 };
 
                                 localContext.OrganizationService.Execute(req);
-                                _log.Debug($"Th={threadId} - ValidateEmail: Contact updated with Lead.");
                             }
 
                             if (nContact.DoNotEMail == true)
@@ -4898,7 +5099,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                             localContext.OrganizationService.Update(updContact2);
 
-                            _log.Debug($"Th={threadId} - ValidateEmail: Contact updated.");
+                            CrmPlusUtility.SendConfirmationEmail(localContext, threadId, nContact);
 
                             HttpResponseMessage rm4 = new HttpResponseMessage(HttpStatusCode.OK);
                             rm4.Content = new StringContent(SerializeNoNull(nContact.ToContactInfo(localContext)));
@@ -4908,7 +5109,11 @@ namespace Skanetrafiken.Crm.Controllers
 
                         default:
                             HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                            rm.Content = new StringContent(string.Format(Resources.UnsupportedEntityTypeCode, entityTypeCode));
+                            string errorMessage = Resources.UnsupportedEntityTypeCode;
+                            rm.Content = new StringContent(string.Format(errorMessage, entityTypeCode));
+
+                            _logger.LogError($"{prefix}: Failed - {errorMessage}");
+
                             return rm;
                     }
                 }
@@ -4917,11 +5122,16 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 return rm;
             }
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
@@ -4933,11 +5143,12 @@ namespace Skanetrafiken.Crm.Controllers
         /// <returns></returns>
         public static HttpResponseMessage ValidateEmailKampanj(int threadId, Guid leadId)
         {
+            string prefix = "ValidateEmailKampanj";
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
-                _log.DebugFormat($"Th={threadId} - ValidateEmail: Entered ValidateEmailKampanj(), leadId: {leadId}");
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - ValidateEmail: Creating serviceProxy");
 
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
@@ -4947,20 +5158,20 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - ValidateEmail: ServiceProxy and LocalContext created Successfully.");
-
                     // validating indata
-                    _log.Info($"Th={threadId} - ValidateEmail: Validating InData.");
                     if (leadId == null || Guid.Empty.Equals(leadId))
                     {
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        string errMsg = Resources.GuidMissing;
+
+                        _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
                         rm.Content = new StringContent(Resources.GuidMissing);
                         return rm;
                     }
 
                     #region Find Lead
 
-                    _log.Info($"Th={threadId} - ValidateEmail: Retrieving Lead with Id: {leadId}");
 
                     ColumnSet columns = LeadEntity.LeadInfoBlock;
                     LeadEntity lead = XrmRetrieveHelper.RetrieveFirst<LeadEntity>(localContext, columns, new FilterExpression()
@@ -4974,45 +5185,56 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (lead == null)
                     {
-                        _log.WarnFormat($"Th={threadId} - ValidateEmail: Could not find a Lead with the provided Guid: {leadId}");
                         HttpResponseMessage rml = new HttpResponseMessage(HttpStatusCode.NotFound);
-                        rml.Content = new StringContent(string.Format(Resources.CouldNotFindContactWithInfo, leadId));
+                        string errMsg = Resources.CouldNotFindContactWithInfo;
+                        rml.Content = new StringContent(errMsg);
+
+                        _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
                         return rml;
                     }
 
                     if (string.IsNullOrWhiteSpace(lead.EMailAddress1))
                     {
-                        _log.WarnFormat($"Th={threadId} - ValidateEmail: Lead to be validated does not contain an email address");
                         HttpResponseMessage rml = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        rml.Content = new StringContent(Resources.NoEmailToBeVerifiedFoundOnLead);
+                        string errMsg = Resources.NoEmailToBeVerifiedFoundOnLead;
+                        rml.Content = new StringContent(errMsg);
+
+                        _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
                         return rml;
                     }
 
                     #endregion
 
                     #region Conflict Contacts
-                    _log.Debug($"Th={threadId} - ValidateEmail: Conflicting Contact Query.");
                     QueryExpression contactConflictQuery = QueryContactEmailConflict(lead.EMailAddress1, Contact.Fields.EMailAddress1);
                     IList<ContactEntity> conflictContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactConflictQuery);
-                    _log.Info($"Th={threadId} - ValidateEmail: Found {conflictContacts.Count} conflicting Contacts: EmailAddress1");
 
                     if (conflictContacts.Count > 0)
                     {
                         HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        respMess.Content = new StringContent("Contact already validated. Contact found with EmailAddress1 equal to Lead's Email.");
+                        string errMsg = "Contact already validated. Contact found with EmailAddress1 equal to Lead's Email.";
+                        respMess.Content = new StringContent(errMsg);
+
+                        _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
                         return respMess;
                     }
 
                     contactConflictQuery = QueryContactEmailConflict(lead.EMailAddress1, Contact.Fields.EMailAddress2);
                     conflictContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, contactConflictQuery);
-                    _log.Info($"Th={threadId} - ValidateEmail: Found {conflictContacts.Count} conflicting Contacts: EmailAddress2");
 
                     ContactEntity contact = null;
 
                     if (conflictContacts.Count > 1)
                     {
                         HttpResponseMessage respMess = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        respMess.Content = new StringContent("Multiple Contacts found with EmailAddress2 equal to Lead's Email. This will result in multiple validated Contacts.");
+                        string errMsg = "Multiple Contacts found with EmailAddress2 equal to Lead's Email. This will result in multiple validated Contacts.";
+                        respMess.Content = new StringContent(errMsg);
+
+                        _logger.LogError($"ValidateEmail: Failed - {errMsg}");
+
                         return respMess;
                     }
                     else if (conflictContacts.Count == 1)
@@ -5043,9 +5265,9 @@ namespace Skanetrafiken.Crm.Controllers
 
                     #endregion
 
-                    if(contact != null)
+                    if (contact != null)
                     {
-                        _log.Debug($"Th={threadId} - ValidateEmail: Contact updated.");
+                        CrmPlusUtility.SendConfirmationEmail(localContext, threadId, contact);
 
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.OK);
                         rm.Content = new StringContent(SerializeNoNull(contact.ToContactInfo(localContext)));
@@ -5053,7 +5275,6 @@ namespace Skanetrafiken.Crm.Controllers
                     }
                     else
                     {
-                        _log.Info($"Th={threadId} - ValidateEmail: Empty Response.");
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.OK);
                         rm.Content = new StringContent(string.Empty);
                         return rm;
@@ -5062,6 +5283,9 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -5069,15 +5293,17 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
-        internal static HttpResponseMessage RegisterBuyAndSendSkaKortPost(int threadId, SkaKortInfo skaKortInfo)
+        internal static HttpResponseMessage RegisterBuyAndSendSkaKortPost(int threadId, SkaKortInfo skaKortInfo, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - RegisterBuyAndSendSkaKortPost: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -5086,16 +5312,16 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - RegisterBuyAndSendSkaKortPost: ServiceProxy and LocalContext created Successfully.");
-
                     //TODO: Create Validate Register skaKortInfo method -> Create skaKortUtility. Might not need to validate ContactId / PortalId
-                    _log.Info($"Th={threadId} - RegisterBuyAndSendSkaKortPost: Validating CustomerInfo.");
                     StatusBlock validateStatus = SkaKortUtility.ValidateSkaKortInfo(localContext, skaKortInfo, true);
                     if (!validateStatus.TransactionOk)
                     {
-                        _log.Error($"Th={threadId} - RegisterBuyAndSendSkaKortPost: SkaKort-POST. Validation failed.");
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        rm.Content = new StringContent(validateStatus.ErrorMessage);
+                        string errorMessage = validateStatus.ErrorMessage;
+                        rm.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"RegisterBuyAndSendSkaKortPost: Failed - {errorMessage}");
+
                         return rm;
                     }
 
@@ -5117,8 +5343,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                         if (skakort != null)
                         {
-                            _log.Info($"Th={threadId} - RegisterBuyAndSendSkaKortPost: Updating SkaKort with CardNumber {skaKortInfo.CardNumber}.");
-
                             SkaKortEntity updateSkaKort = new SkaKortEntity();
                             updateSkaKort.Id = skakort.Id;
                             updateSkaKort.ed_Contact = contact.ToEntityReference();
@@ -5142,15 +5366,12 @@ namespace Skanetrafiken.Crm.Controllers
 
                                 XrmHelper.Update(localContext, updateSkaKort);
 
-                            _log.Info($"Th={threadId} - RegisterBuyAndSendSkaKortPost: SkaKort updated. SkaKortId: {skakort.Id}.");
-
                             HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                             resp.Content = new StringContent("SkaKort updated.");
                             return resp;
                         }
                         else //Create new
                         {
-                            _log.Info($"Th={threadId} - RegisterBuyAndSendSkaKortPost: Creating new SkaKort with CardNumber {skaKortInfo.CardNumber}.");
 
                             SkaKortEntity newSkaKort = new SkaKortEntity();
                             newSkaKort.ed_name = !string.IsNullOrWhiteSpace(skaKortInfo.CardName) ? skaKortInfo.CardName : skaKortInfo.CardNumber;
@@ -5165,8 +5386,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                             newSkaKort.Id = XrmHelper.Create(localContext, newSkaKort);
 
-                            _log.Info($"Th={threadId} - RegisterBuyAndSendSkaKortPost: New SkaKort created. SkaKortId: {newSkaKort.Id}.");
-
                             HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                             resp.Content = new StringContent("SkaKort created.");
                             return resp;
@@ -5174,15 +5393,21 @@ namespace Skanetrafiken.Crm.Controllers
                     }
                     else
                     {
-                        _log.Error($"Th={threadId} - RegisterBuyAndSendSkaKortPost: SkaKort-POST. No Account found with passed AccountNumber {skaKortInfo.PortalId}.");
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        error.Content = new StringContent($"Account with AccountNumber {skaKortInfo.PortalId} does not exist.");
+                        string errorMessage = $"Account with AccountNumber {skaKortInfo.PortalId} does not exist.";
+                        error.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"RegisterBuyAndSendSkaKortPost: Failed - {errorMessage}");
+
                         return error;
                     }
                 }
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -5190,15 +5415,17 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
-        internal static HttpResponseMessage RegisterCompanySkaKortPost(int threadId, SkaKortInfo skaKortInfo)
+        internal static HttpResponseMessage RegisterCompanySkaKortPost(int threadId, SkaKortInfo skaKortInfo, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - RegisterCompanySkaKortPost: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -5207,16 +5434,17 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - RegisterCompanySkaKortPost: ServiceProxy and LocalContext created Successfully.");
 
                     //TODO: Create Validate Register skaKortInfo method -> Create skaKortUtility. Might not need to validate ContactId / PortalId
-                    _log.Info($"Th={threadId} - RegisterCompanySkaKortPost: Validating CustomerInfo.");
                     StatusBlock validateStatus = SkaKortUtility.ValidateSkaKortInfo(localContext, skaKortInfo, true);
                     if (!validateStatus.TransactionOk)
                     {
-                        _log.Error($"Th={threadId} - RegisterCompanySkaKortPost: SkaKort-POST. Validation failed.");
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        rm.Content = new StringContent(validateStatus.ErrorMessage);
+                        string errorMessage = validateStatus.ErrorMessage;
+                        rm.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"RegisterCompanySkaKortPost: Failed - {errorMessage}");
+
                         return rm;
                     }
 
@@ -5243,14 +5471,16 @@ namespace Skanetrafiken.Crm.Controllers
                             // If SKÅ Kort is already registered to an Account, return Bad Request
                             if (skakort.ed_Account != null)
                             {
-                                _log.Error($"Th={threadId} - RegisterCompanySkaKortPost: SkaKort-POST. SkaKort found with existing Account/Contact. CardNumber: {skaKortInfo.CardNumber}.");
                                 HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                                error.Content = new StringContent($"SkaKort with CardNumber {skaKortInfo.CardNumber} already exists with Account/Contact.");
+                                string errorMessage = $"SkaKort with CardNumber {skaKortInfo.CardNumber} already exists with Account/Contact.";
+                                error.Content = new StringContent(errorMessage);
+
+                                _logger.LogError($"RegisterCompanySkaKortPost: Failed - {errorMessage}");
+
                                 return error;
                             }
                             else
                             {
-                                _log.Info($"Th={threadId} - RegisterCompanySkaKortPost: Updating SkaKort with CardNumber {skaKortInfo.CardNumber}.");
 
                                 //TODO: Update SkaKort (Vad gör vi om kortet är inaktiv?)
                                 SkaKortEntity updateSkaKort = new SkaKortEntity();
@@ -5279,8 +5509,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                                 XrmHelper.Update(localContext, updateSkaKort);
 
-                                _log.Info($"Th={threadId} - RegisterCompanySkaKortPost: SkaKort updated. SkaKortId: {skakort.Id}.");
-
                                 HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                                 resp.Content = new StringContent("SkaKort updated.");
                                 return resp;
@@ -5288,7 +5516,6 @@ namespace Skanetrafiken.Crm.Controllers
                         }
                         else
                         {
-                            _log.Info($"Th={threadId} - RegisterCompanySkaKortPost: Creating new SkaKort with CardNumber {skaKortInfo.CardNumber}.");
 
                             //TODO: Create SkaKort
                             SkaKortEntity newSkaKort = new SkaKortEntity();
@@ -5304,8 +5531,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                             newSkaKort.Id = XrmHelper.Create(localContext, newSkaKort);
 
-                            _log.Info($"Th={threadId} - RegisterCompanySkaKortPost: New SkaKort created. SkaKortId: {newSkaKort.Id}.");
-
                             HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                             resp.Content = new StringContent("SkaKort created.");
                             return resp;
@@ -5314,15 +5539,21 @@ namespace Skanetrafiken.Crm.Controllers
                     }
                     else
                     {
-                        _log.Error($"Th={threadId} - RegisterCompanySkaKortPost: SkaKort-POST. No Account found with AccountNumber {skaKortInfo.PortalId}.");
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        error.Content = new StringContent($"Account with AccountNumber {skaKortInfo.PortalId} does not exist.");
+                        string errorMessage = $"Account with AccountNumber {skaKortInfo.PortalId} does not exist.";
+                        error.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"RegisterCompanySkaKortPost: Failed - {errorMessage}");
+
                         return error;
                     }
                 }
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -5330,15 +5561,17 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
-        internal static HttpResponseMessage RemoveSkaKortContactOrAccount(int threadId, SkaKortInfo skaKortInfo)
+        internal static HttpResponseMessage RemoveSkaKortContactOrAccount(int threadId, SkaKortInfo skaKortInfo, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - RemoveSkaKortContactOrAccount: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -5347,15 +5580,16 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - RemoveSkaKortContactOrAccount: ServiceProxy and LocalContext created Successfully.");
-
                     //TODO: Create Validate Register skaKortInfo method -> Create skaKortUtility. Might not need to validate ContactId / PortalId
-                    _log.Info($"Th={threadId} - RemoveSkaKortContactOrAccount: Validating CustomerInfo.");
                     StatusBlock validateStatus = SkaKortUtility.ValidateSkaKortInfo(localContext, skaKortInfo, false);
                     if (!validateStatus.TransactionOk)
                     {
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        rm.Content = new StringContent(validateStatus.ErrorMessage);
+                        string errorMessage = validateStatus.ErrorMessage;
+                        rm.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"RemoveSkaKortContactOrAccount: Failed - {errorMessage}");
+
                         return rm;
                     }
 
@@ -5373,12 +5607,15 @@ namespace Skanetrafiken.Crm.Controllers
                     if (skakort == null)
                     {
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        error.Content = new StringContent($"Active SkaKort with CardNumber {skaKortInfo.CardNumber} does not exist.");
+                        string errorMessage = $"Active SkaKort with CardNumber {skaKortInfo.CardNumber} does not exist.";
+                        error.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"RemoveSkaKortContactOrAccount: Failed - {errorMessage}");
+
                         return error;
                     }
                     else
                     {
-                        _log.Info($"Th={threadId} - RemoveSkaKortContactOrAccount: Found Inactive SkaKort. SkaKortId: {skakort.Id}.");
                         SkaKortEntity updateSkakort = new SkaKortEntity();
                         updateSkakort.Id = skakort.Id;
 
@@ -5395,8 +5632,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                         XrmHelper.Update(localContext, updateSkakort);
 
-                        _log.Info($"Th={threadId} - RemoveSkaKortContactOrAccount: SkaKort updated. SkaKortId: {skakort.Id}.");
-
                         HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                         resp.Content = new StringContent("SkaKort updated.");
                         return resp;
@@ -5405,6 +5640,9 @@ namespace Skanetrafiken.Crm.Controllers
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -5412,15 +5650,17 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
-        internal static HttpResponseMessage SkaKortInactivate(int threadId, SkaKortInfo skaKortInfo)
+        internal static HttpResponseMessage SkaKortInactivate(int threadId, SkaKortInfo skaKortInfo, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - SkaKortInactivate: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -5429,15 +5669,17 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - SkaKortInactivate: ServiceProxy and LocalContext created Successfully.");
 
                     //TODO: Create Validate Register skaKortInfo method -> Create skaKortUtility. Might not need to validate ContactId / PortalId
-                    _log.Info($"Th={threadId} - SkaKortInactivate: Validating SkaKortInfo.");
                     StatusBlock validateStatus = SkaKortUtility.ValidateSkaKortInfo(localContext, skaKortInfo, false);
                     if (!validateStatus.TransactionOk)
                     {
                         HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        rm.Content = new StringContent(validateStatus.ErrorMessage);
+                        string errorMessage = validateStatus.ErrorMessage;
+                        rm.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"SkaKortInactivate: Failed - {errorMessage}");
+
                         return rm;
                     }
 
@@ -5450,20 +5692,22 @@ namespace Skanetrafiken.Crm.Controllers
                     if (skakort == null)
                     {
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        error.Content = new StringContent($"SkaKort with CardNumber {skaKortInfo.CardNumber} does not exist.");
+                        string errorMessage = $"SkaKort with CardNumber {skaKortInfo.CardNumber} does not exist.";
+                        error.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"SkaKortInactivate: Failed - {errorMessage}");
+
                         return error;
                     }
 
                     if (skakort.statecode != Generated.ed_SKAkortState.Inactive)
                     {
-                        _log.Debug($"Th={threadId} - SkaKortInactivate: Found Inactive SkaKort. SkaKortId - {skakort.Id}.");
                         SkaKortEntity updateSkakort = new SkaKortEntity();
                         updateSkakort.Id = skakort.Id;
                         updateSkakort.statecode = Generated.ed_SKAkortState.Inactive;
 
                         XrmHelper.Update(localContext, updateSkakort);
 
-                        _log.Info($"Th={threadId} - SkaKortInactivate: SkaKort Disconnected. SkaKortId - {skakort.Id}.");
 
                         HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                         resp.Content = new StringContent("SkaKort Disconnected.");
@@ -5472,13 +5716,20 @@ namespace Skanetrafiken.Crm.Controllers
                     else
                     {
                         HttpResponseMessage error = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        error.Content = new StringContent($"SkaKort with CardNumber {skaKortInfo.CardNumber} is already disconnected.");
+                        string errorMessage = $"SkaKort with CardNumber {skaKortInfo.CardNumber} is already disconnected.";
+                        error.Content = new StringContent(errorMessage);
+
+                        _logger.LogError($"SkaKortInactivate: Failed - {errorMessage}");
+
                         return error;
                     }
                 }
             }
             catch (Exception ex)
             {
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
                 return rm;
@@ -5486,6 +5737,7 @@ namespace Skanetrafiken.Crm.Controllers
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
@@ -5676,7 +5928,6 @@ namespace Skanetrafiken.Crm.Controllers
 
             if (result == null)
             {
-                _log.Warn($"-- GetAccessToken Failed! --");
                 throw new Exception("Failed to authenticate via ADAL");
             }
 
@@ -5692,20 +5943,20 @@ namespace Skanetrafiken.Crm.Controllers
 
             if (result == null)
             {
-                _log.Warn($"-- GetAccessToken Failed! --");
                 throw new Exception("Failed to authenticate via ADAL");
             }
 
             return result.AccessToken;
         }
 
-        public static string HandleAttachemntFilesFromAzure(int threadId, string clientId, string clientSecret, string tenantId, string storageAccountName, string containerName, string fileUrl, Guid? emailGuid) 
+        public static string HandleAttachemntFilesFromAzure(int threadId, string clientId, string clientSecret, string audience, string tenantId, string storageAccountName, string containerName, string fileUrl, Guid? emailGuid, string prefix)
         {
+            _logger.SetGlobalProperty("source", prefix);
+
             bool createdCheck = false;
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -5714,109 +5965,64 @@ namespace Skanetrafiken.Crm.Controllers
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: ServiceProxy and LocalContext created Successfully.");
 
                     byte[] imageByteArray = { };
                     string returnString = "";
 
-                    //TODO:
-                    _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Starting TASK...");
-
                     Task.Run(async () =>
                     {
-                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Getting Access Token...");
-                        var token = await GetAccessToken(clientId, clientSecret, tenantId);
-                        if (token != string.Empty)
-                        {
-                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Token Retrieved => {token}");
-                        }
-                        else
+                        var token = await GetAccessToken(clientId, clientSecret, tenantId, audience);
+                        if (token == string.Empty)
                         {
                             throw new Exception(string.Format($"Could not retrieve a Token!"));
                         }
 
-                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating Token Credential...");
                         TokenCredential tokenCredential = new TokenCredential(token);
-                        if (tokenCredential != null)
-                        {
-                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Token Credential Created!");
-                        }
-                        else
+                        if (tokenCredential == null)
                         {
                             throw new Exception(string.Format($"Could not create Token Credential!"));
                         }
 
-                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating Storage Credential...");
                         StorageCredentials storageCredentials = new StorageCredentials(tokenCredential);
-                        if (storageCredentials != null)
-                        {
-                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Storage Credential Created!");
-                        }
-                        else
+                        if (storageCredentials == null)
                         {
                             throw new Exception(string.Format($"Could not create Storage Credential!"));
                         }
 
                         string cloudBlobClientURI = "https://" + $"{storageAccountName}" + ".blob.core.windows.net";
-                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating CloudBlobClient with URI: \n {cloudBlobClientURI}");
                         CloudBlobClient client = new CloudBlobClient(new Uri(cloudBlobClientURI), storageCredentials);
-                        if (client != null)
-                        {
-                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: CloudBlobClient Created!");
-                        }
-                        else
+                        if (client == null)
                         {
                             throw new Exception(string.Format($"Could not create CloudBlobClient with URI: {cloudBlobClientURI}"));
                         }
 
-                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating CloudBlobContainer with ContainerName: {containerName}");
                         CloudBlobContainer container = client.GetContainerReference(containerName);
-                        if (container != null)
-                        {
-                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: CloudBlobContainer Created!");
-                        }
-                        else
+                        if (container == null)
                         {
                             throw new Exception(string.Format($"Could not create CloudBlobContainer with ContainerName: {containerName}"));
                         }
 
-                        //var blob = container.GetBlockBlobReference(FileName);
-                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Getting File as a blob using 'container.GetBlockBlobReference()'...");
+
                         var blob = container.GetBlockBlobReference(fileUrl);
-                        if (blob != null)
-                        {
-                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Blob Retrieved!");
-                        }
-                        else
+                        if (blob == null)
                         {
                             throw new Exception(string.Format($"Could not find a Blob using GetBlockBlobReference()!"));
                         }
 
-                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating MemoryStream...");
                         MemoryStream ms = new MemoryStream();
-                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: MemoryStream Created!");
 
-                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Downloading Blob to created Stream...");
                         blob.DownloadToStream(ms); //*****
-                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Blob downloaded to Stream!");
-
-                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Parsing Stream to Byte content...");
 
                         imageByteArray = ms.ToArray();
-                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Stream Parsed to Byte content!");
 
                     }).Wait();
-                    _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: TASK finished!");
 
                     if (imageByteArray?.Length > 0)
                     {
-                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: imageByteArray greater than 0!");
                         string attachmentBase64String = Convert.ToBase64String(imageByteArray);
-                        _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: imageByteArray converted to Base64 String!");
 
                         if (emailGuid != null)
                         {
-                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Creating Attachment");
                             //Create attachments for Email - Get file extention
                             //handle Extention
                             string[] extentionTmp = fileUrl.Split('.');
@@ -5831,7 +6037,7 @@ namespace Skanetrafiken.Crm.Controllers
                             {
                                 attachment["mimetype"] = "application/rtf";
                             }
-                            else if (extentionTmp[1] == "doc") 
+                            else if (extentionTmp[1] == "doc")
                             {
                                 attachment["mimetype"] = "application/msword";
                             }
@@ -5857,16 +6063,14 @@ namespace Skanetrafiken.Crm.Controllers
                             attachment["objecttypecode"] = "email";
                             XrmHelper.Create(localContext, attachment);
 
-                            _log.Info($"Th={threadId} - HandleAttachemntFilesFromAzure: Attachment Created");
-
                             createdCheck = true;
                         }
-                        else 
+                        else
                         {
                             return attachmentBase64String;
                         }
                     }
-                    else 
+                    else
                     {
                         returnString = $"Th={threadId} - (FailedCreate) Exception was thrown in HandleAttachemntFilesFromAzure: Parsed Stream did not have any value!";
                     }
@@ -5881,16 +6085,20 @@ namespace Skanetrafiken.Crm.Controllers
                 {
                     error = $"Th={threadId} - (FailedCreate) Exception was thrown in HandleAttachemntFilesFromAzure: {ex.Message}";
                 }
-                else 
+                else
                 {
                     error = $"Th={threadId} - (SuccessCreate) Exception was thrown in HandleAttachemntFilesFromAzure: {ex.Message}";
                 }
-                
+
+                _exceptionCustomProperties["source"] = prefix;
+                _logger.LogException(ex, _exceptionCustomProperties);
+
                 return error;
             }
             finally
             {
                 ConnectionCacheManager.ReleaseConnection(threadId);
+                _logger.Dispose();
             }
         }
 
@@ -5901,7 +6109,6 @@ namespace Skanetrafiken.Crm.Controllers
         //        Guid couponGuid = Guid.Empty;
 
         //        CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-        //        _log.DebugFormat($"Th={threadId} - Creating serviceProxy");
 
 
 

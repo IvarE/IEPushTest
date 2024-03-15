@@ -74,7 +74,7 @@ namespace Skanetrafiken.Crm
                     target.HandlePostContactUpdateAsync(localContext, preImage);
 
                     if(target.ed_BusinessContact != true)
-                        target.ClearContactFieldsRelatedToSSN(localContext, postImage, preImage);
+                        target.ClearContactFieldsRelatedToSSN(localContext, postImage);
                 }
                 catch (Exception ex)
                 {

@@ -1085,7 +1085,7 @@ namespace Endeavor.Crm.UnitTest
 
                     Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
 
-                    ValueCodeEntity.HandleCancelValueCode(localContext, "CA5F49C4-7F79-4DF4-882F-A6C642AA60C5", null);
+                    ValueCodeEntity.HandleCancelValueCode(localContext, "468d6ad3-bbfb-ed11-949a-005056b6fa28", null);
 
                     //9F6BE044-DD50-4743-81BB-CA12633A8BC4
 
@@ -3132,8 +3132,8 @@ namespace Endeavor.Crm.UnitTest
                 amount = amount,
                 created = created,
                 tag = "Tag_test",
-                validFromDate = DateTime.UtcNow,
-                validToDate = DateTime.UtcNow.AddYears(1),
+                //validFromDate = DateTime.UtcNow,
+                //validToDate = DateTime.UtcNow.AddYears(1),
                 voucherCode = c_codeId,
                 voucherId = Guid.NewGuid(),
                 voucherType = voucherType,

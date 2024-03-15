@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using Newtonsoft.Json.Serialization;
-using log4net.Config;
 using System.Net.Http;
 
 namespace Skanetrafiken.Crm

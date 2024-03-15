@@ -16,14 +16,13 @@ namespace Skanetrafiken.Crm.Controllers
 {
     public class PingConnectionController : WrapperController
     {
-        protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private string _prefix = "PingConnection";
 
         [HttpGet]
         public HttpResponseMessage Get()
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - GET PingConnection called.\n");
-            return CrmPlusControl.PingConnection(threadId);
+            return CrmPlusControl.PingConnection(threadId, _prefix);
         }
     }
 }

@@ -10,7 +10,6 @@ namespace Skanetrafiken.Crm
 {
     public static class ConnectionCacheManager
     {
-        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly string cacheNamePrefix = "conn";
 
         //public static string globalString;
@@ -23,8 +22,6 @@ namespace Skanetrafiken.Crm
             lock (bookingList)
             {
                 cacheName = getFreeCacheName();
-                if (print)
-                    _log.Debug("Using Connection " + cacheName);
                 bookingList.Add(new Tuple<int, string>(threadId, cacheName));
             }
 
@@ -44,16 +41,10 @@ namespace Skanetrafiken.Crm
             }
             if (_conn == null)
             {
-                if (print)
-                    _log.Debug("Creating new connection from CRM (no cache found)");
                 string connectionString = CrmConnection.GetCrmConnectionString(CredentialFilePath);
-                if (print)
-                    _log.DebugFormat("connectionString = {0}", connectionString);
                 //  Connect to the CRM web service using a connection string.
                 _conn = new CrmServiceClient(connectionString);
 
-                if (print)
-                    _log.DebugFormat("Connection state: _conn.IsReady = {0}", _conn.IsReady);
                 if (_conn.IsReady)
                 {
                     httpContext.Cache.Insert(cacheName, _conn, null, DateTime.Now.AddMinutes(5), Cache.NoSlidingExpiration);
@@ -68,25 +59,30 @@ namespace Skanetrafiken.Crm
 
         private static string getFreeCacheName()
         {
-            int i = 0;
-            while (true)
+            using (var _logger = new AppInsightsLogger())
             {
-                if (i > 4)
-                    _log.Warn("CAUTION!! More than 5 connections are booked in the Manager. Possible bug.");
 
-                bool isBooked = false;
-                foreach (Tuple<int, string> booking in bookingList)
+
+                int i = 0;
+                while (true)
                 {
-                    if ((cacheNamePrefix + i).Equals(booking.Item2))
-                        isBooked = true;
-                }
-                if (!isBooked)
-                {
-                    return (cacheNamePrefix + i);
-                }
-                else
-                {
-                    i++;
+                    if (i > 4)
+                        _logger.LogInformation("CAUTION!! More than 5 connections are booked in the Manager. Possible bug.");
+
+                    bool isBooked = false;
+                    foreach (Tuple<int, string> booking in bookingList)
+                    {
+                        if ((cacheNamePrefix + i).Equals(booking.Item2))
+                            isBooked = true;
+                    }
+                    if (!isBooked)
+                    {
+                        return (cacheNamePrefix + i);
+                    }
+                    else
+                    {
+                        i++;
+                    }
                 }
             }
         }

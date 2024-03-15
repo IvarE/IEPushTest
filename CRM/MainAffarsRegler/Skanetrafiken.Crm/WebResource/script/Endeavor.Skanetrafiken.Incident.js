@@ -202,6 +202,8 @@ if (typeof (Endeavor.Skanetrafiken.Incident) == "undefined") {
             if (originOptionSet != null && originOptionSet.getValue() != 3986) {
                 formContext.getControl("caseorigincode").removeOption(3986);
             }
+            Endeavor.formscriptfunctions.SaveEntity(formContext);
+
         },
 
         onLoadHideShowTypeOfContactFields: function (executionContext) {

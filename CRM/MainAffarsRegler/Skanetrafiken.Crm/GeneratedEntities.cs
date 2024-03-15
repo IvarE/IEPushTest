@@ -26809,6 +26809,86 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		}
 		
 		/// <summary>
+		/// Audience used for the retrieval of Attachments from Azure Blob Storage
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_attachmentaudience")]
+		public string st_AttachmentAudience
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("st_attachmentaudience");
+			}
+			set
+			{
+				this.SetAttributeValue("st_attachmentaudience", value);
+			}
+		}
+		
+		/// <summary>
+		/// Audience used for CRMClientAppRegistration
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_crmappregistrationaudience")]
+		public string st_CrmAppRegistrationAudience
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("st_crmappregistrationaudience");
+			}
+			set
+			{
+				this.SetAttributeValue("st_crmappregistrationaudience", value);
+			}
+		}
+		
+		/// <summary>
+		/// Client ID used for CrmClientAppRegistration
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_crmappregistrationclientid")]
+		public string st_CrmAppRegistrationClientId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("st_crmappregistrationclientid");
+			}
+			set
+			{
+				this.SetAttributeValue("st_crmappregistrationclientid", value);
+			}
+		}
+		
+		/// <summary>
+		/// Client Secret used for CRMClientAppRegistration
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_crmappregistrationclientsecret")]
+		public string st_CrmAppRegistrationClientSecret
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("st_crmappregistrationclientsecret");
+			}
+			set
+			{
+				this.SetAttributeValue("st_crmappregistrationclientsecret", value);
+			}
+		}
+		
+		/// <summary>
+		/// Tenant Id used for CRMClientAppRegistration
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_crmappregistrationtenantid")]
+		public string st_CrmAppRegistrationTenantId
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("st_crmappregistrationtenantid");
+			}
+			set
+			{
+				this.SetAttributeValue("st_crmappregistrationtenantid", value);
+			}
+		}
+		
+		/// <summary>
 		/// Status of the Setting
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
@@ -26868,54 +26948,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			set
 			{
 				this.SetAttributeValue("timezoneruleversionnumber", value);
-			}
-		}
-
-		/// <summary>
-		/// Client ID used for CrmClientAppRegistration
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_crmappregistrationclientid")]
-		public string st_CrmAppRegistrationClientId
-		{
-			get
-			{
-				return this.GetAttributeValue<string>("st_crmappregistrationclientid");
-			}
-			set
-			{
-				this.SetAttributeValue("st_crmappregistrationclientid", value);
-			}
-		}
-
-		/// <summary>
-		/// Client Secret used for CRMClientAppRegistration
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_crmappregistrationclientsecret")]
-		public string st_CrmAppRegistrationClientSecret
-		{
-			get
-			{
-				return this.GetAttributeValue<string>("st_crmappregistrationclientsecret");
-			}
-			set
-			{
-				this.SetAttributeValue("st_crmappregistrationclientsecret", value);
-			}
-		}
-
-		/// <summary>
-		/// Tenant Id used for CRMClientAppRegistration
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_crmappregistrationtenantid")]
-		public string st_CrmAppRegistrationTenantId
-		{
-			get
-			{
-				return this.GetAttributeValue<string>("st_crmappregistrationtenantid");
-			}
-			set
-			{
-				this.SetAttributeValue("st_crmappregistrationtenantid", value);
 			}
 		}
 
@@ -27554,6 +27586,16 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			
 			public const string OverriddenCreatedOn = "overriddencreatedon";
 			
+			public const string st_AttachmentAudience = "st_attachmentaudience";
+			
+			public const string st_CrmAppRegistrationAudience = "st_crmappregistrationaudience";
+			
+			public const string st_CrmAppRegistrationClientId = "st_crmappregistrationclientid";
+			
+			public const string st_CrmAppRegistrationClientSecret = "st_crmappregistrationclientsecret";
+			
+			public const string st_CrmAppRegistrationTenantId = "st_crmappregistrationtenantid";
+			
 			public const string statecode = "statecode";
 			
 			public const string statuscode = "statuscode";
@@ -27568,13 +27610,7 @@ namespace Skanetrafiken.Crm.Schema.Generated
 
 			public const string st_crmappmklaudience = "st_crmappmklaudience";
 
-			public const string st_CrmAppRegistrationClientId = "st_crmappregistrationclientid";
-
-			public const string st_CrmAppRegistrationClientSecret = "st_crmappregistrationclientsecret";
-
 			public const string st_MklEndpointToken = "st_mklendpointtoken";
-
-			public const string st_CrmAppRegistrationTenantId = "st_crmappregistrationtenantid";
 		}
 		
 		public struct FieldLengths

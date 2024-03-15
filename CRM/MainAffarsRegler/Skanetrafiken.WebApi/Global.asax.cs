@@ -1,5 +1,4 @@
-﻿using log4net.Config;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,7 +18,6 @@ namespace Skanetrafiken.Crm
 
             GlobalConfiguration.Configure(WebApiConfig.Register);
 
-            XmlConfigurator.Configure();
         }
     }
 }

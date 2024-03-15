@@ -47,113 +47,149 @@ namespace Skanetrafiken.Crm.Controllers
             string token = "";
             string certName = "";
 
-            if (this.Request.Headers == null)
-                throw new Exception(Resources.HeadersMissing);
+            using (var _logger = new AppInsightsLogger())
+            {
+                if (this.Request.Headers == null)
+                    throw new Exception(Resources.HeadersMissing);
 
-            string MKLHeaderName = ConfigurationManager.AppSettings["MKLTokenHeaderName"];
-            string InternalHeaderName = ConfigurationManager.AppSettings["InternalTokenHeaderName"];
-            string EcommerceHeaderName = ConfigurationManager.AppSettings["EcommerceTokenHeaderName"];
-            string SeKundFasadenHeaderName = ConfigurationManager.AppSettings["SeKundFasadenHeaderName"];
+                string MKLHeaderName = ConfigurationManager.AppSettings["MKLTokenHeaderName"];
+                string InternalHeaderName = ConfigurationManager.AppSettings["InternalTokenHeaderName"];
+                string EcommerceHeaderName = ConfigurationManager.AppSettings["EcommerceTokenHeaderName"];
+                string SeKundFasadenHeaderName = ConfigurationManager.AppSettings["SeKundFasadenHeaderName"];
 
-            if (!(this.Request.Headers.Contains(MKLHeaderName) || this.Request.Headers.Contains(InternalHeaderName) || this.Request.Headers.Contains(EcommerceHeaderName) || this.Request.Headers.Contains(SeKundFasadenHeaderName)))
-            {
-                HttpResponseMessage hdrResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                hdrResp.Content = new StringContent(string.Format(Resources.TokenHeaderMissing, MKLHeaderName, InternalHeaderName, EcommerceHeaderName, SeKundFasadenHeaderName));
-                return hdrResp;
-            }
+                if (!(this.Request.Headers.Contains(MKLHeaderName) || this.Request.Headers.Contains(InternalHeaderName) || this.Request.Headers.Contains(EcommerceHeaderName) || this.Request.Headers.Contains(SeKundFasadenHeaderName)))
+                {
+                    HttpResponseMessage hdrResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                    var errMsg = string.Format(Resources.TokenHeaderMissing, MKLHeaderName, InternalHeaderName, EcommerceHeaderName, SeKundFasadenHeaderName);
+                    hdrResp.Content = new StringContent(errMsg);
 
-            if (this.Request.Headers.Contains(MKLHeaderName))
-            {
-                certName = ConfigurationManager.AppSettings["MKLTokenCertificateName"];
-                IEnumerable<string> headerValues = this.Request.Headers.GetValues(MKLHeaderName);
-                token = headerValues.FirstOrDefault();
-            }
-            else if (this.Request.Headers.Contains(InternalHeaderName))
-            {
-                IEnumerable<string> headerValues = this.Request.Headers.GetValues(InternalHeaderName);
-                token = headerValues.FirstOrDefault();
-                certName = ConfigurationManager.AppSettings["InternalTokenCertificateName"];
-            }
-            else if (this.Request.Headers.Contains(EcommerceHeaderName))
-            {
-                IEnumerable<string> headerValues = this.Request.Headers.GetValues(EcommerceHeaderName);
-                token = headerValues.FirstOrDefault();
-                certName = ConfigurationManager.AppSettings["EcommerceTokenCertificateName"];
-            }
-            else if (this.Request.Headers.Contains(SeKundFasadenHeaderName))
-            {
-                IEnumerable<string> headerValues = this.Request.Headers.GetValues(SeKundFasadenHeaderName);
-                token = headerValues.FirstOrDefault();
-                certName = ConfigurationManager.AppSettings["SeKundFasadenCertificateName"];
-            }
+                    _logger.LogError(errMsg);
 
-            StatusBlock tokenEncryptionStatusBlock = CrmPlusUtility.GetConfigBoolSetting("TokenEncryptionEnabled");
-            if (!tokenEncryptionStatusBlock.TransactionOk)
-            {
-                HttpResponseMessage encrResp = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                encrResp.Content = new StringContent(tokenEncryptionStatusBlock.ErrorMessage);
-                return encrResp;
-            }
+                    return hdrResp;
+                }
 
-            if (bool.Parse(tokenEncryptionStatusBlock.Information))
-            {
-                identity = Identity.DecodeTokenEncryption(token, certName);
-            }
-            else
-                identity = Identity.DecodeToken(token);
+                if (this.Request.Headers.Contains(MKLHeaderName))
+                {
+                    certName = ConfigurationManager.AppSettings["MKLTokenCertificateName"];
+                    IEnumerable<string> headerValues = this.Request.Headers.GetValues(MKLHeaderName);
+                    token = headerValues.FirstOrDefault();
+                }
+                else if (this.Request.Headers.Contains(InternalHeaderName))
+                {
+                    IEnumerable<string> headerValues = this.Request.Headers.GetValues(InternalHeaderName);
+                    token = headerValues.FirstOrDefault();
+                    certName = ConfigurationManager.AppSettings["InternalTokenCertificateName"];
+                }
+                else if (this.Request.Headers.Contains(EcommerceHeaderName))
+                {
+                    IEnumerable<string> headerValues = this.Request.Headers.GetValues(EcommerceHeaderName);
+                    token = headerValues.FirstOrDefault();
+                    certName = ConfigurationManager.AppSettings["EcommerceTokenCertificateName"];
+                }
+                else if (this.Request.Headers.Contains(SeKundFasadenHeaderName))
+                {
+                    IEnumerable<string> headerValues = this.Request.Headers.GetValues(SeKundFasadenHeaderName);
+                    token = headerValues.FirstOrDefault();
+                    certName = ConfigurationManager.AppSettings["SeKundFasadenCertificateName"];
+                }
 
-            if (identity == null)
-            {
-                HttpResponseMessage errorResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                errorResp.Content = new StringContent($"Ogiltig Token. Kunde inte läsa någon data.");
-                return errorResp;
-            }
+                StatusBlock tokenEncryptionStatusBlock = CrmPlusUtility.GetConfigBoolSetting("TokenEncryptionEnabled");
+                if (!tokenEncryptionStatusBlock.TransactionOk)
+                {
+                    HttpResponseMessage encrResp = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                    var errMsg = tokenEncryptionStatusBlock.ErrorMessage;
+                    encrResp.Content = new StringContent(errMsg);
 
-            if (identity.expirationTime == null)
-            {
-                HttpResponseMessage errorResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                errorResp.Content = new StringContent($"Ogiltig Token. Ingen giltighetstid funnen.");
-                return errorResp;
-            }
+                    _logger.LogError(errMsg);
 
-            if (DateTime.Now.ToUniversalTime().CompareTo(identity.expirationTime) > 0)
-            {
-                HttpResponseMessage errorResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                errorResp.Content = new StringContent($"Ogiltig Token. Giltighetstiden gick ut {identity.expirationTime}.");
-                return errorResp;
-            }
+                    return encrResp;
+                }
 
-            // If a GUID is present, make sure it matches.
-            // *******************************************
-            if (id != null)
-            {
-                Guid guid = Guid.Empty;
-                if (!Guid.TryParse(id, out guid))
+                if (bool.Parse(tokenEncryptionStatusBlock.Information))
+                {
+                    identity = Identity.DecodeTokenEncryption(token, certName);
+                }
+                else
+                    identity = Identity.DecodeToken(token);
+
+                if (identity == null)
                 {
                     HttpResponseMessage errorResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    errorResp.Content = new StringContent($"Kunde inte tolka {id} som ett giltigt CRM Guid.");
+                    var errMsg = "Ogiltig Token. Kunde inte läsa någon data.";
+                    errorResp.Content = new StringContent(errMsg);
+
+                    _logger.LogError(errMsg);
+
                     return errorResp;
                 }
-                if (identity.crmId == null)
+
+                if (identity.expirationTime == null)
                 {
                     HttpResponseMessage errorResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    errorResp.Content = new StringContent($"Ogiltig Token. Parametern 'crmId' saknas.");
+                    var errMsg = "Ogiltig token. Ingen giltighetstid funnen.";
+                    errorResp.Content = new StringContent(errMsg);
+
+                    _logger.LogError(errMsg);
+
                     return errorResp;
                 }
-                if (!guid.Equals(identity.crmId))
+
+                if (DateTime.Now.ToUniversalTime().CompareTo(identity.expirationTime) > 0)
                 {
                     HttpResponseMessage errorResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    errorResp.Content = new StringContent($"Ogiltig Token. Parametern 'crmId' matchade inte entitetens guid.");
+                    var errMsg = $"Ogiltig Token. Giltighetstiden gick ut {identity.expirationTime}.";
+                    errorResp.Content = new StringContent(errMsg);
+
+                    _logger.LogError(errMsg);
+
                     return errorResp;
+                }
+
+                // If a GUID is present, make sure it matches.
+                // *******************************************
+                if (id != null)
+                {
+                    Guid guid = Guid.Empty;
+                    if (!Guid.TryParse(id, out guid))
+                    {
+                        HttpResponseMessage errorResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        var errMsg = $"Kunde inte tolka {id} som ett giltigt CRM Guid.";
+                        errorResp.Content = new StringContent(errMsg);
+
+                        _logger.LogError(errMsg);
+
+                        return errorResp;
+                    }
+                    if (identity.crmId == null)
+                    {
+                        HttpResponseMessage errorResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        var errMsg = $"Ogiltig Token. Parametern 'crmId' saknas.";
+                        errorResp.Content = new StringContent(errMsg);
+
+                        _logger.LogError(errMsg);
+
+                        return errorResp;
+                    }
+                    if (!guid.Equals(identity.crmId))
+                    {
+                        HttpResponseMessage errorResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        var errMsg = $"Ogiltig Token. Parametern 'crmId' matchade inte entitetens guid.";
+                        errorResp.Content = new StringContent(errMsg);
+
+                        _logger.LogError(errMsg);
+
+                        return errorResp;
+                    }
                 }
             }
-
             return new HttpResponseMessage(HttpStatusCode.OK);
+
         }
 
         public static void FormatCustomerInfo(ref CustomerInfo customerInfo)
         {
-            if (customerInfo != null){
+            if (customerInfo != null)
+            {
                 customerInfo.FirstName = ContactEntity.Capitalise(customerInfo.FirstName);
                 customerInfo.LastName = ContactEntity.Capitalise(customerInfo.LastName);
                 if (customerInfo.AddressBlock != null)
@@ -194,24 +230,13 @@ namespace Skanetrafiken.Crm.Controllers
             }
         }
 
-        protected void LogResultOfOperation(HttpResponseMessage rm, int threadId, ILog log)
-        {
-            if (rm.StatusCode != HttpStatusCode.OK)
-            {
-                log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content?.ReadAsStringAsync()?.Result}\n");
-            }
-            else
-            {
-                log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
-                log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content?.ReadAsStringAsync()?.Result}\n");
-            }
-        }
-
-        protected HttpResponseMessage CreateErrorResponseWithStatusCode(HttpStatusCode statusCode, string message, int threadId, ILog log)
+        protected HttpResponseMessage CreateErrorResponseWithStatusCode(HttpStatusCode statusCode, string methodName, string message, AppInsightsLogger logger)
         {
             HttpResponseMessage response = new HttpResponseMessage(statusCode);
             response.Content = new StringContent(message);
-            log.Warn($"Th={threadId} - Returning statuscode = {statusCode}, Content = {message}");
+
+            logger.LogError($"{methodName}: Failed - {message}");
+
             return response;
         }
     }

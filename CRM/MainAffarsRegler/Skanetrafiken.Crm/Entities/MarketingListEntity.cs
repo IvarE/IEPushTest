@@ -167,7 +167,6 @@ namespace Skanetrafiken.Crm.Entities
                 }
                 catch (Exception ex)
                 {
-                    //_integrationLog.Error("Error accured in GetCardDetailIntegration", ex);
                     throw new InvalidPluginExecutionException($"Exception: {ex.Message}.\r\nInnerException: {ex.InnerException}.");
                 }
             }

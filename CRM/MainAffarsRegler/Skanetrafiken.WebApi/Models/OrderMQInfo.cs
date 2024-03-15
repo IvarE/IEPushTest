@@ -1,4 +1,5 @@
-﻿using Endeavor.Crm;
+﻿using DocumentFormat.OpenXml.EMMA;
+using Endeavor.Crm;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Skanetrafiken.Crm.Entities;
@@ -98,13 +99,13 @@ namespace Skanetrafiken.Crm.Models
         public bool userRemovable { get; set; }
         public bool userEditable { get; set; }
 
-        internal static bool CheckIfOrderAlreadyHasFile(Plugin.LocalPluginContext localContext, Guid orderId, string orderNumber, log4net.ILog _log)
+        internal static bool CheckIfOrderAlreadyHasFile(Plugin.LocalPluginContext localContext, Guid orderId, string orderNumber)
         {
             bool hasFile = false;
 
             QueryExpression queryAnnotation = new QueryExpression(Annotation.EntityLogicalName);
             queryAnnotation.NoLock = true;
-            queryAnnotation.Criteria.AddCondition(Annotation.Fields.Subject, ConditionOperator.Like, "%"+orderNumber+"%");
+            queryAnnotation.Criteria.AddCondition(Annotation.Fields.Subject, ConditionOperator.Like, "%" + orderNumber + "%");
 
             LinkEntity link_salesorder = queryAnnotation.AddLink(OrderEntity.EntityLogicalName, Annotation.Fields.ObjectId, OrderEntity.Fields.SalesOrderId);
             link_salesorder.EntityAlias = "ac";
@@ -114,18 +115,12 @@ namespace Skanetrafiken.Crm.Models
 
             if (lAnnotations.Count == 1)
                 return !hasFile;
-            else if (lAnnotations.Count == 0)
-                _log.Info("There was no Annotation on Order: " + orderId + " with Subject containing: " + orderNumber);
-            else if (lAnnotations.Count > 1)
-                _log.Info("There was more than one Annotation on Order: " + orderId + " with Subject containing: " + orderNumber);
 
             return hasFile;
         }
 
-        internal static List<OrderRow> GetOrderProductsFromOrder(Plugin.LocalPluginContext localContext, Guid orderId, string pattern, log4net.ILog _log)
+        internal static List<OrderRow> GetOrderProductsFromOrder(Plugin.LocalPluginContext localContext, Guid orderId, string pattern)
         {
-            _log.Debug($"Entered GetOrderProductsFromOrder");
-
             if (orderId == null)
                 return new List<OrderRow>();
 
@@ -135,22 +130,12 @@ namespace Skanetrafiken.Crm.Models
                 OrderProductEntity.Fields.ed_FromDate, OrderProductEntity.Fields.ed_ToDate);
             queryOrderProducts.Criteria.AddCondition(OrderProductEntity.Fields.SalesOrderId, ConditionOperator.Equal, orderId);
 
-            _log.Debug($"Query OrderRows. query: {queryOrderProducts}");
 
             List<OrderRow> lOrderRows = new List<OrderRow>();
             List<OrderProductEntity> lOrderProducts = XrmRetrieveHelper.RetrieveMultiple<OrderProductEntity>(localContext, queryOrderProducts);
 
-            if(lOrderProducts == null || lOrderProducts.Count() < 1)
-            {
-                _log.Debug($"No Order Rows (products) found...");
-            }
-
-            _log.Debug($"Looping Order Products");
-
             foreach (OrderProductEntity orderProduct in lOrderProducts)
             {
-                _log.Debug($"OrderProductId: {orderProduct.Id}");
-                   
                 OrderRow orderRow = new OrderRow();
 
                 orderRow.id = 1;
@@ -180,161 +165,148 @@ namespace Skanetrafiken.Crm.Models
                 lOrderRows.Add(orderRow);
             }
 
-            _log.Debug($"Returning OrderRows (Order Products)");
 
             return lOrderRows;
         }
 
-        internal static OrderMQ GetOrderMQInfoFromOrderEntity(Plugin.LocalPluginContext localContext, OrderEntity orderCRM, log4net.ILog _log)
+        internal static OrderMQ GetOrderMQInfoFromOrderEntity(Plugin.LocalPluginContext localContext, OrderEntity orderCRM)
         {
-            _log.Debug($"GetOrderMQInfoFromOrderEntity: Entered GetOrderMQInfoFromOrderEntity");
-
-            DateTime now = DateTime.Now;
-            string pattern = "yyyy-MM-dd";
-            string dateNow = DateTime.Now.ToString(pattern);
-
-            _log.Debug("GetOrderMQInfoFromOrderEntity: Creting OrderMQ");
-
-            OrderMQ orderMQ = new OrderMQ();
-            orderMQ.id = orderCRM.OrderNumber;
-            orderMQ.description = orderCRM.Name;
-            orderMQ.closeDate = dateNow;
-            orderMQ.date = dateNow;
-            orderMQ.notes = "";
-
-            bool hasFile = CheckIfOrderAlreadyHasFile(localContext, (Guid)orderCRM.SalesOrderId, orderCRM.OrderNumber, _log);
-
-            if (hasFile)
+            using (var _logger = new AppInsightsLogger())
             {
-                _log.Debug($"GetOrderMQInfoFromOrderEntity: DeliveryReportCreated=True");
-                orderMQ.deliveryReportCreated = true;
-            }
-            else
-            {
-                _log.Debug($"GetOrderMQInfoFromOrderEntity: DeliveryReportCreated=False");
-                orderMQ.deliveryReportCreated = false;
-            }
 
-            EntityReference erOwner = orderCRM.OwnerId;
+                DateTime now = DateTime.Now;
+                string pattern = "yyyy-MM-dd";
+                string dateNow = DateTime.Now.ToString(pattern);
 
-            User userMQ = null;
+                OrderMQ orderMQ = new OrderMQ();
+                orderMQ.id = orderCRM.OrderNumber;
+                orderMQ.description = orderCRM.Name;
+                orderMQ.closeDate = dateNow;
+                orderMQ.date = dateNow;
+                orderMQ.notes = "";
 
-            if (erOwner != null)
-            {
-                _log.Debug($"GetOrderMQInfoFromOrderEntity: Setting Owner");
+                bool hasFile = CheckIfOrderAlreadyHasFile(localContext, (Guid)orderCRM.SalesOrderId, orderCRM.OrderNumber);
 
-                SystemUserEntity erUser = XrmRetrieveHelper.Retrieve<SystemUserEntity>(localContext, erOwner, new ColumnSet(SystemUserEntity.Fields.FullName, SystemUserEntity.Fields.InternalEMailAddress));
-
-                userMQ = new User();
-                userMQ.name = erUser.FullName;
-                userMQ.email = erUser.InternalEMailAddress;
-
-                orderMQ.user = userMQ;
-
-                _log.Debug($"GetOrderMQInfoFromOrderEntity: Owner Email: {erUser.InternalEMailAddress}");
-            }
-
-            EntityReference erCustomer = orderCRM.CustomerId;
-
-            try
-            {
-                if (erCustomer != null && erCustomer.LogicalName == AccountEntity.EntityLogicalName)
+                if (hasFile)
                 {
-                    _log.Debug($"GetOrderMQInfoFromOrderEntity: Setting Customer/Client");
-
-                    Client clientMQ = new Client();
-                    clientMQ.name = erCustomer.Name;
-
-                    if (userMQ != null)
-                    {
-                        clientMQ.users = new List<User>();
-                        clientMQ.users.Add(userMQ);
-                    }
-
-                    orderMQ.client = clientMQ;
-                    _log.Debug($"GetOrderMQInfoFromOrderEntity: Customer/Client Name: {erCustomer.Name}");
+                    orderMQ.deliveryReportCreated = true;
                 }
+                else
+                {
+                    orderMQ.deliveryReportCreated = false;
+                }
+
+                EntityReference erOwner = orderCRM.OwnerId;
+
+                User userMQ = null;
+
+                if (erOwner != null)
+                {
+                    SystemUserEntity erUser = XrmRetrieveHelper.Retrieve<SystemUserEntity>(localContext, erOwner, new ColumnSet(SystemUserEntity.Fields.FullName, SystemUserEntity.Fields.InternalEMailAddress));
+
+                    userMQ = new User();
+                    userMQ.name = erUser.FullName;
+                    userMQ.email = erUser.InternalEMailAddress;
+
+                    orderMQ.user = userMQ;
+                }
+
+                EntityReference erCustomer = orderCRM.CustomerId;
+
+                try
+                {
+                    if (erCustomer != null && erCustomer.LogicalName == AccountEntity.EntityLogicalName)
+                    {
+                        Client clientMQ = new Client();
+                        clientMQ.name = erCustomer.Name;
+
+                        if (userMQ != null)
+                        {
+                            clientMQ.users = new List<User>();
+                            clientMQ.users.Add(userMQ);
+                        }
+
+                        orderMQ.client = clientMQ;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"GetOrderMQInfoFromOrderEntity: Error adding ClientMQ. Ex: {ex.Message}");
+                }
+
+                orderMQ.contact = null;
+                orderMQ.project = null;
+                orderMQ.regDate = now;
+
+                orderMQ.stage = null;
+                orderMQ.probability = orderCRM.ed_Probability != null ? (int)orderCRM.ed_Probability : int.MinValue;
+                orderMQ.modDate = now;
+                orderMQ.clientConnection = null;
+                orderMQ.currencyRate = 1;
+                orderMQ.currency = "SEK";
+                orderMQ.locked = 0;
+
+
+                Custom custom = new Custom();
+
+                try
+                {
+                    string endDate = orderCRM.ed_campaigndateend != null ? orderCRM.ed_campaigndateend.Value.ToString(pattern) : null;
+                    custom.value = endDate;
+                    custom.valueDate = endDate;
+                    custom.fieldId = 2; //End Date
+
+                    orderMQ.custom = new List<Custom>();
+                    orderMQ.custom.Add(custom);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"GetOrderMQInfoFromOrderEntity: Error from custom object 1. Ex: {ex.Message}");
+                }
+
+                custom = new Custom();
+
+                try
+                {
+                    string startDate = orderCRM.ed_campaigndatestart != null ? orderCRM.ed_campaigndatestart.Value.ToString(pattern) : null;
+                    custom.value = startDate;
+                    custom.valueDate = startDate;
+                    custom.fieldId = 1; //Start Date
+
+                    orderMQ.custom.Add(custom);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"GetOrderMQInfoFromOrderEntity: Error from custom object 2. Ex: {ex.Message}");
+                }
+
+                try
+                {
+                    orderMQ.value = int.MinValue;
+                    orderMQ.weightedValue = int.MinValue;
+                    orderMQ.valueInMasterCurrency = int.MinValue;
+                    orderMQ.weightedValueInMasterCurrency = int.MinValue;
+                    orderMQ.agreement = null;
+                    orderMQ.userRemovable = true;
+                    orderMQ.userEditable = true;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"GetOrderMQInfoFromOrderEntity: Error from other values. Ex: {ex.Message}");
+                }
+
+                try
+                {
+                    List<OrderRow> lOrderProducts = GetOrderProductsFromOrder(localContext, orderCRM.Id, pattern);
+                    orderMQ.orderRow = lOrderProducts;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"GetOrderMQInfoFromOrderEntity: Error when adding OrderProducts. Ex: {ex.Message}");
+                }
+
+                return orderMQ;
             }
-            catch(Exception ex)
-            {
-                _log.Warn($"GetOrderMQInfoFromOrderEntity: Error adding ClientMQ. Ex: {ex.Message}");
-            }
-
-            orderMQ.contact = null;
-            orderMQ.project = null;
-            orderMQ.regDate = now;
-
-            orderMQ.stage = null;
-            orderMQ.probability = orderCRM.ed_Probability != null ? (int)orderCRM.ed_Probability : int.MinValue;
-            orderMQ.modDate = now;
-            orderMQ.clientConnection = null;
-            orderMQ.currencyRate = 1;
-            orderMQ.currency = "SEK";
-            orderMQ.locked = 0;
-
-            _log.Debug($"GetOrderMQInfoFromOrderEntity: Creating object Custom");
-
-            Custom custom = new Custom();
-
-            try
-            {
-                _log.Debug($"GetOrderMQInfoFromOrderEntity: CustomObject 1");
-                string endDate = orderCRM.ed_campaigndateend != null ? orderCRM.ed_campaigndateend.Value.ToString(pattern) : null;
-                custom.value = endDate;
-                custom.valueDate = endDate;
-                custom.fieldId = 2; //End Date
-
-                orderMQ.custom = new List<Custom>();
-                orderMQ.custom.Add(custom);
-            }
-            catch(Exception ex)
-            {
-                _log.Warn($"GetOrderMQInfoFromOrderEntity: Error from custom object 1. Ex: {ex.Message}");
-            }
-
-            custom = new Custom();
-
-            try
-            {
-                string startDate = orderCRM.ed_campaigndatestart != null ? orderCRM.ed_campaigndatestart.Value.ToString(pattern) : null;
-                custom.value = startDate;
-                custom.valueDate = startDate;
-                custom.fieldId = 1; //Start Date
-                
-                orderMQ.custom.Add(custom);
-            }
-            catch(Exception ex)
-            {
-                _log.Warn($"GetOrderMQInfoFromOrderEntity: Error from custom object 2. Ex: {ex.Message}");
-            }
-
-            try
-            {
-                orderMQ.value = int.MinValue;
-                orderMQ.weightedValue = int.MinValue;
-                orderMQ.valueInMasterCurrency = int.MinValue;
-                orderMQ.weightedValueInMasterCurrency = int.MinValue;
-                orderMQ.agreement = null;
-                orderMQ.userRemovable = true;
-                orderMQ.userEditable = true;
-            }
-            catch(Exception ex)
-            {
-                _log.Warn($"GetOrderMQInfoFromOrderEntity: Error from other values. Ex: {ex.Message}");
-            }
-
-            try
-            {
-                List<OrderRow> lOrderProducts = GetOrderProductsFromOrder(localContext, orderCRM.Id, pattern, _log);
-                orderMQ.orderRow = lOrderProducts;
-            }
-            catch(Exception ex)
-            {
-                _log.Warn($"GetOrderMQInfoFromOrderEntity: Error when adding OrderProducts. Ex: {ex.Message}");
-            }
-
-            _log.Debug($"GetOrderMQInfoFromOrderEntity: Returning OrderMQ");
-            return orderMQ;
         }
     }
 

@@ -53,16 +53,98 @@ namespace Endeavor.Crm.IntegrationTests
                 var con = new ContactEntity();
                 XrmHelper.Create(localContext, con);
 
-        //[Test, Explicit]
-        //public void Contact_Util()
-        //{
-        //    // Connect to the Organization service. 
-        //    // The using statement assures that the service proxy will be properly disposed.
-        //    using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
-        //    {
-        //        // This statement is required to enable early-bound type support.
-        //        _serviceProxy.EnableProxyTypes();
+            }
+        }
 
+        [Test, Explicit]
+        public void setContactContextToDefault()
+        {
+            // Connect to the Organization service. 
+            // The using statement assures that the service proxy will be properly disposed.
+            using (_serviceProxy = ServerConnection.GetOrganizationProxy(Config))
+            {
+                // This statement is required to enable early-bound type support.
+                _serviceProxy.EnableProxyTypes();
+
+                Plugin.LocalPluginContext localContext = new Plugin.LocalPluginContext(new ServiceProvider(), _serviceProxy, null, new TracingService());
+
+                System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+                stopwatch.Start();
+
+                QueryExpression query = new QueryExpression
+                {
+                    EntityName = ContactEntity.EntityLogicalName,
+                    ColumnSet = new ColumnSet(
+                        ContactEntity.Fields.ed_PrivateCustomerContact,
+                        ContactEntity.Fields.ed_Kontaktperson,
+                        ContactEntity.Fields.ed_Epostmottagare,
+                        ContactEntity.Fields.ed_BusinessContact,
+                        ContactEntity.Fields.ed_InfotainmentContact,
+                        ContactEntity.Fields.ed_CollaborationContact,
+                        ContactEntity.Fields.ed_AgentContact)
+                };
+
+                FilterExpression filter = new FilterExpression();
+                filter.FilterOperator = LogicalOperator.Or;
+                filter.AddCondition(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Null);
+                filter.AddCondition(ContactEntity.Fields.ed_Kontaktperson, ConditionOperator.Null);
+                filter.AddCondition(ContactEntity.Fields.ed_Epostmottagare, ConditionOperator.Null);
+                filter.AddCondition(ContactEntity.Fields.ed_BusinessContact, ConditionOperator.Null);
+                filter.AddCondition(ContactEntity.Fields.ed_InfotainmentContact, ConditionOperator.Null);
+                filter.AddCondition(ContactEntity.Fields.ed_CollaborationContact, ConditionOperator.Null);
+                filter.AddCondition(ContactEntity.Fields.ed_AgentContact, ConditionOperator.Null);
+
+                query.Criteria.AddFilter(filter);
+
+                IList<ContactEntity> contactsWithEmptyContext = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, query);
+
+                int i = 0;
+                var totalContact = contactsWithEmptyContext.Count();
+                IList<ContactEntity> notUpdatedContacts = new List<ContactEntity>();
+
+                foreach (ContactEntity contact in contactsWithEmptyContext)
+                {
+                    i++;
+
+                    if (contact.ed_PrivateCustomerContact == null)
+                    {
+                        contact.ed_PrivateCustomerContact = false;
+                    }
+                    if (contact.ed_Kontaktperson == null)
+                    {
+                        contact.ed_Kontaktperson = false;
+                    }
+                    if (contact.ed_Epostmottagare == null)
+                    {
+                        contact.ed_Epostmottagare = false;
+                    }
+                    if (contact.ed_BusinessContact == null)
+                    {
+                        contact.ed_BusinessContact = false;
+                    }
+                    if (contact.ed_InfotainmentContact == null)
+                    {
+                        contact.ed_InfotainmentContact = false;
+                    }
+                    if (contact.ed_CollaborationContact == null)
+                    {
+                        contact.ed_CollaborationContact = false;
+                    }
+                    if (contact.ed_AgentContact == null)
+                    {
+                        contact.ed_AgentContact = false;
+                    }
+                    try
+                    {
+                        XrmHelper.Update(localContext, contact);
+                        localContext.TracingService.Trace($"Updated Contact: {i}/{totalContact}");
+                    }
+                    catch
+                    {
+                        notUpdatedContacts.Add(contact);
+                        continue;
+                    }
+                }
             }
         }
 
@@ -81,7 +163,7 @@ namespace Endeavor.Crm.IntegrationTests
                 System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
 
-        //        MergeRecordsEntity merge = XrmRetrieveHelper.Retrieve<MergeRecordsEntity>(localContext, new Guid("F5B46823-322C-E811-826F-00155D010B00"), new ColumnSet(true));
+                //        MergeRecordsEntity merge = XrmRetrieveHelper.Retrieve<MergeRecordsEntity>(localContext, new Guid("F5B46823-322C-E811-826F-00155D010B00"), new ColumnSet(true));
 
                 //ContactEntity c1 = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, new Guid(),new ColumnSet(false));
                 //ContactEntity c2 = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, new Guid(), new ColumnSet(false));
@@ -199,7 +281,8 @@ namespace Endeavor.Crm.IntegrationTests
                 stopwatch.Start();
 
                 //ContactEntity contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, new Guid("d1fefc59-7ba6-e611-8112-00155d0a6b01"), new ColumnSet(false));
-                ContactEntity contact = new ContactEntity() {
+                ContactEntity contact = new ContactEntity()
+                {
                     FirstName = "to",
                     LastName = "mas",
                     ed_HasSwedishSocialSecurityNumber = false,
@@ -684,7 +767,7 @@ namespace Endeavor.Crm.IntegrationTests
         //    if (!string.IsNullOrWhiteSpace(companyRoleId))
         //    {
         //        bool isValidGuid = Guid.TryParse(companyRoleId, out coRoleGuid);
-                
+
         //    }
         //}
 
@@ -2302,7 +2385,7 @@ namespace Endeavor.Crm.IntegrationTests
 
                 System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
-                
+
                 ContactEntity contactDoNotUpdateFBEqFalse = new ContactEntity();
                 contactDoNotUpdateFBEqFalse.FirstName = "Marcus";
                 contactDoNotUpdateFBEqFalse.LastName = "Pettersson " + DateTime.Now;
@@ -2311,8 +2394,8 @@ namespace Endeavor.Crm.IntegrationTests
                 contactDoNotUpdateFBEqFalse.ed_InformationSource = Generated.ed_informationsource.AdmAndraKund;
                 Guid contactId = localContext.OrganizationService.Create(contactDoNotUpdateFBEqFalse);
 
-                
-                
+
+
                 ContactEntity contactDoNotUpdateFBEqTrue = contactDoNotUpdateFBEqFalse;
                 contactDoNotUpdateFBEqTrue.Id = contactId;
                 contactDoNotUpdateFBEqTrue.ed_DoNotUpdateFB = true;
@@ -2339,7 +2422,7 @@ namespace Endeavor.Crm.IntegrationTests
                             TopCount = 100
                         });
 
-                
+
 
                 if (deltabatchQueue == null || deltabatchQueue.Count <= 0)
                 {

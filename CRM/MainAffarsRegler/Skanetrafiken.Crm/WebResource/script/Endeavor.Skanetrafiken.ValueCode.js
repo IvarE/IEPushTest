@@ -154,27 +154,12 @@ if (typeof (Endeavor.Skanetrafiken.ValueCode) == "undefined") {
             console.log("Cancel Button Clicked!");
             var fromForm = true;
 
-            //Kontrollera attt värdekoden är av typen "Inlösen Reskassa/Presentkort"
-            //var valueCodeTypeAtr = formContext.getAttribute("ed_valuecodetypeglobal");
-            //var valueCodeType = 0;
-            //if (valueCodeTypeAtr != null && valueCodeTypeAtr != "undefined") {
-            //    valueCodeType = valueCodeTypeAtr.getValue();
-            //}
-
             var vcVoucherAtr = formContext.getAttribute("ed_valuecodevoucherid");
             var vcVoucherId = "";
             if (vcVoucherAtr != null && vcVoucherAtr != "undefined") {
                 vcVoucherId = vcVoucherAtr.getValue();
             }
 
-            //if (valueCodeType == null || valueCodeType == "undefined") {
-            //    console.log("Cancel Button Clicked: Found no ValueCode Type on form!");
-            //    alert("Värdekoden kan inte Makuleras: Hittade inte Värdekodstyp på värdekoden.");
-            //}
-            //else if (valueCodeType != 2 && valueCodeType != 5) {
-            //    console.log("Cancel Button Clicked: Värdekoden måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
-            //    alert("Värdekoden kan inte Makuleras: Värdekoden måste vara av typen 'Inlösen Reskassa' eller 'Presentkort'!");
-            //}
             if (vcVoucherId == null || vcVoucherId == "undefined" || vcVoucherId == 0) {
                 console.log("Cancel Button Clicked: Found no ValueCode Code-ID on form!");
                 alert("Värdekoden kan inte Makuleras: Hittade inte en Voucher kod för Värdekoden.");

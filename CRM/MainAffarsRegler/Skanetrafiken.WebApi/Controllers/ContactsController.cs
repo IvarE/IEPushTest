@@ -7,9 +7,9 @@ using Skanetrafiken.Crm.Properties;
 using System.Threading;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
-using Microsoft.Identity.Client;
-using System.Globalization;
 using Endeavor.Crm;
 using Microsoft.Xrm.Tooling.Connector;
 using Microsoft.Xrm.Sdk.Client;
@@ -19,20 +19,22 @@ namespace Skanetrafiken.Crm.Controllers
 {
     public class ContactsController : WrapperController
     {
-        protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private string _prefix = "Contact";
+        private static Dictionary<string, string> _exceptionCustomProperties = new Dictionary<string, string>()
+        {
+            { "source", "" }
+        };
 
         [Route("api/Contacts/GetAccessToken/{process}")]
         [HttpGet]
         public async Task<HttpResponseMessage> GetAccessToken(string process)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - GetAccessToken called with parameter: {process}");
 
             if (string.IsNullOrWhiteSpace(process))
             {
                 HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 badReq.Content = new StringContent("Could not find value in 'process' parameter. Please provide a valid 'process'.");
-                _log.Warn($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
                 return badReq;
             }
 
@@ -41,7 +43,6 @@ namespace Skanetrafiken.Crm.Controllers
             try
             {
                 CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - GetAccessToken: Creating serviceProxy");
                 // Cast the proxy client to the IOrganizationService interface.
                 using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
@@ -49,8 +50,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (localContext.OrganizationService == null)
                         throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
-
-                    _log.Info($"Th={threadId} - GetAccessToken: ServiceProxy and LocalContext created Successfully. Getting Info from Settings.");
 
                     var clientId = string.Empty;
                     var clientSecret = string.Empty;
@@ -63,7 +62,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (process == "mkl")
                     {
-                        _log.Info($"Th={threadId} - GetAccessToken: Process is - {process}");
 
                         settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationClientId, ConditionOperator.NotNull);
                         settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationClientSecret, ConditionOperator.NotNull);
@@ -77,13 +75,9 @@ namespace Skanetrafiken.Crm.Controllers
                         CgiSettingEntity.Fields.st_crmappmklaudience), settingFilter);
 
                         clientId = settings.st_CrmAppRegistrationClientId;
-                        _log.Debug($"Th={threadId} - GetAccessToken: Client Id - {clientId}");
                         clientSecret = settings.st_CrmAppRegistrationClientSecret;
-                        _log.Debug($"Th={threadId} - GetAccessToken: Client Secret - {clientSecret}");
                         tenentId = settings.st_CrmAppRegistrationTenantId;
-                        _log.Debug($"Th={threadId} - GetAccessToken: TenentId - {tenentId}");
                         audience = settings.st_crmappmklaudience;
-                        _log.Debug($"Th={threadId} - GetAccessToken: Audience - {audience}");
                     }
                     else
                     {
@@ -98,7 +92,6 @@ namespace Skanetrafiken.Crm.Controllers
                     }
                     else
                     {
-                        _log.Debug($"Th={threadId} - GetAccessToken: Fetching Access Token.");
                         
                         var tokenResp = await CrmPlusControl.GetAccessToken(clientId, clientSecret, tenentId, audience);
 
@@ -111,7 +104,6 @@ namespace Skanetrafiken.Crm.Controllers
             {
                 HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                _log.Error($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
                 return rm;
             }
             finally
@@ -122,7 +114,6 @@ namespace Skanetrafiken.Crm.Controllers
 
         private static HttpResponseMessage ReturnApiMessage(int threadId, string errorMessage, HttpStatusCode code)
         {
-            _log.DebugFormat($"Th={threadId} - Returning statuscode = {code}, Content = {errorMessage}\n");
 
             HttpResponseMessage response = new HttpResponseMessage(code);
             response.Content = new StringContent(errorMessage);
@@ -132,133 +123,112 @@ namespace Skanetrafiken.Crm.Controllers
         //INFO: teo - Is not part of HttpRouting in Production-releases
         public HttpResponseMessage GetLatestLinkGuid(string email)
         {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - RetrieveLatestLinkGuid called for '{email}'.");
-            if (string.IsNullOrWhiteSpace(email))
+            using (var _logger = new AppInsightsLogger())
             {
-                HttpResponseMessage returnMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                returnMessage.Content = new StringContent(Resources.ParameterMissingEmail);
-                _log.Warn($"Th={threadId} - Returning statuscode = {returnMessage.StatusCode}, Content = {returnMessage.Content.ReadAsStringAsync().Result}\n");
-                return returnMessage;
-            }
+                int threadId = Thread.CurrentThread.ManagedThreadId;
+                if (string.IsNullOrWhiteSpace(email))
+                {
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetLatestLinkGuid", Resources.ParameterMissingEmail, _logger);
+                }
 
-            HttpResponseMessage linkGuidResponse = CrmPlusControl.RetrieveContactLinkGuid(threadId, email);
-            //Return Logg
-            if (linkGuidResponse.StatusCode != HttpStatusCode.OK)
-            {
-                _log.Warn($"Th={threadId} - Returning statuscode = {linkGuidResponse.StatusCode}, Content = {linkGuidResponse.Content.ReadAsStringAsync().Result}\n");
-            }
-            else
-            {
-                _log.Info($"Th={threadId} - Returning statuscode = {linkGuidResponse.StatusCode}.\n");
-                _log.Debug($"Th={threadId} - Returning statuscode = {linkGuidResponse.StatusCode}, Content = {linkGuidResponse.Content.ReadAsStringAsync().Result}\n");
-            }
+                HttpResponseMessage linkGuidResponse = CrmPlusControl.RetrieveContactLinkGuid(threadId, email);
 
-            return linkGuidResponse;
+                return linkGuidResponse;
+            }
         }
 
         [HttpGet]
         public HttpResponseMessage Get()
         {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Error($"Th={threadId} - Unsupported generic GET called.");
+            using (var _logger = new AppInsightsLogger())
+            {
+                int threadId = Thread.CurrentThread.ManagedThreadId;
 
-            //System.Diagnostics.Stopwatch counter = new System.Diagnostics.Stopwatch();
-            //counter.Restart();
-            //string mess = "";
+                //System.Diagnostics.Stopwatch counter = new System.Diagnostics.Stopwatch();
+                //counter.Restart();
+                //string mess = "";
 
-            //for (int i = 0; i < 15; i++)
-            //{
-            //    string messAdd = CrmPlusControl.util();
-            //    mess = string.Format("{0}{1}", mess, messAdd);
-            //    mess = string.Format("{0}{1}", mess, string.Format("\nUtilCount = {0}, counter = {1}\n", i, counter.ElapsedMilliseconds));
-            //}
+                //for (int i = 0; i < 15; i++)
+                //{
+                //    string messAdd = CrmPlusControl.util();
+                //    mess = string.Format("{0}{1}", mess, messAdd);
+                //    mess = string.Format("{0}{1}", mess, string.Format("\nUtilCount = {0}, counter = {1}\n", i, counter.ElapsedMilliseconds));
+                //}
 
-            //HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-            //resp.Content = new StringContent(mess);
-            //return resp;
-
-            HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-            resp.Content = new StringContent(Resources.GenericGetNotSupported);
-            _log.Error($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
-            return resp;
+                //HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                //resp.Content = new StringContent(mess);
+                //return resp;
+                return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Get", Resources.GenericGetNotSupported, _logger);
+            }
         }
 
         [HttpGet]
         public HttpResponseMessage GetWithId(string id)
         {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - GET called with parameter: id = {id}");
-            if (string.IsNullOrWhiteSpace(id))
+            using (var _logger = new AppInsightsLogger())
             {
-                HttpResponseMessage guidResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                guidResp.Content = new StringContent("Could not find an 'id' parameter in url");
-                _log.Warn($"Th={threadId} - Returning statuscode = {guidResp.StatusCode}, Content = {guidResp.Content.ReadAsStringAsync().Result}\n");
-                return guidResp;
-            }
+                _logger.SetGlobalProperty("source", _prefix);
+                int threadId = Thread.CurrentThread.ManagedThreadId;
 
-            if (this.Request.Headers == null) 
-            {
-                _log.Warn($"Th={threadId} - Exception caught: {Resources.HeadersMissing}\n");
-                throw new Exception(Resources.HeadersMissing);
-            }
-
-            string MKLHeaderName = ConfigurationManager.AppSettings["MKLTokenHeaderName"];
-
-            // TODO :
-            // If call is made from Company Portal they're using MKLCertificate. It is gonna change. but for now use this.
-            if (!(this.Request.Headers.Contains(MKLHeaderName)))
-            {
-                // TOKEN VERIFICATION
-                try
+                if (string.IsNullOrWhiteSpace(id))
                 {
-                    HttpResponseMessage tokenResp = TokenValidation(id);
-                    if (tokenResp.StatusCode != HttpStatusCode.OK)
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetWithId", "Could not find an 'id' parameter in url", _logger);
+                }
+
+                if (this.Request.Headers == null)
+                {
+                    //log?
+                    throw new Exception(Resources.HeadersMissing);
+                }
+
+                string MKLHeaderName = ConfigurationManager.AppSettings["MKLTokenHeaderName"];
+
+                // TODO :
+                // If call is made from Company Portal they're using MKLCertificate. It is gonna change. but for now use this.
+                if (!(this.Request.Headers.Contains(MKLHeaderName)))
+                {
+                    // TOKEN VERIFICATION
+                    try
                     {
-                        _log.Warn($"Th={threadId} - Returning statuscode = {tokenResp.StatusCode}, Content = {tokenResp.Content.ReadAsStringAsync().Result}\n");
-                        return tokenResp;
+                        HttpResponseMessage tokenResp = TokenValidation(id);
+                        if (tokenResp.StatusCode != HttpStatusCode.OK)
+                        {
+                            return tokenResp;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                        rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+
+                        _exceptionCustomProperties["source"] = _prefix;
+                        _logger.LogException(ex, _exceptionCustomProperties);
+
+                        return rm;
                     }
                 }
-                catch (Exception ex)
-                {
-                    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                    _log.Error($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-                    return rm;
-                }
-            }
 
-            HttpResponseMessage resp = CrmPlusControl.GetContact(threadId, id);
+                HttpResponseMessage resp = CrmPlusControl.GetContact(threadId, id, _prefix);
 
-            //Return Logg
-            if (resp.StatusCode != HttpStatusCode.OK)
-            {
-                _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
+                return resp;
             }
-            else
-            {
-                _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}.\n");
-                _log.Debug($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
-            }
-
-            return resp;
         }
 
         [HttpPost]
         public HttpResponseMessage ClearMKLId(string mklId)
         {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - POST called with parameter: mklId = {mklId}");
-
-            if (string.IsNullOrWhiteSpace(mklId))
+            using (var _logger = new AppInsightsLogger())
             {
-                HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                erm.Content = new StringContent(Resources.MklIdMissing);
-                _log.Warn($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
-                return erm;
+                int threadId = Thread.CurrentThread.ManagedThreadId;
+
+                if (string.IsNullOrWhiteSpace(mklId))
+                {
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "ClearMKLId", Resources.MklIdMissing, _logger);
+                }
+
+                return CrmPlusControl.ClearMKLIdContact(threadId, mklId);
             }
 
-            return CrmPlusControl.ClearMKLIdContact(threadId, mklId);
         }
 
         /// <summary>
@@ -269,224 +239,186 @@ namespace Skanetrafiken.Crm.Controllers
         [HttpPost]
         public HttpResponseMessage Post([FromBody] CustomerInfo info)
         {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - POST called.\n");
-            _log.DebugFormat($"Th={threadId} - POST called with Payload:\n{CrmPlusControl.SerializeNoNull(info)}");
-
-            if (info == null)
+            using (var _logger = new AppInsightsLogger())
             {
-                HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                erm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-                _log.Warn($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
-                return erm;
-            }
+                int threadId = Thread.CurrentThread.ManagedThreadId;
 
-            //// *-* INFO: *-*
-
-            // Token verification inactivated for calls that didn't require Guid.
-
-            //// *-* /INFO *-*
-
-            //// TOKEN VERIFICATION
-            //try
-            //{
-            //    HttpResponseMessage tokenResp = TokenValidation();
-            //    if (tokenResp.StatusCode != HttpStatusCode.OK)
-            //    {
-            //        _log.DebugFormat("Returning statuscode = {0}, Content = {1}\n", tokenResp.StatusCode, tokenResp.Content.ReadAsStringAsync().Result);
-            //        return tokenResp;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-            //    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-            //    _log.DebugFormat("Returning statuscode = {0}, Content = {1}\n", rm.StatusCode, rm.Content.ReadAsStringAsync().Result);
-            //    return rm;
-            //}
-
-            if (info.ServiceType == 1)
-            {
-                _log.Info($"Th={threadId} - Setting InformationSource to KöpOchSkicka.\n");
-                info.Source = (int)Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
-                if (info != null && info.AddressBlock != null && !String.IsNullOrEmpty(info.AddressBlock.PostalCode))
+                if (info == null)
                 {
-                    info.AddressBlock.PostalCode = Regex.Replace(info.AddressBlock.PostalCode, @"\s+", "");
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Post", Resources.IncomingDataCannotBeNull, _logger);
                 }
-            }
-            else if (info.ServiceType == 2) 
-            {
-                _log.Info($"Th={threadId} - Setting InformationSource to ForetagsPortal.\n");
-                info.Source = (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
-            }
-            
-            // Format Customer info
-            FormatCustomerInfo(ref info);
-            
 
-            HttpResponseMessage rm = null;
-            switch (info.Source)
-            {
-                case (int)Crm.Schema.Generated.ed_informationsource.OinloggatKundArende:
-                    rm = CrmPlusControl.NonLoginCustomerIncident(threadId, info);
-                    break;
-                case (int)Crm.Schema.Generated.ed_informationsource.RGOL:
-                    rm = CrmPlusControl.RGOL(threadId, info);
-                    break;
-                case (int)Crm.Schema.Generated.ed_informationsource.PASS:
-                    rm = CrmPlusControl.PASS(threadId, info);
-                    break;
-                case (int)Crm.Schema.Generated.ed_informationsource.OinloggatKop:
-                    rm = CrmPlusControl.NonLoginPurchase(threadId, info); // --- Private Contact
-                    break;
-                case (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal: // Business Contact 
-                    rm = CrmPlusControl.CreatePortalCustomer(threadId, info);
-                    break;
-                case (int)Crm.Schema.Generated.ed_informationsource.SkolPortal: // School Contact
-                    rm = CrmPlusControl.CreatePortalCustomer(threadId, info);
-                    break;
-                case (int)Crm.Schema.Generated.ed_informationsource.SeniorPortal: // Senior Contact
-                    rm = CrmPlusControl.CreatePortalCustomer(threadId, info);
-                    break;
-                case (int)Schema.Generated.ed_informationsource.KopOchSkicka:
-                    rm = CrmPlusControl.KopOchSkickaKund(threadId, info);
-                    break;
-                default:
-                    rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    rm.Content = new StringContent(string.Format(Resources.InvalidSource, info.Source));
-                    break;
-            }
+                //// *-* INFO: *-*
 
-            //Return Logg
-            if (rm.StatusCode != HttpStatusCode.OK)
-            {
-                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-            }
-            else
-            {
-                _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
-                _log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-            }
+                // Token verification inactivated for calls that didn't require Guid.
 
-            return rm;
+                //// *-* /INFO *-*
+
+                //// TOKEN VERIFICATION
+                //try
+                //{
+                //    HttpResponseMessage tokenResp = TokenValidation();
+                //    if (tokenResp.StatusCode != HttpStatusCode.OK)
+                //    {
+                //        return tokenResp;
+                //    }
+                //}
+                //catch (Exception ex)
+                //{
+                //    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                //    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                //    return rm;
+                //}
+
+                if (info.ServiceType == 1)
+                {
+                    info.Source = (int)Crm.Schema.Generated.ed_informationsource.KopOchSkicka;
+                    if (info != null && info.AddressBlock != null && !String.IsNullOrEmpty(info.AddressBlock.PostalCode))
+                    {
+                        info.AddressBlock.PostalCode = Regex.Replace(info.AddressBlock.PostalCode, @"\s+", "");
+                    }
+                }
+                else if (info.ServiceType == 2)
+                {
+                    info.Source = (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal;
+                }
+
+                // Format Customer info
+                FormatCustomerInfo(ref info);
+
+
+                HttpResponseMessage rm = null;
+                switch (info.Source)
+                {
+                    case (int)Crm.Schema.Generated.ed_informationsource.OinloggatKundArende:
+                        rm = CrmPlusControl.NonLoginCustomerIncident(threadId, info, _prefix);
+                        break;
+                    case (int)Crm.Schema.Generated.ed_informationsource.RGOL:
+                        rm = CrmPlusControl.RGOL(threadId, info, _prefix);
+                        break;
+                    case (int)Crm.Schema.Generated.ed_informationsource.PASS:
+                        rm = CrmPlusControl.PASS(threadId, info, _prefix);
+                        break;
+                    case (int)Crm.Schema.Generated.ed_informationsource.OinloggatKop:
+                        rm = CrmPlusControl.NonLoginPurchase(threadId, info, _prefix); // --- Private Contact
+                        break;
+                    case (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal: // Business Contact 
+                        rm = CrmPlusControl.CreatePortalCustomer(threadId, info, _prefix);
+                        break;
+                    case (int)Crm.Schema.Generated.ed_informationsource.SkolPortal: // School Contact
+                        rm = CrmPlusControl.CreatePortalCustomer(threadId, info, _prefix);
+                        break;
+                    case (int)Crm.Schema.Generated.ed_informationsource.SeniorPortal: // Senior Contact
+                        rm = CrmPlusControl.CreatePortalCustomer(threadId, info, _prefix);
+                        break;
+                    case (int)Schema.Generated.ed_informationsource.KopOchSkicka:
+                        rm = CrmPlusControl.KopOchSkickaKund(threadId, info, _prefix);
+                        break;
+                    default:
+                        rm = CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Post", string.Format(Resources.InvalidSource, info.Source), _logger);
+                        break;
+                }
+
+                return rm;
+            }
         }
 
         //[HttpPost]
         //public HttpResponseMessage Post2Param([FromUri] string time, [FromUri] int price, [FromBody] CustomerInfo info)
         //{
-        //    _log.DebugFormat("Post called with 2 parameters");
         //    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.BadRequest);
         //    resp.Content = new StringContent(Resources.ParameteredPostNotSupported);
-        //    _log.DebugFormat("Returning statuscode = {0}, Content = {1}\n", resp.StatusCode, resp.Content.ReadAsStringAsync().Result);
         //    return resp;
         //}
 
         [HttpPut]
         public HttpResponseMessage Put([FromUri] string id, [FromBody] CustomerInfo info)
         {
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - PUT called.\n");
-            _log.DebugFormat($"Th={threadId} - PUT called for id: '{id}' with Payload:\n{CrmPlusControl.SerializeNoNull(info)}");
-
-            if (info == null)
+            using (var _logger = new AppInsightsLogger())
             {
-                HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                erm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-                _log.Warn($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
-                return erm;
-            }
-            Guid guid = Guid.Empty;
-            if (info.Guid == null || !Guid.TryParse(info.Guid, out guid))
-            {
-                HttpResponseMessage verm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                verm.Content = new StringContent(Resources.GuidNotValid);
-                _log.Warn($"Th={threadId} - Returning statuscode = {verm.StatusCode}, Content = {verm.Content.ReadAsStringAsync().Result}\n");
-                return verm;
-            }
+                _logger.SetGlobalProperty("source", _prefix);
+                int threadId = Thread.CurrentThread.ManagedThreadId;
 
-            if (this.Request.Headers == null) 
-            {
-                _log.Warn($"Th={threadId} - Header Exception caught: {Resources.HeadersMissing}\n");
-                throw new Exception(Resources.HeadersMissing);
-            }
-
-            string MKLHeaderName = ConfigurationManager.AppSettings["MKLTokenHeaderName"];
-
-            // TODO :
-            // If call is made from Company Portal they're using MKLCertificate. It is gonna change. but for now use this.
-            if (!(this.Request.Headers.Contains(MKLHeaderName)))
-            {
-                // TOKEN VERIFICATION
-                try
+                if (info == null)
                 {
-                    HttpResponseMessage tokenResp = TokenValidation(guid.ToString());
-                    if (tokenResp.StatusCode != HttpStatusCode.OK)
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.IncomingDataCannotBeNull, _logger);
+                }
+                Guid guid = Guid.Empty;
+                if (info.Guid == null || !Guid.TryParse(info.Guid, out guid))
+                {
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.GuidNotValid, _logger);
+                }
+
+                if (this.Request.Headers == null)
+                {
+                    throw new Exception(Resources.HeadersMissing);
+                }
+
+                string MKLHeaderName = ConfigurationManager.AppSettings["MKLTokenHeaderName"];
+
+                // TODO :
+                // If call is made from Company Portal they're using MKLCertificate. It is gonna change. but for now use this.
+                if (!(this.Request.Headers.Contains(MKLHeaderName)))
+                {
+                    // TOKEN VERIFICATION
+                    try
                     {
-                        _log.Warn($"Th={threadId} - Returning statuscode = {tokenResp.StatusCode}, Content = {tokenResp.Content.ReadAsStringAsync().Result}\n");
-                        return tokenResp;
+                        HttpResponseMessage tokenResp = TokenValidation(guid.ToString());
+                        if (tokenResp.StatusCode != HttpStatusCode.OK)
+                        {
+                            return tokenResp;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                        erm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+
+                        _exceptionCustomProperties["source"] = _prefix;
+                        _logger.LogException(ex, _exceptionCustomProperties);
+
+                        return erm;
                     }
                 }
-                catch (Exception ex)
+                if (info.Source != (int)Crm.Schema.Generated.ed_informationsource.LoggaInMittKonto)
                 {
-                    HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                    erm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                    _log.Error($"Th={threadId} - Returning statuscode = {erm.StatusCode}, Content = {erm.Content.ReadAsStringAsync().Result}\n");
-                    return erm;
+                    if (!id.Equals(info.Guid))
+                    {
+                        return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.GuidMismatchBodyAndUrl, _logger);
+                    }
                 }
-            }
-            if (info.Source != (int)Crm.Schema.Generated.ed_informationsource.LoggaInMittKonto)
-            {
-                if (!id.Equals(info.Guid))
-                {
-                    HttpResponseMessage rm1 = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    rm1.Content = new StringContent(Resources.GuidMismatchBodyAndUrl);
-                    _log.Warn($"Th={threadId} - Returning statuscode = {rm1.StatusCode}, Content = {rm1.Content.ReadAsStringAsync().Result}\n");
-                    return rm1;
-                }
-            }
 
-            FormatCustomerInfo(ref info);
-            HttpResponseMessage rm = null;
-            switch (info.Source)
-            {
-                case (int)Crm.Schema.Generated.ed_informationsource.UppdateraMittKonto:
-                    rm = CrmPlusControl.UpdateContact(threadId, info);
-                    break;
-                case (int)Crm.Schema.Generated.ed_informationsource.BytEpost:
-                    rm = CrmPlusControl.ChangeEmailAddress(threadId, info);
-                    break;
+                FormatCustomerInfo(ref info);
+                HttpResponseMessage rm = null;
+                switch (info.Source)
+                {
+                    case (int)Crm.Schema.Generated.ed_informationsource.UppdateraMittKonto:
+                        rm = CrmPlusControl.UpdateContact(threadId, info, _prefix);
+                        break;
+                    case (int)Crm.Schema.Generated.ed_informationsource.BytEpost:
+                        rm = CrmPlusControl.ChangeEmailAddress(threadId, info, _prefix);
+                        break;
                     //case (int)CustomerUtility.Source.LosenAterstallningSkickat:
                     //    rm = CrmPlusControl.NotifyMKLSent(info);
-                case (int)Crm.Schema.Generated.ed_informationsource.LoggaInMittKonto:
-                    rm = CrmPlusControl.ValidateEmail(threadId, guid, ContactEntity.EntityTypeCode, id, info.MklId);
-                    break;
-                case (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal:
-                    rm = CrmPlusControl.UpdatePortalCustomer(threadId, info);
-                    break;
-                case (int)Crm.Schema.Generated.ed_informationsource.SkolPortal:
-                    rm = CrmPlusControl.UpdatePortalCustomer(threadId, info);
-                    break;
-                case (int)Crm.Schema.Generated.ed_informationsource.SeniorPortal:
-                    rm = CrmPlusControl.UpdatePortalCustomer(threadId, info);
-                    break;
-                default:
-                    rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    rm.Content = new StringContent(string.Format(Resources.InvalidSource, info.Source));
-                    break;
-            }
+                    case (int)Crm.Schema.Generated.ed_informationsource.LoggaInMittKonto:
+                        rm = CrmPlusControl.ValidateEmail(threadId, guid, ContactEntity.EntityTypeCode, id, info.MklId, _prefix);
+                        break;
+                    case (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal:
+                        rm = CrmPlusControl.UpdatePortalCustomer(threadId, info, _prefix);
+                        break;
+                    case (int)Crm.Schema.Generated.ed_informationsource.SkolPortal:
+                        rm = CrmPlusControl.UpdatePortalCustomer(threadId, info, _prefix);
+                        break;
+                    case (int)Crm.Schema.Generated.ed_informationsource.SeniorPortal:
+                        rm = CrmPlusControl.UpdatePortalCustomer(threadId, info, _prefix);
+                        break;
+                    default:
+                        rm = CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", string.Format(Resources.InvalidSource,info.Source), _logger);
+                        break;
+                }
 
-            //Return Logg
-            if (rm.StatusCode != HttpStatusCode.OK)
-            {
-                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
+                return rm;
             }
-            else
-            {
-                _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}.\n");
-                _log.Debug($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-            }
-
-            return rm;
         }
 
 
@@ -494,20 +426,17 @@ namespace Skanetrafiken.Crm.Controllers
         //public HttpResponseMessage AngeNamnDebugPost([FromBody] CustomerInfo info)
         //{
         //    int threadId = Thread.CurrentThread.ManagedThreadId;
-        //    _log.Info($"Th={threadId} - AngeNamnDebugPost called with Payload:\n{CrmPlusControl.SerializeNoNull(info)}");
 
         //    if (info == null)
         //    {
         //        HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
         //        rm.Content = new StringContent(Resources.IncomingDataCannotBeNull);
-        //        _log.Info($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
         //        return rm;
         //    }
 
         //    FormatCustomerInfo(ref info);
 
         //    HttpResponseMessage resp1 = CrmPlusControl.CreateAngeNamn(threadId, info);
-        //    _log.Info($"Th={threadId} - Returning statuscode = {resp1.StatusCode}, Content = {resp1.Content.ReadAsStringAsync().Result}\n");
         //    return resp1;
 
         //}

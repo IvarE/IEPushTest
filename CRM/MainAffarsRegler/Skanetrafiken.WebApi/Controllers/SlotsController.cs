@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -10,34 +8,29 @@ namespace Skanetrafiken.Crm.Controllers
 {
     public class SlotsController : WrapperController
     {
-        protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private string _prefix = "Slot";
 
         [HttpGet]
         public HttpResponseMessage GetExcelBase64(string fromDate, string toDate)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
 
-            _log.Info($"Th={threadId} - GetExcelBase64 called with FromDate: {fromDate} and ToDate: {toDate}");
-            if (string.IsNullOrWhiteSpace(fromDate))
+            using (var _logger = new AppInsightsLogger())
             {
-                HttpResponseMessage fromResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                fromResp.Content = new StringContent("Could not find a 'fromDate' parameter in url");
-                _log.Warn($"Th={threadId} - Returning statuscode = {fromResp.StatusCode}, Content = {fromResp.Content.ReadAsStringAsync().Result}\n");
-                return fromResp;
+                if (string.IsNullOrWhiteSpace(fromDate))
+                {
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetExcelBase64", "Could not find a 'fromDate' parameter in url", _logger);
+                }
+
+                if (string.IsNullOrWhiteSpace(toDate))
+                {
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetExcelBase64", "Could not find a 'toDate' parameter in url", _logger);
+                }
+
+                HttpResponseMessage resp = CrmPlusControl.CreateExcelBase64(threadId, fromDate, toDate, _prefix);
+
+                return resp;
             }
-
-            if (string.IsNullOrWhiteSpace(toDate))
-            {
-                HttpResponseMessage toResp = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                toResp.Content = new StringContent("Could not find a 'fromDate' parameter in url");
-                _log.Warn($"Th={threadId} - Returning statuscode = {toResp.StatusCode}, Content = {toResp.Content.ReadAsStringAsync().Result}\n");
-                return toResp;
-            }
-
-            HttpResponseMessage resp = CrmPlusControl.CreateExcelBase64(threadId, fromDate, toDate);
-            _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
-
-            return resp;
         }
     }
 }

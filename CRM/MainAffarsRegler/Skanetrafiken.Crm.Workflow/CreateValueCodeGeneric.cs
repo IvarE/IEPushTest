@@ -232,7 +232,7 @@ namespace Skanetrafiken.Crm.Entities
                 {
                     localContext.Trace($"(ExecuteCodeActivity) Retrieving Refund.");
                     refundEntity = XrmRetrieveHelper.Retrieve<RefundEntity>(localContext, refund, new ColumnSet(
-                        RefundEntity.Fields.cgi_Caseid));
+                        RefundEntity.Fields.cgi_Caseid, RefundEntity.Fields.CreatedBy));
                     localContext.Trace($"(ExecuteCodeActivity) Retrieving Refund finished.");
                 }
 

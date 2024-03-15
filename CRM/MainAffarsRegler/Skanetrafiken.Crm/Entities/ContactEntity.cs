@@ -360,13 +360,9 @@ namespace Skanetrafiken.Crm.Entities
         /// one public and one private part, so that the fields that are cleared can be reused, and we have a public interface
         /// to test against. This is a workaround for the PostContactUpdate_Async not being adapted to unit testing.
         /// </summary>
-        public void ClearContactFieldsRelatedToSSN(Plugin.LocalPluginContext localContext, ContactEntity postImage, ContactEntity preImage)
+        public void ClearContactFieldsRelatedToSSN(Plugin.LocalPluginContext localContext, ContactEntity postImage)
         {
             if (localContext.PluginExecutionContext.Depth > 1) // Clearing the fields triggers pre contact update which in turns triggers this one again
-            {
-                return;
-            }
-            if (postImage.ed_Serviceresor == true)
             {
                 return;
             }
@@ -376,13 +372,11 @@ namespace Skanetrafiken.Crm.Entities
                 return;
             }
 
-            if(String.IsNullOrEmpty(postImage.ed_SocialSecurityNumberFormat) && !String.IsNullOrEmpty(preImage.ed_SocialSecurityNumberFormat))
-            {
-                Contact updateContact = new Contact() { Id = this.Id };
-                _ClearContactFieldsRelatedToSSN(updateContact);
-                localContext.OrganizationService.Update(updateContact);
-                localContext.Trace($"{nameof(ClearContactFieldsRelatedToSSN)}: SSN empty, clearing fields on contact");
-            }
+            localContext.Trace($"{nameof(ClearContactFieldsRelatedToSSN)}: SSN empty, clearing fields on contact");
+
+            Contact updateContact = new Contact() { Id = this.Id };
+            _ClearContactFieldsRelatedToSSN(updateContact);
+            localContext.OrganizationService.Update(updateContact);
         }
 
         /// <summary>
@@ -400,7 +394,6 @@ namespace Skanetrafiken.Crm.Entities
             contact.ed_UpdatedFBDate = null;
             contact.ed_HasSwedishSocialSecurityNumber = false;
             contact.ed_SocialSecurityNumberFormat = null;
-            contact.st_reservid = null;
             contact.cgi_socialsecuritynumber = null;
             contact.ed_SocialSecurityNumberBlock = null;
             contact.ed_SocialSecurityNumber2 = null;

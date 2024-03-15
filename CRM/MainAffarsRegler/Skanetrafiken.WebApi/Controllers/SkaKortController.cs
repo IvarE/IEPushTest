@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Skanetrafiken.Crm.Properties;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace Skanetrafiken.Crm.Controllers
 {
@@ -12,7 +13,11 @@ namespace Skanetrafiken.Crm.Controllers
     /// </summary>
     public class SkaKortController : WrapperController
     {
-        protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private string _prefix = "SkaKort";
+        private static Dictionary<string, string> _exceptionCustomProperties = new Dictionary<string, string>()
+        {
+            { "source", "" }
+        };
 
         /// <summary>
         /// Registers or updates a SkaKort connected to a Contact or Company. Here operation must be equal to Register (0) even when updating an existing card.
@@ -25,53 +30,55 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage Post([FromBody] SkaKortInfo skaKortInfo)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - POST called.\n");
-            _log.DebugFormat($"Th={threadId} - POST called with Payload:\n {CrmPlusControl.SerializeNoNull(skaKortInfo)}");
 
-            if (skaKortInfo == null)
+            using (var _logger = new AppInsightsLogger())
             {
-                return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, Resources.IncomingDataCannotBeNull, threadId, _log);
-            }
-
-            if (skaKortInfo.Operation != Operation.Register)
-            {
-                return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, Resources.IncorrectOperation, threadId, _log);
-            }
-
-            try
-            {
-                if (skaKortInfo.InformationSource == 1)
-                    skaKortInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.KopOchSkicka; //ändra till skakort hantering (ResKortPrivat - ReskortFöretag) - Då måste det finnas en contactid
-                else if (skaKortInfo.InformationSource == 2)
-                    skaKortInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal; // skickar de med en 2a så måste det finnas en accountID
-                
-
-                HttpResponseMessage rm = null;
-                switch (skaKortInfo.InformationSource)
+                if (skaKortInfo == null)
                 {
-                    case (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal:
-                        rm = CrmPlusControl.RegisterCompanySkaKortPost(threadId, skaKortInfo);
-                        break;
-                    case (int)Schema.Generated.ed_informationsource.KopOchSkicka:
-                        rm = CrmPlusControl.RegisterBuyAndSendSkaKortPost(threadId, skaKortInfo);
-                        break;
-                    default:
-                        rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        rm.Content = new StringContent(string.Format(Resources.InvalidSource, skaKortInfo.InformationSource));
-                        break;
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Post", Resources.IncomingDataCannotBeNull, _logger);
                 }
 
-                LogResultOfOperation(rm, threadId, _log);
+                if (skaKortInfo.Operation != Operation.Register)
+                {
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Post", Resources.IncorrectOperation, _logger);
+                }
 
-                return rm;
-            }
-            catch (Exception ex)
-            {
-                return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, string.Format(Resources.UnexpectedException, ex.Message), threadId, _log);
-            }
-            finally
-            {
-                ConnectionCacheManager.ReleaseConnection(threadId);
+                try
+                {
+                    if (skaKortInfo.InformationSource == 1)
+                        skaKortInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.KopOchSkicka; //ändra till skakort hantering (ResKortPrivat - ReskortFöretag) - Då måste det finnas en contactid
+                    else if (skaKortInfo.InformationSource == 2)
+                        skaKortInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal; // skickar de med en 2a så måste det finnas en accountID
+
+
+                    HttpResponseMessage rm = null;
+                    switch (skaKortInfo.InformationSource)
+                    {
+                        case (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal:
+                            rm = CrmPlusControl.RegisterCompanySkaKortPost(threadId, skaKortInfo, _prefix);
+                            break;
+                        case (int)Schema.Generated.ed_informationsource.KopOchSkicka:
+                            rm = CrmPlusControl.RegisterBuyAndSendSkaKortPost(threadId, skaKortInfo, _prefix);
+                            break;
+                        default:
+                            rm = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                            rm.Content = new StringContent(string.Format(Resources.InvalidSource, skaKortInfo.InformationSource));
+                            break;
+                    }
+
+                    return rm;
+                }
+                catch (Exception ex)
+                {
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
+
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "Post", string.Format(Resources.UnexpectedException, ex.Message), _logger);
+                }
+                finally
+                {
+                    ConnectionCacheManager.ReleaseConnection(threadId);
+                }
             }
         }
 
@@ -87,48 +94,50 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage Put([FromUri] string id, [FromBody] SkaKortInfo skaKortInfo)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - PUT called.\n");
-            _log.DebugFormat($"Th={threadId} - PUT called with Payload:\n {CrmPlusControl.SerializeNoNull(skaKortInfo)}");
 
-            if (skaKortInfo == null)
+            using (var _logger = new AppInsightsLogger())
             {
-                return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, Resources.IncomingDataCannotBeNull, threadId, _log);
-            }
-
-            if (skaKortInfo.Operation != Operation.Delete && skaKortInfo.Operation != Operation.Revoke)
-            {
-                return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, Resources.IncorrectOperation, threadId, _log);
-            }
-
-            try
-            {
-                if (skaKortInfo.InformationSource == 1)
-                    skaKortInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.KopOchSkicka; //ändra till skakort hantering (ResKortPrivat - ReskortFöretag) - Då måste det finnas en contactid
-                else if (skaKortInfo.InformationSource == 2)
-                    skaKortInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal; // skickar de med en 2a så måste det finnas en accountID
-                
-                HttpResponseMessage rm = new HttpResponseMessage();
-                
-                if (skaKortInfo.Operation == Operation.Revoke)
+                if (skaKortInfo == null)
                 {
-                    rm = CrmPlusControl.SkaKortInactivate(threadId, skaKortInfo);
-                }
-                else if (skaKortInfo.Operation == Operation.Delete)
-                {
-                    rm = CrmPlusControl.RemoveSkaKortContactOrAccount(threadId, skaKortInfo);
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.IncomingDataCannotBeNull, _logger);
                 }
 
-                LogResultOfOperation(rm, threadId, _log);
+                if (skaKortInfo.Operation != Operation.Delete && skaKortInfo.Operation != Operation.Revoke)
+                {
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.IncorrectOperation, _logger);
+                }
 
-                return rm;
-            }
-            catch (Exception ex)
-            {
-                return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, string.Format(Resources.UnexpectedException, ex.Message), threadId, _log);
-            }
-            finally
-            {
-                ConnectionCacheManager.ReleaseConnection(threadId);
+                try
+                {
+                    if (skaKortInfo.InformationSource == 1)
+                        skaKortInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.KopOchSkicka; //ändra till skakort hantering (ResKortPrivat - ReskortFöretag) - Då måste det finnas en contactid
+                    else if (skaKortInfo.InformationSource == 2)
+                        skaKortInfo.InformationSource = (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal; // skickar de med en 2a så måste det finnas en accountID
+
+                    HttpResponseMessage rm = new HttpResponseMessage();
+
+                    if (skaKortInfo.Operation == Operation.Revoke)
+                    {
+                        rm = CrmPlusControl.SkaKortInactivate(threadId, skaKortInfo, _prefix);
+                    }
+                    else if (skaKortInfo.Operation == Operation.Delete)
+                    {
+                        rm = CrmPlusControl.RemoveSkaKortContactOrAccount(threadId, skaKortInfo, _prefix);
+                    }
+
+                    return rm;
+                }
+                catch (Exception ex)
+                {
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
+
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "Put", string.Format(Resources.UnexpectedException, ex.Message), _logger);
+                }
+                finally
+                {
+                    ConnectionCacheManager.ReleaseConnection(threadId);
+                }
             }
         }
     }

@@ -12,7 +12,6 @@ namespace Skanetrafiken.Crm
 {
     public class CrmPlusUtility
     {
-        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         internal static StatusBlock GetConfigBoolSetting(string settingName)
         {
@@ -43,7 +42,7 @@ namespace Skanetrafiken.Crm
                 };
             }
         }
-        
+
         internal static string GetConfigStringSetting(string settingName)
         {
 
@@ -59,6 +58,33 @@ namespace Skanetrafiken.Crm
                 throw new MissingFieldException($"Hittade inte inställning: {settingName}");
             }
             return settingString;
+        }
+
+        public static SendEmailResponse SendConfirmationEmail(Plugin.LocalPluginContext localContext, int threadId, ContactEntity contact)
+        {
+            string emailCofnfirmationTemplateName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_TemplateTitleEmailConfirmation);
+            QueryExpression query = new QueryExpression()
+            {
+                EntityName = TemplateEntity.EntityLogicalName,
+                ColumnSet = new ColumnSet(TemplateEntity.Fields.Title),
+                Criteria =
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression(TemplateEntity.Fields.Title, ConditionOperator.Equal, emailCofnfirmationTemplateName)
+                    }
+                }
+            };
+
+            TemplateEntity template = XrmRetrieveHelper.RetrieveFirst<TemplateEntity>(localContext, query);
+            if (template == null)
+                throw new Exception(string.Format(Resources.CouldNotFindEmailTemplate, emailCofnfirmationTemplateName));
+
+            EmailEntity email = EmailEntity.CreateEmailFromTemplate(localContext, template, contact.ToEntityReference());
+
+            email.RegardingObjectId = contact.ToEntityReference();
+
+            return SetToFromAndSendEmail(localContext, threadId, contact.ToEntityReference(), email);
         }
 
         public static SendEmailResponse SendValidationEmail(Plugin.LocalPluginContext localContext, int threadId, ContactEntity to)
@@ -91,7 +117,6 @@ namespace Skanetrafiken.Crm
 
         public static SendEmailResponse SendValidationEmail(Plugin.LocalPluginContext localContext, int threadId, LeadEntity to)
         {
-            _log.Debug($"Th={threadId} - CreateCustomerLead -> SendValidationEmail: Retrieving Lead Validation Template.");
             string leadValidationTemplateName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_TemplateTitleEmailValidationLead);
             QueryExpression query = new QueryExpression()
             {
@@ -110,119 +135,113 @@ namespace Skanetrafiken.Crm
             if (template == null)
                 throw new Exception(string.Format(Resources.CouldNotFindEmailTemplate, leadValidationTemplateName));
 
-            _log.Info($"Th={threadId} - CreateCustomerLead -> SendValidationEmail: Lead Validation Template retrieved.");
             CgiSettingEntity setting = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, EmailEntity.CgiSettingColumnSet);
 
-            _log.Debug($"Th={threadId} - CreateCustomerLead -> SendValidationEmail: Creating Email from template.");
             EmailEntity email = EmailEntity.CreateEmailFromTemplate(localContext, template, to.ToEntityReference(), new List<Entity> { (Entity)to, (Entity)setting });
-            
+
             email.RegardingObjectId = to.ToEntityReference();
-            _log.Info($"Th={threadId} - CreateCustomerLead -> SendValidationEmail: Email object created with regarding ref.");
 
             return SetToFromAndSendEmail(localContext, threadId, to.ToEntityReference(), email);
         }
 
         private static SendEmailResponse SetToFromAndSendEmail(Plugin.LocalPluginContext localContext, int threadId, ContactEntity to, EmailEntity email)
         {
-            _log.Debug($"Th={threadId} - Entered function SetToFromAndSendEmail() with recipientEmail as String param");
-            EntityReference defaultQueue;
-            try
+            using (var _logger = new AppInsightsLogger())
             {
-                defaultQueue = CgiSettingEntity.GetSettingEntRef(localContext, CgiSettingEntity.Fields.cgi_Defaultoutgoingemailqueue);
+                EntityReference defaultQueue;
+                try
+                {
+                    defaultQueue = CgiSettingEntity.GetSettingEntRef(localContext, CgiSettingEntity.Fields.cgi_Defaultoutgoingemailqueue);
+                }
+                catch (MissingFieldException e)
+                {
+                    _logger.LogError($"MissingFieldException caught when calling GetSettingEntRef() for {CgiSettingEntity.Fields.cgi_Defaultoutgoingemailqueue}. Message = {e.Message}");
+                    throw e;
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError($"Exception caught when calling GetSettingEntRef() for {CgiSettingEntity.Fields.cgi_Defaultoutgoingemailqueue}. Message = {e.Message}");
+                    throw e;
+                }
+
+                // Create the 'From:' activity party for the email
+                ActivityPartyEntity fromParty = new ActivityPartyEntity
+                {
+                    PartyId = defaultQueue
+                };
+
+                // Create the 'To:' activity party for the email
+                ActivityPartyEntity toParty = new ActivityPartyEntity
+                {
+                    PartyId = to.ToEntityReference(),
+                    AddressUsed = to.ed_EmailToBeVerified
+                };
+
+                email.To = new ActivityPartyEntity[] { toParty };
+                email.From = new ActivityPartyEntity[] { fromParty };
+
+                email.Id = localContext.OrganizationService.Create(email);
+
+                // Use the SendEmail message to send an e-mail message.
+                SendEmailRequest sendEmailreq = new SendEmailRequest
+                {
+                    EmailId = email.Id,
+                    IssueSend = true
+                };
+
+                SendEmailResponse sendEmailresp = (SendEmailResponse)localContext.OrganizationService.Execute(sendEmailreq);
+                return sendEmailresp;
             }
-            catch (MissingFieldException e)
-            {
-                _log.Error($"Th={threadId} - MissingFieldException caught when calling GetSettingEntRef() for {CgiSettingEntity.Fields.cgi_Defaultoutgoingemailqueue}. Message = {e.Message}");
-                throw e;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            // Create the 'From:' activity party for the email
-            ActivityPartyEntity fromParty = new ActivityPartyEntity
-            {
-                PartyId = defaultQueue
-            };
-
-            // Create the 'To:' activity party for the email
-            ActivityPartyEntity toParty = new ActivityPartyEntity
-            {
-                PartyId = to.ToEntityReference(),
-                AddressUsed = to.ed_EmailToBeVerified
-            };
-
-            email.To = new ActivityPartyEntity[] { toParty };
-            email.From = new ActivityPartyEntity[] { fromParty };
-
-            email.Id = localContext.OrganizationService.Create(email);
-
-            // Use the SendEmail message to send an e-mail message.
-            SendEmailRequest sendEmailreq = new SendEmailRequest
-            {
-                EmailId = email.Id,
-                IssueSend = true
-            };
-
-            SendEmailResponse sendEmailresp = (SendEmailResponse)localContext.OrganizationService.Execute(sendEmailreq);
-            _log.Debug($"Th={threadId} - Email sent. Response.Subject = {sendEmailresp.Subject}");
-            return sendEmailresp;
         }
 
         private static SendEmailResponse SetToFromAndSendEmail(Plugin.LocalPluginContext localContext, int threadId, EntityReference to, EmailEntity email)
         {
-            _log.Info($"Th={threadId} - Entered function SetToFromAndSendEmail()");
-
-            _log.Debug($"Th={threadId} - SetToFromAndSendEmail: Retrieving default Queue.");
-            EntityReference defaultQueue;
-            try
+            using (var _logger = new AppInsightsLogger())
             {
-                defaultQueue = CgiSettingEntity.GetSettingEntRef(localContext, CgiSettingEntity.Fields.cgi_Defaultoutgoingemailqueue);
+                EntityReference defaultQueue;
+                try
+                {
+                    defaultQueue = CgiSettingEntity.GetSettingEntRef(localContext, CgiSettingEntity.Fields.cgi_Defaultoutgoingemailqueue);
+                }
+                catch (MissingFieldException e)
+                {
+                    _logger.LogError($"MissingFieldException caught when calling GetSettingInt() for {CgiSettingEntity.Fields.cgi_Defaultoutgoingemailqueue}. Message = {e.Message}");
+                    throw e;
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError($"Exception caught when calling GetSettingInt() for {CgiSettingEntity.Fields.cgi_Defaultoutgoingemailqueue}. Message = {e.Message}");
+                    throw e;
+                }
+
+                // Create the 'From:' activity party for the email
+                ActivityPartyEntity fromParty = new ActivityPartyEntity
+                {
+                    PartyId = defaultQueue
+                };
+
+                // Create the 'To:' activity party for the email
+                ActivityPartyEntity toParty = new ActivityPartyEntity
+                {
+                    PartyId = to
+                };
+
+                email.To = new ActivityPartyEntity[] { toParty };
+                email.From = new ActivityPartyEntity[] { fromParty };
+
+                email.Id = localContext.OrganizationService.Create(email);
+
+                // Use the SendEmail message to send an e-mail message.
+                SendEmailRequest sendEmailreq = new SendEmailRequest
+                {
+                    EmailId = email.Id,
+                    IssueSend = true
+                };
+
+                SendEmailResponse sendEmailresp = (SendEmailResponse)localContext.OrganizationService.Execute(sendEmailreq);
+
+                return sendEmailresp;
             }
-            catch (MissingFieldException e)
-            {
-                _log.Error($"Th={threadId} - MissingFieldException caught when calling GetSettingInt() for {CgiSettingEntity.Fields.cgi_Defaultoutgoingemailqueue}. Message = {e.Message}");
-                throw e;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            // Create the 'From:' activity party for the email
-            _log.Debug($"Th={threadId} - SetToFromAndSendEmail: Creating the 'From:' activity party for the email.");
-            ActivityPartyEntity fromParty = new ActivityPartyEntity
-            {
-                PartyId = defaultQueue
-            };
-
-            // Create the 'To:' activity party for the email
-            _log.Debug($"Th={threadId} - SetToFromAndSendEmail: Creating the 'To:' activity party for the email.");
-            ActivityPartyEntity toParty = new ActivityPartyEntity
-            {
-                PartyId = to
-            };
-
-            email.To = new ActivityPartyEntity[] { toParty };
-            email.From = new ActivityPartyEntity[] { fromParty };
-
-            email.Id = localContext.OrganizationService.Create(email);
-            _log.DebugFormat($"Th={threadId} - SetToFromAndSendEmail: Email Created with Id - {email.Id.ToString()}.");
-
-            // Use the SendEmail message to send an e-mail message.
-            _log.DebugFormat($"Th={threadId} - SetToFromAndSendEmail: Using the SendEmail message to send an e-mail message.");
-            SendEmailRequest sendEmailreq = new SendEmailRequest
-            {
-                EmailId = email.Id,
-                IssueSend = true
-            };
-
-            SendEmailResponse sendEmailresp = (SendEmailResponse)localContext.OrganizationService.Execute(sendEmailreq);
-            _log.Info($"Th={threadId} - Email sent. Response.Subject = {sendEmailresp.Subject}");
-            _log.DebugFormat($"Th={threadId} - SetToFromAndSendEmail: Email with Id - {email.Id.ToString()} - sent.");
-
-            return sendEmailresp;
         }
 
         public static void CombineLeadInfos(Plugin.LocalPluginContext localContext, LeadInfo target, LeadInfo existingLead)
@@ -401,7 +420,7 @@ namespace Skanetrafiken.Crm
             }
             #endregion
         }
-        
+
         internal static string GetEnumString(string listName, Type enumType)
         {
             string returnString = $"Enum out of range. Valid values for {listName}: ";

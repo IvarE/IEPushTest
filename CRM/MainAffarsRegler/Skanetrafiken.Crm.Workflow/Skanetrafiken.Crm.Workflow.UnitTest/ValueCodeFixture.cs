@@ -16,7 +16,7 @@ using Generated = Skanetrafiken.Crm.Schema.Generated;
 
 namespace Endeavor.Crm.UnitTest
 {
-    public class WFReturnObject 
+    public class WFReturnObject
     {
         public EntityReference valueCodeRef { get; set; }
         public string returnMessage { get; set; }
@@ -27,7 +27,7 @@ namespace Endeavor.Crm.UnitTest
     {
         private ServerConnection _serverConnection;
 
-        
+
 
         [Test, Category("Debug")]
         public void FullFlowValueCodes()
@@ -54,22 +54,22 @@ namespace Endeavor.Crm.UnitTest
                     IncidentEntity incident = CreateRGOLTestCase(localContext, contact, testInstanceName);
 
                     RefundEntity refund = CreateRGOLTestRefund(localContext, incident, contact, testInstanceName);
-                    
+
                     incident.CloseCase(localContext, testInstanceName);
 
                     #region Förseningsersättning (Value Code)
 
                     #region Should Create and Send a Value Code without errors (email and sms)
                     WFReturnObject valueCodeForseningsersattningEmail1 = CallWorkflowCreateValueCodeAction(
-                        localContext, 
-                        (int)Generated.ed_valuecodetypeglobal.Forseningsersattning, 
-                        refund.cgi_Amount.Value, 
-                        contact.Telephone2, 
+                        localContext,
+                        (int)Generated.ed_valuecodetypeglobal.Forseningsersattning,
+                        refund.cgi_Amount.Value,
+                        contact.Telephone2,
                         (contact.EMailAddress1 != null) ? contact.EMailAddress1 : contact.EMailAddress2,
-                        refund.ToEntityReference(), 
-                        null, 
-                        contact.ToEntityReference(), 
-                        null, 
+                        refund.ToEntityReference(),
+                        null,
+                        contact.ToEntityReference(),
+                        null,
                         (int)Generated.ed_valuecodedeliverytypeglobal.Email
                         );
 
@@ -96,7 +96,7 @@ namespace Endeavor.Crm.UnitTest
                         null,
                         (int)Generated.ed_valuecodedeliverytypeglobal.SMS
                         );
-                    
+
                     NUnit.Framework.Assert.IsNotNull(valueCodeForseningsersattningSMS1.returnMessage);
                     NUnit.Framework.StringAssert.Contains("OK", valueCodeForseningsersattningSMS1.returnMessage);
                     NUnit.Framework.Assert.IsNotNull(valueCodeForseningsersattningSMS1.valueCodeRef);
@@ -119,7 +119,7 @@ namespace Endeavor.Crm.UnitTest
                     contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, contact.Id, new ColumnSet(true));
 
                     IncidentEntity incident2 = CreateRGOLTestCase(localContext, contact, testInstanceName);
-                    
+
                     RefundEntity refund2 = CreateRGOLTestRefund(localContext, incident2, contact, testInstanceName);
 
                     incident2.CloseCase(localContext, testInstanceName);
@@ -140,7 +140,7 @@ namespace Endeavor.Crm.UnitTest
                     // TODO (Marcus) - Why does not the correct error messagee returns and make sure case i reopened
                     NUnit.Framework.StringAssert.Contains("Bad format on phone number.", valueCodeForseningsersattning2.returnMessage);
                     NUnit.Framework.Assert.IsNull(valueCodeForseningsersattning2.valueCodeRef);
-                    
+
                     incident2 = XrmRetrieveHelper.Retrieve<IncidentEntity>(localContext, incident2.Id, new ColumnSet(IncidentEntity.Fields.StateCode));
                     NUnit.Framework.Assert.AreEqual(incident2.StateCode, Generated.IncidentState.Active);
 
@@ -159,7 +159,7 @@ namespace Endeavor.Crm.UnitTest
                     //};
                     //XrmHelper.Update(localContext, updateContact);
                     //contact = XrmRetrieveHelper.Retrieve<ContactEntity>(localContext, contact.Id, new ColumnSet(true));
-                    
+
                     //incident2.CloseCase(localContext, testInstanceName);
 
                     //WFReturnObject valueCodeForseningsersattning3 = CallWorkflowCreateValueCodeAction(
@@ -215,7 +215,7 @@ namespace Endeavor.Crm.UnitTest
                         );
 
                     // Should not work (not a valid mobile)
-                    ValueCodeEntity valueCodeSMS = XrmRetrieveHelper.Retrieve<ValueCodeEntity>(localContext, valueCodeForseningsersattningSMS2.valueCodeRef.Id, 
+                    ValueCodeEntity valueCodeSMS = XrmRetrieveHelper.Retrieve<ValueCodeEntity>(localContext, valueCodeForseningsersattningSMS2.valueCodeRef.Id,
                         new ColumnSet(
                             true
                         ));
@@ -234,7 +234,7 @@ namespace Endeavor.Crm.UnitTest
                     //NUnit.Framework.Assert.IsNotNull(refundSMS2.cgi_errormessage);
                     refundSMS2.cgi_errormessage = null;
                     XrmHelper.Update(localContext, refundSMS2);
-                    
+
 
                     // Should not work (not a valid mobile)
                     valueCodeSMS = XrmRetrieveHelper.Retrieve<ValueCodeEntity>(localContext, valueCodeForseningsersattningSMS2.valueCodeRef.Id, new ColumnSet(false));
@@ -376,12 +376,12 @@ namespace Endeavor.Crm.UnitTest
                     NUnit.Framework.Assert.IsNull(valueCodeForlustgaranti.returnMessage);
                     NUnit.Framework.Assert.IsNotNull(valueCodeForlustgaranti.valueCodeRef);
                     NUnit.Framework.Assert.IsNotNull(XrmRetrieveHelper.Retrieve<ValueCodeEntity>(localContext, valueCodeForlustgaranti.valueCodeRef.Id, new ColumnSet(false)));
-                    
+
                     // TODO - Marcus
                     // Create more tests for blocking card and creating valuecode etc.
-                    
+
                     #endregion Förlustgaranti (Value Code)
-                    
+
                     #region Presentkort - Spärra kort och få värdekod (Value Code)
                     WFReturnObject valueCodePresentKort = CallWorkflowCreateValueCodeAction(
                         localContext,
@@ -434,10 +434,10 @@ namespace Endeavor.Crm.UnitTest
                     string resultSend3 = CallWorkflowSendValueCode(localContext, valueCodeFromApproval);
 
                     #endregion
-                    
+
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception($"FullFlowValueCodes test failed. Ex: {ex.Message}");
             }
@@ -478,7 +478,7 @@ namespace Endeavor.Crm.UnitTest
                         if (tovcEnum == Generated.ed_valuecodetype.Utansaldo)
                             apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_CreateValueCodeCoupons);
                         else
-                            apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_CreateValueCodeVoucher);
+                            apiUrl = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_VoucherService);
                     }
 
                     apiUrl = "https://stvoucherservicecert.azurewebsites.net/vouchers";
@@ -486,6 +486,7 @@ namespace Endeavor.Crm.UnitTest
                     Uri url = new Uri(apiUrl);
                     HttpWebRequest httpWebRequest = CreateRequest(url);
                     httpWebRequest.Method = "POST";
+                    //Changed with VoucherService 2.0
                     ApiHelper.CreateTokenForVoucherService(localContext, httpWebRequest);
 
                     // TODO - Which template
@@ -542,7 +543,7 @@ namespace Endeavor.Crm.UnitTest
 
                         throw new WebException($"Error when trying to create Value Code. Ex:{we.Message}, message:{resultFromService}");
                     }
-                    catch(Exception ex1)
+                    catch (Exception ex1)
                     {
 
                     }
@@ -719,7 +720,7 @@ namespace Endeavor.Crm.UnitTest
 
                 return returnObj;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new WFReturnObject()
                 {
@@ -777,7 +778,7 @@ namespace Endeavor.Crm.UnitTest
             string cardBlockResponse = (string)response["CardBlockResponse"];
             return cardBlockResponse;
         }
-        
+
         private string CallWorkflowParseBlockCardDetails(Plugin.LocalPluginContext localContext, string biztalkResponse)
         {
             OrganizationRequest request = new OrganizationRequest("ed_ParseBlockCardResponseFromBiztalk");
@@ -836,7 +837,7 @@ namespace Endeavor.Crm.UnitTest
 
             OrganizationResponse response = (OrganizationResponse)localContext.OrganizationService.Execute(request);
         }
-        
+
         private ContactEntity CreateOrRetrieveRGOLTestContact(Plugin.LocalPluginContext localContext, string email, string mobile, string testInstanceName)
         {
             ContactEntity contact = new ContactEntity();
@@ -864,7 +865,7 @@ namespace Endeavor.Crm.UnitTest
                         }
                     });
 
-            if(contact == null)
+            if (contact == null)
             {
                 contact = new ContactEntity
                 {
@@ -918,7 +919,7 @@ namespace Endeavor.Crm.UnitTest
             };
 
             Guid id = XrmHelper.Create(localContext, refund);
-            
+
             return XrmRetrieveHelper.Retrieve<RefundEntity>(localContext, id, new ColumnSet(true));
         }
 

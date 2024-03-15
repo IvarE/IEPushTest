@@ -11,14 +11,14 @@ namespace Skanetrafiken.Crm
 {
     internal class TracingService : ITracingService
     {
-        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly AppInsightsLogger _logger = new AppInsightsLogger();
 
         public void Trace(string format, params object[] args)
         {
             if (args.Count() > 0)
-                _log.InfoFormat(format, args);
+                _logger.InfoFormat(format, args);
             else
-                _log.InfoFormat(format);
+                _logger.InfoFormat(format);
         }
     }
 }

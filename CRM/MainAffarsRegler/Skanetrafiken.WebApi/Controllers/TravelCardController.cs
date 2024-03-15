@@ -1,37 +1,33 @@
-﻿using Newtonsoft.Json;
-using Skanetrafiken.Crm.OCTest.Kassagirot;
+﻿using Endeavor.Crm;
+using Microsoft.Identity.Client;
+using Microsoft.Xrm.Sdk.Client;
+using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Xrm.Tooling.Connector;
+using Skanetrafiken.Crm.Entities;
+using Skanetrafiken.Crm.Models;
 using Skanetrafiken.Crm.Properties;
+using Skanetrafiken.Crm.ValueCodes;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
-using System.Web;
-using System.Web.Http;
-using System.Web.Script.Serialization;
-using System.Xml.Serialization;
-using Skanetrafiken.Crm.Models;
-using Skanetrafiken.Crm.ValueCodes;
-using Microsoft.Xrm.Tooling.Connector;
-using Microsoft.Xrm.Sdk.Client;
-using Endeavor.Crm;
-using Skanetrafiken.Crm.Entities;
-using Microsoft.Xrm.Sdk.Query;
-using Endeavor.Crm.Extensions;
-using static Skanetrafiken.Crm.ValueCodes.ValueCodeHandler;
-using System.Globalization;
-using Microsoft.Identity.Client;
-using Microsoft.Xrm.Sdk;
-using System.Threading.Tasks;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web.Http;
+using static Skanetrafiken.Crm.ValueCodes.ValueCodeHandler;
 
 namespace Skanetrafiken.Crm.Controllers
 {
     public class TravelCardController : WrapperController
     {
-        protected static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private string _prefix = "TravelCard";
+        private static Dictionary<string, string> _exceptionCustomProperties = new Dictionary<string, string>()
+        {
+            { "source", "" }
+        };
 
         public static string applicationId = "";
         public static string tenentId = "";
@@ -52,13 +48,9 @@ namespace Skanetrafiken.Crm.Controllers
                 //var certificate = Identity.GetCertToUse("crm-sekundfasaden-acc-sp");
                 //var certificate = Identity.GetCertToUse("crm-sekundfasaden-prod-sp");
                 var certificate = Identity.GetCertToUse(jojoCertificateName);
-                _log.DebugFormat($"<----- Initializing: Cert - {certificate?.Subject} ----->");
-                
+
                 //var authority = string.Format(CultureInfo.InvariantCulture, "https://login.microsoftonline.com/e1fcb9f3-e5f9-496f-a583-e495dfd57497"); //Tenent
                 var authority = string.Format(CultureInfo.InvariantCulture, "https://login.microsoftonline.com/" + tenentId);
-
-                _log.DebugFormat($"<----- Initializing: Authority - {authority} ----->");
-                _log.Info($"<----- Initializing: ConfidentialClientApplication ----->");
 
                 // Dynamic
                 return ConfidentialClientApplicationBuilder
@@ -86,147 +78,124 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage GetCardWithCardNumber(string cardNumber)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - GetCardWithCardNumber: GetCardWithCardNumber called with parameter: {cardNumber}");
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-            if (string.IsNullOrWhiteSpace(cardNumber))
+            using (var _logger = new AppInsightsLogger())
             {
-                HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                badReq.Content = new StringContent("Could not find a 'CardNumber' parameter in url");
-                _log.Warn($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
-                return badReq;
-            }
+                _logger.SetGlobalProperty("source", _prefix);
 
-            Plugin.LocalPluginContext localContext = null;
-
-            try
-            {
-                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - GetCardWithCardNumber: Creating serviceProxy");
-
-                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                if (string.IsNullOrWhiteSpace(cardNumber))
                 {
-                    localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
-
-                    if (localContext.OrganizationService == null)
-                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
-
-                    _log.Info($"Th={threadId} - GetCardWithCardNumber: ServiceProxy and LocalContext created Successfully.");
-
-                    _log.Info($"GetCardWithCardNumber: : Calling -> Get information from settings");
-                    //Get information from settings
-                    FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
-                    CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
-                        CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
-
-                    if (settings != null)
-                    {
-                        applicationId = settings.ed_JojoCardDetailsApplicationId;
-                        _log.Debug($"GetCardWithCardNumber: ApplicationId: {applicationId}");
-                        tenentId = settings.ed_JojoCardDetailsTenentId;
-                        _log.Debug($"GetCardWithCardNumber: TenentId: {tenentId}");
-                        jojoCertificateName = settings.ed_ClientCertNameReskassa;
-                        _log.Debug($"GetCardWithCardNumber: CertName: {jojoCertificateName}");
-                        msAuthScope = settings.ed_JojoCardDetailsScope;
-                        _log.Debug($"GetCardWithCardNumber: msAuthScope: {msAuthScope}");
-                    }
-                    else
-                    {
-                        HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        badReqSetting.Content = new StringContent("Could not find Settings Information from CRM (GetCardWithCardNumber)");
-                        _log.Warn($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
-                        return badReqSetting;
-                    }
-
-                    //_log.DebugFormat($"GetCardWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
-                    //AuthenticationResult authenticationResponse = _taskFactory
-                    //    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardserviceprod/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
-                    //    .Unwrap()
-                    //    .GetAwaiter()
-                    //    .GetResult();
-
-                    _log.Info($"GetCardWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
-                    AuthenticationResult authenticationResponse = _taskFactory
-                        .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync)
-                        .Unwrap()
-                        .GetAwaiter()
-                        .GetResult();
-
-                    if (authenticationResponse == null)
-                    {
-                        _log.DebugFormat($"GetCardWithCardNumber: Error -> Could not aquire token for client!");
-                        HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        badReq.Content = new StringContent("Error: Could not aquire token for client!");
-                        _log.Warn($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
-                        return badReq;
-                    }
-
-                    _log.DebugFormat($"GetCardWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
-
-                    //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/card/";
-                    //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/card/";
-                    string endPoint = settings.ed_JojoCardDetailsAPI + "card/";
-
-                    _log.Info($"GetCardWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
-
-                    _log.DebugFormat($"GetCardWithCardNumber: Building Jojo Card GetCard GET Call...");
-                    var myUri = new Uri(endPoint);
-                    var myWebRequest = WebRequest.Create(myUri);
-                    var myHttpWebRequest = (HttpWebRequest)myWebRequest;
-                    myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
-                    myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
-                    myHttpWebRequest.Headers.Add("20", "*/*");
-                    myHttpWebRequest.Method = "GET";
-
-                    _log.Info($"GetCardWithCardNumber: Calling Jojo Card GetCard GET...");
-                    var myWebResponse = myWebRequest.GetResponse();
-                    var responseStream = myWebResponse.GetResponseStream();
-                    if (responseStream == null) return null;
-
-                    var myStreamReader = new StreamReader(responseStream, Encoding.Default);
-                    var json = myStreamReader.ReadToEnd();
-
-                    responseStream.Close();
-                    myWebResponse.Close();
-
-                    var returnJson = new StringContent(json);
-                    _log.DebugFormat($"GetCardWithCardNumber: Jojo Card GET returned -> {returnJson}");
-
-                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                    resp.Content = returnJson;
-                    _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content}\n");
-                    return resp;
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetCardWithCardNumber", "Could not find a 'CardNumber' parameter in url", _logger);
                 }
-            }
-            catch (Exception ex)
-            {
-                _log.Info($"GetCardWithCardNumber: Exception cought -> {ex?.Message}, {ex?.InnerException}, {ex?.InnerException?.Message}");
-                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
 
-                if (ex.Message.Contains("404"))
+                Plugin.LocalPluginContext localContext = null;
+
+                try
                 {
-                    rm = new HttpResponseMessage(HttpStatusCode.NotFound);
-                    rm.Content = new StringContent(string.Format(ex.Message));
+                    CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+
+                    using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                    {
+                        localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                        if (localContext.OrganizationService == null)
+                            throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                        //Get information from settings
+                        FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
+                        CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
+                            CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
+
+                        if (settings != null)
+                        {
+                            applicationId = settings.ed_JojoCardDetailsApplicationId;
+                            tenentId = settings.ed_JojoCardDetailsTenentId;
+                            jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                            msAuthScope = settings.ed_JojoCardDetailsScope;
+                        }
+                        else
+                        {
+                            return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetCardWithCardNumber", "Could not find Settings Information from CRM", _logger);
+                        }
+
+                        //AuthenticationResult authenticationResponse = _taskFactory
+                        //    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardserviceprod/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
+                        //    .Unwrap()
+                        //    .GetAwaiter()
+                        //    .GetResult();
+
+                        AuthenticationResult authenticationResponse = _taskFactory
+                            .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync)
+                            .Unwrap()
+                            .GetAwaiter()
+                            .GetResult();
+
+                        if (authenticationResponse == null)
+                        {
+                            return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetCardWithCardNumber", "Could not aquire token for client!", _logger);
+                        }
+
+                        //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/card/";
+                        //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/card/";
+                        string endPoint = settings.ed_JojoCardDetailsAPI + "card/";
+
+                        var myUri = new Uri(endPoint);
+                        var myWebRequest = WebRequest.Create(myUri);
+                        var myHttpWebRequest = (HttpWebRequest)myWebRequest;
+                        myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
+                        myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
+                        myHttpWebRequest.Headers.Add("20", "*/*");
+                        myHttpWebRequest.Method = "GET";
+
+                        var myWebResponse = myWebRequest.GetResponse();
+                        var responseStream = myWebResponse.GetResponseStream();
+                        if (responseStream == null) return null;
+
+                        var myStreamReader = new StreamReader(responseStream, Encoding.Default);
+                        var json = myStreamReader.ReadToEnd();
+
+                        responseStream.Close();
+                        myWebResponse.Close();
+
+                        var returnJson = new StringContent(json);
+
+                        HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                        resp.Content = returnJson;
+                        return resp;
+                    }
                 }
-                
-                
-                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-                return rm;
-            }
-            finally
-            {
-                ConnectionCacheManager.ReleaseConnection(threadId);
+                catch (Exception ex)
+                {
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
+                    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+
+                    if (ex.Message.Contains("404"))
+                    {
+                        rm = new HttpResponseMessage(HttpStatusCode.NotFound);
+                        rm.Content = new StringContent(string.Format(ex.Message));
+                    }
+
+
+                   
+                    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                    return rm;
+                }
+                finally
+                {
+                    ConnectionCacheManager.ReleaseConnection(threadId);
+                }
             }
         }
 
@@ -234,141 +203,120 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage PlaceOrderWithCardNumber(string cardNumber)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - PlaceOrderWithCardNumber: PlaceOrderWithCardNumber called with parameter: {cardNumber}");
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-            if (string.IsNullOrWhiteSpace(cardNumber))
+            using (var _logger = new AppInsightsLogger())
             {
-                HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                badReq.Content = new StringContent("Could not find a 'CardNumber' parameter in url");
-                _log.Warn($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
-                return badReq;
-            }
+                _logger.SetGlobalProperty("source", _prefix);
 
-            Plugin.LocalPluginContext localContext = null;
-
-            try
-            {
-                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - PlaceOrderWithCardNumber: Creating serviceProxy");
-
-                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                if (string.IsNullOrWhiteSpace(cardNumber))
                 {
-                    localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
-
-                    if (localContext.OrganizationService == null)
-                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
-
-                    _log.Info($"Th={threadId} - PlaceOrderWithCardNumber: ServiceProxy and LocalContext created Successfully.");
-
-                    _log.Info($"PlaceOrderWithCardNumber: Calling -> Get information from settings");
-                    //Get information from settings
-                    FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
-                    CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
-                        CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
-
-                    if (settings != null)
-                    {
-                        applicationId = settings.ed_JojoCardDetailsApplicationId;
-                        _log.Debug($"PlaceOrderWithCardNumber: ApplicationId: {applicationId}");
-                        tenentId = settings.ed_JojoCardDetailsTenentId;
-                        _log.Debug($"PlaceOrderWithCardNumber: TenentId: {tenentId}");
-                        jojoCertificateName = settings.ed_ClientCertNameReskassa;
-                        _log.Debug($"PlaceOrderWithCardNumber: CertName: {jojoCertificateName}");
-                        msAuthScope = settings.ed_JojoCardDetailsScope;
-                        _log.Debug($"PlaceOrderWithCardNumber: msAuthScope: {msAuthScope}");
-                    }
-                    else
-                    {
-                        HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (PlaceOrderWithCardNumber)");
-                        _log.Warn($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
-                        return badReqSetting;
-                    }
-
-                    //_log.DebugFormat($"PlaceOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
-                    //AuthenticationResult authenticationResponse = _taskFactory
-                    //    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
-                    //    .Unwrap()
-                    //    .GetAwaiter()
-                    //    .GetResult();
-
-                    _log.Info($"PlaceOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
-                    AuthenticationResult authenticationResponse = _taskFactory
-                        .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync)
-                        .Unwrap()
-                        .GetAwaiter()
-                        .GetResult();
-
-                    if (authenticationResponse == null)
-                    {
-                        _log.DebugFormat($"PlaceOrderWithCardNumber: Error -> Could not aquire token for client!");
-                        HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        badReq.Content = new StringContent("Error: Could not aquire token for client!");
-                        _log.Warn($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
-                        return badReq;
-                    }
-
-                    _log.DebugFormat($"PlaceOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
-
-                    //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/placeOrder/";
-                    //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/placeOrder/";
-                    string endPoint = settings.ed_JojoCardDetailsAPI + "placeOrder/";
-
-                    _log.Info($"PlaceOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
-
-                    _log.DebugFormat($"PlaceOrderWithCardNumber: Building Jojo Card PlaceOrder POST Call...");
-                    var myUri = new Uri(endPoint);
-                    var myWebRequest = WebRequest.Create(myUri);
-                    var myHttpWebRequest = (HttpWebRequest)myWebRequest;
-
-                    myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
-                    myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
-                    myHttpWebRequest.Headers.Add("20", "*/*");
-
-                    myHttpWebRequest.ContentLength = 0;
-                    myHttpWebRequest.Method = "POST";
-
-                    _log.Info($"PlaceOrderWithCardNumber: Calling Jojo Card PlaceOrder POST...");
-                    var myWebResponse = myWebRequest.GetResponse();
-                    var responseStream = myWebResponse.GetResponseStream();
-                    if (responseStream == null) return null;
-
-                    var myStreamReader = new StreamReader(responseStream, Encoding.Default);
-                    var json = myStreamReader.ReadToEnd();
-
-                    responseStream.Close();
-                    myWebResponse.Close();
-
-                    var returnJson = new StringContent(json);
-                    _log.DebugFormat($"PlaceOrderWithCardNumber: Jojo Card PlaceOrder POST returned -> {returnJson}");
-
-                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                    resp.Content = returnJson;
-                    _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content}\n");
-                    return resp;
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "PlaceOrderWithCardNumber", "Could not find a 'CardNumber' parameter in url", _logger);
                 }
-            }
-            catch (Exception ex)
-            {
-                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-                return rm;
-            }
-            finally
-            {
-                ConnectionCacheManager.ReleaseConnection(threadId);
+
+                Plugin.LocalPluginContext localContext = null;
+
+                try
+                {
+                    CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+
+                    using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                    {
+                        localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                        if (localContext.OrganizationService == null)
+                            throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                        //Get information from settings
+                        FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
+                        CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
+                            CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
+
+                        if (settings != null)
+                        {
+                            applicationId = settings.ed_JojoCardDetailsApplicationId;
+                            tenentId = settings.ed_JojoCardDetailsTenentId;
+                            jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                            msAuthScope = settings.ed_JojoCardDetailsScope;
+                        }
+                        else
+                        {
+                            return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "PlaceOrderWithCardNumber", "Could not find a Settings Information from CRM", _logger);
+                        }
+
+                        //AuthenticationResult authenticationResponse = _taskFactory
+                        //    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
+                        //    .Unwrap()
+                        //    .GetAwaiter()
+                        //    .GetResult();
+
+                        AuthenticationResult authenticationResponse = _taskFactory
+                            .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync)
+                            .Unwrap()
+                            .GetAwaiter()
+                            .GetResult();
+
+                        if (authenticationResponse == null)
+                        {
+                            return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetCardWithCardNumber", "Could not aquire token for client!", _logger);
+                        }
+
+                        //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/placeOrder/";
+                        //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/placeOrder/";
+                        string endPoint = settings.ed_JojoCardDetailsAPI + "placeOrder/";
+
+                        var myUri = new Uri(endPoint);
+                        var myWebRequest = WebRequest.Create(myUri);
+                        var myHttpWebRequest = (HttpWebRequest)myWebRequest;
+
+                        myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
+                        myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
+                        myHttpWebRequest.Headers.Add("20", "*/*");
+
+                        myHttpWebRequest.ContentLength = 0;
+                        myHttpWebRequest.Method = "POST";
+
+                        var myWebResponse = myWebRequest.GetResponse();
+                        var responseStream = myWebResponse.GetResponseStream();
+                        if (responseStream == null) return null;
+
+                        var myStreamReader = new StreamReader(responseStream, Encoding.Default);
+                        var json = myStreamReader.ReadToEnd();
+
+                        responseStream.Close();
+                        myWebResponse.Close();
+
+                        var returnJson = new StringContent(json);
+
+                        HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                        resp.Content = returnJson;
+                        return resp;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
+
+
+                    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                    return rm;
+                }
+                finally
+                {
+                    ConnectionCacheManager.ReleaseConnection(threadId);
+                }
             }
         }
 
@@ -376,142 +324,121 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage CancelOrderWithCardNumber(string cardNumber)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - CancelOrderWithCardNumber: CancelOrderWithCardNumber called with parameter: {cardNumber}");
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-            if (string.IsNullOrWhiteSpace(cardNumber))
+            using (var _logger = new AppInsightsLogger())
             {
-                HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                badReq.Content = new StringContent("Could not find a 'CardNumber' parameter in url");
-                _log.Warn($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
-                return badReq;
-            }
 
-            Plugin.LocalPluginContext localContext = null;
+                _logger.SetGlobalProperty("source", _prefix);
 
-            try
-            {
-                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - CancelOrderWithCardNumber: Creating serviceProxy");
-
-                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                if (string.IsNullOrWhiteSpace(cardNumber))
                 {
-                    localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
-
-                    if (localContext.OrganizationService == null)
-                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
-
-                    _log.Info($"Th={threadId} - CancelOrderWithCardNumber: ServiceProxy and LocalContext created Successfully.");
-
-                    _log.Info($"CancelOrderWithCardNumber: Calling -> Get information from settings");
-                    //Get information from settings
-                    FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
-                    CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
-                        CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
-
-                    if (settings != null)
-                    {
-                        applicationId = settings.ed_JojoCardDetailsApplicationId;
-                        _log.Debug($"CancelOrderWithCardNumber: ApplicationId: {applicationId}");
-                        tenentId = settings.ed_JojoCardDetailsTenentId;
-                        _log.Debug($"CancelOrderWithCardNumber: TenentId: {tenentId}");
-                        jojoCertificateName = settings.ed_ClientCertNameReskassa;
-                        _log.Debug($"CancelOrderWithCardNumber: CertName: {jojoCertificateName}");
-                        msAuthScope = settings.ed_JojoCardDetailsScope;
-                        _log.Debug($"CancelOrderWithCardNumber: msAuthScope: {msAuthScope}");
-                    }
-                    else
-                    {
-                        HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (CancelOrderWithCardNumber)");
-                        _log.Warn($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
-                        return badReqSetting;
-                    }
-
-                    //_log.DebugFormat($"CancelOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
-                    //AuthenticationResult authenticationResponse = _taskFactory
-                    //    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
-                    //    .Unwrap()
-                    //    .GetAwaiter()
-                    //    .GetResult();
-
-                    _log.Info($"CancelOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
-                    AuthenticationResult authenticationResponse = _taskFactory
-                        .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync)
-                        .Unwrap()
-                        .GetAwaiter()
-                        .GetResult();
-
-                    if (authenticationResponse == null)
-                    {
-                        _log.DebugFormat($"CancelOrderWithCardNumber: Error -> Could not aquire token for client!");
-                        HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        badReq.Content = new StringContent("Error: Could not aquire token for client!");
-                        _log.Warn($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
-                        return badReq;
-                    }
-
-                    _log.DebugFormat($"CancelOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
-
-                    //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/cancelOrder/";
-                    //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/cancelOrder/";
-                    string endPoint = settings.ed_JojoCardDetailsAPI + "cancelOrder/";
-
-                    _log.Info($"CancelOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
-
-                    _log.DebugFormat($"CancelOrderWithCardNumber: Building Jojo Card CancelOrder POST Call...");
-                    var myUri = new Uri(endPoint);
-                    var myWebRequest = WebRequest.Create(myUri);
-                    var myHttpWebRequest = (HttpWebRequest)myWebRequest;
-                    myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
-                    myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
-
-                    myHttpWebRequest.ContentLength = 0;
-                    myHttpWebRequest.Headers.Add("20", "*/*");
-                    myHttpWebRequest.Method = "POST";
-
-                    _log.Info($"CancelOrderWithCardNumber: Calling Jojo Card CancelOrder POST...");
-                    var myWebResponse = myWebRequest.GetResponse();
-                    //Check Status and return ok or not ok
-
-                    var responseStream = myWebResponse.GetResponseStream();
-                    if (responseStream == null) return null;
-
-                    var myStreamReader = new StreamReader(responseStream, Encoding.Default);
-                    var json = myStreamReader.ReadToEnd();
-
-                    responseStream.Close();
-                    myWebResponse.Close();
-
-                    var returnJson = new StringContent(json);
-                    _log.DebugFormat($"CancelOrderWithCardNumber: Jojo Card CancelOrder POST returned -> {returnJson}");
-
-                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                    resp.Content = returnJson;
-                    _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content}\n");
-                    return resp;
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "CancelOrderWithCardNumber", "\"Could not find a 'CardNumber' parameter in url", _logger);
                 }
-            }
-            catch (Exception ex)
-            {
-                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-                return rm;
-            }
-            finally
-            {
-                ConnectionCacheManager.ReleaseConnection(threadId);
+
+                Plugin.LocalPluginContext localContext = null;
+
+                try
+                {
+                    CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+
+                    using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                    {
+                        localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                        if (localContext.OrganizationService == null)
+                            throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                        //Get information from settings
+                        FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
+                        CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
+                            CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
+
+                        if (settings != null)
+                        {
+                            applicationId = settings.ed_JojoCardDetailsApplicationId;
+                            tenentId = settings.ed_JojoCardDetailsTenentId;
+                            jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                            msAuthScope = settings.ed_JojoCardDetailsScope;
+                        }
+                        else
+                        {
+                            return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "CancelOrderWithCardNumber", "Could not find a Settings Information from CRM", _logger);
+                        }
+
+                        //AuthenticationResult authenticationResponse = _taskFactory
+                        //    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
+                        //    .Unwrap()
+                        //    .GetAwaiter()
+                        //    .GetResult();
+
+                        AuthenticationResult authenticationResponse = _taskFactory
+                            .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync)
+                            .Unwrap()
+                            .GetAwaiter()
+                            .GetResult();
+
+                        if (authenticationResponse == null)
+                        {
+                            return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "CancelOrderWithCardNumber", "Could not aquire token for client!", _logger);
+                        }
+
+
+                        //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/cancelOrder/";
+                        //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/cancelOrder/";
+                        string endPoint = settings.ed_JojoCardDetailsAPI + "cancelOrder/";
+
+                        var myUri = new Uri(endPoint);
+                        var myWebRequest = WebRequest.Create(myUri);
+                        var myHttpWebRequest = (HttpWebRequest)myWebRequest;
+                        myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
+                        myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
+
+                        myHttpWebRequest.ContentLength = 0;
+                        myHttpWebRequest.Headers.Add("20", "*/*");
+                        myHttpWebRequest.Method = "POST";
+
+                        var myWebResponse = myWebRequest.GetResponse();
+                        //Check Status and return ok or not ok
+
+                        var responseStream = myWebResponse.GetResponseStream();
+                        if (responseStream == null) return null;
+
+                        var myStreamReader = new StreamReader(responseStream, Encoding.Default);
+                        var json = myStreamReader.ReadToEnd();
+
+                        responseStream.Close();
+                        myWebResponse.Close();
+
+                        var returnJson = new StringContent(json);
+
+                        HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                        resp.Content = returnJson;
+                        return resp;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
+                    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                    return rm;
+                }
+                finally
+                {
+                    ConnectionCacheManager.ReleaseConnection(threadId);
+                }
             }
         }
 
@@ -519,141 +446,119 @@ namespace Skanetrafiken.Crm.Controllers
         public HttpResponseMessage CaptureOrderWithCardNumber(string cardNumber)
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - CaptureOrderWithCardNumber: CaptureOrderWithCardNumber called with parameter: {cardNumber}");
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-            if (string.IsNullOrWhiteSpace(cardNumber))
+            using (var _logger = new AppInsightsLogger())
             {
-                HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                badReq.Content = new StringContent("Could not find a 'CardNumber' parameter in url");
-                _log.Warn($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
-                return badReq;
-            }
+                _logger.SetGlobalProperty("source", _prefix);
 
-            Plugin.LocalPluginContext localContext = null;
-
-            try
-            {
-                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - CaptureOrderWithCardNumber: Creating serviceProxy");
-
-                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                if (string.IsNullOrWhiteSpace(cardNumber))
                 {
-                    localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
-
-                    if (localContext.OrganizationService == null)
-                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
-
-                    _log.Info($"Th={threadId} - CaptureOrderWithCardNumber: ServiceProxy and LocalContext created Successfully.");
-
-                    _log.Info($"CaptureOrderWithCardNumber: Calling -> Get information from settings");
-                    //Get information from settings
-                    FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
-                    settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
-                    CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
-                        CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
-                        CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
-
-                    if (settings != null)
-                    {
-                        applicationId = settings.ed_JojoCardDetailsApplicationId;
-                        _log.Debug($"CaptureOrderWithCardNumber: ApplicationId: {applicationId}");
-                        tenentId = settings.ed_JojoCardDetailsTenentId;
-                        _log.Debug($"CaptureOrderWithCardNumber: TenentId: {tenentId}");
-                        jojoCertificateName = settings.ed_ClientCertNameReskassa;
-                        _log.Debug($"CaptureOrderWithCardNumber: CertName: {jojoCertificateName}");
-                        msAuthScope = settings.ed_JojoCardDetailsScope;
-                        _log.Debug($"CaptureOrderWithCardNumber: msAuthScope: {msAuthScope}");
-                    }
-                    else
-                    {
-                        HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (CaptureOrderWithCardNumber)");
-                        _log.Warn($"Th={threadId} - Returning statuscode = {badReqSetting.StatusCode}, Content = {badReqSetting.Content.ReadAsStringAsync().Result}\n");
-                        return badReqSetting;
-                    }
-
-                    //_log.DebugFormat($"CaptureOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
-                    //AuthenticationResult authenticationResponse = _taskFactory
-                    //    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
-                    //    .Unwrap()
-                    //    .GetAwaiter()
-                    //    .GetResult();
-
-                    _log.Info($"CaptureOrderWithCardNumber: Calling -> _msalApplication.AcquireTokenForClient");
-                    AuthenticationResult authenticationResponse = _taskFactory
-                        .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync)
-                        .Unwrap()
-                        .GetAwaiter()
-                        .GetResult();
-
-                    if (authenticationResponse == null)
-                    {
-                        _log.DebugFormat($"CaptureOrderWithCardNumber: Error -> Could not aquire token for client!");
-                        HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        badReq.Content = new StringContent("Error: Could not aquire token for client!");
-                        _log.Warn($"Th={threadId} - Returning statuscode = {badReq.StatusCode}, Content = {badReq.Content.ReadAsStringAsync().Result}\n");
-                        return badReq;
-                    }
-
-                    _log.DebugFormat($"CaptureOrderWithCardNumber: Checking AccessToken -> {authenticationResponse?.AccessToken}");
-
-                    //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/captureOrder/";
-                    //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/captureOrder/";
-                    string endPoint = settings.ed_JojoCardDetailsAPI + "captureOrder/";
-
-                    _log.Info($"CaptureOrderWithCardNumber: Endpoint to use for Jojo Card -> {endPoint}");
-
-                    _log.DebugFormat($"CaptureOrderWithCardNumber: Building Jojo Card CaptureOrder POST Call...");
-                    var myUri = new Uri(endPoint);
-                    var myWebRequest = WebRequest.Create(myUri);
-                    var myHttpWebRequest = (HttpWebRequest)myWebRequest;
-                    myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
-                    myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
-                    myHttpWebRequest.Headers.Add("20", "*");
-                    myHttpWebRequest.ContentLength = 0;
-                    myHttpWebRequest.Method = "POST";
-
-                    _log.Info($"CaptureOrderWithCardNumber: Calling Jojo Card CaptureOrder POST...");
-                    var myWebResponse = myWebRequest.GetResponse();
-                    //Check Status and return ok or not ok
-
-                    var responseStream = myWebResponse.GetResponseStream();
-                    if (responseStream == null) return null;
-
-                    var myStreamReader = new StreamReader(responseStream, Encoding.Default);
-                    var json = myStreamReader.ReadToEnd();
-
-                    responseStream.Close();
-                    myWebResponse.Close();
-
-                    var returnJson = new StringContent(json);
-                    _log.DebugFormat($"CaptureOrderWithCardNumber: Jojo Card CaptureOrder POST returned -> {returnJson}");
-
-                    HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                    resp.Content = returnJson;
-                    _log.Info($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content}\n");
-                    return resp;
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "CaptureOrderWithCardNumber", "Could not find a 'CardNumber' parameter in url", _logger);
                 }
-            }
-            catch (Exception ex)
-            {
-                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                _log.Warn($"Th={threadId} - Returning statuscode = {rm.StatusCode}, Content = {rm.Content.ReadAsStringAsync().Result}\n");
-                return rm;
-            }
-            finally
-            {
-                ConnectionCacheManager.ReleaseConnection(threadId);
+
+                Plugin.LocalPluginContext localContext = null;
+
+                try
+                {
+                    CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+
+                    using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                    {
+                        localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+
+                        if (localContext.OrganizationService == null)
+                            throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+
+                        //Get information from settings
+                        FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsAPI, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsScope, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_ClientCertNameReskassa, ConditionOperator.NotNull);
+                        CgiSettingEntity settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsAPI,
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsScope,
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsApplicationId,
+                            CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
+                            CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
+
+                        if (settings != null)
+                        {
+                            applicationId = settings.ed_JojoCardDetailsApplicationId;
+                            tenentId = settings.ed_JojoCardDetailsTenentId;
+                            jojoCertificateName = settings.ed_ClientCertNameReskassa;
+                            msAuthScope = settings.ed_JojoCardDetailsScope;
+                        }
+                        else
+                        {
+                            return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "CaptureOrderWithCardNumber", "Could not find a Settings Information from CRM", _logger);
+                        }
+
+                        //AuthenticationResult authenticationResponse = _taskFactory
+                        //    .StartNew(_msalApplication.AcquireTokenForClient(new[] { "https://skanetrafiken.se/apps/jojocardservice/.default" }).ExecuteAsync) //https://skanetrafiken.se/apps/jojocardserviceacc/.default
+                        //    .Unwrap()
+                        //    .GetAwaiter()
+                        //    .GetResult();
+
+                        AuthenticationResult authenticationResponse = _taskFactory
+                            .StartNew(_msalApplication.AcquireTokenForClient(new[] { msAuthScope }).ExecuteAsync)
+                            .Unwrap()
+                            .GetAwaiter()
+                            .GetResult();
+
+                        if (authenticationResponse == null)
+                        {
+                            return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "CaptureOrderWithCardNumber", "Could not aquire token for client!", _logger);
+                        }
+
+                        //string endPoint = "https://stjojocardserviceacc.azurewebsites.net/v1/captureOrder/";
+                        //string endPoint = "https://stjojocardserviceprod.azurewebsites.net/v1/captureOrder/";
+                        string endPoint = settings.ed_JojoCardDetailsAPI + "captureOrder/";
+
+                        var myUri = new Uri(endPoint);
+                        var myWebRequest = WebRequest.Create(myUri);
+                        var myHttpWebRequest = (HttpWebRequest)myWebRequest;
+                        myHttpWebRequest.Headers.Add("Authorization", "Bearer " + authenticationResponse.AccessToken);
+                        myHttpWebRequest.Headers.Add("Card-Number", cardNumber);
+                        myHttpWebRequest.Headers.Add("20", "*");
+                        myHttpWebRequest.ContentLength = 0;
+                        myHttpWebRequest.Method = "POST";
+
+                        var myWebResponse = myWebRequest.GetResponse();
+                        //Check Status and return ok or not ok
+
+                        var responseStream = myWebResponse.GetResponseStream();
+                        if (responseStream == null) return null;
+
+                        var myStreamReader = new StreamReader(responseStream, Encoding.Default);
+                        var json = myStreamReader.ReadToEnd();
+
+                        responseStream.Close();
+                        myWebResponse.Close();
+
+                        var returnJson = new StringContent(json);
+
+                        HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+                        resp.Content = returnJson;
+                        return resp;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
+
+                    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                    return rm;
+                }
+                finally
+                {
+                    ConnectionCacheManager.ReleaseConnection(threadId);
+                }
             }
         }
 
@@ -674,228 +579,186 @@ namespace Skanetrafiken.Crm.Controllers
         {
             //  *** Endast Förlustgaranti ***
             int threadId = Thread.CurrentThread.ManagedThreadId;
-            _log.Info($"Th={threadId} - POST called.\n");
-            _log.DebugFormat($"Th={threadId} - POST called with Payload:\n {CrmPlusControl.SerializeNoNull(travelCard)}");
 
             Plugin.LocalPluginContext localContext = null;
 
-            var response = new HttpResponseMessage();
-
-            try
+            using (var _logger = new AppInsightsLogger())
             {
-                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                _log.DebugFormat($"Th={threadId} - BlockTravelCard: Creating serviceProxy");
+                _logger.SetGlobalProperty("source", _prefix);
 
+                var response = new HttpResponseMessage();
 
-                // Cast the proxy client to the IOrganizationService interface.
-                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+                try
                 {
-                    localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
+                    CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
 
-                    if (localContext.OrganizationService == null)
-                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    _log.Info($"Th={threadId} - BlockTravelCard: ServiceProxy and LocalContext created Successfully.");
-
-                    _log.Info($"Th={threadId} - BlockTravelCard: Input parameter:\nTravelCardNumber '{travelCard?.TravelCardNumber}'\nCVC: '{travelCard?.CVC}'.");
-
-                    if (string.IsNullOrWhiteSpace(travelCard.TravelCardNumber) || string.IsNullOrWhiteSpace(travelCard.CVC))
+                    // Cast the proxy client to the IOrganizationService interface.
+                    using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                     {
-                        _log.Debug($"TravelCardNumber or CVC is empty.");
-                        var resp = ReturnApiMessage(threadId,
-                            ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_TravelCardNumberAndCVC),
-                            HttpStatusCode.BadRequest);
+                        localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
 
-                        _log.Warn($"Th={threadId} - Returning statuscode = {resp.StatusCode}, Content = {resp.Content.ReadAsStringAsync().Result}\n");
-                        return resp;
-                    }
+                        if (localContext.OrganizationService == null)
+                            throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                    if ((travelCard.TravelCardNumber == "123456" && travelCard.CVC == "123") ||
-                        (travelCard.TravelCardNumber == "654321" && travelCard.CVC == "321") ||
-                        (travelCard.TravelCardNumber == "45678" && travelCard.CVC == "456") ||
-                        (travelCard.TravelCardNumber == "123456" && travelCard.CVC == "123") ||
-                        (travelCard.TravelCardNumber == "987654" && travelCard.CVC == "987"))
-                    {
-                        _log.Warn($"Th={threadId} - BlockTravelCard: User passed mocked travel cards.");
-                        return ReturnApiMessage(1, "Kortet spärrad - Mock.", HttpStatusCode.OK);
-                    }
+                        if (string.IsNullOrWhiteSpace(travelCard.TravelCardNumber) || string.IsNullOrWhiteSpace(travelCard.CVC))
+                        {
+                            return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "BlockTravelCard", ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_TravelCardNumberAndCVC), _logger);
+                        }
 
-                    // Get Card Details from BizTalk
-                    #region Get Card Details
+                        if ((travelCard.TravelCardNumber == "123456" && travelCard.CVC == "123") ||
+                            (travelCard.TravelCardNumber == "654321" && travelCard.CVC == "321") ||
+                            (travelCard.TravelCardNumber == "45678" && travelCard.CVC == "456") ||
+                            (travelCard.TravelCardNumber == "123456" && travelCard.CVC == "123") ||
+                            (travelCard.TravelCardNumber == "987654" && travelCard.CVC == "987"))
+                        {
+                            return ReturnApiMessage(1, "Kortet spärrad - Mock.", HttpStatusCode.OK);
+                        }
 
-                    _log.Info($"Th={threadId} - BlockTravelCard: Calling ed_GetCardDetails workflow.");
-                    string cardDetailsResponse =
-                        ValueCodeHandler.CallGetCardDetailsFromBiztalkAction(localContext, travelCard.TravelCardNumber);
-                    _log.Info($"Th={threadId} - BlockTravelCard: GetCardDetails call ran successfully.");
-                    #endregion
+                        // Get Card Details from BizTalk
+                        #region Get Card Details
 
-                    if (string.IsNullOrWhiteSpace(cardDetailsResponse))
-                    {
-                        _log.Warn($"Th={threadId} - BlockTravelCard: Response from GetCardDetails is empty.");
-                        return ReturnApiMessage(threadId,
-                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                             HttpStatusCode.BadRequest);
-                    }
+                        string cardDetailsResponse =
+                            ValueCodeHandler.CallGetCardDetailsFromBiztalkAction(localContext, travelCard.TravelCardNumber);
+                        #endregion
 
-                    // Parse Card Details from response Biztalk
-                    #region Parse Card Details from response
+                        if (string.IsNullOrWhiteSpace(cardDetailsResponse))
+                        {
+                            return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "BlockTravelCard", ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError), _logger);
+                        }
 
-                    _log.Info($"Th={threadId} - BlockTravelCard: Running ed_ParseBiztalkResponse workflow.");
-                    BiztalkParseCardDetailsMessage cardDetails =
-                        ValueCodeHandler.CallParseCardDetailsFromBiztalkAction(localContext, cardDetailsResponse);
-                    _log.Info($"Th={threadId} - BlockTravelCard: ParseCardDetails ran successfully. Response parameters for validation -\nTravelCardNumber: {cardDetails.CardNumberField}\nHotlisted: {cardDetails.CardHotlistedField}");
-                    #endregion
+                        // Parse Card Details from response Biztalk
+                        #region Parse Card Details from response
 
-                    // Validate Card is valid to Block
-                    #region Validate Card
+                        BiztalkParseCardDetailsMessage cardDetails =
+                            ValueCodeHandler.CallParseCardDetailsFromBiztalkAction(localContext, cardDetailsResponse);
+                        #endregion
 
-                    _log.Info($"Th={threadId} - BlockTravelCard: (TravelCardEntity.ValidateCardDetailsFromBiztalkForBlockTravelCard) Validating parsed travel card from BIFF.");
-                    response = ValidateCardDetailsFromBiztalkForBlockTravelCard(localContext, threadId, response, cardDetails);
+                        // Validate Card is valid to Block
+                        #region Validate Card
 
-                    _log.Info($"Th={threadId} - BlockTravelCard: Result from validation - CardNumber: {cardDetails?.CardNumberField} StatusCode: {response?.StatusCode}\n" +
-                        $"CardHotlisted: {cardDetails?.CardHotlistedField} StatusCode: {response?.StatusCode}");
+                       
+                        response = ValidateCardDetailsFromBiztalkForBlockTravelCard(localContext, threadId, response, cardDetails);
 
+                        //If travel card already is blocked
+                        if (response.StatusCode == HttpStatusCode.Continue)
+                        {
+                            response.StatusCode = HttpStatusCode.OK;
+                            return response;
+                        }
 
-                    //If travel card already is blocked
-                    if (response.StatusCode == HttpStatusCode.Continue)
-                    {
-                        response.StatusCode = HttpStatusCode.OK;
-                        _log.Info($"Th={threadId} - BlockTravelCard: Travelcard from BIFF is already blocked.");
-                        return response;
-                    }
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            return response;
+                        }
 
-                    if (response.StatusCode != HttpStatusCode.OK)
-                    {
-                        _log.Warn($"Th={threadId} - BlockTravelCard: Travelcard from BIFF returned status that is not OK: {response.StatusCode}.");
-                        return response;
-                    }
+                        #endregion
 
-                    #endregion
+                        // Block Travel Card
+                        #region Block Card
 
-                    // Block Travel Card
-                    #region Block Card
+                        //Set block reason to 5 = Other (See ST-304)
+                        string blockCardDetails = ValueCodeHandler.CallBlockCardBiztalkAction(localContext, travelCard.TravelCardNumber, (int)TravelCardEntity.BlockCardProductReasonCode.Other);
 
-                    _log.Info($"Th={threadId} - BlockTravelCard: Calling ed_BlockCardBiztalk workflow to block travel card '{travelCard?.TravelCardNumber}'.");
-                    //Set block reason to 5 = Other (See ST-304)
-                    string blockCardDetails = ValueCodeHandler.CallBlockCardBiztalkAction(localContext, travelCard.TravelCardNumber, (int)TravelCardEntity.BlockCardProductReasonCode.Other);
+                        // Parse Block Card details from response Biztalk
+                        #region Parse Block Card details from response
 
-                    _log.Info($"Th={threadId} - BlockTravelCard: BlockCardBiztalk ran successfully.");
+                        string blockResponse = ValueCodeHandler.CallParseBlockCardFromBiztalkAction(localContext, blockCardDetails);
 
-                    // Parse Block Card details from response Biztalk
-                    #region Parse Block Card details from response
+                        #endregion
 
-                    _log.Info($"Th={threadId} - BlockTravelCard: Calling ed_ParseBlockCardResponseFromBiztalk workflow.");
-                    string blockResponse = ValueCodeHandler.CallParseBlockCardFromBiztalkAction(localContext, blockCardDetails);
+                        // Validate Block Card response
+                        #region Validate Block Card response
 
-                    _log.Info($"Th={threadId} - BlockTravelCard: ParseBlockCardFromBiztalk ran successfully.");
-                    #endregion
+                        var blockStatus = ValidateBlockResponse(localContext, threadId, blockResponse);
+                        if (!blockStatus.IsSuccessStatusCode)
+                            return blockStatus;
 
-                    // Validate Block Card response
-                    #region Validate Block Card response
-
-                    var blockStatus = ValidateBlockResponse(localContext, threadId, blockResponse);
-                    if (!blockStatus.IsSuccessStatusCode)
-                        return blockStatus;
-
-                    _log.Info($"Th={threadId} - BlockTravelCard: Validation from response is OK.");
-                    #endregion
+                        #endregion
 
 
-                    #endregion
+                        #endregion
 
-                    #region Create travel card in CRM
+                        #region Create travel card in CRM
 
-                    _log.Info($"Th={threadId} - BlockTravelCard: Create travel card in CRM.");
-                    _log.Debug($"Th={threadId} - BlockTravelCard: Query given travel card number in CRM to see if one exists.");
-                    var queryTravelCard = new QueryExpression()
-                    {
-                        EntityName = TravelCardEntity.EntityLogicalName,
-                        ColumnSet = new ColumnSet(TravelCardEntity.Fields.cgi_Blocked),
-                        Criteria =
+                        var queryTravelCard = new QueryExpression()
+                        {
+                            EntityName = TravelCardEntity.EntityLogicalName,
+                            ColumnSet = new ColumnSet(TravelCardEntity.Fields.cgi_Blocked),
+                            Criteria =
                         {
                             Conditions =
                             {
                                 new ConditionExpression(TravelCardEntity.Fields.cgi_travelcardnumber, ConditionOperator.Equal, cardDetails.CardNumberField)
                             }
                         }
-                    };
-
-                    var crmTravelCard = XrmRetrieveHelper.RetrieveFirst<TravelCardEntity>(localContext, queryTravelCard);
-
-                    /*
-                     * Create a new travel card if one is not found in CRM. Note that this travel card at this point
-                     * will not be associated with a contact since no info regarding contact is given.
-                     */
-                    if (crmTravelCard == null)
-                    {
-                        _log.Info($"Th={threadId} - BlockTravelCard: Could not find given travel card '{cardDetails?.CardNumberField}' in CRM. Create a new travel card.");
-                        var newTravelCard = new TravelCardEntity()
-                        {
-                            cgi_travelcardnumber = travelCard.TravelCardNumber,
-                            cgi_TravelCardCVC = travelCard.CVC,
-                            ed_RequestedValueCodeForCard = false,
-                            cgi_Blocked = true
                         };
 
-                        newTravelCard.Id = XrmHelper.Create(localContext, newTravelCard);
+                        var crmTravelCard = XrmRetrieveHelper.RetrieveFirst<TravelCardEntity>(localContext, queryTravelCard);
 
-                        _log.Info($"Th={threadId} - BlockTravelCard: Newly created travel card:\nId: {newTravelCard?.Id}\n" +
-                            $"cgi_travelcardnumber: {newTravelCard?.cgi_travelcardnumber}\n" +
-                            $"cgi_TravelCardCVC: {newTravelCard?.cgi_TravelCardCVC}\n" +
-                            $"ed_RequestedValueCodeForCard: {newTravelCard?.ed_RequestedValueCodeForCard}\n" +
-                            $"cgi_Blocked: {newTravelCard?.cgi_Blocked}");
-                    }
-                    else
-                    {
-                        _log.Info($"Th={threadId} - BlockTravelCard: Found given travel card '{cardDetails?.CardNumberField}' in CRM.");
-                        var updateTraverlCard = new TravelCardEntity()
+                        /*
+                         * Create a new travel card if one is not found in CRM. Note that this travel card at this point
+                         * will not be associated with a contact since no info regarding contact is given.
+                         */
+                        if (crmTravelCard == null)
                         {
-                            Id = crmTravelCard.Id,
-                            cgi_Blocked = true,
-                            ed_RequestedValueCodeForCard = false
-                        };
-                        XrmHelper.Update(localContext, updateTraverlCard);
+                            var newTravelCard = new TravelCardEntity()
+                            {
+                                cgi_travelcardnumber = travelCard.TravelCardNumber,
+                                cgi_TravelCardCVC = travelCard.CVC,
+                                ed_RequestedValueCodeForCard = false,
+                                cgi_Blocked = true
+                            };
 
-                        _log.Info($"Th={threadId} - BlockTravelCard: Updated travel card:\nId: {updateTraverlCard?.Id}\n" +
-                            $"ed_RequestedValueCodeForCard: {updateTraverlCard?.ed_RequestedValueCodeForCard}\n" +
-                            $"cgi_Blocked: {updateTraverlCard?.cgi_Blocked}");
+                            newTravelCard.Id = XrmHelper.Create(localContext, newTravelCard);
+                        }
+                        else
+                        {
+                            var updateTraverlCard = new TravelCardEntity()
+                            {
+                                Id = crmTravelCard.Id,
+                                cgi_Blocked = true,
+                                ed_RequestedValueCodeForCard = false
+                            };
+                            XrmHelper.Update(localContext, updateTraverlCard);
+                        }
+
+                        #endregion
+
+                        // Return OK
+                        #region Return OK Message
+
+                        response = ReturnApiMessage(threadId,
+                                    ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_TravelCardBlocked),
+                                    HttpStatusCode.OK);
+
+                        return response;
+
+                        #endregion
                     }
-
-                    #endregion
-
-                    // Return OK
-                    #region Return OK Message
-
-                    response = ReturnApiMessage(threadId,
-                                ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_TravelCardBlocked),
-                                HttpStatusCode.OK);
-
-                    _log.Info($"Th={threadId} - BlockTravelCard: Successfully exiting BlockTravelCard api with StatusCode: {response?.StatusCode}");
-
-                    return response;
-
-                    #endregion
                 }
-            }
-            catch (WebException ex)
-            {
-                _log.Error($"Th={threadId} - BlockTravelCard: WebException caught - {ex.Message}");
+                catch (WebException ex)
+                {
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
 
-                return ReturnApiMessage(threadId,
-                                ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                                HttpStatusCode.InternalServerError);
-            }
-            catch (Exception ex)
-            {
-                _log.Error($"Th={threadId} - BlockTravelCard: Exception caught {ex.Message}");
+                    return ReturnApiMessage(threadId,
+                                    ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                                    HttpStatusCode.InternalServerError);
+                }
+                catch (Exception ex)
+                {
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
 
-                return ReturnApiMessage(threadId,
-                                ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                                HttpStatusCode.InternalServerError);
-            }
-            finally
-            {
-                ConnectionCacheManager.ReleaseConnection(threadId);
+                    return ReturnApiMessage(threadId,
+                                    ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                                    HttpStatusCode.InternalServerError);
+                }
+                finally
+                {
+                    ConnectionCacheManager.ReleaseConnection(threadId);
+                }
             }
         }
 
@@ -909,10 +772,8 @@ namespace Skanetrafiken.Crm.Controllers
         /// <returns></returns>
         public HttpResponseMessage ValidateCardDetailsFromBiztalkForBlockTravelCard(Plugin.LocalPluginContext localContext, int threadId, HttpResponseMessage response, BiztalkParseCardDetailsMessage cardDetails)
         {
-            _log.Debug($"Entering ValidateCardDetailsFromBiztalkForBlockTravelCard");
             if (string.IsNullOrWhiteSpace(cardDetails.CardNumberField))
             {
-                _log.Debug($"Th={threadId} - ValidateCardDetailsFromBiztalkForBlockTravelCard: Travel card number could not be found in BIFF.");
                 return response = ReturnApiMessage(threadId,
                         ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_TravelCardDoesNotExist),
                         HttpStatusCode.BadRequest);
@@ -920,7 +781,6 @@ namespace Skanetrafiken.Crm.Controllers
 
             if (cardDetails.CardHotlistedField == true)
             {
-                _log.Info($"Th={threadId} - ValidateCardDetailsFromBiztalkForBlockTravelCard: Travel card '{cardDetails.CardNumberField}' is hotlisted in BIFF.");
                 /*
                  *In case travel card has been blocked from somewhere else outside this API,
                  * we'll ensure that the Blocked status is updated.
@@ -952,7 +812,6 @@ namespace Skanetrafiken.Crm.Controllers
                         HttpStatusCode.Continue);
             }
 
-            _log.Debug($"Exiting ValidateCardDetailsFromBiztalkForBlockTravelCard");
             return response = new HttpResponseMessage(HttpStatusCode.OK);
         }
 
@@ -960,14 +819,6 @@ namespace Skanetrafiken.Crm.Controllers
         #region Helpers
         private HttpResponseMessage ReturnApiMessage(int threadId, string errorMessage, HttpStatusCode code)
         {
-            if (code == HttpStatusCode.OK)
-            {
-                _log.DebugFormat($"Th={threadId} - Returning statuscode = {code}, Content = {errorMessage}\n");
-            }
-            else {
-                _log.Warn($"Th={threadId} - Returning statuscode = {code}, Content = {errorMessage}\n");
-            }
-            
             return Request.CreateResponse(code, errorMessage);
         }
 
@@ -1008,10 +859,8 @@ namespace Skanetrafiken.Crm.Controllers
         /// <returns></returns>
         private HttpResponseMessage ValidateBlockResponse(Plugin.LocalPluginContext localContext, int threadId, string blockResponse)
         {
-            _log.Info($"Th={threadId} - ValidateBlockResponse: Validating response from BIFF.");
             if (blockResponse == null || blockResponse == "")
             {
-                _log.Warn($"Th={threadId} - ValidateBlockResponse: Could not block travel card in Biff. Response return null.");
                 ReturnApiMessage(threadId,
                 ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_CouldNotBlockCard),
                 HttpStatusCode.BadRequest);
@@ -1019,7 +868,6 @@ namespace Skanetrafiken.Crm.Controllers
 
             if (blockResponse == "-1")
             {
-                _log.Warn($"Th={threadId} - ValidateBlockResponse: Travel card in Biff is currently in process of blocking it.");
                 ReturnApiMessage(threadId,
                                     ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_TravelCardNotBlockedYet),
                                     HttpStatusCode.BadRequest);
@@ -1027,7 +875,6 @@ namespace Skanetrafiken.Crm.Controllers
 
             if (blockResponse == "-1000")
             {
-                _log.Warn($"Th={threadId} - ValidateBlockResponse: Possibly connection error with the database - See Open API documentation.");
                 ReturnApiMessage(threadId,
                     ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_CouldNotBlockCard),
                     HttpStatusCode.BadRequest);

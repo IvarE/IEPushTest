@@ -18,7 +18,6 @@ namespace Skanetrafiken.Crm
     /// </summary>
     public class CrmConnection
     {
-        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static byte[] entropy = System.Text.Encoding.Unicode.GetBytes("Salt Is Not A Password");
         private static string ExternalPasswordPlaceHolder = "[Encrypted]";
 
@@ -80,9 +79,6 @@ namespace Skanetrafiken.Crm
                 throw new Exception(string.Format(CultureInfo.InvariantCulture, Properties.Resources.MultipleConnectionString, filteredConnectionStrings.Count));
             }
 
-            _log.Info(string.Format(CultureInfo.InvariantCulture, Properties.Resources.ConnectionStringUsed, filteredConnectionStrings[0].Key));
-
-
 
             string connectionString = filteredConnectionStrings[0].Value;
 
@@ -128,7 +124,6 @@ namespace Skanetrafiken.Crm
             );
             Directory.CreateDirectory(Path.GetDirectoryName(filePath));
             saveDoc.Save(filePath);
-            _log.Debug(string.Format(Properties.Resources.CredentialsSaved, filePath));
         }
 
         internal static void SaveCredentials(string filePath, string password, byte[] entropy)

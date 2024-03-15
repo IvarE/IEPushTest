@@ -315,7 +315,7 @@ namespace Endeavor.Crm.IntegrationTests
 
                 localContext.OrganizationService.Create(incident);
 
-                 localContext.TracingService.Trace("Stop Sequences, ElapsedMilliseconds: {0}.", stopwatch.ElapsedMilliseconds);
+                localContext.TracingService.Trace("Stop Sequences, ElapsedMilliseconds: {0}.", stopwatch.ElapsedMilliseconds);
             }
         }
 
@@ -343,8 +343,9 @@ namespace Endeavor.Crm.IntegrationTests
                         Conditions =
                         {
                             new ConditionExpression(IncidentEntity.Fields.cgi_soc_sec_number, ConditionOperator.NotNull),
+                            new ConditionExpression(IncidentEntity.Fields.ed_socialsecuritynumberformat, ConditionOperator.Null),
                             new ConditionExpression(IncidentEntity.Fields.StateCode, ConditionOperator.Equal, (int)Generated.IncidentState.Active),
-                            new ConditionExpression(IncidentEntity.Fields.CreatedOn, ConditionOperator.OnOrAfter, DateTime.UtcNow)
+                            new ConditionExpression(IncidentEntity.Fields.CreatedOn, ConditionOperator.OnOrAfter, new DateTime(2022, 1, 16))
                         }
                     }
                 };
@@ -352,15 +353,34 @@ namespace Endeavor.Crm.IntegrationTests
                 IList<IncidentEntity> casesWithSocialSecurityNumber = XrmRetrieveHelper.RetrieveMultiple<IncidentEntity>(localContext, query);
 
                 var tempHoldingSocSec = "";
-
-                foreach(IncidentEntity incident in casesWithSocialSecurityNumber)
+                int i = 0;
+                int k = 0;
+                foreach (IncidentEntity incident in casesWithSocialSecurityNumber)
                 {
-                    tempHoldingSocSec = incident.cgi_soc_sec_number;
-                    tempHoldingSocSec.Insert(8, "-");
 
-                    incident.ed_socialsecuritynumberformat = tempHoldingSocSec;
+
+                    if (incident.cgi_soc_sec_number.Length == 12)
+                    {
+                        i++;
+                        localContext.TracingService.Trace($"Populating Case: {i}/{casesWithSocialSecurityNumber.Count}");
+
+                        var tempHolder = "";
+                        tempHoldingSocSec = incident.cgi_soc_sec_number;
+                        tempHolder = tempHoldingSocSec.Insert(8, "-");
+
+                        incident.ed_socialsecuritynumberformat = tempHolder;
+
+                        XrmHelper.Update(localContext, incident);
+                    }
+                    else
+                    {
+                        k++;
+                    }
+
                 }
 
+                localContext.TracingService.Trace($"Populated Cases: {i}");
+                localContext.TracingService.Trace($"UnPopulated Cases: {k}");
             }
         }
 
@@ -383,6 +403,6 @@ namespace Endeavor.Crm.IntegrationTests
                 return TestSetup.Config;
             }
         }
- 
+
     }
 }
