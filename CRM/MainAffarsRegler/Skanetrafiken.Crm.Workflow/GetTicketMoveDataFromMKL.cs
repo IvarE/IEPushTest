@@ -54,7 +54,7 @@ namespace Skanetrafiken.Crm.Entities
         {
             try
             {
-                string mklEndpoint = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_MklEndpoint);
+                string mklEndpoint = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_MklEndpoint); // Viggo  TODO här behöver vi tillfälligt hårdkoda till gamla adressen.
                 //string mklEndpoint = "https://stmkltest.azurewebsites.net";
 
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create($"{mklEndpoint}/admin/users/{guid}");

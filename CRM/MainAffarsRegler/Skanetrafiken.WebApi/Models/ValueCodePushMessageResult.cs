@@ -202,16 +202,16 @@ namespace Skanetrafiken.Crm.Models
                                     XrmHelper.Update(localContext, newValueCode);
                                 }
 
-                                //Handle updates where ValueCode has been canceled by Voucher Service (status 4 = Canceled)
-                                if (this.status == 4)
+                            //Handle updates where ValueCode has been canceled by Voucher Service (status 4 = Canceled)
+                            if (this.status == 4)
+                            {
+                                var updateValueCode = new ValueCodeEntity()
                                 {
-                                    var updateValueCode = new ValueCodeEntity()
-                                    {
-                                        Id = newValueCode.Id,
-                                        ed_Amount = new Money(this.amount),
-                                        ed_RedemptionDate = redeemed,
-                                        ed_CanceledOn = (DateTime?)DateTime.UtcNow
-                                    };
+                                    Id = newValueCode.Id,
+                                    ed_Amount = new Money(this.amount),
+                                    ed_RedemptionDate = redeemed,
+                                    ed_CanceledOn = (DateTime?)DateTime.UtcNow
+                                };
 
                                     UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
                                 }
@@ -319,18 +319,18 @@ namespace Skanetrafiken.Crm.Models
                             if (valueCode == null)
                             {
 
-                                ValueCodeEntity newValueCode = new ValueCodeEntity()
-                                {
-                                    ed_name = voucherId.ToString(),
-                                    ed_Amount = new Money(amount),
-                                    ed_CreatedTimestamp = created,
-                                    //ed_LastRedemptionDate = validToDate, //Changed in VoucherService 2.0
-                                    //ed_ValidUntil = validToDate, //Changed in VoucherService 2.0
-                                    ed_CodeId = voucherCode,
-                                    //ed_Ean = eanCode?.ToString(), //Changed in VoucherService 2.0
-                                    ed_OriginalAmount = amount,
-                                    ed_ValueCodeVoucherId = voucherId.ToString()
-                                };
+                            ValueCodeEntity newValueCode = new ValueCodeEntity()
+                            {
+                                ed_name = voucherId.ToString(),
+                                ed_Amount = new Money(amount),
+                                ed_CreatedTimestamp = created,
+                                //ed_LastRedemptionDate = validToDate, //Changed in VoucherService 2.0
+                                //ed_ValidUntil = validToDate, //Changed in VoucherService 2.0
+                                ed_CodeId = voucherCode,
+                                //ed_Ean = eanCode?.ToString(), //Changed in VoucherService 2.0
+                                ed_OriginalAmount = amount,
+                                ed_ValueCodeVoucherId = voucherId.ToString()
+                            };
 
                                 switch (voucherType)
                                 {
@@ -360,54 +360,56 @@ namespace Skanetrafiken.Crm.Models
                                     XrmHelper.Update(localContext, newValueCode);
                                 }
 
-                                //Handle updates where ValueCode has been canceled by Voucher Service (status 4 = Canceled)
-                                //1 = Activated
-                                //2 = Expired
-                                //3 = Used Up
-                                //4 = Cancelled
-                                if (/*this.status == 3 ||*/ this.status == 4)
+                            //Handle updates where ValueCode has been canceled by Voucher Service (status 4 = Canceled)
+                            //1 = Activated
+                            //2 = Expired
+                            //3 = Used Up
+                            //4 = Cancelled
+                            if (/*this.status == 3 ||*/ this.status == 4)
+                            {
+                                var updateValueCode = new ValueCodeEntity()
                                 {
-                                    var updateValueCode = new ValueCodeEntity()
-                                    {
-                                        Id = newValueCode.Id,
-                                        ed_Amount = new Money(this.amount),
-                                        ed_RedemptionDate = redeemed,
-                                        ed_CanceledOn = (DateTime?)DateTime.UtcNow
-                                    };
+                                    Id = newValueCode.Id,
+                                    ed_Amount = new Money(this.amount),
+                                    ed_RedemptionDate = redeemed,
+                                    ed_CanceledOn = (DateTime?)DateTime.UtcNow
+                                };
 
-                                    UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
-                                }
-                                else if (this.amount <= 0 || this.status == 3)
-                                {
-                                    newValueCode.ed_RedemptionDate = redeemed;
-                                    UpdateValueCodeRecordAndDeactivate(localContext, newValueCode);
-                                }
-                                else
-                                {
-                                    XrmHelper.Update(localContext.OrganizationService, newValueCode);
-                                }
+                                UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
+                            }
+                            else if (this.amount <= 0 || this.status == 3)
+                            {
+                                newValueCode.ed_RedemptionDate = redeemed;
+                                UpdateValueCodeRecordAndDeactivate(localContext, newValueCode);
+                            }
+                            else
+                            {
+
+                                XrmHelper.Update(localContext.OrganizationService, newValueCode);
 
                             }
-                            // Presentkort
-                            else if ((int)valueCode.ed_ValueCodeTypeGlobal.Value == 2)
-                            {
-                                //Handle updates where ValueCode has been canceled by Voucher Service (status 4 = Canceled)
-                                if (this.status == 4)
-                                {
-                                    var updateValueCode = new ValueCodeEntity()
-                                    {
-                                        Id = valueCode.Id,
-                                        ed_Amount = new Money(this.amount),
-                                        ed_RedemptionDate = redeemed,
-                                        ed_CanceledOn = (DateTime?)DateTime.UtcNow
-                                    };
 
-                                    UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
-                                }
-                                else if (this.amount <= 0 || this.status == 3)
+                        }
+                        // Presentkort
+                        else if ((int)valueCode.ed_ValueCodeTypeGlobal.Value == 2)
+                        {
+                            //Handle updates where ValueCode has been canceled by Voucher Service (status 4 = Canceled)
+                            if (this.status == 4)
+                            {
+                                var updateValueCode = new ValueCodeEntity()
                                 {
-                                    valueCode.ed_Amount = new Money(this.amount);
-                                    valueCode.ed_RedemptionDate = redeemed;
+                                    Id = valueCode.Id,
+                                    ed_Amount = new Money(this.amount),
+                                    ed_RedemptionDate = redeemed,
+                                    ed_CanceledOn = (DateTime?)DateTime.UtcNow
+                                };
+
+                                UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
+                            }
+                            else if (this.amount <= 0 || this.status == 3)
+                            {
+                                valueCode.ed_Amount = new Money(this.amount);
+                                valueCode.ed_RedemptionDate = redeemed;
 
                                     UpdateValueCodeRecordAndDeactivate(localContext, valueCode);
 
@@ -426,23 +428,23 @@ namespace Skanetrafiken.Crm.Models
                                 {
                                     valueCode.ed_Amount = new Money(this.amount);
 
-                                    XrmHelper.Update(localContext.OrganizationService, valueCode);
-                                }
+                                XrmHelper.Update(localContext.OrganizationService, valueCode);
                             }
-                            // Övriga
-                            else if ((int)valueCode.ed_ValueCodeTypeGlobal.Value != 2)
+                        }
+                        // Övriga
+                        else if ((int)valueCode.ed_ValueCodeTypeGlobal.Value != 2)
+                        {
+                            //DevOps Task: 3998
+                            //Handle updates where ValueCode has been canceled by Voucher Service(status 4 = Canceled)
+                            if (this.status == 4)
                             {
-                                //DevOps Task: 3998
-                                //Handle updates where ValueCode has been canceled by Voucher Service(status 4 = Canceled)
-                                if (this.status == 4)
+                                var updateValueCode = new ValueCodeEntity()
                                 {
-                                    var updateValueCode = new ValueCodeEntity()
-                                    {
-                                        Id = valueCode.Id,
-                                        ed_Amount = new Money(this.amount),
-                                        ed_RedemptionDate = redeemed,
-                                        ed_CanceledOn = (DateTime?)DateTime.UtcNow
-                                    };
+                                    Id = valueCode.Id,
+                                    ed_Amount = new Money(this.amount),
+                                    ed_RedemptionDate = redeemed,
+                                    ed_CanceledOn = (DateTime?)DateTime.UtcNow
+                                };
 
                                     UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
                                 }

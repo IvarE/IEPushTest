@@ -73,7 +73,7 @@ namespace Skanetrafiken.Crm.Entities
                     throw new Exception($"Could not find a contact with {guidParam.ToString()}");
                 }
 
-                string MklEndpoint = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_MklEndpoint);
+                string MklEndpoint = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_MklEndpoint); // här behöver vi tillfälligt hårdkoda till gamla adressen
 
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create($"{MklEndpoint}/admin/users/allowCarrierChange/{guid}");
                 string clientCertName = CgiSettingEntity.GetSettingString(localContext, CgiSettingEntity.Fields.ed_ClientCertName);

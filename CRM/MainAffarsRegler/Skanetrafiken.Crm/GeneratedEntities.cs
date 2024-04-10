@@ -27589,7 +27589,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string st_AttachmentAudience = "st_attachmentaudience";
 			
 			public const string st_CrmAppRegistrationAudience = "st_crmappregistrationaudience";
-			
+
+			public const string st_crmappmklaudience = "st_crmappmklaudience";
+
 			public const string st_CrmAppRegistrationClientId = "st_crmappregistrationclientid";
 			
 			public const string st_CrmAppRegistrationClientSecret = "st_crmappregistrationclientsecret";
@@ -27607,8 +27609,6 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
 			
 			public const string VersionNumber = "versionnumber";
-
-			public const string st_crmappmklaudience = "st_crmappmklaudience";
 
 			public const string st_MklEndpointToken = "st_mklendpointtoken";
 		}
@@ -27779,16 +27779,18 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const int ed_TravelInformationDBConnectionString = 300;
 			
 			public const int ed_VoucherService = 100;
+			
+			public const int st_AttachmentAudience = 100;
+			
+			public const int st_CrmAppRegistrationAudience = 100;
 
 			public const int st_crmappmklaudience = 100;
 
 			public const int st_CrmAppRegistrationClientId = 100;
-
+			
 			public const int st_CrmAppRegistrationClientSecret = 100;
-
+			
 			public const int st_CrmAppRegistrationTenantId = 100;
-
-			public const int st_MklEndpointToken = 100;
 		}
 	}
 	

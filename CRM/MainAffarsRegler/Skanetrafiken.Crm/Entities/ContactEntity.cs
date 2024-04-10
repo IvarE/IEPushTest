@@ -1729,12 +1729,15 @@ namespace Skanetrafiken.Crm.Entities
             HandleDeleteContactMessageMKL(localContext, entityId, contact);
         }
 
-        /// <summary>
-        /// Perform merge on all the conflicting contacts
-        /// </summary>
-        /// <param name="localContext"></param>
-        /// <param name="conflicts">Contacts to merge to context contact</param>
-        public void CombineContacts(Plugin.LocalPluginContext localContext, IList<ContactEntity> conflicts)
+
+        
+
+            /// <summary>
+            /// Perform merge on all the conflicting contacts
+            /// </summary>
+            /// <param name="localContext"></param>
+            /// <param name="conflicts">Contacts to merge to context contact</param>
+            public void CombineContacts(Plugin.LocalPluginContext localContext, IList<ContactEntity> conflicts)
         {
             localContext.Trace("Entrered CombineContacts()");
             if (this == null)

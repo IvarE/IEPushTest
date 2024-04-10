@@ -91,110 +91,123 @@ namespace Skanetrafiken.Crm.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> GetAccessToken(string process)
         {
-            using (var _logger = new AppInsightsLogger())
+            int threadId = Thread.CurrentThread.ManagedThreadId;
+
+            if (string.IsNullOrWhiteSpace(process))
             {
-                _logger.SetGlobalProperty("source", _prefix);
+                HttpResponseMessage badReq = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                badReq.Content = new StringContent("Could not find value in 'process' parameter. Please provide a valid 'process'.");
+                return badReq;
+            }
 
-                int threadId = Thread.CurrentThread.ManagedThreadId;
+            Plugin.LocalPluginContext localContext = null;
 
-                if (string.IsNullOrWhiteSpace(process))
+            try
+            {
+                CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
+                // Cast the proxy client to the IOrganizationService interface.
+                using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
                 {
-                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetAccessToken", "Could not find value in 'process' parameter. Please provide a valid 'process'.", _logger);
-                }
+                    localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
 
-                Plugin.LocalPluginContext localContext = null;
+                    if (localContext.OrganizationService == null)
+                        throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
 
-                try
-                {
-                    CrmServiceClient serviceClient = ConnectionCacheManager.GetAvailableConnection(threadId, true);
-                    // Cast the proxy client to the IOrganizationService interface.
-                    using (OrganizationServiceProxy serviceProxy = (OrganizationServiceProxy)serviceClient.OrganizationServiceProxy)
+
+                    var clientId = string.Empty;
+                    var clientSecret = string.Empty;
+                    var tenentId = string.Empty;
+                    var audience = string.Empty;
+
+                    CgiSettingEntity settings = null;
+                    FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+
+                    if (process == "attachment")
                     {
-                        localContext = new Plugin.LocalPluginContext(new ServiceProvider(), serviceProxy, null, new TracingService());
 
-                        if (localContext.OrganizationService == null)
-                            throw new Exception(string.Format("Failed to connect to CRM API. Please check connection string. Localcontext is null."));
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_AttachmentClientID, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_AttachmentClientSecret, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.st_AttachmentAudience, ConditionOperator.NotNull);
 
-                        var clientId = string.Empty;
-                        var clientSecret = string.Empty;
-                        var tenentId = string.Empty;
-                        var audience = string.Empty;
+                        settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                        CgiSettingEntity.Fields.ed_AttachmentClientID,
+                        CgiSettingEntity.Fields.ed_AttachmentClientSecret,
+                        CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
+                        CgiSettingEntity.Fields.st_AttachmentAudience), settingFilter);
 
-                        CgiSettingEntity settings = null;
-                        FilterExpression settingFilter = new FilterExpression(LogicalOperator.And);
+                        clientId = settings.ed_AttachmentClientID;
+                        clientSecret = settings.ed_AttachmentClientSecret;
+                        tenentId = settings.ed_JojoCardDetailsTenentId;
+                        audience = settings.st_AttachmentAudience;
+                    }
+                    else if (process == "voucher")
+                    {
 
-                        if (process == "attachment")
-                        {
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationClientId, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationClientSecret, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationTenantId, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationAudience, ConditionOperator.NotNull);
 
-                            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_AttachmentClientID, ConditionOperator.NotNull);
-                            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_AttachmentClientSecret, ConditionOperator.NotNull);
-                            settingFilter.AddCondition(CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId, ConditionOperator.NotNull);
-                            settingFilter.AddCondition(CgiSettingEntity.Fields.st_AttachmentAudience, ConditionOperator.NotNull);
+                        settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                        CgiSettingEntity.Fields.st_CrmAppRegistrationClientId,
+                        CgiSettingEntity.Fields.st_CrmAppRegistrationClientSecret,
+                        CgiSettingEntity.Fields.st_CrmAppRegistrationTenantId,
+                        CgiSettingEntity.Fields.st_CrmAppRegistrationAudience), settingFilter);
 
-                            settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
-                            CgiSettingEntity.Fields.ed_AttachmentClientID,
-                            CgiSettingEntity.Fields.ed_AttachmentClientSecret,
-                            CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
-                            CgiSettingEntity.Fields.st_AttachmentAudience), settingFilter);
+                        clientId = settings.st_CrmAppRegistrationClientId;
+                        clientSecret = settings.st_CrmAppRegistrationClientSecret;
+                        tenentId = settings.st_CrmAppRegistrationTenantId;
+                        audience = settings.st_CrmAppRegistrationAudience;
+                    }
+                    else if(process == "mkl")
+                    {
 
-                            clientId = settings.ed_AttachmentClientID;
-                            clientSecret = settings.ed_AttachmentClientSecret;
-                            tenentId = settings.ed_JojoCardDetailsTenentId;
-                            audience = settings.st_AttachmentAudience;
-                        }
-                        else if (process == "voucher")
-                        {
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationClientId, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationClientSecret, ConditionOperator.NotNull);
+                        settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationTenantId, ConditionOperator.NotNull);
 
-                            settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationClientId, ConditionOperator.NotNull);
-                            settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationClientSecret, ConditionOperator.NotNull);
-                            settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationTenantId, ConditionOperator.NotNull);
-                            settingFilter.AddCondition(CgiSettingEntity.Fields.st_CrmAppRegistrationAudience, ConditionOperator.NotNull);
+                        settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
+                        CgiSettingEntity.Fields.st_CrmAppRegistrationClientId,
+                        CgiSettingEntity.Fields.st_CrmAppRegistrationClientSecret,
+                        CgiSettingEntity.Fields.st_CrmAppRegistrationTenantId,
+                        CgiSettingEntity.Fields.st_crmappmklaudience), settingFilter);
 
-                            settings = XrmRetrieveHelper.RetrieveFirst<CgiSettingEntity>(localContext, new ColumnSet(
-                            CgiSettingEntity.Fields.st_CrmAppRegistrationClientId,
-                            CgiSettingEntity.Fields.st_CrmAppRegistrationClientSecret,
-                            CgiSettingEntity.Fields.st_CrmAppRegistrationTenantId,
-                            CgiSettingEntity.Fields.st_CrmAppRegistrationAudience), settingFilter);
+                        clientId = settings.st_CrmAppRegistrationClientId;
+                        clientSecret = settings.st_CrmAppRegistrationClientSecret;
+                        tenentId = settings.st_CrmAppRegistrationTenantId;
+                        audience = settings.st_crmappmklaudience;
+                    }
+                    else
+                    {
+                        //Throw an exception
+                        throw new Exception(string.Format("GetAccessToken: Provided 'Process' argument does not match any available processes. Please provide a valid 'Process'."));
+                    }
 
-                            clientId = settings.st_CrmAppRegistrationClientId;
-                            clientSecret = settings.st_CrmAppRegistrationClientSecret;
-                            tenentId = settings.st_CrmAppRegistrationTenantId;
-                            audience = settings.st_CrmAppRegistrationAudience;
-                        }
-                        else
-                        {
-                            //Throw an exception
-                            throw new Exception(string.Format("GetAccessToken: Provided 'Process' argument does not match any available processes. Please provide a valid 'Process'."));
-                        }
+                    if (settings == null || string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret) || string.IsNullOrEmpty(tenentId) || string.IsNullOrWhiteSpace(audience))
+                    {
+                        //Throw an exception
+                        throw new Exception(string.Format("GetAccessToken: Failed to aquire settings from CRM."));
+                    }
+                    else
+                    {
+                        //var tokenResp = await CrmPlusControl.GetAccessToken(clientId, clientSecret, tenentId, "api://9ec4d21c-a934-4692-a322-44698afe33a5/");
+                        var tokenResp = await CrmPlusControl.GetAccessToken(clientId, clientSecret, tenentId, audience);
 
-                        if (settings == null || string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret) || string.IsNullOrEmpty(tenentId) || string.IsNullOrWhiteSpace(audience))
-                        {
-                            //Throw an exception
-                            throw new Exception(string.Format("GetAccessToken: Failed to aquire settings from CRM."));
-                        }
-                        else
-                        {
-                            //var tokenResp = await CrmPlusControl.GetAccessToken(clientId, clientSecret, tenentId, "api://9ec4d21c-a934-4692-a322-44698afe33a5/");
-                            var tokenResp = await CrmPlusControl.GetAccessToken(clientId, clientSecret, tenentId, audience);
-
-                            //Create a return OK with token in string
-                            return ReturnApiMessage(threadId, tokenResp, HttpStatusCode.OK);
-                        }
+                        //Create a return OK with token in string
+                        return ReturnApiMessage(threadId, tokenResp, HttpStatusCode.OK);
                     }
                 }
-                catch (Exception ex)
-                {
-                    _exceptionCustomProperties["source"] = _prefix;
-                    _logger.LogException(ex, _exceptionCustomProperties);
-
-                    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                    return rm;
-                }
-                finally
-                {
-                    ConnectionCacheManager.ReleaseConnection(threadId);
-                }
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                return rm;
+            }
+            finally
+            {
+                ConnectionCacheManager.ReleaseConnection(threadId);
             }
         }
 
@@ -312,10 +325,7 @@ namespace Skanetrafiken.Crm.Controllers
 
                     if (string.IsNullOrWhiteSpace(jsonMessage.voucherCode))
                     {
-                        string errorMessage = "VoucherCode cannot be empty.";
-                        _logger.LogError($"Post: Failed - {errorMessage}");
-
-                        return response = Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
+                        return response = Request.CreateResponse(HttpStatusCode.BadRequest, "VoucherCode cannot be empty.");
                     }
 
                     //Execute Core Method
@@ -328,10 +338,7 @@ namespace Skanetrafiken.Crm.Controllers
                 {
                     // Temporary while in Test
                     //return response = Request.CreateResponse(HttpStatusCode.OK, "OK");
-                    _exceptionCustomProperties["source"] = _prefix;
-                    _logger.LogException(ex, _exceptionCustomProperties);
-
-                    return Request.CreateResponse(HttpStatusCode.InternalServerError, "ErrorMsg: " + ex);
+                    return response = Request.CreateResponse(HttpStatusCode.InternalServerError, "ErrorMsg: " + ex);
                 }
             }
         }
@@ -394,27 +401,23 @@ namespace Skanetrafiken.Crm.Controllers
 
         }
 
-        ///// <summary>
-        ///// Returns an error message to api and log
-        ///// </summary>
-        ///// <param name="threadId"></param>
-        ///// <param name="errorMessage">Error message from CRM</param>
-        ///// <param name="code"></param>
-        ///// <returns></returns>
-        //private static HttpResponseMessage ReturnApiMessage(int threadId, string errorMessage, HttpStatusCode code)
-        //{
+            ///// <summary>
+            ///// Returns an error message to api and log
+            ///// </summary>
+            ///// <param name="threadId"></param>
+            ///// <param name="errorMessage">Error message from CRM</param>
+            ///// <param name="code"></param>
+            ///// <returns></returns>
 
-        //    return Request.CreateResponse(code, errorMessage);
-        //}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="valueCode"></param>
-        /// <param name="threadId"></param>
-        /// <param name="localContext"></param>
-        /// <returns></returns>
-        public HttpResponseMessage HandleCreateValueCode(Plugin.LocalPluginContext localContext, ValueCodeCreationGiftCard valueCode, int threadId)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="valueCode"></param>
+            /// <param name="threadId"></param>
+            /// <param name="localContext"></param>
+            /// <returns></returns>
+            public HttpResponseMessage HandleCreateValueCode(Plugin.LocalPluginContext localContext, ValueCodeCreationGiftCard valueCode, int threadId)
         {
             using (var _logger = new AppInsightsLogger())
             {
@@ -539,12 +542,14 @@ namespace Skanetrafiken.Crm.Controllers
 
                             #region Validate found contact with input parameters
 
+
                             if (travelCard == null)
                             {
-                                _logger.LogInformation("Travelcard is null");
+                                
                             }
                             else if (travelCard?.cgi_Contactid == null)
                             {
+                                
                                 // 2DO, Why not do this prior and avoid the update?
                                 var updateCard = new TravelCardEntity()
                                 {
@@ -625,6 +630,7 @@ namespace Skanetrafiken.Crm.Controllers
                 }
                 #endregion
 
+
                 //Only block card if not one of these cards. This is used for mocking.
                 if ((valueCode.TravelCard.TravelCardNumber == "123456" && valueCode.TravelCard.CVC == "123") ||
                     (valueCode.TravelCard.TravelCardNumber == "654321" && valueCode.TravelCard.CVC == "321") ||
@@ -666,7 +672,6 @@ namespace Skanetrafiken.Crm.Controllers
                 //Convert response to ValueCodeHandler.GetCardProperties
                 if (!string.IsNullOrEmpty(jsonAnswer) && jsonAnswer != "ERROR")
                 {
-
                     var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                     getCardProperties = (ValueCodeHandler.GetCardProperties)serializer.Deserialize(jsonAnswer, typeof(ValueCodeHandler.GetCardProperties));
                 }
@@ -683,10 +688,12 @@ namespace Skanetrafiken.Crm.Controllers
                 var maxAmount = CgiSettingEntity.GetSettingDecimal(localContext, CgiSettingEntity.Fields.ed_MaxAmountForGiftCard);
                 if (maxAmount < 0M)
                 {
+
                     return ReturnApiMessage(threadId,
                         "Max amount cannot be less than 0. Please contact CRM admin.",
                         HttpStatusCode.BadRequest);
                 }
+
 
                 //Fetch setting for number of valid days
                 var validDays = CgiSettingEntity.GetSettingInt(localContext, CgiSettingEntity.Fields.ed_ValidForDaysValueCode);
@@ -698,15 +705,18 @@ namespace Skanetrafiken.Crm.Controllers
                 }
 
                 //If exceeds max amount, create incident
+
                 //Devop Task 745 - Round decimals
                 if (getCardProperties.Amount > 0)
                 {
+
                     getCardProperties.Amount = (decimal)Math.Round(getCardProperties.Amount, 0, MidpointRounding.AwayFromZero);
                 }
 
                 //If exceeds max amount, create value code approval.
                 if (getCardProperties.Amount > maxAmount)
                 {
+
                     //Block Travel Card (OBS! Using Capture Order and Place Order)
 
                     //Call "Place Order API" to actually block the travel card
@@ -730,8 +740,6 @@ namespace Skanetrafiken.Crm.Controllers
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
                         HttpStatusCode.BadRequest);
                     }
-
-                    //Create Incident
 
                     IncidentEntity incidentEnt = null;
 
@@ -771,6 +779,7 @@ namespace Skanetrafiken.Crm.Controllers
                     try
                     {
                         //Create a new Value Code before blocking the card through the API
+
                         valueCodeGeneric = CreateGiftCardValueCode(localContext, getCardProperties.Amount, valueCode, travelCard, contact); //new version for new API
 
                         //Validate that Value Code has been created
@@ -783,9 +792,6 @@ namespace Skanetrafiken.Crm.Controllers
                     {
                         //TODO: CallCancelOrder API
                         var cancelOrderResponse = CancelOrderWithCardNumber(localContext, getCardProperties.CardNumber);
-
-                        _exceptionCustomProperties["source"] = _prefix;
-                        _logger.LogException(e, _exceptionCustomProperties);
 
                         return ReturnApiMessage(threadId,
                             ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
@@ -872,29 +878,27 @@ namespace Skanetrafiken.Crm.Controllers
                             return resp;
                         }
 
-                        if (!string.IsNullOrWhiteSpace(valueCode.Email))
+                    if (!string.IsNullOrWhiteSpace(valueCode.Email))
+                    {
+                        //This validation is also done in PreCreateContact, this solution is added here in order to handle status code from CRM which returns Internal Server Error.
+                        if (!CustomerUtility.CheckEmailFormat(valueCode.Email))
                         {
-                            //This validation is also done in PreCreateContact, this solution is added here in order to handle status code from CRM which returns Internal Server Error.
-                            if (!CustomerUtility.CheckEmailFormat(valueCode.Email))
-                            {
-                                var resp = ReturnApiMessage(threadId, string.Format(Resources.InvalidFormatForEmail, valueCode.Email),
-                                HttpStatusCode.BadRequest);
-
-                                return resp;
-                            }
-                            valueCode.deliveryMethod = 1;
+                            var resp = ReturnApiMessage(threadId, string.Format(Resources.InvalidFormatForEmail, valueCode.Email),
+                            HttpStatusCode.BadRequest);
+                            return resp;
                         }
+                        valueCode.deliveryMethod = 1;
+                    }
 
-                        else
+                    else
+                    {
+                        if (!System.Text.RegularExpressions.Regex.Match(valueCode.Mobile, @"^([0-9]{6,16})$").Success)
                         {
-                            if (!System.Text.RegularExpressions.Regex.Match(valueCode.Mobile, @"^([0-9]{6,16})$").Success)
-                            {
-                                var resp = ReturnApiMessage(threadId, string.Format(Resources.InvalidFormatForMobile, valueCode.Mobile),
-                                HttpStatusCode.BadRequest);
-
-                                return resp;
-                            }
-                            valueCode.deliveryMethod = 2;
+                            var resp = ReturnApiMessage(threadId, string.Format(Resources.InvalidFormatForMobile, valueCode.Mobile),
+                            HttpStatusCode.BadRequest);
+                            return resp;
+                        }
+                        valueCode.deliveryMethod = 2;
 
                         }
 
@@ -924,24 +928,24 @@ namespace Skanetrafiken.Crm.Controllers
                             return resp;
                         }
 
-                        if (valueCode.ContactId.HasValue && valueCode.ContactId.Value != Guid.Empty)
-                        {
-                            var con = FetchContact(localContext, valueCode.ContactId.Value);
-                            if (con == null)
-                            {
-                                var resp = ReturnApiMessage(threadId,
-                                    ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_ContactDoesNotExist),
-                                    HttpStatusCode.BadRequest);
-                                return resp;
-                            }
-                        }
-                        else
+                    if (valueCode.ContactId.HasValue && valueCode.ContactId.Value != Guid.Empty)
+                    {
+                        var con = FetchContact(localContext, valueCode.ContactId.Value);
+                        if (con == null)
                         {
                             var resp = ReturnApiMessage(threadId,
-                                ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                                ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_ContactDoesNotExist),
                                 HttpStatusCode.BadRequest);
                             return resp;
                         }
+                    }
+                    else
+                    {
+                        var resp = ReturnApiMessage(threadId,
+                            ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                            HttpStatusCode.BadRequest);
+                        return resp;
+                    }
 
                         #endregion
 
@@ -1170,17 +1174,17 @@ namespace Skanetrafiken.Crm.Controllers
                         //// Send Value Code
                         #region Send Value Code
 
-                        if (valueCodeCreated != null)
-                        {
-                            ValueCodeHandler.CallSendValueCodeAction(localContext, valueCodeCreated);
-                        }
-                        else
-                        {
-                            var resp = ReturnApiMessage(threadId,
-                                ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
-                                HttpStatusCode.OK);
-                            return resp;
-                        }
+                    if (valueCodeCreated != null)
+                    {
+                        ValueCodeHandler.CallSendValueCodeAction(localContext, valueCodeCreated);
+                    }
+                    else
+                    {
+                        var resp = ReturnApiMessage(threadId,
+                            ReturnMessageWebApiEntity.GetValueString(localContext, ReturnMessageWebApiEntity.Fields.ed_UnexpectedError),
+                            HttpStatusCode.OK);
+                        return resp;
+                    }
 
                         #endregion
 
@@ -1652,11 +1656,11 @@ namespace Skanetrafiken.Crm.Controllers
 
                 string answer = "";
 
-                if (string.IsNullOrWhiteSpace(cardNumber))
-                {
-                    answer = "ERROR";
-                    return answer;
-                }
+            if (string.IsNullOrWhiteSpace(cardNumber))
+            {
+                answer = "ERROR";
+                return answer;
+            }
 
                 try
                 {
@@ -1674,17 +1678,17 @@ namespace Skanetrafiken.Crm.Controllers
                         CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
                         CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
 
-                    if (settings != null)
-                    {
-                        _applicationId = settings.ed_JojoCardDetailsApplicationId;
-                        _tenentId = settings.ed_JojoCardDetailsTenentId;
-                        globalCertificateName = settings.ed_ClientCertNameReskassa;
-                        msAuthScope = settings.ed_JojoCardDetailsScope;
-                    }
-                    else
-                    {
-                        HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (GetCardWithCardNumber)");
+                if (settings != null)
+                {
+                    _applicationId = settings.ed_JojoCardDetailsApplicationId;
+                    _tenentId = settings.ed_JojoCardDetailsTenentId;
+                    globalCertificateName = settings.ed_ClientCertNameReskassa;
+                    msAuthScope = settings.ed_JojoCardDetailsScope;
+                }
+                else
+                {
+                    HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                    badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (GetCardWithCardNumber)");
 
                         answer = "ERROR - " + new StringContent("Could not find a Settings Information from CRM (GetCardWithCardNumber)");
                         return answer;
@@ -1785,17 +1789,17 @@ namespace Skanetrafiken.Crm.Controllers
                         CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
                         CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
 
-                    if (settings != null)
-                    {
-                        _applicationId = settings.ed_JojoCardDetailsApplicationId;
-                        _tenentId = settings.ed_JojoCardDetailsTenentId;
-                        globalCertificateName = settings.ed_ClientCertNameReskassa;
-                        msAuthScope = settings.ed_JojoCardDetailsScope;
-                    }
-                    else
-                    {
-                        HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (PlaceOrderWithCardNumber)");
+                if (settings != null)
+                {
+                    _applicationId = settings.ed_JojoCardDetailsApplicationId;
+                    _tenentId = settings.ed_JojoCardDetailsTenentId;
+                    globalCertificateName = settings.ed_ClientCertNameReskassa;
+                    msAuthScope = settings.ed_JojoCardDetailsScope;
+                }
+                else
+                {
+                    HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                    badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (PlaceOrderWithCardNumber)");
 
                         answer = "ERROR - " + new StringContent("Could not find a Settings Information from CRM (PlaceOrderWithCardNumber)");
                         return answer;
@@ -1912,17 +1916,17 @@ namespace Skanetrafiken.Crm.Controllers
                         CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
                         CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
 
-                    if (settings != null)
-                    {
-                        _applicationId = settings.ed_JojoCardDetailsApplicationId;
-                        _tenentId = settings.ed_JojoCardDetailsTenentId;
-                        globalCertificateName = settings.ed_ClientCertNameReskassa;
-                        msAuthScope = settings.ed_JojoCardDetailsScope;
-                    }
-                    else
-                    {
-                        HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (CancelOrderWithCardNumber)");
+                if (settings != null)
+                {
+                    _applicationId = settings.ed_JojoCardDetailsApplicationId;
+                    _tenentId = settings.ed_JojoCardDetailsTenentId;
+                    globalCertificateName = settings.ed_ClientCertNameReskassa;
+                    msAuthScope = settings.ed_JojoCardDetailsScope;
+                }
+                else
+                {
+                    HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                    badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (CancelOrderWithCardNumber)");
 
                         answer = "ERROR - " + new StringContent("Could not find a Settings Information from CRM (CancelOrderWithCardNumber)");
                         return answer;
@@ -2039,17 +2043,17 @@ namespace Skanetrafiken.Crm.Controllers
                         CgiSettingEntity.Fields.ed_JojoCardDetailsTenentId,
                         CgiSettingEntity.Fields.ed_ClientCertNameReskassa), settingFilter);
 
-                    if (settings != null)
-                    {
-                        _applicationId = settings.ed_JojoCardDetailsApplicationId;
-                        _tenentId = settings.ed_JojoCardDetailsTenentId;
-                        globalCertificateName = settings.ed_ClientCertNameReskassa;
-                        msAuthScope = settings.ed_JojoCardDetailsScope;
-                    }
-                    else
-                    {
-                        HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                        badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (CaptureOrderWithCardNumber)");
+                if (settings != null)
+                {
+                    _applicationId = settings.ed_JojoCardDetailsApplicationId;
+                    _tenentId = settings.ed_JojoCardDetailsTenentId;
+                    globalCertificateName = settings.ed_ClientCertNameReskassa;
+                    msAuthScope = settings.ed_JojoCardDetailsScope;
+                }
+                else
+                {
+                    HttpResponseMessage badReqSetting = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                    badReqSetting.Content = new StringContent("Could not find a Settings Information from CRM (CaptureOrderWithCardNumber)");
 
                         answer = "ERROR - " + new StringContent("Could not find a Settings Information from CRM (CaptureOrderWithCardNumber)");
                         return answer;
