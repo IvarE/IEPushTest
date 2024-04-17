@@ -104,7 +104,7 @@ namespace TicketPurchaseService
             JobDataMap jobDataMap = new JobDataMap();
             jobDataMap[PopulateTPJob.DataMapModifiedAfter] = DateTime.Now;
 
-            _log.Info($"Scheduling UploadJob");
+            _log.Info($"Scheduling PopulateTPJob");
 
             IJobDetail scheduleJob = JobBuilder.Create<PopulateTPJob>()
             .WithIdentity(PopulateTPJob.JobName, PopulateTPJob.GroupName)
