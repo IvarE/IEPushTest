@@ -3183,6 +3183,11 @@ namespace Skanetrafiken.Crm.Entities
                 contact.ed_Address1_Country = lead.ed_Address1_Country;
             }
 
+            if(string.IsNullOrWhiteSpace(contact.FirstName) && !string.IsNullOrWhiteSpace(lead.FirstName))
+                contact.FirstName = lead.FirstName;
+            if (string.IsNullOrWhiteSpace(contact.LastName) && !string.IsNullOrWhiteSpace(lead.LastName))
+                contact.LastName = lead.LastName;
+
             contact.OriginatingLeadId = lead.ToEntityReference();
         }
 
