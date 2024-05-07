@@ -60517,7 +60517,23 @@ namespace Skanetrafiken.Crm.Schema.Generated
 				this.SetAttributeValue("ed_biljettid", value);
 			}
 		}
-		
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_tag")]
+		public string ed_tag
+		{
+			get
+			{
+				return this.GetAttributeValue<string>("ed_tag");
+			}
+			set
+			{
+				this.SetAttributeValue("ed_tag", value);
+			}
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -62018,7 +62034,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_ArrivalDate = "ed_arrivaldate";
 			
 			public const string ed_BiljettID = "ed_biljettid";
-			
+
+			public const string ed_tag = "ed_tag";
+
 			public const string ed_Campaign = "ed_campaign";
 			
 			public const string ed_CampaignNumber = "ed_campaignnumber";
@@ -62154,7 +62172,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		{
 			
 			public const int ed_BiljettID = 100;
-			
+
+			public const int ed_tag = 1000;
+
 			public const int ed_CampaignNumber = 100;
 			
 			public const int ed_CaseNumber = 100;

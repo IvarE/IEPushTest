@@ -86,7 +86,7 @@ namespace Skanetrafiken.Crm.Models
     {
         public decimal amount { get; set; }
         public DateTime created { get; set; }
-        public string tag { get; set; } //Skip
+        public string tag { get; set; } 
         public int voucherType { get; set; } //ed_valuecodetypeglobal
         public decimal? remainingAmount { get; set; } //Skip
         public DateTime? disabled { get; set; } //Redeemed
@@ -171,7 +171,8 @@ namespace Skanetrafiken.Crm.Models
                                     ed_CodeId = voucherCode,
                                     //ed_Ean = eanCode?.ToString(),
                                     ed_OriginalAmount = amount,
-                                    ed_ValueCodeVoucherId = voucherId.ToString()
+                                    ed_ValueCodeVoucherId = voucherId.ToString(),
+                                    ed_tag = tag
                                 };
 
                                 switch (this.voucherType)
@@ -203,17 +204,30 @@ namespace Skanetrafiken.Crm.Models
                                 }
 
                             //Handle updates where ValueCode has been canceled by Voucher Service (status 4 = Canceled)
-                            if (this.status == 4)
-                            {
-                                var updateValueCode = new ValueCodeEntity()
+                                if (this.status == 4)
                                 {
-                                    Id = newValueCode.Id,
-                                    ed_Amount = new Money(this.amount),
-                                    ed_RedemptionDate = redeemed,
-                                    ed_CanceledOn = (DateTime?)DateTime.UtcNow
-                                };
+                                    var updateValueCode = new ValueCodeEntity()
+                                    {
+                                        Id = newValueCode.Id,
+                                        ed_Amount = new Money(this.amount),
+                                        ed_RedemptionDate = redeemed,
+                                        ed_CanceledOn = (DateTime?)DateTime.UtcNow,
+                                        ed_tag = tag
+                                    };
 
-                                    UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
+                                        UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
+                                }
+                                else if (this.status == 2)
+                                {
+                                    var updateValueCode = new ValueCodeEntity()
+                                    {
+                                        Id = newValueCode.Id,
+                                        ed_Amount = new Money(this.amount),
+                                        ed_RedemptionDate = redeemed,
+                                        ed_tag = tag
+                                    };
+
+                                    UpdateValueCodeRecordAndExpired(localContext, updateValueCode);
                                 }
                                 else if (this.amount <= 0)
                                 {
@@ -253,11 +267,24 @@ namespace Skanetrafiken.Crm.Models
                                             Id = valueCode.Id,
                                             ed_Amount = new Money(this.amount),
                                             ed_RedemptionDate = redeemed,
-                                            ed_CanceledOn = (DateTime?)DateTime.UtcNow
+                                            ed_CanceledOn = (DateTime?)DateTime.UtcNow,
+                                            ed_tag = tag
                                         };
 
                                         UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
                                     }
+                                }
+                                else if (this.status == 2)
+                                {
+                                    var updateValueCode = new ValueCodeEntity()
+                                    {
+                                        Id = valueCode.Id,
+                                        ed_Amount = new Money(this.amount),
+                                        ed_RedemptionDate = redeemed,
+                                        ed_tag = tag
+                                    };
+
+                                    UpdateValueCodeRecordAndExpired(localContext, updateValueCode);
                                 }
                                 else if (this.amount <= 0)
                                 {
@@ -265,7 +292,8 @@ namespace Skanetrafiken.Crm.Models
                                     {
                                         Id = valueCode.Id,
                                         ed_Amount = new Money(this.amount),
-                                        ed_RedemptionDate = redeemed
+                                        ed_RedemptionDate = redeemed,
+                                        ed_tag = tag
                                     };
 
                                     UpdateValueCodeRecordAndDeactivate(localContext, updateValueCode);
@@ -288,7 +316,8 @@ namespace Skanetrafiken.Crm.Models
                                         var updateValueCode = new ValueCodeEntity()
                                         {
                                             Id = valueCode.Id,
-                                            ed_Amount = new Money(this.amount)
+                                            ed_Amount = new Money(this.amount),
+                                            ed_tag = tag
                                         };
 
                                         XrmHelper.Update(localContext.OrganizationService, updateValueCode);
@@ -298,7 +327,8 @@ namespace Skanetrafiken.Crm.Models
                                         var updateValueCode = new ValueCodeEntity()
                                         {
                                             Id = valueCode.Id,
-                                            ed_Amount = new Money(this.amount)
+                                            ed_Amount = new Money(this.amount),
+                                            ed_tag = tag
                                         };
 
                                         XrmHelper.Update(localContext.OrganizationService, updateValueCode);
@@ -319,18 +349,19 @@ namespace Skanetrafiken.Crm.Models
                             if (valueCode == null)
                             {
 
-                            ValueCodeEntity newValueCode = new ValueCodeEntity()
-                            {
-                                ed_name = voucherId.ToString(),
-                                ed_Amount = new Money(amount),
-                                ed_CreatedTimestamp = created,
-                                //ed_LastRedemptionDate = validToDate, //Changed in VoucherService 2.0
-                                //ed_ValidUntil = validToDate, //Changed in VoucherService 2.0
-                                ed_CodeId = voucherCode,
-                                //ed_Ean = eanCode?.ToString(), //Changed in VoucherService 2.0
-                                ed_OriginalAmount = amount,
-                                ed_ValueCodeVoucherId = voucherId.ToString()
-                            };
+                                ValueCodeEntity newValueCode = new ValueCodeEntity()
+                                {
+                                    ed_name = voucherId.ToString(),
+                                    ed_Amount = new Money(amount),
+                                    ed_CreatedTimestamp = created,
+                                    //ed_LastRedemptionDate = validToDate, //Changed in VoucherService 2.0
+                                    //ed_ValidUntil = validToDate, //Changed in VoucherService 2.0
+                                    ed_CodeId = voucherCode,
+                                    //ed_Ean = eanCode?.ToString(), //Changed in VoucherService 2.0
+                                    ed_OriginalAmount = amount,
+                                    ed_ValueCodeVoucherId = voucherId.ToString(),
+                                    ed_tag = tag
+                                };
 
                                 switch (voucherType)
                                 {
@@ -360,36 +391,49 @@ namespace Skanetrafiken.Crm.Models
                                     XrmHelper.Update(localContext, newValueCode);
                                 }
 
-                            //Handle updates where ValueCode has been canceled by Voucher Service (status 4 = Canceled)
-                            //1 = Activated
-                            //2 = Expired
-                            //3 = Used Up
-                            //4 = Cancelled
-                            if (/*this.status == 3 ||*/ this.status == 4)
-                            {
-                                var updateValueCode = new ValueCodeEntity()
+                                //Handle updates where ValueCode has been canceled by Voucher Service (status 4 = Canceled)
+                                //1 = Activated
+                                //2 = Expired
+                                //3 = Used Up
+                                //4 = Cancelled
+                                if (/*this.status == 3 ||*/ this.status == 4)
                                 {
-                                    Id = newValueCode.Id,
-                                    ed_Amount = new Money(this.amount),
-                                    ed_RedemptionDate = redeemed,
-                                    ed_CanceledOn = (DateTime?)DateTime.UtcNow
-                                };
+                                    var updateValueCode = new ValueCodeEntity()
+                                    {
+                                        Id = newValueCode.Id,
+                                        ed_Amount = new Money(this.amount),
+                                        ed_RedemptionDate = redeemed,
+                                        ed_CanceledOn = (DateTime?)DateTime.UtcNow,
+                                        ed_tag = tag
+                                    };
 
-                                UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
+                                    UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
+                                }
+                                else if (this.status == 2)
+                                {
+                                    var updateValueCode = new ValueCodeEntity()
+                                    {
+                                        Id = newValueCode.Id,
+                                        ed_Amount = new Money(this.amount),
+                                        ed_RedemptionDate = redeemed,
+                                        ed_tag = tag
+                                    };
+
+                                    UpdateValueCodeRecordAndExpired(localContext, updateValueCode);
+                                }
+                                else if (this.amount <= 0 || this.status == 3)
+                                {
+                                    newValueCode.ed_RedemptionDate = redeemed;
+                                    UpdateValueCodeRecordAndDeactivate(localContext, newValueCode);
+                                }
+                                else
+                                {
+
+                                    XrmHelper.Update(localContext.OrganizationService, newValueCode);
+
+                                }
+
                             }
-                            else if (this.amount <= 0 || this.status == 3)
-                            {
-                                newValueCode.ed_RedemptionDate = redeemed;
-                                UpdateValueCodeRecordAndDeactivate(localContext, newValueCode);
-                            }
-                            else
-                            {
-
-                                XrmHelper.Update(localContext.OrganizationService, newValueCode);
-
-                            }
-
-                        }
                         // Presentkort
                         else if ((int)valueCode.ed_ValueCodeTypeGlobal.Value == 2)
                         {
@@ -401,10 +445,23 @@ namespace Skanetrafiken.Crm.Models
                                     Id = valueCode.Id,
                                     ed_Amount = new Money(this.amount),
                                     ed_RedemptionDate = redeemed,
-                                    ed_CanceledOn = (DateTime?)DateTime.UtcNow
+                                    ed_CanceledOn = (DateTime?)DateTime.UtcNow,
+                                    ed_tag = tag
                                 };
 
                                 UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
+                            }
+                            else if (this.status == 2)
+                            {
+                                    var updateValueCode = new ValueCodeEntity()
+                                    {
+                                        Id = valueCode.Id,
+                                        ed_Amount = new Money(this.amount),
+                                        ed_RedemptionDate = redeemed,
+                                        ed_tag = tag
+                                    };
+
+                                    UpdateValueCodeRecordAndExpired(localContext, updateValueCode);
                             }
                             else if (this.amount <= 0 || this.status == 3)
                             {
@@ -423,10 +480,10 @@ namespace Skanetrafiken.Crm.Models
                                     SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
 
                                     // TODO : Marcus Generate
-                                }
-                                else
-                                {
-                                    valueCode.ed_Amount = new Money(this.amount);
+                            }
+                            else
+                            {
+                                valueCode.ed_Amount = new Money(this.amount);
 
                                 XrmHelper.Update(localContext.OrganizationService, valueCode);
                             }
@@ -443,25 +500,38 @@ namespace Skanetrafiken.Crm.Models
                                     Id = valueCode.Id,
                                     ed_Amount = new Money(this.amount),
                                     ed_RedemptionDate = redeemed,
-                                    ed_CanceledOn = (DateTime?)DateTime.UtcNow
+                                    ed_CanceledOn = (DateTime?)DateTime.UtcNow,
+                                    ed_tag = tag
                                 };
 
                                     UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
-                                }
-                                else if (this.amount > 0
+                            }
+                            else if (this.status == 2)
+                            {
+                                    var updateValueCode = new ValueCodeEntity()
+                                    {
+                                        Id = valueCode.Id,
+                                        ed_Amount = new Money(this.amount),
+                                        ed_RedemptionDate = redeemed,
+                                        ed_tag = tag
+                                    };
+
+                                    UpdateValueCodeRecordAndExpired(localContext, updateValueCode);
+                            }
+                            else if (this.amount > 0
                                     && (int)valueCode.ed_ValueCodeTypeGlobal.Value != 1
                                     && (int)valueCode.ed_ValueCodeTypeGlobal.Value != 3
                                     && (int)valueCode.ed_ValueCodeTypeGlobal.Value != 4) //This should be modified according to new DevOps Task: 3888
-                                {
+                            {
                                     valueCode.ed_Amount = new Money(this.amount);
                                     XrmHelper.Update(localContext, valueCode);
-                                }
-                                else
-                                {
+                            }
+                            else
+                            {
                                     valueCode.ed_Amount = new Money(0);
                                     valueCode.ed_RedemptionDate = redeemed;
                                     UpdateValueCodeRecordAndDeactivate(localContext, valueCode);
-                                }
+                            }
                             }
 
                             CreateValueCodeTransaction(threadId, localContext, valueCode, _logger);
@@ -549,6 +619,19 @@ namespace Skanetrafiken.Crm.Models
                 EntityMoniker = valueCode.ToEntityReference(),
                 State = new OptionSetValue((int)Generated.ed_ValueCodeState.Inactive),
                 Status = new OptionSetValue((int)ValueCodeEntity.Status.Makulerad)
+            };
+            SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
+        }
+
+        private void UpdateValueCodeRecordAndExpired(Plugin.LocalPluginContext localContext, ValueCodeEntity valueCode)
+        {
+            XrmHelper.Update(localContext.OrganizationService, valueCode);
+
+            SetStateRequest req = new SetStateRequest()
+            {
+                EntityMoniker = valueCode.ToEntityReference(),
+                State = new OptionSetValue((int)Generated.ed_ValueCodeState.Inactive),
+                Status = new OptionSetValue((int)ValueCodeEntity.Status.Forfallen)
             };
             SetStateResponse resp = (SetStateResponse)localContext.OrganizationService.Execute(req);
         }
