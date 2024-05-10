@@ -172,7 +172,7 @@ namespace Skanetrafiken.Crm.Models
                                     //ed_Ean = eanCode?.ToString(),
                                     ed_OriginalAmount = amount,
                                     ed_ValueCodeVoucherId = voucherId.ToString(),
-                                    ed_tag = tag
+                                    st_tag = tag
                                 };
 
                                 switch (this.voucherType)
@@ -212,7 +212,7 @@ namespace Skanetrafiken.Crm.Models
                                         ed_Amount = new Money(this.amount),
                                         ed_RedemptionDate = redeemed,
                                         ed_CanceledOn = (DateTime?)DateTime.UtcNow,
-                                        ed_tag = tag
+                                        st_tag = tag
                                     };
 
                                         UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
@@ -224,7 +224,7 @@ namespace Skanetrafiken.Crm.Models
                                         Id = newValueCode.Id,
                                         ed_Amount = new Money(this.amount),
                                         ed_RedemptionDate = redeemed,
-                                        ed_tag = tag
+                                        st_tag = tag
                                     };
 
                                     UpdateValueCodeRecordAndExpired(localContext, updateValueCode);
@@ -268,7 +268,7 @@ namespace Skanetrafiken.Crm.Models
                                             ed_Amount = new Money(this.amount),
                                             ed_RedemptionDate = redeemed,
                                             ed_CanceledOn = (DateTime?)DateTime.UtcNow,
-                                            ed_tag = tag
+                                            st_tag = tag
                                         };
 
                                         UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
@@ -281,7 +281,7 @@ namespace Skanetrafiken.Crm.Models
                                         Id = valueCode.Id,
                                         ed_Amount = new Money(this.amount),
                                         ed_RedemptionDate = redeemed,
-                                        ed_tag = tag
+                                        st_tag = tag
                                     };
 
                                     UpdateValueCodeRecordAndExpired(localContext, updateValueCode);
@@ -293,7 +293,7 @@ namespace Skanetrafiken.Crm.Models
                                         Id = valueCode.Id,
                                         ed_Amount = new Money(this.amount),
                                         ed_RedemptionDate = redeemed,
-                                        ed_tag = tag
+                                        st_tag = tag
                                     };
 
                                     UpdateValueCodeRecordAndDeactivate(localContext, updateValueCode);
@@ -317,7 +317,7 @@ namespace Skanetrafiken.Crm.Models
                                         {
                                             Id = valueCode.Id,
                                             ed_Amount = new Money(this.amount),
-                                            ed_tag = tag
+                                            st_tag = tag
                                         };
 
                                         XrmHelper.Update(localContext.OrganizationService, updateValueCode);
@@ -328,7 +328,7 @@ namespace Skanetrafiken.Crm.Models
                                         {
                                             Id = valueCode.Id,
                                             ed_Amount = new Money(this.amount),
-                                            ed_tag = tag
+                                            st_tag = tag
                                         };
 
                                         XrmHelper.Update(localContext.OrganizationService, updateValueCode);
@@ -360,7 +360,7 @@ namespace Skanetrafiken.Crm.Models
                                     //ed_Ean = eanCode?.ToString(), //Changed in VoucherService 2.0
                                     ed_OriginalAmount = amount,
                                     ed_ValueCodeVoucherId = voucherId.ToString(),
-                                    ed_tag = tag
+                                    st_tag = tag
                                 };
 
                                 switch (voucherType)
@@ -404,7 +404,7 @@ namespace Skanetrafiken.Crm.Models
                                         ed_Amount = new Money(this.amount),
                                         ed_RedemptionDate = redeemed,
                                         ed_CanceledOn = (DateTime?)DateTime.UtcNow,
-                                        ed_tag = tag
+                                        st_tag = tag
                                     };
 
                                     UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
@@ -416,7 +416,7 @@ namespace Skanetrafiken.Crm.Models
                                         Id = newValueCode.Id,
                                         ed_Amount = new Money(this.amount),
                                         ed_RedemptionDate = redeemed,
-                                        ed_tag = tag
+                                        st_tag = tag
                                     };
 
                                     UpdateValueCodeRecordAndExpired(localContext, updateValueCode);
@@ -446,7 +446,7 @@ namespace Skanetrafiken.Crm.Models
                                     ed_Amount = new Money(this.amount),
                                     ed_RedemptionDate = redeemed,
                                     ed_CanceledOn = (DateTime?)DateTime.UtcNow,
-                                    ed_tag = tag
+                                    st_tag = tag
                                 };
 
                                 UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
@@ -458,7 +458,7 @@ namespace Skanetrafiken.Crm.Models
                                         Id = valueCode.Id,
                                         ed_Amount = new Money(this.amount),
                                         ed_RedemptionDate = redeemed,
-                                        ed_tag = tag
+                                        st_tag = tag
                                     };
 
                                     UpdateValueCodeRecordAndExpired(localContext, updateValueCode);
@@ -501,7 +501,7 @@ namespace Skanetrafiken.Crm.Models
                                     ed_Amount = new Money(this.amount),
                                     ed_RedemptionDate = redeemed,
                                     ed_CanceledOn = (DateTime?)DateTime.UtcNow,
-                                    ed_tag = tag
+                                    st_tag = tag
                                 };
 
                                     UpdateValueCodeRecordAndCancel(localContext, updateValueCode);
@@ -513,7 +513,7 @@ namespace Skanetrafiken.Crm.Models
                                         Id = valueCode.Id,
                                         ed_Amount = new Money(this.amount),
                                         ed_RedemptionDate = redeemed,
-                                        ed_tag = tag
+                                        st_tag = tag
                                     };
 
                                     UpdateValueCodeRecordAndExpired(localContext, updateValueCode);
