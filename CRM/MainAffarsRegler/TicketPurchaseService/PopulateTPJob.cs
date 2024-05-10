@@ -66,7 +66,14 @@ namespace TicketPurchaseService
                 //GET ALL customer data
                 IList<TicketPurchasesPerCustomerDataEntity> ticketInfoData = FetchABatchOfActiveQueuePosts(localContext);
                  ticketInfoData = ticketInfoData.OrderBy(t => t.ed_MKLid).ToList(); //IMPORTANT to sort by MKLId, one contact could have multipe tickets
-                  
+
+                if (ticketInfoData.Count > 1000000) //if over 1mil, something is wrong (DB failover, CRM DB is point to secondary server) each day should have around 40 000 to 50 000 records
+                {//STOP
+                    _log.Info($"TicketPurchaseService job canceled, there are to much data to update: {ticketInfoData.Count}");
+                    LogWithTask(localContext, "\r\n"+ $"TicketPurchaseService job canceled, there are to much data to update: {ticketInfoData.Count}", taskLogUpdate);
+                    return;
+                }
+
                 _log.Info($"Fetching all Contact");
 
                 TimeSpan _diff = DateTime.Now - _startTimeX;
