@@ -59,7 +59,7 @@ namespace Skanetrafiken.Crm.Tests
             ContactEntity preImage = fixture.Create<ContactEntity>();
 
             // Act
-            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage, preImage);
+            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage/*, preImage*/);
 
             // Assert
             organizationServiceMock.Verify(service =>
@@ -91,7 +91,7 @@ namespace Skanetrafiken.Crm.Tests
                                  .Create();
 
             // Act
-            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage, preImage);
+            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage/*, preImage*/);
 
             // Assert
             organizationServiceMock.Verify(service =>
@@ -117,7 +117,7 @@ namespace Skanetrafiken.Crm.Tests
             ContactEntity preImage = fixture.Create<ContactEntity>();
 
             // Act
-            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage, preImage);
+            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage/*, preImage*/);
 
             // Assert
             organizationServiceMock.Verify(service =>
@@ -149,7 +149,7 @@ namespace Skanetrafiken.Crm.Tests
                                              .Create();
 
             // Act
-            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage, preImage);
+            contact.ClearContactFieldsRelatedToSSN(pluginContext, postImage/*, preImage*/);
 
             // Assert
             organizationServiceMock.Verify(service =>

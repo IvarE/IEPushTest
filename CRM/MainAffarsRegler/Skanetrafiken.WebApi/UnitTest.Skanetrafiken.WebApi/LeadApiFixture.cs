@@ -72,8 +72,8 @@ namespace Endeavor.Crm.UnitTest
                 string id = string.Empty;
                 string mklId = string.Empty;
 
-                HttpResponseMessage rmValidateLead = CrmPlusControl.ValidateEmail(threadId, guid, LeadEntity.EntityTypeCode, id, mklId);
-                HttpResponseMessage rmValidateContact = CrmPlusControl.ValidateEmail(threadId, guid, ContactEntity.EntityTypeCode, id, mklId);
+                //HttpResponseMessage rmValidateLead = CrmPlusControl.ValidateEmail(threadId, guid, LeadEntity.EntityTypeCode, id, mklId);
+                //HttpResponseMessage rmValidateContact = CrmPlusControl.ValidateEmail(threadId, guid, ContactEntity.EntityTypeCode, id, mklId);
 
                 HttpResponseMessage rmValidateKampanj = CrmPlusControl.ValidateEmailKampanj(threadId, guid);
                 

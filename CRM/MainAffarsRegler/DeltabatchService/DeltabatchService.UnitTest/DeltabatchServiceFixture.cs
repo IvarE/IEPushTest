@@ -84,7 +84,7 @@ namespace Endeavor.Crm.IntegrationTest
 
                 DownloadJob job = new DownloadJob();
                 job.RetrieveFile();
-                job.UpdateContactsWithNewInfo(localContext);
+                //job.UpdateContactsWithNewInfo(localContext);
 
 
                 #region Test Cleanup

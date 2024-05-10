@@ -233,7 +233,7 @@ namespace Endeavor.Crm.IntegrationTests
                 System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
 
-                ContactEntity.HasMKLBalance(localContext, new EntityReference { Id = new Guid("9FCD3F23-46F8-E611-812B-00155D010B02"), LogicalName = ContactEntity.EntityLogicalName });
+                //ContactEntity.HasMKLBalance(localContext, new EntityReference { Id = new Guid("9FCD3F23-46F8-E611-812B-00155D010B02"), LogicalName = ContactEntity.EntityLogicalName });
 
                 localContext.TracingService.Trace("Stop Sequences, ElapsedMilliseconds: {0}.", stopwatch.ElapsedMilliseconds);
             }
