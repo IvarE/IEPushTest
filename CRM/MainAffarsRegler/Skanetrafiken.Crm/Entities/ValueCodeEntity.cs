@@ -527,7 +527,7 @@ namespace Skanetrafiken.Crm.Entities
 
                                     //Create stream so that you can send a JSON object as body of content so that you include CancelledBy and VoucherId
                                     Skanetrafiken.Crm.ValueCodes.ValueCodeHandler.ValueCodeCancelRequest cancelValueCodeRequestObj = new ValueCodes.ValueCodeHandler.ValueCodeCancelRequest();
-                                    cancelValueCodeRequestObj.voucherId = valueCode.Id.ToString();
+                                    cancelValueCodeRequestObj.voucherId = valueCode.ed_ValueCodeVoucherId; //valueCode.Id.ToString();
                                     cancelValueCodeRequestObj.cancelledBy = cancelledBy;
                                     DataContractJsonSerializer js = null;
                                     MemoryStream msObj = new MemoryStream();
@@ -611,7 +611,7 @@ namespace Skanetrafiken.Crm.Entities
                         if (successValueCodes != "" && nrCanceled > 0)
                             returnString = $"200 = Canceled {nrCanceled} Ids. Failed: {nrFailed} ->{errorValueCodes}";
                         else
-                            returnString = $"400 = Failed to cancel Ids. ResponseCodes: {responseCodes} Failed: {nrFailed} ->{errorValueCodes}";
+                            returnString = $"Failed to cancel Ids. ResponseCodes: {responseCodes} Failed: {nrFailed} ->{errorValueCodes}";
 
                         return returnString;
                     }
