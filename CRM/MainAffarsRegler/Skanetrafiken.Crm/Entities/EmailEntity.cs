@@ -25,7 +25,6 @@ namespace Skanetrafiken.Crm.Entities
         /// </summary>
         public static string ReplacePlaceHolders(Plugin.LocalPluginContext localContext, string text, Entity entity)
         {
-            localContext.TracingService.Trace("Entered function ReplacePlaceHolders");
             string prefix = entity.LogicalName;
 
 
@@ -86,8 +85,6 @@ namespace Skanetrafiken.Crm.Entities
         /// </summary>
         public static EmailEntity CreateEmailFromTemplate(Plugin.LocalPluginContext localContext, TemplateEntity template, EntityReference to, IList<Entity> placeHolderEntities = null)
         {
-            localContext.TracingService.Trace("CreateEmailFromTemplate");
-            
             EmailEntity email = template.InstantiateTemplate(localContext, to);
 
             // Fill email with data

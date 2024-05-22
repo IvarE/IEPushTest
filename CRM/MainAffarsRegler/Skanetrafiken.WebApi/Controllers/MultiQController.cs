@@ -1,5 +1,6 @@
 ﻿using Skanetrafiken.Crm.Models;
 using Skanetrafiken.Crm.Properties;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -11,6 +12,10 @@ namespace Skanetrafiken.Crm.Controllers
     public class MultiQController : WrapperController
     {
         private string _prefix = "MultiQ";
+        private static Dictionary<string, string> _exceptionCustomProperties = new Dictionary<string, string>()
+        {
+            { "source", "" }
+        };
 
         [HttpGet]
         public HttpResponseMessage Get()
@@ -37,25 +42,40 @@ namespace Skanetrafiken.Crm.Controllers
         {
             int threadId = Thread.CurrentThread.ManagedThreadId;
 
-            // TOKEN VERIFICATION - TO CHECK
-            //try
-            //{
-            //    HttpResponseMessage tokenResp = TokenValidation();
-            //    if (tokenResp.StatusCode != HttpStatusCode.OK)
-            //    {
-            //        return tokenResp;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-            //    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-            //    return rm;
-            //}
+            using (var _logger = new AppInsightsLogger())
+            {
+                _logger.SetGlobalProperty("source", _prefix);
 
-            HttpResponseMessage resp = CrmPlusControl.GetOrders(threadId, probability, _prefix);
+                try
+                {
+                    // TOKEN VERIFICATION - TO CHECK
+                    //try
+                    //{
+                    //    HttpResponseMessage tokenResp = TokenValidation();
+                    //    if (tokenResp.StatusCode != HttpStatusCode.OK)
+                    //    {
+                    //        return tokenResp;
+                    //    }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                    //    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                    //    return rm;
+                    //}
 
-            return resp;
+                    HttpResponseMessage resp = CrmPlusControl.GetOrders(threadId, probability, _prefix);
+
+                    return resp;
+                }
+                catch (Exception ex)
+                {
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
+
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "GetOrders", string.Format(Resources.UnexpectedException), _logger);
+                }
+            }
         }
 
         /// <summary>

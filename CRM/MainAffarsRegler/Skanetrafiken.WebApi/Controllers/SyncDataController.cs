@@ -1,4 +1,5 @@
 ﻿using Skanetrafiken.Crm.Properties;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -17,6 +18,10 @@ namespace Skanetrafiken.Crm.Controllers
     public class SyncDataController : WrapperController
     {
         private string _prefix = "SyncData";
+        private static Dictionary<string, string> _exceptionCustomProperties = new Dictionary<string, string>()
+        {
+            { "source", "" }
+        };
 
         //[HttpGet]
         //public HttpResponseMessage Get()
@@ -73,34 +78,43 @@ namespace Skanetrafiken.Crm.Controllers
         {
             using (var _logger = new AppInsightsLogger())
             {
-
-
-                int threadId = Thread.CurrentThread.ManagedThreadId;
-
-                if (string.IsNullOrEmpty(syncContact.SocialSecurityNumber) || string.IsNullOrEmpty(syncContact.PortalId) || string.IsNullOrEmpty(syncContact.EmailAddress))
+                _logger.SetGlobalProperty("source", _prefix);
+                try
                 {
-                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "SyncContact", Resources.IncomingDataCannotBeNull, _logger);
+                    int threadId = Thread.CurrentThread.ManagedThreadId;
+
+                    if (string.IsNullOrEmpty(syncContact.SocialSecurityNumber) || string.IsNullOrEmpty(syncContact.PortalId) || string.IsNullOrEmpty(syncContact.EmailAddress))
+                    {
+                        return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "SyncContact", Resources.IncomingDataCannotBeNull, _logger);
+                    }
+
+                    //// TOKEN VERIFICATION - TO CHECK
+                    //try
+                    //{
+                    //    HttpResponseMessage tokenResp = TokenValidation();
+                    //    if (tokenResp.StatusCode != HttpStatusCode.OK)
+                    //    {
+                    //        return tokenResp;
+                    //    }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    HttpResponseMessage tokenResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                    //    tokenResponse.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                    //    return tokenResponse;
+                    //}
+
+                    HttpResponseMessage rm = CrmPlusControl.SynchronizeContactData(threadId, syncContact.SocialSecurityNumber, syncContact.PortalId, syncContact.EmailAddress, _prefix);
+
+                    return rm;
                 }
+                catch (Exception ex)
+                {
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
 
-                //// TOKEN VERIFICATION - TO CHECK
-                //try
-                //{
-                //    HttpResponseMessage tokenResp = TokenValidation();
-                //    if (tokenResp.StatusCode != HttpStatusCode.OK)
-                //    {
-                //        return tokenResp;
-                //    }
-                //}
-                //catch (Exception ex)
-                //{
-                //    HttpResponseMessage tokenResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                //    tokenResponse.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                //    return tokenResponse;
-                //}
-
-                HttpResponseMessage rm = CrmPlusControl.SynchronizeContactData(threadId, syncContact.SocialSecurityNumber, syncContact.PortalId, syncContact.EmailAddress, _prefix);
-
-                return rm;
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "SyncContact", string.Format(Resources.UnexpectedException), _logger);
+                }
             }
         }
     }

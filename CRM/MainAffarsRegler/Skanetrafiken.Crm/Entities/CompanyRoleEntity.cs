@@ -101,7 +101,6 @@ namespace Skanetrafiken.Crm.Entities
             // Role Name
             if (!string.IsNullOrWhiteSpace(roleName) && !roleName.Equals(oldRole.ed_name))
             {
-                localContext.TracingService.Trace("Updating Role Name");
                 updateRole.ed_name = roleName;
                 roleUpdated = true;
             }
@@ -137,7 +136,6 @@ namespace Skanetrafiken.Crm.Entities
             // Update Role Email
             if (!string.IsNullOrWhiteSpace(companyRole.Email) && !companyRole.Email.Equals(oldRole.ed_EmailAddress))
             {
-                localContext.TracingService.Trace("Updating Email");
                 updateRole.ed_EmailAddress = companyRole.Email;
                 roleUpdated = true;
             }
@@ -152,7 +150,6 @@ namespace Skanetrafiken.Crm.Entities
             // Update Role Telephone
             if (!string.IsNullOrWhiteSpace(companyRole.Telephone) && !companyRole.Telephone.Equals(oldRole.ed_Telephone))
             {
-                localContext.TracingService.Trace("Updating Telephone");
                 updateRole.ed_Telephone = companyRole.Telephone;
                 roleUpdated = true;
             }
@@ -166,7 +163,6 @@ namespace Skanetrafiken.Crm.Entities
 
             if (companyRole.isLockedPortalSpecified && !companyRole.isLockedPortal.Equals(oldRole.ed_isLockedPortal))
             {
-                localContext.TracingService.Trace("Updating IsLockedPortal");
                 updateRole.ed_isLockedPortal = companyRole.isLockedPortal;
                 roleUpdated = true;
             }

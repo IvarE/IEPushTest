@@ -33,6 +33,8 @@ namespace Skanetrafiken.Crm.Controllers
         {
             using (var _logger = new AppInsightsLogger())
             {
+                _logger.SetGlobalProperty("source", _prefix);
+
                 int threadId = Thread.CurrentThread.ManagedThreadId;
 
                 if (salesOrderInfo == null)
@@ -106,9 +108,7 @@ namespace Skanetrafiken.Crm.Controllers
                     _exceptionCustomProperties["source"] = _prefix;
                     _logger.LogException(ex, _exceptionCustomProperties);
 
-                    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                    return rm;
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "Post", string.Format(Resources.UnexpectedException), _logger);
                 }
                 finally
                 {
@@ -174,9 +174,7 @@ namespace Skanetrafiken.Crm.Controllers
                     _exceptionCustomProperties["source"] = _prefix;
                     _logger.LogException(ex, _exceptionCustomProperties);
 
-                    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                    return rm;
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "Put", string.Format(Resources.UnexpectedException), _logger);
                 }
                 finally
                 {

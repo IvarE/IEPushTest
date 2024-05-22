@@ -17,8 +17,6 @@ namespace Skanetrafiken.Crm.Entities
     {
         public EmailEntity InstantiateTemplate(Plugin.LocalPluginContext localContext, EntityReference to)
         {
-            localContext.TracingService.Trace("TemplateEntity.InstantiateTemplate");
-
             // Create an e-mail message using a template.
             InstantiateTemplateRequest templateReq = new InstantiateTemplateRequest
             {

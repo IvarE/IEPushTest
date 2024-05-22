@@ -108,6 +108,7 @@ namespace Skanetrafiken.Crm.Controllers
             using (var _logger = new AppInsightsLogger())
             {
                 _logger.SetGlobalProperty("source", _prefix);
+
                 int threadId = Thread.CurrentThread.ManagedThreadId;
 
                 if (encryptedUrl == string.Empty)

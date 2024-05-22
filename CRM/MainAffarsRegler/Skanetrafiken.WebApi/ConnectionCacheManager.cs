@@ -66,8 +66,6 @@ namespace Skanetrafiken.Crm
                 int i = 0;
                 while (true)
                 {
-                    if (i > 4)
-                        _logger.LogInformation("CAUTION!! More than 5 connections are booked in the Manager. Possible bug.");
 
                     bool isBooked = false;
                     foreach (Tuple<int, string> booking in bookingList)

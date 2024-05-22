@@ -22,7 +22,6 @@ namespace Skanetrafiken.Crm.Entities
         /// <returns></returns>
         public static OrderStatusEntity FindOrCreateOrderStatus(Plugin.LocalPluginContext localContext, string orderLineStatus)
         {
-            localContext.TracingService.Trace($"Entering FindOrCreateOrderStatus");
             var query = new QueryExpression()
             {
                 EntityName = OrderStatusEntity.EntityLogicalName,
@@ -37,8 +36,6 @@ namespace Skanetrafiken.Crm.Entities
                 }
             };
 
-            localContext.TracingService.Trace($"Query for OrderStatus with status '{orderLineStatus}'.");
-
             OrderStatusEntity ordStatus = XrmRetrieveHelper.RetrieveFirst<OrderStatusEntity>(localContext, query);
 
             if (ordStatus == null)
@@ -49,12 +46,10 @@ namespace Skanetrafiken.Crm.Entities
                     ed_name = orderLineStatus
                 };
 
-                localContext.TracingService.Trace($"Creating a new Orderstatus with status '{orderLineStatus}'.");
                 newOrderStatus.Id = XrmHelper.Create(localContext, newOrderStatus);
                 ordStatus = newOrderStatus;
             }
 
-            localContext.TracingService.Trace($"Exiting FindOrCreateOrderStatus");
             return ordStatus;
         }
     }

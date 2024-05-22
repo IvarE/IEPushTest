@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Skanetrafiken.Crm.Properties;
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -9,6 +11,10 @@ namespace Skanetrafiken.Crm.Controllers
     public class SlotsController : WrapperController
     {
         private string _prefix = "Slot";
+        private static Dictionary<string, string> _exceptionCustomProperties = new Dictionary<string, string>()
+        {
+            { "source", "" }
+        };
 
         [HttpGet]
         public HttpResponseMessage GetExcelBase64(string fromDate, string toDate)
@@ -17,6 +23,8 @@ namespace Skanetrafiken.Crm.Controllers
 
             using (var _logger = new AppInsightsLogger())
             {
+                _logger.SetGlobalProperty("source", _prefix);
+
                 if (string.IsNullOrWhiteSpace(fromDate))
                 {
                     return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetExcelBase64", "Could not find a 'fromDate' parameter in url", _logger);
@@ -27,9 +35,19 @@ namespace Skanetrafiken.Crm.Controllers
                     return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetExcelBase64", "Could not find a 'toDate' parameter in url", _logger);
                 }
 
-                HttpResponseMessage resp = CrmPlusControl.CreateExcelBase64(threadId, fromDate, toDate, _prefix);
+                try
+                {
+                    HttpResponseMessage resp = CrmPlusControl.CreateExcelBase64(threadId, fromDate, toDate, _prefix);
 
-                return resp;
+                    return resp;
+                }
+                catch (Exception ex)
+                {
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
+
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "GetExcelBase64", string.Format(Resources.UnexpectedException), _logger);
+                }
             }
         }
     }

@@ -523,8 +523,6 @@ namespace Skanetrafiken.Crm.Controllers
                                 }
                             };
 
-                            localContext.TracingService.Trace($"Query for SkaKort with card number '{salesOrderLineInfo.CardNumber}'");
-
                             skaKortEnt = XrmRetrieveHelper.RetrieveFirst<SkaKortEntity>(localContext, query);
 
                             if (skaKortEnt == null) //Do not create a new SkaKort if one already exists.
@@ -553,7 +551,6 @@ namespace Skanetrafiken.Crm.Controllers
                                 }
 
 
-                                localContext.TracingService.Trace($"Creating a new SkaKort.");
                                 skaKort.Trace(localContext.TracingService);
                                 skaKort.Id = XrmHelper.Create(localContext, skaKort);
 
@@ -1749,8 +1746,6 @@ namespace Skanetrafiken.Crm.Controllers
                             }
                             catch (Exception e)
                             {
-                                localContext.TracingService.Trace(string.Format("Inconcistency in Database. Unexpected exception caught:\n{0}", e.Message));
-
                                 _exceptionCustomProperties["source"] = prefix;
                                 _logger.LogException(e, _exceptionCustomProperties);
 
@@ -2003,7 +1998,6 @@ namespace Skanetrafiken.Crm.Controllers
                     }
 
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-                    _logger.LogInformation($"GetContact: Successfull");
                     resp.Content = new StringContent(SerializeNoNull(info));
                     return resp;
                 }
@@ -2074,7 +2068,6 @@ namespace Skanetrafiken.Crm.Controllers
                     linkProduct.Columns.AddColumns(ProductEntity.Fields.ProductNumber, ProductEntity.Fields.Name);
 
                     List<SlotsEntity> lSlots = XrmRetrieveHelper.RetrieveMultiple<SlotsEntity>(localContext, querySlots);
-                    localContext.Trace($"Found {lSlots.Count} relevant Slots to be exported.");
 
                     if (lSlots.Count == 0)
                     {
@@ -2158,7 +2151,6 @@ namespace Skanetrafiken.Crm.Controllers
                         XrmHelper.Update(localContext, uContact);
 
                         respMess = new HttpResponseMessage(HttpStatusCode.OK);
-                        _logger.LogInformation($"ClearMKLIdContact: Successfull");
                         respMess.Content = new StringContent(SerializeNoNull(contact.Id));
                     }
                     else if (lContacts.Count == 0)
@@ -2902,7 +2894,6 @@ namespace Skanetrafiken.Crm.Controllers
 
                     HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
                     string okMessage = "Account successfully created.";
-                    _logger.LogInformation($"{prefix}: Sucessfull - {okMessage}");
                     resp.Content = new StringContent(okMessage);
                     return resp;
 

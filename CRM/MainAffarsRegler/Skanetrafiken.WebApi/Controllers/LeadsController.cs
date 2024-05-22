@@ -22,24 +22,37 @@ namespace Skanetrafiken.Crm.Controllers
         {
             using (var _logger = new AppInsightsLogger())
             {
+                _logger.SetGlobalProperty("source", _prefix);
+
                 int threadId = Thread.CurrentThread.ManagedThreadId;
                 if (string.IsNullOrWhiteSpace(email))
                 {
                     return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetLatestLinkGuid", Resources.ParameterMissingEmail, _logger);
                 }
 
-                HttpResponseMessage linkGuidResponse = CrmPlusControl.RetrieveLeadLinkGuid(threadId, email);
-
-                return linkGuidResponse;
+                try
+                {
+                    HttpResponseMessage linkGuidResponse = CrmPlusControl.RetrieveLeadLinkGuid(threadId, email);
+                    return linkGuidResponse;
+                }
+                catch (Exception e)
+                {
+                    // Log to Application Insights
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(e, _exceptionCustomProperties);
+                    // Handle the exception
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "GetLatestLinkGuid", "An error occurred", _logger);
+                }
             }
         }
+
 
         [HttpGet]
         public HttpResponseMessage GetLeadInfo(string campaignCode)
         {
             using (var _logger = new AppInsightsLogger())
             {
-
+                _logger.SetGlobalProperty("source", _prefix);
 
                 int threadId = Thread.CurrentThread.ManagedThreadId;
                 if (string.IsNullOrWhiteSpace(campaignCode))
@@ -47,9 +60,19 @@ namespace Skanetrafiken.Crm.Controllers
                     return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Post", Resources.ParameterMissingCampaignCode, _logger);
                 }
 
-                HttpResponseMessage leadInformationResponse = CrmPlusControlCampaign.RetrieveLeadInfo(threadId, campaignCode, _prefix);
+                try
+                {
+                    HttpResponseMessage leadInformationResponse = CrmPlusControlCampaign.RetrieveLeadInfo(threadId, campaignCode, _prefix);
 
-                return leadInformationResponse;
+                    return leadInformationResponse;
+                }
+                catch (Exception ex)
+                {
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
+
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "GetLeadInfo", string.Format(Resources.UnexpectedException), _logger);
+                }
             }
         }
 
@@ -70,6 +93,7 @@ namespace Skanetrafiken.Crm.Controllers
             using (var _logger = new AppInsightsLogger())
             {
                 _logger.SetGlobalProperty("source", _prefix);
+
                 int threadId = Thread.CurrentThread.ManagedThreadId;
 
                 if (string.IsNullOrWhiteSpace(id))
@@ -128,6 +152,8 @@ namespace Skanetrafiken.Crm.Controllers
             int threadId = Thread.CurrentThread.ManagedThreadId;
             using (var _logger = new AppInsightsLogger())
             {
+                _logger.SetGlobalProperty("source", _prefix);
+
                 if (info == null)
                 {
                     return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Post", Resources.IncomingDataCannotBeNull, _logger);
@@ -155,25 +181,36 @@ namespace Skanetrafiken.Crm.Controllers
                 //    return rm;
                 //}
 
-                FormatLeadInfo(ref info);
-                HttpResponseMessage rm = null;
-                switch (info.Source)
+                try
                 {
-                    case (int)Crm.Schema.Generated.ed_informationsource.SkapaMittKonto:
-                        rm = CrmPlusControl.CreateCustomerLead(threadId, info, _prefix);
-                        break;
-                    case (int)Crm.Schema.Generated.ed_informationsource.Kampanj:
-                        rm = CrmPlusControlCampaign.PostLeadAndQualifyToContact(threadId, info, _prefix);
-                        break;
-                    case (int)Crm.Schema.Generated.ed_informationsource.OinloggatLaddaKort:
-                        rm = CrmPlusControl.NonLoginRefill(threadId, info, _prefix);
-                        break;
-                    case (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal:
-                        break;
-                    default:
-                        return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Post", string.Format(Resources.InvalidSource, info.Source), _logger);
+                    FormatLeadInfo(ref info);
+                    HttpResponseMessage rm = null;
+                    switch (info.Source)
+                    {
+                        case (int)Crm.Schema.Generated.ed_informationsource.SkapaMittKonto:
+                            rm = CrmPlusControl.CreateCustomerLead(threadId, info, _prefix);
+                            break;
+                        case (int)Crm.Schema.Generated.ed_informationsource.Kampanj:
+                            rm = CrmPlusControlCampaign.PostLeadAndQualifyToContact(threadId, info, _prefix);
+                            break;
+                        case (int)Crm.Schema.Generated.ed_informationsource.OinloggatLaddaKort:
+                            rm = CrmPlusControl.NonLoginRefill(threadId, info, _prefix);
+                            break;
+                        case (int)Crm.Schema.Generated.ed_informationsource.ForetagsPortal:
+                            break;
+                        default:
+                            return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Post", string.Format(Resources.InvalidSource, info.Source), _logger);
+                    }
+                    return rm;
                 }
-                return rm;
+                catch (Exception ex)
+                {
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
+
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "Post", string.Format(Resources.UnexpectedException), _logger);
+
+                }
             }
         }
 
@@ -236,71 +273,69 @@ namespace Skanetrafiken.Crm.Controllers
             using (var _logger = new AppInsightsLogger())
             {
                 _logger.SetGlobalProperty("source", _prefix);
-                int threadId = Thread.CurrentThread.ManagedThreadId;
 
-                if (info == null)
+                try
                 {
-                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.IncomingDataCannotBeNull, _logger);
-                }
-                Guid guid = Guid.Empty;
-                if (info.Guid == null || !Guid.TryParse(info.Guid, out guid))
-                {
-                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.GuidNotValid, _logger);
-                }
-                // TOKEN VERIFICATION WITH GUID
-#if !DEV
-                else
-                {
-#if !DEV
-                    // TOKEN VERIFICATION WITH GUID
+                    int threadId = Thread.CurrentThread.ManagedThreadId;
 
-                    try
+                    if (info == null)
                     {
+                        return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.IncomingDataCannotBeNull, _logger);
+                    }
+                    Guid guid = Guid.Empty;
+                    if (info.Guid == null || !Guid.TryParse(info.Guid, out guid))
+                    {
+                        return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.GuidNotValid, _logger);
+                    }
+                    // TOKEN VERIFICATION WITH GUID
+#if !DEV
+                    else
+                    {
+#if !DEV
+                        // TOKEN VERIFICATION WITH GUID
                         HttpResponseMessage tokenResp = TokenValidation(guid.ToString());
                         if (tokenResp.StatusCode != HttpStatusCode.OK)
                         {
                             return tokenResp;
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                        erm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-
-                        _exceptionCustomProperties["source"] = _prefix;
-                        _logger.LogException(ex, _exceptionCustomProperties);
-
-                        return erm;
+#endif
                     }
 #endif
-                }
-#endif
 
-                if (info.Source != (int)Crm.Schema.Generated.ed_informationsource.LoggaInMittKonto)
-                {
-                    if (!id.Equals(info.Guid))
+                    if (info.Source != (int)Crm.Schema.Generated.ed_informationsource.LoggaInMittKonto)
                     {
-                        return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.GuidMismatchBodyAndUrl, _logger);
+                        if (!id.Equals(info.Guid))
+                        {
+                            return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.GuidMismatchBodyAndUrl, _logger);
+                        }
                     }
-                }
 
-                FormatLeadInfo(ref info);
-                HttpResponseMessage rm = null;
-                switch (info.Source)
+                    FormatLeadInfo(ref info);
+                    HttpResponseMessage rm = null;
+                    switch (info.Source)
+                    {
+                        case (int)Crm.Schema.Generated.ed_informationsource.LoggaInMittKonto:
+                            rm = CrmPlusControl.ValidateEmail(threadId, guid, LeadEntity.EntityTypeCode, id, info.MklId, _prefix);
+                            break;
+                        case (int)Crm.Schema.Generated.ed_informationsource.Kampanj:
+                            //rm = CrmPlusControl.ValidateEmailKampanj(threadId, guid);
+                            //rm = CrmPlusControlCampaign.QualifyLeadToUnvalidatedCustomer(threadId, info);
+                            break;
+                        default:
+                            rm = CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", string.Format(Resources.IncomingDataCannotBeNull, info.Source), _logger);
+                            break;
+                    }
+
+                    return rm;
+                }
+                catch (Exception ex)
                 {
-                    case (int)Crm.Schema.Generated.ed_informationsource.LoggaInMittKonto:
-                        rm = CrmPlusControl.ValidateEmail(threadId, guid, LeadEntity.EntityTypeCode, id, info.MklId, _prefix);
-                        break;
-                    case (int)Crm.Schema.Generated.ed_informationsource.Kampanj:
-                        //rm = CrmPlusControl.ValidateEmailKampanj(threadId, guid);
-                        //rm = CrmPlusControlCampaign.QualifyLeadToUnvalidatedCustomer(threadId, info);
-                        break;
-                    default:
-                        rm = CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", string.Format(Resources.IncomingDataCannotBeNull, info.Source), _logger);
-                        break;
-                }
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
 
-                return rm;
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "Put", string.Format(Resources.UnexpectedException), _logger);
+                }
+                
             }
         }
     }

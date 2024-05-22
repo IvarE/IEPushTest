@@ -21,7 +21,6 @@ namespace Skanetrafiken.Crm
         public static bool CheckRegexPhoneNumber(Plugin.LocalPluginContext localContext, string phoneNumber)
         {
             List<CountryEntity> lCountries = GetAllowedCountriesPhoneCodes(localContext);
-            localContext.Trace($"(CheckRegexPhoneNumber) Found {lCountries.Count} Allowed Countries Phone Codes.");
 
             foreach (CountryEntity country in lCountries)
             {

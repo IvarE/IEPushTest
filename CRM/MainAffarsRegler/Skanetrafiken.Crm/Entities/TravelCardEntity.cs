@@ -693,7 +693,6 @@ namespace Skanetrafiken.Crm.Entities
         /// <remarks>If LinkedEntities cannot find any linked ContactEntity then this method will return null.</remarks>
         public static TravelCardEntity GetCardAndContactFromCardNumber(Plugin.LocalPluginContext localContext, string travelCardNumber, ColumnSet columns)
         {
-            localContext.TracingService.Trace($"Running GetCardAndContactFromCardNumber");
             QueryExpression travelCardQuery = new QueryExpression()
             {
                 EntityName = TravelCardEntity.EntityLogicalName,
@@ -721,7 +720,6 @@ namespace Skanetrafiken.Crm.Entities
             };
 
             TravelCardEntity travelCard = XrmRetrieveHelper.RetrieveFirst<TravelCardEntity>(localContext, travelCardQuery);
-            localContext.TracingService.Trace($"Exiting GetCardAndContactFromCardNumber");
             return travelCard;
         }
 

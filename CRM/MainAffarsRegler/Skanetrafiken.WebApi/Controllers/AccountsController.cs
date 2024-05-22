@@ -17,6 +17,10 @@ namespace Skanetrafiken.Crm.Controllers
     public class AccountsController : WrapperController
     {
         private string _prefix = "Account";
+        private static Dictionary<string, string> _exceptionCustomProperties = new Dictionary<string, string>()
+        {
+            { "source", "" }
+        };
 
         [HttpGet]
         public HttpResponseMessage Get()
@@ -41,35 +45,48 @@ namespace Skanetrafiken.Crm.Controllers
         {
             using (var _logger = new AppInsightsLogger())
             {
-                if (string.IsNullOrWhiteSpace(id))
-                {
-                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetWithId", "Could not find an 'id' parameter in url", _logger);
-                }
-
-                int threadId = Thread.CurrentThread.ManagedThreadId;
-
-                /*
-                // TOKEN VERIFICATION
+                _logger.SetGlobalProperty("source", _prefix);
                 try
                 {
-                    HttpResponseMessage tokenResp = TokenValidation(id);
-                    if (tokenResp.StatusCode != HttpStatusCode.OK)
+
+                    if (string.IsNullOrWhiteSpace(id))
                     {
-                        return tokenResp;
+                        return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetWithId", "Could not find an 'id' parameter in url", _logger);
                     }
+
+                    int threadId = Thread.CurrentThread.ManagedThreadId;
+
+                    /*
+                    // TOKEN VERIFICATION
+                    try
+                    {
+                        HttpResponseMessage tokenResp = TokenValidation(id);
+                        if (tokenResp.StatusCode != HttpStatusCode.OK)
+                        {
+                            return tokenResp;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                        rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                        return rm;
+                    }*/
+
+                    HttpResponseMessage resp = CrmPlusControl.GetAccount(threadId, id, _prefix);
+
+                    return resp;
+
                 }
                 catch (Exception ex)
                 {
-                    HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                    rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                    return rm;
-                }*/
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
 
-                HttpResponseMessage resp = CrmPlusControl.GetAccount(threadId, id, _prefix);
-
-                return resp;
-
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "GetWithId", "An error occurred", _logger);
+                }
             }
+            
         }
 
         [HttpPost]
@@ -77,31 +94,42 @@ namespace Skanetrafiken.Crm.Controllers
         {
             using (var _logger = new AppInsightsLogger())
             {
-                if (info == null)
+                _logger.SetGlobalProperty("source", _prefix);
+                try
                 {
-                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Post", Resources.IncomingDataCannotBeNull, _logger);
+                    if (info == null)
+                    {
+                        return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Post", Resources.IncomingDataCannotBeNull, _logger);
+                    }
+
+                    int threadId = Thread.CurrentThread.ManagedThreadId;
+
+                    HttpResponseMessage rm = null;
+                    switch (info.InformationSource)
+                    {
+                        case (int)Generated.ed_informationsource.ForetagsPortal:
+                            rm = CrmPlusControl.AccountPost(threadId, info, _prefix);
+                            break;
+                        case (int)Generated.ed_informationsource.SkolPortal:
+                            rm = CrmPlusControl.AccountPost(threadId, info, _prefix);
+                            break;
+                        case (int)Generated.ed_informationsource.SeniorPortal:
+                            rm = CrmPlusControl.AccountPost(threadId, info, _prefix);
+                            break;
+                        default:
+                            rm = CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Post", string.Format(Resources.InvalidSource, info.InformationSource), _logger);
+                            break;
+                    }
+
+                    return rm;
                 }
-
-                int threadId = Thread.CurrentThread.ManagedThreadId;
-
-                HttpResponseMessage rm = null;
-                switch (info.InformationSource)
+                catch (Exception ex)
                 {
-                    case (int)Generated.ed_informationsource.ForetagsPortal:
-                        rm = CrmPlusControl.AccountPost(threadId, info, _prefix);
-                        break;
-                    case (int)Generated.ed_informationsource.SkolPortal:
-                        rm = CrmPlusControl.AccountPost(threadId, info, _prefix);
-                        break;
-                    case (int)Generated.ed_informationsource.SeniorPortal:
-                        rm = CrmPlusControl.AccountPost(threadId, info, _prefix);
-                        break;
-                    default:
-                        rm = CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Post", string.Format(Resources.InvalidSource, info.InformationSource), _logger);
-                        break;
-                }
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
 
-                return rm;
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "Post", "An error occurred", _logger);
+                }            
             }
         }
 
@@ -110,58 +138,69 @@ namespace Skanetrafiken.Crm.Controllers
         {
             using (var _logger = new AppInsightsLogger())
             {
-                int threadId = Thread.CurrentThread.ManagedThreadId;
-
-                if (info == null)
-                {
-                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.IncomingDataCannotBeNull, _logger);
-                }
-                Guid guid = Guid.Empty;
-                if (info.Guid == null || !Guid.TryParse(info.Guid, out guid))
-                {
-                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.GuidNotValid, _logger);
-                }
-
-                /*
-                // TOKEN VERIFICATION
+                _logger.SetGlobalProperty("source", _prefix);
                 try
                 {
-                    HttpResponseMessage tokenResp = TokenValidation(guid.ToString());
-                    if (tokenResp.StatusCode != HttpStatusCode.OK)
+                    int threadId = Thread.CurrentThread.ManagedThreadId;
+
+                    if (info == null)
                     {
-                        return tokenResp;
+                        return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.IncomingDataCannotBeNull, _logger);
                     }
+                    Guid guid = Guid.Empty;
+                    if (info.Guid == null || !Guid.TryParse(info.Guid, out guid))
+                    {
+                        return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.GuidNotValid, _logger);
+                    }
+
+                    /*
+                    // TOKEN VERIFICATION
+                    try
+                    {
+                        HttpResponseMessage tokenResp = TokenValidation(guid.ToString());
+                        if (tokenResp.StatusCode != HttpStatusCode.OK)
+                        {
+                            return tokenResp;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                        erm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
+                        return erm;
+                    } */
+
+                    if (!id.Equals(info.Guid))
+                    {
+                        return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.GuidMismatchBodyAndUrl, _logger);
+                    }
+
+                    HttpResponseMessage rm = null;
+                    switch (info.InformationSource)
+                    {
+                        case (int)Generated.ed_informationsource.ForetagsPortal:
+                            rm = CrmPlusControl.AccountPut(threadId, info, _prefix);
+                            break;
+                        case (int)Generated.ed_informationsource.SkolPortal:
+                            rm = CrmPlusControl.AccountPut(threadId, info, _prefix);
+                            break;
+                        case (int)Generated.ed_informationsource.SeniorPortal:
+                            rm = CrmPlusControl.AccountPut(threadId, info, _prefix);
+                            break;
+                        default:
+                            rm = CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", string.Format(Resources.InvalidSource, info.InformationSource), _logger);
+                            break;
+                    }
+
+                    return rm;
                 }
                 catch (Exception ex)
                 {
-                    HttpResponseMessage erm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                    erm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
-                    return erm;
-                } */
+                    _exceptionCustomProperties["source"] = _prefix;
+                    _logger.LogException(ex, _exceptionCustomProperties);
 
-                if (!id.Equals(info.Guid))
-                {
-                    return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.GuidMismatchBodyAndUrl, _logger);
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "Put", "An error occurred", _logger);
                 }
-
-                HttpResponseMessage rm = null;
-                switch (info.InformationSource)
-                {
-                    case (int)Generated.ed_informationsource.ForetagsPortal:
-                        rm = CrmPlusControl.AccountPut(threadId, info, _prefix);
-                        break;
-                    case (int)Generated.ed_informationsource.SkolPortal:
-                        rm = CrmPlusControl.AccountPut(threadId, info, _prefix);
-                        break;
-                    case (int)Generated.ed_informationsource.SeniorPortal:
-                        rm = CrmPlusControl.AccountPut(threadId, info, _prefix);
-                        break;
-                    default:
-                        rm = CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", string.Format(Resources.InvalidSource, info.InformationSource), _logger);
-                        break;
-                }
-
-                return rm;
             }
         }
         

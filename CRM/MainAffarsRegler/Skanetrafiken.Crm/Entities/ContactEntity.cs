@@ -1739,7 +1739,6 @@ namespace Skanetrafiken.Crm.Entities
             /// <param name="conflicts">Contacts to merge to context contact</param>
             public void CombineContacts(Plugin.LocalPluginContext localContext, IList<ContactEntity> conflicts)
         {
-            localContext.Trace("Entrered CombineContacts()");
             if (this == null)
                 new Exception("Invalid indata: No contact to merge with list of contacts.");
             else if (conflicts == null)
@@ -1747,7 +1746,6 @@ namespace Skanetrafiken.Crm.Entities
                 localContext.Trace("No contacts in list to merge.");
                 return;
             }
-            localContext.Trace($"Combining {conflicts.Count} Contacts");
 
             foreach (ContactEntity c in conflicts)
             {
@@ -1769,8 +1767,6 @@ namespace Skanetrafiken.Crm.Entities
 
         public IList<CompanyRoleEntity> GetCompanyRoles(Plugin.LocalPluginContext localContext)
         {
-            localContext.Trace("Entrered GetCompanyRoles()");
-
             IList<CompanyRoleEntity> contactRoles = XrmRetrieveHelper.RetrieveMultiple<CompanyRoleEntity>
                 (localContext,
                 new ColumnSet(
@@ -2677,7 +2673,6 @@ namespace Skanetrafiken.Crm.Entities
                     if (socseccontacts.Count == 1)
                     {
                         contact = socseccontacts[0];
-                        localContext.Trace($"Found contact by SocialSecurityNumber");
                     }
                     else if (socseccontacts.Count > 1)
                     {
@@ -2742,7 +2737,6 @@ namespace Skanetrafiken.Crm.Entities
                     };
 
                     IList<ContactEntity> possibleMatches = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, queryEmailAndName);
-                    localContext.Trace($"FindActiveContact found {possibleMatches.Count} matches on e-mail and name.");
 
                     // Check if list of possible matches contains any contact
                     if (possibleMatches.Count > 0)

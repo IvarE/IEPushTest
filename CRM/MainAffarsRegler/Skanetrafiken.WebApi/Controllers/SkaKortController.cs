@@ -33,6 +33,8 @@ namespace Skanetrafiken.Crm.Controllers
 
             using (var _logger = new AppInsightsLogger())
             {
+                _logger.SetGlobalProperty("source", _prefix);
+
                 if (skaKortInfo == null)
                 {
                     return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Post", Resources.IncomingDataCannotBeNull, _logger);
@@ -97,6 +99,8 @@ namespace Skanetrafiken.Crm.Controllers
 
             using (var _logger = new AppInsightsLogger())
             {
+                _logger.SetGlobalProperty("source", _prefix);
+
                 if (skaKortInfo == null)
                 {
                     return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "Put", Resources.IncomingDataCannotBeNull, _logger);

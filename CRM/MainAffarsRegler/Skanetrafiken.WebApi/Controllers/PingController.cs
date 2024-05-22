@@ -31,6 +31,7 @@ namespace Skanetrafiken.Crm.Controllers
 
             using (var _logger = new AppInsightsLogger())
             {
+                _logger.SetGlobalProperty("source", _prefix);
                 try
                 {
                     if (string.IsNullOrWhiteSpace(id))
@@ -38,25 +39,12 @@ namespace Skanetrafiken.Crm.Controllers
                         return CreateErrorResponseWithStatusCode(HttpStatusCode.BadRequest, "GetWithId", "Could not find an 'id' parameter in url", _logger);
                     }
 
-
                     // TOKEN VERIFICATION
-                    try
-                    {
-                        HttpResponseMessage tokenResp = TokenValidation(id);
-                        if (tokenResp.StatusCode != HttpStatusCode.OK)
-                        {
-                            return tokenResp;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        HttpResponseMessage rm = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                        rm.Content = new StringContent(string.Format(Resources.UnexpectedException, ex.Message));
 
-                        _exceptionCustomProperties["source"] = _prefix;
-                        _logger.LogException(ex, _exceptionCustomProperties);
-
-                        return rm;
+                    HttpResponseMessage tokenResp = TokenValidation(id);
+                    if (tokenResp.StatusCode != HttpStatusCode.OK)
+                    {
+                        return tokenResp;
                     }
 
                     //return new HttpResponseMessage(HttpStatusCode.OK);
@@ -66,15 +54,12 @@ namespace Skanetrafiken.Crm.Controllers
                     return resp;
 
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    HttpResponseMessage errResp = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                    errResp.Content = new StringContent(e.Message);
-
                     _exceptionCustomProperties["source"] = _prefix;
-                    _logger.LogException(e, _exceptionCustomProperties);
+                    _logger.LogException(ex, _exceptionCustomProperties);
 
-                    return errResp;
+                    return CreateErrorResponseWithStatusCode(HttpStatusCode.InternalServerError, "GetWithId", string.Format(Resources.UnexpectedException), _logger);
                 }
             }
         }
