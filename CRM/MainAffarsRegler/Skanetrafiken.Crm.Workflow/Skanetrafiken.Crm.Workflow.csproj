@@ -368,9 +368,6 @@
     <Compile Include="..\Skanetrafiken.Crm\TextMessageSender\TextMessageToSend.cs">
       <Link>TextMessageSender\TextMessageToSend.cs</Link>
     </Compile>
-    <Compile Include="..\Skanetrafiken.WebApi\AppInsightLogger.cs">
-      <Link>AppInsightLogger.cs</Link>
-    </Compile>
     <Compile Include="ApproveValueCode.cs" />
     <Compile Include="ApproveValueCodeApproval.cs" />
     <Compile Include="BigInteger.cs" />
