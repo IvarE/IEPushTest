@@ -322,30 +322,38 @@ namespace Skanetrafiken.Crm.Entities
                     }
                 }
                 else if (combined.cgi_socialsecuritynumber != preImage.cgi_socialsecuritynumber)
-                {
-                    if (combined.StateCode.Equals(Generated.ContactState.Active) && !string.IsNullOrWhiteSpace(combined.cgi_socialsecuritynumber) && combined.ed_HasSwedishSocialSecurityNumber == true)
+                { // Retrieve existing Contacts with same Social Security Number and statecode active
+                    IList<ContactEntity> activeMatches = null;
+                    if(!string.IsNullOrWhiteSpace(preImage.cgi_socialsecuritynumber) && preImage.ed_HasSwedishSocialSecurityNumber == true)
+                        activeMatches = ContactEntity.RetrieveContactsWithSameSocialSecurityNumber(localContext, this.Id, preImage.cgi_socialsecuritynumber, Generated.ContactState.Active);
+
+                    // If there are no active matches. Add a deltabatch minus queue entity
+                    if (activeMatches == null || activeMatches.Count() == 0)
                     {
-                        DeltabatchQueueEntity plusQueue = new DeltabatchQueueEntity
+                        if (combined.StateCode.Equals(Generated.ContactState.Active) && !string.IsNullOrWhiteSpace(combined.cgi_socialsecuritynumber) && combined.ed_HasSwedishSocialSecurityNumber == true)
                         {
-                            ed_Contact = combined.ToEntityReference(),
-                            ed_ContactGuid = combined.ContactId?.ToString(),
-                            ed_ContactNumber = combined.cgi_socialsecuritynumber,
-                            ed_DeltabatchOperation = Generated.ed_deltabatchqueue_ed_deltabatchoperation.Plus,
-                            ed_name = $"Update - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}".Length > DeltaBatchQueueNameMaxLength ? $"Update - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}".Substring(0, DeltaBatchQueueNameMaxLength) : $"Update - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}"
-                        };
-                        plusQueue.Id = XrmHelper.Create(localContext.OrganizationService, plusQueue);
-                    }
-                    if (!string.IsNullOrWhiteSpace(preImage.cgi_socialsecuritynumber) && preImage.ed_HasSwedishSocialSecurityNumber == true)
-                    {
-                        DeltabatchQueueEntity minusQueue = new DeltabatchQueueEntity
+                            DeltabatchQueueEntity plusQueue = new DeltabatchQueueEntity
+                            {
+                                ed_Contact = combined.ToEntityReference(),
+                                ed_ContactGuid = combined.ContactId?.ToString(),
+                                ed_ContactNumber = combined.cgi_socialsecuritynumber,
+                                ed_DeltabatchOperation = Generated.ed_deltabatchqueue_ed_deltabatchoperation.Plus,
+                                ed_name = $"Update - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}".Length > DeltaBatchQueueNameMaxLength ? $"Update - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}".Substring(0, DeltaBatchQueueNameMaxLength) : $"Update - SocSecNr: {combined.FullName}, {DateTime.Now.ToString()}"
+                            };
+                            plusQueue.Id = XrmHelper.Create(localContext.OrganizationService, plusQueue);
+                        }
+                        if (!string.IsNullOrWhiteSpace(preImage.cgi_socialsecuritynumber) && preImage.ed_HasSwedishSocialSecurityNumber == true)
                         {
-                            ed_Contact = preImage.ToEntityReference(),
-                            ed_ContactGuid = preImage.ContactId?.ToString(),
-                            ed_ContactNumber = preImage.cgi_socialsecuritynumber,
-                            ed_DeltabatchOperation = Generated.ed_deltabatchqueue_ed_deltabatchoperation.Minus,
-                            ed_name = $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}".Length > DeltaBatchQueueNameMaxLength ? $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}".Substring(0, DeltaBatchQueueNameMaxLength) : $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}"
-                        };
-                        minusQueue.Id = XrmHelper.Create(localContext.OrganizationService, minusQueue);
+                            DeltabatchQueueEntity minusQueue = new DeltabatchQueueEntity
+                            {
+                                ed_Contact = preImage.ToEntityReference(),
+                                ed_ContactGuid = preImage.ContactId?.ToString(),
+                                ed_ContactNumber = preImage.cgi_socialsecuritynumber,
+                                ed_DeltabatchOperation = Generated.ed_deltabatchqueue_ed_deltabatchoperation.Minus,
+                                ed_name = $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}".Length > DeltaBatchQueueNameMaxLength ? $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}".Substring(0, DeltaBatchQueueNameMaxLength) : $"Update - SocSecNr: {preImage.FullName}, {DateTime.Now.ToString()}"
+                            };
+                            minusQueue.Id = XrmHelper.Create(localContext.OrganizationService, minusQueue);
+                        }
                     }
                 }
             }
