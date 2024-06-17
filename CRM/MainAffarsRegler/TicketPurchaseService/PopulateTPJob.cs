@@ -329,6 +329,8 @@ namespace TicketPurchaseService
 
         private int CalculateClassificationOnContact(Plugin.LocalPluginContext localContext, Entity eContact, IList<TicketInfoEntity> allTicketInfoCollection)
         {
+            return 0; //Changes calculated class by SQL Job!
+
             //var everyTicketInfo = TicketInfoEntity.GetEveryTicketInfoQuery(localContext, eContact.Id);
             var everyTicketInfo = allTicketInfoCollection.Where(t => t.ed_MklId == eContact["ed_mklid"].ToString());
 
