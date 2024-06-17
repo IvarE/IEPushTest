@@ -207,10 +207,10 @@ namespace Endeavor.Crm.DeltabatchService
             #endregion
 
         }
-        /// <summary>
-        /// Checks if the given contact should be updated by deltabatch. The contact should be updated if it has a MklId or if the service travels flag is set.
-        /// </summary>
-        /// <returns></returns>
+        ///// <summary>
+        ///// Checks if the given contact should be updated by deltabatch. The contact should be updated if it has a MklId or if the service travels flag is set.
+        ///// </summary>
+        ///// <returns></returns>
         private bool ShouldUpdateContact(ContactEntity contact)
         {
             return !string.IsNullOrEmpty(contact.ed_MklId) || contact.ed_Serviceresor == true;
@@ -588,8 +588,9 @@ namespace Endeavor.Crm.DeltabatchService
             {
                 ContactId = existingContact.ContactId,
                 Id = existingContact.Id,
-                ed_MklId = existingContact.ed_MklId,
-                ed_Serviceresor = existingContact.ed_Serviceresor
+                
+                ed_MklId = existingContact.ed_MklId, // do we need to update with same value
+                ed_Serviceresor = existingContact.ed_Serviceresor // do we need to update with same value
             };
             //rejectCode
             if (!string.IsNullOrWhiteSpace(rejectCode))
@@ -652,6 +653,17 @@ namespace Endeavor.Crm.DeltabatchService
                 }
 
                 return updateContact;
+            }
+            else  //Check if existing rejected code has data, then clear it //DevOPs 78898
+            {
+                if (existingContact.ed_CreditsafeRejectionCode != null)
+                    updateContact.ed_CreditsafeRejectionCode = null;
+
+                if (existingContact.ed_CreditsafeRejectionText != null)
+                    updateContact.ed_CreditsafeRejectionText = rejectText;
+
+                if (existingContact.ed_CreditsafeRejectionComment != null)
+                    updateContact.ed_CreditsafeRejectionComment = rejectComment;
             }
 
             // INFO - Address2_Composite should not be used. Is always a combination of co and registered
