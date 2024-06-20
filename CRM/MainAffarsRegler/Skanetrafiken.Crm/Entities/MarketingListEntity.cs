@@ -16,6 +16,8 @@ using System.Text;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.Crm.Sdk.Messages;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace Skanetrafiken.Crm.Entities
 {
@@ -186,6 +188,54 @@ namespace Skanetrafiken.Crm.Entities
             stream.Position = 0;
             return stream;
         }
+        public void HandlePostMarketingListUpdateAsync(Plugin.LocalPluginContext localContext, MarketingListEntity preImage)
+        {
+            if (this.st_ClearMembers == preImage.st_ClearMembers)
+                return;
 
+            if (this.st_ClearMembers == st_clearmembers.ToDo)
+            {
+                MarketingListEntity updateList = new MarketingListEntity
+                {
+                    ListId = this.Id,
+                    Id = this.Id,
+                    st_ClearMembers = st_clearmembers.InProgress,
+                };
+                localContext.OrganizationService.Update(updateList);
+                //remove all members in a list
+                var queryContacts = new QueryExpression(ContactEntity.EntityLogicalName);
+                queryContacts.Distinct = true;
+                queryContacts.NoLock = true;
+                queryContacts.ColumnSet.AddColumns(ContactEntity.Fields.ContactId);
+                queryContacts.Criteria.AddCondition(ContactEntity.Fields.StateCode, ConditionOperator.Equal, (int)ContactState.Active);
+               // queryContacts.Criteria.AddCondition(ContactEntity.Fields.ed_MklId, ConditionOperator.NotNull);
+
+                var queryListMember = queryContacts.AddLink("listmember", ContactEntity.Fields.ContactId, "entityid");
+                var ah = queryListMember.AddLink(MarketingListEntity.EntityLogicalName, MarketingListEntity.Fields.ListId, MarketingListEntity.Fields.ListId);
+                ah.LinkCriteria.AddCondition(MarketingListEntity.Fields.ListId, ConditionOperator.Equal, this.Id);
+
+                List<ContactEntity> lContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, queryContacts);
+                 
+                localContext.OrganizationService.Update(updateList);
+                foreach (ContactEntity contact in lContacts)
+                {
+                    RemoveMemberListRequest req = new RemoveMemberListRequest();
+                    req.EntityId = contact.Id; 
+                    req.ListId = this.Id; 
+                    try
+                    {
+                       RemoveMemberListResponse resp = (RemoveMemberListResponse)localContext.OrganizationService.Execute(req);
+                    }
+                    catch (Exception error)
+                    {
+                        //DO NOTHING
+                    }
+                }
+
+                updateList.st_ClearMembers = st_clearmembers.Completed;
+                localContext.OrganizationService.Update(updateList);
+
+            }
+        }
     }
 }

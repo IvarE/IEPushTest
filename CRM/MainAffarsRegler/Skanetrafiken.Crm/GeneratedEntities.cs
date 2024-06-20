@@ -86659,11 +86659,17 @@ namespace Skanetrafiken.Crm.Schema.Generated
 		
 		Inactive = 1,
 	}
-	
-	/// <summary>
-	/// Group of existing or potential customers created for a marketing campaign or other sales purposes.
-	/// </summary>
-	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("list")]
+
+    public enum st_clearmembers
+    {
+        ToDo = 206290000,
+        InProgress = 206290001,
+        Completed = 206290002
+    }
+    /// <summary>
+    /// Group of existing or potential customers created for a marketing campaign or other sales purposes.
+    /// </summary>
+    [Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("list")]
 	public partial class List : Microsoft.Xrm.Sdk.Entity
 	{
 		
@@ -86782,11 +86788,40 @@ namespace Skanetrafiken.Crm.Schema.Generated
 				this.SetAttributeValue("createdfromcode", value);
 			}
 		}
-		
-		/// <summary>
-		/// Shows the date and time when the record was created. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
+        /// <summary>
+        /// 
+        /// </summary>
+        [Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_clearmembers")]
+        public System.Nullable<Skanetrafiken.Crm.Schema.Generated.st_clearmembers> st_ClearMembers
+        {
+            get
+            {
+                Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("st_clearmembers");
+                if ((optionSet != null))
+                {
+                    return ((Skanetrafiken.Crm.Schema.Generated.st_clearmembers)(System.Enum.ToObject(typeof(Skanetrafiken.Crm.Schema.Generated.st_clearmembers), optionSet.Value)));
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if ((value == null))
+                {
+                    this.SetAttributeValue("st_clearmembers", null);
+                }
+                else
+                {
+                    this.SetAttributeValue("st_clearmembers", new Microsoft.Xrm.Sdk.OptionSetValue((int)value));
+                }
+            }
+        }
+        /// <summary>
+        /// Shows the date and time when the record was created. The date and time are displayed in the time zone selected in Microsoft Dynamics CRM options.
+        /// </summary>
+        [Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("createdon")]
 		public System.Nullable<System.DateTime> CreatedOn
 		{
 			get
@@ -87587,8 +87622,9 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string cdi_marketinglistsfordetachid = "cdi_marketinglistsfordetachid";
 			
 			public const string cdi_SubscriptionListId = "cdi_subscriptionlistid";
-			
-			public const string Cost = "cost";
+            public const string st_ClearMembers = "st_clearmembers";
+
+            public const string Cost = "cost";
 			
 			public const string Cost_Base = "cost_base";
 			

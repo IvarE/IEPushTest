@@ -199,6 +199,7 @@
     <Compile Include="Helper\PhoneNumberUtility.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="PostCalculatePrice.cs" />
+    <Compile Include="PostMarketingListUpdate_Async.cs" />
     <Compile Include="PostOrderProductCreate.cs" />
     <Compile Include="PostOrderProductDelete.cs" />
     <Compile Include="PostQuoteProductDelete.cs" />
