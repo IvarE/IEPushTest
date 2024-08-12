@@ -2721,7 +2721,8 @@ namespace Skanetrafiken.Crm.Entities
                         Conditions =
                             {
                                 new ConditionExpression(ContactEntity.Fields.EMailAddress1, ConditionOperator.Equal, customerInfo.Email),
-                                new ConditionExpression(ContactEntity.Fields.EMailAddress2, ConditionOperator.Equal, customerInfo.Email)
+                                new ConditionExpression(ContactEntity.Fields.EMailAddress2, ConditionOperator.Equal, customerInfo.Email),
+                                new ConditionExpression(ContactEntity.Fields.ed_PrivateCustomerContact, ConditionOperator.Equal, true)
                             }
                     };
 
