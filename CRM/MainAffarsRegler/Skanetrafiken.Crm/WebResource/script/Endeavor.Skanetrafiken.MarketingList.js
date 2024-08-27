@@ -78,7 +78,7 @@ if (typeof (Endeavor.Skanetrafiken.MarketingList) == "undefined") {
             formContext.data.save().then(async function done() {
                 var accessButton = Endeavor.Skanetrafiken.MarketingList.showSendMarketingListButton();
                 if (!accessButton) {
-                    callBack("Du har inte rätt rättigheter till att skicka narknadslista. Kontakta administratör.");
+                    callBack("Du har inte rätt rättigheter till att skicka marknadslista. Kontakta administratör.");
                     return;
                 }
                 if (formContext.getAttribute("type").getValue() !== false) {
@@ -92,7 +92,7 @@ if (typeof (Endeavor.Skanetrafiken.MarketingList) == "undefined") {
                 }
 
                 if (formContext.getAttribute("st_clearmembers") && (formContext.getAttribute("st_clearmembers").getValue() == 206290000 || formContext.getAttribute("st_clearmembers").getValue() == 206290001)) {
-                    callBack("Det går inte att skicka narknadslista när listans medlemmar håller att tömmas.");
+                    callBack("Det går inte att skicka marknadslista när listans medlemmar håller att tömmas.");
                     return;
                 }
 
@@ -113,10 +113,10 @@ if (typeof (Endeavor.Skanetrafiken.MarketingList) == "undefined") {
                 }
 
                 if (checkCampaignList.st_clearmembers == 206290000 || checkCampaignList.st_clearmembers == 206290001) ////To Do: 206290000, In Progress: 206290001, Done: 206290002
-                    alertMessage = "Det går inte att skicka narknadslista när listans medlemmar håller att tömmas.";
+                    alertMessage = "Det går inte att skicka marknadslista när listans medlemmar håller att tömmas.";
                 else {
                     if (checkCampaignList.campaignlist_association && (checkCampaignList.campaignlist_association.length == 0 || checkCampaignList.campaignlist_association.length > 1)) {
-                        alertMessage = "Det gick inte att skicka narknadslista: ";
+                        alertMessage = "Det gick inte att skicka marknadslista: ";
                         if (checkCampaignList.campaignlist_association.length > 1) alertMessage += "Det finns flera än ett kampanjer kopplad till marknadslista";// "There is more than one Campaign connected to the Marketing List.";                                                
                         else alertMessage += "Det finns ingen kampanjer kopplad till marknadslista";// "There is no Campaigns connected to the Marketing List.";
                     }
@@ -138,11 +138,11 @@ if (typeof (Endeavor.Skanetrafiken.MarketingList) == "undefined") {
                         var response = JSON.parse(result.responseText);
 
                         if (response == null || response == undefined) {
-                            resultMessage = "Det gick inte att skicka narknadslista. Kontakta administratör.";
+                            resultMessage = "Det gick inte att skicka marknadslista. Kontakta administratör.";
                         }
                         else {
                             if (response.Ok == false) {
-                                resultMessage = "Det gick inte att skicka narknadslista: " + response.Message;
+                                resultMessage = "Det gick inte att skicka marknadslista: " + response.Message;
                             }
                             else if (response.Ok == true) {
 
