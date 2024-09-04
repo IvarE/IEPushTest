@@ -21,6 +21,7 @@ namespace Endeavor.Crm.CleanRecordsService
                 string runInactivateContacts = ConfigurationManager.AppSettings["runInactivateContacts"];
                 string runDeleteAudits = ConfigurationManager.AppSettings["runDeleteAudits"];
                 string runInactivatePermits = ConfigurationManager.AppSettings["runInactivatePermits"];
+                string runDeleteMarketingLists = ConfigurationManager.AppSettings["runDeleteMarketingLists"];
 
                 string passwordArgument = null; //password place holder
 
@@ -64,6 +65,14 @@ namespace Endeavor.Crm.CleanRecordsService
                     CrmConnection.SaveCredentials(PermitsService.CredentialFilePath, password, PermitsService.Entropy);
                 }
 
+                if (!string.IsNullOrEmpty(passwordArgument) && runDeleteMarketingLists == "true")
+                {
+                    _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
+                    string password = passwordArgument.Substring(passwordArgument.IndexOf(":") + 1);
+
+                    CrmConnection.SaveCredentials(MarketingListsService.CredentialFilePath, password, MarketingListsService.Entropy);
+                }
+
 #if DEBUG
                 //Workaround to make it possible to debug a service.
                 if (runCloseCases == "true")
@@ -94,6 +103,13 @@ namespace Endeavor.Crm.CleanRecordsService
                     service.Execute();
                 }
 
+                if (runDeleteMarketingLists == "true")
+                {
+                    _log.Info($"Running MarketingLists Service...");
+                    MarketingListsService service = new MarketingListsService();
+                    service.Execute();
+                }
+
                 System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
 #else
                 List<ServiceBase> servicesToRun = new List<ServiceBase>();
@@ -120,6 +136,12 @@ namespace Endeavor.Crm.CleanRecordsService
                 {
                     _log.Info($"Running Permits Service...");
                     servicesToRun.Add(new PermitsService());
+                }
+
+                if (runDeleteMarketingLists == "true")
+                {
+                    _log.Info($"Running MarketingLists Service...");
+                    servicesToRun.Add(new MarketingListsService());
                 }
 
                 ServiceBase.Run(servicesToRun.ToArray());
