@@ -121,6 +121,7 @@
       <DependentUpon>CasesService.cs</DependentUpon>
     </Compile>
     <Compile Include="CloseCases.cs" />
+    <Compile Include="DeleteQueueItems.cs" />
     <Compile Include="DeleteMarketinglists.cs" />
     <Compile Include="Pandora\EarlyBound\Entities\abssr_permit.cs" />
     <Compile Include="Pandora\EarlyBound\Entities\abssr_permittype.cs" />
@@ -139,6 +140,12 @@
     <Compile Include="Pandora\EarlyBound\OptionSets\abssr_travelallowance_abssr_missingdocuments.cs" />
     <Compile Include="Pandora\EarlyBound\OptionSets\OptionSets.cs" />
     <Compile Include="Pandora\Helpers\HelperWrapper.cs" />
+    <Compile Include="Pandora\QueueItemsService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Pandora\QueueItemsService.Designer.cs">
+      <DependentUpon>QueueItemsService.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pandora\MarketingListsService.cs">
       <SubType>Component</SubType>
     </Compile>

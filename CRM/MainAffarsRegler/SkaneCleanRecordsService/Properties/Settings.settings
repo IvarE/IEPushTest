@@ -38,5 +38,11 @@
     <Setting Name="CredentialsFilePathPermits" Type="System.String" Scope="Application">
       <Value Profile="(Default)">%APPDATA%\Endeavor\InactivatePermitsService.Credential.xml</Value>
     </Setting>
+    <Setting Name="DeleteQueueItemCronExpression" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0 0 20 ? * SAT *</Value>
+    </Setting>
+    <Setting Name="CredentialsFilePathQueueItems" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%APPDATA%\Endeavor\DeleteQueueItemsService.Credential.xml</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

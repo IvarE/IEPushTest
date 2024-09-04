@@ -21,6 +21,7 @@ namespace Endeavor.Crm.CleanRecordsService
                 string runInactivateContacts = ConfigurationManager.AppSettings["runInactivateContacts"];
                 string runDeleteAudits = ConfigurationManager.AppSettings["runDeleteAudits"];
                 string runInactivatePermits = ConfigurationManager.AppSettings["runInactivatePermits"];
+                string runDeleteQueueItems = ConfigurationManager.AppSettings["runDeleteQueueItems"];
                 string runDeleteMarketingLists = ConfigurationManager.AppSettings["runDeleteMarketingLists"];
 
                 string passwordArgument = null; //password place holder
@@ -65,6 +66,14 @@ namespace Endeavor.Crm.CleanRecordsService
                     CrmConnection.SaveCredentials(PermitsService.CredentialFilePath, password, PermitsService.Entropy);
                 }
 
+                if (!string.IsNullOrEmpty(passwordArgument) && runDeleteQueueItems == "true")
+                {
+                    _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
+                    string password = passwordArgument.Substring(passwordArgument.IndexOf(":") + 1);
+
+                    CrmConnection.SaveCredentials(QueueItemsService.CredentialFilePath, password, QueueItemsService.Entropy);
+                }
+
                 if (!string.IsNullOrEmpty(passwordArgument) && runDeleteMarketingLists == "true")
                 {
                     _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
@@ -103,6 +112,13 @@ namespace Endeavor.Crm.CleanRecordsService
                     service.Execute();
                 }
 
+                if (runDeleteQueueItems == "true")
+                {
+                    _log.Info($"Running QueueItems Service...");
+                    QueueItemsService service = new QueueItemsService();
+                    service.Execute();
+                }
+
                 if (runDeleteMarketingLists == "true")
                 {
                     _log.Info($"Running MarketingLists Service...");
@@ -136,6 +152,12 @@ namespace Endeavor.Crm.CleanRecordsService
                 {
                     _log.Info($"Running Permits Service...");
                     servicesToRun.Add(new PermitsService());
+                }
+
+                if (runDeleteQueueItems == "true")
+                {
+                    _log.Info($"Running QueueItems Service...");
+                    servicesToRun.Add(new QueueItemsService());
                 }
 
                 if (runDeleteMarketingLists == "true")

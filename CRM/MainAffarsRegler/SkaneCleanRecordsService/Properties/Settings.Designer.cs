@@ -12,7 +12,7 @@ namespace Endeavor.Crm.CleanRecordsService.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.9.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -128,6 +128,24 @@ namespace Endeavor.Crm.CleanRecordsService.Properties {
         public string CredentialsFilePathPermits {
             get {
                 return ((string)(this["CredentialsFilePathPermits"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0 20 ? * SAT *")]
+        public string DeleteQueueItemCronExpression {
+            get {
+                return ((string)(this["DeleteQueueItemCronExpression"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\Endeavor\\DeleteQueueItemsService.Credential.xml")]
+        public string CredentialsFilePathQueueItems {
+            get {
+                return ((string)(this["CredentialsFilePathQueueItems"]));
             }
         }
     }
