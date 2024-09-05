@@ -38,6 +38,12 @@
     <Setting Name="CredentialsFilePathPermits" Type="System.String" Scope="Application">
       <Value Profile="(Default)">%APPDATA%\Endeavor\InactivatePermitsService.Credential.xml</Value>
     </Setting>
+    <Setting Name="CredentialsFilePathDeceasedContacts" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">%APPDATA%\Endeavor\InactivateDeceasedContactsService.Credential.xml</Value>
+    </Setting>
+    <Setting Name="InactivateDeceasedContactsScheduleCronExpression" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0 0 18 ? * SAT *</Value>
+    </Setting>
     <Setting Name="DeleteQueueItemCronExpression" Type="System.String" Scope="Application">
       <Value Profile="(Default)">0 0 20 ? * SAT *</Value>
     </Setting>

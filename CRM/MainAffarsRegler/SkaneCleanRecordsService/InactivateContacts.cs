@@ -73,8 +73,8 @@ namespace Endeavor.Crm.CleanRecordsService
 
                 _log.Info($"Local Context is not null....");
                 string runFullData = ConfigurationManager.AppSettings["runFullData"];
-                
-                if(runFullData == null || (runFullData != "true" && runFullData != "false"))
+
+                if (runFullData == null || (runFullData != "true" && runFullData != "false"))
                 {
                     _log.Debug($"The App Setting 'runFullData' is neither 'true' or 'false'.");
                     return;
@@ -220,7 +220,7 @@ namespace Endeavor.Crm.CleanRecordsService
             QueryExpression queryContacts = GetQueryInactivateContacts(bRunFullData);
             List<ContactEntity> lContacts = XrmRetrieveHelper.RetrieveMultiple<ContactEntity>(localContext, queryContacts);
 
-            _log.Info($"Found { lContacts.Count } Contacts to be checked.");
+            _log.Info($"Found {lContacts.Count} Contacts to be checked.");
 
             List<OrganizationRequest> requestsLst = new List<OrganizationRequest>();
 
@@ -231,7 +231,7 @@ namespace Endeavor.Crm.CleanRecordsService
                     QueryExpression queryValueCodes = GetQueryValuesCodes(contact.Id);
                     List<ValueCodeEntity> lValueCodes = XrmRetrieveHelper.RetrieveMultiple<ValueCodeEntity>(localContext, queryValueCodes);
 
-                    if(lValueCodes.Count == 0)
+                    if (lValueCodes.Count == 0)
                     {
                         UpdateRequest updateContact = GetUpdateRequest(contact.Id);
                         requestsLst.Add(updateContact);
@@ -261,7 +261,7 @@ namespace Endeavor.Crm.CleanRecordsService
                 }
             }
 
-            _log.Info($"Found { requestsLst.Count } Contacts to be Inactivated.");
+            _log.Info($"Found {requestsLst.Count} Contacts to be Inactivated.");
             return Helper.ExecuteMultipleRequests(localContext, requestsLst, true, true);
         }
     }

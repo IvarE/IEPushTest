@@ -23,6 +23,7 @@ namespace Endeavor.Crm.CleanRecordsService
                 string runInactivatePermits = ConfigurationManager.AppSettings["runInactivatePermits"];
                 string runDeleteQueueItems = ConfigurationManager.AppSettings["runDeleteQueueItems"];
                 string runDeleteMarketingLists = ConfigurationManager.AppSettings["runDeleteMarketingLists"];
+                string runInactivateDeceasedContacts = ConfigurationManager.AppSettings["runInactivateDeceasedContacts"];
 
                 string passwordArgument = null; //password place holder
 
@@ -82,6 +83,14 @@ namespace Endeavor.Crm.CleanRecordsService
                     CrmConnection.SaveCredentials(MarketingListsService.CredentialFilePath, password, MarketingListsService.Entropy);
                 }
 
+                if (!string.IsNullOrEmpty(passwordArgument) && runInactivateDeceasedContacts == "true")
+                {
+                    _log.DebugFormat(CultureInfo.InvariantCulture, Properties.Resources.CredentialsCommandLine);
+                    string password = passwordArgument.Substring(passwordArgument.IndexOf(":") + 1);
+
+                    CrmConnection.SaveCredentials(DeceasedContactsService.CredentialFilePath, password, DeceasedContactsService.Entropy);
+                }
+
 #if DEBUG
                 //Workaround to make it possible to debug a service.
                 if (runCloseCases == "true")
@@ -126,6 +135,13 @@ namespace Endeavor.Crm.CleanRecordsService
                     service.Execute();
                 }
 
+                if (runInactivateDeceasedContacts == "true")
+                {
+                    _log.Info($"Running Deceased Contacts Service...");
+                    DeceasedContactsService service = new DeceasedContactsService();
+                    service.Execute();
+                }
+
                 System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
 #else
                 List<ServiceBase> servicesToRun = new List<ServiceBase>();
@@ -164,6 +180,12 @@ namespace Endeavor.Crm.CleanRecordsService
                 {
                     _log.Info($"Running MarketingLists Service...");
                     servicesToRun.Add(new MarketingListsService());
+                }
+
+                if (runInactivateDeceasedContacts == "true")
+                {
+                    _log.Info($"Running Deceased Contacts Service...");
+                    servicesToRun.Add(new DeceasedContactsService());
                 }
 
                 ServiceBase.Run(servicesToRun.ToArray());

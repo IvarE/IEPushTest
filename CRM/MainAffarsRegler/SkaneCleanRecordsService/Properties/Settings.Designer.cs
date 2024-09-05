@@ -133,6 +133,24 @@ namespace Endeavor.Crm.CleanRecordsService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\Endeavor\\InactivateDeceasedContactsService.Credential.xml")]
+        public string CredentialsFilePathDeceasedContacts {
+            get {
+                return ((string)(this["CredentialsFilePathDeceasedContacts"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0 0 18 ? * SAT *")]
+        public string InactivateDeceasedContactsScheduleCronExpression {
+            get {
+                return ((string)(this["InactivateDeceasedContactsScheduleCronExpression"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0 0 20 ? * SAT *")]
         public string DeleteQueueItemCronExpression {
             get {
