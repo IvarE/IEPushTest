@@ -63,6 +63,11 @@
                                 var closedReason = result.ClosedReason;
                                 var isReserved = result.IsReserved;
                                 var isExpired = result.IsExpired;
+                                var lastTransDate = "";
+                                try {
+                                    lastTransDate = result.LastTransactionDate ? new Date(result.LastTransactionDate).toLocaleDateString("sv-SE") : "";
+                                } catch { lastTransDate = result.LastTransactionDate.toLocaleDateString(); }
+
                                 if (typeof (isExpired) == 'undefined' || isExpired == null) isExpired = false;
 
                                 if (isClosed) {
@@ -77,7 +82,7 @@
                                 if (isExpired) {
                                     document.getElementById("isExpiredYes").style.display = "block";
                                     document.getElementById("isExpiredNo").style.display = "none";
-                                   
+
                                 } else {
                                     document.getElementById("isExpiredYes").style.display = "none";
                                     document.getElementById("isExpiredNo").style.display = "block";
@@ -86,19 +91,20 @@
                                 document.getElementById("belopp").innerText = amount + " kr";
                                 document.getElementById("sparradav").innerText = closedReason;
                                 document.getElementById("reserveread").checked = isReserved;
-                                document.getElementById("isexpiredread").checked = isExpired; 
+                                document.getElementById("isexpiredread").checked = isExpired;
+                                document.getElementById("lastTransactionDate").innerText = lastTransDate;
                                 //if (amount > 0 || isClosed)
                                 //    activateCloseButton();
                             },
                             function (error) {
                                 var errorMessage = "";
                                 if (error.message.includes("404")) {
-                                    errorMessage = "JoJo-kort med kortnummer: " + cardId +" saknas.";
+                                    errorMessage = "JoJo-kort med kortnummer: " + cardId + " saknas.";
 
                                 } else {
                                     errorMessage = "Något gick fel. Vänligen försök igen. Details: " + error.message;
                                 }
-                                
+
                                 console.error(errorMessage);
                                 Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
                             });
@@ -131,6 +137,12 @@
                                 var closedReason = result.ClosedReason;
                                 var isReserved = result.IsReserved;
                                 var isExpired = result.IsExpired;
+                                var lastTransDate = { formattedDate: "", date: "" };
+                                try {
+                                    lastTransDate.date = result.LastTransactionDate ? new Date(result.LastTransactionDate) : "";
+                                    lastTransDate.formattedDate = result.LastTransactionDate ? new Date(result.LastTransactionDate).toLocaleDateString("sv-SE") : "";
+                                } catch { lastTransDate.formattedDate = result.LastTransactionDate.toLocaleDateString(); }
+
                                 if (typeof (isExpired) == 'undefined' || isExpired == null) isExpired = false;
 
                                 if (placeOrderResponse.indexOf("200") > -1)
@@ -158,7 +170,8 @@
                                 document.getElementById("belopp").innerText = amount;
                                 document.getElementById("sparradav").innerText = closedReason;
                                 document.getElementById("reserveread").checked = isReserved;
-                                document.getElementById("isexpiredread").checked = isExpired; 
+                                document.getElementById("isexpiredread").checked = isExpired;
+                                document.getElementById("lastTransactionDate").innerText = lastTransDate.formattedDate;
 
                                 Endeavor.formscriptfunctions.callGlobalAction("ed_CaptureOrder", inputParameters,
                                     function (result) {
@@ -200,6 +213,7 @@
                                     var fetchXml = "?fetchXml=<fetch>" +
                                         "<entity name='cgi_travelcard'>" +
                                         "<attribute name='cgi_travelcardid' />" +
+                                        "<attribute name='st_lasttransactiondate' />" +
                                         "<filter type='and'>" +
                                         "<condition attribute='cgi_travelcardnumber' operator='eq' value='" + cardId + "'/>" +
                                         "<condition attribute='cgi_blocked' operator='eq' value='0'/>" +
@@ -213,11 +227,13 @@
 
                                             var data =
                                             {
-                                                "cgi_blocked": true,
-                                                "st_isexpired": isExpired
+                                                "cgi_blocked": true
+                                                // , "st_isexpired": isExpired
                                             };
+                                            if (lastTransDate.date != "" && result.entities.length != 0 && result.entities[0].st_lasttransactiondate == null)
+                                                data.st_lasttransactiondate = lastTransDate.date;
 
-                                            if (result.entities[0].cgi_travelcardid != null) {
+                                            if (result.entities.length != 0 && result.entities[0].cgi_travelcardid != null) {
                                                 parent.Xrm.WebApi.updateRecord("cgi_travelcard", result.entities[0].cgi_travelcardid, data).then(
                                                     function success(result) {
                                                         console.log("Travelcard updated to blocked");
@@ -241,7 +257,7 @@
                                 //Endeavor.formscriptfunctions.AlertCustomDialog(errorMessage);
                             });
 
-                        
+
                     }
                     catch (error) {
                         document.getElementById("messageSpace").innerText = ("Oväntat fel: " + error.message);
@@ -279,13 +295,17 @@
             <p id="isExpiredYes" style="display: none">Ja</p>
             <p id="isExpiredNo">Nej</p>
         </div>
-        <div class="row row-position content-bucket" style="--row: 4; --col: 1">Spärrad av:</div>
-        <div class="row row-position content-bucket" style="--row: 4; --col: 2" id="sparradav"></div>
+        <div class="row row-position content-bucket" style="--row: 4; --col: 1">Senaste transaktionsdatum :</div>
+        <div class="row row-position content-bucket" style="--row: 4; --col: 2">
+            <p id="lastTransactionDate" style=""></p>
+        </div>
+        <div class="row row-position content-bucket" style="--row: 5; --col: 1">Spärrad av:</div>
+        <div class="row row-position content-bucket" style="--row: 5; --col: 2" id="sparradav"></div>
 
-        <div class="row row-position content-bucket no-border" style="--row: 5; --col: 1; display: none;">Reserverad:</div>
-        <div class="row row-position content-bucket no-border" style="--row: 5; --col: 2"><input type="checkbox" id="reserveread" style="display: none;"><input type="checkbox" id="isexpiredread" style="display: none;"></div>
+        <div class="row row-position content-bucket no-border" style="--row: 6; --col: 1; display: none;">Reserverad:</div>
+        <div class="row row-position content-bucket no-border" style="--row: 6; --col: 2"><input type="checkbox" id="reserveread" style="display: none;"><input type="checkbox" id="isexpiredread" style="display: none;"></div>
 
-        <div class="row row-position no-border" style="--row: 6; --col: 1"><button onclick="blockTravelCardWithConfirmDialog()" id="block" type="button" disabled="">Spärra Kort</button></div>
+        <div class="row row-position no-border" style="--row: 7; --col: 1"><button onclick="blockTravelCardWithConfirmDialog()" id="block" type="button" disabled="">Spärra Kort</button></div>
     </div>
 
     <script>
