@@ -377,6 +377,7 @@
     <Compile Include="CancelValueCode.cs" />
     <Compile Include="CancelOrder.cs" />
     <Compile Include="CrmConnection.cs" />
+    <Compile Include="CheckTravelCardExpired.cs" />
     <Compile Include="GetCard.cs" />
     <Compile Include="GetOrders.cs" />
     <Compile Include="PlaceOrder.cs" />

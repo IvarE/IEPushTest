@@ -3,8 +3,21 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <link href="../css/Endeavor.Skanetrafiken.SearchTravelCards.css" rel="stylesheet" type="text/css">
     <script src="../script/Endeavor.Skanetrafiken.formscriptfunctions.js"></script>
-
+    
     <script type="text/javascript">
+
+        function travelCardSearchOnload() {
+             
+            let currentUser = {userName: "", userId:""};
+            try{
+                currentUser.userName = parent.Xrm.Page.context.userSettings.userName;
+                currentUser.userId = parent.Xrm.Page.context.userSettings.userId.slice(1,-1);
+             }catch(err){ }
+
+            document.getElementById("sparradav_user").innerText = currentUser.userName;
+            document.getElementById("sparradav_user").setAttribute("userId", currentUser.userId);
+            document.getElementById("sparradav_date").innerText = new Date().toLocaleDateString("sv-SE");
+        }
 
         function blockTravelCardWithConfirmDialog() {
             var confirmStrings = { text: "Vill du verkligen spärra detta Jojokort?", title: "Spära Jojokort" };
@@ -227,9 +240,13 @@
 
                                             var data =
                                             {
-                                                "cgi_blocked": true
+                                                "cgi_blocked": true,
+                                                "ed_blockeddatecard": new Date(),
+                                                "ed_blockedstatus": 899310002 //Blocked Card
                                                 // , "st_isexpired": isExpired
                                             };
+                                            data.st_blockedbyusername = document.getElementById("sparradav_user").innerText;
+
                                             if (lastTransDate.date != "" && result.entities.length != 0 && result.entities[0].st_lasttransactiondate == null)
                                                 data.st_lasttransactiondate = lastTransDate.date;
 
@@ -271,7 +288,7 @@
 
     <meta>
 </head>
-<body style="overflow-wrap: break-word;">
+<body style="overflow-wrap: break-word;" onload="travelCardSearchOnload()">
 
     <div class="header-grid">
         <div class="row row-position no-border" style="--row: 1; --col: 1" id="headerLabel">Sök Jojo-kort</div>
@@ -299,13 +316,16 @@
         <div class="row row-position content-bucket" style="--row: 4; --col: 2">
             <p id="lastTransactionDate" style=""></p>
         </div>
-        <div class="row row-position content-bucket" style="--row: 5; --col: 1">Spärrad av:</div>
+        <div class="row row-position content-bucket" style="--row: 5; --col: 1">Spärrad av anledning:</div>
         <div class="row row-position content-bucket" style="--row: 5; --col: 2" id="sparradav"></div>
+        <div class="row row-position content-bucket" style="--row: 6; --col: 1">Spärrad av :</div>
+        <div class="row row-position content-bucket" style="--row: 6; --col: 2" id="sparradav_user">[aktuell användare]</div>
+        <div class="row row-position content-bucket" style="--row: 7; --col: 1">Spärrad den:</div>
+        <div class="row row-position content-bucket" style="--row: 7; --col: 2" id="sparradav_date">[YYYY-MM-DD]</div>
+        <div class="row row-position content-bucket no-border" style="--row: 8; --col: 1; display: none;">Reserverad:</div>
+        <div class="row row-position content-bucket no-border" style="--row: 8; --col: 2"><input type="checkbox" id="reserveread" style="display: none;"><input type="checkbox" id="isexpiredread" style="display: none;"></div>
 
-        <div class="row row-position content-bucket no-border" style="--row: 6; --col: 1; display: none;">Reserverad:</div>
-        <div class="row row-position content-bucket no-border" style="--row: 6; --col: 2"><input type="checkbox" id="reserveread" style="display: none;"><input type="checkbox" id="isexpiredread" style="display: none;"></div>
-
-        <div class="row row-position no-border" style="--row: 7; --col: 1"><button onclick="blockTravelCardWithConfirmDialog()" id="block" type="button" disabled="">Spärra Kort</button></div>
+        <div class="row row-position no-border" style="--row: 9; --col: 1"><button onclick="blockTravelCardWithConfirmDialog()" id="block" type="button" disabled="">Spärra Kort</button></div>
     </div>
 
     <script>
