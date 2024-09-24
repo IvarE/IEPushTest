@@ -254,7 +254,7 @@ namespace Skanetrafiken.Crm
 
         }
 
-        public string Suborgname
+        public string DisplayName
         {
             get
             {
@@ -300,11 +300,11 @@ namespace Skanetrafiken.Crm
             //ae.Name = $"Kostnadsställe - {ai.OrganizationName}"; //Gamla
             //ae.Name = $"{ai.OrganizationName} - KST"; //ändra namn
 
-            if (ai.Suborgname != null && ai.Suborgname != string.Empty)
+            if (ai.DisplayName != null && ai.DisplayName != string.Empty)
             {
-                ae.Name = ai.Suborgname;
+                ae.Name = ai.DisplayName;
                 //ed_SubOrgNamn ska ej sättas längre, används av användare i systemet
-                //ae.ed_SubOrgNamn = ai.Suborgname; //Inget skickas från fasaden ännu
+                //ae.ed_SubOrgNamn = ai.DisplayName; //Inget skickas från fasaden ännu
             }
             else
             {
@@ -358,9 +358,9 @@ namespace Skanetrafiken.Crm
                 isChanged = true;
             }
 
-            if (!string.IsNullOrEmpty(accountInfo.Suborgname) && oldAccount.Name != accountInfo.Suborgname)
+            if (!string.IsNullOrEmpty(accountInfo.DisplayName) && oldAccount.Name != accountInfo.DisplayName)
             {
-                newAccount.Name = accountInfo.Suborgname;
+                newAccount.Name = accountInfo.DisplayName;
                 isChanged = true;
             }
 
@@ -418,14 +418,14 @@ namespace Skanetrafiken.Crm
                 isChanged = true;
             }
             /* //ed_SubOrgNamn ska ej sättas längre, används av användare i systemet
-            if (accountInfo.Suborgname == null && !string.IsNullOrEmpty(oldAccount.ed_SubOrgNamn))
+            if (accountInfo.DisplayName == null && !string.IsNullOrEmpty(oldAccount.ed_SubOrgNamn))
             {
                 newAccount.ed_SubOrgNamn = string.Empty;
                 isChanged = true;
             }
-            else if (!string.IsNullOrEmpty(accountInfo.Suborgname) && oldAccount.ed_SubOrgNamn != accountInfo.Suborgname)
+            else if (!string.IsNullOrEmpty(accountInfo.DisplayName) && oldAccount.ed_SubOrgNamn != accountInfo.DisplayName)
             {
-                newAccount.ed_SubOrgNamn = accountInfo.Suborgname;
+                newAccount.ed_SubOrgNamn = accountInfo.DisplayName;
                 isChanged = true;
             }
             */
@@ -456,7 +456,7 @@ namespace Skanetrafiken.Crm
             accountInfo.ed_BillingEmailAddress = ae.ed_BillingEmailAddress;
             accountInfo.ed_BillingMethod = (int?)ae.ed_BillingMethod;
             accountInfo.ed_AllowCreate = ae.ed_AllowCreate;
-            accountInfo.Suborgname = ae.ed_SubOrgNamn;
+            accountInfo.DisplayName = ae.ed_SubOrgNamn;
             accountInfo.ed_AccountDescription = ae.ed_AccountDescription;
 
             return accountInfo;
