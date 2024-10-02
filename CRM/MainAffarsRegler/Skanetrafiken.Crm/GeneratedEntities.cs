@@ -33043,11 +33043,25 @@ namespace Skanetrafiken.Crm.Schema.Generated
 				this.SetAttributeValue("ed_kundresan", value);
 			}
 		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_lasttraveldate")]
+        /// <summary>
+        /// 
+        /// </summary>
+        [Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("st_startdatummittkonto")]
+        public System.Nullable<System.DateTime> st_StartdatumMittKonto
+        {
+            get
+            {
+                return this.GetAttributeValue<System.Nullable<System.DateTime>>("st_startdatummittkonto");
+            }
+            set
+            {
+                this.SetAttributeValue("st_startdatummittkonto", value);
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("ed_lasttraveldate")]
 		public System.Nullable<System.DateTime> ed_LastTravelDate
 		{
 			get
@@ -37311,8 +37325,10 @@ namespace Skanetrafiken.Crm.Schema.Generated
 			public const string ed_Kontaktperson = "ed_kontaktperson";
 			
 			public const string ed_Kundresan = "ed_kundresan";
-			
-			public const string ed_LastTravelDate = "ed_lasttraveldate";
+            
+			public const string st_StartdatumMittKonto = "st_startdatummittkonto";
+
+            public const string ed_LastTravelDate = "ed_lasttraveldate";
 			
 			public const string ed_LatestLinkGuid = "ed_latestlinkguid";
 			

@@ -902,7 +902,8 @@ namespace Skanetrafiken.Crm.Entities
 
             if((!string.IsNullOrEmpty(this.ed_MklId)) && (this.ed_Kundresan == null))
             {
-                    ed_Kundresan = new OptionSetValue((int)899310000);
+                ed_Kundresan = new OptionSetValue((int)899310000);
+                st_StartdatumMittKonto = DateTime.UtcNow;
             }
 
             localContext.Trace($"Entered HandlePreContactCreate() Postal Code: {Address1_PostalCode} and City: {Address1_City}");
@@ -1029,8 +1030,15 @@ namespace Skanetrafiken.Crm.Entities
             }
 
             if ((!string.IsNullOrEmpty(preImage.ed_MklId)) && (preImage.ed_Kundresan == null) || (!string.IsNullOrEmpty(this.ed_MklId)) && (this.ed_Kundresan == null))
-            {
-                ed_Kundresan = new OptionSetValue((int)899310000);
+            {   
+                string preMklId = string.IsNullOrEmpty(preImage.ed_MklId)? "": preImage.ed_MklId;
+                string currentMklId = string.IsNullOrEmpty(this.ed_MklId) ? "" : this.ed_MklId;
+
+                if (preMklId != currentMklId && currentMklId != "")
+                {
+                    ed_Kundresan = new OptionSetValue((int)899310000);
+                    st_StartdatumMittKonto = DateTime.UtcNow;             
+                }
             }
 
             string postalCode = this.Address1_PostalCode != null ? this.Address1_PostalCode : preImage.Address1_PostalCode;
