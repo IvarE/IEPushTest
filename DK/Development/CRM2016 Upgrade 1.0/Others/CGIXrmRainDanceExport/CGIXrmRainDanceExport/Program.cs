@@ -33,11 +33,14 @@ namespace CGIXrmRainDanceExport
                     CrmConnection.SaveCredentials(RunBatch.CredentialFilePath, password, RunBatch.Entropy);
                 }
 
-                RunBatch run = new RunBatch();
-                run.Run();
+                RunBatch_RainDance2_Sverige runSV = new RunBatch_RainDance2_Sverige();
+                runSV.Run();
 
-                RunBatch_UTLAND run2 = new RunBatch_UTLAND();
-                run2.Run();
+                //RunBatch run = new RunBatch();
+                //run.Run();
+
+                //RunBatch_UTLAND run2 = new RunBatch_UTLAND();
+                //run2.Run();
             }
             catch (Exception ex)
             {
