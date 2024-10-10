@@ -209,6 +209,7 @@
     <Compile Include="RunBatch.cs" />
     <Compile Include="RunBatch_Kundfaktura.cs" />
     <Compile Include="RunBatch_RainDance2_Sverige.cs" />
+    <Compile Include="RunBatch_RainDance2_Utland.cs" />
     <Compile Include="RunBatch_UTLAND.cs" />
     <Compile Include="ServiceProvider.cs" />
     <Compile Include="TracingService.cs" />
