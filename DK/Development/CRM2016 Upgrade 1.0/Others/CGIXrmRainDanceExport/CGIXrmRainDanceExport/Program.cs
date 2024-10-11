@@ -36,6 +36,9 @@ namespace CGIXrmRainDanceExport
                 RunBatch_RainDance2_Sverige runSV = new RunBatch_RainDance2_Sverige();
                 runSV.Run();
 
+                RunBatch_RainDance2_Utland runUT = new RunBatch_RainDance2_Utland();
+                runUT.Run();
+
                 //RunBatch run = new RunBatch();
                 //run.Run();
 

@@ -202,8 +202,8 @@ namespace CGIXrmRainDanceExport
             string blank6 = "".SetToFixedLengthPadRight(4);
             string gln = "".SetToFixedLengthPadRight(13);
             string blank7 = "".SetToFixedLengthPadRight(7);
-            string iban = "".SetToFixedLengthPadRight(34);
-            string bicswift = "".SetToFixedLengthPadRight(11);
+            string iban = refund.cgi_iban.SetToFixedLengthPadRight(34);
+            string bicswift = refund.cgi_swift.SetToFixedLengthPadRight(11);
             string riksbankskode = "223".SetToFixedLengthPadRight(3);
 
             //Special handling of adresses for RGOL cases
@@ -300,8 +300,8 @@ namespace CGIXrmRainDanceExport
         private string _createHeader()
         {
             string line1 = "01";
-            string line2 = DateTime.Now.ToShortDateString().PadLeft(149 + 8).Replace("-", "");
-            string line3 = DateTime.Now.ToShortTimeString().PadLeft(157 - 149 - 6).Replace(":", "") + "00";
+            string line2 = DateTime.Now.ToShortDateString().PadLeft(149 + 8 - 2).Replace("-", "");
+            string line3 = DateTime.Now.ToShortTimeString().PadLeft(157 - 149 - 6 - 2).Replace(":", "") + "00";
             string line = string.Format("{0}{1}{2}", line1, line2, line3);
             return line;
         }

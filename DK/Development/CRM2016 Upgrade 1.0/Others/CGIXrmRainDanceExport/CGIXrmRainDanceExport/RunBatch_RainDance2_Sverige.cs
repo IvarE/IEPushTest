@@ -86,7 +86,7 @@ namespace CGIXrmRainDanceExport
                 {
                     try
                     {
-                        _log.Debug(string.Format("Processing refundnumber: {0} | CaseId: {1}", _formatString(refund.cgi_refundnumber), _formatString(refund.cgi_Caseid.Id.ToString())));
+                        _log.Debug(string.Format("Processing refundnumber: {0} | CaseId: {1}", _formatString(refund.cgi_refundnumber), _formatString(refund.cgi_Caseid?.Id.ToString())));
 
                         if (refund.cgi_Caseid != null)
                         {
@@ -221,10 +221,10 @@ namespace CGIXrmRainDanceExport
             string bankkonto = "".SetToFixedLengthPadRight(16);
             string blank6 = "".SetToFixedLengthPadRight(4);
             string gln = "".SetToFixedLengthPadRight(13);
-            string blank7 = "".SetToFixedLengthPadRight(7);
-            string iban = "".SetToFixedLengthPadRight(34);
-            string bicswift = "".SetToFixedLengthPadRight(11);
-            string riksbankskode = "223".SetToFixedLengthPadRight(3);
+            //string blank7 = "".SetToFixedLengthPadRight(7);
+            //string iban = "".SetToFixedLengthPadRight(34);
+            //string bicswift = "".SetToFixedLengthPadRight(11);
+            //string riksbankskode = "223".SetToFixedLengthPadRight(3);
 
             //Special handling of adresses for RGOL cases
             if (!string.IsNullOrWhiteSpace(incident.cgi_rgol_fullname))//if (incident.Caseorigincode == 285050007)
@@ -235,7 +235,7 @@ namespace CGIXrmRainDanceExport
                 ort = _formatString(incident.cgi_rgol_address1_city).SetToFixedLengthPadRight(30);
             }
 
-            string line = string.Format($"{postmarkering}{kundidentitet}{kundnamn}{kundco}{postadress}{postnummer}{blank}{ort}{momskod}{blank2}{personnummer}{blank3}{landskod}{blank4}{motpart}{blank5}{kundtyp}{peppoId}{plusgiro}{bankgiro}{bankkonto}{blank6}{gln}{blank7}{iban}{bicswift}{riksbankskode}");
+            string line = string.Format($"{postmarkering}{kundidentitet}{kundnamn}{kundco}{postadress}{postnummer}{blank}{ort}{momskod}{blank2}{personnummer}{blank3}{landskod}{blank4}{motpart}{blank5}{kundtyp}{peppoId}{plusgiro}{bankgiro}{bankkonto}{blank6}{gln}"); // {blank7}{iban}{bicswift}{riksbankskode}");
             return line;
         }
 
