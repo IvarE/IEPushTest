@@ -391,11 +391,7 @@ namespace CGIXrmRainDanceExport
         {
             string postmarkering = "09";
 
-            string account = "";
-            if (refundaccount != null)
-                account = refundaccount.cgi_Account;
-
-            string konto = _formatString(account).SetToFixedLengthPadRight(10);
+            string konto = _formatString(refundaccount.cgi_Account).SetToFixedLengthPadRight(10);
 
             string ansvar;
             if (responsible != null)
@@ -432,23 +428,15 @@ namespace CGIXrmRainDanceExport
             string periodiseringsnyckel = "".SetToFixedLengthPadRight(10);
             string periodiseringfrom = "".SetToFixedLengthPadRight(10);
             string periodiseringto = "".SetToFixedLengthPadRight(10);
-
-            string line6;
-            if (refundproduct != null)
-                line6 = _formatString(refundproduct.cgi_Account).SetToFixedLengthPadRight(10);
-            else
-                line6 = _formatString("").SetToFixedLengthPadRight(10);
-
-
             string attestSAK = (!string.IsNullOrEmpty(user.cgi_RSID)) ? user.cgi_RSID.SetToFixedLengthPadRight(10) : "".SetToFixedLengthPadRight(10);   // "".SetToFixedLength(10); //RSID
             string attestBES = "".SetToFixedLengthPadRight(10);
 
             //Special handling of adresses for RGOL cases
             string line9 = "";
             if (!string.IsNullOrWhiteSpace(incident.cgi_rgol_fullname))//if (incident.Caseorigincode == 285050007)
-                line9 = _checkLenght(string.Format("{0} {1}", _formatString(incident.TicketNumber), _formatString(incident.cgi_rgol_fullname)).SetToFixedLengthPadRight(30));
+                bokforingstext = _checkLenght(string.Format("{0} {1}", _formatString(incident.TicketNumber), _formatString(incident.cgi_rgol_fullname)).SetToFixedLengthPadRight(30));
             else
-                line9 = _checkLenght(string.Format("{0} {1} {2}", _formatString(incident.TicketNumber), _formatString(contact.LastName), _formatString(contact.FirstName)).SetToFixedLengthPadRight(30));
+                bokforingstext = _checkLenght(string.Format("{0} {1} {2}", _formatString(incident.TicketNumber), _formatString(contact.LastName), _formatString(contact.FirstName)).SetToFixedLengthPadRight(30));
 
             string line = string.Format($"{postmarkering}{konto}{ansvar}{proj}{aktiv}{objekt}{motpart}{momscode}{blank1}{belopp}{kreditmarkering}{blank2}{bokforingstext}{periodiseringsnyckel}{periodiseringfrom}{periodiseringto}{attestSAK}{attestBES}");
             return line;
